@@ -1,83 +1,115 @@
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Search, Clipboard, Package, Wrench, Zap, ArrowRight } from "lucide-react"
+import { Search, Package, Clipboard, Wrench, Zap, Users } from "lucide-react"
 
 const services = [
   {
     icon: Search,
-    title: "Product Acquisition",
+    title: "Product Sourcing",
     description:
-      "End-to-end procurement including vendor evaluation, price negotiation, purchase execution, and delivery coordination.",
+      "We research suppliers, compare pricing and quality, negotiate when possible, and coordinate the entire purchase through delivery. You get options, recommendations, and full documentation—without spending hours hunting.",
+    examples: ["Electronics & tech equipment", "Furniture & home goods", "Specialized materials", "Bulk purchases"],
   },
   {
     icon: Package,
-    title: "Resale Operations",
+    title: "Resale & Fulfillment",
     description:
-      "Product sourcing with transparent margin disclosure, quality assurance, logistics management, and warranty documentation.",
+      "Curated products delivered with transparent vendor costs and service fees. We handle sourcing, quality checks, and logistics—you get reliable fulfillment with complete visibility into margins.",
+    examples: ["Curated product selection", "Quality verification", "White-glove delivery", "Full cost transparency"],
   },
   {
     icon: Clipboard,
     title: "Service Coordination",
     description:
-      "Contractor sourcing, proposal evaluation, scheduling management, and quality oversight for professional services.",
+      "From home repairs to professional appointments, we find qualified providers, gather quotes, schedule work, and ensure completion. Full vendor vetting, timeline management, and quality follow-up.",
+    examples: ["Home services & repairs", "Professional services", "Appointment scheduling", "Multi-vendor projects"],
   },
   {
     icon: Wrench,
-    title: "Project Execution",
+    title: "Project Support",
     description:
-      "Multi-phase project management including planning, vendor coordination, timeline tracking, and completion verification.",
+      "One-time tasks like relocations, event planning, or tech installations handled end-to-end. We scope requirements, coordinate vendors, track progress, and deliver complete documentation.",
+    examples: ["Office/home moves", "Event logistics", "Tech setup", "Vendor management"],
   },
   {
     icon: Zap,
     title: "On-Demand Support",
     description:
-      "Flexible assistance for complex tasks, administrative coordination, and specialized research with hourly billing.",
+      "Flexible hourly assistance for tasks that don't fit standard categories. Standard or rush rates available, transparent billing, and first-hour satisfaction guarantee on all work.",
+    examples: ["Research tasks", "Administrative support", "Quick coordination", "Urgent requests"],
+  },
+  {
+    icon: Users,
+    title: "Personal Concierge",
+    description:
+      "Your dedicated point of contact for ongoing needs. Mix and match services with priority access, personalized attention, and consistent support from someone who knows your preferences.",
+    examples: ["Dedicated support", "Priority handling", "Custom packages", "Long-term partnership"],
   },
 ]
 
 export function Services() {
   return (
-    <section id="services" className="py-28 md:py-36 bg-gradient-to-b from-background to-secondary/30">
+    <section id="services" className="py-28 md:py-36 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="mb-24 max-w-3xl">
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Core capabilities</h2>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            Professional support services designed for clarity and measurable outcomes. Each engagement includes
-            detailed documentation and transparent pricing.
+        <div className="text-center mb-20">
+          <div className="inline-block text-sm font-semibold tracking-widest text-primary/80 mb-6 uppercase">
+            What We Do
+          </div>
+          <h2 className="font-serif text-5xl md:text-7xl font-light leading-[1.1] mb-8 text-balance">
+            Services built for
+            <br />
+            <span className="text-primary">busy professionals</span>
+          </h2>
+          <p className="text-muted-foreground text-xl max-w-2xl mx-auto leading-relaxed">
+            From single purchases to complex multi-vendor projects, we deliver expert coordination with fixed pricing
+            and measurable results.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-16 max-w-5xl mx-auto">
+        <div className="space-y-1">
           {services.map((service, index) => (
-            <Card
-              key={index}
-              className="group p-8 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-card border-border/50 relative overflow-hidden"
+            <div
+              key={service.title}
+              className={`group relative py-12 px-8 border-b border-border/50 hover:bg-primary/5 transition-all duration-300 ${
+                index === 0 ? "border-t" : ""
+              }`}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8" />
-              <div className="relative flex flex-col">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 shadow-lg group-hover:scale-110 transition-transform">
-                    <service.icon className="h-7 w-7 text-primary" />
+              <div className="flex flex-col lg:flex-row gap-8 items-start">
+                <div className="flex items-start gap-6 lg:w-2/5 shrink-0">
+                  <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary group-hover:border-primary transition-colors shrink-0">
+                    <service.icon className="h-8 w-8 text-primary group-hover:text-primary-foreground transition-colors" />
                   </div>
-                  <span className="text-5xl font-serif font-light text-muted-foreground/10">{index + 1}</span>
+                  <div>
+                    <h3 className="font-serif text-3xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-serif font-bold mb-4 text-balance group-hover:text-primary transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed text-[15px]">{service.description}</p>
+
+                <div className="lg:w-3/5 pl-0 lg:pl-8 lg:border-l lg:border-border/50">
+                  <div className="text-sm font-semibold text-foreground/60 uppercase tracking-wider mb-4">
+                    Common Requests
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {service.examples.map((example, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {example}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
 
-        <div className="text-center mt-20">
-          <Button
-            size="lg"
-            className="text-lg px-10 h-14 shadow-xl hover:shadow-2xl transition-all hover:scale-105 bg-primary hover:bg-primary/90 font-semibold"
+        <div className="text-center mt-16">
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-foreground hover:text-primary border-2 border-border hover:border-primary transition-colors rounded-lg"
           >
-            Request Service
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+            Request a Service
+          </a>
         </div>
       </div>
     </section>

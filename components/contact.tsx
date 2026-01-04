@@ -10,18 +10,52 @@ export function Contact() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-block text-sm font-semibold tracking-wider text-muted-foreground mb-4 uppercase">
-            Get Started
+            Ready to Get Started?
           </div>
-          <h2 className="font-serif text-4xl md:text-6xl font-bold mb-6">Submit a request</h2>
+          <h2 className="font-serif text-4xl md:text-6xl font-light mb-6">Tell us what you need</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Describe your needs and we'll respond with a plan and cost estimate during business hours.
+            Submit your request and we'll respond with a clear plan and upfront pricing within hours. No obligations, no
+            pressure
           </p>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-12 items-start">
           <div className="lg:col-span-2 space-y-8">
             <div>
-              <h3 className="font-serif text-2xl font-semibold mb-6">Contact Information</h3>
+              <h3 className="font-serif text-2xl font-semibold mb-6">Why choose Nexus?</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-foreground shrink-0 mt-1" />
+                  <div>
+                    <div className="font-semibold mb-1">Fast Response</div>
+                    <div className="text-sm text-muted-foreground">
+                      Same-day replies (during business hours), most within 2 hours
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-foreground shrink-0 mt-1" />
+                  <div>
+                    <div className="font-semibold mb-1">Transparent Pricing</div>
+                    <div className="text-sm text-muted-foreground">
+                      Clear quotes before work begins—no hidden fees, or surprises
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-foreground shrink-0 mt-1" />
+                  <div>
+                    <div className="font-semibold mb-1">Results</div>
+                    <div className="text-sm text-muted-foreground">
+                      First-hour satisfaction guarantee on all services
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-8 border-t border-border/50">
+              <h4 className="font-semibold mb-4">Contact Us Directly</h4>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-secondary p-2.5 rounded-lg">
@@ -29,7 +63,7 @@ export function Contact() {
                   </div>
                   <div>
                     <div className="text-sm font-medium">Email</div>
-                    <div className="text-sm text-muted-foreground">admin@nexusoperations.com</div>
+                    <div className="text-sm text-muted-foreground">admin@nexusoperations.org</div>
                   </div>
                 </div>
 
@@ -39,34 +73,18 @@ export function Contact() {
                   </div>
                   <div>
                     <div className="text-sm font-medium">Phone</div>
-                    <div className="text-sm text-muted-foreground">+1 (913) 951-1711</div>
+                    <div className="text-sm text-muted-foreground">(913) 951-1711</div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="pt-8 border-t border-border/50">
-              <h4 className="font-semibold mb-4">Business Hours</h4>
-              <div className="text-sm text-muted-foreground space-y-1">
-                <div>Monday - Friday: 8:00 AM - 5:00 PM</div>
-                <div>Saturday - Sunday: Closed</div>
-              </div>
-            </div>
-
-            <div className="pt-8 border-t border-border/50">
-              <h4 className="font-semibold mb-4">Service Standards</h4>
-              <div className="space-y-3">
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-foreground shrink-0 mt-0.5" />
-                  <div className="text-sm text-muted-foreground">Response within one business day</div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-foreground shrink-0 mt-0.5" />
-                  <div className="text-sm text-muted-foreground">Written cost estimates before work begins</div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-foreground shrink-0 mt-0.5" />
-                  <div className="text-sm text-muted-foreground">Documented processes and receipts</div>
+                <div className="flex items-start gap-3">
+                  <div className="bg-secondary p-2.5 rounded-lg">
+                    <Phone className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">Hours</div>
+                    <div className="text-sm text-muted-foreground">Monday - Friday: 8:00am - 5:00pm</div>
+                    <div className="text-sm text-muted-foreground">Saturday - Sunday: CLOSED</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -143,11 +161,11 @@ export function Contact() {
 
               <div className="pt-4">
                 <Button className="w-full font-semibold shadow-lg hover:shadow-xl transition-shadow" size="lg">
-                  Submit Request
+                  Request Your Free Quote
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <p className="text-xs text-muted-foreground text-center mt-4">
-                  Submitting this form does not obligate you to any service or fee.
+                  By submitting, you agree to receive communications from Nexus Operations. We respect your privacy.
                 </p>
               </div>
             </form>

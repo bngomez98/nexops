@@ -1,56 +1,76 @@
+import { Card } from "@/components/ui/card"
+import { ClipboardList, Search, FileCheck, PackageCheck } from "lucide-react"
+
 const steps = [
   {
+    icon: ClipboardList,
     number: "01",
-    title: "Initial consultation",
-    description: "Submission of project scope, requirements, and constraints through structured intake process.",
+    title: "Tell Us What You Need",
+    description:
+      "Submit your request through our intake form or email. Be as specific or general as you like—we'll ask clarifying questions to ensure we understand exactly what you're looking for.",
   },
   {
+    icon: Search,
     number: "02",
-    title: "Proposal development",
+    title: "We Research & Plan",
     description:
-      "Detailed plan with cost breakdown, timeline projections, and execution strategy delivered within one business day.",
+      "Our team researches options, compares vendors, gets quotes, and builds a detailed plan. You receive a clear proposal with costs, timeline, and our recommended approach before any work begins.",
   },
   {
+    icon: FileCheck,
     number: "03",
-    title: "Execution phase",
+    title: "You Approve, We Execute",
     description:
-      "Systematic completion of research, vendor coordination, procurement, and quality verification with milestone updates.",
+      "Once you approve the plan, we handle everything: purchases, scheduling, coordination, quality checks, and progress updates. You stay informed without having to manage the details.",
   },
   {
+    icon: PackageCheck,
     number: "04",
-    title: "Delivery & documentation",
+    title: "Delivered & Documented",
     description:
-      "Final deliverables with comprehensive documentation including receipts, warranties, and relevant reference materials.",
+      "We deliver completed work with full documentation: receipts, warranty info, vendor contacts, and outcome summary. Everything organized and ready for your records.",
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-32 md:py-40">
+    <section id="how-it-works" className="py-28 md:py-36 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="mb-24 max-w-3xl">
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Standard process</h2>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            A structured approach ensuring consistency, transparency, and accountability throughout every engagement.
+        <div className="text-center mb-24">
+          <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-sm font-bold tracking-wider text-primary mb-6 uppercase border border-primary/20">
+            <ClipboardList className="h-4 w-4" />
+            Our Process
+          </div>
+          <h2 className="font-serif text-5xl md:text-6xl font-bold mb-8">
+            Simple, <span className="text-primary">predictable</span> process
+          </h2>
+          <p className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed">
+            Four straightforward steps from initial request to documented delivery. No surprises, no hassle.
           </p>
         </div>
-        {/* </CHANGE> */}
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
-            <div key={index} className="relative">
-              <div className="flex gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary">{step.number}</span>
+            <Card
+              key={step.number}
+              className="p-8 hover:shadow-xl transition-all duration-300 bg-card border-border/50 relative"
+            >
+              <div className="flex flex-col h-full">
+                <div className="mb-6">
+                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 shadow-lg inline-flex">
+                    <step.icon className="h-7 w-7 text-primary" />
                   </div>
                 </div>
-                <div className="flex-1 pt-1">
-                  <h3 className="text-xl font-serif font-bold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
-                </div>
+                <span className="text-5xl font-serif font-light text-muted-foreground/10 absolute top-6 right-6">
+                  {step.number}
+                </span>
+                <h3 className="text-xl font-serif font-bold mb-4 text-balance">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-sm">{step.description}</p>
               </div>
-            </div>
+              {index < steps.length - 1 && (
+                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
+              )}
+            </Card>
           ))}
         </div>
       </div>

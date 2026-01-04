@@ -4,26 +4,30 @@ import { Clock, Shield, Target, Award } from "lucide-react"
 const values = [
   {
     icon: Clock,
-    title: "Responsive",
-    description: "Business-day replies, realistic timelines",
+    title: "Fast",
+    subtitle: "Response Times",
+    description: "Same-day replies and rapid project turnaround",
     color: "primary",
   },
   {
     icon: Target,
-    title: "Transparent",
-    description: "Clear pricing and honest communication",
+    title: "Clear",
+    subtitle: "Communication",
+    description: "Transparent pricing and realistic expectations",
     color: "accent",
   },
   {
     icon: Shield,
-    title: "Accountable",
-    description: "Quality standards on every engagement",
+    title: "Reliable",
+    subtitle: "Results",
+    description: "Quality guarantees backed by our service promise",
     color: "chart-3",
   },
   {
     icon: Award,
-    title: "Professional",
-    description: "Expert execution, documented processes",
+    title: "Expert",
+    subtitle: "Execution",
+    description: "Professional standards on every engagement",
     color: "chart-5",
   },
 ]
@@ -36,27 +40,25 @@ export function About() {
           <div>
             <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-sm font-bold tracking-wider text-primary mb-6 uppercase border border-primary/20">
               <Award className="h-4 w-4" />
-              About Us
+              About Nexus Operations
             </div>
-
+            {/* </CHANGE> */}
             <h2 className="font-serif text-5xl md:text-6xl font-bold mb-8 leading-tight">
-              Professional service, <span className="text-primary">real results</span>
+              Built on <span className="text-primary">expertise</span>, not algorithms
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
-              Nexus Operations provides product sourcing, vendor coordination, and project management services for
-              individuals and small businesses.
+              <strong className="text-foreground">Nexus Operations delivers results</strong> through professional
+              execution, not automated workflows. Every request is handled by a real expert who understands quality,
+              values your time, and commits to transparent outcomes.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
-              We handle the research, comparison, negotiation, and logistics—delivering completed solutions with
-              transparent pricing and documented processes.
+              We specialize in product sourcing, service coordination, and project management for individuals who need
+              reliable support without the overhead of platforms, subscriptions, or hidden fees.
             </p>
-
-            <div className="border-l-4 border-primary pl-6 py-4 bg-primary/5">
-              <p className="text-foreground font-semibold text-lg mb-2">Our commitment</p>
-              <p className="text-muted-foreground leading-relaxed">
-                Fast communication, honest pricing, quality execution. We do the work so you don't have to.
-              </p>
-            </div>
+            <p className="text-foreground font-semibold text-lg border-l-4 border-primary pl-6 py-2 bg-primary/5">
+              Our mission: Handle the work you don't have time for, with speed, clarity, and guaranteed results.
+            </p>
+            {/* </CHANGE> */}
           </div>
 
           <div className="grid grid-cols-2 gap-6">
@@ -74,14 +76,18 @@ export function About() {
                   >
                     <value.icon className={`h-8 w-8 text-${value.color}`} />
                   </div>
-                  <div className="text-3xl font-serif font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
+                  <div className="text-4xl font-serif font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
                     {value.title}
+                  </div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4 font-bold">
+                    {value.subtitle}
                   </div>
                   <div className="text-sm text-muted-foreground leading-relaxed">{value.description}</div>
                 </div>
               </Card>
             ))}
           </div>
+          {/* </CHANGE> */}
         </div>
       </div>
     </section>

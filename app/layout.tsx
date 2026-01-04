@@ -15,19 +15,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Nexus Operations - Professional Product Sourcing & Project Support Services",
+  title: "Nexus Operations, LLC - Get It Handled",
   description:
-    "Expert product sourcing, vendor coordination, and project management services. Transparent pricing, same-day response, and quality guaranteed. Request a free quote today.",
-  keywords: [
-    "product sourcing",
-    "vendor coordination",
-    "project support",
-    "personal assistant services",
-    "procurement services",
-    "product research",
-    "technical consulting",
-  ],
-  authors: [{ name: "Nexus Operations, LLC" }],
+    "Practical consumer services, product sourcing, and project support. Fast response, transparent pricing, and results you can count on.",
   generator: "v0.app",
   icons: {
     icon: [
