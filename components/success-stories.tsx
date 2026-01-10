@@ -1,34 +1,34 @@
 const stories = [
   {
-    metric: "18% Cost Savings",
-    client: "Small Marketing Agency",
-    deliverable: "Office equipment & software for 4 new hires",
+    metric: "$2,400 Saved",
+    client: "Marketing agency with remote team",
+    deliverable: "Office equipment for 4 new hires",
     result:
-      "Researched 12 vendors, negotiated bulk pricing on monitors, chairs, and SaaS licenses. Coordinated staggered delivery over 2 weeks. Saved $2,400 vs. initial quotes while ensuring everything arrived configured and ready.",
+      "Needed monitors, chairs, keyboards, and software licenses for new employees starting in 2 weeks. Researched 12 vendors, negotiated bulk pricing, coordinated staggered delivery to match start dates. Everything arrived configured and saved $2,400 vs their initial quotes.",
     color: "primary",
   },
   {
-    metric: "48-Hour Completion",
-    client: "Tech Startup Founder",
-    deliverable: "Emergency office relocation coordination",
+    metric: "48 Hours",
+    client: "Startup founder during product launch",
+    deliverable: "Emergency office relocation",
     result:
-      "Coordinated movers, internet installation, furniture delivery, and cleaning across 4 vendors within tight timeline. Managed scheduling conflicts and ensured sequential completion. Founder stayed focused on product launch.",
+      "Had to relocate office mid-product launch with zero time to manage logistics. We coordinated movers, internet installation, furniture delivery, and cleaning across 4 vendors within 48 hours. Founder stayed focused on launch, office was operational on schedule.",
     color: "accent",
   },
   {
-    metric: "Multi-Vendor Success",
-    client: "E-commerce Business",
-    deliverable: "Specialized packaging from 12 suppliers",
+    metric: "12 Suppliers",
+    client: "E-commerce business scaling production",
+    deliverable: "Custom packaging from multiple vendors",
     result:
-      "Sourced custom packaging materials from multiple vendors, negotiated rush delivery, coordinated staggered arrivals to match production schedule. All materials delivered on time, 15% under budget estimate.",
+      "Needed specialized packaging materials no single supplier could provide. Sourced from 12 different vendors, negotiated rush delivery, coordinated arrivals to match production schedule. All materials delivered on time, 15% under their budget estimate.",
     color: "chart-3",
   },
   {
-    metric: "Quality Match",
-    client: "Remote Professional",
-    deliverable: "Home repair contractor coordination",
+    metric: "Zero Hassle",
+    client: "Remote professional with home repairs",
+    deliverable: "Plumbing contractor coordination",
     result:
-      "Vetted 8 contractors for plumbing work, verified licenses and reviews, obtained detailed quotes, scheduled site visits, and monitored work quality. Project completed on budget with full documentation for future reference.",
+      "Needed reliable plumber but didn't want to spend days getting quotes and checking reviews. We vetted 8 contractors, verified licenses, obtained detailed quotes, coordinated site visits, and monitored work. Project done on budget with full documentation.",
     color: "chart-5",
   },
 ]

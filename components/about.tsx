@@ -40,23 +40,24 @@ export function About() {
           <div>
             <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-sm font-bold tracking-wider text-primary mb-6 uppercase border border-primary/20">
               <Award className="h-4 w-4" />
-              About Nexus Operations
+              Who We Are
             </div>
-            {/* </CHANGE> */}
             <h2 className="font-serif text-5xl md:text-6xl font-bold mb-8 leading-tight">
-              Built on <span className="text-primary">expertise</span>, not algorithms
+              Built for people who
+              <br />
+              <span className="text-primary">value their time</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
-              <strong className="text-foreground">Nexus Operations delivers results</strong> through professional
-              execution, not automated workflows. Every request is handled by a real expert who understands quality,
-              values your time, and commits to transparent outcomes.
+              If you're a professional, entrepreneur, or small business owner who needs operational support but doesn't
+              want to hire full-time staff or deal with platform fees—Nexus Operations exists for you.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
-              We specialize in product sourcing, service coordination, and project management for individuals who need
-              reliable support without the overhead of platforms, subscriptions, or hidden fees.
+              We're not a marketplace with random freelancers. We're not a subscription with automated responses. You
+              work directly with experienced professionals who handle complex coordination and deliver documented
+              results.
             </p>
             <p className="text-foreground font-semibold text-lg border-l-4 border-primary pl-6 py-2 bg-primary/5">
-              Our mission: Handle the work you don't have time for, with speed, clarity, and guaranteed results.
+              You focus on what matters. We handle what takes time.
             </p>
             {/* </CHANGE> */}
           </div>

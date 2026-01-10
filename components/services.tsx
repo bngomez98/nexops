@@ -5,43 +5,68 @@ const services = [
     icon: Search,
     title: "Product Sourcing",
     description:
-      "We research suppliers, compare pricing and quality, negotiate when possible, and coordinate the entire purchase through delivery. You get options, recommendations, and full documentation—without spending hours hunting.",
-    examples: ["Electronics & tech equipment", "Furniture & home goods", "Specialized materials", "Bulk purchases"],
+      "Looking for specialized equipment, bulk materials, or hard-to-find products? We research suppliers, compare options, negotiate pricing, and coordinate delivery. Save hours of hunting and get expert recommendations backed by real research.",
+    examples: [
+      "Tech equipment for your office",
+      "Specialized tools or materials",
+      "Bulk purchases with better pricing",
+      "Items you can't find on Amazon",
+    ],
   },
   {
     icon: Package,
     title: "Resale & Fulfillment",
     description:
-      "Curated products delivered with transparent vendor costs and service fees. We handle sourcing, quality checks, and logistics—you get reliable fulfillment with complete visibility into margins.",
-    examples: ["Curated product selection", "Quality verification", "White-glove delivery", "Full cost transparency"],
+      "Need products sourced and delivered with complete transparency? We handle the entire supply chain—from finding quality vendors to coordinating logistics—while showing you exactly what things cost and what you're paying for.",
+    examples: [
+      "Curated product selection",
+      "Quality verification process",
+      "Coordinated delivery",
+      "Transparent vendor costs",
+    ],
   },
   {
     icon: Clipboard,
     title: "Service Coordination",
     description:
-      "From home repairs to professional appointments, we find qualified providers, gather quotes, schedule work, and ensure completion. Full vendor vetting, timeline management, and quality follow-up.",
-    examples: ["Home services & repairs", "Professional services", "Appointment scheduling", "Multi-vendor projects"],
+      "Tired of getting multiple quotes and playing phone tag with contractors? We find qualified pros, vet them properly, get you competitive quotes, schedule the work, and make sure it's done right. You approve, we coordinate.",
+    examples: [
+      "Home repairs & renovations",
+      "Professional service appointments",
+      "Multi-contractor projects",
+      "Quality verification & follow-up",
+    ],
   },
   {
     icon: Wrench,
-    title: "Project Support",
+    title: "Project Management",
     description:
-      "One-time tasks like relocations, event planning, or tech installations handled end-to-end. We scope requirements, coordinate vendors, track progress, and deliver complete documentation.",
-    examples: ["Office/home moves", "Event logistics", "Tech setup", "Vendor management"],
+      "Planning an office move? Setting up tech? Organizing an event? We scope out what needs to happen, coordinate all the vendors, track progress, handle problems, and deliver everything documented. No detail left to chance.",
+    examples: [
+      "Office or home relocations",
+      "Event planning & logistics",
+      "Tech installations",
+      "Complex vendor coordination",
+    ],
   },
   {
     icon: Zap,
-    title: "On-Demand Support",
+    title: "On-Demand Help",
     description:
-      "Flexible hourly assistance for tasks that don't fit standard categories. Standard or rush rates available, transparent billing, and first-hour satisfaction guarantee on all work.",
-    examples: ["Research tasks", "Administrative support", "Quick coordination", "Urgent requests"],
+      "Sometimes you just need someone to handle something—fast. Research a vendor, coordinate a quick task, solve an urgent problem. Flexible hourly support with transparent billing. First hour guaranteed or your money back.",
+    examples: [
+      "Urgent vendor research",
+      "Quick coordination tasks",
+      "Administrative support",
+      "Rush requests (premium rates)",
+    ],
   },
   {
     icon: Users,
-    title: "Personal Concierge",
+    title: "Ongoing Partnership",
     description:
-      "Your dedicated point of contact for ongoing needs. Mix and match services with priority access, personalized attention, and consistent support from someone who knows your preferences.",
-    examples: ["Dedicated support", "Priority handling", "Custom packages", "Long-term partnership"],
+      "Have regular needs? Get a dedicated contact who learns your preferences, handles requests quickly, and prioritizes your work. Mix any services, get faster turnaround, and work with someone who actually knows your situation.",
+    examples: ["Your dedicated coordinator", "Priority scheduling", "Custom service packages", "Consistent support"],
   },
 ]
 
