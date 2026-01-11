@@ -10,46 +10,48 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="border-b border-border/20 bg-background/80 backdrop-blur-xl sticky top-0 z-50">
-      {/* </CHANGE> */}
+    <header className="border-b border-border/50 bg-background/95 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
-          {/* </CHANGE> */}
+        <div className="flex items-center justify-between h-20">
           <Link href="/" className="hover:opacity-80 transition-opacity">
             <Logo />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-10">
-            {/* </CHANGE> */}
+          <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/#services"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
             >
               Services
             </Link>
             <Link
               href="/#how-it-works"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
             >
               How It Works
             </Link>
             <Link
               href="/#pricing"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
             >
               Pricing
             </Link>
             <Link
               href="/#results"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
             >
               Results
+            </Link>
+            <Link
+              href="/#contact"
+              className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+            >
+              Contact
             </Link>
           </nav>
 
           <div className="flex items-center gap-4">
-            <Button asChild className="hidden md:inline-flex font-medium glow-primary">
-              {/* </CHANGE> */}
+            <Button asChild className="hidden md:inline-flex font-medium">
               <Link href="/#contact">Get Started</Link>
             </Button>
             <Button
@@ -65,40 +67,44 @@ export function Header() {
         </div>
 
         {mobileMenuOpen && (
-          <nav className="md:hidden py-8 border-t border-border/20">
-            {/* </CHANGE> */}
-            <div className="flex flex-col gap-6">
-              {/* </CHANGE> */}
+          <nav className="md:hidden py-6 border-t border-border/50">
+            <div className="flex flex-col gap-4">
               <Link
                 href="/#services"
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Services
               </Link>
               <Link
                 href="/#how-it-works"
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
               </Link>
               <Link
                 href="/#pricing"
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pricing
               </Link>
               <Link
                 href="/#results"
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Results
               </Link>
-              <Button asChild className="mt-6 font-medium w-full">
-                {/* </CHANGE> */}
+              <Link
+                href="/#contact"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <Button asChild className="mt-4 font-medium">
                 <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>
                   Get Started
                 </Link>
