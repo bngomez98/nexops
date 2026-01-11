@@ -72,53 +72,58 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="py-28 md:py-36 bg-background">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <div className="inline-block text-sm font-semibold tracking-widest text-primary/80 mb-6 uppercase">
-            What We Do
+    <section id="services" className="py-32 md:py-40 relative overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute bottom-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-primary/10 blur-[150px]" />
+      </div>
+      {/* </CHANGE> */}
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="mb-24">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-8">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            Our Services
           </div>
-          <h2 className="font-serif text-5xl md:text-7xl font-light leading-[1.1] mb-8 text-balance">
-            Services built for
+          <h2 className="font-serif text-6xl md:text-7xl lg:text-8xl font-light leading-[0.9] mb-10 max-w-4xl">
+            Everything you need.
             <br />
-            <span className="text-primary">busy professionals</span>
+            <span className="text-primary">Nothing you don't.</span>
           </h2>
-          <p className="text-muted-foreground text-xl max-w-2xl mx-auto leading-relaxed">
-            From single purchases to complex multi-vendor projects, we deliver expert coordination with fixed pricing
-            and measurable results.
+          <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
+            From single purchases to complex multi-vendor projects, we handle the research, negotiation, coordination,
+            and quality control so you don't have to.
           </p>
         </div>
+        {/* </CHANGE> */}
 
-        <div className="space-y-1">
+        <div className="space-y-px">
           {services.map((service, index) => (
             <div
               key={service.title}
-              className={`group relative py-12 px-8 border-b border-border/50 hover:bg-primary/5 transition-all duration-300 ${
-                index === 0 ? "border-t" : ""
-              }`}
+              className="group relative bg-card/50 hover:bg-card border-b border-border/30 transition-all duration-300 hover:border-primary/30"
             >
-              <div className="flex flex-col lg:flex-row gap-8 items-start">
-                <div className="flex items-start gap-6 lg:w-2/5 shrink-0">
-                  <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary group-hover:border-primary transition-colors shrink-0">
+              <div className="flex flex-col lg:flex-row gap-8 p-10 lg:p-12">
+                <div className="flex items-start gap-6 lg:w-1/2">
+                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 group-hover:bg-primary group-hover:border-primary transition-all shrink-0 glow-primary">
                     <service.icon className="h-8 w-8 text-primary group-hover:text-primary-foreground transition-colors" />
                   </div>
-                  <div>
-                    <h3 className="font-serif text-3xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                  <div className="flex-1">
+                    <h3 className="font-serif text-3xl font-light mb-4 group-hover:text-primary transition-colors">
                       {service.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                    <p className="text-muted-foreground leading-relaxed text-lg">{service.description}</p>
                   </div>
                 </div>
 
-                <div className="lg:w-3/5 pl-0 lg:pl-8 lg:border-l lg:border-border/50">
-                  <div className="text-sm font-semibold text-foreground/60 uppercase tracking-wider mb-4">
-                    Common Requests
+                <div className="lg:w-1/2 lg:pl-12 lg:border-l lg:border-border/30">
+                  <div className="text-xs font-bold text-foreground/50 uppercase tracking-widest mb-6">
+                    Common Use Cases
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="space-y-3">
                     {service.examples.map((example, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        {example}
+                      <div key={i} className="flex items-start gap-3 text-muted-foreground">
+                        <div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                        <span className="leading-relaxed">{example}</span>
                       </div>
                     ))}
                   </div>
@@ -127,15 +132,20 @@ export function Services() {
             </div>
           ))}
         </div>
+        {/* </CHANGE> */}
 
-        <div className="text-center mt-16">
+        <div className="text-center mt-20">
           <a
             href="#contact"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-foreground hover:text-primary border-2 border-border hover:border-primary transition-colors rounded-lg"
+            className="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all glow-primary"
           >
-            Request a Service
+            Start Your Project
+            <svg className="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </a>
         </div>
+        {/* </CHANGE> */}
       </div>
     </section>
   )

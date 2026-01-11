@@ -1,56 +1,71 @@
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-radial from-primary/10 to-transparent blur-3xl" />
+    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+      <div className="absolute inset-0">
+        <div className="absolute top-[20%] right-[15%] w-[500px] h-[500px] rounded-full bg-primary/20 blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] rounded-full bg-accent/15 blur-[100px]" />
+      </div>
+      {/* </CHANGE> */}
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-24 md:pt-40 md:pb-32">
-        <div className="max-w-4xl">
-          <div className="inline-block text-sm font-semibold tracking-widest text-primary/80 mb-6 uppercase">
-            For Busy Professionals Who Need Things Done Right
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-24">
+        <div className="max-w-5xl">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-8">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            Serving Busy Professionals Since 2024
           </div>
+          {/* </CHANGE> */}
 
-          <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] mb-8">
-            You don't have time
+          <h1 className="font-serif text-7xl md:text-8xl lg:text-9xl font-light leading-[0.9] mb-10 text-balance">
+            You Don't Have
             <br />
-            to hunt down vendors.
+            Time to Hunt
             <br />
-            <span className="text-primary">We do.</span>
+            <span className="text-primary">Vendors.</span>
           </h1>
+          {/* </CHANGE> */}
 
-          <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl mb-12">
-            Need specialized equipment? Coordinating multiple contractors? Sourcing products you can't easily find? We
-            handle the research, vetting, negotiation, and coordination—you get results without the time drain.
+          <p className="text-2xl md:text-3xl text-muted-foreground leading-relaxed max-w-3xl mb-14 text-pretty">
+            We source specialized products, coordinate contractors, negotiate pricing, and manage fulfillment. You get
+            results. We handle everything else.
           </p>
           {/* </CHANGE> */}
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row gap-6 mb-20">
             <a
               href="#contact"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors rounded-lg"
+              className="group inline-flex items-center justify-center px-10 py-5 text-lg font-semibold bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all glow-primary"
             >
-              Tell Us What You Need
+              Start Your Project
+              <svg
+                className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </a>
             <a
               href="#services"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-foreground hover:text-primary border-2 border-border hover:border-primary transition-colors rounded-lg"
+              className="inline-flex items-center justify-center px-10 py-5 text-lg font-medium text-foreground hover:text-primary transition-colors"
             >
-              See What We Handle
+              Explore Services →
             </a>
           </div>
+          {/* </CHANGE> */}
 
-          <div className="grid grid-cols-3 gap-8 max-w-2xl pt-8 border-t border-border/50">
+          <div className="grid grid-cols-3 gap-12 max-w-3xl pt-12 border-t border-border/30">
             <div>
-              <div className="text-3xl font-serif font-semibold text-primary mb-1">Same Day</div>
-              <div className="text-sm text-muted-foreground">We Respond</div>
+              <div className="text-5xl font-serif font-light text-primary mb-2">24hr</div>
+              <div className="text-sm text-muted-foreground uppercase tracking-wider">Response Time</div>
             </div>
             <div>
-              <div className="text-3xl font-serif font-semibold text-primary mb-1">Your Time</div>
-              <div className="text-sm text-muted-foreground">Saved</div>
+              <div className="text-5xl font-serif font-light text-primary mb-2">100%</div>
+              <div className="text-sm text-muted-foreground uppercase tracking-wider">Transparent Pricing</div>
             </div>
             <div>
-              <div className="text-3xl font-serif font-semibold text-primary mb-1">Fixed Price</div>
-              <div className="text-sm text-muted-foreground">No Hidden Costs</div>
+              <div className="text-5xl font-serif font-light text-primary mb-2">0</div>
+              <div className="text-sm text-muted-foreground uppercase tracking-wider">Hidden Fees</div>
             </div>
           </div>
           {/* </CHANGE> */}

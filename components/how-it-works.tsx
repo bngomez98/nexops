@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card"
 import { ClipboardList, Search, FileCheck, PackageCheck } from "lucide-react"
 
 const steps = [
@@ -34,43 +33,45 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-28 md:py-36 bg-background">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-24">
-          <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-sm font-bold tracking-wider text-primary mb-6 uppercase border border-primary/20">
+    <section id="how-it-works" className="py-32 md:py-40 relative overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-[20%] right-[10%] w-[500px] h-[500px] rounded-full bg-accent/10 blur-[120px]" />
+      </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="mb-28">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-sm font-medium text-accent mb-8">
             <ClipboardList className="h-4 w-4" />
-            Our Process
+            How It Works
           </div>
-          <h2 className="font-serif text-5xl md:text-6xl font-bold mb-8">
-            Simple, <span className="text-primary">predictable</span> process
+          <h2 className="font-serif text-6xl md:text-7xl lg:text-8xl font-light leading-[0.9] mb-10 max-w-4xl">
+            Simple.
+            <br />
+            <span className="text-accent">Transparent.</span>
           </h2>
-          <p className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed">
-            Four straightforward steps from initial request to documented delivery. No surprises, no hassle.
+          <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
+            Four clear steps from your initial request to complete delivery. No hidden processes, no surprises.
           </p>
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-4 gap-6">
           {steps.map((step, index) => (
-            <Card
+            <div
               key={step.number}
-              className="p-8 hover:shadow-xl transition-all duration-300 bg-card border-border/50 relative"
+              className="group relative p-8 bg-card/30 hover:bg-card border border-border/30 hover:border-primary/50 rounded-2xl transition-all duration-300"
             >
               <div className="flex flex-col h-full">
-                <div className="mb-6">
-                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 shadow-lg inline-flex">
+                <div className="mb-8">
+                  <div className="inline-flex p-4 rounded-2xl bg-primary/5 border border-primary/10 group-hover:bg-primary/10 transition-colors glow-primary">
                     <step.icon className="h-7 w-7 text-primary" />
                   </div>
                 </div>
-                <span className="text-5xl font-serif font-light text-muted-foreground/10 absolute top-6 right-6">
-                  {step.number}
-                </span>
-                <h3 className="text-xl font-serif font-bold mb-4 text-balance">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm">{step.description}</p>
+                <span className="text-6xl font-serif font-light text-border/20 mb-4">{step.number}</span>
+                <h3 className="text-2xl font-light mb-4 text-balance leading-tight">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed flex-1">{step.description}</p>
               </div>
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
+                <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-gradient-to-r from-primary/30 to-transparent" />
               )}
-            </Card>
+            </div>
           ))}
         </div>
       </div>

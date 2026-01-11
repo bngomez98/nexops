@@ -4,32 +4,27 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color system with richer brand colors - teal primary, warm neutrals */
-  --background: oklch(0.98 0.008 85);
-  --foreground: oklch(0.15 0.02 240);
-  --card: oklch(0.99 0.004 85);
-  --card-foreground: oklch(0.15 0.02 240);
-  --popover: oklch(0.99 0.004 85);
-  --popover-foreground: oklch(0.15 0.02 240);
-  --primary: oklch(0.45 0.14 195);
-  --primary-foreground: oklch(0.99 0.004 85);
-  --secondary: oklch(0.92 0.015 85);
-  --secondary-foreground: oklch(0.15 0.02 240);
-  --muted: oklch(0.88 0.012 85);
-  --muted-foreground: oklch(0.48 0.015 240);
-  --accent: oklch(0.65 0.18 45);
-  --accent-foreground: oklch(0.99 0.004 85);
+  /* Dark-first design with mint green accents inspired by design brief */
+  --background: oklch(0.12 0.015 240);
+  --foreground: oklch(0.98 0.005 85);
+  --card: oklch(0.16 0.018 240);
+  --card-foreground: oklch(0.98 0.005 85);
+  --popover: oklch(0.16 0.018 240);
+  --popover-foreground: oklch(0.98 0.005 85);
+  --primary: oklch(0.75 0.14 165);
+  --primary-foreground: oklch(0.12 0.015 240);
+  --secondary: oklch(0.22 0.02 240);
+  --secondary-foreground: oklch(0.98 0.005 85);
+  --muted: oklch(0.25 0.02 240);
+  --muted-foreground: oklch(0.65 0.01 240);
+  --accent: oklch(0.72 0.16 55);
+  --accent-foreground: oklch(0.12 0.015 240);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0.002 88.3);
-  --border: oklch(0.88 0.012 85);
-  --input: oklch(0.88 0.012 85);
-  --ring: oklch(0.45 0.14 195);
-  --chart-1: oklch(0.45 0.14 195);
-  --chart-2: oklch(0.65 0.18 45);
-  --chart-3: oklch(0.6 0.15 285);
-  --chart-4: oklch(0.7 0.12 160);
-  --chart-5: oklch(0.55 0.16 25);
-  --radius: 0.5rem;
+  --border: oklch(0.25 0.02 240);
+  --input: oklch(0.22 0.02 240);
+  --ring: oklch(0.75 0.14 165);
+  --radius: 0.75rem;
   /* </CHANGE> */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -127,9 +122,13 @@
     @apply bg-background text-foreground antialiased;
   }
 
-  /* Add smooth gradient support */
-  .bg-gradient-radial {
-    background: radial-gradient(var(--tw-gradient-stops));
+  /* Add sophisticated gradient and glow effects */
+  .glow-primary {
+    box-shadow: 0 0 60px -15px oklch(0.75 0.14 165 / 0.5);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 60px -15px oklch(0.72 0.16 55 / 0.4);
   }
   /* </CHANGE> */
 }
