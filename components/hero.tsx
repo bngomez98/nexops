@@ -1,59 +1,62 @@
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
+
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-radial from-primary/10 to-transparent blur-3xl" />
+    <section className="relative min-h-[90vh] flex items-center">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_oklch(0.75_0.18_155_/_0.08),_transparent_60%)]" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-border/40" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-24 md:pt-40 md:pb-32">
-        <div className="max-w-4xl">
-          <div className="inline-block text-sm font-semibold tracking-widest text-primary/80 mb-6 uppercase">
-            For Busy Professionals Who Need Things Done Right
-          </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
+        <div className="max-w-3xl">
+          <p className="text-primary text-sm font-medium tracking-wide mb-6">
+            Home services, simplified
+          </p>
 
-          <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] mb-8">
-            You don't have time
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
+            One request.
             <br />
-            to hunt down vendors.
+            One verified contractor.
             <br />
-            <span className="text-primary">We do.</span>
+            <span className="text-primary">No runaround.</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl mb-12">
-            Need specialized equipment? Coordinating multiple contractors? Sourcing products you can't easily find? We
-            handle the research, vetting, negotiation, and coordination—you get results without the time drain.
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
+            Upload photos of your project, set a budget, and pick a consultation time.
+            We match you with a single licensed, insured contractor who claims your job first-come, first-served. Free for homeowners.
           </p>
-          {/* </CHANGE> */}
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-16">
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors rounded-lg"
+          <div className="flex flex-col sm:flex-row items-start gap-4 mb-16">
+            <Link
+              href="#submit"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
             >
-              Tell Us What You Need
-            </a>
-            <a
-              href="#services"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-foreground hover:text-primary border-2 border-border hover:border-primary transition-colors rounded-lg"
+              Submit a Request
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/contractors"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
             >
-              See What We Handle
-            </a>
+              I'm a contractor
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-3 gap-8 max-w-2xl pt-8 border-t border-border/50">
-            <div>
-              <div className="text-3xl font-serif font-semibold text-primary mb-1">Same Day</div>
-              <div className="text-sm text-muted-foreground">We Respond</div>
+          <div className="flex flex-wrap gap-x-10 gap-y-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Exclusive leads, not shared
             </div>
-            <div>
-              <div className="text-3xl font-serif font-semibold text-primary mb-1">Your Time</div>
-              <div className="text-sm text-muted-foreground">Saved</div>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Licensed and insured only
             </div>
-            <div>
-              <div className="text-3xl font-serif font-semibold text-primary mb-1">Fixed Price</div>
-              <div className="text-sm text-muted-foreground">No Hidden Costs</div>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Free for homeowners
             </div>
           </div>
-          {/* </CHANGE> */}
         </div>
       </div>
     </section>

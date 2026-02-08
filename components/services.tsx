@@ -1,140 +1,105 @@
-import { Search, Package, Clipboard, Wrench, Zap, Users } from "lucide-react"
+import { TreePine, HardHat, Home, Flame, Fence, Zap } from "lucide-react"
+import Link from "next/link"
 
-const services = [
+const categories = [
   {
-    icon: Search,
-    title: "Product Sourcing",
-    description:
-      "Looking for specialized equipment, bulk materials, or hard-to-find products? We research suppliers, compare options, negotiate pricing, and coordinate delivery. Save hours of hunting and get expert recommendations backed by real research.",
-    examples: [
-      "Tech equipment for your office",
-      "Specialized tools or materials",
-      "Bulk purchases with better pricing",
-      "Items you can't find on Amazon",
-    ],
+    icon: TreePine,
+    name: "Tree Removal",
+    description: "Removal, trimming, stump grinding. Storm damage and hazardous tree assessment.",
+    budget: "$500 - $8,000",
+    available: true,
   },
   {
-    icon: Package,
-    title: "Resale & Fulfillment",
-    description:
-      "Need products sourced and delivered with complete transparency? We handle the entire supply chain—from finding quality vendors to coordinating logistics—while showing you exactly what things cost and what you're paying for.",
-    examples: [
-      "Curated product selection",
-      "Quality verification process",
-      "Coordinated delivery",
-      "Transparent vendor costs",
-    ],
+    icon: HardHat,
+    name: "Concrete Work",
+    description: "Driveways, patios, sidewalks, foundation repair, decorative and stamped concrete.",
+    budget: "$1,200 - $15,000",
+    available: true,
   },
   {
-    icon: Clipboard,
-    title: "Service Coordination",
-    description:
-      "Tired of getting multiple quotes and playing phone tag with contractors? We find qualified pros, vet them properly, get you competitive quotes, schedule the work, and make sure it's done right. You approve, we coordinate.",
-    examples: [
-      "Home repairs & renovations",
-      "Professional service appointments",
-      "Multi-contractor projects",
-      "Quality verification & follow-up",
-    ],
+    icon: Home,
+    name: "Roofing",
+    description: "Shingle replacement, metal roofing, leak repair, storm damage restoration.",
+    budget: "$300 - $25,000",
+    available: true,
   },
   {
-    icon: Wrench,
-    title: "Project Management",
-    description:
-      "Planning an office move? Setting up tech? Organizing an event? We scope out what needs to happen, coordinate all the vendors, track progress, handle problems, and deliver everything documented. No detail left to chance.",
-    examples: [
-      "Office or home relocations",
-      "Event planning & logistics",
-      "Tech installations",
-      "Complex vendor coordination",
-    ],
+    icon: Flame,
+    name: "HVAC",
+    description: "Installation, repair, and maintenance for heating and cooling systems.",
+    budget: "$3,000 - $20,000",
+    available: false,
+  },
+  {
+    icon: Fence,
+    name: "Fencing",
+    description: "Wood, vinyl, chain link, and iron fencing installation and repair.",
+    budget: "$1,500 - $8,000",
+    available: false,
   },
   {
     icon: Zap,
-    title: "On-Demand Help",
-    description:
-      "Sometimes you just need someone to handle something—fast. Research a vendor, coordinate a quick task, solve an urgent problem. Flexible hourly support with transparent billing. First hour guaranteed or your money back.",
-    examples: [
-      "Urgent vendor research",
-      "Quick coordination tasks",
-      "Administrative support",
-      "Rush requests (premium rates)",
-    ],
-  },
-  {
-    icon: Users,
-    title: "Ongoing Partnership",
-    description:
-      "Have regular needs? Get a dedicated contact who learns your preferences, handles requests quickly, and prioritizes your work. Mix any services, get faster turnaround, and work with someone who actually knows your situation.",
-    examples: ["Your dedicated coordinator", "Priority scheduling", "Custom service packages", "Consistent support"],
+    name: "Electrical",
+    description: "Panel upgrades, wiring, outlet installation, lighting, and code compliance.",
+    budget: "$500 - $10,000",
+    available: false,
   },
 ]
 
 export function Services() {
   return (
-    <section id="services" className="py-28 md:py-36 bg-background">
+    <section id="services" className="py-24 lg:py-32 bg-card/30">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <div className="inline-block text-sm font-semibold tracking-widest text-primary/80 mb-6 uppercase">
-            What We Do
-          </div>
-          <h2 className="font-serif text-5xl md:text-7xl font-light leading-[1.1] mb-8 text-balance">
-            Services built for
-            <br />
-            <span className="text-primary">busy professionals</span>
+        <div className="max-w-2xl mb-16">
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+            Launching with 3 categories, expanding fast
           </h2>
-          <p className="text-muted-foreground text-xl max-w-2xl mx-auto leading-relaxed">
-            From single purchases to complex multi-vendor projects, we deliver expert coordination with fixed pricing
-            and measurable results.
+          <p className="text-muted-foreground leading-relaxed">
+            Each request requires photos, specifications, and a budget cap so contractors know exactly
+            what they are bidding on before they claim the lead.
           </p>
         </div>
 
-        <div className="space-y-1">
-          {services.map((service, index) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {categories.map((cat) => (
             <div
-              key={service.title}
-              className={`group relative py-12 px-8 border-b border-border/50 hover:bg-primary/5 transition-all duration-300 ${
-                index === 0 ? "border-t" : ""
+              key={cat.name}
+              className={`group relative p-6 rounded-xl border transition-colors ${
+                cat.available
+                  ? "bg-card border-border/40 hover:border-primary/30"
+                  : "bg-secondary/30 border-border/20"
               }`}
             >
-              <div className="flex flex-col lg:flex-row gap-8 items-start">
-                <div className="flex items-start gap-6 lg:w-2/5 shrink-0">
-                  <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary group-hover:border-primary transition-colors shrink-0">
-                    <service.icon className="h-8 w-8 text-primary group-hover:text-primary-foreground transition-colors" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-3xl font-semibold mb-3 group-hover:text-primary transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">{service.description}</p>
-                  </div>
-                </div>
-
-                <div className="lg:w-3/5 pl-0 lg:pl-8 lg:border-l lg:border-border/50">
-                  <div className="text-sm font-semibold text-foreground/60 uppercase tracking-wider mb-4">
-                    Common Requests
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    {service.examples.map((example, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        {example}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              {!cat.available && (
+                <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-wider text-muted-foreground bg-secondary px-2 py-0.5 rounded">
+                  Coming Soon
+                </span>
+              )}
+              <div className={`flex items-center justify-center w-10 h-10 rounded-lg mb-4 ${
+                cat.available ? "bg-primary/10" : "bg-secondary"
+              }`}>
+                <cat.icon className={`h-5 w-5 ${cat.available ? "text-primary" : "text-muted-foreground"}`} />
               </div>
+              <h3 className="text-base font-semibold mb-1.5">{cat.name}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">{cat.description}</p>
+              <p className="text-xs text-muted-foreground">
+                Typical range: <span className="text-foreground font-medium">{cat.budget}</span>
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="text-center mt-16">
-          <a
-            href="#contact"
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-foreground hover:text-primary border-2 border-border hover:border-primary transition-colors rounded-lg"
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-start">
+          <Link
+            href="#submit"
+            className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
           >
-            Request a Service
-          </a>
+            Submit a Request
+          </Link>
+          <p className="text-sm text-muted-foreground">
+            Don't see your category? <Link href="/contact" className="text-primary hover:underline">Let us know</Link> and we'll prioritize it.
+          </p>
         </div>
       </div>
     </section>

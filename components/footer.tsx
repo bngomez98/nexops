@@ -1,105 +1,55 @@
 import Link from "next/link"
-import { Mail, Phone } from "lucide-react"
 import { Logo } from "@/components/logo"
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-secondary/20">
+    <footer className="border-t border-border/40 bg-card/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
-          <div className="md:col-span-2">
-            <div className="mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+          <div className="col-span-2 md:col-span-1">
+            <div className="mb-5">
               <Logo />
             </div>
-            {/* </CHANGE> */}
-            <p className="text-sm text-muted-foreground max-w-sm mb-6 leading-relaxed">
-              Expert sourcing, project coordination, and on-demand assistance for busy professionals who value quality,
-              transparency, and results.
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+              Connecting homeowners with licensed, insured contractors through exclusive leads and pre-qualified requests.
             </p>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <a href="mailto:admin@nexusoperations.org" className="hover:text-primary transition-colors">
-                  admin@nexusoperations.org
-                </a>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <a href="tel:+19139511711" className="hover:text-primary transition-colors">
-                  (913) 951-1711
-                </a>
-              </div>
-            </div>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider">Services</h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li>
-                <Link href="/#services" className="hover:text-primary transition-colors">
-                  Product Sourcing
-                </Link>
-              </li>
-              <li>
-                <Link href="/#services" className="hover:text-primary transition-colors">
-                  Resale & Fulfillment
-                </Link>
-              </li>
-              <li>
-                <Link href="/#services" className="hover:text-primary transition-colors">
-                  Service Coordination
-                </Link>
-              </li>
-              <li>
-                <Link href="/#services" className="hover:text-primary transition-colors">
-                  Project Management
-                </Link>
-              </li>
-              <li>
-                <Link href="/#pricing" className="hover:text-primary transition-colors">
-                  View Pricing
-                </Link>
-              </li>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Platform</h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li><Link href="/#how-it-works" className="text-foreground/60 hover:text-primary transition-colors">How It Works</Link></li>
+              <li><Link href="/#services" className="text-foreground/60 hover:text-primary transition-colors">Service Categories</Link></li>
+              <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Contractor Pricing</Link></li>
+              <li><Link href="/#submit" className="text-foreground/60 hover:text-primary transition-colors">Submit a Request</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider">Company</h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li>
-                <Link href="/#about" className="hover:text-primary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/#contact" className="hover:text-primary transition-colors">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/#results" className="hover:text-primary transition-colors">
-                  Success Stories
-                </Link>
-              </li>
-              <li>
-                <Link href="/#how-it-works" className="hover:text-primary transition-colors">
-                  How It Works
-                </Link>
-              </li>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Contractors</h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li><Link href="/contractors" className="text-foreground/60 hover:text-primary transition-colors">Join the Network</Link></li>
+              <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Subscription Tiers</Link></li>
+              <li><Link href="/contractors#verification" className="text-foreground/60 hover:text-primary transition-colors">Verification Process</Link></li>
+              <li><Link href="/contractors#faq" className="text-foreground/60 hover:text-primary transition-colors">Contractor FAQ</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Company</h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</Link></li>
+              <li><a href="mailto:admin@nexusoperations.org" className="text-foreground/60 hover:text-primary transition-colors">admin@nexusoperations.org</a></li>
+              <li><a href="tel:+19139511711" className="text-foreground/60 hover:text-primary transition-colors">(913) 951-1711</a></li>
+              <li><Link href="/privacy" className="text-foreground/60 hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-foreground/60 hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">© 2025 Nexus Operations, LLC. All rights reserved.</p>
-          <div className="flex gap-6 text-xs text-muted-foreground">
-            <Link href="/privacy" className="hover:text-primary transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="hover:text-primary transition-colors">
-              Terms of Service
-            </Link>
-          </div>
+        <div className="pt-8 border-t border-border/40 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-muted-foreground">{'\u00A9'} {new Date().getFullYear()} Nexus Operations, LLC. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">Licensed and insured contractors only.</p>
         </div>
       </div>
     </footer>

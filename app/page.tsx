@@ -1,12 +1,11 @@
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
+import { Stats } from "@/components/stats"
 import { HowItWorks } from "@/components/how-it-works"
 import { Services } from "@/components/services"
-import { ServicePackages } from "@/components/service-packages"
-import { Pricing } from "@/components/pricing"
-import { SuccessStories } from "@/components/success-stories"
-import { About } from "@/components/about"
-import { Contact } from "@/components/contact"
+import { Comparison } from "@/components/comparison"
+import { ContractorCTA } from "@/components/contractor-cta"
+import { SubmitCTA } from "@/components/submit-cta"
 import { Footer } from "@/components/footer"
 
 export default function HomePage() {
@@ -15,13 +14,12 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
+        <Stats />
         <HowItWorks />
         <Services />
-        <ServicePackages />
-        <Pricing />
-        <SuccessStories />
-        <About />
-        <Contact />
+        <Comparison />
+        <ContractorCTA />
+        <SubmitCTA />
       </main>
       <Footer />
     </div>

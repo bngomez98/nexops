@@ -1,26 +1,27 @@
-export function Logo({ className = "" }: { className?: string }) {
+export function Logo({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center gap-2.5 ${className}`}>
       <svg
-        width="36"
-        height="36"
-        viewBox="0 0 36 36"
+        width="32"
+        height="32"
+        viewBox="0 0 32 32"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="shrink-0"
+        aria-hidden="true"
       >
-        {/* Geometric N symbol representing Nexus - interconnected nodes */}
-        <path d="M8 28V8L18 18L28 8V28L18 18L8 28Z" fill="currentColor" className="text-primary" />
-        <circle cx="8" cy="8" r="2.5" fill="currentColor" className="text-primary" />
-        <circle cx="28" cy="8" r="2.5" fill="currentColor" className="text-primary" />
-        <circle cx="8" cy="28" r="2.5" fill="currentColor" className="text-primary" />
-        <circle cx="28" cy="28" r="2.5" fill="currentColor" className="text-primary" />
-        <circle cx="18" cy="18" r="2.5" fill="currentColor" className="text-accent" />
+        <rect width="32" height="32" rx="6" className="fill-primary" />
+        <path
+          d="M8 24V8h2.4l5.6 10.4V8h2.4v16h-2.4L10.4 13.6V24H8z"
+          className="fill-primary-foreground"
+        />
       </svg>
-      <div className="flex flex-col leading-tight">
-        <span className="font-serif text-xl font-semibold tracking-tight">Nexus</span>
-        <span className="text-xs tracking-widest text-muted-foreground">OPERATIONS</span>
-      </div>
+      {!compact && (
+        <div className="flex flex-col leading-none">
+          <span className="text-[15px] font-semibold tracking-tight text-foreground">Nexus</span>
+          <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground">Operations</span>
+        </div>
+      )}
     </div>
   )
 }

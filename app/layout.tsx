@@ -1,38 +1,30 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Playfair_Display, Inter } from "next/font/google"
+import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-})
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
-    default: "Nexus Operations | Professional Sourcing & Project Coordination Services",
+    default: "Nexus Operations | Exclusive Contractor Leads for Home Services",
     template: "%s | Nexus Operations",
   },
   description:
-    "Expert product sourcing, vendor coordination, and project management for busy professionals. Save time with transparent pricing, same-day response, and guaranteed results. Specialized services for equipment sourcing, resale fulfillment, and contractor coordination.",
+    "Get matched with a single licensed, insured contractor for your home project. Upload photos, set your budget, and schedule a consultation. No phone tag, no bidding wars.",
   keywords: [
-    "product sourcing",
-    "vendor coordination",
-    "project management",
-    "professional services",
-    "equipment sourcing",
-    "contractor coordination",
-    "resale fulfillment",
-    "business support",
-    "project coordination",
-    "time-saving services",
+    "home services",
+    "contractor leads",
+    "tree removal",
+    "roofing contractor",
+    "concrete work",
+    "licensed contractors",
+    "home repair",
+    "exclusive leads",
+    "contractor matching",
+    "Topeka contractors",
   ],
   authors: [{ name: "Nexus Operations" }],
   creator: "Nexus Operations",
@@ -41,15 +33,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
-    title: "Nexus Operations | Professional Sourcing & Project Coordination Services",
+    title: "Nexus Operations | Exclusive Contractor Leads for Home Services",
     description:
-      "Expert product sourcing, vendor coordination, and project management for busy professionals. Transparent pricing, same-day response, and guaranteed results.",
+      "Upload photos, set your budget, get matched with one verified contractor. No phone tag. No shared leads.",
     siteName: "Nexus Operations",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus Operations | Professional Sourcing & Project Coordination Services",
-    description: "Expert sourcing and coordination services for busy professionals who value their time.",
+    title: "Nexus Operations | Exclusive Contractor Leads for Home Services",
+    description: "One request. One verified contractor. No runaround.",
   },
   robots: {
     index: true,
@@ -62,9 +54,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "verification_token",
-  },
     generator: 'v0.app'
 }
 
@@ -76,26 +65,64 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="canonical" href="https://nexusoperations.org" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              name: "Nexus Operations",
-              description: "Expert product sourcing, vendor coordination, and project management services",
-              url: "https://nexusoperations.org",
-              telephone: "+1-913-951-1711",
-              email: "admin@nexusoperations.org",
-              priceRange: "$$",
-              areaServed: "US",
-              serviceType: ["Product Sourcing", "Vendor Coordination", "Project Management", "Equipment Sourcing"],
-            }),
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "@id": "https://nexusoperations.org/#organization",
+                name: "Nexus Operations",
+                description:
+                  "Two-sided marketplace connecting homeowners with licensed, insured contractors through exclusive lead distribution.",
+                url: "https://nexusoperations.org",
+                telephone: "+1-913-951-1711",
+                email: "admin@nexusoperations.org",
+                address: {
+                  "@type": "PostalAddress",
+                  addressLocality: "Topeka",
+                  addressRegion: "KS",
+                  addressCountry: "US",
+                },
+                areaServed: [
+                  { "@type": "City", name: "Topeka" },
+                  { "@type": "State", name: "Kansas" },
+                ],
+                serviceType: [
+                  "Tree Removal",
+                  "Roofing",
+                  "Concrete Work",
+                  "HVAC",
+                  "Fencing",
+                  "Electrical",
+                  "Plumbing",
+                  "Excavation",
+                ],
+                priceRange: "Free for homeowners",
+                openingHoursSpecification: {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  opens: "08:00",
+                  closes: "17:00",
+                },
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Nexus Operations",
+                url: "https://nexusoperations.org",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: "https://nexusoperations.org/services?q={search_term_string}",
+                  "query-input": "required name=search_term_string",
+                },
+              },
+            ]),
           }}
         />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>
