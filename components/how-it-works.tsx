@@ -1,76 +1,63 @@
-import { Card } from "@/components/ui/card"
-import { ClipboardList, Search, FileCheck, PackageCheck } from "lucide-react"
+import { Camera, MousePointerClick, CalendarCheck, Star } from "lucide-react"
 
 const steps = [
   {
-    icon: ClipboardList,
+    icon: Camera,
     number: "01",
-    title: "Tell Us What You Need",
+    title: "Document your project",
     description:
-      "Submit your request through our intake form or email. Be as specific or general as you like—we'll ask clarifying questions to ensure we understand exactly what you're looking for.",
+      "Upload 2-10 photos, enter project specs, set your budget cap, and pick 3-4 consultation windows. The more detail you provide, the better the match.",
   },
   {
-    icon: Search,
+    icon: MousePointerClick,
     number: "02",
-    title: "We Research & Plan",
+    title: "Contractor claims your job",
     description:
-      "Our team researches options, compares vendors, gets quotes, and builds a detailed plan. You receive a clear proposal with costs, timeline, and our recommended approach before any work begins.",
+      "Licensed, insured contractors in your area see your request instantly. The first one to claim it gets exclusive access — no bidding wars, no shared leads.",
   },
   {
-    icon: FileCheck,
+    icon: CalendarCheck,
     number: "03",
-    title: "You Approve, We Execute",
+    title: "Consultation is scheduled",
     description:
-      "Once you approve the plan, we handle everything: purchases, scheduling, coordination, quality checks, and progress updates. You stay informed without having to manage the details.",
+      "Both parties get a confirmed calendar invite for the consultation time you selected. The contractor already knows your scope, budget, and has seen your photos.",
   },
   {
-    icon: PackageCheck,
+    icon: Star,
     number: "04",
-    title: "Delivered & Documented",
+    title: "Get the work done",
     description:
-      "We deliver completed work with full documentation: receipts, warranty info, vendor contacts, and outcome summary. Everything organized and ready for your records.",
+      "After the consultation, you receive a quote. Accept it and the project moves forward. We follow up to ensure quality and track contractor performance.",
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-28 md:py-36 bg-background">
+    <section id="how-it-works" className="py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-24">
-          <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full text-sm font-bold tracking-wider text-primary mb-6 uppercase border border-primary/20">
-            <ClipboardList className="h-4 w-4" />
-            Our Process
-          </div>
-          <h2 className="font-serif text-5xl md:text-6xl font-bold mb-8">
-            Simple, <span className="text-primary">predictable</span> process
+        <div className="max-w-2xl mb-16">
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+            From photos to consultation in under 24 hours
           </h2>
-          <p className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed">
-            Four straightforward steps from initial request to documented delivery. No surprises, no hassle.
+          <p className="text-muted-foreground leading-relaxed">
+            No phone tag, no waiting for callbacks, no getting bombarded by five different contractors.
+            Submit once, get matched once.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => (
-            <Card
-              key={step.number}
-              className="p-8 hover:shadow-xl transition-all duration-300 bg-card border-border/50 relative"
-            >
-              <div className="flex flex-col h-full">
-                <div className="mb-6">
-                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 shadow-lg inline-flex">
-                    <step.icon className="h-7 w-7 text-primary" />
-                  </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step) => (
+            <div key={step.number} className="group p-6 rounded-xl bg-card border border-border/40 hover:border-primary/30 transition-colors">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
+                  <step.icon className="h-5 w-5 text-primary" />
                 </div>
-                <span className="text-5xl font-serif font-light text-muted-foreground/10 absolute top-6 right-6">
-                  {step.number}
-                </span>
-                <h3 className="text-xl font-serif font-bold mb-4 text-balance">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm">{step.description}</p>
+                <span className="text-xs font-mono font-medium text-muted-foreground">{step.number}</span>
               </div>
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary/50 to-transparent" />
-              )}
-            </Card>
+              <h3 className="text-base font-semibold mb-2">{step.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+            </div>
           ))}
         </div>
       </div>
