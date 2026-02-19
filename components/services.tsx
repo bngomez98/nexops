@@ -1,56 +1,108 @@
-import { TreePine, HardHat, Home, Flame, Fence, Zap } from "lucide-react"
+"use client"
+
+import { TreePine, HardHat, Home, Flame, Fence, Zap, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { useState, useEffect, useRef } from "react"
 
 const categories = [
   {
     icon: TreePine,
     name: "Tree Removal",
     description: "Removal, trimming, stump grinding. Storm damage and hazardous tree assessment.",
-    budget: "$500 - $8,000",
+    budget: "$500 – $8,000",
     available: true,
+    tag: "Available",
   },
   {
     icon: HardHat,
     name: "Concrete Work",
     description: "Driveways, patios, sidewalks, foundation repair, decorative and stamped concrete.",
-    budget: "$1,200 - $15,000",
+    budget: "$1,200 – $15,000",
     available: true,
+    tag: "Available",
   },
   {
     icon: Home,
     name: "Roofing",
     description: "Shingle replacement, metal roofing, leak repair, storm damage restoration.",
-    budget: "$300 - $25,000",
+    budget: "$300 – $25,000",
     available: true,
+    tag: "Available",
   },
   {
     icon: Flame,
     name: "HVAC",
     description: "Installation, repair, and maintenance for heating and cooling systems.",
-    budget: "$3,000 - $20,000",
+    budget: "$3,000 – $20,000",
     available: false,
+    tag: "Coming Soon",
   },
   {
     icon: Fence,
     name: "Fencing",
     description: "Wood, vinyl, chain link, and iron fencing installation and repair.",
-    budget: "$1,500 - $8,000",
+    budget: "$1,500 – $8,000",
     available: false,
+    tag: "Coming Soon",
   },
   {
     icon: Zap,
     name: "Electrical",
     description: "Panel upgrades, wiring, outlet installation, lighting, and code compliance.",
-    budget: "$500 - $10,000",
+    budget: "$500 – $10,000",
     available: false,
+    tag: "Coming Soon",
   },
 ]
 
+type Filter = "all" | "available" | "soon"
+
+const filters: { label: string; value: Filter }[] = [
+  { label: "All Services", value: "all" },
+  { label: "Available Now", value: "available" },
+  { label: "Coming Soon", value: "soon" },
+]
+
 export function Services() {
+  const [filter, setFilter] = useState<Filter>("all")
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.querySelectorAll(".reveal").forEach((node, i) => {
+            setTimeout(() => node.classList.add("in-view"), i * 100)
+          })
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const filtered = categories.filter((c) => {
+    if (filter === "available") return c.available
+    if (filter === "soon") return !c.available
+    return true
+  })
+
   return (
-    <section id="services" className="py-24 lg:py-32 bg-card/30">
+    <section ref={sectionRef} id="services" className="py-24 lg:py-32 bg-card/30 relative overflow-hidden">
+      {/* Background decoration */}
+      <div
+        className="absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full pointer-events-none opacity-[0.03]"
+        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
+      />
+
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-16">
+        {/* Section header */}
+        <div className="max-w-2xl mb-10 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
             Launching with 3 categories, expanding fast
@@ -61,44 +113,99 @@ export function Services() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.map((cat) => (
-            <div
-              key={cat.name}
-              className={`group relative p-6 rounded-xl border transition-colors ${
-                cat.available
-                  ? "bg-card border-border/40 hover:border-primary/30"
-                  : "bg-secondary/30 border-border/20"
+        {/* Filter tabs */}
+        <div className="flex items-center gap-2 mb-8 reveal" style={{ transitionDelay: "100ms" }}>
+          {filters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setFilter(f.value)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                filter === f.value
+                  ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20"
+                  : "bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
             >
-              {!cat.available && (
+              {f.label}
+              {f.value === "available" && (
+                <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${filter === f.value ? "bg-primary-foreground/20" : "bg-primary/10 text-primary"}`}>
+                  3
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Cards grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((cat, i) => (
+            <div
+              key={cat.name}
+              className={`reveal group relative flex flex-col p-6 rounded-2xl border transition-all duration-300 cursor-default ${
+                cat.available
+                  ? "bg-card border-border/40 hover-glow"
+                  : "bg-secondary/20 border-border/20"
+              } ${hoveredCard === cat.name ? "translate-y-[-2px]" : ""}`}
+              style={{ transitionDelay: `${i * 80}ms` }}
+              onMouseEnter={() => setHoveredCard(cat.name)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              {/* Available badge */}
+              {cat.available ? (
+                <span className="absolute top-4 right-4 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-primary">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
+                  </span>
+                  Live
+                </span>
+              ) : (
                 <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-wider text-muted-foreground bg-secondary px-2 py-0.5 rounded">
                   Coming Soon
                 </span>
               )}
-              <div className={`flex items-center justify-center w-10 h-10 rounded-lg mb-4 ${
+
+              {/* Icon */}
+              <div className={`flex items-center justify-center w-12 h-12 rounded-xl mb-4 transition-transform duration-300 ${
                 cat.available ? "bg-primary/10" : "bg-secondary"
-              }`}>
+              } ${hoveredCard === cat.name && cat.available ? "scale-110" : ""}`}>
                 <cat.icon className={`h-5 w-5 ${cat.available ? "text-primary" : "text-muted-foreground"}`} />
               </div>
+
               <h3 className="text-base font-semibold mb-1.5">{cat.name}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-3">{cat.description}</p>
-              <p className="text-xs text-muted-foreground">
-                Typical range: <span className="text-foreground font-medium">{cat.budget}</span>
-              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-1">{cat.description}</p>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                <div>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Typical range</p>
+                  <p className="text-sm font-semibold text-foreground">{cat.budget}</p>
+                </div>
+                {cat.available && (
+                  <Link
+                    href="/login?tab=signup"
+                    className={`inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline transition-all duration-200 ${hoveredCard === cat.name ? "translate-x-1" : ""}`}
+                  >
+                    Request <ArrowRight className="h-3 w-3" />
+                  </Link>
+                )}
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-start">
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center reveal" style={{ transitionDelay: "500ms" }}>
           <Link
-            href="#submit"
-            className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+            href="/login?tab=signup"
+            className="btn-shimmer inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
             Submit a Request
           </Link>
           <p className="text-sm text-muted-foreground">
-            Don't see your category? <Link href="/contact" className="text-primary hover:underline">Let us know</Link> and we'll prioritize it.
+            Don&apos;t see your category?{" "}
+            <Link href="/contact" className="text-primary hover:underline">
+              Let us know
+            </Link>{" "}
+            and we&apos;ll prioritize it.
           </p>
         </div>
       </div>
