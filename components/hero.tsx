@@ -78,11 +78,7 @@ export function Hero() {
               className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6 animate-fade-in-up"
               style={{ animationDelay: "0.15s", opacity: 0 }}
             >
-              One request.
-              <br />
-              One verified{" "}
-              <span className="gradient-text">contractor.</span>
-              <br />
+              Your{" "}
               <span
                 className="inline-block transition-all duration-300"
                 style={{
@@ -93,14 +89,21 @@ export function Hero() {
                 {cyclingWords[wordIndex]}
               </span>
               <span className="animate-cursor-blink text-primary ml-1">|</span>
+              {" "}job.
+              <br />
+              One verified{" "}
+              <span className="gradient-text">contractor.</span>
+              <br />
+              Zero spam calls.
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Document your project with photos, set your budget cap, and choose a consultation window.
-              We match you with one licensed, insured contractor — exclusively. No bidding wars, no spam calls. Always free for homeowners.
+              Most platforms sell your contact info to 5–7 contractors the moment you submit — they all call within the hour.
+              We work differently. Upload photos, set a budget cap, and pick a consultation window.
+              One licensed, insured contractor claims your job exclusively. Always free for homeowners.
             </p>
 
             <div
@@ -129,9 +132,9 @@ export function Hero() {
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Shield, text: "Verified license & insurance" },
+                { icon: Shield, text: "1 contractor per job — not 7" },
                 { icon: Clock, text: "Consultation within 24 hrs" },
-                { icon: Star, text: "Always free for homeowners" },
+                { icon: Star, text: "Free for homeowners, always" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary" />

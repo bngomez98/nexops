@@ -87,8 +87,8 @@ export function HowItWorks() {
             From submission to consultation in under 24 hours
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            No phone tag. No waiting on callbacks. No inbox flooded by five contractors who all got
-            your number. Submit your project once and get matched with one.
+            No phone tag. No inbox flooded by 5–7 contractors who all got your number at the same time.
+            Submit your project once, with photos and a budget — and we match you with one.
           </p>
         </div>
 
