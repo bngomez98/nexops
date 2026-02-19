@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       businessName?: string
       licenseNumber?: string
       serviceCategories?: string[]
-      subscription?: "basic" | "premium" | "elite"
+      subscription?: "standard" | "premium" | "elite"
       address?: string
     }
 

@@ -61,11 +61,12 @@ export function SubmitCTA() {
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Ready to get your project started?
+                  Your project. One contractor. No hassle.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Submit your request in under 5 minutes. Upload photos, set your budget, pick a consultation
-                  window, and we match you with a verified contractor. No cost to you, ever.
+                  Submit in under five minutes. Upload your photos, define a budget, select a consultation
+                  window, and we handle the rest. You will hear from one verified contractor — not fifteen.
+                  No cost to you, ever.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">

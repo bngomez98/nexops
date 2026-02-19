@@ -99,8 +99,8 @@ export function Hero() {
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Upload photos of your project, set a budget, and pick a consultation time.
-              We match you with a single licensed, insured contractor — first-come, first-served. Free for homeowners.
+              Document your project with photos, set your budget cap, and choose a consultation window.
+              We match you with one licensed, insured contractor — exclusively. No bidding wars, no spam calls. Always free for homeowners.
             </p>
 
             <div
@@ -129,9 +129,9 @@ export function Hero() {
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Shield, text: "Licensed & insured only" },
-                { icon: Clock, text: "24hr consultation" },
-                { icon: Star, text: "Free for homeowners" },
+                { icon: Shield, text: "Verified license & insurance" },
+                { icon: Clock, text: "Consultation within 24 hrs" },
+                { icon: Star, text: "Always free for homeowners" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary" />

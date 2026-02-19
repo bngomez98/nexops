@@ -8,7 +8,7 @@ const categories = [
   {
     icon: TreePine,
     name: "Tree Removal",
-    description: "Removal, trimming, stump grinding. Storm damage and hazardous tree assessment.",
+    description: "Full removal, selective trimming, stump grinding, and emergency storm-damage assessment. Requires ISA-certified arborist documentation.",
     budget: "$500 – $8,000",
     available: true,
     tag: "Available",
@@ -16,7 +16,7 @@ const categories = [
   {
     icon: HardHat,
     name: "Concrete Work",
-    description: "Driveways, patios, sidewalks, foundation repair, decorative and stamped concrete.",
+    description: "Driveways, patios, sidewalks, retaining walls, foundation repair, and decorative or stamped concrete finishes.",
     budget: "$1,200 – $15,000",
     available: true,
     tag: "Available",
@@ -24,7 +24,7 @@ const categories = [
   {
     icon: Home,
     name: "Roofing",
-    description: "Shingle replacement, metal roofing, leak repair, storm damage restoration.",
+    description: "Asphalt shingle replacement, metal roofing, flat roof repair, active leak mitigation, and insurance storm-damage restoration.",
     budget: "$300 – $25,000",
     available: true,
     tag: "Available",
@@ -32,7 +32,7 @@ const categories = [
   {
     icon: Flame,
     name: "HVAC",
-    description: "Installation, repair, and maintenance for heating and cooling systems.",
+    description: "Forced-air system installation, heat pump replacement, ductwork repair, and seasonal maintenance contracts.",
     budget: "$3,000 – $20,000",
     available: false,
     tag: "Coming Soon",
@@ -40,7 +40,7 @@ const categories = [
   {
     icon: Fence,
     name: "Fencing",
-    description: "Wood, vinyl, chain link, and iron fencing installation and repair.",
+    description: "Wood privacy, vinyl, chain-link, wrought iron, and farm-style fencing — installation and repair for residential and commercial properties.",
     budget: "$1,500 – $8,000",
     available: false,
     tag: "Coming Soon",
@@ -48,7 +48,7 @@ const categories = [
   {
     icon: Zap,
     name: "Electrical",
-    description: "Panel upgrades, wiring, outlet installation, lighting, and code compliance.",
+    description: "Panel upgrades, circuit additions, outlet and switch installation, whole-home rewiring, and NEC code compliance inspections.",
     budget: "$500 – $10,000",
     available: false,
     tag: "Coming Soon",
@@ -105,11 +105,11 @@ export function Services() {
         <div className="max-w-2xl mb-10 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Launching with 3 categories, expanding fast
+            Three categories live now, more on the way
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Each request requires photos, specifications, and a budget cap so contractors know exactly
-            what they are bidding on before they claim the lead.
+            Every request requires photos, project specifications, and a defined budget — so contractors
+            arrive at consultations fully informed, not guessing.
           </p>
         </div>
 
@@ -203,9 +203,9 @@ export function Services() {
           <p className="text-sm text-muted-foreground">
             Don&apos;t see your category?{" "}
             <Link href="/contact" className="text-primary hover:underline">
-              Let us know
+              Tell us about it
             </Link>{" "}
-            and we&apos;ll prioritize it.
+            — we prioritize expansion based on demand.
           </p>
         </div>
       </div>

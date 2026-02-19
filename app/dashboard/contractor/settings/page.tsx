@@ -74,11 +74,11 @@ export default function ContractorSettingsPage() {
   if (!user) return null
 
   const planDetails: Record<string, { leads: string; notice: string; price: string }> = {
-    basic: { leads: "Unlimited", notice: "Real-time", price: "$149/mo" },
-    premium: { leads: "Unlimited", notice: "60-second advance", price: "$299/mo" },
-    elite: { leads: "Unlimited", notice: "5-minute exclusive", price: "$499/mo" },
+    standard: { leads: "Unlimited", notice: "Real-time (FCFS pool)", price: "$299/mo" },
+    premium: { leads: "Unlimited", notice: "90-second advance window", price: "$499/mo" },
+    elite: { leads: "Unlimited", notice: "10-min exclusive on $5K+ projects", price: "$749/mo" },
   }
-  const plan = planDetails[user.subscription ?? "basic"]
+  const plan = planDetails[user.subscription ?? "standard"]
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -193,7 +193,7 @@ export default function ContractorSettingsPage() {
           <CardContent className="flex flex-col gap-3">
             <div className="flex items-center justify-between py-2 border-b border-border/40">
               <span className="text-sm text-muted-foreground">Current plan</span>
-              <span className="text-sm font-semibold capitalize text-primary">{user.subscription ?? "basic"}</span>
+              <span className="text-sm font-semibold capitalize text-primary">{user.subscription ?? "standard"}</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-border/40">
               <span className="text-sm text-muted-foreground">Monthly price</span>
@@ -212,7 +212,7 @@ export default function ContractorSettingsPage() {
                 href="/pricing"
                 className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
               >
-                View upgrade options <ArrowUpRight className="h-3.5 w-3.5" />
+                Compare membership plans <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
             </div>
           </CardContent>

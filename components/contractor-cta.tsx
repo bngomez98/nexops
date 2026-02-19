@@ -7,24 +7,24 @@ import { useEffect, useRef, useState } from "react"
 const benefits = [
   {
     icon: ShieldCheck,
-    title: "Exclusive leads",
-    description: "Every lead you claim is yours alone. No competing with 5 other contractors for the same job.",
+    title: "Leads no one else can touch",
+    description: "The moment you claim a request, it vanishes from every other contractor's feed. You are the only one contacting this homeowner — no price wars, no chasing.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: Clock,
-    title: "Pre-qualified requests",
-    description: "Photos, specs, budget cap, and consultation times are provided before you claim. No wasted estimate visits.",
+    title: "Fully documented before you commit",
+    description: "Every lead includes 2–10 project photos, a written scope, a defined budget cap, and a pre-selected consultation window. Know what you're walking into before you claim it.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "Predictable cost",
-    description: "Monthly subscription from $200–$400. No per-lead fees, no surprise charges, cancel anytime.",
+    title: "Flat monthly membership",
+    description: "Starting at $299/month. Claim as many leads as you can handle — no per-lead charges, no surprise fees, no annual commitment. Cancel anytime.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -32,8 +32,8 @@ const benefits = [
 ]
 
 const miniStats = [
-  { value: "47%", label: "Avg close rate" },
-  { value: "< 5min", label: "Lead response time" },
+  { value: "1", label: "Contractor per lead" },
+  { value: "$299", label: "Starting membership" },
   { value: "$0", label: "Per-lead fees" },
 ]
 
@@ -72,12 +72,12 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop wasting time on shared leads
+              Build your pipeline on leads that are actually yours
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              If you are a licensed, insured contractor in Topeka and surrounding areas,
-              Nexus Operations sends you exclusive leads with full project documentation.
-              First-come, first-served. No bidding wars.
+              Licensed, insured contractors in Topeka and surrounding areas use Nexus Operations
+              to replace unpredictable shared-lead platforms with a dependable, exclusive pipeline.
+              Every job you claim belongs to you alone.
             </p>
 
             {/* Mini stats row */}
@@ -103,7 +103,7 @@ export function ContractorCTA() {
                 className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
                 <TrendingUp className="h-4 w-4" />
-                View Pricing
+                View Membership Plans
               </Link>
             </div>
           </div>

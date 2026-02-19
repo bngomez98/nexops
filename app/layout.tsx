@@ -6,22 +6,22 @@ import "./globals.css"
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
-    default: "Nexus Operations | Exclusive Contractor Leads for Home Services",
+    default: "Nexus Operations | One Request. One Verified Contractor.",
     template: "%s | Nexus Operations",
   },
   description:
-    "Get matched with a single licensed, insured contractor for your home project. Upload photos, set your budget, and schedule a consultation. No phone tag, no bidding wars.",
+    "Nexus Operations connects homeowners with a single licensed, insured contractor — not a list of five who all call at once. Upload photos, set a budget, pick a consultation window. Free for homeowners.",
   keywords: [
-    "home services",
-    "contractor leads",
-    "tree removal",
-    "roofing contractor",
-    "concrete work",
-    "licensed contractors",
-    "home repair",
-    "exclusive leads",
-    "contractor matching",
-    "Topeka contractors",
+    "home services Topeka Kansas",
+    "exclusive contractor leads",
+    "tree removal Topeka",
+    "roofing contractor Kansas",
+    "concrete work Topeka",
+    "licensed insured contractors",
+    "home repair matching",
+    "contractor marketplace",
+    "HVAC contractor Topeka",
+    "fencing contractor Kansas",
   ],
   authors: [{ name: "Nexus Operations" }],
   creator: "Nexus Operations",
@@ -30,15 +30,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
-    title: "Nexus Operations | Exclusive Contractor Leads for Home Services",
+    title: "Nexus Operations | One Request. One Verified Contractor.",
     description:
-      "Upload photos, set your budget, get matched with one verified contractor. No phone tag. No shared leads.",
+      "Document your project, set your budget, and get matched with one verified contractor. No bidding wars. No spam calls. Free for homeowners.",
     siteName: "Nexus Operations",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus Operations | Exclusive Contractor Leads for Home Services",
-    description: "One request. One verified contractor. No runaround.",
+    title: "Nexus Operations | One Request. One Verified Contractor.",
+    description: "One request. One licensed contractor. Zero runaround. Free for homeowners in Topeka, KS.",
   },
   robots: {
     index: true,
@@ -51,7 +51,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-    generator: 'v0.app'
 }
 
 export default function RootLayout({
