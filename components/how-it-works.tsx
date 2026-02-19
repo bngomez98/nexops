@@ -87,8 +87,7 @@ export function HowItWorks() {
             From submission to consultation in under 24 hours
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            No phone tag. No inbox flooded by contractors who all received your number at the same time.
-            Submit your project once — with documentation and a defined budget — and we match you with a single verified professional.
+            Submit your project once — with full documentation and a defined budget — and we match you with a single verified professional who claims it exclusively. No back-and-forth scheduling. No competing bids.
           </p>
         </div>
 

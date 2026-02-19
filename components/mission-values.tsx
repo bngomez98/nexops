@@ -7,7 +7,7 @@ const values = [
   {
     icon: Users,
     title: "The homeowner deserves control",
-    body: "You own the project. You should set the scope, the budget ceiling, and the consultation window — before a single contractor is contacted. Not after you have already given your number to six strangers who all received it at the same time.",
+    body: "You own the project. Before a single contractor is ever contacted, you define the scope, set a hard budget ceiling, and choose your consultation window. The terms are yours — locked in upfront, not negotiated under pressure after the fact.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -23,7 +23,7 @@ const values = [
   {
     icon: FileText,
     title: "Both sides deserve preparation",
-    body: "Bad projects start with bad information. We require full documentation — photos, written scope, a defined budget cap — before any match is made. The result is a consultation that is productive from the first minute, not a fishing expedition for someone who already called seven people.",
+    body: "Bad projects start with bad information. We require full documentation — photos, written scope, a defined budget cap — before any match is made. The result is a first consultation that is immediately productive: the contractor arrives knowing exactly what the job involves.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -76,18 +76,18 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            Home improvement became adversarial.
-            <span className="gradient-text"> We built an alternative.</span>
+            Hiring a contractor should feel like a decision,
+            <span className="gradient-text"> not a gamble.</span>
           </h2>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
-              Homeowners brace for spam calls the moment they submit a request. Contractors undercut their margin
-              to survive a bidding war they never agreed to enter. The platforms connecting them profit by
-              distributing contact information as widely as possible — five, ten, fifteen contractors
-              per lead — and calling that a service.
+              The current model treats your project as a commodity. Platforms distribute it to as many
+              contractors as possible, then step aside while you sort out the chaos. Contractors race
+              each other to respond, cutting margins to win work they should have earned on merit.
+              Nobody wins — except the platform.
             </p>
             <p className="text-foreground/80 font-medium">
-              Nexus Operations was built on a different premise: one request, one verified contractor,
+              Nexus Operations runs on a different principle: one request, one verified contractor,
               no exceptions. Not as a feature. As a founding belief.
             </p>
           </div>
@@ -128,9 +128,9 @@ export function MissionValues() {
         >
           <blockquote className="text-center">
             <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;This is what we mean by operations. Not just a marketplace.
-              A system that runs the logistics so contractors can focus on the craft —
-              and homeowners can focus on their lives.&rdquo;
+              &ldquo;This is what we mean by operations. Not a lead generator. Not a bidding platform.
+              A structured system that handles the logistics — so contractors can focus on the craft,
+              and homeowners can trust the result.&rdquo;
             </p>
             <footer className="mt-4 text-sm text-muted-foreground">
               Nexus Operations — Topeka, KS

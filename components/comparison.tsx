@@ -118,10 +118,9 @@ export function Comparison() {
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
             <p className="text-sm text-muted-foreground">
-              One request. One verified contractor. Zero unsolicited calls. No platform has the right to sell your
-              contact information to seven people and call that a service. If no qualified contractor is currently
-              available in your area, you are told immediately — no indefinite wait, no ambiguity, no inbox full of
-              strangers competing for your attention.
+              One request. One verified contractor. No exceptions. If no qualified professional is available in your
+              area right now, we tell you immediately — no indefinite wait, no ambiguity, no vague estimates
+              from someone who hasn&apos;t seen the job.
             </p>
           </div>
         </div>
