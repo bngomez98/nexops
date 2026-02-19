@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getSession, getUserById, getRequestsForHomeowner, addRequest, updateRequestStatus } from "@/lib/store"
+import { isFullSentences } from "@/lib/utils"
 
 function getAuthUser(req: NextRequest) {
   const sessionToken = req.cookies.get("nexops_session")?.value
@@ -44,6 +45,13 @@ export async function POST(req: NextRequest) {
 
     if (!service || !description || !budget || !address) {
       return NextResponse.json({ error: "Required fields missing" }, { status: 400 })
+    }
+
+    if (!isFullSentences(description)) {
+      return NextResponse.json(
+        { error: "Project description must be written in full sentences. Start each sentence with a capital letter and end it with a period, exclamation mark, or question mark." },
+        { status: 422 }
+      )
     }
 
     const request = addRequest(user.id, {
