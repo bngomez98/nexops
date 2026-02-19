@@ -12,7 +12,7 @@ interface Stat {
 
 const stats: Stat[] = [
   { prefix: "$", value: 600, suffix: "B", label: "U.S. home improvement market, annually" },
-  { value: 1, suffix: "", label: "Contractor per request — not 3 to 7" },
+  { value: 1, suffix: "", label: "Contractor per job — not 5, not 7, just one" },
   { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners — free, every time" },
   { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
 ]

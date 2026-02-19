@@ -49,9 +49,9 @@ export function Comparison() {
             A fundamentally different model
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Legacy platforms profit by selling your contact information to as many contractors as possible.
-            That means more calls for you, more competition for contractors, and worse outcomes for both.
-            We built Nexus Operations around a single principle: one request, one match.
+            Legacy platforms make money by selling your contact info to as many contractors as possible — often 5 to 15 for a single job.
+            You get flooded with calls. Contractors race to undercut each other. Nobody wins.
+            We built Nexus Operations on one rule: your job goes to one contractor, and one alone.
           </p>
         </div>
 
