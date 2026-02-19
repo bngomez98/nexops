@@ -34,6 +34,7 @@ export interface Lead {
   value: number
   createdAt: string
   consultationWindow?: string
+  notes?: string
 }
 
 export interface Request {
@@ -49,6 +50,7 @@ export interface Request {
   contractorId?: string
   consultationWindow?: string
   createdAt: string
+  updatedAt?: string
 }
 
 function hashPassword(password: string): string {
@@ -204,6 +206,33 @@ function seedData() {
       contractorId,
       consultationWindow: "Thu Dec 19, 2–4 PM",
       createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "req-002",
+      homeownerId,
+      service: "Concrete Work",
+      description: "Cracked sidewalk along front of property — roughly 20 linear feet needs replacement.",
+      budget: "$500 – $1,000",
+      address: "1234 Oak Street, Topeka, KS 66603",
+      photos: 2,
+      status: "completed",
+      contractorName: "Rodriguez Tree & Landscaping LLC",
+      contractorId,
+      consultationWindow: "Weekday morning (8–12 AM)",
+      createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "req-003",
+      homeownerId,
+      service: "Fencing",
+      description: "Need a 6ft privacy fence along back property line, approximately 80 linear feet.",
+      budget: "$2,500 – $5,000",
+      address: "1234 Oak Street, Topeka, KS 66603",
+      photos: 0,
+      status: "pending",
+      createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
     },
   ]
   requestsStore.set(homeownerId, demoRequests)
@@ -273,6 +302,20 @@ export function addLead(contractorId: string, lead: Omit<Lead, "id" | "createdAt
   return newLead
 }
 
+export function updateLeadStatus(
+  contractorId: string,
+  leadId: string,
+  status: Lead["status"],
+  notes?: string,
+): Lead | null {
+  const leads = leadsStore.get(contractorId) ?? []
+  const idx = leads.findIndex((l) => l.id === leadId)
+  if (idx === -1) return null
+  leads[idx] = { ...leads[idx], status, ...(notes !== undefined ? { notes } : {}) }
+  leadsStore.set(contractorId, leads)
+  return leads[idx]
+}
+
 // Requests
 export function getRequestsForHomeowner(homeownerId: string): Request[] {
   return requestsStore.get(homeownerId) ?? []
@@ -288,4 +331,17 @@ export function addRequest(homeownerId: string, data: Omit<Request, "id" | "crea
   const existing = requestsStore.get(homeownerId) ?? []
   requestsStore.set(homeownerId, [request, ...existing])
   return request
+}
+
+export function updateRequestStatus(
+  homeownerId: string,
+  requestId: string,
+  status: Request["status"],
+): Request | null {
+  const requests = requestsStore.get(homeownerId) ?? []
+  const idx = requests.findIndex((r) => r.id === requestId)
+  if (idx === -1) return null
+  requests[idx] = { ...requests[idx], status, updatedAt: new Date().toISOString() }
+  requestsStore.set(homeownerId, requests)
+  return requests[idx]
 }
