@@ -38,7 +38,7 @@ interface Lead {
   address: string
   photos: number
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "basic" | "premium" | "elite"
+  tier: "standard" | "premium" | "elite"
   value: number
   createdAt: string
   consultationWindow?: string

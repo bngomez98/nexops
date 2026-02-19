@@ -11,9 +11,9 @@ import { Eye, EyeOff, ArrowRight, CheckCircle2, Home, Wrench } from "lucide-reac
 
 const SERVICE_CATEGORIES = ["Tree Removal", "Concrete Work", "Roofing", "HVAC", "Fencing", "Electrical", "Plumbing", "Excavation"]
 const SUBSCRIPTION_TIERS = [
-  { value: "basic", label: "Basic", price: "$200–$300/mo" },
-  { value: "premium", label: "Premium", price: "$350–$450/mo" },
-  { value: "elite", label: "Elite", price: "$550–$700/mo" },
+  { value: "standard", label: "Standard", price: "$299/mo" },
+  { value: "premium", label: "Premium", price: "$499/mo" },
+  { value: "elite", label: "Elite", price: "$749/mo" },
 ]
 
 function LoginContent() {
@@ -40,7 +40,7 @@ function LoginContent() {
   const [signupBusiness, setSignupBusiness] = useState("")
   const [signupLicense, setSignupLicense] = useState("")
   const [signupCategories, setSignupCategories] = useState<string[]>([])
-  const [signupSubscription, setSignupSubscription] = useState("basic")
+  const [signupSubscription, setSignupSubscription] = useState("standard")
 
   useEffect(() => {
     // Redirect if already logged in

@@ -16,9 +16,9 @@ export function Header() {
   }, [])
 
   const nav = [
-    { label: "About", href: "/about" },
-    { label: "Services", href: "/services" },
     { label: "How It Works", href: "/#how-it-works" },
+    { label: "Services", href: "/services" },
+    { label: "For Contractors", href: "/contractors" },
     { label: "Contact", href: "/contact" },
   ]
 

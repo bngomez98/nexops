@@ -4,13 +4,13 @@ import { Check, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const rows = [
-  { feature: "Lead exclusivity", us: "1 contractor per request", them: "3–7 contractors per lead" },
-  { feature: "Homeowner cost", us: "Free, always", them: "$0 but your data is sold" },
-  { feature: "Budget transparency", us: "Set upfront by homeowner", them: "Discovered after estimate visit" },
-  { feature: "Photo documentation", us: "Required before match", them: "Optional or not available" },
-  { feature: "Consultation scheduling", us: "Pre-scheduled, confirmed", them: "Phone tag and callbacks" },
-  { feature: "Contractor verification", us: "License, insurance, background", them: "Varies by platform" },
-  { feature: "Phone calls to homeowner", us: "1 contractor contacts you", them: "5–15 calls within hours" },
+  { feature: "Lead exclusivity", us: "One contractor per request, always", them: "3–7 contractors competing for the same lead" },
+  { feature: "Homeowner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data is sold" },
+  { feature: "Budget transparency", us: "Homeowner sets a cap before matching", them: "Contractor guesses after visiting the site" },
+  { feature: "Project documentation", us: "Photos + specs required before match", them: "Optional, often absent" },
+  { feature: "Consultation scheduling", us: "Pre-confirmed by homeowner at submission", them: "Phone tag, voicemails, missed calls" },
+  { feature: "Contractor vetting", us: "License, insurance, and background verified", them: "Self-reported; varies widely by platform" },
+  { feature: "Inbound contact volume", us: "One contractor reaches out", them: "5–15 contractor calls within the first hour" },
 ]
 
 export function Comparison() {
@@ -44,13 +44,14 @@ export function Comparison() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built to fix what&apos;s broken in home services
+            A fundamentally different model
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms sell your info to multiple contractors. You get bombarded with calls.
-            Contractors waste time on shared leads with low conversion. We eliminate both problems.
+            Legacy platforms profit by selling your contact information to as many contractors as possible.
+            That means more calls for you, more competition for contractors, and worse outcomes for both.
+            We built Nexus Operations around a single principle: one request, one match.
           </p>
         </div>
 
@@ -113,9 +114,10 @@ export function Comparison() {
             <Check className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Guarantee</p>
+            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
             <p className="text-sm text-muted-foreground">
-              One request. One contractor. Zero spam calls. If we can&apos;t find a verified match, we notify you immediately — no waiting in limbo.
+              One request. One contractor. Zero spam calls. If no verified contractor in your area
+              is available for your category, we tell you immediately — no waiting in limbo, no false hope.
             </p>
           </div>
         </div>

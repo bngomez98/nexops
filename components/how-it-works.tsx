@@ -7,9 +7,9 @@ const steps = [
   {
     icon: Camera,
     number: "01",
-    title: "Document your project",
+    title: "Submit your project",
     description:
-      "Upload 2–10 photos, enter project specs, set your budget cap, and pick 3–4 consultation windows. The more detail you provide, the better the match.",
+      "Upload 2–10 photos, describe the scope, set a budget cap, and select 3–4 available consultation windows. Complete submissions get faster, better matches.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -17,9 +17,9 @@ const steps = [
   {
     icon: MousePointerClick,
     number: "02",
-    title: "Contractor claims your job",
+    title: "A contractor claims it",
     description:
-      "Licensed, insured contractors in your area see your request instantly. The first one to claim it gets exclusive access — no bidding wars, no shared leads.",
+      "Verified contractors in your category and area are notified immediately. The first to claim your request locks it exclusively — it disappears from every other contractor's feed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -27,9 +27,9 @@ const steps = [
   {
     icon: CalendarCheck,
     number: "03",
-    title: "Consultation is scheduled",
+    title: "Consultation is confirmed",
     description:
-      "Both parties get a confirmed calendar invite for the consultation time you selected. The contractor already knows your scope, budget, and has seen your photos.",
+      "Both you and the contractor receive a calendar confirmation for the window you chose. They arrive already briefed on your scope, budget, and project photos.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -37,9 +37,9 @@ const steps = [
   {
     icon: Star,
     number: "04",
-    title: "Get the work done",
+    title: "Project moves forward",
     description:
-      "After the consultation, you receive a quote. Accept it and the project moves forward. We follow up to ensure quality and track contractor performance.",
+      "You receive a written quote after the consultation. Accept it and work begins. We follow up on every closed project to maintain contractor quality standards.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -84,11 +84,11 @@ export function HowItWorks() {
         <div className="max-w-2xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            From photos to consultation in under 24 hours
+            From submission to consultation in under 24 hours
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            No phone tag, no waiting for callbacks, no getting bombarded by five different contractors.
-            Submit once, get matched once.
+            No phone tag. No waiting on callbacks. No inbox flooded by five contractors who all got
+            your number. Submit your project once and get matched with one.
           </p>
         </div>
 

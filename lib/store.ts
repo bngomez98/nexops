@@ -11,7 +11,7 @@ export interface User {
   businessName?: string
   licenseNumber?: string
   serviceCategories?: string[]
-  subscription?: "basic" | "premium" | "elite"
+  subscription?: "standard" | "premium" | "elite"
   // Homeowner fields
   address?: string
   createdAt: string
@@ -30,7 +30,7 @@ export interface Lead {
   address: string
   photos: number
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "basic" | "premium" | "elite"
+  tier: "standard" | "premium" | "elite"
   value: number
   createdAt: string
   consultationWindow?: string
@@ -136,7 +136,7 @@ function seedData() {
       address: "234 Pine St, Topeka, KS",
       photos: 3,
       status: "new",
-      tier: "basic",
+      tier: "standard",
       value: 950,
       createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Mon Dec 23, 8–10 AM",
@@ -152,7 +152,7 @@ function seedData() {
       address: "567 Oak Blvd, Topeka, KS",
       photos: 2,
       status: "contacted",
-      tier: "basic",
+      tier: "standard",
       value: 450,
       createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Tue Dec 17, 1–3 PM",
