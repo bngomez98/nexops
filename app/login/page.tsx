@@ -6,14 +6,50 @@ import Link from "next/link"
 import { Logo } from "@/components/logo"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { storeUser, getStoredUser } from "@/lib/auth"
-import { Eye, EyeOff, ArrowRight, CheckCircle2, Home, Wrench } from "lucide-react"
+import { storeUser, getStoredUser, type PropertyType } from "@/lib/auth"
+import { Eye, EyeOff, ArrowRight, CheckCircle2, Building2, Wrench, Home, CalendarClock, Zap } from "lucide-react"
 
 const SERVICE_CATEGORIES = ["Tree Removal", "Concrete Work", "Roofing", "HVAC", "Fencing", "Electrical", "Plumbing", "Excavation"]
 const SUBSCRIPTION_TIERS = [
   { value: "standard", label: "Standard", price: "$299/mo" },
   { value: "premium", label: "Premium", price: "$499/mo" },
   { value: "elite", label: "Elite", price: "$749/mo" },
+]
+
+const PROPERTY_TYPES: { value: PropertyType; label: string; Icon: React.ElementType; desc: string }[] = [
+  { value: "homeowner", label: "Homeowner", Icon: Home, desc: "Single property" },
+  { value: "property_manager", label: "Property Manager", Icon: Building2, desc: "Portfolio of units" },
+  { value: "airbnb_host", label: "Airbnb / STR Host", Icon: CalendarClock, desc: "Short-term rentals" },
+]
+
+const DEMO_ACCOUNTS = [
+  {
+    label: "Property manager demo",
+    email: "homeowner@demo.com",
+    password: "demo123",
+    role: "homeowner" as const,
+    propertyType: "property_manager" as PropertyType,
+    propertyCount: 12,
+    description: "Multi-unit portfolio view",
+  },
+  {
+    label: "Airbnb host demo",
+    email: "homeowner@demo.com",
+    password: "demo123",
+    role: "homeowner" as const,
+    propertyType: "airbnb_host" as PropertyType,
+    propertyCount: 3,
+    description: "Turnover & STR workflow",
+  },
+  {
+    label: "Contractor demo",
+    email: "contractor@demo.com",
+    password: "demo123",
+    role: "contractor" as const,
+    propertyType: undefined,
+    propertyCount: undefined,
+    description: "Vendor dashboard & leads",
+  },
 ]
 
 function LoginContent() {
@@ -23,15 +59,15 @@ function LoginContent() {
 
   const [tab, setTab] = useState<"login" | "signup">(defaultTab as "login" | "signup")
   const [role, setRole] = useState<"homeowner" | "contractor">("homeowner")
+  const [propertyType, setPropertyType] = useState<PropertyType>("homeowner")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [demoLoading, setDemoLoading] = useState<string | null>(null)
   const [error, setError] = useState("")
 
-  // Login form state
   const [loginEmail, setLoginEmail] = useState("")
   const [loginPassword, setLoginPassword] = useState("")
 
-  // Signup form state
   const [signupName, setSignupName] = useState("")
   const [signupEmail, setSignupEmail] = useState("")
   const [signupPassword, setSignupPassword] = useState("")
@@ -41,9 +77,9 @@ function LoginContent() {
   const [signupLicense, setSignupLicense] = useState("")
   const [signupCategories, setSignupCategories] = useState<string[]>([])
   const [signupSubscription, setSignupSubscription] = useState("standard")
+  const [signupPropertyCount, setSignupPropertyCount] = useState("")
 
   useEffect(() => {
-    // Redirect if already logged in
     const user = getStoredUser()
     if (user) {
       router.replace(`/dashboard/${user.role}`)
@@ -56,11 +92,38 @@ function LoginContent() {
     )
   }
 
+  async function handleDemoLogin(demo: typeof DEMO_ACCOUNTS[number]) {
+    setError("")
+    setDemoLoading(demo.label)
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: demo.email, password: demo.password }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? "Demo login failed")
+        return
+      }
+      const enriched = {
+        ...data.user,
+        ...(demo.propertyType !== undefined && { propertyType: demo.propertyType }),
+        ...(demo.propertyCount !== undefined && { propertyCount: demo.propertyCount }),
+      }
+      storeUser(enriched)
+      router.push(`/dashboard/${data.user.role}`)
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setDemoLoading(null)
+    }
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setError("")
     setLoading(true)
-
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -68,12 +131,10 @@ function LoginContent() {
         body: JSON.stringify({ email: loginEmail, password: loginPassword }),
       })
       const data = await res.json()
-
       if (!res.ok) {
         setError(data.error ?? "Login failed")
         return
       }
-
       storeUser(data.user)
       router.push(`/dashboard/${data.user.role}`)
     } catch {
@@ -93,7 +154,6 @@ function LoginContent() {
     }
 
     setLoading(true)
-
     try {
       const body: Record<string, unknown> = {
         email: signupEmail,
@@ -104,6 +164,8 @@ function LoginContent() {
       }
       if (role === "homeowner") {
         body.address = signupAddress
+        body.propertyType = propertyType
+        body.propertyCount = signupPropertyCount ? parseInt(signupPropertyCount) : 1
       } else {
         body.businessName = signupBusiness
         body.licenseNumber = signupLicense
@@ -117,12 +179,10 @@ function LoginContent() {
         body: JSON.stringify(body),
       })
       const data = await res.json()
-
       if (!res.ok) {
         setError(data.error ?? "Sign up failed")
         return
       }
-
       storeUser(data.user)
       router.push(`/dashboard/${data.user.role}`)
     } catch {
@@ -141,16 +201,16 @@ function LoginContent() {
         </Link>
 
         <div>
-          <p className="text-primary text-sm font-medium tracking-wide mb-4">The smarter way to grow</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-4">Property &amp; vendor operations</p>
           <h2 className="text-3xl font-semibold leading-snug tracking-tight mb-8">
-            Exclusive leads.<br />Predictable revenue.<br />Zero phone tag.
+            Automate the maintenance.<br />Own the vendor relationships.<br />Run every property.
           </h2>
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-col gap-4 mb-10">
             {[
-              "One lead, one contractor — always exclusive",
-              "Pre-qualified requests with photos and budgets",
-              "Flexible monthly plans, cancel any time",
-              "Real-time notifications and analytics",
+              "Work orders dispatched in minutes, not days",
+              "Verified, insured contractors — always exclusive",
+              "Cost and service history across every property",
+              "Scales from one home to a full portfolio",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
@@ -158,10 +218,39 @@ function LoginContent() {
               </li>
             ))}
           </ul>
+
+          {/* Quick demo access on left panel */}
+          <div className="p-4 rounded-xl border border-border/40 bg-card/30">
+            <div className="flex items-center gap-2 mb-3">
+              <Zap className="h-3.5 w-3.5 text-primary" />
+              <p className="text-xs font-semibold text-primary">Explore without signing up</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              {DEMO_ACCOUNTS.map((demo) => (
+                <button
+                  key={demo.label}
+                  type="button"
+                  onClick={() => handleDemoLogin(demo)}
+                  disabled={demoLoading !== null}
+                  className="flex items-center justify-between px-3 py-2 rounded-lg border border-border/30 bg-secondary/50 hover:bg-secondary hover:border-primary/30 transition-all duration-200 text-left group disabled:opacity-50"
+                >
+                  <div>
+                    <p className="text-xs font-semibold group-hover:text-foreground text-muted-foreground transition-colors">{demo.label}</p>
+                    <p className="text-[10px] text-muted-foreground/60">{demo.description}</p>
+                  </div>
+                  {demoLoading === demo.label ? (
+                    <div className="h-3.5 w-3.5 rounded-full border-2 border-primary border-t-transparent animate-spin flex-shrink-0" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors flex-shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <p className="text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Nexus Operations, LLC &middot; Topeka, KS
+          &copy; {new Date().getFullYear()} Nexus Operations, LLC
         </p>
       </div>
 
@@ -175,6 +264,35 @@ function LoginContent() {
             </Link>
           </div>
 
+          {/* Mobile demo access */}
+          <div className="lg:hidden mb-6 p-4 rounded-xl border border-primary/20 bg-primary/5">
+            <div className="flex items-center gap-2 mb-3">
+              <Zap className="h-3.5 w-3.5 text-primary" />
+              <p className="text-xs font-semibold text-primary">Try a demo account</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              {DEMO_ACCOUNTS.map((demo) => (
+                <button
+                  key={demo.label}
+                  type="button"
+                  onClick={() => handleDemoLogin(demo)}
+                  disabled={demoLoading !== null}
+                  className="flex items-center justify-between px-3 py-2 rounded-lg border border-primary/20 bg-background hover:bg-primary/5 transition-colors text-left group disabled:opacity-50"
+                >
+                  <div>
+                    <p className="text-xs font-semibold">{demo.label}</p>
+                    <p className="text-[10px] text-muted-foreground">{demo.description}</p>
+                  </div>
+                  {demoLoading === demo.label ? (
+                    <div className="h-3.5 w-3.5 rounded-full border-2 border-primary border-t-transparent animate-spin flex-shrink-0" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <Tabs value={tab} onValueChange={(v) => { setTab(v as "login" | "signup"); setError("") }}>
             <TabsList className="w-full mb-8">
               <TabsTrigger value="login" className="flex-1">Sign In</TabsTrigger>
@@ -186,13 +304,6 @@ function LoginContent() {
               <div className="mb-6">
                 <h1 className="text-2xl font-semibold mb-1">Welcome back</h1>
                 <p className="text-sm text-muted-foreground">Sign in to your Nexus Operations account.</p>
-              </div>
-
-              {/* Demo credentials hint */}
-              <div className="mb-6 p-3 rounded-lg border border-primary/20 bg-primary/5">
-                <p className="text-xs font-medium text-primary mb-1">Demo accounts</p>
-                <p className="text-xs text-muted-foreground">homeowner@demo.com / demo123</p>
-                <p className="text-xs text-muted-foreground">contractor@demo.com / demo123</p>
               </div>
 
               <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -261,16 +372,16 @@ function LoginContent() {
             <TabsContent value="signup">
               <div className="mb-6">
                 <h1 className="text-2xl font-semibold mb-1">Create your account</h1>
-                <p className="text-sm text-muted-foreground">Join Nexus Operations today.</p>
+                <p className="text-sm text-muted-foreground">Tell us how you use your properties.</p>
               </div>
 
               {/* Role picker */}
-              <div className="mb-6">
+              <div className="mb-5">
                 <p className="text-sm font-medium mb-3">I am a…</p>
                 <div className="grid grid-cols-2 gap-3">
                   {([
-                    { value: "homeowner", label: "Homeowner", Icon: Home, desc: "Find verified contractors" },
-                    { value: "contractor", label: "Contractor", Icon: Wrench, desc: "Get exclusive leads" },
+                    { value: "homeowner", label: "Property Owner / Manager", Icon: Building2, desc: "Homeowner, PM, or STR host" },
+                    { value: "contractor", label: "Contractor / Vendor", Icon: Wrench, desc: "Service provider" },
                   ] as const).map(({ value, label, Icon, desc }) => (
                     <button
                       key={value}
@@ -291,6 +402,33 @@ function LoginContent() {
                   ))}
                 </div>
               </div>
+
+              {/* Property type selector — only for homeowner role */}
+              {role === "homeowner" && (
+                <div className="mb-5">
+                  <p className="text-sm font-medium mb-3">How I use my properties</p>
+                  <div className="flex flex-col gap-2">
+                    {PROPERTY_TYPES.map(({ value, label, Icon, desc }) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => setPropertyType(value)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
+                          propertyType === value
+                            ? "border-primary bg-primary/10"
+                            : "border-border/40 hover:border-border hover:bg-secondary"
+                        }`}
+                      >
+                        <Icon className={`h-4 w-4 flex-shrink-0 ${propertyType === value ? "text-primary" : "text-muted-foreground"}`} />
+                        <div>
+                          <p className={`text-sm font-medium ${propertyType === value ? "text-foreground" : "text-muted-foreground"}`}>{label}</p>
+                          <p className="text-xs text-muted-foreground">{desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <form onSubmit={handleSignup} className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1.5">
@@ -356,16 +494,31 @@ function LoginContent() {
 
                 {/* Homeowner-specific fields */}
                 {role === "homeowner" && (
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="signup-address" className="text-sm font-medium">Service address</label>
-                    <Input
-                      id="signup-address"
-                      placeholder="123 Main St, Topeka, KS"
-                      value={signupAddress}
-                      onChange={(e) => setSignupAddress(e.target.value)}
-                      autoComplete="street-address"
-                    />
-                  </div>
+                  <>
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="signup-address" className="text-sm font-medium">Primary property address</label>
+                      <Input
+                        id="signup-address"
+                        placeholder="123 Main St, City, State"
+                        value={signupAddress}
+                        onChange={(e) => setSignupAddress(e.target.value)}
+                        autoComplete="street-address"
+                      />
+                    </div>
+                    {(propertyType === "property_manager" || propertyType === "airbnb_host") && (
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="signup-count" className="text-sm font-medium">Number of properties</label>
+                        <Input
+                          id="signup-count"
+                          type="number"
+                          min="1"
+                          placeholder="How many properties do you manage?"
+                          value={signupPropertyCount}
+                          onChange={(e) => setSignupPropertyCount(e.target.value)}
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {/* Contractor-specific fields */}

@@ -1,30 +1,71 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, FileText, DollarSign, CalendarRange, CheckCircle2, Shield, Lock } from "lucide-react"
+import { ArrowRight, Building2, CalendarClock, Home, Layers, RotateCcw, ClipboardList } from "lucide-react"
 import { useEffect, useRef } from "react"
 
-const steps = [
+const audiences = [
   {
-    icon: FileText,
-    title: "Document your project",
-    description: "Photos, written scope, and the specifics — so the contractor arrives knowing exactly what the job entails.",
+    icon: Building2,
+    tag: "Property managers",
+    headline: "Run a portfolio, not a spreadsheet.",
+    description:
+      "Track maintenance across every unit. Dispatch verified vendors in minutes. See cost history by property, by category, by month — not buried in email threads. Your tenants stop calling you because things actually get fixed.",
+    bullets: [
+      "Multi-property work order dispatch",
+      "Per-unit cost and vendor history",
+      "Tenant communication built in",
+      "Recurring task automation",
+    ],
+    cta: "Explore for property managers",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
+    cardBorder: "hover:border-primary/40",
   },
   {
-    icon: DollarSign,
-    title: "Define your budget ceiling",
-    description: "Set a hard cap before anyone is contacted. No surprises on-site. No negotiating blind.",
+    icon: CalendarClock,
+    tag: "Airbnb & STR hosts",
+    headline: "Every turnover on time. Every vendor on call.",
+    description:
+      "Your listing's reviews live or die on the condition of the property. Automate cleaner dispatch on checkout, schedule preventive maintenance between bookings, and keep a trusted bench of local vendors who know your property.",
+    bullets: [
+      "Auto-dispatch cleaners on checkout",
+      "Maintenance between bookings",
+      "Trusted vendor bench per property",
+      "Service history for every stay",
+    ],
+    cta: "Explore for STR hosts",
+    color: "text-amber-400",
+    bg: "bg-amber-400/10",
+    border: "border-amber-400/20",
+    cardBorder: "hover:border-amber-400/40",
   },
   {
-    icon: CalendarRange,
-    title: "Set your consultation window",
-    description: "Choose when works for you. The contractor commits to that window before the match is confirmed.",
+    icon: Home,
+    tag: "Homeowners",
+    headline: "Own your home without it owning you.",
+    description:
+      "Whether it's a leaky roof, a seasonal HVAC service, or a full renovation — coordinate it all from one place. No bidding chaos, no spam calls. One verified professional, your schedule, your budget.",
+    bullets: [
+      "Single request, one committed contractor",
+      "Seasonal maintenance reminders",
+      "Full project cost history",
+      "Budget control before anyone is contacted",
+    ],
+    cta: "Explore for homeowners",
+    color: "text-emerald-400",
+    bg: "bg-emerald-400/10",
+    border: "border-emerald-400/20",
+    cardBorder: "hover:border-emerald-400/40",
   },
-  {
-    icon: CheckCircle2,
-    title: "One professional claims it",
-    description: "A single verified contractor reviews your full project profile and commits — exclusively, permanently.",
-  },
+]
+
+const platformCapabilities = [
+  { icon: ClipboardList, label: "Work order management" },
+  { icon: Layers, label: "Multi-property view" },
+  { icon: RotateCcw, label: "Recurring task automation" },
+  { icon: Building2, label: "Verified vendor network" },
 ]
 
 export function SubmitCTA() {
@@ -42,7 +83,7 @@ export function SubmitCTA() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     )
     observer.observe(el)
     return () => observer.disconnect()
@@ -51,92 +92,91 @@ export function SubmitCTA() {
   return (
     <section ref={sectionRef} id="submit" className="py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="relative rounded-3xl border border-border/40 bg-card overflow-hidden reveal">
-          {/* Animated background */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div
-              className="animate-orb-1 absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.06]"
-              style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
-            />
-            <div
-              className="animate-orb-2 absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full opacity-[0.04]"
-              style={{ background: "radial-gradient(circle, oklch(0.70 0.15 85), transparent 70%)" }}
-            />
+        {/* Header */}
+        <div className="text-center mb-14 reveal">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
+            </span>
+            <span className="text-primary text-xs font-medium">Built for how you actually operate</span>
           </div>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+            Tell us how you use your property.
+            <br />
+            <span className="gradient-text">We&apos;ll show you what that looks like here.</span>
+          </h2>
+          <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Nexus Operations adapts to your context — from single-family homeowners to full property management
+            companies. The platform and vendor network work the same way; how you use it is up to you.
+          </p>
+        </div>
 
-          <div className="relative p-10 lg:p-16">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left */}
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
-                  </span>
-                  <span className="text-primary text-xs font-medium">Always free for homeowners</span>
+        {/* Audience cards */}
+        <div className="grid lg:grid-cols-3 gap-6 mb-14">
+          {audiences.map((a, i) => (
+            <div
+              key={a.tag}
+              className={`reveal flex flex-col rounded-2xl border border-border/40 bg-card p-7 transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl hover:shadow-black/20 ${a.cardBorder}`}
+              style={{ transitionDelay: `${i * 80}ms` }}
+            >
+              {/* Icon + tag */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className={`w-10 h-10 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center flex-shrink-0`}>
+                  <a.icon className={`h-5 w-5 ${a.color}`} />
                 </div>
-
-                <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Your project, your terms.
-                  <br />
-                  <span className="gradient-text">One contractor who earns it.</span>
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-8">
-                  Define your project completely before anyone is contacted. Set the budget ceiling, choose your consultation
-                  window, and document the scope. A single verified professional reviews every detail and commits
-                  to your job — not to winning a bid against six competitors.
-                  There is no cost to homeowners, at any tier, ever.
-                </p>
-
-                <div className="flex flex-col sm:flex-row items-start gap-3">
-                  <Link
-                    href="/login?tab=signup"
-                    className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
-                  >
-                    Start Your Project — Free
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">
-                    <span className="flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-primary" /> You control the terms
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Shield className="h-3.5 w-3.5 text-primary" /> Verified professionals only
-                    </span>
-                  </div>
-                </div>
+                <span className={`text-xs font-semibold uppercase tracking-wide ${a.color}`}>{a.tag}</span>
               </div>
 
-              {/* Right — 4-step outcome flow */}
-              <div className="hidden lg:block">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How your project moves</p>
-                <div className="relative">
-                  {steps.map((step, i) => (
-                    <div key={step.title} className="flex items-start gap-4 mb-4 last:mb-0">
-                      {/* Left column: number + line */}
-                      <div className="flex flex-col items-center pt-1">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[11px] font-bold text-primary shrink-0">
-                          {i + 1}
-                        </div>
-                        {i < steps.length - 1 && (
-                          <div className="w-px h-7 bg-border/40 my-1" />
-                        )}
-                      </div>
-                      {/* Content */}
-                      <div className="flex-1 pb-1">
-                        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-secondary/30 border border-border/30 hover:bg-secondary/50 hover:border-border/50 transition-colors duration-200">
-                          <step.icon className="h-4 w-4 text-primary shrink-0" />
-                          <div>
-                            <p className="text-sm font-semibold leading-tight">{step.title}</p>
-                            <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{step.description}</p>
-                          </div>
-                        </div>
-                      </div>
+              <h3 className="text-lg font-semibold mb-3 leading-snug">{a.headline}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">{a.description}</p>
+
+              {/* Bullets */}
+              <ul className="space-y-2 mb-7">
+                {a.bullets.map((b) => (
+                  <li key={b} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <div className={`w-1.5 h-1.5 rounded-full ${a.bg} border ${a.border} flex-shrink-0`}>
+                      <div className={`w-full h-full rounded-full ${a.color.replace("text-", "bg-")}`} />
                     </div>
-                  ))}
-                </div>
-              </div>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <Link
+                href="/login?tab=signup"
+                className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl border ${a.border} ${a.bg} ${a.color} hover:opacity-80 transition-all duration-200`}
+              >
+                {a.cta}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
+          ))}
+        </div>
+
+        {/* Platform capabilities strip */}
+        <div className="reveal rounded-2xl border border-border/40 bg-card/50 p-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-center sm:text-left">
+              <p className="text-sm font-semibold mb-1">One platform. Any scale.</p>
+              <p className="text-xs text-muted-foreground">Start with one property, expand to an entire portfolio.</p>
+            </div>
+            <div className="flex flex-wrap justify-center sm:justify-end gap-3">
+              {platformCapabilities.map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/30">
+                  <Icon className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs font-medium text-muted-foreground">{label}</span>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/login"
+              className="btn-shimmer inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-primary/20 flex-shrink-0"
+            >
+              Try the dashboard
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </div>

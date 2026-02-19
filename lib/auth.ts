@@ -1,8 +1,12 @@
+export type PropertyType = "homeowner" | "property_manager" | "airbnb_host" | "hoa" | "commercial"
+
 export interface AuthUser {
   id: string
   email: string
   name: string
   role: "homeowner" | "contractor"
+  propertyType?: PropertyType
+  propertyCount?: number
   phone?: string
   businessName?: string
   licenseNumber?: string
