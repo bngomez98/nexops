@@ -73,19 +73,14 @@ export default function ContractorSettingsPage() {
 
   if (!user) return null
 
-  const planDetails: Record<string, { leads: string; notice: string; price: string }> = {
-    standard: { leads: "Unlimited", notice: "Real-time (FCFS pool)", price: "$299/mo" },
-    premium: { leads: "Unlimited", notice: "90-second advance window", price: "$499/mo" },
-    elite: { leads: "Unlimited", notice: "10-min exclusive on $5K+ projects", price: "$749/mo" },
-  }
-  const plan = planDetails[user.subscription ?? "standard"]
+  const creditsBalance = user.credits ?? 0
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
         <p className="text-primary text-sm font-medium mb-1">Contractor Portal</p>
         <h1 className="text-2xl font-semibold">Account Settings</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Manage your business profile and subscription.</p>
+        <p className="text-sm text-muted-foreground mt-0.5">Manage your business profile and lead credits.</p>
       </div>
 
       <div className="flex flex-col gap-5">
@@ -182,37 +177,37 @@ export default function ContractorSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Subscription */}
+        {/* Lead Credits */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Zap className="h-4 w-4" /> Subscription
+              <Zap className="h-4 w-4" /> Lead Credits
             </CardTitle>
-            <CardDescription>Current plan and billing details.</CardDescription>
+            <CardDescription>Your credit balance and how credits are spent.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Current plan</span>
-              <span className="text-sm font-semibold capitalize text-primary">{user.subscription ?? "standard"}</span>
+              <span className="text-sm text-muted-foreground">Available credits</span>
+              <span className="text-sm font-bold text-violet-400">{creditsBalance} credits</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Monthly price</span>
-              <span className="text-sm font-medium">{plan.price}</span>
+              <span className="text-sm text-muted-foreground">Small job (under $1K)</span>
+              <span className="text-sm font-medium">1 credit</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Advance notice</span>
-              <span className="text-sm font-medium">{plan.notice}</span>
+              <span className="text-sm text-muted-foreground">Mid-size job ($1K–$5K)</span>
+              <span className="text-sm font-medium">2 credits</span>
             </div>
             <div className="flex items-center justify-between py-2">
-              <span className="text-sm text-muted-foreground">Lead access</span>
-              <span className="text-sm font-medium">{plan.leads}</span>
+              <span className="text-sm text-muted-foreground">Large job ($5K+)</span>
+              <span className="text-sm font-medium">3 credits</span>
             </div>
             <div className="pt-2">
               <a
                 href="/pricing"
                 className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
               >
-                Compare membership plans <ArrowUpRight className="h-3.5 w-3.5" />
+                Buy more credits <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
             </div>
           </CardContent>

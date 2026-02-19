@@ -7,7 +7,7 @@ export interface AuthUser {
   businessName?: string
   licenseNumber?: string
   serviceCategories?: string[]
-  subscription?: "standard" | "premium" | "elite"
+  credits?: number
   address?: string
   createdAt: string
 }

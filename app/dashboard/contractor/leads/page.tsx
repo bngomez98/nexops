@@ -27,7 +27,8 @@ interface Lead {
   address: string
   photos: number
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "standard" | "premium" | "elite"
+  size: "small" | "medium" | "large"
+  creditCost: number
   value: number
   createdAt: string
   consultationWindow?: string
@@ -58,15 +59,21 @@ const NEXT_LABEL: Record<Lead["status"], string> = {
   lost: "",
 }
 
-function tierBadge(tier: Lead["tier"]) {
-  const colors: Record<Lead["tier"], string> = {
-    basic: "text-muted-foreground border-border/40",
-    premium: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-    elite: "text-violet-400 border-violet-500/30 bg-violet-500/10",
+const SIZE_LABELS: Record<Lead["size"], string> = {
+  small: "Small",
+  medium: "Mid-size",
+  large: "Large",
+}
+
+function sizeBadge(size: Lead["size"]) {
+  const colors: Record<Lead["size"], string> = {
+    small: "text-muted-foreground border-border/40",
+    medium: "text-amber-400 border-amber-500/30 bg-amber-500/10",
+    large: "text-violet-400 border-violet-500/30 bg-violet-500/10",
   }
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-medium capitalize ${colors[tier]}`}>
-      {tier}
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-medium ${colors[size]}`}>
+      {SIZE_LABELS[size]}
     </span>
   )
 }
@@ -187,7 +194,7 @@ export default function ContractorLeadsPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <p className="font-semibold text-sm">{lead.homeownerName}</p>
-                          {tierBadge(lead.tier)}
+                          {sizeBadge(lead.size)}
                           <Badge variant={STATUS_META[lead.status].variant}>{STATUS_META[lead.status].label}</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground mb-1">

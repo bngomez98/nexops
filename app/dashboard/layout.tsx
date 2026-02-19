@@ -34,11 +34,6 @@ const homeownerNav = [
   { label: "Settings", href: "/dashboard/homeowner/settings", icon: Settings },
 ]
 
-const tierColors: Record<string, string> = {
-  standard: "text-muted-foreground border-border/40 bg-secondary/60",
-  premium: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-  elite: "text-violet-400 border-violet-500/30 bg-violet-500/10",
-}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -107,9 +102,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <p className="text-sm font-semibold truncate">{user.name}</p>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
-              {user.subscription && (
-                <span className={`inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-semibold capitalize ${tierColors[user.subscription] ?? tierColors.standard}`}>
-                  {user.subscription}
+              {user.role === "contractor" && user.credits !== undefined && (
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-semibold text-violet-400 border-violet-500/30 bg-violet-500/10">
+                  {user.credits} credits
                 </span>
               )}
             </div>

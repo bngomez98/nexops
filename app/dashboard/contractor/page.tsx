@@ -27,9 +27,6 @@ import {
   Briefcase,
   TrendingDown,
   AlertCircle,
-  Star,
-  Crown,
-  Shield,
   Phone,
   ChevronDown,
 } from "lucide-react"
@@ -43,7 +40,8 @@ interface Lead {
   address: string
   photos: number
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "standard" | "premium" | "elite"
+  size: "small" | "medium" | "large"
+  creditCost: number
   value: number
   createdAt: string
   consultationWindow?: string
@@ -58,30 +56,24 @@ const weeklyData = [
   { week: "Dec W2", leads: 4, revenue: 6900 },
 ]
 
-const tierConfig = {
-  standard: {
-    label: "Standard",
-    icon: Shield,
+const sizeConfig = {
+  small: {
+    label: "Small",
     colors: "text-muted-foreground border-border/50 bg-secondary/60",
     accent: "text-muted-foreground",
-    headerBg: "from-secondary/40 to-background",
-    advance: "Real-time",
+    creditCost: 1,
   },
-  premium: {
-    label: "Premium",
-    icon: Star,
+  medium: {
+    label: "Mid-size",
     colors: "text-amber-400 border-amber-500/30 bg-amber-500/10",
     accent: "text-amber-400",
-    headerBg: "from-amber-500/8 to-background",
-    advance: "60 sec early",
+    creditCost: 2,
   },
-  elite: {
-    label: "Elite",
-    icon: Crown,
+  large: {
+    label: "Large",
     colors: "text-violet-400 border-violet-500/30 bg-violet-500/10",
     accent: "text-violet-400",
-    headerBg: "from-violet-500/8 to-background",
-    advance: "5 min exclusive",
+    creditCost: 3,
   },
 }
 
@@ -107,12 +99,11 @@ function statusBadge(status: Lead["status"]) {
   )
 }
 
-function tierBadge(tier: Lead["tier"]) {
-  const config = tierConfig[tier] ?? tierConfig.standard
-  const TierIcon = config.icon
+function sizeBadge(size: Lead["size"]) {
+  const config = sizeConfig[size] ?? sizeConfig.small
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-semibold ${config.colors}`}>
-      <TierIcon className="h-2.5 w-2.5" />
+      <Zap className="h-2.5 w-2.5" />
       {config.label}
     </span>
   )
@@ -180,10 +171,7 @@ export default function ContractorDashboard() {
   const wonLeads = leads.filter((l) => l.status === "won").length
   const closeRate = leads.length > 0 ? Math.round((wonLeads / leads.length) * 100) : 0
   const newLeads = leads.filter((l) => l.status === "new").length
-
-  const sub = (user.subscription ?? "standard") as keyof typeof tierConfig
-  const tier = tierConfig[sub] ?? tierConfig.standard
-  const TierIcon = tier.icon
+  const creditsBalance = user.credits ?? 0
 
   const stats = [
     {
@@ -217,13 +205,13 @@ export default function ContractorDashboard() {
       trend: { value: "-3%", positive: false },
     },
     {
-      title: "Plan",
-      value: user.subscription ? user.subscription.charAt(0).toUpperCase() + user.subscription.slice(1) : "—",
-      sub: "Active subscription",
-      icon: TierIcon,
-      accent: tier.accent,
-      accentBg: tierConfig[sub]?.colors ?? "",
-      border: "border-border/30",
+      title: "Lead Credits",
+      value: creditsBalance.toString(),
+      sub: "Available balance",
+      icon: Zap,
+      accent: "text-violet-400",
+      accentBg: "bg-violet-400/10",
+      border: "border-violet-400/20",
       trend: null,
     },
   ]
@@ -232,17 +220,14 @@ export default function ContractorDashboard() {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Welcome banner */}
       <div className="relative rounded-2xl overflow-hidden border border-border/40">
-        <div className={`absolute inset-0 bg-gradient-to-br ${tier.headerBg} pointer-events-none`} />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background pointer-events-none" />
         <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-primary/4 blur-3xl pointer-events-none" />
 
         <div className="relative px-6 py-5 flex items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <TierIcon className={`h-3.5 w-3.5 ${tier.accent}`} />
-              <p className={`text-xs font-semibold uppercase tracking-wider ${tier.accent}`}>Contractor Portal</p>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-bold capitalize ${tier.colors}`}>
-                {tier.label}
-              </span>
+              <Briefcase className="h-3.5 w-3.5 text-primary" />
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary">Contractor Portal</p>
             </div>
             <h1 className="text-xl font-bold">
               Welcome back, <span className="gradient-text">{user.name.split(" ")[0]}</span>
@@ -357,28 +342,36 @@ export default function ContractorDashboard() {
           </CardContent>
         </Card>
 
-        {/* Subscription card */}
-        <Card className={`lg:col-span-2 border-2 ${sub === "elite" ? "border-violet-500/30" : sub === "premium" ? "border-amber-500/30" : "border-border/40"}`}>
+        {/* Credits card */}
+        <Card className="lg:col-span-2 border-2 border-violet-500/20">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Your Plan</CardTitle>
-                <CardDescription>Subscription & service categories</CardDescription>
+                <CardTitle>Lead Credits</CardTitle>
+                <CardDescription>Balance &amp; service categories</CardDescription>
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-bold capitalize ${tier.colors}`}>
-                <TierIcon className="h-4 w-4" />
-                {tier.label}
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-violet-500/30 bg-violet-500/10 text-sm font-bold text-violet-400">
+                <Zap className="h-4 w-4" />
+                {creditsBalance} credits
               </div>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            {/* Tier benefits */}
+            {/* Credit breakdown */}
             <div className="space-y-2 p-3 rounded-xl bg-secondary/40 border border-border/30">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground text-xs">Lead advance notice</span>
-                <span className={`text-xs font-bold ${tier.accent}`}>{tier.advance}</span>
+                <span className="text-muted-foreground text-xs">Small job (under $1K)</span>
+                <span className="text-xs font-bold text-muted-foreground">1 credit</span>
               </div>
               <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground text-xs">Mid-size job ($1K–$5K)</span>
+                <span className="text-xs font-bold text-amber-400">2 credits</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground text-xs">Large job ($5K+)</span>
+                <span className="text-xs font-bold text-violet-400">3 credits</span>
+              </div>
+              <div className="flex items-center justify-between text-sm border-t border-border/30 pt-2 mt-1">
                 <span className="text-muted-foreground text-xs">Service categories</span>
                 <span className="text-xs font-semibold">{(user.serviceCategories ?? []).length} active</span>
               </div>
@@ -412,9 +405,9 @@ export default function ContractorDashboard() {
 
             <a
               href="/pricing"
-              className={`inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-3 rounded-xl border transition-colors mt-1 ${tier.colors} hover:opacity-80`}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-3 rounded-xl border border-violet-500/30 bg-violet-500/10 text-violet-400 hover:opacity-80 transition-colors mt-1"
             >
-              {sub === "elite" ? "Manage plan" : "Upgrade plan"}
+              Buy more credits
               <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </CardContent>
@@ -459,7 +452,7 @@ export default function ContractorDashboard() {
                     <th className="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Homeowner</th>
                     <th className="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Service</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Budget</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tier</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Size</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Window</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Age</th>
@@ -490,7 +483,7 @@ export default function ContractorDashboard() {
                           </div>
                         </td>
                         <td className="px-4 py-4 text-sm font-bold text-foreground">{lead.budget}</td>
-                        <td className="px-4 py-4">{tierBadge(lead.tier)}</td>
+                        <td className="px-4 py-4">{sizeBadge(lead.size)}</td>
                         <td className="px-4 py-4">{statusBadge(lead.status)}</td>
                         <td className="px-4 py-4">
                           {lead.consultationWindow ? (

@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Stop paying per lead shared with five competitors. Nexus Operations delivers exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Licensed and insured contractors only. Flat monthly membership starting at $299.",
+    "Stop paying per lead shared with five competitors. Nexus Operations delivers exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Licensed and insured contractors only. Pay-per-lead credits from $10 — no monthly subscription.",
 }
 
 const benefits = [
@@ -36,15 +36,15 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "Predictable, flat monthly membership",
+    title: "Pay per lead. No subscription.",
     description:
-      "Starting at $299/month for unlimited lead claims. No per-lead fees. No surprise charges. No annual contracts. One closed project per month typically covers your membership cost many times over.",
+      "Buy credits in any amount — 5 for $75, 20 for $240, 50 for $500. Credits never expire. No monthly fee, no annual commitment. A single closed project typically returns your lead acquisition cost many times over.",
   },
   {
     icon: BarChart3,
     title: "Dashboard built for performance",
     description:
-      "Track your response time, claim-to-consultation rate, quote acceptance rate, and customer satisfaction scores. Premium and Elite members get advanced analytics, benchmarking, and pipeline reporting.",
+      "Track your response time, claim-to-consultation rate, quote acceptance rate, and customer satisfaction scores. Advanced analytics, benchmarking, and pipeline reporting — included for every verified contractor.",
   },
 ]
 
@@ -112,7 +112,7 @@ export default function ContractorsPage() {
                   href="/pricing"
                   className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
                 >
-                  View Membership Plans
+                  View Credit Pricing
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -130,7 +130,7 @@ export default function ContractorsPage() {
               <p className="text-muted-foreground leading-relaxed">
                 Shared-lead platforms are optimized to sell your contact information as many times as possible —
                 maximizing their revenue at the cost of your close rate. Nexus Operations is structured around
-                the opposite model: your membership funds a pipeline that works exclusively for you, with every
+                the opposite model: your lead credits fund a pipeline that works exclusively for you, with every
                 request you claim guaranteed off-limits to every other contractor on the platform.
               </p>
             </div>
@@ -179,18 +179,18 @@ export default function ContractorsPage() {
                     Nexus Operations
                   </p>
                   <ul className="flex flex-col gap-3 text-sm text-foreground">
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$299/month flat — claim unlimited leads</li>
+                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$10–$15 per credit — pay only for leads you claim</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>You are the only contractor on every claimed job</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Photos and budget defined before you commit</li>
+                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Photos and budget defined before you spend a credit</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Consultation pre-confirmed by homeowner — no callbacks</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>One closed project typically pays your membership for months</li>
+                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>No monthly fee — zero idle spend in slow months</li>
                   </ul>
                 </div>
               </div>
               <div className="p-5 rounded-xl border border-border/40 bg-card/50 text-center">
                 <p className="text-sm text-muted-foreground">
                   Median residential project value on our platform: <span className="font-semibold text-foreground">$4,200</span>.
-                  That&apos;s 14 months of Standard membership from a single closed job.
+                  A mid-size job costs 2 credits — at Pro pricing, that&apos;s $24 to acquire a $4,200 job.
                 </p>
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "How does the first-come, first-served system work?",
-                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
+                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively — it is immediately removed from all other feeds. Claiming a lead deducts the credits for that job size from your balance.",
                 },
                 {
                   q: "Can I set a minimum project size?",
@@ -319,11 +319,11 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "Can I cover multiple service categories?",
-                  a: "Yes, provided you hold the appropriate licenses and insurance for each category. Your membership covers all approved categories under a single subscription.",
+                  a: "Yes, provided you hold the appropriate licenses and insurance for each category. Your credit balance covers all approved categories — there is no per-category fee.",
                 },
                 {
-                  q: "What does cancellation look like?",
-                  a: "No annual contracts. Cancel anytime from your dashboard. Your account stays active through the end of the current billing period. No cancellation fees, no hard conversations.",
+                  q: "What does leaving the platform look like?",
+                  a: "There is no subscription to cancel. If you stop buying credits, your account simply goes dormant. Unused credits remain in your balance indefinitely. No cancellation process, no fees, no hard conversations.",
                 },
               ].map((faq) => (
                 <div key={faq.q} className="border-b border-border/40 pb-6">
@@ -344,7 +344,7 @@ export default function ContractorsPage() {
                 href="/pricing"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                Compare Membership Plans
+                View Credit Pricing
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

@@ -10,11 +10,6 @@ import { storeUser, getStoredUser } from "@/lib/auth"
 import { Eye, EyeOff, ArrowRight, CheckCircle2, Home, Wrench } from "lucide-react"
 
 const SERVICE_CATEGORIES = ["Tree Removal", "Concrete Work", "Roofing", "HVAC", "Fencing", "Electrical", "Plumbing", "Excavation"]
-const SUBSCRIPTION_TIERS = [
-  { value: "standard", label: "Standard", price: "$299/mo" },
-  { value: "premium", label: "Premium", price: "$499/mo" },
-  { value: "elite", label: "Elite", price: "$749/mo" },
-]
 
 function LoginContent() {
   const router = useRouter()
@@ -40,7 +35,6 @@ function LoginContent() {
   const [signupBusiness, setSignupBusiness] = useState("")
   const [signupLicense, setSignupLicense] = useState("")
   const [signupCategories, setSignupCategories] = useState<string[]>([])
-  const [signupSubscription, setSignupSubscription] = useState("standard")
 
   useEffect(() => {
     // Redirect if already logged in
@@ -108,7 +102,6 @@ function LoginContent() {
         body.businessName = signupBusiness
         body.licenseNumber = signupLicense
         body.serviceCategories = signupCategories
-        body.subscription = signupSubscription
       }
 
       const res = await fetch("/api/auth/signup", {
@@ -412,25 +405,10 @@ function LoginContent() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="signup-subscription" className="text-sm font-medium">Subscription tier</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {SUBSCRIPTION_TIERS.map(({ value, label, price }) => (
-                          <button
-                            key={value}
-                            type="button"
-                            onClick={() => setSignupSubscription(value)}
-                            className={`flex flex-col items-center gap-0.5 p-3 rounded-lg border text-center transition-all ${
-                              signupSubscription === value
-                                ? "border-primary bg-primary/10"
-                                : "border-border/40 hover:border-border"
-                            }`}
-                          >
-                            <span className="text-xs font-semibold">{label}</span>
-                            <span className="text-[10px] text-muted-foreground">{price}</span>
-                          </button>
-                        ))}
-                      </div>
+                    <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">No subscription required.</span> After verification you&apos;ll receive 3 complimentary lead credits to get started. Additional credits can be purchased at any time.
+                      </p>
                     </div>
                   </>
                 )}

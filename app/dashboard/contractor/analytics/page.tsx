@@ -25,7 +25,8 @@ interface Lead {
   id: string
   service: string
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "standard" | "premium" | "elite"
+  size: "small" | "medium" | "large"
+  creditCost: number
   value: number
   createdAt: string
 }

@@ -11,7 +11,7 @@ export interface User {
   businessName?: string
   licenseNumber?: string
   serviceCategories?: string[]
-  subscription?: "standard" | "premium" | "elite"
+  credits?: number
   // Homeowner fields
   address?: string
   createdAt: string
@@ -30,7 +30,8 @@ export interface Lead {
   address: string
   photos: number
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "standard" | "premium" | "elite"
+  size: "small" | "medium" | "large"
+  creditCost: number
   value: number
   createdAt: string
   consultationWindow?: string
@@ -88,7 +89,7 @@ function seedData() {
     businessName: "Rodriguez Tree & Landscaping LLC",
     licenseNumber: "KS-TC-2021-4892",
     serviceCategories: ["Tree Removal", "Concrete Work"],
-    subscription: "premium",
+    credits: 20,
     createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
   })
 
@@ -104,7 +105,8 @@ function seedData() {
       address: "5678 Elm Ave, Topeka, KS",
       photos: 4,
       status: "won",
-      tier: "premium",
+      size: "medium",
+      creditCost: 2,
       value: 2100,
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Mon Dec 16, 2–4 PM",
@@ -120,7 +122,8 @@ function seedData() {
       address: "910 Maple Dr, Topeka, KS",
       photos: 6,
       status: "scheduled",
-      tier: "premium",
+      size: "medium",
+      creditCost: 2,
       value: 4200,
       createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Fri Dec 20, 10 AM–12 PM",
@@ -136,7 +139,8 @@ function seedData() {
       address: "234 Pine St, Topeka, KS",
       photos: 3,
       status: "new",
-      tier: "standard",
+      size: "small",
+      creditCost: 1,
       value: 950,
       createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Mon Dec 23, 8–10 AM",
@@ -152,7 +156,8 @@ function seedData() {
       address: "567 Oak Blvd, Topeka, KS",
       photos: 2,
       status: "contacted",
-      tier: "standard",
+      size: "small",
+      creditCost: 1,
       value: 450,
       createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Tue Dec 17, 1–3 PM",
@@ -168,7 +173,8 @@ function seedData() {
       address: "890 Cedar Lane, Topeka, KS",
       photos: 5,
       status: "lost",
-      tier: "premium",
+      size: "medium",
+      creditCost: 2,
       value: 3200,
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Wed Dec 11, 9–11 AM",
@@ -184,7 +190,8 @@ function seedData() {
       address: "321 Birch Way, Topeka, KS",
       photos: 7,
       status: "contacted",
-      tier: "premium",
+      size: "medium",
+      creditCost: 2,
       value: 2600,
       createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
       consultationWindow: "Thu Dec 19, 3–5 PM",

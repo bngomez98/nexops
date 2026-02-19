@@ -20,7 +20,7 @@ export function Footer() {
             <ul className="flex flex-col gap-3 text-sm">
               <li><Link href="/#how-it-works" className="text-foreground/60 hover:text-primary transition-colors">How It Works</Link></li>
               <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Service Categories</Link></li>
-              <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Membership Plans</Link></li>
+              <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Lead Credits</Link></li>
               <li><Link href="/login?tab=signup" className="text-foreground/60 hover:text-primary transition-colors">Submit a Request</Link></li>
             </ul>
           </div>
@@ -29,7 +29,7 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Contractors</h3>
             <ul className="flex flex-col gap-3 text-sm">
               <li><Link href="/contractors" className="text-foreground/60 hover:text-primary transition-colors">Join the Network</Link></li>
-              <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Membership Plans</Link></li>
+              <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Lead Credits</Link></li>
               <li><Link href="/contractors#verification" className="text-foreground/60 hover:text-primary transition-colors">Verification Process</Link></li>
               <li><Link href="/contractors#faq" className="text-foreground/60 hover:text-primary transition-colors">Contractor FAQ</Link></li>
             </ul>

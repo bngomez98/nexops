@@ -23,8 +23,8 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "One flat membership. No per-lead fees.",
-    description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
+    title: "Pay for leads you want. Nothing else.",
+    description: "Buy lead credits in any amount — 5 for $75, 20 for $240, 50 for $500. Credits never expire and there is no monthly subscription. At $10–$15 per credit, one closed residential project returns your acquisition cost many times over. Slow month? Spend nothing.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -41,8 +41,8 @@ const benefits = [
 
 const miniStats = [
   { value: "1", label: "Contractor per lead" },
-  { value: "$299", label: "Starting membership" },
-  { value: "$0", label: "Per-lead fees, ever" },
+  { value: "$10", label: "Lowest credit price" },
+  { value: "$0", label: "Monthly subscription" },
 ]
 
 export function ContractorCTA() {
@@ -118,7 +118,7 @@ export function ContractorCTA() {
                 className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
                 <TrendingUp className="h-4 w-4" />
-                View Membership Plans
+                View Credit Pricing
               </Link>
             </div>
           </div>

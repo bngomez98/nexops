@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
       businessName,
       licenseNumber,
       serviceCategories,
-      subscription,
       address,
     } = body as {
       email: string
@@ -24,7 +23,6 @@ export async function POST(req: NextRequest) {
       businessName?: string
       licenseNumber?: string
       serviceCategories?: string[]
-      subscription?: "standard" | "premium" | "elite"
       address?: string
     }
 
@@ -50,7 +48,8 @@ export async function POST(req: NextRequest) {
       businessName,
       licenseNumber,
       serviceCategories,
-      subscription,
+      // Contractors start with 3 complimentary credits after verification
+      credits: role === "contractor" ? 3 : undefined,
       address,
     })
 
