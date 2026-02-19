@@ -1,6 +1,7 @@
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { Stats } from "@/components/stats"
+import { MissionValues } from "@/components/mission-values"
 import { HowItWorks } from "@/components/how-it-works"
 import { Services } from "@/components/services"
 import { Comparison } from "@/components/comparison"
@@ -15,6 +16,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <Stats />
+        <MissionValues />
         <HowItWorks />
         <Services />
         <Comparison />

@@ -1,40 +1,48 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ShieldCheck, Clock, DollarSign, TrendingUp } from "lucide-react"
+import { ArrowRight, Lock, FileText, DollarSign, TrendingUp, BarChart3 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const benefits = [
   {
-    icon: ShieldCheck,
-    title: "Leads no one else can touch",
-    description: "The instant you claim a request, it is permanently removed from every other contractor's portal. You are the sole point of contact for this homeowner — no competing bids, no price undercutting, no wasted site visits.",
+    icon: Lock,
+    title: "Leads that belong to you — entirely",
+    description: "The instant you claim a request, it is removed from every other contractor's portal — permanently. You are the sole point of contact for this homeowner. No competing bids. No price undercutting. No wasted site visits against someone who will drop their margin to close the job.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
-    icon: Clock,
-    title: "Fully documented before you commit",
-    description: "Every request includes 2–10 project photos, a written scope description, a homeowner-defined budget cap, and a pre-confirmed consultation window. Review the complete project profile before deciding whether to claim.",
+    icon: FileText,
+    title: "Full project context before you commit",
+    description: "Every request includes 2–10 photos, a written scope, a homeowner-defined budget cap, and a pre-confirmed consultation window. You review the complete project profile before claiming — so you only take jobs that make sense for your business.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "Flat monthly membership",
-    description: "Starting at $299 per month with no per-lead charges, no cancellation fees, and no annual contracts. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
+    title: "One flat membership. No per-lead fees.",
+    description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
+  },
+  {
+    icon: BarChart3,
+    title: "A reputation built on documented outcomes",
+    description: "Your standing in the network reflects actual project performance — not reviews anyone can game. Consistent quality earns you priority notifications, advanced access to high-value leads, and long-term eligibility for the Elite tier. The standard protects contractors who meet it.",
+    color: "text-violet-400",
+    bg: "bg-violet-400/10",
+    border: "border-violet-400/20",
   },
 ]
 
 const miniStats = [
   { value: "1", label: "Contractor per lead" },
   { value: "$299", label: "Starting membership" },
-  { value: "$0", label: "Per-lead fees" },
+  { value: "$0", label: "Per-lead fees, ever" },
 ]
 
 export function ContractorCTA() {
@@ -65,6 +73,10 @@ export function ContractorCTA() {
         className="absolute left-0 bottom-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.04]"
         style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
       />
+      <div
+        className="absolute right-0 top-0 w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.03]"
+        style={{ background: "radial-gradient(circle, oklch(0.70 0.15 85), transparent 70%)" }}
+      />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
@@ -72,12 +84,15 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Build your pipeline on leads that are actually yours
+              Stop competing for leads.
+              <br />
+              <span className="gradient-text">Start owning them.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations
               to replace unpredictable shared-lead platforms with a structured, exclusive pipeline.
-              Every request you claim is yours alone — from the moment you click to the completed project.
+              You do not bid against competitors. You do not pay per lead. You claim a fully documented project
+              and it is yours from that moment to the final invoice — no exceptions.
             </p>
 
             {/* Mini stats row */}
