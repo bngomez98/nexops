@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react"
 export const metadata: Metadata = {
   title: "Service Categories | Home Services in Topeka, KS",
   description:
-    "Nexus Operations currently serves tree removal, concrete work, and roofing in Topeka, KS — with HVAC, fencing, electrical, and plumbing launching soon. Every request requires photos, a scope, and a budget so contractors arrive fully informed.",
+    "Nexus Operations currently serves tree removal, concrete work, and roofing in Topeka, KS — with HVAC, fencing, electrical, and plumbing launching in subsequent quarters. Every request requires photos, a written scope, and a defined budget so contractors arrive at consultations fully prepared.",
 }
 
 export default function ServicesPage() {
@@ -25,8 +25,9 @@ export default function ServicesPage() {
                 What we cover — and what&apos;s coming
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Nexus Operations launches with the highest-demand residential trades in the Topeka area and
-                expands systematically based on contractor supply and homeowner demand.
+                Nexus Operations launches with the highest-demand residential trades in the Topeka area
+                and expands systematically — adding categories only when sufficient verified contractor
+                supply exists to maintain response-time and quality standards.
               </p>
             </div>
           </div>
@@ -41,8 +42,9 @@ export default function ServicesPage() {
               Ready to submit your project?
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Document your project with photos and a budget cap. We will match you with one verified,
-              insured contractor in your area — no bidding wars, no spam calls. Always free for homeowners.
+              Document your project with photos, a written scope, and a budget cap. We match you with one
+              verified, insured contractor in your area — no competing bids, no unsolicited calls.
+              Always free for homeowners.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

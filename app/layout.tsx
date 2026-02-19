@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | Nexus Operations",
   },
   description:
-    "Nexus Operations connects homeowners with a single licensed, insured contractor — not a list of five who all call at once. Upload photos, set a budget, pick a consultation window. Free for homeowners.",
+    "Nexus Operations matches homeowners with one licensed, insured contractor per job — not a list of five who call within the hour. Document your project with photos, set a budget cap, and select a consultation window. Always free for homeowners.",
   keywords: [
     "home services Topeka Kansas",
     "exclusive contractor leads",
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
     url: "https://nexusoperations.org",
     title: "Nexus Operations | One Request. One Verified Contractor.",
     description:
-      "Document your project, set your budget, and get matched with one verified contractor. No bidding wars. No spam calls. Free for homeowners.",
+      "Document your project with photos, set a budget cap, and get matched with one verified contractor — not seven. No bidding wars. No unsolicited calls. Always free for homeowners.",
     siteName: "Nexus Operations",
   },
   twitter: {
     card: "summary_large_image",
     title: "Nexus Operations | One Request. One Verified Contractor.",
-    description: "One request. One licensed contractor. Zero runaround. Free for homeowners in Topeka, KS.",
+    description: "One request. One verified, licensed contractor. Zero runaround or unsolicited calls. Always free for homeowners in Topeka, KS.",
   },
   robots: {
     index: true,
@@ -71,7 +71,7 @@ export default function RootLayout({
                 "@id": "https://nexusoperations.org/#organization",
                 name: "Nexus Operations",
                 description:
-                  "Two-sided marketplace connecting homeowners with licensed, insured contractors through exclusive lead distribution.",
+                  "Exclusive contractor matching platform connecting homeowners with a single licensed, insured professional per project — eliminating shared leads, bidding wars, and unsolicited contractor contact.",
                 url: "https://nexusoperations.org",
                 telephone: "+1-913-951-1711",
                 email: "admin@nexusoperations.org",

@@ -9,7 +9,7 @@ const steps = [
     number: "01",
     title: "Submit your project",
     description:
-      "Upload 2–10 photos, describe the scope, set a budget cap, and select 3–4 available consultation windows. Complete submissions get faster, better matches.",
+      "Upload 2–10 project photos, document the scope of work, set a hard budget cap, and select 3–4 available consultation windows. A thorough submission produces a faster match and ensures the contractor arrives fully prepared.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -19,7 +19,7 @@ const steps = [
     number: "02",
     title: "A contractor claims it",
     description:
-      "Verified contractors in your category and area are notified immediately. The first to claim your request locks it exclusively — it disappears from every other contractor's feed.",
+      "Every qualified, verified contractor in your trade category and geographic area is notified simultaneously. The first to claim your request secures it exclusively — the listing is removed from every other contractor's portal immediately and permanently.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -29,7 +29,7 @@ const steps = [
     number: "03",
     title: "Consultation is confirmed",
     description:
-      "Both you and the contractor receive a calendar confirmation for the window you chose. They arrive already briefed on your scope, budget, and project photos.",
+      "Both you and the contractor receive a confirmed calendar appointment for the window you selected during submission. The contractor reviews your photos, written scope, and budget cap in advance — so the consultation is productive, not exploratory.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -39,7 +39,7 @@ const steps = [
     number: "04",
     title: "Project moves forward",
     description:
-      "You receive a written quote after the consultation. Accept it and work begins. We follow up on every closed project to maintain contractor quality standards.",
+      "Following the on-site consultation, you receive a written, itemized estimate. Accept, negotiate, or decline — with no obligation. Every completed project is reviewed for quality, and contractor standing in the network is updated accordingly.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -87,8 +87,8 @@ export function HowItWorks() {
             From submission to consultation in under 24 hours
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            No phone tag. No inbox flooded by 5–7 contractors who all got your number at the same time.
-            Submit your project once, with photos and a budget — and we match you with one.
+            No phone tag. No inbox flooded by contractors who all received your number at the same time.
+            Submit your project once — with documentation and a defined budget — and we match you with a single verified professional.
           </p>
         </div>
 

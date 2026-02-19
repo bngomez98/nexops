@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Stop paying for shared leads that 5 other contractors are also calling. Nexus Operations delivers exclusive, pre-qualified requests with photos, scope, and a confirmed budget. Licensed and insured contractors only. Flat monthly membership starting at $299.",
+    "Stop paying per lead shared with five competitors. Nexus Operations delivers exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Licensed and insured contractors only. Flat monthly membership starting at $299.",
 }
 
 const benefits = [
@@ -95,9 +95,10 @@ export default function ContractorsPage() {
                 <span className="text-primary">to you alone.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations gives licensed, insured contractors in Topeka and surrounding areas access to
-                pre-qualified, exclusive project requests. No shared leads. No bidding wars. No cold calls into
-                a sea of competition. First-come, first-served — and every lead you claim is permanently yours.
+                Nexus Operations provides licensed, insured contractors in Topeka and the surrounding region
+                with access to pre-qualified, exclusive project requests. No shared leads. No competing bids.
+                No cold calling into a crowded market. First-come, first-served — and every request you claim
+                is permanently, exclusively yours.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -127,8 +128,10 @@ export default function ContractorsPage() {
                 Built around contractor economics
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Shared-lead platforms are optimized to sell your contact information as many times as possible.
-                We are built around the opposite model: your membership funds a pipeline that works exclusively for you.
+                Shared-lead platforms are optimized to sell your contact information as many times as possible —
+                maximizing their revenue at the cost of your close rate. Nexus Operations is structured around
+                the opposite model: your membership funds a pipeline that works exclusively for you, with every
+                request you claim guaranteed off-limits to every other contractor on the platform.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -202,9 +205,10 @@ export default function ContractorsPage() {
                 Verification keeps everyone protected
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Every contractor in our network is manually reviewed before accessing leads. This protects
-                homeowners and ensures you are competing against professionals — not uninsured operators.
-                The process takes 3–5 business days.
+                Every contractor in the Nexus Operations network is manually reviewed and credentialed before
+                gaining access to project requests. This protects homeowners and ensures that when you win a
+                job, you are competing against verified professionals — not unlicensed or uninsured operators.
+                Verification typically takes 3–5 business days.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -234,8 +238,9 @@ export default function ContractorsPage() {
                   We accept established, insured trade professionals
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Nexus Operations is not a place for unlicensed handymen or unverified operations.
-                  Our homeowners expect professionals, and our network is built to match that standard.
+                  Nexus Operations is not a general handyman directory. Our homeowners expect licensed,
+                  insured trade professionals, and our network is built and maintained to that standard.
+                  Applications from unlicensed or uninsured operators are declined without exception.
                 </p>
                 <ul className="flex flex-col gap-3">
                   {[

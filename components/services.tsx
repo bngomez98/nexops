@@ -8,7 +8,7 @@ const categories = [
   {
     icon: TreePine,
     name: "Tree Removal",
-    description: "Full removal, selective trimming, stump grinding, and emergency storm-damage assessment. Requires ISA-certified arborist documentation.",
+    description: "Licensed removal of hazardous and non-hazardous trees, crown reduction, directional felling, stump grinding, and post-storm risk assessment. All contractors hold ISA-certified arborist credentials and adhere to ANSI A300 industry standards.",
     budget: "$500 – $8,000",
     available: true,
     tag: "Available",
@@ -16,7 +16,7 @@ const categories = [
   {
     icon: HardHat,
     name: "Concrete Work",
-    description: "Driveways, patios, sidewalks, retaining walls, foundation repair, and decorative or stamped concrete finishes.",
+    description: "Residential and commercial flatwork including driveways, patios, walkways, and retaining walls. Structural repair, stamped and exposed aggregate finishes. Mix design, PSI specification, and reinforcement documented before project start.",
     budget: "$1,200 – $15,000",
     available: true,
     tag: "Available",
@@ -24,7 +24,7 @@ const categories = [
   {
     icon: Home,
     name: "Roofing",
-    description: "Asphalt shingle replacement, metal roofing, flat roof repair, active leak mitigation, and insurance storm-damage restoration.",
+    description: "Full tear-off and replacement, overlay systems, standing seam metal, TPO and modified bitumen flat roofing, emergency leak mitigation, and insurance-grade storm-damage documentation. All work performed to NRCA installation guidelines.",
     budget: "$300 – $25,000",
     available: true,
     tag: "Available",
@@ -32,7 +32,7 @@ const categories = [
   {
     icon: Flame,
     name: "HVAC",
-    description: "Forced-air system installation, heat pump replacement, ductwork repair, and seasonal maintenance contracts.",
+    description: "Central air installation, heat pump and ductless mini-split systems, furnace replacement, ductwork design and air-sealing, and preventive maintenance agreements. All technicians hold EPA 608 certification; equipment selections include ENERGY STAR-rated units.",
     budget: "$3,000 – $20,000",
     available: false,
     tag: "Coming Soon",
@@ -40,7 +40,7 @@ const categories = [
   {
     icon: Fence,
     name: "Fencing",
-    description: "Wood privacy, vinyl, chain-link, wrought iron, and farm-style fencing — installation and repair for residential and commercial properties.",
+    description: "Privacy, semi-privacy, and perimeter fencing in cedar, pressure-treated pine, vinyl, steel chain-link, ornamental iron, and agricultural wire. Posts set to frost-line depth and compliant with local zoning setback and HOA requirements.",
     budget: "$1,500 – $8,000",
     available: false,
     tag: "Coming Soon",
@@ -48,7 +48,7 @@ const categories = [
   {
     icon: Zap,
     name: "Electrical",
-    description: "Panel upgrades, circuit additions, outlet and switch installation, whole-home rewiring, and NEC code compliance inspections.",
+    description: "Service panel upgrades (100A–400A), branch circuit additions, whole-home rewiring, subpanel installation, EV charger rough-in, and permit-ready NEC code compliance inspections. All work performed by licensed master or journeyman electricians.",
     budget: "$500 – $10,000",
     available: false,
     tag: "Coming Soon",
@@ -108,8 +108,8 @@ export function Services() {
             Three categories live now, more on the way
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Every request requires photos, project specifications, and a defined budget — so contractors
-            arrive at consultations fully informed, not guessing.
+            Every request requires project photos, a written scope, and a defined budget cap before a contractor
+            is matched — so consultations are productive from the first minute, not spent gathering basic information.
           </p>
         </div>
 
