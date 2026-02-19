@@ -27,6 +27,11 @@ import {
   Briefcase,
   TrendingDown,
   AlertCircle,
+  Star,
+  Crown,
+  Shield,
+  Phone,
+  ChevronDown,
 } from "lucide-react"
 
 interface Lead {
@@ -53,6 +58,33 @@ const weeklyData = [
   { week: "Dec W2", leads: 4, revenue: 6900 },
 ]
 
+const tierConfig = {
+  standard: {
+    label: "Standard",
+    icon: Shield,
+    colors: "text-muted-foreground border-border/50 bg-secondary/60",
+    accent: "text-muted-foreground",
+    headerBg: "from-secondary/40 to-background",
+    advance: "Real-time",
+  },
+  premium: {
+    label: "Premium",
+    icon: Star,
+    colors: "text-amber-400 border-amber-500/30 bg-amber-500/10",
+    accent: "text-amber-400",
+    headerBg: "from-amber-500/8 to-background",
+    advance: "60 sec early",
+  },
+  elite: {
+    label: "Elite",
+    icon: Crown,
+    colors: "text-violet-400 border-violet-500/30 bg-violet-500/10",
+    accent: "text-violet-400",
+    headerBg: "from-violet-500/8 to-background",
+    advance: "5 min exclusive",
+  },
+}
+
 function statusBadge(status: Lead["status"]) {
   const map: Record<Lead["status"], { label: string; variant: "success" | "info" | "warning" | "muted" | "destructive" }> = {
     new: { label: "New", variant: "info" },
@@ -76,14 +108,12 @@ function statusBadge(status: Lead["status"]) {
 }
 
 function tierBadge(tier: Lead["tier"]) {
-  const colors: Record<Lead["tier"], string> = {
-    basic: "text-muted-foreground border-border/40",
-    premium: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-    elite: "text-violet-400 border-violet-500/30 bg-violet-500/10",
-  }
+  const config = tierConfig[tier] ?? tierConfig.standard
+  const TierIcon = config.icon
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-medium capitalize ${colors[tier]}`}>
-      {tier}
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-semibold ${config.colors}`}>
+      <TierIcon className="h-2.5 w-2.5" />
+      {config.label}
     </span>
   )
 }
@@ -96,17 +126,15 @@ function timeAgo(iso: string) {
   return `${d}d ago`
 }
 
-// Sparkline-style trend indicator
 function Trend({ value, positive }: { value: string; positive: boolean }) {
   return (
-    <div className={`flex items-center gap-1 text-xs font-medium ${positive ? "text-emerald-400" : "text-red-400"}`}>
+    <div className={`flex items-center gap-1 text-xs font-semibold px-1.5 py-0.5 rounded-md ${positive ? "text-emerald-400 bg-emerald-400/10" : "text-red-400 bg-red-400/10"}`}>
       {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
       {value}
     </div>
   )
 }
 
-// Custom tooltip for the chart
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
   if (!active || !payload?.length) return null
   return (
@@ -153,6 +181,10 @@ export default function ContractorDashboard() {
   const closeRate = leads.length > 0 ? Math.round((wonLeads / leads.length) * 100) : 0
   const newLeads = leads.filter((l) => l.status === "new").length
 
+  const sub = (user.subscription ?? "standard") as keyof typeof tierConfig
+  const tier = tierConfig[sub] ?? tierConfig.standard
+  const TierIcon = tier.icon
+
   const stats = [
     {
       title: "Total Leads",
@@ -161,6 +193,7 @@ export default function ContractorDashboard() {
       icon: TrendingUp,
       accent: "text-primary",
       accentBg: "bg-primary/10",
+      border: "border-primary/20",
       trend: { value: "+12%", positive: true },
     },
     {
@@ -170,6 +203,7 @@ export default function ContractorDashboard() {
       icon: DollarSign,
       accent: "text-emerald-400",
       accentBg: "bg-emerald-400/10",
+      border: "border-emerald-400/20",
       trend: { value: "+8%", positive: true },
     },
     {
@@ -179,67 +213,83 @@ export default function ContractorDashboard() {
       icon: Target,
       accent: "text-amber-400",
       accentBg: "bg-amber-400/10",
+      border: "border-amber-400/20",
       trend: { value: "-3%", positive: false },
     },
     {
-      title: "Subscription",
+      title: "Plan",
       value: user.subscription ? user.subscription.charAt(0).toUpperCase() + user.subscription.slice(1) : "—",
-      sub: "Active plan",
-      icon: Zap,
-      accent: "text-violet-400",
-      accentBg: "bg-violet-400/10",
+      sub: "Active subscription",
+      icon: TierIcon,
+      accent: tier.accent,
+      accentBg: tierConfig[sub]?.colors ?? "",
+      border: "border-border/30",
       trend: null,
     },
   ]
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Page header */}
-      <div className="mb-8 flex items-start justify-between">
-        <div>
-          <p className="text-primary text-sm font-medium mb-1">Contractor Portal</p>
-          <h1 className="text-2xl font-semibold">Welcome back, {user.name.split(" ")[0]}</h1>
-          {user.businessName && (
-            <p className="text-sm text-muted-foreground mt-0.5 flex items-center gap-1.5">
-              <Briefcase className="h-3.5 w-3.5" />
-              {user.businessName}
-            </p>
+    <div className="max-w-7xl mx-auto space-y-6">
+      {/* Welcome banner */}
+      <div className="relative rounded-2xl overflow-hidden border border-border/40">
+        <div className={`absolute inset-0 bg-gradient-to-br ${tier.headerBg} pointer-events-none`} />
+        <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-primary/4 blur-3xl pointer-events-none" />
+
+        <div className="relative px-6 py-5 flex items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <TierIcon className={`h-3.5 w-3.5 ${tier.accent}`} />
+              <p className={`text-xs font-semibold uppercase tracking-wider ${tier.accent}`}>Contractor Portal</p>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-bold capitalize ${tier.colors}`}>
+                {tier.label}
+              </span>
+            </div>
+            <h1 className="text-xl font-bold">
+              Welcome back, <span className="gradient-text">{user.name.split(" ")[0]}</span>
+            </h1>
+            {user.businessName && (
+              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">
+                <Briefcase className="h-3.5 w-3.5 text-primary/60" />
+                {user.businessName}
+              </p>
+            )}
+          </div>
+          {newLeads > 0 && (
+            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-blue-500/30 bg-blue-500/10">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400" />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-blue-400">{newLeads} new lead{newLeads > 1 ? "s" : ""}</p>
+                <p className="text-[10px] text-blue-300/60">Awaiting your response</p>
+              </div>
+            </div>
           )}
         </div>
-        {newLeads > 0 && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-blue-500/30 bg-blue-500/10 text-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
-            </span>
-            <span className="text-blue-400 font-medium">{newLeads} new lead{newLeads > 1 ? "s" : ""} waiting</span>
-          </div>
-        )}
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map(({ title, value, sub, icon: Icon, accent, accentBg, trend }) => (
-          <Card key={title} className="hover-glow transition-all duration-200 hover:translate-y-[-1px]">
-            <CardContent className="pt-6">
-              <div className="flex items-start justify-between mb-3">
-                <p className="text-sm text-muted-foreground">{title}</p>
-                <div className={`${accent} ${accentBg} p-1.5 rounded-lg`}>
-                  <Icon className="h-4 w-4" />
-                </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {stats.map(({ title, value, sub: subLabel, icon: Icon, accent, accentBg, border, trend }) => (
+          <div key={title} className={`rounded-xl border ${border} bg-card p-4 hover-glow transition-all duration-200 hover:translate-y-[-1px]`}>
+            <div className="flex items-start justify-between mb-3">
+              <p className="text-xs text-muted-foreground font-medium">{title}</p>
+              <div className={`${accentBg} p-1.5 rounded-lg`}>
+                <Icon className={`h-4 w-4 ${accent}`} />
               </div>
-              <p className="text-2xl font-bold tracking-tight">{value}</p>
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-xs text-muted-foreground">{sub}</p>
-                {trend && <Trend value={trend.value} positive={trend.positive} />}
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+            <p className="text-2xl font-bold tracking-tight">{value}</p>
+            <div className="flex items-center justify-between mt-1.5">
+              <p className="text-[10px] text-muted-foreground">{subLabel}</p>
+              {trend && <Trend value={trend.value} positive={trend.positive} />}
+            </div>
+          </div>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-5 gap-6 mb-6">
-        {/* Chart — dual axis (bars for leads, line for revenue) */}
+      <div className="grid lg:grid-cols-5 gap-6">
+        {/* Chart */}
         <Card className="lg:col-span-3">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -247,7 +297,7 @@ export default function ContractorDashboard() {
                 <CardTitle>Lead Activity</CardTitle>
                 <CardDescription>Weekly lead volume and revenue over the last 6 weeks</CardDescription>
               </div>
-              <div className="flex items-center gap-1 text-xs text-emerald-400 font-medium">
+              <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold px-2 py-1 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
                 <TrendingUp className="h-3.5 w-3.5" />
                 +23% MoM
               </div>
@@ -308,51 +358,64 @@ export default function ContractorDashboard() {
         </Card>
 
         {/* Subscription card */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Your Plan</CardTitle>
-            <CardDescription>Current subscription details</CardDescription>
+        <Card className={`lg:col-span-2 border-2 ${sub === "elite" ? "border-violet-500/30" : sub === "premium" ? "border-amber-500/30" : "border-border/40"}`}>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Your Plan</CardTitle>
+                <CardDescription>Subscription & service categories</CardDescription>
+              </div>
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-bold capitalize ${tier.colors}`}>
+                <TierIcon className="h-4 w-4" />
+                {tier.label}
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/40 border border-border/30">
-              <span className="text-sm text-muted-foreground">Tier</span>
-              <span className="font-bold capitalize text-primary">{user.subscription ?? "—"}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Advance notice</span>
-              <span className="text-sm font-medium">
-                {user.subscription === "elite" ? "5 min exclusive" : user.subscription === "premium" ? "60 sec" : "Real-time"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Categories</span>
-              <span className="text-sm font-medium">{(user.serviceCategories ?? []).length} active</span>
+          <CardContent className="flex flex-col gap-3">
+            {/* Tier benefits */}
+            <div className="space-y-2 p-3 rounded-xl bg-secondary/40 border border-border/30">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground text-xs">Lead advance notice</span>
+                <span className={`text-xs font-bold ${tier.accent}`}>{tier.advance}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground text-xs">Service categories</span>
+                <span className="text-xs font-semibold">{(user.serviceCategories ?? []).length} active</span>
+              </div>
             </div>
 
-            {/* Close rate progress */}
+            {/* Close rate bar */}
             <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
-                <span>Close rate</span>
-                <span className="font-medium text-foreground">{closeRate}%</span>
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-muted-foreground font-medium">Close rate</span>
+                <span className="font-bold text-foreground">{closeRate}%</span>
               </div>
-              <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+              <div className="h-2 rounded-full bg-secondary overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-primary transition-all duration-1000"
+                  className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-1000"
                   style={{ width: `${closeRate}%` }}
                 />
               </div>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {closeRate >= 50 ? "Strong performance" : closeRate >= 25 ? "Room to improve" : "Focus on follow-ups"}
+              </p>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/40">
-              {(user.serviceCategories ?? []).map((cat) => (
-                <span key={cat} className="px-2 py-1 rounded-md bg-secondary text-xs text-muted-foreground">{cat}</span>
-              ))}
-            </div>
+            {/* Categories */}
+            {(user.serviceCategories ?? []).length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/30">
+                {(user.serviceCategories ?? []).map((cat) => (
+                  <span key={cat} className="px-2 py-0.5 rounded-md bg-secondary text-xs text-muted-foreground border border-border/30">{cat}</span>
+                ))}
+              </div>
+            )}
+
             <a
               href="/pricing"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-auto"
+              className={`inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-3 rounded-xl border transition-colors mt-1 ${tier.colors} hover:opacity-80`}
             >
-              Upgrade plan <ArrowUpRight className="h-3.5 w-3.5" />
+              {sub === "elite" ? "Manage plan" : "Upgrade plan"}
+              <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </CardContent>
         </Card>
@@ -364,24 +427,30 @@ export default function ContractorDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Recent Leads</CardTitle>
-              <CardDescription>All leads assigned to your account</CardDescription>
+              <CardDescription>All leads assigned to your account — click a row to expand</CardDescription>
             </div>
             {newLeads > 0 && (
-              <div className="flex items-center gap-1.5 text-xs text-blue-400">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/25 text-xs text-blue-400 font-semibold">
                 <AlertCircle className="h-3.5 w-3.5" />
-                {newLeads} require attention
+                {newLeads} need attention
               </div>
             )}
           </div>
         </CardHeader>
         <CardContent className="p-0">
           {loading ? (
-            <div className="flex items-center justify-center py-12 gap-3">
+            <div className="flex items-center justify-center py-14 gap-3">
               <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
               <span className="text-sm text-muted-foreground">Loading leads…</span>
             </div>
           ) : leads.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm">No leads yet.</div>
+            <div className="text-center py-14">
+              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                <Briefcase className="h-5 w-5 text-muted-foreground/40" />
+              </div>
+              <p className="text-sm font-semibold mb-1">No leads yet</p>
+              <p className="text-xs text-muted-foreground">Leads will appear here when homeowners in your service area submit requests.</p>
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -408,7 +477,7 @@ export default function ContractorDashboard() {
                       >
                         <td className="px-6 py-4">
                           <div>
-                            <p className="font-medium">{lead.homeownerName}</p>
+                            <p className="font-semibold">{lead.homeownerName}</p>
                             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                               <MapPin className="h-3 w-3" /> {lead.address.split(",")[0]}
                             </p>
@@ -416,11 +485,11 @@ export default function ContractorDashboard() {
                         </td>
                         <td className="px-6 py-4">
                           <div>
-                            <p className="font-medium">{lead.service}</p>
+                            <p className="font-semibold">{lead.service}</p>
                             <p className="text-xs text-muted-foreground line-clamp-1 max-w-[160px]">{lead.description}</p>
                           </div>
                         </td>
-                        <td className="px-4 py-4 text-sm font-semibold">{lead.budget}</td>
+                        <td className="px-4 py-4 text-sm font-bold text-foreground">{lead.budget}</td>
                         <td className="px-4 py-4">{tierBadge(lead.tier)}</td>
                         <td className="px-4 py-4">{statusBadge(lead.status)}</td>
                         <td className="px-4 py-4">
@@ -436,12 +505,7 @@ export default function ContractorDashboard() {
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-muted-foreground">{timeAgo(lead.createdAt)}</span>
-                            <svg
-                              className={`h-3 w-3 text-muted-foreground transition-transform duration-200 ${expandedLead === lead.id ? "rotate-180" : ""}`}
-                              viewBox="0 0 12 12" fill="none"
-                            >
-                              <path d="M3 5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
+                            <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform duration-200 ${expandedLead === lead.id ? "rotate-180" : ""}`} />
                           </div>
                         </td>
                       </tr>
@@ -449,24 +513,36 @@ export default function ContractorDashboard() {
                       {expandedLead === lead.id && (
                         <tr key={`${lead.id}-expanded`} className="border-b border-border/20 bg-secondary/10">
                           <td colSpan={7} className="px-6 py-4">
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-4">
                               <div>
-                                <p className="text-xs text-muted-foreground mb-1">Description</p>
-                                <p className="text-foreground">{lead.description}</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Description</p>
+                                <p className="text-foreground text-xs leading-relaxed">{lead.description}</p>
                               </div>
                               <div>
-                                <p className="text-xs text-muted-foreground mb-1">Full Address</p>
-                                <p className="text-foreground">{lead.address}</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Full Address</p>
+                                <p className="text-foreground text-xs">{lead.address}</p>
                               </div>
                               <div>
-                                <p className="text-xs text-muted-foreground mb-1">Photos</p>
-                                <p className="text-foreground">{lead.photos} uploaded</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Photos</p>
+                                <p className="text-foreground text-xs">{lead.photos} uploaded</p>
                               </div>
                               <div>
-                                <p className="text-xs text-muted-foreground mb-1">Lead Value</p>
-                                <p className="text-emerald-400 font-semibold">${lead.value.toLocaleString()}</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Lead Value</p>
+                                <p className="text-emerald-400 font-bold text-base">${lead.value.toLocaleString()}</p>
                               </div>
                             </div>
+                            {lead.status === "new" && (
+                              <div className="flex items-center gap-2 pt-3 border-t border-border/30">
+                                <button
+                                  type="button"
+                                  className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-primary/20"
+                                >
+                                  <Phone className="h-3.5 w-3.5" />
+                                  Mark as Contacted
+                                </button>
+                                <span className="text-xs text-muted-foreground">Respond quickly to improve close rate</span>
+                              </div>
+                            )}
                           </td>
                         </tr>
                       )}
