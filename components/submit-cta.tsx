@@ -64,9 +64,9 @@ export function SubmitCTA() {
                   Your project. One contractor. No hassle.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Submit in under five minutes. Upload your photos, define a budget, select a consultation
-                  window, and we handle the rest. You will hear from one verified contractor — not fifteen.
-                  No cost to you, ever.
+                  Complete your submission in under five minutes. Upload project photos, set a budget ceiling,
+                  and select a consultation window. We match you with a single verified, insured contractor —
+                  not a queue of competing bids. There is no cost to homeowners, at any tier, ever.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">

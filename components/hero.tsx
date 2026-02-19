@@ -101,9 +101,10 @@ export function Hero() {
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Most platforms sell your contact info to 5–7 contractors the moment you submit — they all call within the hour.
-              We work differently. Upload photos, set a budget cap, and pick a consultation window.
-              One licensed, insured contractor claims your job exclusively. Always free for homeowners.
+              The standard model distributes your contact information to five to seven contractors the instant you submit —
+              your phone rings within the hour. Nexus Operations works differently. Document your project with photos,
+              define a budget cap, and select a consultation window. A single licensed, insured contractor claims your job
+              exclusively. No bidding wars. No unsolicited calls. Always free for homeowners.
             </p>
 
             <div

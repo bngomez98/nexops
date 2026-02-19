@@ -8,7 +8,7 @@ const benefits = [
   {
     icon: ShieldCheck,
     title: "Leads no one else can touch",
-    description: "The moment you claim a request, it vanishes from every other contractor's feed. You are the only one contacting this homeowner — no price wars, no chasing.",
+    description: "The instant you claim a request, it is permanently removed from every other contractor's portal. You are the sole point of contact for this homeowner — no competing bids, no price undercutting, no wasted site visits.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -16,7 +16,7 @@ const benefits = [
   {
     icon: Clock,
     title: "Fully documented before you commit",
-    description: "Every lead includes 2–10 project photos, a written scope, a defined budget cap, and a pre-selected consultation window. Know what you're walking into before you claim it.",
+    description: "Every request includes 2–10 project photos, a written scope description, a homeowner-defined budget cap, and a pre-confirmed consultation window. Review the complete project profile before deciding whether to claim.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -24,7 +24,7 @@ const benefits = [
   {
     icon: DollarSign,
     title: "Flat monthly membership",
-    description: "Starting at $299/month. Claim as many leads as you can handle — no per-lead charges, no surprise fees, no annual commitment. Cancel anytime.",
+    description: "Starting at $299 per month with no per-lead charges, no cancellation fees, and no annual contracts. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -75,9 +75,9 @@ export function ContractorCTA() {
               Build your pipeline on leads that are actually yours
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Licensed, insured contractors in Topeka and surrounding areas use Nexus Operations
-              to replace unpredictable shared-lead platforms with a dependable, exclusive pipeline.
-              Every job you claim belongs to you alone.
+              Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations
+              to replace unpredictable shared-lead platforms with a structured, exclusive pipeline.
+              Every request you claim is yours alone — from the moment you click to the completed project.
             </p>
 
             {/* Mini stats row */}

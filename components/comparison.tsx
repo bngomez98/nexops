@@ -49,9 +49,10 @@ export function Comparison() {
             A fundamentally different model
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Legacy platforms make money by selling your contact info to as many contractors as possible — often 5 to 15 for a single job.
-            You get flooded with calls. Contractors race to undercut each other. Nobody wins.
-            We built Nexus Operations on one rule: your job goes to one contractor, and one alone.
+            Traditional platforms generate revenue by distributing your contact information to as many contractors as possible —
+            routinely 5 to 15 per request. The result is an inbox flooded with calls, a race to the bottom on pricing, and an
+            experience that disadvantages both homeowners and contractors alike. Nexus Operations was built on a different premise:
+            one request, one contractor, no exceptions.
           </p>
         </div>
 
@@ -116,8 +117,8 @@ export function Comparison() {
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
             <p className="text-sm text-muted-foreground">
-              One request. One contractor. Zero spam calls. If no verified contractor in your area
-              is available for your category, we tell you immediately — no waiting in limbo, no false hope.
+              One request. One verified contractor. Zero unsolicited calls. If no qualified contractor is currently available
+              in your area for your service category, you are notified immediately — no indefinite wait, no ambiguity.
             </p>
           </div>
         </div>
