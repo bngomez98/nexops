@@ -1,14 +1,30 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Camera, Clock, Shield, Star } from "lucide-react"
+import { ArrowRight, FileText, DollarSign, CalendarRange, CheckCircle2, Shield, Lock } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 const steps = [
-  { icon: Camera, text: "Upload photos" },
-  { icon: Shield, text: "Set your budget" },
-  { icon: Clock, text: "Pick a time slot" },
-  { icon: Star, text: "Get matched" },
+  {
+    icon: FileText,
+    title: "Document your project",
+    description: "Photos, written scope, and the specifics — so the contractor arrives knowing exactly what the job entails.",
+  },
+  {
+    icon: DollarSign,
+    title: "Define your budget ceiling",
+    description: "Set a hard cap before anyone is contacted. No surprises on-site. No negotiating blind.",
+  },
+  {
+    icon: CalendarRange,
+    title: "Set your consultation window",
+    description: "Choose when works for you. The contractor commits to that window before the match is confirmed.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "One professional claims it",
+    description: "A single verified contractor reviews your full project profile and commits — exclusively, permanently.",
+  },
 ]
 
 export function SubmitCTA() {
@@ -57,16 +73,19 @@ export function SubmitCTA() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                   </span>
-                  <span className="text-primary text-xs font-medium">Free for homeowners</span>
+                  <span className="text-primary text-xs font-medium">Always free for homeowners</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Your project. One contractor. No hassle.
+                  Your project, your terms.
+                  <br />
+                  <span className="gradient-text">One contractor who earns it.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Complete your submission in under five minutes. Upload project photos, set a budget ceiling,
-                  and select a consultation window. We match you with a single verified, insured contractor —
-                  not a queue of competing bids. There is no cost to homeowners, at any tier, ever.
+                  Define your project completely before anyone is contacted. Set the budget ceiling, choose your consultation
+                  window, and document the scope. A single verified professional reviews every detail and commits
+                  to your job — not to winning a bid against six competitors.
+                  There is no cost to homeowners, at any tier, ever.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
@@ -74,39 +93,44 @@ export function SubmitCTA() {
                     href="/login?tab=signup"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Submit a Request
+                    Start Your Project — Free
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">
                     <span className="flex items-center gap-1.5">
-                      <Shield className="h-3.5 w-3.5 text-primary" /> No phone tag
+                      <Lock className="h-3.5 w-3.5 text-primary" /> You control the terms
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-primary" /> 24hr response
+                      <Shield className="h-3.5 w-3.5 text-primary" /> Verified professionals only
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Right — 4-step mini flow */}
+              {/* Right — 4-step outcome flow */}
               <div className="hidden lg:block">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How it goes</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How your project moves</p>
                 <div className="relative">
                   {steps.map((step, i) => (
-                    <div key={step.text} className="flex items-center gap-4 mb-4 last:mb-0">
+                    <div key={step.title} className="flex items-start gap-4 mb-4 last:mb-0">
                       {/* Left column: number + line */}
-                      <div className="flex flex-col items-center">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[11px] font-bold text-primary">
+                      <div className="flex flex-col items-center pt-1">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[11px] font-bold text-primary shrink-0">
                           {i + 1}
                         </div>
                         {i < steps.length - 1 && (
-                          <div className="w-px h-5 bg-border/40 my-1" />
+                          <div className="w-px h-7 bg-border/40 my-1" />
                         )}
                       </div>
                       {/* Content */}
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-border/30 flex-1 hover:bg-secondary/50 hover:border-border/50 transition-colors duration-200">
-                        <step.icon className="h-4 w-4 text-primary shrink-0" />
-                        <span className="text-sm font-medium">{step.text}</span>
+                      <div className="flex-1 pb-1">
+                        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-secondary/30 border border-border/30 hover:bg-secondary/50 hover:border-border/50 transition-colors duration-200">
+                          <step.icon className="h-4 w-4 text-primary shrink-0" />
+                          <div>
+                            <p className="text-sm font-semibold leading-tight">{step.title}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{step.description}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}

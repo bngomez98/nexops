@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ChevronDown, Shield, Clock, Star } from "lucide-react"
+import { ArrowRight, ChevronDown, CheckCircle2, Lock, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const cyclingWords = ["Roofing", "Tree Removal", "Concrete", "Fencing", "HVAC", "Electrical"]
@@ -71,14 +71,14 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>
-              <span className="text-primary text-xs font-medium tracking-wide">Now live in Topeka, KS</span>
+              <span className="text-primary text-xs font-medium tracking-wide">Now live in Topeka, KS &mdash; a better way to hire</span>
             </div>
 
             <h1
               className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6 animate-fade-in-up"
               style={{ animationDelay: "0.15s", opacity: 0 }}
             >
-              Your{" "}
+              One{" "}
               <span
                 className="inline-block transition-all duration-300"
                 style={{
@@ -89,22 +89,22 @@ export function Hero() {
                 {cyclingWords[wordIndex]}
               </span>
               <span className="animate-cursor-blink text-primary ml-1">|</span>
-              {" "}job.
+              {" "}contractor.
               <br />
-              One verified{" "}
-              <span className="gradient-text">contractor.</span>
+              <span className="gradient-text">Exclusively yours.</span>
               <br />
-              Zero spam calls.
+              <span className="text-foreground/70">No exceptions.</span>
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              The standard model distributes your contact information to five to seven contractors the instant you submit —
-              your phone rings within the hour. Nexus Operations works differently. Document your project with photos,
-              define a budget cap, and select a consultation window. A single licensed, insured contractor claims your job
-              exclusively. No bidding wars. No unsolicited calls. Always free for homeowners.
+              Most platforms sell your contact information to five to seven contractors the moment you hit submit —
+              and your phone rings within the hour. Nexus Operations was built on a different premise:
+              you set the scope, the budget ceiling, and the consultation window.
+              A single verified, insured professional claims your project exclusively.
+              No bidding wars. No spam calls. No compromise on who walks through your door.
             </p>
 
             <div
@@ -115,7 +115,7 @@ export function Hero() {
                 href="/login?tab=signup"
                 className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Submit a Request
+                Start Your Project — Free
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -133,12 +133,12 @@ export function Hero() {
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Shield, text: "1 contractor per job — not 7" },
-                { icon: Clock, text: "Consultation within 24 hrs" },
-                { icon: Star, text: "Free for homeowners, always" },
+                { icon: Lock, text: "You set the terms — scope, budget, schedule" },
+                { icon: CheckCircle2, text: "One professional, committed exclusively" },
+                { icon: Zap, text: "Consultation confirmed within 24 hours" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
-                  <Icon className="h-3.5 w-3.5 text-primary" />
+                  <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
                   <span>{text}</span>
                 </div>
               ))}
@@ -151,25 +151,25 @@ export function Hero() {
             style={{ animationDelay: "0.4s", opacity: 0 }}
           >
             <div className="animate-float-slow">
-              <div className="glass-card rounded-2xl p-6 w-[340px] shadow-2xl shadow-black/40">
+              <div className="glass-card rounded-2xl p-6 w-[360px] shadow-2xl shadow-black/40">
                 {/* Card header */}
                 <div className="flex items-center justify-between mb-5">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Active lead</p>
-                    <p className="text-sm font-semibold">Tree Removal — 3 Large Oaks</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Exclusive lead claimed</p>
+                    <p className="text-sm font-semibold">Roofing — Full Shingle Replacement</p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-medium text-primary">
-                    New
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium text-emerald-400">
+                    Confirmed
                   </span>
                 </div>
 
                 {/* Lead details */}
                 <div className="space-y-3 mb-5">
                   {[
-                    { label: "Budget", value: "$2,400 cap" },
-                    { label: "Location", value: "SW Topeka, KS" },
-                    { label: "Photos", value: "6 uploaded" },
-                    { label: "Window", value: "Sat Dec 14, 9–11am" },
+                    { label: "Budget cap", value: "$8,500 maximum" },
+                    { label: "Location", value: "NE Topeka, KS" },
+                    { label: "Documentation", value: "9 photos · written scope" },
+                    { label: "Consultation", value: "Sat, 10–11am — confirmed" },
                   ].map(({ label, value }) => (
                     <div key={label} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{label}</span>
@@ -178,33 +178,25 @@ export function Hero() {
                   ))}
                 </div>
 
-                {/* Progress bar */}
-                <div className="mb-5">
-                  <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
-                    <span>Match progress</span>
-                    <span>Awaiting claim</span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-primary"
-                      style={{
-                        width: "35%",
-                        animation: "progress-fill 2s ease 0.8s both",
-                        "--target-width": "35%",
-                      } as React.CSSProperties}
-                    />
+                {/* Exclusivity bar */}
+                <div className="mb-5 p-3 rounded-xl bg-primary/5 border border-primary/15">
+                  <div className="flex items-center gap-2 text-xs text-primary font-medium">
+                    <Lock className="h-3 w-3" />
+                    This lead is locked to one contractor. No one else can claim it.
                   </div>
                 </div>
 
-                {/* CTA */}
-                <button className="btn-shimmer w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity">
-                  Claim This Lead →
-                </button>
-
-                {/* Bottom */}
-                <p className="text-center text-[11px] text-muted-foreground mt-3">
-                  Posted 4 minutes ago · 0 contractors claimed
-                </p>
+                {/* Status */}
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span>Posted 6 minutes ago</span>
+                  <span className="flex items-center gap-1 text-emerald-400 font-medium">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                    </span>
+                    Claimed exclusively
+                  </span>
+                </div>
               </div>
             </div>
           </div>
