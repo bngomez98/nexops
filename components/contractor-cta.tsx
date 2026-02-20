@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from "react"
 const benefits = [
   {
     icon: Lock,
-    title: "Leads that belong to you — entirely",
-    description: "The instant you claim a request, it is removed from every other contractor's portal — permanently. You are the sole point of contact for this homeowner. No competing bids. No price undercutting. No wasted site visits against someone who will drop their margin to close the job.",
+    title: "Exclusive access to every request you claim",
+    description: "The instant you claim a request, it is removed from every other contractor's portal permanently. You are the sole point of contact for this property owner. There are no competing bids, no price undercutting, and no other contractor who can access the same lead.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -23,7 +23,7 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "One flat membership. No per-lead fees.",
+    title: "A flat monthly membership with no per-lead charges",
     description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
@@ -84,15 +84,15 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop competing for leads.
+              Replace shared-lead platforms with
               <br />
-              <span className="gradient-text">Start owning them.</span>
+              <span className="gradient-text">an exclusive project pipeline.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations
-              to replace unpredictable shared-lead platforms with a structured, exclusive pipeline.
-              You do not bid against competitors. You do not pay per lead. You claim a fully documented project
-              and it is yours from that moment to the final invoice — no exceptions.
+              Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations as a
+              replacement for shared-lead platforms. Every request you claim is yours exclusively — no competing
+              bids, no per-lead fees, and full project documentation available before you commit. Your membership
+              covers every category you are approved for, with no cap on the number of leads you can claim.
             </p>
 
             {/* Mini stats row */}

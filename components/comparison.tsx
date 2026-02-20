@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 
 const rows = [
   { feature: "Lead exclusivity", us: "One contractor per request, always", them: "3–7 contractors competing for the same lead" },
-  { feature: "Homeowner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data is sold" },
+  { feature: "Property owner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data is sold" },
   { feature: "Budget transparency", us: "Homeowner sets a cap before matching", them: "Contractor guesses after visiting the site" },
   { feature: "Project documentation", us: "Photos + specs required before match", them: "Optional, often absent" },
   { feature: "Consultation scheduling", us: "Pre-confirmed by homeowner at submission", them: "Phone tag, voicemails, missed calls" },
@@ -46,14 +46,14 @@ export function Comparison() {
         <div className="max-w-2xl mb-12 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            The old model was built for volume.
-            <span className="gradient-text"> Ours is built for outcomes.</span>
+            How Nexus Operations differs from
+            <span className="gradient-text"> traditional lead platforms</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms generate revenue by distributing your contact information to as many contractors as possible —
-            routinely 5 to 15 per request. The result is an inbox flooded with calls, a race to the bottom on pricing, and an
-            experience that disadvantages both homeowners and contractors alike. We rejected that model from day one:
-            one request, one contractor, full documentation, no exceptions.
+            Traditional platforms distribute contact information to multiple contractors simultaneously — routinely five to fifteen
+            per request. For property owners and managers, this means competing calls and no meaningful control over who is
+            contacted. For contractors, it means bidding against four or five peers on every job. Nexus Operations operates
+            on a different principle: one request, one contractor, with full project documentation required before any match is made.
           </p>
         </div>
 
@@ -118,10 +118,9 @@ export function Comparison() {
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
             <p className="text-sm text-muted-foreground">
-              One request. One verified contractor. Zero unsolicited calls. No platform has the right to sell your
-              contact information to seven people and call that a service. If no qualified contractor is currently
-              available in your area, you are told immediately — no indefinite wait, no ambiguity, no inbox full of
-              strangers competing for your attention.
+              When a property owner submits a request through Nexus Operations, their contact information is shared with
+              exactly one contractor — the professional who claims the request first. If no qualified contractor is
+              currently available in your area, you are notified immediately, with no indefinite wait and no unsolicited outreach.
             </p>
           </div>
         </div>

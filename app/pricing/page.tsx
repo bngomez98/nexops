@@ -105,11 +105,12 @@ export default function PricingPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                One price. Unlimited leads.
+                Contractor membership plans — one monthly rate, unlimited lead claims.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                No per-lead fees. No price ranges. No annual contracts. Choose the access tier that fits your
-                business — and start claiming exclusive, pre-qualified leads the day you are approved.
+                Each tier is priced at a flat monthly rate with no per-lead fees, no price ranges, and no annual contracts.
+                Choose the access level that fits your business and start claiming exclusive, pre-qualified project
+                requests the day your application is approved.
               </p>
             </div>
           </div>
@@ -204,7 +205,7 @@ export default function PricingPage() {
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One flat monthly fee — claim as many leads as you can handle</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>You are the only contractor on every job you claim</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Photos, specs, and a defined budget before you commit</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Consultation pre-scheduled by the homeowner — no callbacks</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Consultation pre-scheduled by the property owner — no callbacks needed</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One closed project typically covers 6+ months of membership</li>
                 </ul>
               </div>
@@ -233,16 +234,17 @@ export default function PricingPage() {
         {/* Free for homeowners */}
         <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight mb-4">Always free for homeowners</h2>
+            <h2 className="text-3xl font-semibold tracking-tight mb-4">Always free for property owners</h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Property owners never pay to submit a request or receive a match. Our platform is funded
-              entirely by contractor memberships — so homeowners get a premium matching experience at zero cost.
+              Property owners, landlords, and property managers never pay to submit a request or receive a contractor match.
+              The platform is funded entirely by contractor memberships, which means project requesters receive a structured,
+              documented matching process at no cost.
             </p>
             <Link
               href="/login?tab=signup"
               className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
             >
-              Submit a Request — It&apos;s Free
+              Submit a Project Request
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

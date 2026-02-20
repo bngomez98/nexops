@@ -24,9 +24,9 @@ export const metadata: Metadata = {
 const benefits = [
   {
     icon: Lock,
-    title: "True exclusivity — not just priority",
+    title: "Complete exclusivity on every request you claim",
     description:
-      "The instant you claim a request, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner. No competing quotes, no race to the bottom on price.",
+      "The instant you claim a request, it is removed from every other contractor's feed permanently. You are the only contractor contacting this property owner. There are no competing quotes and no pressure to reduce your price to win the job.",
   },
   {
     icon: Clock,
@@ -90,15 +90,15 @@ export default function ContractorsPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Leads that belong
+                Exclusive, pre-qualified
                 <br />
-                <span className="text-primary">to you alone.</span>
+                <span className="text-primary">project requests.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations provides licensed, insured contractors in Topeka and the surrounding region
-                with access to pre-qualified, exclusive project requests. No shared leads. No competing bids.
-                No cold calling into a crowded market. First-come, first-served — and every request you claim
-                is permanently, exclusively yours.
+                Nexus Operations gives licensed, insured contractors in Topeka and the surrounding region access
+                to documented, pre-qualified project requests from property owners and managers. Every request you
+                claim is yours exclusively — no shared leads, no competing bids, and no other contractor can access
+                it after you claim it. Requests are first-come, first-served, and the claim is permanent.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -182,7 +182,7 @@ export default function ContractorsPage() {
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$299/month flat — claim unlimited leads</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>You are the only contractor on every claimed job</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Photos and budget defined before you commit</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Consultation pre-confirmed by homeowner — no callbacks</li>
+                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Consultation pre-confirmed by the property owner — no callbacks needed</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>One closed project typically pays your membership for months</li>
                   </ul>
                 </div>
@@ -206,8 +206,8 @@ export default function ContractorsPage() {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Every contractor in the Nexus Operations network is manually reviewed and credentialed before
-                gaining access to project requests. This protects homeowners and ensures that when you win a
-                job, you are competing against verified professionals — not unlicensed or uninsured operators.
+                gaining access to project requests. This protects property owners and ensures that the network
+                consists of licensed, insured professionals — not unlicensed or uninsured operators.
                 Verification typically takes 3–5 business days.
               </p>
             </div>
@@ -238,9 +238,9 @@ export default function ContractorsPage() {
                   We accept established, insured trade professionals
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Nexus Operations is not a general handyman directory. Our homeowners expect licensed,
-                  insured trade professionals, and our network is built and maintained to that standard.
-                  Applications from unlicensed or uninsured operators are declined without exception.
+                  Nexus Operations is not a general handyman directory. Property owners and managers who use the
+                  platform expect licensed, insured trade professionals, and the network is built and maintained
+                  to that standard. Applications from unlicensed or uninsured operators are not accepted.
                 </p>
                 <ul className="flex flex-col gap-3">
                   {[

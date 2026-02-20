@@ -13,7 +13,7 @@ const steps = [
   {
     icon: DollarSign,
     title: "Define your budget ceiling",
-    description: "Set a hard cap before anyone is contacted. No surprises on-site. No negotiating blind.",
+    description: "Set a budget ceiling before any contractor is contacted, so there are no surprises during the consultation.",
   },
   {
     icon: CalendarRange,
@@ -73,19 +73,19 @@ export function SubmitCTA() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
                   </span>
-                  <span className="text-primary text-xs font-medium">Always free for homeowners</span>
+                  <span className="text-primary text-xs font-medium">Always free for property owners</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Your project, your terms.
+                  Define your project completely
                   <br />
-                  <span className="gradient-text">One contractor who earns it.</span>
+                  <span className="gradient-text">before anyone is contacted.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Define your project completely before anyone is contacted. Set the budget ceiling, choose your consultation
-                  window, and document the scope. A single verified professional reviews every detail and commits
-                  to your job — not to winning a bid against six competitors.
-                  There is no cost to homeowners, at any tier, ever.
+                  Nexus Operations is free for property owners, landlords, and property managers. You define the scope of
+                  work, set a budget ceiling, and select your consultation window before any contractor is contacted.
+                  A single verified professional reviews your full submission and commits to your project exclusively.
+                  There are no subscription fees, no hidden charges, and no obligation after the consultation.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
@@ -93,7 +93,7 @@ export function SubmitCTA() {
                     href="/login?tab=signup"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Start Your Project — Free
+                    Submit a Project Request
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">

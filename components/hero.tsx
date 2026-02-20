@@ -71,14 +71,14 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>
-              <span className="text-primary text-xs font-medium tracking-wide">Now live in Topeka, KS &mdash; a better way to hire</span>
+              <span className="text-primary text-xs font-medium tracking-wide">Now live in Topeka, KS &mdash; serving property owners and licensed contractors</span>
             </div>
 
             <h1
               className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6 animate-fade-in-up"
               style={{ animationDelay: "0.15s", opacity: 0 }}
             >
-              One{" "}
+              One verified{" "}
               <span
                 className="inline-block transition-all duration-300"
                 style={{
@@ -89,22 +89,21 @@ export function Hero() {
                 {cyclingWords[wordIndex]}
               </span>
               <span className="animate-cursor-blink text-primary ml-1">|</span>
-              {" "}contractor.
+              {" "}contractor,
               <br />
-              <span className="gradient-text">Exclusively yours.</span>
+              <span className="gradient-text">assigned to your project</span>
               <br />
-              <span className="text-foreground/70">No exceptions.</span>
+              <span className="text-foreground/70">and no one else.</span>
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Most platforms sell your contact information to five to seven contractors the moment you hit submit —
-              and your phone rings within the hour. Nexus Operations was built on a different premise:
-              you set the scope, the budget ceiling, and the consultation window.
-              A single verified, insured professional claims your project exclusively.
-              No bidding wars. No spam calls. No compromise on who walks through your door.
+              Nexus Operations is a structured project matching platform for property owners, landlords, and
+              property managers. You define the scope of work, set a budget ceiling, and select a consultation
+              window before any contractor is contacted. A single verified, insured professional then claims your
+              request and works with you exclusively — from the initial consultation through the final invoice.
             </p>
 
             <div
@@ -115,7 +114,7 @@ export function Hero() {
                 href="/login?tab=signup"
                 className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Start Your Project — Free
+                Submit a Project Request
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -133,9 +132,9 @@ export function Hero() {
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Lock, text: "You set the terms — scope, budget, schedule" },
-                { icon: CheckCircle2, text: "One professional, committed exclusively" },
-                { icon: Zap, text: "Consultation confirmed within 24 hours" },
+                { icon: Lock, text: "You define the scope, budget, and schedule upfront" },
+                { icon: CheckCircle2, text: "One verified professional, assigned exclusively" },
+                { icon: Zap, text: "Consultation confirmed within 24 hours of submission" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary shrink-0" />

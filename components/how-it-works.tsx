@@ -39,7 +39,7 @@ const steps = [
     number: "04",
     title: "Project moves forward",
     description:
-      "Following the on-site consultation, you receive a written, itemized estimate. Accept, negotiate, or decline — with no obligation. Every completed project is reviewed for quality, and contractor standing in the network is updated accordingly.",
+      "Following the on-site consultation, you receive a written, itemized estimate. You are under no obligation to proceed, and all pricing decisions remain with you. Every completed project is reviewed for quality, and contractor standing in the network is updated accordingly.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -87,8 +87,9 @@ export function HowItWorks() {
             From submission to consultation in under 24 hours
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            No phone tag. No inbox flooded by contractors who all received your number at the same time.
-            Submit your project once — with documentation and a defined budget — and we match you with a single verified professional.
+            Submit your project with photos, a written scope, and a defined budget ceiling. Qualified contractors in your area
+            are notified, and the first to claim the request is assigned exclusively to your project.
+            From that point forward, you work with one professional and one professional only.
           </p>
         </div>
 
