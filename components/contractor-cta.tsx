@@ -8,7 +8,7 @@ const benefits = [
   {
     icon: Lock,
     title: "Leads that belong to you — entirely",
-    description: "The instant you claim a request, it is removed from every other contractor's portal — permanently. You are the sole point of contact for this homeowner. No competing bids. No price undercutting. No wasted site visits against someone who will drop their margin to close the job.",
+    description: "The instant you claim a request, it is locked to you permanently and removed from every other contractor's view. You are the sole point of contact for this homeowner, working from a fully documented project profile and a pre-confirmed consultation window.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -84,15 +84,15 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop competing for leads.
+              Every lead you claim
               <br />
-              <span className="gradient-text">Start owning them.</span>
+              <span className="gradient-text">is yours. Exclusively.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations
-              to replace unpredictable shared-lead platforms with a structured, exclusive pipeline.
-              You do not bid against competitors. You do not pay per lead. You claim a fully documented project
-              and it is yours from that moment to the final invoice — no exceptions.
+              to build a structured, exclusive pipeline of pre-qualified residential projects.
+              Every lead you claim comes fully documented — photos, budget cap, written scope,
+              and a pre-confirmed consultation window. Yours from claim to final invoice, with no exceptions.
             </p>
 
             {/* Mini stats row */}

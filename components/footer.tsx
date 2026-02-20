@@ -11,7 +11,7 @@ export function Footer() {
               <Logo />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              A two-sided marketplace built around one principle: one project, one verified contractor. No shared leads. No bidding wars. Free for homeowners.
+              A structured, two-sided marketplace built around one principle: one project, one verified contractor, confirmed on your terms. Always free for homeowners.
             </p>
           </div>
 

@@ -7,7 +7,7 @@ const values = [
   {
     icon: Users,
     title: "The homeowner deserves control",
-    body: "You own the project. You should set the scope, the budget ceiling, and the consultation window — before a single contractor is contacted. Not after you have already given your number to six strangers who all received it at the same time.",
+    body: "You own the project. At Nexus Operations, you set the scope, the budget ceiling, and the consultation window — before a single contractor is contacted. The first step is yours to define, on your terms.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -15,7 +15,7 @@ const values = [
   {
     icon: ShieldCheck,
     title: "The contractor deserves exclusivity",
-    body: "A skilled professional should not have to fight five competitors for the same job, or undercut their margin just to win a bid. When a contractor claims a request on Nexus, they have earned it outright — no auction, no race to the bottom, no erosion of their craft.",
+    body: "When a contractor claims a request on Nexus Operations, that lead is theirs outright and permanently. The path from claim to consultation is clear, documented, and structured entirely around the contractor's ability to do their best work.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -23,7 +23,7 @@ const values = [
   {
     icon: FileText,
     title: "Both sides deserve preparation",
-    body: "Bad projects start with bad information. We require full documentation — photos, written scope, a defined budget cap — before any match is made. The result is a consultation that is productive from the first minute, not a fishing expedition for someone who already called seven people.",
+    body: "We require full documentation — photos, written scope, a defined budget cap — before any match is made. The result is a consultation that is productive from the first minute, with both parties arriving informed and ready to move forward.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -76,19 +76,19 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            Home improvement became adversarial.
-            <span className="gradient-text"> We built an alternative.</span>
+            We built the marketplace homeowners
+            <span className="gradient-text"> and contractors actually deserve.</span>
           </h2>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
-              Homeowners brace for spam calls the moment they submit a request. Contractors undercut their margin
-              to survive a bidding war they never agreed to enter. The platforms connecting them profit by
-              distributing contact information as widely as possible — five, ten, fifteen contractors
-              per lead — and calling that a service.
+              At Nexus Operations, homeowners retain full control of every project detail before anyone is
+              contacted. Contractors receive pre-qualified, fully documented leads and convert them on their
+              own terms. Every connection made through our platform is structured, intentional, and built
+              around outcomes for both sides.
             </p>
             <p className="text-foreground/80 font-medium">
-              Nexus Operations was built on a different premise: one request, one verified contractor,
-              no exceptions. Not as a feature. As a founding belief.
+              One request. One verified contractor. No exceptions.
+              Not as a feature. As a founding belief.
             </p>
           </div>
         </div>

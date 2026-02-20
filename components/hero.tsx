@@ -100,11 +100,11 @@ export function Hero() {
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Most platforms sell your contact information to five to seven contractors the moment you hit submit —
-              and your phone rings within the hour. Nexus Operations was built on a different premise:
-              you set the scope, the budget ceiling, and the consultation window.
-              A single verified, insured professional claims your project exclusively.
-              No bidding wars. No spam calls. No compromise on who walks through your door.
+              On Nexus Operations, you define every detail before a contractor is ever contacted —
+              scope, budget ceiling, and consultation window set entirely by you.
+              A single verified, insured professional then claims your project exclusively.
+              One point of contact. Full documentation upfront.
+              A consultation confirmed on your schedule, not theirs.
             </p>
 
             <div
