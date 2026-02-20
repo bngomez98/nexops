@@ -13,6 +13,7 @@ import {
   Users,
   Eye,
   Layers,
+  TrendingUp,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -76,6 +77,63 @@ const howItWorks = [
     title: "Review, approve, and close",
     description:
       "Receive a standardized quote with documentation for owner approval. Every job follows the same process, making it easy to present options, track history, and report across your portfolio.",
+  },
+]
+
+const roiStats = [
+  {
+    stat: "40%",
+    label: "Guest satisfaction increase",
+    description:
+      "Fast maintenance response times drive measurable improvements in guest and tenant satisfaction scores.",
+  },
+  {
+    stat: "20%",
+    label: "Occupancy rate boost",
+    description:
+      "Higher satisfaction scores translate directly into improved occupancy rates across managed properties.",
+  },
+  {
+    stat: "10–15%",
+    label: "More rental income",
+    description:
+      "Occupancy gains and tenant retention compound into a significant increase in annual rental revenue per property.",
+  },
+  {
+    stat: "15–20%",
+    label: "Reduction in maintenance costs",
+    description:
+      "Streamlined workflows and automated administrative tasks cut maintenance overhead by thousands annually per property.",
+  },
+  {
+    stat: "10 hrs/wk",
+    label: "Saved per property",
+    description:
+      "Automating follow-ups and repair tracking saves approximately $1,500–$2,000 per month in labor costs per property.",
+  },
+  {
+    stat: "10–15%",
+    label: "More market value retained",
+    description:
+      "Well-maintained properties preserve significantly more equity over time compared to reactively managed units.",
+  },
+  {
+    stat: "2–3×",
+    label: "More properties per manager",
+    description:
+      "Operational efficiency lets managers oversee larger portfolios without proportionally increasing headcount.",
+  },
+  {
+    stat: "30–40%",
+    label: "Less management overhead",
+    description:
+      "Consolidated workflows reduce administrative burden, freeing managers to focus on higher-value activity.",
+  },
+  {
+    stat: "25%",
+    label: "More listing visibility",
+    description:
+      "Faster repairs and stronger guest reviews improve listing rankings and platform visibility.",
   },
 ]
 
@@ -369,6 +427,46 @@ export default function PropertyManagersPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ROI / Measurable Results */}
+        <section className="py-24 lg:py-32">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-16">
+              <div className="flex items-center gap-2 mb-3">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                <p className="text-primary text-sm font-medium tracking-wide">Measurable ROI</p>
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+                Results backed by industry data
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Nexus Operations delivers real, quantifiable outcomes — across revenue, cost reduction,
+                labor savings, and portfolio scalability. These are the numbers property managers
+                report when they move from fragmented vendor management to a centralized workflow.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {roiStats.map((item) => (
+                <div
+                  key={item.label}
+                  className="p-6 rounded-2xl bg-card border border-border/40 hover:border-primary/30 transition-colors"
+                >
+                  <p className="text-3xl font-semibold text-primary mb-1">{item.stat}</p>
+                  <p className="text-sm font-semibold mb-2">{item.label}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+            <div className="p-6 rounded-2xl border border-primary/20 bg-primary/5">
+              <p className="text-sm text-center text-foreground/80 leading-relaxed max-w-2xl mx-auto">
+                Taken together, these gains represent a{" "}
+                <span className="font-semibold text-foreground">proven ROI</span> — decreasing
+                operational expenses, increasing revenue, and enabling scalable portfolio growth
+                without proportionally increasing staffing or overhead.
+              </p>
             </div>
           </div>
         </section>
