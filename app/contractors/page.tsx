@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Stop paying per lead shared with five competitors. Nexus Operations delivers exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Licensed and insured contractors only. Flat monthly membership starting at $299.",
+    "Nexus Operations delivers exclusive, fully documented project requests to licensed contractors — with photos, written scope, and a confirmed budget cap. Claim a lead and it is permanently yours. Licensed and insured contractors only. Flat monthly membership starting at $299.",
 }
 
 const benefits = [
@@ -95,10 +95,10 @@ export default function ContractorsPage() {
                 <span className="text-primary">to you alone.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations provides licensed, insured contractors in Topeka and the surrounding region
-                with access to pre-qualified, exclusive project requests. No shared leads. No competing bids.
-                No cold calling into a crowded market. First-come, first-served — and every request you claim
-                is permanently, exclusively yours.
+                Nexus Operations connects licensed, insured contractors in Topeka and the surrounding region
+                with pre-qualified, exclusive project requests. Every lead you claim comes fully documented —
+                photos, written scope, defined budget cap, and a pre-confirmed consultation window.
+                Claim it first, and it is permanently, exclusively yours.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -128,10 +128,9 @@ export default function ContractorsPage() {
                 Built around contractor economics
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Shared-lead platforms are optimized to sell your contact information as many times as possible —
-                maximizing their revenue at the cost of your close rate. Nexus Operations is structured around
-                the opposite model: your membership funds a pipeline that works exclusively for you, with every
-                request you claim guaranteed off-limits to every other contractor on the platform.
+                Nexus Operations is built around your close rate and your business model. Your membership
+                funds a pipeline designed to deliver qualified, fully documented project requests — and every
+                lead you claim is guaranteed off-limits to every other contractor on the platform.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -238,9 +237,10 @@ export default function ContractorsPage() {
                   We accept established, insured trade professionals
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Nexus Operations is not a general handyman directory. Our homeowners expect licensed,
-                  insured trade professionals, and our network is built and maintained to that standard.
-                  Applications from unlicensed or uninsured operators are declined without exception.
+                  Nexus Operations is a vetted network of licensed, insured trade professionals.
+                  Our homeowners expect that standard — and our application and verification process
+                  ensures every contractor in the network meets it. We accept established professionals
+                  and maintain that bar without exception.
                 </p>
                 <ul className="flex flex-col gap-3">
                   {[

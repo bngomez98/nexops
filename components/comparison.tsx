@@ -46,14 +46,14 @@ export function Comparison() {
         <div className="max-w-2xl mb-12 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            The old model was built for volume.
-            <span className="gradient-text"> Ours is built for outcomes.</span>
+            Every decision we&apos;ve made
+            <span className="gradient-text"> is built for outcomes.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms generate revenue by distributing your contact information to as many contractors as possible —
-            routinely 5 to 15 per request. The result is an inbox flooded with calls, a race to the bottom on pricing, and an
-            experience that disadvantages both homeowners and contractors alike. We rejected that model from day one:
-            one request, one contractor, full documentation, no exceptions.
+            At Nexus Operations, every project request is matched to exactly one contractor — fully documented,
+            budget-capped, and consultation-confirmed before the connection is made. The result is a structured
+            process that respects both parties&apos; time, delivers qualified engagements, and creates the
+            conditions for every project to succeed.
           </p>
         </div>
 
@@ -118,10 +118,9 @@ export function Comparison() {
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
             <p className="text-sm text-muted-foreground">
-              One request. One verified contractor. Zero unsolicited calls. No platform has the right to sell your
-              contact information to seven people and call that a service. If no qualified contractor is currently
-              available in your area, you are told immediately — no indefinite wait, no ambiguity, no inbox full of
-              strangers competing for your attention.
+              One request. One verified contractor. A pre-confirmed consultation, on your schedule.
+              If no qualified contractor is currently available in your area, you are told immediately —
+              no indefinite wait, no ambiguity, no unsolicited contact from anyone.
             </p>
           </div>
         </div>
