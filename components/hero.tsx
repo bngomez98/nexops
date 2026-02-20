@@ -71,7 +71,7 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>
-              <span className="text-primary text-xs font-medium tracking-wide">Now live in Topeka, KS &mdash; a better way to hire</span>
+              <span className="text-primary text-xs font-medium tracking-wide">Now serving Topeka, KS &mdash; one project, one professional</span>
             </div>
 
             <h1
@@ -93,18 +93,18 @@ export function Hero() {
               <br />
               <span className="gradient-text">Exclusively yours.</span>
               <br />
-              <span className="text-foreground/70">No exceptions.</span>
+              <span className="text-foreground/70">That&apos;s the whole system.</span>
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Most platforms sell your contact information to five to seven contractors the moment you hit submit —
-              and your phone rings within the hour. Nexus Operations was built on a different premise:
-              you set the scope, the budget ceiling, and the consultation window.
-              A single verified, insured professional claims your project exclusively.
-              No bidding wars. No spam calls. No compromise on who walks through your door.
+              Nexus Operations is a contractor marketplace built around one rule: your project goes to one
+              professional — not a list. You submit your project once with photos, a written scope, and a real
+              budget ceiling. A single licensed, insured contractor in your area claims it exclusively before
+              your phone rings. They arrive at your consultation already knowing the scope. You already know
+              who&apos;s coming. That&apos;s what it means to hire with confidence.
             </p>
 
             <div
@@ -133,9 +133,9 @@ export function Hero() {
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Lock, text: "You set the terms — scope, budget, schedule" },
-                { icon: CheckCircle2, text: "One professional, committed exclusively" },
-                { icon: Zap, text: "Consultation confirmed within 24 hours" },
+                { icon: Lock, text: "Your project is never sold or shared with a list" },
+                { icon: CheckCircle2, text: "Every contractor is licensed, insured, and verified" },
+                { icon: Zap, text: "Consultation confirmed within 24 hours — on your schedule" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
