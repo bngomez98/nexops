@@ -19,6 +19,7 @@ export function Header() {
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Services", href: "/services" },
     { label: "For Contractors", href: "/contractors" },
+    { label: "For Property Managers", href: "/property-managers" },
     { label: "Contact", href: "/contact" },
   ]
 
