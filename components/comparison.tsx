@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 
 const rows = [
   { feature: "Lead exclusivity", us: "One contractor per request, always", them: "3–7 contractors competing for the same lead" },
-  { feature: "Homeowner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data is sold" },
+  { feature: "Homeowner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data gets sold" },
   { feature: "Budget transparency", us: "Homeowner sets a cap before matching", them: "Contractor guesses after visiting the site" },
   { feature: "Project documentation", us: "Photos + specs required before match", them: "Optional, often absent" },
   { feature: "Consultation scheduling", us: "Pre-confirmed by homeowner at submission", them: "Phone tag, voicemails, missed calls" },
@@ -24,106 +24,104 @@ export function Comparison() {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 80)
+            setTimeout(() => node.classList.add("in-view"), i * 70)
           })
           observer.disconnect()
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     )
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 lg:py-36 relative overflow-hidden">
       <div
-        className="absolute right-0 bottom-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
+        className="absolute right-0 bottom-0 w-[450px] h-[450px] rounded-full pointer-events-none opacity-[0.025]"
+        style={{ background: "radial-gradient(circle, oklch(0.76 0.17 158), transparent 70%)" }}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            The old model was built for volume.
-            <span className="gradient-text"> Ours is built for outcomes.</span>
+        <div className="max-w-2xl mb-14 reveal">
+          <p className="section-overline mb-4">Why Nexus Operations</p>
+          <h2 className="text-3xl lg:text-[2.5rem] font-bold tracking-[-0.02em] leading-[1.12] mb-5">
+            The old model ran on volume.
+            <br />
+            <span className="gradient-text">Ours runs on outcomes.</span>
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms generate revenue by distributing your contact information to as many contractors as possible —
-            routinely 5 to 15 per request. The result is an inbox flooded with calls, a race to the bottom on pricing, and an
-            experience that disadvantages both homeowners and contractors alike. We rejected that model from day one:
-            one request, one contractor, full documentation, no exceptions.
+          <p className="text-[15px] text-muted-foreground leading-relaxed">
+            Traditional platforms generate revenue by distributing your contact information to as many contractors as
+            possible — routinely 5 to 15 per request. The result is an inbox flooded with calls, a race to the bottom
+            on pricing, and an experience that disadvantages everyone. We rejected that model from day one.
           </p>
         </div>
 
         {/* Comparison table */}
-        <div className="rounded-2xl border border-border/40 overflow-hidden bg-card reveal" style={{ transitionDelay: "100ms" }}>
-          {/* Header */}
-          <div className="grid grid-cols-3 border-b border-border/40 bg-secondary/30">
-            <div className="py-4 px-6 text-sm font-semibold text-muted-foreground">Feature</div>
-            <div className="py-4 px-6 border-l border-border/40">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <span className="text-sm font-bold text-primary">Nexus Operations</span>
-              </div>
-            </div>
-            <div className="py-4 px-6 border-l border-border/40 text-sm font-medium text-muted-foreground">
-              Traditional Platforms
-            </div>
-          </div>
-
-          {rows.map((row, i) => (
-            <div
-              key={row.feature}
-              className={`grid grid-cols-3 border-b border-border/20 last:border-0 transition-colors duration-150 cursor-default ${
-                hoveredRow === i ? "bg-secondary/20" : ""
-              }`}
-              onMouseEnter={() => setHoveredRow(i)}
-              onMouseLeave={() => setHoveredRow(null)}
-            >
-              <div className="py-4 px-6 text-sm text-foreground/80 flex items-center">
-                {row.feature}
-              </div>
-              <div className={`py-4 px-6 border-l transition-colors duration-150 ${
-                hoveredRow === i ? "border-primary/30" : "border-border/40"
-              }`}>
-                <div className="flex items-center gap-2.5">
-                  <div className={`flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 border border-primary/20 shrink-0 transition-transform duration-200 ${hoveredRow === i ? "scale-110" : ""}`}>
-                    <Check className="h-3 w-3 text-primary" />
+        <div className="reveal overflow-x-auto" style={{ transitionDelay: "80ms" }}>
+          <table className="w-full min-w-[600px]">
+            <thead>
+              <tr className="border-b border-border/40">
+                <th className="text-left py-4 pr-8 text-[13px] font-medium text-muted-foreground w-[220px]">Feature</th>
+                <th className="text-left py-4 pr-8">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    <span className="text-[13px] font-bold text-primary">Nexus Operations</span>
                   </div>
-                  <span className="text-sm text-foreground font-medium">{row.us}</span>
-                </div>
-              </div>
-              <div className="py-4 px-6 border-l border-border/40">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-secondary shrink-0">
-                    <X className="h-3 w-3 text-muted-foreground/50" />
-                  </div>
-                  <span className="text-sm text-muted-foreground">{row.them}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+                </th>
+                <th className="text-left py-4 text-[13px] font-medium text-muted-foreground">
+                  Traditional Platforms
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr
+                  key={row.feature}
+                  className={`border-b border-border/20 last:border-0 transition-colors duration-150 cursor-default ${
+                    hoveredRow === i ? "bg-secondary/15" : ""
+                  }`}
+                  onMouseEnter={() => setHoveredRow(i)}
+                  onMouseLeave={() => setHoveredRow(null)}
+                >
+                  <td className="py-4 pr-8 text-[13px] text-foreground/65 align-top">{row.feature}</td>
+                  <td className="py-4 pr-8 align-top">
+                    <div className="flex items-start gap-2.5">
+                      <div
+                        className={`flex items-center justify-center w-4.5 h-4.5 rounded-full bg-primary/10 border border-primary/25 shrink-0 mt-0.5 transition-transform duration-200 ${
+                          hoveredRow === i ? "scale-110" : ""
+                        }`}
+                      >
+                        <Check className="h-2.5 w-2.5 text-primary" />
+                      </div>
+                      <span className="text-[13px] font-medium leading-relaxed">{row.us}</span>
+                    </div>
+                  </td>
+                  <td className="py-4 align-top">
+                    <div className="flex items-start gap-2.5">
+                      <div className="flex items-center justify-center w-4.5 h-4.5 rounded-full bg-secondary shrink-0 mt-0.5">
+                        <X className="h-2.5 w-2.5 text-muted-foreground/45" />
+                      </div>
+                      <span className="text-[13px] text-muted-foreground leading-relaxed">{row.them}</span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* Callout */}
+        {/* Commitment callout */}
         <div
-          className="mt-6 p-5 rounded-xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 reveal"
-          style={{ transitionDelay: "200ms" }}
+          className="mt-8 pl-6 border-l-2 border-primary/35 reveal"
+          style={{ transitionDelay: "160ms" }}
         >
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 shrink-0">
-            <Check className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
-            <p className="text-sm text-muted-foreground">
-              One request. One verified contractor. Zero unsolicited calls. No platform has the right to sell your
-              contact information to seven people and call that a service. If no qualified contractor is currently
-              available in your area, you are told immediately — no indefinite wait, no ambiguity, no inbox full of
-              strangers competing for your attention.
-            </p>
-          </div>
+          <p className="text-[13px] font-semibold text-foreground mb-1">The Nexus Commitment</p>
+          <p className="text-[13px] text-muted-foreground leading-relaxed max-w-2xl">
+            One request. One verified contractor. Zero unsolicited calls. No platform has the right to sell your
+            contact information to seven people and call that a service. If no qualified contractor is available
+            in your area, we tell you immediately — no indefinite wait, no ambiguity.
+          </p>
         </div>
       </div>
     </section>

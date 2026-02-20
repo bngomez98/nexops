@@ -17,7 +17,7 @@ const stats: Stat[] = [
   { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
 ]
 
-function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {
+function useCountUp(target: number, duration = 1200, enabled = false, decimals = 0) {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function useCountUp(target: number, duration = 1400, enabled = false, decimals =
     const step = (ts: number) => {
       if (!start) start = ts
       const progress = Math.min((ts - start) / duration, 1)
-      const ease = 1 - Math.pow(1 - progress, 3) // ease-out-cubic
+      const ease = 1 - Math.pow(1 - progress, 3)
       setCount(parseFloat((ease * target).toFixed(decimals)))
       if (progress < 1) requestAnimationFrame(step)
     }
@@ -46,16 +46,16 @@ function StatItem({ stat, enabled, index }: { stat: Stat; enabled: boolean; inde
 
   return (
     <div
-      className="group text-center lg:text-left reveal"
-      style={{ transitionDelay: `${index * 120}ms` }}
+      className="reveal group"
+      style={{ transitionDelay: `${index * 100}ms` }}
     >
-      {/* Accent line */}
-      <div className="hidden lg:block h-0.5 w-8 bg-primary rounded-full mb-4 group-hover:w-14 transition-all duration-300" />
-
-      <div className="text-3xl lg:text-4xl font-bold tracking-tight text-primary mb-1.5 tabular-nums">
-        {stat.prefix ?? ""}{displayValue}{stat.suffix}
+      <div className="text-[2.75rem] lg:text-5xl font-bold tracking-[-0.03em] text-foreground mb-2 tabular-nums leading-none">
+        <span className="text-primary/80">{stat.prefix ?? ""}</span>
+        {displayValue}
+        <span className="text-primary/80">{stat.suffix}</span>
       </div>
-      <div className="text-sm text-muted-foreground leading-snug">{stat.label}</div>
+      <div className="text-[13px] text-muted-foreground leading-snug max-w-[200px]">{stat.label}</div>
+      <div className="accent-line mt-4 group-hover:w-12" />
     </div>
   )
 }
@@ -72,29 +72,27 @@ export function Stats() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true)
-          // Add in-view class to all reveal elements
           el.querySelectorAll(".reveal").forEach((node) => node.classList.add("in-view"))
           observer.disconnect()
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.25 }
     )
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-20 border-y border-border/40 bg-card/30 relative overflow-hidden">
-      {/* Subtle glow behind */}
+    <section ref={sectionRef} className="py-20 lg:py-28 border-y border-border/30 relative overflow-hidden">
       <div
-        className="absolute inset-0 pointer-events-none opacity-30"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at 50% 50%, oklch(0.75 0.18 155 / 0.04), transparent 60%)",
+          background: "radial-gradient(ellipse at 50% 120%, oklch(0.76 0.17 158 / 0.03), transparent 60%)",
         }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
           {stats.map((stat, i) => (
             <StatItem key={stat.label} stat={stat} enabled={inView} index={i} />
           ))}
