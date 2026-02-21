@@ -8,7 +8,7 @@ const categories = [
   {
     icon: TreePine,
     name: "Tree Removal",
-    description: "Licensed removal of hazardous and non-hazardous trees, crown reduction, directional felling, stump grinding, and post-storm risk assessment. All contractors hold ISA-certified arborist credentials and adhere to ANSI A300 industry standards.",
+    description: "Tree removal and stump grinding. Licensed professionals with certified credentials.",
     budget: "$500 – $8,000",
     available: true,
     tag: "Available",
@@ -16,7 +16,7 @@ const categories = [
   {
     icon: HardHat,
     name: "Concrete Work",
-    description: "Residential and commercial flatwork including driveways, patios, walkways, and retaining walls. Structural repair, stamped and exposed aggregate finishes. Mix design, PSI specification, and reinforcement documented before project start.",
+    description: "Driveways, patios, walkways, and retaining walls. Structural repair and custom finishes.",
     budget: "$1,200 – $15,000",
     available: true,
     tag: "Available",
@@ -24,7 +24,7 @@ const categories = [
   {
     icon: Home,
     name: "Roofing",
-    description: "Full tear-off and replacement, overlay systems, standing seam metal, TPO and modified bitumen flat roofing, emergency leak mitigation, and insurance-grade storm-damage documentation. All work performed to NRCA installation guidelines.",
+    description: "Full roof replacement, repairs, and emergency leak mitigation. All contractors licensed and insured.",
     budget: "$300 – $25,000",
     available: true,
     tag: "Available",
@@ -32,7 +32,7 @@ const categories = [
   {
     icon: Flame,
     name: "HVAC",
-    description: "Central air installation, heat pump and ductless mini-split systems, furnace replacement, ductwork design and air-sealing, and preventive maintenance agreements. All technicians hold EPA 608 certification; equipment selections include ENERGY STAR-rated units.",
+    description: "Heating and cooling system installation and replacement. Licensed technicians with EPA certification.",
     budget: "$3,000 – $20,000",
     available: false,
     tag: "Coming Soon",
@@ -40,7 +40,7 @@ const categories = [
   {
     icon: Fence,
     name: "Fencing",
-    description: "Privacy, semi-privacy, and perimeter fencing in cedar, pressure-treated pine, vinyl, steel chain-link, ornamental iron, and agricultural wire. Posts set to frost-line depth and compliant with local zoning setback and HOA requirements.",
+    description: "Privacy fencing, perimeter fencing, and decorative options. Professional installation.",
     budget: "$1,500 – $8,000",
     available: false,
     tag: "Coming Soon",
@@ -48,7 +48,7 @@ const categories = [
   {
     icon: Zap,
     name: "Electrical",
-    description: "Service panel upgrades (100A–400A), branch circuit additions, whole-home rewiring, subpanel installation, EV charger rough-in, and permit-ready NEC code compliance inspections. All work performed by licensed master or journeyman electricians.",
+    description: "Panel upgrades, wiring, and EV charger installation. Licensed electrician on every project.",
     budget: "$500 – $10,000",
     available: false,
     tag: "Coming Soon",

@@ -18,33 +18,33 @@ import {
 export const metadata: Metadata = {
   title: "For Property Managers | Nexus Operations",
   description:
-    "Nexus Operations gives property managers a centralized, high-efficiency solution for maintenance — with pre-vetted contractors, photo documentation, budget caps, and automatic scheduling. Manage your entire portfolio without the overhead.",
+    "Manage maintenance across your entire portfolio. One workflow. Pre-vetted contractors. No vendor coordination.",
 }
 
 const benefits = [
   {
     icon: ShieldCheck,
-    title: "Automated contractor vetting & compliance",
+    title: "Pre-vetted contractors",
     description:
-      "Every contractor claiming a job has been pre-verified for active licensing at the state and local levels, general liability and workers' comp documentation, and tracked performance metrics across all jobs. Your liability exposure is managed before a contractor ever sets foot on a property.",
+      "All contractors are verified for licensing, insurance, and performance. Liability is managed before anyone touches a property.",
   },
   {
     icon: Clock,
-    title: "Drastic reduction in soft costs",
+    title: "Less time coordinating estimates",
     description:
-      "Stop calling five contractors to get three quotes. Submit your photos and specs once. You don't manage outreach — the contractor claims the job and the consultation is automatically scheduled based on your or your tenant's availability. No phone tag.",
+      "Submit once. One contractor claims it. Consultation scheduled automatically. No phone tag.",
   },
   {
     icon: Eye,
-    title: "Remote maintenance management",
+    title: "Remote management",
     description:
-      "Photo documentation and budget caps are required upfront, so you can manage repairs across a wide portfolio without being on-site for every estimate. See the tree damage or the roof leak before the contractor does. Set the maximum spend you're authorized by the property owner before the project is even claimed.",
+      "Manage repairs across multiple properties without being on-site. You see photos and set budgets upfront.",
   },
   {
     icon: Layers,
-    title: "Scalability for large portfolios",
+    title: "Same process at scale",
     description:
-      "Whether you manage 10 doors or 500, the process is identical. One consolidated vendor pool replaces your Rolodex of subcontractors across Tree, Concrete, and Roofing categories — with HVAC, Fencing, and more coming soon. Every job follows the same documentation and quoting process.",
+      "Whether you manage 10 doors or 500, every job follows the same documented process.",
   },
 ]
 
@@ -52,30 +52,26 @@ const howItWorks = [
   {
     icon: Building2,
     step: "01",
-    title: "Submit your request",
-    description:
-      "Upload photos of the issue, write a brief description, and set your authorized budget cap. One submission covers the full scope — no follow-up calls required.",
+    title: "Submit",
+    description: "Upload photos, describe the issue, set your budget cap.",
   },
   {
     icon: ShieldCheck,
     step: "02",
-    title: "A verified contractor claims the job",
-    description:
-      "Your request enters the feed of pre-vetted, licensed, and insured contractors in the right category. The first to claim it locks the job exclusively. No competing contractors contacting your tenant.",
+    title: "Contractor claims it",
+    description: "One verified contractor locks the job. Exclusively.",
   },
   {
     icon: Clock,
     step: "03",
-    title: "Consultation is auto-scheduled",
-    description:
-      "Once claimed, the platform schedules the on-site consultation against your availability or your tenant's — within 24 hours of submission in most cases. No coordination overhead on your end.",
+    title: "Auto-scheduled",
+    description: "Consultation scheduled within 24 hours. No coordination needed.",
   },
   {
     icon: CheckCircle,
     step: "04",
-    title: "Review, approve, and close",
-    description:
-      "Receive a standardized quote with documentation for owner approval. Every job follows the same process, making it easy to present options, track history, and report across your portfolio.",
+    title: "Review & approve",
+    description: "Standardized quote. Easy to report. Done.",
   },
 ]
 
@@ -95,10 +91,7 @@ export default function PropertyManagersPage() {
                 <span className="text-primary">the overhead.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations gives property managers a centralized, high-efficiency solution for
-                maintenance requests — pre-vetted contractors, photo documentation, budget controls, and
-                automatic scheduling. Manage your entire portfolio without vetting vendors or chasing
-                estimates.
+                One workflow for maintenance across your entire portfolio. No vetting vendors. No chasing estimates.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -125,12 +118,10 @@ export default function PropertyManagersPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Built for portfolio-scale operations
+                Built for property managers
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Property managers face unique pressures: liability exposure, soft-cost accumulation from
-                chasing estimates, and tenant satisfaction tied directly to maintenance speed. Nexus
-                Operations addresses all three with a single, standardized workflow.
+                Manage liability. Save time on estimates. Keep tenants satisfied. One workflow for all three.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -155,12 +146,10 @@ export default function PropertyManagersPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                One workflow for every property
+                Same process at any scale
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Whether you manage 10 doors or 500, every maintenance request follows the same
-                documented, auditable process — making it easy to report to property owners and keep
-                tenants informed.
+                10 properties or 500. Same documented process. Easy to report.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -268,9 +257,7 @@ export default function PropertyManagersPage() {
                   The same process whether you manage 10 doors or 500
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Nexus Operations replaces a fragmented vendor Rolodex with a single point of entry
-                  for your maintenance needs. Every contractor is pre-verified. Every job is documented
-                  the same way. Every quote is structured for owner approval.
+                  One entry point for all maintenance. Every contractor verified. Every job documented the same way. Easy owner approval.
                 </p>
                 <ul className="flex flex-col gap-3">
                   {[
@@ -337,9 +324,7 @@ export default function PropertyManagersPage() {
                 Tenant satisfaction is a retention metric
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-                Maintenance delays are the number one driver of tenant turnover. When tenants call
-                with a problem, Nexus Operations puts a verified, professional contractor on the job
-                within 24 hours — not a week of scheduling calls and no-shows.
+                Maintenance delays drive tenant turnover. Get a verified contractor on the job within 24 hours.
               </p>
               <div className="grid sm:grid-cols-3 gap-6 text-left">
                 {[
@@ -380,10 +365,7 @@ export default function PropertyManagersPage() {
               Interested in a Corporate Account?
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              If you manage a portfolio in the Topeka area and want to streamline your maintenance
-              workflow, contact us for specialized property management onboarding. We&apos;ll walk
-              through your portfolio size, service needs, and how Nexus integrates with your
-              current process.
+              Manage multiple properties efficiently. Contact us for corporate onboarding specific to your portfolio size and needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
