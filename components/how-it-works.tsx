@@ -12,6 +12,7 @@ const steps = [
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
+    barColor: "oklch(0.75 0.18 155)",
   },
   {
     icon: MousePointerClick,
@@ -21,6 +22,7 @@ const steps = [
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
+    barColor: "oklch(0.84 0.175 85)",
   },
   {
     icon: CalendarCheck,
@@ -30,6 +32,7 @@ const steps = [
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
+    barColor: "oklch(0.67 0.22 293)",
   },
   {
     icon: Star,
@@ -39,6 +42,7 @@ const steps = [
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
+    barColor: "oklch(0.74 0.18 162)",
   },
 ]
 
@@ -143,8 +147,8 @@ export function HowItWorks() {
 
                   {/* Active indicator bar */}
                   <div
-                    className={`absolute bottom-0 left-6 right-6 h-0.5 rounded-full ${step.bg} transition-all duration-300 ${activeStep === i ? "opacity-100" : "opacity-0"}`}
-                    style={activeStep === i ? { background: `var(--${step.color.replace("text-", "color-")})` } : {}}
+                    className={`absolute bottom-0 left-6 right-6 h-0.5 rounded-full transition-all duration-300 ${activeStep === i ? "opacity-100" : "opacity-0"}`}
+                    style={{ background: step.barColor }}
                   />
                 </div>
 

@@ -6,32 +6,32 @@ import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 const values = [
   {
     icon: Users,
-    title: "Homeowners control their projects",
-    body: "Homeowners define the project scope, maximum budget, and available consultation windows before any contractor is notified. The terms are established before the match is made.",
+    title: "You set the terms before a single contractor is notified",
+    body: "Before anyone in the network sees your request, you upload photos, write the scope in your own words, lock in your budget ceiling, and choose consultation windows from your own calendar. By the time a contractor claims the job, everything is already decided on your side.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: ShieldCheck,
-    title: "Contractors own their projects",
-    body: "Claim a project and it's yours alone. No bidding wars, no competing for the same job.",
+    title: "Claim it and it's yours — removed from every other feed the instant you do",
+    body: "The moment a contractor claims a project, it disappears from all other contractors permanently. No race to undercut, no competing bids, no one else calling that homeowner. One contractor reviews the full details and commits — then it's locked.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: FileText,
-    title: "Both sides come prepared",
-    body: "Every project includes photos, scope, and budget before matching. Consultations are productive from minute one.",
+    title: "Every detail is there before anyone drives anywhere",
+    body: "Photos, written scope, confirmed budget ceiling, and pre-selected consultation windows are all collected before matching. Contractors arrive knowing the job. Homeowners know who is coming. The consultation starts at the actual work, not at introductions.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
   {
     icon: Award,
-    title: "Quality matters",
-    body: "Every contractor in the network is license-verified, insurance-confirmed, and background-checked before gaining access to project requests. Performance ratings reflect actual project outcomes — not self-reported reviews.",
+    title: "Verified before network access — rated on real outcomes, not self-reported reviews",
+    body: "Every contractor is checked against state license databases, insurance is confirmed directly with the provider, and a business background check clears before they see a single project request. Reputation scores are built from actual completed jobs — contractors cannot write their own reviews.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -80,7 +80,7 @@ export function MissionValues() {
             <span className="gradient-text"> No bidding wars, no exceptions.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most platforms distribute your contact information to 5–15 contractors simultaneously and present that as a service. We built the opposite: exclusive, fully documented project requests for contractors, and a single verified professional for homeowners.
+            Most platforms send your phone number to 5–15 contractors at the same time and call it a service. Within an hour, you have a flooded inbox and a list of strangers calling. We built the opposite: one fully documented, exclusively claimed project for contractors — and one verified professional for homeowners.
           </p>
         </div>
 

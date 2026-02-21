@@ -4,13 +4,13 @@ import { Check, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const rows = [
-  { feature: "Who contacts you", us: "Only one contractor, every time", them: "3–7 contractors all calling about the same job" },
-  { feature: "Cost to you", us: "Always free — no hidden costs", them: "Free on paper, but your info gets sold" },
-  { feature: "Budget clarity", us: "You set your budget before anyone contacts you", them: "No budget discussion until someone shows up" },
-  { feature: "Project documentation", us: "Photos, written scope, and budget collected upfront", them: "Usually skipped or missing" },
-  { feature: "Scheduling", us: "You pick the time when you sign up", them: "Back-and-forth calls, voicemails, missed connections" },
-  { feature: "Contractor quality", us: "License, insurance, and background checked", them: "They fill out their own info — no real checks" },
-  { feature: "Expected contractor calls", us: "One call, from one contractor", them: "5–15 calls within the first hour" },
+  { feature: "Who contacts you", us: "One contractor — you know their name before they arrive", them: "5–15 contractors all calling the same hour you submitted" },
+  { feature: "Cost to you", us: "Always free — funded by contractor memberships, not your data", them: "Free on paper, but your contact info is the product being sold" },
+  { feature: "Budget clarity", us: "Your ceiling is locked in before anyone is notified — no surprise estimates on-site", them: "Contractors learn your budget during the visit, often pushing above it" },
+  { feature: "Project documentation", us: "Photos, written scope, and confirmed budget ceiling collected before matching", them: "Scope is described over the phone, details fall through the cracks" },
+  { feature: "Scheduling", us: "You pick 3–4 windows upfront; the contractor commits to one before the match locks", them: "Call-backs, voicemails, and rescheduling for every contractor who showed interest" },
+  { feature: "Contractor quality", us: "State license verified, insurance confirmed with the provider, background checked", them: "Self-reported — contractors fill in their own credentials with no verification" },
+  { feature: "What happens after you submit", us: "One confirmed appointment from one contractor who already knows the full scope", them: "Inbox flooded within minutes; most callers never followed through" },
 ]
 
 export function Comparison() {
@@ -50,7 +50,7 @@ export function Comparison() {
             <span className="gradient-text"> One request. One contractor.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most other services sell your number to 5–15 contractors. We connect you with one verified professional instead.
+            On shared-lead platforms, submitting one request triggers 5–15 contractors calling the same hour — all reading from the same script, all hoping you haven't committed to someone else yet. Nexus sends your project to a single verified professional who reviews every detail before responding.
           </p>
         </div>
 

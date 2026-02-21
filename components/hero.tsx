@@ -11,14 +11,18 @@ export function Hero() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>
     const interval = setInterval(() => {
       setVisible(false)
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setWordIndex((i) => (i + 1) % cyclingWords.length)
         setVisible(true)
       }, 300)
     }, 2500)
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeoutId)
+    }
   }, [])
 
   return (
@@ -76,7 +80,7 @@ export function Hero() {
 
             <h1
               className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6 animate-fade-in-up"
-              style={{ animationDelay: "0.15s", opacity: 0 }}
+              style={{ animationDelay: "0.15s" }}
             >
               One{" "}
               <span
@@ -98,7 +102,7 @@ export function Hero() {
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
-              style={{ animationDelay: "0.25s", opacity: 0 }}
+              style={{ animationDelay: "0.25s" }}
             >
               Submit your project once. One licensed, insured contractor reviews your scope and claims it exclusively.
               You know who is coming, and they know the job in full before they arrive. No unsolicited calls. No competing bids.
@@ -106,7 +110,7 @@ export function Hero() {
 
             <div
               className="flex flex-col sm:flex-row items-start gap-3 mb-12 animate-fade-in-up"
-              style={{ animationDelay: "0.35s", opacity: 0 }}
+              style={{ animationDelay: "0.35s" }}
             >
               <Link
                 href="/login?tab=signup"
@@ -127,7 +131,7 @@ export function Hero() {
             {/* Trust indicators */}
             <div
               className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground animate-fade-in-up"
-              style={{ animationDelay: "0.45s", opacity: 0 }}
+              style={{ animationDelay: "0.45s" }}
             >
               {[
                 { icon: Lock, text: "Your project details are never sold or shared with third parties" },
@@ -145,7 +149,7 @@ export function Hero() {
           {/* Right — floating UI card */}
           <div
             className="hidden lg:flex justify-center items-center animate-fade-in-up"
-            style={{ animationDelay: "0.4s", opacity: 0 }}
+            style={{ animationDelay: "0.4s" }}
           >
             <div className="animate-float-slow">
               <div className="glass-card rounded-2xl p-6 w-[360px] shadow-2xl shadow-black/40">
@@ -200,7 +204,7 @@ export function Hero() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: "1s", opacity: 0 }}>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: "1s" }}>
           <span className="text-[11px] text-muted-foreground tracking-wide uppercase">Scroll</span>
           <ChevronDown className="h-4 w-4 text-muted-foreground animate-float" />
         </div>

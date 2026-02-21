@@ -11,10 +11,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { prefix: "$", value: 600, suffix: "B", label: "U.S. home improvement market, annually" },
-  { value: 1, suffix: "", label: "Licensed contractor assigned per project — exclusively" },
-  { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners — no fees, no exceptions" },
-  { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
+  { value: 15, suffix: "+", label: "Unsolicited contractor calls homeowners receive per request on shared-lead platforms — before Nexus" },
+  { value: 1, suffix: "", label: "Licensed, insured contractor matched per project — no bidding, no competition, no exceptions" },
+  { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners — always free, at every tier, funded by contractor memberships not your data" },
+  { value: 24, suffix: "hr", label: "Or less from project submission to a confirmed consultation at a time you already chose" },
 ]
 
 function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {
