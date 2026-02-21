@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Nexus Operations matches homeowners with one licensed, insured contractor per job — not a list of five who call within the hour. Document your project with photos, set a budget cap, and select a consultation window. Always free for homeowners.",
   keywords: [
     "home services Topeka Kansas",
-    "exclusive contractor leads",
+    "exclusive contractor projects",
     "tree removal Topeka",
     "roofing contractor Kansas",
     "concrete work Topeka",

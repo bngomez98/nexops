@@ -43,24 +43,24 @@ const homeownerFAQs: FAQItem[] = [
 
 const contractorFAQs: FAQItem[] = [
   {
-    question: "How many leads can I expect each week?",
+    question: "How many projects can I expect each week?",
     answer:
-      "Lead volume depends on your trade category, service area, time of year, and local demand. We cannot guarantee a specific number. What we can guarantee is that every lead you receive is exclusive to you — no one else in the network receives the same request simultaneously.",
+      "Project volume depends on your trade category, service area, time of year, and local demand. We cannot guarantee a specific number. What we can guarantee is that every project you receive is exclusive to you — no one else in the network receives the same request simultaneously.",
   },
   {
-    question: "When will I receive my first lead?",
+    question: "When will I receive my first project?",
     answer:
-      "Most partners receive their first claimed lead within the first two weeks of account activation. The timeline varies based on active requests in your area and how quickly you respond to new notifications.",
+      "Most partners receive their first claimed project within the first two weeks of account activation. The timeline varies based on active requests in your area and how quickly you respond to new notifications.",
   },
   {
-    question: "How do I receive leads?",
+    question: "How do I receive projects?",
     answer:
-      "Leads appear in your contractor dashboard as soon as a homeowner request is submitted in your trade category and service area. You review the full project profile — photos, written scope, budget cap, and consultation windows — and claim it if it fits your business. Claiming is instantaneous and removes the request from all other contractors.",
+      "Projects appear in your contractor dashboard as soon as a homeowner request is submitted in your trade category and service area. You review the full project profile — photos, written scope, budget cap, and consultation windows — and claim it if it fits your business. Claiming is instantaneous and removes the request from all other contractors.",
   },
   {
     question: "What is included in the membership?",
     answer:
-      "Your membership covers unlimited lead claims across every trade category you are approved for, access to the full project documentation before you commit to a lead, dashboard analytics, and priority support. There are no per-lead fees, no setup fees, and no cancellation penalties.",
+      "Your membership covers unlimited project claims across every trade category you are approved for, access to the full project documentation before you commit to a project, dashboard analytics, and priority support. There are no per-lead fees, no setup fees, and no cancellation penalties.",
   },
   {
     question: "Are there long-term contracts?",
@@ -68,9 +68,9 @@ const contractorFAQs: FAQItem[] = [
       "No. Membership is month-to-month with no long-term commitment. You can pause or cancel at any time. We do limit the number of contractors per service area and trade category, so if you cancel, re-entry cannot be guaranteed.",
   },
   {
-    question: "What makes a lead billable or valid?",
+    question: "What makes a project billable or valid?",
     answer:
-      "A lead is counted against your membership when you claim it from the dashboard. Unlike per-lead billing models, your flat membership covers all claims. The only requirement is that you follow through on the confirmed consultation — no-shows affect your standing in the network.",
+      "A project is counted against your membership when you claim it from the dashboard. Unlike per-lead billing models, your flat membership covers all claims. The only requirement is that you follow through on the confirmed consultation — no-shows affect your standing in the network.",
   },
   {
     question: "Can I pause my account?",

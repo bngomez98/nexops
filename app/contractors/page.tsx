@@ -38,7 +38,7 @@ const benefits = [
     icon: DollarSign,
     title: "Predictable, flat monthly membership",
     description:
-      "Starting at $299/month for unlimited lead claims. No per-lead fees. No surprise charges. No annual contracts. One closed project per month typically covers your membership cost many times over.",
+      "Starting at $299/month for unlimited project claims. No per-lead fees. No surprise charges. No annual contracts. One closed project per month typically covers your membership cost many times over.",
   },
   {
     icon: BarChart3,
@@ -75,7 +75,7 @@ const verificationSteps = [
     step: "04",
     title: "Activate your portal",
     description:
-      "Once approved, configure your notification preferences, set your coverage boundaries, and begin claiming leads immediately. No onboarding delay.",
+      "Once approved, configure your notification preferences, set your coverage boundaries, and begin claiming projects immediately. No onboarding delay.",
   },
 ]
 
@@ -90,7 +90,7 @@ export default function ContractorsPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Leads that belong
+                Projects that belong
                 <br />
                 <span className="text-primary">to you alone.</span>
               </h1>
@@ -179,7 +179,7 @@ export default function ContractorsPage() {
                     Nexus Operations
                   </p>
                   <ul className="flex flex-col gap-3 text-sm text-foreground">
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$299/month flat — claim unlimited leads</li>
+                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$299/month flat — claim unlimited projects</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>You are the only contractor on every claimed job</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Photos and budget defined before you commit</li>
                     <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Consultation pre-confirmed by homeowner — no callbacks</li>
@@ -307,15 +307,15 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "How does the first-come, first-served system work?",
-                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
+                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the project exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                 },
                 {
                   q: "Can I set a minimum project size?",
                   a: "Yes. In your portal settings you can define a budget floor so only requests above your threshold appear in your feed. This keeps your attention on jobs that fit your business model.",
                 },
                 {
-                  q: "What happens if I claim a lead and the homeowner doesn't respond?",
-                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue lead credits for confirmed no-shows, not just excuses.",
+                  q: "What happens if I claim a project and the homeowner doesn't respond?",
+                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows, not just excuses.",
                 },
                 {
                   q: "Can I cover multiple service categories?",

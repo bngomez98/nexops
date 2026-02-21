@@ -7,7 +7,7 @@ import { ArrowRight, Check, HelpCircle } from "lucide-react"
 export const metadata: Metadata = {
   title: "Membership Plans | Contractor Access Tiers",
   description:
-    "Simple, transparent monthly membership for contractors. Standard, Premium, and Elite plans. Fixed pricing — no per-lead fees, no annual contracts, no hidden charges. Exclusive leads for licensed, insured contractors.",
+    "Simple, transparent monthly membership for contractors. Standard, Premium, and Elite plans. Fixed pricing — no per-lead fees, no annual contracts, no hidden charges. Exclusive projects for licensed, insured contractors.",
 }
 
 const tiers = [
@@ -16,9 +16,9 @@ const tiers = [
     price: "$299",
     period: "/month",
     description:
-      "Full access to every pre-qualified lead in your service category and coverage area. First-come, first-served.",
+      "Full access to every pre-qualified project in your service category and coverage area. First-come, first-served.",
     features: [
-      "All leads in your approved categories",
+      "All projects in your approved categories",
       "Real-time push, email, and SMS notifications",
       "Unlimited claim attempts per month",
       "Full project documentation before you claim",
@@ -37,7 +37,7 @@ const tiers = [
       "A 90-second advance notification window before the general pool opens, plus deep analytics to sharpen your close rate.",
     features: [
       "Everything in Standard",
-      "90-second head-start on every new lead",
+      "90-second head-start on every new project",
       "Priority placement on high-value requests",
       "Advanced analytics — benchmarks, trends, pipeline",
       "Custom budget-floor filter (see only jobs above your minimum)",
@@ -86,11 +86,11 @@ const faqs = [
   },
   {
     q: "What does 'first-come, first-served' mean in practice?",
-    a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the lead exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
+    a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the project exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
   },
   {
     q: "Are there any per-lead fees on top of my subscription?",
-    a: "No. Your monthly membership is the only charge. You can claim as many leads as you can handle with no additional cost per claim.",
+    a: "No. Your monthly membership is the only charge. You can claim as many projects as you can handle with no additional cost per claim.",
   },
 ]
 
@@ -105,11 +105,11 @@ export default function PricingPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                One price. Unlimited leads.
+                One price. Unlimited projects.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 No per-lead fees. No price ranges. No annual contracts. Choose the access tier that fits your
-                business — and start claiming exclusive, pre-qualified leads the day you are approved.
+                business — and start claiming exclusive, pre-qualified projects the day you are approved.
               </p>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function PricingPage() {
                   What you get
                 </p>
                 <ul className="flex flex-col gap-3 text-sm text-foreground">
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One flat monthly fee — claim as many leads as you can handle</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One flat monthly fee — claim as many projects as you can handle</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>You are the only contractor on every job you claim</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Photos, specs, and a defined budget before you commit</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Consultation pre-scheduled by the homeowner — no callbacks</li>

@@ -78,7 +78,7 @@ function timeAgo(iso: string) {
   return `${Math.floor(h / 24)}d ago`
 }
 
-export default function ContractorLeadsPage() {
+export default function ContractorProjectsPage() {
   const router = useRouter()
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
@@ -132,9 +132,9 @@ export default function ContractorLeadsPage() {
       {/* Header */}
       <div className="mb-6">
         <p className="text-primary text-sm font-medium mb-1">Contractor Portal</p>
-        <h1 className="text-2xl font-semibold">Leads Pipeline</h1>
+        <h1 className="text-2xl font-semibold">Projects Pipeline</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {leads.length} total leads — advance statuses to track your pipeline.
+          {leads.length} total projects — advance statuses to track your pipeline.
         </p>
       </div>
 
@@ -158,7 +158,7 @@ export default function ContractorLeadsPage() {
         ))}
       </div>
 
-      {/* Lead list */}
+      {/* Project list */}
       {loading ? (
         <div className="flex justify-center py-16">
           <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -166,8 +166,8 @@ export default function ContractorLeadsPage() {
       ) : filtered.length === 0 ? (
         <Card>
           <CardContent className="py-14 text-center">
-            <p className="font-medium mb-1">{filter === "all" ? "No leads yet" : `No ${filter} leads`}</p>
-            <p className="text-sm text-muted-foreground">Leads are automatically assigned based on your service categories and location.</p>
+            <p className="font-medium mb-1">{filter === "all" ? "No projects yet" : `No ${filter} projects`}</p>
+            <p className="text-sm text-muted-foreground">Projects are automatically assigned based on your service categories and location.</p>
           </CardContent>
         </Card>
       ) : (
@@ -263,7 +263,7 @@ export default function ContractorLeadsPage() {
 
                       <div className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Phone className="h-3.5 w-3.5" />
-                        <span>Call homeowner to progress this lead</span>
+                        <span>Call homeowner to progress this project</span>
                         <ArrowRight className="h-3 w-3" />
                       </div>
                     </div>

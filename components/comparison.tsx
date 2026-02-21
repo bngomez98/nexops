@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const rows = [
-  { feature: "Lead exclusivity", us: "One contractor per request, always", them: "3–7 contractors competing for the same lead" },
+  { feature: "Request exclusivity", us: "One contractor per request, always", them: "3–7 contractors competing for the same request" },
   { feature: "Homeowner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data is sold" },
   { feature: "Budget transparency", us: "Homeowner sets a cap before matching", them: "Contractor guesses after visiting the site" },
   { feature: "Project documentation", us: "Photos + specs required before match", them: "Optional, often absent" },

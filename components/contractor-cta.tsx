@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react"
 const benefits = [
   {
     icon: Lock,
-    title: "Leads that belong to you — entirely",
+    title: "Projects that belong to you — entirely",
     description: "The instant you claim a request, it is removed from every other contractor's portal — permanently. You are the sole point of contact for this homeowner. No competing bids. No price undercutting. No wasted site visits against someone who will drop their margin to close the job.",
     color: "text-primary",
     bg: "bg-primary/10",
@@ -24,7 +24,7 @@ const benefits = [
   {
     icon: DollarSign,
     title: "One flat membership. No per-lead fees.",
-    description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
+    description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited project claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -32,7 +32,7 @@ const benefits = [
   {
     icon: BarChart3,
     title: "A reputation built on documented outcomes",
-    description: "Your standing in the network reflects actual project performance — not reviews anyone can game. Consistent quality earns you priority notifications, advanced access to high-value leads, and long-term eligibility for the Elite tier. The standard protects contractors who meet it.",
+    description: "Your standing in the network reflects actual project performance — not reviews anyone can game. Consistent quality earns you priority notifications, advanced access to high-value projects, and long-term eligibility for the Elite tier. The standard protects contractors who meet it.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -40,7 +40,7 @@ const benefits = [
 ]
 
 const miniStats = [
-  { value: "1", label: "Contractor per lead" },
+  { value: "1", label: "Contractor per project" },
   { value: "$299", label: "Starting membership" },
   { value: "$0", label: "Per-lead fees, ever" },
 ]
@@ -84,14 +84,14 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop competing for leads.
+              Stop competing for projects.
               <br />
               <span className="gradient-text">Start owning them.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations
               to replace unpredictable shared-lead platforms with a structured, exclusive pipeline.
-              You do not bid against competitors. You do not pay per lead. You claim a fully documented project
+              You do not bid against competitors. You do not pay per project. You claim a fully documented project
               and it is yours from that moment to the final invoice — no exceptions.
             </p>
 

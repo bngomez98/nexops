@@ -73,10 +73,10 @@ export default function ContractorSettingsPage() {
 
   if (!user) return null
 
-  const planDetails: Record<string, { leads: string; notice: string; price: string }> = {
-    standard: { leads: "Unlimited", notice: "Real-time (FCFS pool)", price: "$299/mo" },
-    premium: { leads: "Unlimited", notice: "90-second advance window", price: "$499/mo" },
-    elite: { leads: "Unlimited", notice: "10-min exclusive on $5K+ projects", price: "$749/mo" },
+  const planDetails: Record<string, { projects: string; notice: string; price: string }> = {
+    standard: { projects: "Unlimited", notice: "Real-time (FCFS pool)", price: "$299/mo" },
+    premium: { projects: "Unlimited", notice: "90-second advance window", price: "$499/mo" },
+    elite: { projects: "Unlimited", notice: "10-min exclusive on $5K+ projects", price: "$749/mo" },
   }
   const plan = planDetails[user.subscription ?? "standard"]
 
@@ -204,8 +204,8 @@ export default function ContractorSettingsPage() {
               <span className="text-sm font-medium">{plan.notice}</span>
             </div>
             <div className="flex items-center justify-between py-2">
-              <span className="text-sm text-muted-foreground">Lead access</span>
-              <span className="text-sm font-medium">{plan.leads}</span>
+              <span className="text-sm text-muted-foreground">Project access</span>
+              <span className="text-sm font-medium">{plan.projects}</span>
             </div>
             <div className="pt-2">
               <a

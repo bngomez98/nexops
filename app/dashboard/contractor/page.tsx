@@ -50,12 +50,12 @@ interface Lead {
 }
 
 const weeklyData = [
-  { week: "Nov W1", leads: 2, revenue: 2800 },
-  { week: "Nov W2", leads: 3, revenue: 4200 },
-  { week: "Nov W3", leads: 1, revenue: 950 },
-  { week: "Nov W4", leads: 4, revenue: 7100 },
-  { week: "Dec W1", leads: 3, revenue: 5600 },
-  { week: "Dec W2", leads: 4, revenue: 6900 },
+  { week: "Nov W1", projects: 2, revenue: 2800 },
+  { week: "Nov W2", projects: 3, revenue: 4200 },
+  { week: "Nov W3", projects: 1, revenue: 950 },
+  { week: "Nov W4", projects: 4, revenue: 7100 },
+  { week: "Dec W1", projects: 3, revenue: 5600 },
+  { week: "Dec W2", projects: 4, revenue: 6900 },
 ]
 
 const tierConfig = {
@@ -187,7 +187,7 @@ export default function ContractorDashboard() {
 
   const stats = [
     {
-      title: "Total Leads",
+      title: "Total Projects",
       value: leads.length.toString(),
       sub: `${newLeads} new`,
       icon: TrendingUp,
@@ -261,7 +261,7 @@ export default function ContractorDashboard() {
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400" />
               </span>
               <div>
-                <p className="text-sm font-bold text-blue-400">{newLeads} new lead{newLeads > 1 ? "s" : ""}</p>
+                <p className="text-sm font-bold text-blue-400">{newLeads} new project{newLeads > 1 ? "s" : ""}</p>
                 <p className="text-[10px] text-blue-300/60">Awaiting your response</p>
               </div>
             </div>
@@ -294,8 +294,8 @@ export default function ContractorDashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Lead Activity</CardTitle>
-                <CardDescription>Weekly lead volume and revenue over the last 6 weeks</CardDescription>
+                <CardTitle>Project Activity</CardTitle>
+                <CardDescription>Weekly project volume and revenue over the last 6 weeks</CardDescription>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold px-2 py-1 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
                 <TrendingUp className="h-3.5 w-3.5" />
@@ -336,8 +336,8 @@ export default function ContractorDashboard() {
                 />
                 <Bar
                   yAxisId="left"
-                  dataKey="leads"
-                  name="Leads"
+                  dataKey="projects"
+                  name="Projects"
                   fill="oklch(0.75 0.18 155)"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={40}
@@ -375,7 +375,7 @@ export default function ContractorDashboard() {
             {/* Tier benefits */}
             <div className="space-y-2 p-3 rounded-xl bg-secondary/40 border border-border/30">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground text-xs">Lead advance notice</span>
+                <span className="text-muted-foreground text-xs">Project advance notice</span>
                 <span className={`text-xs font-bold ${tier.accent}`}>{tier.advance}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
@@ -426,8 +426,8 @@ export default function ContractorDashboard() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Recent Leads</CardTitle>
-              <CardDescription>All leads assigned to your account — click a row to expand</CardDescription>
+              <CardTitle>Recent Projects</CardTitle>
+              <CardDescription>All projects assigned to your account — click a row to expand</CardDescription>
             </div>
             {newLeads > 0 && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/25 text-xs text-blue-400 font-semibold">
@@ -441,15 +441,15 @@ export default function ContractorDashboard() {
           {loading ? (
             <div className="flex items-center justify-center py-14 gap-3">
               <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-              <span className="text-sm text-muted-foreground">Loading leads…</span>
+              <span className="text-sm text-muted-foreground">Loading projects…</span>
             </div>
           ) : leads.length === 0 ? (
             <div className="text-center py-14">
               <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
                 <Briefcase className="h-5 w-5 text-muted-foreground/40" />
               </div>
-              <p className="text-sm font-semibold mb-1">No leads yet</p>
-              <p className="text-xs text-muted-foreground">Leads will appear here when homeowners in your service area submit requests.</p>
+              <p className="text-sm font-semibold mb-1">No projects yet</p>
+              <p className="text-xs text-muted-foreground">Projects will appear here when homeowners in your service area submit requests.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -527,7 +527,7 @@ export default function ContractorDashboard() {
                                 <p className="text-foreground text-xs">{lead.photos} uploaded</p>
                               </div>
                               <div>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Lead Value</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Project Value</p>
                                 <p className="text-emerald-400 font-bold text-base">${lead.value.toLocaleString()}</p>
                               </div>
                             </div>

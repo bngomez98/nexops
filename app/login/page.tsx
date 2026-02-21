@@ -143,11 +143,11 @@ function LoginContent() {
         <div>
           <p className="text-primary text-sm font-medium tracking-wide mb-4">The smarter way to grow</p>
           <h2 className="text-3xl font-semibold leading-snug tracking-tight mb-8">
-            Exclusive leads.<br />Predictable revenue.<br />Zero phone tag.
+            Exclusive projects.<br />Predictable revenue.<br />Zero phone tag.
           </h2>
           <ul className="flex flex-col gap-4">
             {[
-              "One lead, one contractor — always exclusive",
+              "One project, one contractor — always exclusive",
               "Pre-qualified requests with photos and budgets",
               "Flexible monthly plans, cancel any time",
               "Real-time notifications and analytics",
@@ -270,7 +270,7 @@ function LoginContent() {
                 <div className="grid grid-cols-2 gap-3">
                   {([
                     { value: "homeowner", label: "Homeowner", Icon: Home, desc: "Find verified contractors" },
-                    { value: "contractor", label: "Contractor", Icon: Wrench, desc: "Get exclusive leads" },
+                    { value: "contractor", label: "Contractor", Icon: Wrench, desc: "Get exclusive projects" },
                   ] as const).map(({ value, label, Icon, desc }) => (
                     <button
                       key={value}
