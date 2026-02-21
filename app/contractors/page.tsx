@@ -90,15 +90,15 @@ export default function ContractorsPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Leads that belong
+                Exclusive, pre-documented
                 <br />
-                <span className="text-primary">to you alone.</span>
+                <span className="text-primary">project requests in Topeka.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations provides licensed, insured contractors in Topeka and the surrounding region
-                with access to pre-qualified, exclusive project requests. No shared leads. No competing bids.
-                No cold calling into a crowded market. First-come, first-served — and every request you claim
-                is permanently, exclusively yours.
+                Nexus Operations gives licensed, insured contractors access to homeowner project requests
+                that include photos, a written scope, and a defined budget. When you claim a request, it is
+                removed from every other contractor&apos;s feed permanently. You are the only professional
+                who contacts that homeowner.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -125,13 +125,13 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Built around contractor economics
+                How membership works for contractors
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Shared-lead platforms are optimized to sell your contact information as many times as possible —
-                maximizing their revenue at the cost of your close rate. Nexus Operations is structured around
-                the opposite model: your membership funds a pipeline that works exclusively for you, with every
-                request you claim guaranteed off-limits to every other contractor on the platform.
+                A flat monthly membership gives you access to every pre-qualified project request in your
+                trade category and coverage area. When you claim a request, it is removed from all other
+                contractor feeds permanently. There are no per-lead charges and no competing bids on the
+                same project.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -156,10 +156,11 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3 text-center">
-                The economics are straightforward
+                Membership cost versus shared-lead platforms
               </h2>
               <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
-                Compare what you spend now versus what a flat-rate exclusive pipeline actually costs.
+                What contractors typically spend on shared-lead platforms compared to the Nexus Operations
+                flat-rate membership.
               </p>
               <div className="grid sm:grid-cols-2 gap-6 mb-10">
                 <div className="p-7 rounded-2xl bg-card border border-border/40">
@@ -306,7 +307,7 @@ export default function ContractorsPage() {
                   a: "A valid business license, applicable trade licenses for your category, general liability insurance ($500K per occurrence, $1M aggregate), workers' compensation if you have employees, and three verifiable business or customer references.",
                 },
                 {
-                  q: "How does the first-come, first-served system work?",
+                  q: "How does first-come, first-served claiming work?",
                   a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                 },
                 {

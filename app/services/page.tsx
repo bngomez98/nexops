@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react"
 export const metadata: Metadata = {
   title: "Service Categories | Home Services in Topeka, KS",
   description:
-    "Nexus Operations currently serves tree removal, concrete work, and roofing in Topeka, KS — with HVAC, fencing, electrical, and plumbing launching in subsequent quarters. Every request requires photos, a written scope, and a defined budget so contractors arrive at consultations fully prepared.",
+    "Nexus Operations covers residential trade categories in the Topeka, KS area including tree removal, concrete, roofing, HVAC, fencing, and electrical. Every request requires photos, a written scope, and a defined budget before a contractor is matched.",
 }
 
 export default function ServicesPage() {
@@ -22,12 +22,12 @@ export default function ServicesPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                What we cover — and what&apos;s coming
+                Residential trade categories in the Topeka area
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Nexus Operations launches with the highest-demand residential trades in the Topeka area
-                and expands systematically — adding categories only when sufficient verified contractor
-                supply exists to maintain response-time and quality standards.
+                Nexus Operations covers the highest-demand residential trades and expands based on
+                verified contractor availability and homeowner demand. New categories are added only
+                when enough qualified contractors exist in the area to meet our response and quality standards.
               </p>
             </div>
           </div>

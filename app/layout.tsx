@@ -7,11 +7,11 @@ import "./globals.css"
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
-    default: "Nexus Operations | One Request. One Verified Contractor.",
+    default: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
     template: "%s | Nexus Operations",
   },
   description:
-    "Nexus Operations matches homeowners with one licensed, insured contractor per job — not a list of five who call within the hour. Document your project with photos, set a budget cap, and select a consultation window. Always free for homeowners.",
+    "Nexus Operations matches each home project to one licensed, insured contractor in the Topeka, KS area. Homeowners submit photos, a written scope, and a budget cap. One verified contractor is assigned exclusively. Free for homeowners.",
   keywords: [
     "home services Topeka Kansas",
     "exclusive contractor leads",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "concrete work Topeka",
     "licensed insured contractors",
     "home repair matching",
-    "contractor marketplace",
+    "exclusive contractor matching",
     "HVAC contractor Topeka",
     "fencing contractor Kansas",
   ],
@@ -31,15 +31,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
-    title: "Nexus Operations | One Request. One Verified Contractor.",
+    title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
     description:
-      "Document your project with photos, set a budget cap, and get matched with one verified contractor — not seven. No bidding wars. No unsolicited calls. Always free for homeowners.",
+      "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Homeowners submit photos, scope, and budget. One verified contractor is assigned exclusively. Free for homeowners.",
     siteName: "Nexus Operations",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus Operations | One Request. One Verified Contractor.",
-    description: "One request. One verified, licensed contractor. Zero runaround or unsolicited calls. Always free for homeowners in Topeka, KS.",
+    title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
+    description: "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Free for homeowners. Flat monthly membership for contractors.",
   },
   robots: {
     index: true,

@@ -76,19 +76,19 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            Home improvement became adversarial.
-            <span className="gradient-text"> We built an alternative.</span>
+            Most platforms profit by sharing your information with as many contractors as possible.
+            <span className="gradient-text"> We took the opposite approach.</span>
           </h2>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
-              Homeowners brace for spam calls the moment they submit a request. Contractors undercut their margin
-              to survive a bidding war they never agreed to enter. The platforms connecting them profit by
-              distributing contact information as widely as possible — five, ten, fifteen contractors
-              per lead — and calling that a service.
+              When a homeowner submits a request on a traditional platform, their phone number is sold
+              to 5–15 contractors at once. Contractors pay per lead, then compete against each other to
+              win the same job. Both sides lose — homeowners get flooded with calls, and contractors
+              burn time and margin chasing leads they may never close.
             </p>
             <p className="text-foreground/80 font-medium">
-              Nexus Operations was built on a different premise: one request, one verified contractor,
-              no exceptions. Not as a feature. As a founding belief.
+              Nexus Operations was built on a different premise: one request routes to one verified
+              contractor, and that contractor is the only professional who contacts the homeowner.
             </p>
           </div>
         </div>
@@ -128,8 +128,8 @@ export function MissionValues() {
         >
           <blockquote className="text-center">
             <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;This is what we mean by operations. Not just a marketplace.
-              A system that runs the logistics so contractors can focus on the craft —
+              &ldquo;This is what we mean by operations. Not lead generation —
+              exclusive matching and routing so contractors can focus on the craft
               and homeowners can focus on their lives.&rdquo;
             </p>
             <footer className="mt-4 text-sm text-muted-foreground">

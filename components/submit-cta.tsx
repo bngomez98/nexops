@@ -77,15 +77,14 @@ export function SubmitCTA() {
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Your project, your terms.
+                  You define the project before
                   <br />
-                  <span className="gradient-text">One contractor who earns it.</span>
+                  <span className="gradient-text">any contractor is contacted.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Define your project completely before anyone is contacted. Set the budget ceiling, choose your consultation
-                  window, and document the scope. A single verified professional reviews every detail and commits
-                  to your job — not to winning a bid against six competitors.
-                  There is no cost to homeowners, at any tier, ever.
+                  Upload photos, write the scope, set a budget ceiling, and choose your consultation window.
+                  One verified contractor reviews your full project profile and claims it exclusively. There
+                  is no cost to homeowners.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">

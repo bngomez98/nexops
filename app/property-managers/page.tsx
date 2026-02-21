@@ -90,15 +90,15 @@ export default function PropertyManagersPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For property managers</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Maintenance without
+                One submission per issue.
                 <br />
-                <span className="text-primary">the overhead.</span>
+                <span className="text-primary">One verified contractor assigned.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations gives property managers a centralized, high-efficiency solution for
-                maintenance requests — pre-vetted contractors, photo documentation, budget controls, and
-                automatic scheduling. Manage your entire portfolio without vetting vendors or chasing
-                estimates.
+                Nexus Operations handles contractor vetting, scheduling, and documentation for property
+                managers. Submit photos and a budget cap for any maintenance issue, and a pre-verified
+                contractor is assigned and scheduled within 24 hours. No vendor management, no chasing
+                estimates, no unvetted operators on your properties.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link

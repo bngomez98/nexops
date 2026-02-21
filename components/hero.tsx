@@ -93,18 +93,18 @@ export function Hero() {
               <br />
               <span className="gradient-text">Exclusively yours.</span>
               <br />
-              <span className="text-foreground/70">That&apos;s the whole system.</span>
+              <span className="text-foreground/70">No shared leads. No competing bids.</span>
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Nexus Operations is a contractor marketplace built around one rule: your project goes to one
-              professional — not a list. You submit your project once with photos, a written scope, and a real
-              budget ceiling. A single licensed, insured contractor in your area claims it exclusively before
-              your phone rings. They arrive at your consultation already knowing the scope. You already know
-              who&apos;s coming. That&apos;s what it means to hire with confidence.
+              Nexus Operations matches homeowners with one licensed, insured contractor per project —
+              not a list. You submit once with photos, a written scope, and a real budget ceiling. One
+              verified contractor in your area claims it exclusively before your phone rings. They arrive
+              at your consultation already knowing the scope. You already know who&apos;s coming. That&apos;s
+              what it means to hire with confidence.
             </p>
 
             <div

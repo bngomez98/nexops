@@ -46,14 +46,13 @@ export function Comparison() {
         <div className="max-w-2xl mb-12 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            The old model was built for volume.
-            <span className="gradient-text"> Ours is built for outcomes.</span>
+            How Nexus Operations compares to traditional lead platforms
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms generate revenue by distributing your contact information to as many contractors as possible —
-            routinely 5 to 15 per request. The result is an inbox flooded with calls, a race to the bottom on pricing, and an
-            experience that disadvantages both homeowners and contractors alike. We rejected that model from day one:
-            one request, one contractor, full documentation, no exceptions.
+            Traditional platforms distribute your contact information to 5–15 contractors per request and
+            charge each one for the same lead. Nexus Operations routes each project to one verified
+            contractor — the homeowner sets the scope and budget upfront, and only one professional
+            is ever assigned.
           </p>
         </div>
 

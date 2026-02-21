@@ -87,12 +87,11 @@ export function Testimonials() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">From our contractors</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Results from partners
-            <span className="gradient-text"> who made the switch.</span>
+            What contractors experience after joining the Nexus Operations network
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Contractors who join Nexus Operations come from platforms where their leads were shared with
-            five, seven, or more competitors simultaneously. Here is what they found on the other side.
+            These contractors previously used platforms where every lead was shared with five or more
+            competitors. After switching to exclusive matching, their close rates and project values changed.
           </p>
         </div>
 
