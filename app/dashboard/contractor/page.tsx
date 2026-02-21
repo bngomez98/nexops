@@ -169,8 +169,11 @@ export default function ContractorDashboard() {
     setUser(stored)
 
     fetch("/api/leads")
-      .then((r) => r.json())
-      .then((d) => setLeads(d.leads ?? []))
+      .then((r) => {
+        if (r.status === 401) { router.replace("/login"); return null }
+        return r.json()
+      })
+      .then((d) => { if (d) setLeads(d.leads ?? []) })
       .finally(() => setLoading(false))
   }, [router])
 

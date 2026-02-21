@@ -60,7 +60,7 @@ const NEXT_LABEL: Record<Lead["status"], string> = {
 
 function tierBadge(tier: Lead["tier"]) {
   const colors: Record<Lead["tier"], string> = {
-    basic: "text-muted-foreground border-border/40",
+    standard: "text-muted-foreground border-border/40",
     premium: "text-amber-400 border-amber-500/30 bg-amber-500/10",
     elite: "text-violet-400 border-violet-500/30 bg-violet-500/10",
   }
@@ -94,8 +94,11 @@ export default function ContractorProjectsPage() {
     }
 
     fetch("/api/leads")
-      .then((r) => r.json())
-      .then((d) => setLeads(d.leads ?? []))
+      .then((r) => {
+        if (r.status === 401) { router.replace("/login"); return null }
+        return r.json()
+      })
+      .then((d) => { if (d) setLeads(d.leads ?? []) })
       .finally(() => setLoading(false))
   }, [router])
 
