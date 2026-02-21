@@ -57,11 +57,30 @@ function hashPassword(password: string): string {
   return createHash("sha256").update(password + "nexops_salt_2024").digest("hex")
 }
 
-// In-memory stores
-const users = new Map<string, User>()
-const sessions = new Map<string, string>() // sessionToken -> userId
-const leadsStore = new Map<string, Lead[]>() // contractorId -> leads[]
-const requestsStore = new Map<string, Request[]>() // homeownerId -> requests[]
+// Persist in-memory stores across Next.js hot reloads in development.
+// Without this, module re-evaluation clears all sessions and data,
+// causing /api/leads to return 401 and the dashboard to show no projects.
+declare global {
+  // eslint-disable-next-line no-var
+  var __nexops_users: Map<string, User> | undefined
+  var __nexops_sessions: Map<string, string> | undefined
+  var __nexops_leads: Map<string, Lead[]> | undefined
+  var __nexops_requests: Map<string, Request[]> | undefined
+}
+
+const _needsSeed = !global.__nexops_users
+
+if (!global.__nexops_users) {
+  global.__nexops_users = new Map<string, User>()
+  global.__nexops_sessions = new Map<string, string>()
+  global.__nexops_leads = new Map<string, Lead[]>()
+  global.__nexops_requests = new Map<string, Request[]>()
+}
+
+const users = global.__nexops_users
+const sessions = global.__nexops_sessions!
+const leadsStore = global.__nexops_leads!
+const requestsStore = global.__nexops_requests!
 
 function seedData() {
   const homeownerId = "homeowner-demo-001"
@@ -238,7 +257,7 @@ function seedData() {
   requestsStore.set(homeownerId, demoRequests)
 }
 
-seedData()
+if (_needsSeed) seedData()
 
 // Session management
 export function createSession(userId: string): string {
