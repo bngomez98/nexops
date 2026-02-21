@@ -8,22 +8,22 @@ const steps = [
   {
     icon: FileText,
     title: "Document your project",
-    description: "Photos, written scope, and the specifics — so the contractor arrives knowing exactly what the job entails.",
+    description: "You upload 2–10 photos of the work area and describe the scope in your own words — what needs to be done, any materials involved, and anything the contractor needs to know before showing up. More detail means a faster match and a contractor who arrives already knowing the job.",
   },
   {
     icon: DollarSign,
     title: "Define your budget ceiling",
-    description: "Set a hard cap before anyone is contacted. No surprises on-site. No negotiating blind.",
+    description: "You enter the maximum dollar amount you're willing to spend before any contractor sees your request. Every contractor who considers claiming your job knows your ceiling upfront — no surprise estimates on-site, no pressure to negotiate up.",
   },
   {
     icon: CalendarRange,
     title: "Set your consultation window",
-    description: "Choose when works for you. The contractor commits to that window before the match is confirmed.",
+    description: "You pick 3–4 available time slots from your own calendar. The contractor who claims your request commits to one of those windows before the match is locked — no callbacks required, no back-and-forth scheduling.",
   },
   {
     icon: CheckCircle2,
     title: "One professional claims it",
-    description: "A single verified contractor reviews your full project profile and commits — exclusively, permanently.",
+    description: "One licensed, insured contractor in your area reviews your photos, scope, budget, and available windows — then commits to the job exclusively. From that moment, no other contractor in the network can see or respond to your request.",
   },
 ]
 
