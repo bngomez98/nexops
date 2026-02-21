@@ -16,8 +16,8 @@ const steps = [
   {
     icon: MousePointerClick,
     number: "02",
-    title: "A contractor claims it",
-    description: "One contractor in your area claims it exclusively. No one else sees it after that.",
+    title: "One contractor claims it exclusively",
+    description: "One licensed, insured contractor in your area claims your project. It is immediately removed from all other contractors' feeds — permanently.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -34,8 +34,8 @@ const steps = [
   {
     icon: Star,
     number: "04",
-    title: "Project moves forward",
-    description: "Receive an estimate, decide whether to proceed. No obligation either way.",
+    title: "Review the estimate and decide",
+    description: "Receive a written estimate from your assigned contractor. Review the scope, confirm the timeline, and decide whether to proceed. No obligation to move forward.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",

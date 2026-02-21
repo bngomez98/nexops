@@ -7,7 +7,7 @@ const values = [
   {
     icon: Users,
     title: "Homeowners control their projects",
-    body: "You set the scope, budget, and timing before any contractor is contacted.",
+    body: "Homeowners define the project scope, maximum budget, and available consultation windows before any contractor is notified. The terms are established before the match is made.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -31,7 +31,7 @@ const values = [
   {
     icon: Award,
     title: "Quality matters",
-    body: "All contractors are licensed, insured, and verified. Their reputation is based on actual project outcomes.",
+    body: "Every contractor in the network is license-verified, insurance-confirmed, and background-checked before gaining access to project requests. Performance ratings reflect actual project outcomes — not self-reported reviews.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -77,10 +77,10 @@ export function MissionValues() {
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
             One request, one contractor.
-            <span className="gradient-text"> That's it.</span>
+            <span className="gradient-text"> No bidding wars, no exceptions.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most platforms sell your contact info to 5–15 contractors and call it a service. We built something different: exclusive projects for contractors who want them, and peace of mind for homeowners.
+            Most platforms distribute your contact information to 5–15 contractors simultaneously and present that as a service. We built the opposite: exclusive, fully documented project requests for contractors, and a single verified professional for homeowners.
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export function MissionValues() {
         >
           <blockquote className="text-center">
             <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;One request, one contractor. That's the system.&rdquo;
+              &ldquo;One request, one contractor. Every time, without exception.&rdquo;
             </p>
             <footer className="mt-4 text-sm text-muted-foreground">
               Nexus Operations — Topeka, KS

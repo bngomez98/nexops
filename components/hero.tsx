@@ -93,15 +93,15 @@ export function Hero() {
               <br />
               <span className="gradient-text">Exclusively yours.</span>
               <br />
-              <span className="text-foreground/70">That&apos;s the whole system.</span>
+              <span className="text-foreground/70">Built for predictability.</span>
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Submit your project once. One licensed contractor claims it. They know your scope before arriving.
-              You know who's coming. No spam calls. No competing bids. That's confidence.
+              Submit your project once. One licensed, insured contractor reviews your scope and claims it exclusively.
+              You know who is coming, and they know the job in full before they arrive. No unsolicited calls. No competing bids.
             </p>
 
             <div
@@ -130,9 +130,9 @@ export function Hero() {
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Lock, text: "Your project is never sold or shared with a list" },
-                { icon: CheckCircle2, text: "Every contractor is licensed, insured, and verified" },
-                { icon: Zap, text: "Consultation confirmed within 24 hours — on your schedule" },
+                { icon: Lock, text: "Your project details are never sold or shared with third parties" },
+                { icon: CheckCircle2, text: "Every contractor is license-verified, insured, and background-checked" },
+                { icon: Zap, text: "Consultation confirmed within 24 hours, at a time you select" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary shrink-0" />

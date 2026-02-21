@@ -105,7 +105,7 @@ export function Services() {
         <div className="max-w-2xl mb-10 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Three categories live now, more on the way
+            Three service categories active in Topeka — additional trades launching quarterly
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Every request requires project photos, a written scope, and a defined budget cap before a contractor

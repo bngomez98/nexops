@@ -7,10 +7,10 @@ const rows = [
   { feature: "Who contacts you", us: "Only one contractor, every time", them: "3–7 contractors all calling about the same job" },
   { feature: "Cost to you", us: "Always free — no hidden costs", them: "Free on paper, but your info gets sold" },
   { feature: "Budget clarity", us: "You set your budget before anyone contacts you", them: "No budget discussion until someone shows up" },
-  { feature: "Job details", us: "Photos and details collected upfront", them: "Usually skipped or missing" },
+  { feature: "Project documentation", us: "Photos, written scope, and budget collected upfront", them: "Usually skipped or missing" },
   { feature: "Scheduling", us: "You pick the time when you sign up", them: "Back-and-forth calls, voicemails, missed connections" },
   { feature: "Contractor quality", us: "License, insurance, and background checked", them: "They fill out their own info — no real checks" },
-  { feature: "How many calls to expect", us: "One call, from one contractor", them: "5–15 calls flooding in within the first hour" },
+  { feature: "Expected contractor calls", us: "One call, from one contractor", them: "5–15 calls within the first hour" },
 ]
 
 export function Comparison() {
