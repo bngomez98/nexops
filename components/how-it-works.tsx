@@ -9,7 +9,7 @@ const steps = [
     number: "01",
     title: "Submit your project",
     description:
-      "Upload 2–10 project photos, document the scope of work, set a hard budget cap, and select 3–4 available consultation windows. A thorough submission produces a faster match and ensures the contractor arrives fully prepared.",
+      "You upload 2–10 photos of the work site, describe the scope in plain language, enter the maximum dollar amount you're willing to spend, and pick 3–4 windows from your calendar when you're available for an on-site meeting. The more detail you provide upfront, the faster the match — and the less time the contractor spends gathering basic facts when they arrive.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -19,7 +19,7 @@ const steps = [
     number: "02",
     title: "A contractor claims it",
     description:
-      "Every qualified, verified contractor in your trade category and geographic area is notified simultaneously. The first to claim your request secures it exclusively — the listing is removed from every other contractor's portal immediately and permanently.",
+      "Every verified contractor in your trade category and your part of the Topeka area is notified the moment you submit. The first to claim your request locks it exclusively — your listing is pulled from every other contractor's portal immediately and for good. No one else contacts you about this job.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -29,7 +29,7 @@ const steps = [
     number: "03",
     title: "Consultation is confirmed",
     description:
-      "Both you and the contractor receive a confirmed calendar appointment for the window you selected during submission. The contractor reviews your photos, written scope, and budget cap in advance — so the consultation is productive, not exploratory.",
+      "You and the contractor each receive a confirmed calendar appointment for one of the windows you chose at submission — typically within 24 hours. The contractor reviews your photos, written scope, and budget ceiling before they arrive, so the on-site visit is a real conversation about the work, not an hour spent explaining what needs to be done.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -39,7 +39,7 @@ const steps = [
     number: "04",
     title: "Project moves forward",
     description:
-      "Following the on-site consultation, you receive a written, itemized estimate. Accept, negotiate, or decline — with no obligation. Every completed project is reviewed for quality, and contractor standing in the network is updated accordingly.",
+      "After the on-site visit, the contractor delivers a written, itemized estimate. You decide whether to accept, negotiate, or walk away — no obligation either way. If you proceed, the completed project is documented and the contractor's standing in the network is updated based on actual outcomes, not self-reported reviews.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
