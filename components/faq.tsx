@@ -20,19 +20,19 @@ const homeownerFAQs: FAQItem[] = [
       "One. When a contractor claims your project, it's removed from all other contractors' views. That's the entire system.",
   },
   {
-    question: "Is there any cost?",
+    question: "Is there a cost for homeowners?",
     answer:
-      "No. Nexus is free for homeowners. We make money from contractor memberships, not by selling your information.",
+      "No. Nexus Operations is free for homeowners at every tier. We are funded by contractor memberships, not by selling your contact information.",
   },
   {
-    question: "How are contractors verified?",
+    question: "How are contractors screened and verified?",
     answer:
-      "All contractors pass license verification, insurance review, and background checks. Their reputation is based on actual project outcomes.",
+      "All contractors are verified against state and county license databases, insurance is confirmed directly with the provider, and a business background check is completed. Reputation scores reflect actual project outcomes — not self-reported reviews.",
   },
   {
-    question: "What if no contractor is available in my area?",
+    question: "What happens if no contractor is available in my area?",
     answer:
-      "We'll tell you immediately. No waiting around. If coverage expands, we'll notify you.",
+      "We notify you immediately — no waiting period. If coverage expands to your area, we will contact you directly.",
   },
   {
     question: "Can I cancel or update my request?",
@@ -43,14 +43,14 @@ const homeownerFAQs: FAQItem[] = [
 
 const contractorFAQs: FAQItem[] = [
   {
-    question: "How many projects per week?",
+    question: "How many projects can I expect per week?",
     answer:
-      "Depends on your area and category. Every project is exclusive to you—no sharing with other contractors.",
+      "Volume depends on your service area and category. Every project you claim is exclusive to you — no other contractor receives it once you claim it.",
   },
   {
-    question: "When do I get my first project?",
+    question: "How soon will I receive my first project after activation?",
     answer:
-      "Usually within two weeks of activation. Timing depends on active requests in your area.",
+      "Most contractors receive their first available project within two weeks of activation. Timing varies based on active homeowner requests in your coverage area.",
   },
   {
     question: "How do I receive projects?",
@@ -58,24 +58,24 @@ const contractorFAQs: FAQItem[] = [
       "They appear in your dashboard. Review the details and claim it if it fits. Claiming is instant and removes it from all other contractors.",
   },
   {
-    question: "What's included in membership?",
+    question: "What does my membership include?",
     answer:
-      "Unlimited claims, full project details upfront, dashboard analytics. No per-lead fees, setup fees, or cancellation penalties.",
+      "Unlimited project claims, full documentation before you commit, and dashboard analytics. No per-lead fees, no setup fees, and no cancellation penalties.",
   },
   {
-    question: "Long-term contracts?",
+    question: "Are there long-term contracts or annual commitments?",
     answer:
-      "No. Month-to-month only. Pause or cancel anytime. We limit contractors per area, so re-entry isn't guaranteed if you cancel.",
+      "No. All memberships are month-to-month. Pause or cancel from your dashboard at any time with no penalty. We limit active contractors per service area, so re-entry is not guaranteed once a spot is vacated.",
   },
   {
-    question: "When is a project billable?",
+    question: "How does billing work for claimed projects?",
     answer:
-      "When you claim it. Your flat membership covers all claims. Just follow through on the confirmed consultation.",
+      "Your flat monthly membership covers all project claims. There are no per-claim charges at any stage. Claiming a project commits you to the confirmed consultation window.",
   },
   {
-    question: "Can I pause my account?",
+    question: "Can I pause my service area or notifications?",
     answer:
-      "Yes. Pause notifications by county or service area for a few hours up to seven days.",
+      "Yes. You can pause notifications by county or service area for any duration between a few hours and seven days.",
   },
 ]
 
