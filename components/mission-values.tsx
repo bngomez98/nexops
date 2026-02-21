@@ -6,32 +6,32 @@ import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 const values = [
   {
     icon: Users,
-    title: "Homeowners control their projects",
-    body: "You set the scope, budget, and timing before any contractor is contacted.",
+    title: "Homeowners define the project",
+    body: "Before a single contractor is notified, you write the scope, set a budget ceiling, and select your consultation windows. You're not reacting to whoever showed up — you're setting the terms from the start.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: ShieldCheck,
-    title: "Contractors own their projects",
-    body: "Claim a project and it's yours alone. No bidding wars, no competing for the same job.",
+    title: "Contractors own what they claim",
+    body: "The moment a contractor claims a project, it belongs to them alone. No other contractor can claim the same job or contact the homeowner. One project, one contractor — from the claim to the final invoice.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: FileText,
-    title: "Both sides come prepared",
-    body: "Every project includes photos, scope, and budget before matching. Consultations are productive from minute one.",
+    title: "Both sides arrive prepared",
+    body: "Every project requires photos, a written description, and a budget before any match is made. When the contractor arrives for the consultation, both parties already understand the work. The conversation starts at the estimate, not the explanation.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
   {
     icon: Award,
-    title: "Quality matters",
-    body: "All contractors are licensed, insured, and verified. Their reputation is based on actual project outcomes.",
+    title: "Verification is not optional",
+    body: "Every contractor in the network has completed license, insurance, and background verification before being admitted. After each project, their standing is updated based on documented outcomes — not self-reported reviews.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -79,9 +79,14 @@ export function MissionValues() {
             One request, one contractor.
             <span className="gradient-text"> That's it.</span>
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Most platforms sell your contact info to 5–15 contractors and call it a service. We built something different: exclusive projects for contractors who want them, and peace of mind for homeowners.
-          </p>
+          <div className="space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              Most contractor platforms distribute your contact information to as many contractors as possible — five, ten, sometimes fifteen per request — and call that a service. The homeowner gets a flood of calls. The contractor gets a bidding war. Both lose.
+            </p>
+            <p className="text-foreground/80 font-medium">
+              Nexus Operations was built on one rule: one request goes to one verified contractor. Not as a feature. As the entire business model.
+            </p>
+          </div>
         </div>
 
         {/* Divider */}

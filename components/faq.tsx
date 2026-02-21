@@ -12,32 +12,32 @@ const homeownerFAQs: FAQItem[] = [
   {
     question: "How does the matching process work?",
     answer:
-      "Submit your project with photos, scope, budget, and available times. One contractor in your area claims it exclusively. You get a confirmed appointment within 24 hours.",
+      "You submit your project with photos, a written description, a budget ceiling, and a few available consultation windows. The moment a verified contractor in your trade and area claims it, the request is removed from every other contractor's view — permanently. You receive a confirmed appointment. No phone tag, no competing calls.",
   },
   {
     question: "How many contractors will contact me?",
     answer:
-      "One. When a contractor claims your project, it's removed from all other contractors' views. That's the entire system.",
+      "Exactly one. When a contractor claims your project, it becomes exclusive to them. No other contractor can see or contact you about it. You will not receive a flood of calls — you will receive one confirmed appointment from one verified professional.",
   },
   {
-    question: "Is there any cost?",
+    question: "Is there any cost to homeowners?",
     answer:
-      "No. Nexus is free for homeowners. We make money from contractor memberships, not by selling your information.",
+      "None. Nexus Operations is free for homeowners at every tier. Our revenue comes from contractor memberships, not from distributing your contact information.",
   },
   {
     question: "How are contractors verified?",
     answer:
-      "All contractors pass license verification, insurance review, and background checks. Their reputation is based on actual project outcomes.",
+      "Every contractor has passed license verification, proof-of-insurance review, and a background check before being admitted to the network. Their standing is updated after each completed project based on documented outcomes.",
   },
   {
     question: "What if no contractor is available in my area?",
     answer:
-      "We'll tell you immediately. No waiting around. If coverage expands, we'll notify you.",
+      "We'll tell you immediately — no indefinite wait, no ambiguity. We don't hold your request open hoping coverage materializes. If that changes, we'll notify you. You're not obligated to resubmit.",
   },
   {
     question: "Can I cancel or update my request?",
     answer:
-      "Yes, anytime before it's claimed. Once claimed and confirmed, contact support to discuss changes.",
+      "Yes, at any point before a contractor claims it. Once a contractor has claimed your project and a consultation is confirmed, contact support to discuss changes.",
   },
 ]
 

@@ -8,7 +8,7 @@ const categories = [
   {
     icon: TreePine,
     name: "Tree Removal",
-    description: "Tree removal and stump grinding. Licensed professionals with certified credentials.",
+    description: "Removal of trees of any size — hazardous, storm-damaged, or routine. Includes crown reduction, stump grinding, and debris clearing. All contractors are licensed and insured.",
     budget: "$500 – $8,000",
     available: true,
     tag: "Available",
@@ -16,7 +16,7 @@ const categories = [
   {
     icon: HardHat,
     name: "Concrete Work",
-    description: "Driveways, patios, walkways, and retaining walls. Structural repair and custom finishes.",
+    description: "Driveways, patios, walkways, retaining walls, and structural repairs. Includes stamped and exposed aggregate finishes. Mix design and reinforcement are documented upfront.",
     budget: "$1,200 – $15,000",
     available: true,
     tag: "Available",
@@ -24,7 +24,7 @@ const categories = [
   {
     icon: Home,
     name: "Roofing",
-    description: "Full roof replacement, repairs, and emergency leak mitigation. All contractors licensed and insured.",
+    description: "Full tear-off and replacement, overlay systems, emergency leak repairs, and storm damage documentation. Covers shingle, metal, and flat roof systems. All contractors licensed and insured.",
     budget: "$300 – $25,000",
     available: true,
     tag: "Available",
@@ -32,7 +32,7 @@ const categories = [
   {
     icon: Flame,
     name: "HVAC",
-    description: "Heating and cooling system installation and replacement. Licensed technicians with EPA certification.",
+    description: "Central air installation, heat pump and mini-split systems, furnace replacement, and ductwork. All technicians EPA-certified. Equipment selections documented before any work begins.",
     budget: "$3,000 – $20,000",
     available: false,
     tag: "Coming Soon",
@@ -40,7 +40,7 @@ const categories = [
   {
     icon: Fence,
     name: "Fencing",
-    description: "Privacy fencing, perimeter fencing, and decorative options. Professional installation.",
+    description: "Privacy, semi-privacy, and perimeter fencing in cedar, vinyl, ornamental iron, and chain-link. Posts set to frost-line depth. Compliant with local zoning and HOA requirements.",
     budget: "$1,500 – $8,000",
     available: false,
     tag: "Coming Soon",
@@ -48,7 +48,7 @@ const categories = [
   {
     icon: Zap,
     name: "Electrical",
-    description: "Panel upgrades, wiring, and EV charger installation. Licensed electrician on every project.",
+    description: "Panel upgrades, branch circuit additions, whole-home rewiring, and EV charger installation. All work permit-ready and performed by licensed electricians.",
     budget: "$500 – $10,000",
     available: false,
     tag: "Coming Soon",

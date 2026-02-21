@@ -52,26 +52,26 @@ const howItWorks = [
   {
     icon: Building2,
     step: "01",
-    title: "Submit",
-    description: "Upload photos, describe the issue, set your budget cap.",
+    title: "Submit the request",
+    description: "Upload photos of the issue, describe the scope, and set the maximum spend you're authorized for. One submission covers it — no follow-up calls to contractors.",
   },
   {
     icon: ShieldCheck,
     step: "02",
-    title: "Contractor claims it",
-    description: "One verified contractor locks the job. Exclusively.",
+    title: "A contractor claims it",
+    description: "Your request enters the dashboard of pre-verified contractors in the right trade. The first to claim it takes the job exclusively — no competing contractors contacting your tenant.",
   },
   {
     icon: Clock,
     step: "03",
-    title: "Auto-scheduled",
-    description: "Consultation scheduled within 24 hours. No coordination needed.",
+    title: "Consultation is scheduled",
+    description: "Once claimed, a consultation is confirmed against your availability window — typically within 24 hours. The contractor arrives having reviewed your photos and scope.",
   },
   {
     icon: CheckCircle,
     step: "04",
-    title: "Review & approve",
-    description: "Standardized quote. Easy to report. Done.",
+    title: "Review and approve",
+    description: "Receive a written estimate with documentation structured for owner review. Every job follows the same format, making it straightforward to compare, approve, and record.",
   },
 ]
 
