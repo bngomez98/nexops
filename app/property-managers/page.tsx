@@ -38,7 +38,7 @@ const benefits = [
     icon: Eye,
     title: "Remote maintenance management",
     description:
-      "Photo documentation and budget caps are required upfront, so you can manage repairs across a wide portfolio without being on-site for every estimate. See the tree damage or the roof leak before the contractor does. Set the maximum spend you're authorized by the property owner before the lead is even claimed.",
+      "Photo documentation and budget caps are required upfront, so you can manage repairs across a wide portfolio without being on-site for every estimate. See the tree damage or the roof leak before the contractor does. Set the maximum spend you're authorized by the property owner before the project is even claimed.",
   },
   {
     icon: Layers,

@@ -22,7 +22,7 @@ import {
 
 const contractorNav = [
   { label: "Dashboard", href: "/dashboard/contractor", icon: LayoutDashboard },
-  { label: "Leads", href: "/dashboard/contractor/leads", icon: FileText },
+  { label: "Projects", href: "/dashboard/contractor/projects", icon: FileText },
   { label: "Analytics", href: "/dashboard/contractor/analytics", icon: BarChart3 },
   { label: "Settings", href: "/dashboard/contractor/settings", icon: Settings },
 ]

@@ -155,7 +155,7 @@ export function Hero() {
                 {/* Card header */}
                 <div className="flex items-center justify-between mb-5">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Exclusive lead claimed</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Exclusive project claimed</p>
                     <p className="text-sm font-semibold">Roofing — Full Shingle Replacement</p>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium text-emerald-400">
@@ -182,7 +182,7 @@ export function Hero() {
                 <div className="mb-5 p-3 rounded-xl bg-primary/5 border border-primary/15">
                   <div className="flex items-center gap-2 text-xs text-primary font-medium">
                     <Lock className="h-3 w-3" />
-                    This lead is locked to one contractor. No one else can claim it.
+                    This project is locked to one contractor. No one else can claim it.
                   </div>
                 </div>
 
