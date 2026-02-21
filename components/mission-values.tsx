@@ -6,32 +6,32 @@ import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 const values = [
   {
     icon: Users,
-    title: "The homeowner deserves control",
-    body: "You own the project. You should set the scope, the budget ceiling, and the consultation window — before a single contractor is contacted. Not after you have already given your number to six strangers who all received it at the same time.",
+    title: "Homeowners control their projects",
+    body: "You set the scope, budget, and timing before any contractor is contacted.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: ShieldCheck,
-    title: "The contractor deserves exclusivity",
-    body: "A skilled professional should not have to fight five competitors for the same job, or undercut their margin just to win a bid. When a contractor claims a request on Nexus, they have earned it outright — no auction, no race to the bottom, no erosion of their craft.",
+    title: "Contractors own their projects",
+    body: "Claim a project and it's yours alone. No bidding wars, no competing for the same job.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: FileText,
-    title: "Both sides deserve preparation",
-    body: "Bad projects start with bad information. We require full documentation — photos, written scope, a defined budget cap — before any match is made. The result is a consultation that is productive from the first minute, not a fishing expedition for someone who already called seven people.",
+    title: "Both sides come prepared",
+    body: "Every project includes photos, scope, and budget before matching. Consultations are productive from minute one.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
   {
     icon: Award,
-    title: "Quality is tracked, not assumed",
-    body: "Every contractor in the network earned their place through license verification, insurance confirmation, and background review. Every completed project updates their standing. The standard is not a hurdle — it is the reason homeowners trust the match they receive.",
+    title: "Quality matters",
+    body: "All contractors are licensed, insured, and verified. Their reputation is based on actual project outcomes.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -76,21 +76,12 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            Home improvement became adversarial.
-            <span className="gradient-text"> We built an alternative.</span>
+            One request, one contractor.
+            <span className="gradient-text"> That's it.</span>
           </h2>
-          <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p>
-              Homeowners brace for spam calls the moment they submit a request. Contractors undercut their margin
-              to survive a bidding war they never agreed to enter. The platforms connecting them profit by
-              distributing contact information as widely as possible — five, ten, fifteen contractors
-              per lead — and calling that a service.
-            </p>
-            <p className="text-foreground/80 font-medium">
-              Nexus Operations was built on a different premise: one request, one verified contractor,
-              no exceptions. Not as a feature. As a founding belief.
-            </p>
-          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            Most platforms sell your contact info to 5–15 contractors and call it a service. We built something different: exclusive projects for contractors who want them, and peace of mind for homeowners.
+          </p>
         </div>
 
         {/* Divider */}
@@ -128,9 +119,7 @@ export function MissionValues() {
         >
           <blockquote className="text-center">
             <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;This is what we mean by operations. Not just a marketplace.
-              A system that runs the logistics so contractors can focus on the craft —
-              and homeowners can focus on their lives.&rdquo;
+              &ldquo;One request, one contractor. That's the system.&rdquo;
             </p>
             <footer className="mt-4 text-sm text-muted-foreground">
               Nexus Operations — Topeka, KS

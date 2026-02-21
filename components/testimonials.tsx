@@ -87,12 +87,11 @@ export function Testimonials() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">From our contractors</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Results from partners
-            <span className="gradient-text"> who made the switch.</span>
+            Why contractors join.
+            <span className="gradient-text"> Why they stay.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Contractors who join Nexus Operations come from platforms where their leads were shared with
-            five, seven, or more competitors simultaneously. Here is what they found on the other side.
+            Exclusive projects. Better customers. No per-lead fees.
           </p>
         </div>
 
@@ -163,10 +162,10 @@ export function Testimonials() {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">
-              Every project in the network goes to one contractor.
+              Every project is exclusive.
             </p>
             <p className="text-sm text-muted-foreground">
-              No other platform in the Topeka area guarantees full exclusivity on every request. If you claim it, it belongs to you — permanently, from that moment forward.
+              Claim a project and it's yours. No one else gets it.
             </p>
           </div>
         </div>

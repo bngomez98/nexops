@@ -7,32 +7,32 @@ import { useEffect, useRef, useState } from "react"
 const benefits = [
   {
     icon: Lock,
-    title: "Projects that belong to you — entirely",
-    description: "The instant you claim a request, it is removed from every other contractor's portal — permanently. You are the sole point of contact for this homeowner. No competing bids. No price undercutting. No wasted site visits against someone who will drop their margin to close the job.",
+    title: "Projects are exclusively yours",
+    description: "Claim a project and no one else can touch it. You're the only contractor the homeowner hears from.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: FileText,
-    title: "Full project context before you commit",
-    description: "Every request includes 2–10 photos, a written scope, a homeowner-defined budget cap, and a pre-confirmed consultation window. You review the complete project profile before claiming — so you only take jobs that make sense for your business.",
+    title: "Full details before you claim",
+    description: "Photos, written scope, and budget are all there. You only take jobs that fit your business.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "One flat membership. No per-lead fees.",
-    description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited project claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
+    title: "Flat membership, no surprises",
+    description: "Starting at $299/month. No per-lead fees, no cancellation penalties, unlimited claims.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
   },
   {
     icon: BarChart3,
-    title: "A reputation built on documented outcomes",
-    description: "Your standing in the network reflects actual project performance — not reviews anyone can game. Consistent quality earns you priority notifications, advanced access to high-value projects, and long-term eligibility for the Elite tier. The standard protects contractors who meet it.",
+    title: "Reputation based on real work",
+    description: "Your standing comes from actual project outcomes, not gamed reviews. Quality contractors get priority access.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -89,10 +89,7 @@ export function ContractorCTA() {
               <span className="gradient-text">Start owning them.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Licensed, insured contractors in Topeka and the surrounding region use Nexus Operations
-              to replace unpredictable shared-lead platforms with a structured, exclusive pipeline.
-              You do not bid against competitors. You do not pay per project. You claim a fully documented project
-              and it is yours from that moment to the final invoice — no exceptions.
+              Claim fully documented projects that are exclusively yours. No competing bids. No per-lead fees. One flat membership.
             </p>
 
             {/* Mini stats row */}

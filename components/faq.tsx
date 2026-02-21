@@ -12,70 +12,70 @@ const homeownerFAQs: FAQItem[] = [
   {
     question: "How does the matching process work?",
     answer:
-      "You submit your project with 2–10 photos, a written scope, a hard budget cap, and 3–4 available consultation windows. The moment a verified contractor in your trade category and area claims your request, it is removed from every other contractor's view — permanently. You receive a confirmed appointment for one of your selected windows. No phone tag, no competing calls.",
+      "Submit your project with photos, scope, budget, and available times. One contractor in your area claims it exclusively. You get a confirmed appointment within 24 hours.",
   },
   {
-    question: "How many contractors will contact me after I submit?",
+    question: "How many contractors will contact me?",
     answer:
-      "Exactly one. That is the entire point. The instant your request is claimed, it becomes exclusive to that contractor. No other contractor can see or contact you about it. You will not receive a flood of calls within the first hour — you will receive one confirmed consultation from one verified professional.",
+      "One. When a contractor claims your project, it's removed from all other contractors' views. That's the entire system.",
   },
   {
-    question: "Is there any cost to homeowners?",
+    question: "Is there any cost?",
     answer:
-      "None. Nexus Operations is completely free for homeowners at every tier, with no hidden fees, subscriptions, or data-selling. Our revenue comes from contractor memberships, not from distributing your contact information.",
+      "No. Nexus is free for homeowners. We make money from contractor memberships, not by selling your information.",
   },
   {
     question: "How are contractors verified?",
     answer:
-      "Every contractor in the network has passed license verification, proof-of-insurance review, and a background check before being admitted. Their standing is updated after each completed project based on documented outcomes — not self-reported reviews anyone can game.",
+      "All contractors pass license verification, insurance review, and background checks. Their reputation is based on actual project outcomes.",
   },
   {
-    question: "What happens if no contractor is available in my area?",
+    question: "What if no contractor is available in my area?",
     answer:
-      "You are told immediately and clearly — no indefinite wait, no ambiguity. We do not hold your request open hoping something changes. If coverage expands to your area, we will notify you. You are not obligated to resubmit.",
+      "We'll tell you immediately. No waiting around. If coverage expands, we'll notify you.",
   },
   {
-    question: "Can I cancel or update my request after submitting?",
+    question: "Can I cancel or update my request?",
     answer:
-      "Yes. You can update your request or cancel it at any time before a contractor claims it. Once a contractor has claimed your project and a consultation is confirmed, you should contact support to discuss changes.",
+      "Yes, anytime before it's claimed. Once claimed and confirmed, contact support to discuss changes.",
   },
 ]
 
 const contractorFAQs: FAQItem[] = [
   {
-    question: "How many projects can I expect each week?",
+    question: "How many projects per week?",
     answer:
-      "Project volume depends on your trade category, service area, time of year, and local demand. We cannot guarantee a specific number. What we can guarantee is that every project you receive is exclusive to you — no one else in the network receives the same request simultaneously.",
+      "Depends on your area and category. Every project is exclusive to you—no sharing with other contractors.",
   },
   {
-    question: "When will I receive my first project?",
+    question: "When do I get my first project?",
     answer:
-      "Most partners receive their first claimed project within the first two weeks of account activation. The timeline varies based on active requests in your area and how quickly you respond to new notifications.",
+      "Usually within two weeks of activation. Timing depends on active requests in your area.",
   },
   {
     question: "How do I receive projects?",
     answer:
-      "Projects appear in your contractor dashboard as soon as a homeowner request is submitted in your trade category and service area. You review the full project profile — photos, written scope, budget cap, and consultation windows — and claim it if it fits your business. Claiming is instantaneous and removes the request from all other contractors.",
+      "They appear in your dashboard. Review the details and claim it if it fits. Claiming is instant and removes it from all other contractors.",
   },
   {
-    question: "What is included in the membership?",
+    question: "What's included in membership?",
     answer:
-      "Your membership covers unlimited project claims across every trade category you are approved for, access to the full project documentation before you commit to a project, dashboard analytics, and priority support. There are no per-lead fees, no setup fees, and no cancellation penalties.",
+      "Unlimited claims, full project details upfront, dashboard analytics. No per-lead fees, setup fees, or cancellation penalties.",
   },
   {
-    question: "Are there long-term contracts?",
+    question: "Long-term contracts?",
     answer:
-      "No. Membership is month-to-month with no long-term commitment. You can pause or cancel at any time. We do limit the number of contractors per service area and trade category, so if you cancel, re-entry cannot be guaranteed.",
+      "No. Month-to-month only. Pause or cancel anytime. We limit contractors per area, so re-entry isn't guaranteed if you cancel.",
   },
   {
-    question: "What makes a project billable or valid?",
+    question: "When is a project billable?",
     answer:
-      "A project is counted against your membership when you claim it from the dashboard. Unlike per-lead billing models, your flat membership covers all claims. The only requirement is that you follow through on the confirmed consultation — no-shows affect your standing in the network.",
+      "When you claim it. Your flat membership covers all claims. Just follow through on the confirmed consultation.",
   },
   {
     question: "Can I pause my account?",
     answer:
-      "Yes. If you are on a job, taking time off, or need a break, you can pause incoming notifications for individual counties or your entire service area. Pauses are available in durations from a few hours up to seven days.",
+      "Yes. Pause notifications by county or service area for a few hours up to seven days.",
   },
 ]
 

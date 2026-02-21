@@ -100,11 +100,8 @@ export function Hero() {
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Nexus Operations is a contractor marketplace built around one rule: your project goes to one
-              professional — not a list. You submit your project once with photos, a written scope, and a real
-              budget ceiling. A single licensed, insured contractor in your area claims it exclusively before
-              your phone rings. They arrive at your consultation already knowing the scope. You already know
-              who&apos;s coming. That&apos;s what it means to hire with confidence.
+              Submit your project once. One licensed contractor claims it. They know your scope before arriving.
+              You know who's coming. No spam calls. No competing bids. That's confidence.
             </p>
 
             <div
