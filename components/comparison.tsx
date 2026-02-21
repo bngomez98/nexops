@@ -4,13 +4,13 @@ import { Check, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const rows = [
-  { feature: "Request exclusivity", us: "One contractor per request, always", them: "3–7 contractors competing for the same request" },
-  { feature: "Homeowner cost", us: "Free — no hidden fees, ever", them: "Technically free, but your data is sold" },
-  { feature: "Budget transparency", us: "Homeowner sets a cap before matching", them: "Contractor guesses after visiting the site" },
-  { feature: "Project documentation", us: "Photos + specs required before match", them: "Optional, often absent" },
-  { feature: "Consultation scheduling", us: "Pre-confirmed by homeowner at submission", them: "Phone tag, voicemails, missed calls" },
-  { feature: "Contractor vetting", us: "License, insurance, and background verified", them: "Self-reported; varies widely by platform" },
-  { feature: "Inbound contact volume", us: "One contractor reaches out", them: "5–15 contractor calls within the first hour" },
+  { feature: "Who contacts you", us: "Only one contractor, every time", them: "3–7 contractors all calling about the same job" },
+  { feature: "Cost to you", us: "Always free — no hidden costs", them: "Free on paper, but your info gets sold" },
+  { feature: "Budget clarity", us: "You set your budget before anyone contacts you", them: "No budget discussion until someone shows up" },
+  { feature: "Job details", us: "Photos and details collected upfront", them: "Usually skipped or missing" },
+  { feature: "Scheduling", us: "You pick the time when you sign up", them: "Back-and-forth calls, voicemails, missed connections" },
+  { feature: "Contractor quality", us: "License, insurance, and background checked", them: "They fill out their own info — no real checks" },
+  { feature: "How many calls to expect", us: "One call, from one contractor", them: "5–15 calls flooding in within the first hour" },
 ]
 
 export function Comparison() {
@@ -50,7 +50,7 @@ export function Comparison() {
             <span className="gradient-text"> One request. One contractor.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most platforms sell your number to 5–15 contractors. We match you with one verified professional instead.
+            Most other services sell your number to 5–15 contractors. We connect you with one verified professional instead.
           </p>
         </div>
 
