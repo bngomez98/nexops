@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   const sessionToken = req.cookies.get("nexops_session")?.value
 
   if (sessionToken) {
-    deleteSession(sessionToken)
+    await deleteSession(sessionToken)
   }
 
   const response = NextResponse.json({ ok: true })

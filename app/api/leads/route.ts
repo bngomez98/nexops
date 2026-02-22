@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSession, getUserById, getLeadsForContractor, updateLeadStatus } from "@/lib/store"
+import { getSession, getUserById, getLeadsForContractor, updateLeadStatus, seedIfEmpty } from "@/lib/store"
 
-function getAuthUser(req: NextRequest) {
+async function getAuthUser(req: NextRequest) {
   const sessionToken = req.cookies.get("nexops_session")?.value
   if (!sessionToken) return null
-  const userId = getSession(sessionToken)
+  const userId = await getSession(sessionToken)
   if (!userId) return null
   return getUserById(userId)
 }
 
 export async function GET(req: NextRequest) {
-  const user = getAuthUser(req)
+  await seedIfEmpty()
+
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -18,12 +20,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const leads = getLeadsForContractor(user.id)
+  const leads = await getLeadsForContractor(user.id)
   return NextResponse.json({ leads })
 }
 
 export async function PATCH(req: NextRequest) {
-  const user = getAuthUser(req)
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -44,7 +46,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 })
     }
 
-    const updated = updateLeadStatus(
+    const updated = await updateLeadStatus(
       user.id,
       leadId,
       status as "new" | "contacted" | "scheduled" | "won" | "lost",

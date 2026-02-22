@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getUserByEmail, verifyPassword, createSession, toSafeUser } from "@/lib/store"
+import { getUserByEmail, verifyPassword, createSession, toSafeUser, seedIfEmpty } from "@/lib/store"
 
 export async function POST(req: NextRequest) {
   try {
+    await seedIfEmpty()
+
     const body = await req.json()
     const { email, password } = body as { email: string; password: string }
 
@@ -10,12 +12,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
     }
 
-    const user = getUserByEmail(email)
+    const user = await getUserByEmail(email)
     if (!user || !verifyPassword(password, user.passwordHash)) {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
     }
 
-    const sessionToken = createSession(user.id)
+    const sessionToken = await createSession(user.id)
     const safeUser = toSafeUser(user)
 
     const response = NextResponse.json({ user: safeUser })
