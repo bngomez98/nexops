@@ -1,4 +1,17 @@
+/**
+ * Data-access layer for Nexus Operations.
+ *
+ * All persistence is backed by SQLite via Prisma (lib/db.ts).  The function
+ * signatures mirror the original in-memory implementation so that the API
+ * routes only need to add `await` — no structural changes required.
+ *
+ * serviceCategories is serialised as a JSON string in SQLite (which has no
+ * native array type) and deserialised back to string[] on every read.
+ */
 import { createHash, randomUUID } from "crypto"
+import { db } from "./db"
+
+// ─── Shared types ────────────────────────────────────────────────────────────
 
 export interface User {
   id: string
@@ -53,65 +66,155 @@ export interface Request {
   updatedAt?: string
 }
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
 function hashPassword(password: string): string {
   return createHash("sha256").update(password + "nexops_salt_2024").digest("hex")
 }
 
-// Persist in-memory stores across Next.js hot reloads in development.
-// Without this, module re-evaluation clears all sessions and data,
-// causing /api/leads to return 401 and the dashboard to show no projects.
-declare global {
-  // eslint-disable-next-line no-var
-  var __nexops_users: Map<string, User> | undefined
-  var __nexops_sessions: Map<string, string> | undefined
-  var __nexops_leads: Map<string, Lead[]> | undefined
-  var __nexops_requests: Map<string, Request[]> | undefined
+function toUser(row: {
+  id: string
+  email: string
+  passwordHash: string
+  name: string
+  role: string
+  phone: string | null
+  businessName: string | null
+  licenseNumber: string | null
+  serviceCategories: string | null
+  subscription: string | null
+  address: string | null
+  createdAt: Date
+}): User {
+  return {
+    id: row.id,
+    email: row.email,
+    passwordHash: row.passwordHash,
+    name: row.name,
+    role: row.role as User["role"],
+    phone: row.phone ?? undefined,
+    businessName: row.businessName ?? undefined,
+    licenseNumber: row.licenseNumber ?? undefined,
+    serviceCategories: row.serviceCategories
+      ? (JSON.parse(row.serviceCategories) as string[])
+      : undefined,
+    subscription: (row.subscription ?? undefined) as User["subscription"],
+    address: row.address ?? undefined,
+    createdAt: row.createdAt.toISOString(),
+  }
 }
 
-const _needsSeed = !global.__nexops_users
-
-if (!global.__nexops_users) {
-  global.__nexops_users = new Map<string, User>()
-  global.__nexops_sessions = new Map<string, string>()
-  global.__nexops_leads = new Map<string, Lead[]>()
-  global.__nexops_requests = new Map<string, Request[]>()
+function toLead(row: {
+  id: string
+  contractorId: string
+  homeownerId: string
+  homeownerName: string
+  service: string
+  description: string
+  budget: string
+  address: string
+  photos: number
+  status: string
+  tier: string
+  value: number
+  consultationWindow: string | null
+  notes: string | null
+  createdAt: Date
+}): Lead {
+  return {
+    id: row.id,
+    contractorId: row.contractorId,
+    homeownerId: row.homeownerId,
+    homeownerName: row.homeownerName,
+    service: row.service,
+    description: row.description,
+    budget: row.budget,
+    address: row.address,
+    photos: row.photos,
+    status: row.status as Lead["status"],
+    tier: row.tier as Lead["tier"],
+    value: row.value,
+    consultationWindow: row.consultationWindow ?? undefined,
+    notes: row.notes ?? undefined,
+    createdAt: row.createdAt.toISOString(),
+  }
 }
 
-const users = global.__nexops_users
-const sessions = global.__nexops_sessions!
-const leadsStore = global.__nexops_leads!
-const requestsStore = global.__nexops_requests!
+function toRequest(row: {
+  id: string
+  homeownerId: string
+  service: string
+  description: string
+  budget: string
+  address: string
+  photos: number
+  status: string
+  contractorName: string | null
+  contractorId: string | null
+  consultationWindow: string | null
+  createdAt: Date
+  updatedAt: Date | null
+}): Request {
+  return {
+    id: row.id,
+    homeownerId: row.homeownerId,
+    service: row.service,
+    description: row.description,
+    budget: row.budget,
+    address: row.address,
+    photos: row.photos,
+    status: row.status as Request["status"],
+    contractorName: row.contractorName ?? undefined,
+    contractorId: row.contractorId ?? undefined,
+    consultationWindow: row.consultationWindow ?? undefined,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt?.toISOString(),
+  }
+}
 
-function seedData() {
+// ─── Seeding ─────────────────────────────────────────────────────────────────
+
+/**
+ * Populate the database with two demo accounts and sample data on first run.
+ * Skipped when any user already exists so the call is idempotent.
+ */
+export async function seedIfEmpty(): Promise<void> {
+  const count = await db.user.count()
+  if (count > 0) return
+
   const homeownerId = "homeowner-demo-001"
   const contractorId = "contractor-demo-001"
 
-  users.set("homeowner@demo.com", {
-    id: homeownerId,
-    email: "homeowner@demo.com",
-    passwordHash: hashPassword("demo123"),
-    name: "Sarah Johnson",
-    role: "homeowner",
-    phone: "(785) 555-0123",
-    address: "1234 Oak Street, Topeka, KS 66603",
-    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+  await db.user.create({
+    data: {
+      id: homeownerId,
+      email: "homeowner@demo.com",
+      passwordHash: hashPassword("demo123"),
+      name: "Sarah Johnson",
+      role: "homeowner",
+      phone: "(785) 555-0123",
+      address: "1234 Oak Street, Topeka, KS 66603",
+      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    },
   })
 
-  users.set("contractor@demo.com", {
-    id: contractorId,
-    email: "contractor@demo.com",
-    passwordHash: hashPassword("demo123"),
-    name: "Mike Rodriguez",
-    role: "contractor",
-    phone: "(785) 555-0456",
-    businessName: "Rodriguez Tree & Landscaping LLC",
-    licenseNumber: "KS-TC-2021-4892",
-    serviceCategories: ["Tree Removal", "Concrete Work"],
-    subscription: "premium",
-    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+  await db.user.create({
+    data: {
+      id: contractorId,
+      email: "contractor@demo.com",
+      passwordHash: hashPassword("demo123"),
+      name: "Mike Rodriguez",
+      role: "contractor",
+      phone: "(785) 555-0456",
+      businessName: "Rodriguez Tree & Landscaping LLC",
+      licenseNumber: "KS-TC-2021-4892",
+      serviceCategories: JSON.stringify(["Tree Removal", "Concrete Work"]),
+      subscription: "premium",
+      createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+    },
   })
 
-  const demoLeads: Lead[] = [
+  const leads = [
     {
       id: "lead-001",
       contractorId,
@@ -125,7 +228,7 @@ function seedData() {
       status: "won",
       tier: "premium",
       value: 2100,
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       consultationWindow: "Mon Dec 16, 2–4 PM",
     },
     {
@@ -141,7 +244,7 @@ function seedData() {
       status: "scheduled",
       tier: "premium",
       value: 4200,
-      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
       consultationWindow: "Fri Dec 20, 10 AM–12 PM",
     },
     {
@@ -157,7 +260,7 @@ function seedData() {
       status: "new",
       tier: "standard",
       value: 950,
-      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
       consultationWindow: "Mon Dec 23, 8–10 AM",
     },
     {
@@ -173,7 +276,7 @@ function seedData() {
       status: "contacted",
       tier: "standard",
       value: 450,
-      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
       consultationWindow: "Tue Dec 17, 1–3 PM",
     },
     {
@@ -189,7 +292,7 @@ function seedData() {
       status: "lost",
       tier: "premium",
       value: 3200,
-      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
       consultationWindow: "Wed Dec 11, 9–11 AM",
     },
     {
@@ -205,13 +308,16 @@ function seedData() {
       status: "contacted",
       tier: "premium",
       value: 2600,
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       consultationWindow: "Thu Dec 19, 3–5 PM",
     },
   ]
-  leadsStore.set(contractorId, demoLeads)
 
-  const demoRequests: Request[] = [
+  for (const lead of leads) {
+    await db.lead.create({ data: lead })
+  }
+
+  const requests = [
     {
       id: "req-001",
       homeownerId,
@@ -224,8 +330,8 @@ function seedData() {
       contractorName: "Rodriguez Tree & Landscaping LLC",
       contractorId,
       consultationWindow: "Thu Dec 19, 2–4 PM",
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     },
     {
       id: "req-002",
@@ -239,8 +345,8 @@ function seedData() {
       contractorName: "Rodriguez Tree & Landscaping LLC",
       contractorId,
       consultationWindow: "Weekday morning (8–12 AM)",
-      createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
     },
     {
       id: "req-003",
@@ -251,49 +357,75 @@ function seedData() {
       address: "1234 Oak Street, Topeka, KS 66603",
       photos: 0,
       status: "pending",
-      createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+      createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
     },
   ]
-  requestsStore.set(homeownerId, demoRequests)
+
+  for (const req of requests) {
+    await db.request.create({ data: req })
+  }
 }
 
-if (_needsSeed) seedData()
+// ─── Session management ───────────────────────────────────────────────────────
 
-// Session management
-export function createSession(userId: string): string {
+export async function createSession(userId: string): Promise<string> {
   const token = randomUUID()
-  sessions.set(token, userId)
+  await db.session.create({
+    data: {
+      token,
+      userId,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    },
+  })
   return token
 }
 
-export function getSession(token: string): string | undefined {
-  return sessions.get(token)
-}
-
-export function deleteSession(token: string): void {
-  sessions.delete(token)
-}
-
-// User management
-export function getUserByEmail(email: string): User | undefined {
-  return users.get(email.toLowerCase())
-}
-
-export function getUserById(id: string): User | undefined {
-  for (const user of users.values()) {
-    if (user.id === id) return user
+export async function getSession(token: string): Promise<string | undefined> {
+  const session = await db.session.findUnique({ where: { token } })
+  if (!session) return undefined
+  if (session.expiresAt < new Date()) {
+    await db.session.delete({ where: { token } })
+    return undefined
   }
-  return undefined
+  return session.userId
 }
 
-export function createUser(data: Omit<User, "id" | "createdAt">): User {
-  const user: User = {
-    ...data,
-    id: randomUUID(),
-    createdAt: new Date().toISOString(),
-  }
-  users.set(data.email.toLowerCase(), user)
-  return user
+export async function deleteSession(token: string): Promise<void> {
+  await db.session.deleteMany({ where: { token } })
+}
+
+// ─── User management ─────────────────────────────────────────────────────────
+
+export async function getUserByEmail(email: string): Promise<User | undefined> {
+  const row = await db.user.findUnique({ where: { email: email.toLowerCase() } })
+  return row ? toUser(row) : undefined
+}
+
+export async function getUserById(id: string): Promise<User | undefined> {
+  const row = await db.user.findUnique({ where: { id } })
+  return row ? toUser(row) : undefined
+}
+
+export async function createUser(
+  data: Omit<User, "id" | "createdAt">,
+): Promise<User> {
+  const row = await db.user.create({
+    data: {
+      email: data.email.toLowerCase(),
+      passwordHash: data.passwordHash,
+      name: data.name,
+      role: data.role,
+      phone: data.phone,
+      businessName: data.businessName,
+      licenseNumber: data.licenseNumber,
+      serviceCategories: data.serviceCategories
+        ? JSON.stringify(data.serviceCategories)
+        : undefined,
+      subscription: data.subscription,
+      address: data.address,
+    },
+  })
+  return toUser(row)
 }
 
 export function toSafeUser(user: User): SafeUser {
@@ -309,58 +441,94 @@ export function hashNewPassword(password: string): string {
   return hashPassword(password)
 }
 
-// Leads
-export function getLeadsForContractor(contractorId: string): Lead[] {
-  return leadsStore.get(contractorId) ?? []
+// ─── Leads ────────────────────────────────────────────────────────────────────
+
+export async function getLeadsForContractor(contractorId: string): Promise<Lead[]> {
+  const rows = await db.lead.findMany({
+    where: { contractorId },
+    orderBy: { createdAt: "desc" },
+  })
+  return rows.map(toLead)
 }
 
-export function addLead(contractorId: string, lead: Omit<Lead, "id" | "createdAt">): Lead {
-  const newLead: Lead = { ...lead, id: randomUUID(), createdAt: new Date().toISOString() }
-  const existing = leadsStore.get(contractorId) ?? []
-  leadsStore.set(contractorId, [newLead, ...existing])
-  return newLead
+export async function addLead(
+  contractorId: string,
+  lead: Omit<Lead, "id" | "createdAt">,
+): Promise<Lead> {
+  const row = await db.lead.create({
+    data: {
+      contractorId,
+      homeownerId: lead.homeownerId,
+      homeownerName: lead.homeownerName,
+      service: lead.service,
+      description: lead.description,
+      budget: lead.budget,
+      address: lead.address,
+      photos: lead.photos,
+      status: lead.status,
+      tier: lead.tier,
+      value: lead.value,
+      consultationWindow: lead.consultationWindow,
+      notes: lead.notes,
+    },
+  })
+  return toLead(row)
 }
 
-export function updateLeadStatus(
+export async function updateLeadStatus(
   contractorId: string,
   leadId: string,
   status: Lead["status"],
   notes?: string,
-): Lead | null {
-  const leads = leadsStore.get(contractorId) ?? []
-  const idx = leads.findIndex((l) => l.id === leadId)
-  if (idx === -1) return null
-  leads[idx] = { ...leads[idx], status, ...(notes !== undefined ? { notes } : {}) }
-  leadsStore.set(contractorId, leads)
-  return leads[idx]
+): Promise<Lead | null> {
+  const existing = await db.lead.findFirst({ where: { id: leadId, contractorId } })
+  if (!existing) return null
+  const row = await db.lead.update({
+    where: { id: leadId },
+    data: { status, ...(notes !== undefined ? { notes } : {}) },
+  })
+  return toLead(row)
 }
 
-// Requests
-export function getRequestsForHomeowner(homeownerId: string): Request[] {
-  return requestsStore.get(homeownerId) ?? []
+// ─── Requests ─────────────────────────────────────────────────────────────────
+
+export async function getRequestsForHomeowner(homeownerId: string): Promise<Request[]> {
+  const rows = await db.request.findMany({
+    where: { homeownerId },
+    orderBy: { createdAt: "desc" },
+  })
+  return rows.map(toRequest)
 }
 
-export function addRequest(homeownerId: string, data: Omit<Request, "id" | "createdAt" | "status">): Request {
-  const request: Request = {
-    ...data,
-    id: randomUUID(),
-    status: "pending",
-    createdAt: new Date().toISOString(),
-  }
-  const existing = requestsStore.get(homeownerId) ?? []
-  requestsStore.set(homeownerId, [request, ...existing])
-  return request
+export async function addRequest(
+  homeownerId: string,
+  data: Omit<Request, "id" | "createdAt" | "status">,
+): Promise<Request> {
+  const row = await db.request.create({
+    data: {
+      homeownerId,
+      service: data.service,
+      description: data.description,
+      budget: data.budget,
+      address: data.address,
+      photos: data.photos ?? 0,
+      consultationWindow: data.consultationWindow,
+      status: "pending",
+    },
+  })
+  return toRequest(row)
 }
 
-export function updateRequestStatus(
+export async function updateRequestStatus(
   homeownerId: string,
   requestId: string,
   status: Request["status"],
-): Request | null {
-  const requests = requestsStore.get(homeownerId) ?? []
-  const idx = requests.findIndex((r) => r.id === requestId)
-  if (idx === -1) return null
-  requests[idx] = { ...requests[idx], status, updatedAt: new Date().toISOString() }
-  requestsStore.set(homeownerId, requests)
-  return requests[idx]
+): Promise<Request | null> {
+  const existing = await db.request.findFirst({ where: { id: requestId, homeownerId } })
+  if (!existing) return null
+  const row = await db.request.update({
+    where: { id: requestId },
+    data: { status, updatedAt: new Date() },
+  })
+  return toRequest(row)
 }

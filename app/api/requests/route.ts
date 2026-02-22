@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSession, getUserById, getRequestsForHomeowner, addRequest, updateRequestStatus } from "@/lib/store"
+import { getSession, getUserById, getRequestsForHomeowner, addRequest, updateRequestStatus, seedIfEmpty } from "@/lib/store"
 import { isFullSentences } from "@/lib/utils"
 
-function getAuthUser(req: NextRequest) {
+async function getAuthUser(req: NextRequest) {
   const sessionToken = req.cookies.get("nexops_session")?.value
   if (!sessionToken) return null
-  const userId = getSession(sessionToken)
+  const userId = await getSession(sessionToken)
   if (!userId) return null
   return getUserById(userId)
 }
 
 export async function GET(req: NextRequest) {
-  const user = getAuthUser(req)
+  await seedIfEmpty()
+
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -19,12 +21,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const requests = getRequestsForHomeowner(user.id)
+  const requests = await getRequestsForHomeowner(user.id)
   return NextResponse.json({ requests })
 }
 
 export async function POST(req: NextRequest) {
-  const user = getAuthUser(req)
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -54,7 +56,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const request = addRequest(user.id, {
+    const request = await addRequest(user.id, {
       homeownerId: user.id,
       service,
       description,
@@ -71,7 +73,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const user = getAuthUser(req)
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -92,7 +94,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 })
     }
 
-    const updated = updateRequestStatus(user.id, requestId, status as "pending" | "matched" | "in_progress" | "completed" | "cancelled")
+    const updated = await updateRequestStatus(user.id, requestId, status as "pending" | "matched" | "in_progress" | "completed" | "cancelled")
     if (!updated) {
       return NextResponse.json({ error: "Request not found" }, { status: 404 })
     }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   ComposedChart,
@@ -19,7 +19,6 @@ import { getStoredUser, type AuthUser } from "@/lib/auth"
 import {
   TrendingUp,
   DollarSign,
-  Zap,
   Target,
   Clock,
   MapPin,
@@ -32,6 +31,10 @@ import {
   Shield,
   Phone,
   ChevronDown,
+  CheckCircle2,
+  CalendarCheck,
+  XCircle,
+  Loader2,
 } from "lucide-react"
 
 interface Lead {
@@ -83,6 +86,24 @@ const tierConfig = {
     headerBg: "from-violet-500/8 to-background",
     advance: "5 min exclusive",
   },
+}
+
+// Status transitions available for each status
+const nextStatuses: Record<Lead["status"], { value: Lead["status"]; label: string; icon: typeof Phone }[]> = {
+  new: [
+    { value: "contacted", label: "Mark contacted", icon: Phone },
+    { value: "lost", label: "Mark lost", icon: XCircle },
+  ],
+  contacted: [
+    { value: "scheduled", label: "Mark scheduled", icon: CalendarCheck },
+    { value: "lost", label: "Mark lost", icon: XCircle },
+  ],
+  scheduled: [
+    { value: "won", label: "Mark won", icon: CheckCircle2 },
+    { value: "lost", label: "Mark lost", icon: XCircle },
+  ],
+  won: [],
+  lost: [],
 }
 
 function statusBadge(status: Lead["status"]) {
@@ -159,6 +180,7 @@ export default function ContractorDashboard() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedLead, setExpandedLead] = useState<string | null>(null)
+  const [updating, setUpdating] = useState<string | null>(null)
 
   useEffect(() => {
     const stored = getStoredUser()
@@ -176,6 +198,29 @@ export default function ContractorDashboard() {
       .then((d) => { if (d) setLeads(d.leads ?? []) })
       .finally(() => setLoading(false))
   }, [router])
+
+  const updateStatus = useCallback(
+    async (leadId: string, status: Lead["status"]) => {
+      setUpdating(leadId)
+      try {
+        const res = await fetch("/api/leads", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ leadId, status }),
+        })
+        if (!res.ok) return
+        const { lead } = await res.json() as { lead: Lead }
+        setLeads((prev) => prev.map((l) => (l.id === lead.id ? lead : l)))
+        // Collapse the row if it's now in a terminal state
+        if (status === "won" || status === "lost") {
+          setExpandedLead(null)
+        }
+      } finally {
+        setUpdating(null)
+      }
+    },
+    [],
+  )
 
   if (!user) return null
 
@@ -375,7 +420,6 @@ export default function ContractorDashboard() {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            {/* Tier benefits */}
             <div className="space-y-2 p-3 rounded-xl bg-secondary/40 border border-border/30">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground text-xs">Project advance notice</span>
@@ -404,7 +448,6 @@ export default function ContractorDashboard() {
               </p>
             </div>
 
-            {/* Categories */}
             {(user.serviceCategories ?? []).length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/30">
                 {(user.serviceCategories ?? []).map((cat) => (
@@ -430,7 +473,7 @@ export default function ContractorDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Recent Projects</CardTitle>
-              <CardDescription>All projects assigned to your account — click a row to expand</CardDescription>
+              <CardDescription>All projects assigned to your account — click a row to expand and update status</CardDescription>
             </div>
             {newLeads > 0 && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/25 text-xs text-blue-400 font-semibold">
@@ -512,11 +555,12 @@ export default function ContractorDashboard() {
                           </div>
                         </td>
                       </tr>
-                      {/* Expanded row */}
+
+                      {/* Expanded detail row */}
                       {expandedLead === lead.id && (
                         <tr key={`${lead.id}-expanded`} className="border-b border-border/20 bg-secondary/10">
-                          <td colSpan={7} className="px-6 py-4">
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-4">
+                          <td colSpan={7} className="px-6 py-5">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
                               <div>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Description</p>
                                 <p className="text-foreground text-xs leading-relaxed">{lead.description}</p>
@@ -534,16 +578,47 @@ export default function ContractorDashboard() {
                                 <p className="text-emerald-400 font-bold text-base">${lead.value.toLocaleString()}</p>
                               </div>
                             </div>
-                            {lead.status === "new" && (
-                              <div className="flex items-center gap-2 pt-3 border-t border-border/30">
-                                <button
-                                  type="button"
-                                  className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-primary/20"
-                                >
-                                  <Phone className="h-3.5 w-3.5" />
-                                  Mark as Contacted
-                                </button>
-                                <span className="text-xs text-muted-foreground">Respond quickly to improve close rate</span>
+
+                            {/* Status actions */}
+                            {nextStatuses[lead.status].length > 0 && (
+                              <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border/30">
+                                {nextStatuses[lead.status].map(({ value: nextStatus, label, icon: Icon }) => {
+                                  const isWon = nextStatus === "won"
+                                  const isLost = nextStatus === "lost"
+                                  const isLoading = updating === lead.id
+                                  return (
+                                    <button
+                                      key={nextStatus}
+                                      type="button"
+                                      disabled={isLoading}
+                                      onClick={(e) => { e.stopPropagation(); updateStatus(lead.id, nextStatus) }}
+                                      className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                        isWon
+                                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
+                                          : isLost
+                                          ? "bg-red-500/10 text-red-400 border border-red-500/25 hover:bg-red-500/20"
+                                          : "btn-shimmer bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:opacity-90"
+                                      }`}
+                                    >
+                                      {isLoading ? (
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                      ) : (
+                                        <Icon className="h-3.5 w-3.5" />
+                                      )}
+                                      {label}
+                                    </button>
+                                  )
+                                })}
+                                {lead.status === "new" && (
+                                  <span className="text-xs text-muted-foreground ml-1">Respond quickly to improve close rate</span>
+                                )}
+                              </div>
+                            )}
+
+                            {(lead.status === "won" || lead.status === "lost") && (
+                              <div className={`flex items-center gap-2 pt-4 border-t border-border/30 text-xs font-medium ${lead.status === "won" ? "text-emerald-400" : "text-muted-foreground"}`}>
+                                {lead.status === "won" ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />}
+                                {lead.status === "won" ? "Job closed — counted in your revenue" : "Marked as lost"}
                               </div>
                             )}
                           </td>

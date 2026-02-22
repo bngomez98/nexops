@@ -8,12 +8,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
 
-  const userId = getSession(sessionToken)
+  const userId = await getSession(sessionToken)
   if (!userId) {
     return NextResponse.json({ error: "Session expired" }, { status: 401 })
   }
 
-  const user = getUserById(userId)
+  const user = await getUserById(userId)
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 })
   }
