@@ -15,6 +15,8 @@ const steps = [
     number: "01",
     title: "Initial consultation",
     detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
+    title: "Choose a membership tier",
+    detail: "Standard receives real-time notifications when projects are posted. Premium receives a 90-second advance window before the general pool opens. Elite receives a 10-minute exclusive window on all projects valued at $5,000 or more.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -45,6 +47,8 @@ const steps = [
     number: "04",
     title: "Platform access at launch",
     detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
+    title: "Deliver a written estimate on-site",
+    detail: "You've reviewed the photos, scope, and budget before the consultation. Arrive with the information needed to write an estimate on the spot — no second visit required.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -207,6 +211,23 @@ export function HowItWorks() {
               get first access to the platform when it launches in 2026.
             </p>
           </div>
+          {perspective === "homeowner" ? (
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
+              <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">Free for homeowners.</span>{" "}
+                Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.
+              </p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/15 max-w-2xl">
+              <Star className="h-4 w-4 text-amber-400 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">No per-lead charges.</span>{" "}
+                Your membership covers unlimited project claims. Elite members receive a 10-minute exclusive claim window on every project valued at $5,000 or more.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </section>

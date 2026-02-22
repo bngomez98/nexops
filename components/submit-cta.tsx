@@ -76,6 +76,9 @@ export function SubmitCTA() {
                   Work with us
                   <br />
                   <span className="gradient-text">before we launch.</span>
+                  Set the budget, scope, and schedule
+                  <br />
+                  <span className="gradient-text">before any contractor sees your request.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   Consulting engagements are open now. Every early client gets a dedicated NexOps

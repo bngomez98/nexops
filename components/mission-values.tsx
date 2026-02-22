@@ -16,6 +16,9 @@ const values = [
     icon: Shield,
     title: "Clients define the scope",
     body: "You set the priorities, the budget, and the outcomes you need. We operate within your framework and report to you — not to our own internal metrics. The engagement looks like what you need it to look like.",
+    icon: ShieldCheck,
+    title: "Contractors own their projects",
+    body: "The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed. One contractor contacts the homeowner — no one else.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -24,6 +27,8 @@ const values = [
     icon: FileText,
     title: "Documentation as infrastructure",
     body: "Every vendor relationship, workflow decision, and coordination record is written down and accessible. When something needs to be referenced — or when your team changes — the knowledge stays with your organization.",
+    title: "Both sides come prepared",
+    body: "Every project requires photos, a written scope description, a maximum budget, and pre-selected consultation windows before any contractor is notified. The contractor arrives having reviewed all of it — no discovery conversation required.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -32,6 +37,9 @@ const values = [
     icon: TrendingUp,
     title: "Outcomes over activity",
     body: "We don't measure success by calls made or emails sent. We measure it by whether your operations run more smoothly because of what we did. If it doesn't move the needle for your portfolio, we won't bill you for it.",
+    icon: Award,
+    title: "Verified credentials, tracked outcomes",
+    body: "Every contractor in the network is license-verified, insurance-confirmed, and background-checked before gaining access to project requests. Performance ratings reflect actual project outcomes — not self-reported reviews.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -128,6 +136,9 @@ export function MissionValues() {
               Nexus Operations
             </footer>
           </blockquote>
+          <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
+            Every project request includes photos, a written scope, a defined budget ceiling, and pre-selected consultation windows — all collected before any contractor is notified. The contractor who claims your project has reviewed all of it before showing up.
+          </p>
         </div>
       </div>
     </section>

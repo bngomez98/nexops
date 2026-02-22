@@ -136,13 +136,12 @@ export function FAQ() {
           <div className="reveal lg:sticky lg:top-24">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">FAQ</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Common questions,
-              <span className="gradient-text"> straight answers.</span>
+              Answers to the questions
+              <span className="gradient-text"> that matter before you commit.</span>
             </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              No vague commitments. If something isn&apos;t clear about how NexOps works, what
-              an engagement looks like, or what we actually deliver — you should know before
-              you reach out.
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              How matching works, what contractors are required to carry, what happens if no contractor is
+              available, and what your obligations are — answered before you submit a project or join the network.
             </p>
           </div>
 

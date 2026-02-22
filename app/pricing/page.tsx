@@ -205,7 +205,7 @@ export default function PricingPage() {
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>You are the only contractor on every job you claim</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Photos, specs, and a defined budget before you commit</li>
                   <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Consultation pre-scheduled by the homeowner — no callbacks</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One closed project typically covers 6+ months of membership</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Median project value is $4,200 — 14 months of Standard membership from a single closed job</li>
                 </ul>
               </div>
             </div>
