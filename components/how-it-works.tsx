@@ -64,7 +64,7 @@ const contractorSteps = [
     icon: Briefcase,
     number: "01",
     title: "Choose a membership tier",
-    detail: "Standard gets real-time feed access. Premium unlocks a 60-second advance window. Elite sees $5K+ projects 5 minutes before everyone else.",
+    detail: "Standard receives real-time notifications when projects are posted. Premium receives a 90-second advance window before the general pool opens. Elite receives a 10-minute exclusive window on all projects valued at $5,000 or more.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
