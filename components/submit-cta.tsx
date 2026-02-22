@@ -77,9 +77,9 @@ export function SubmitCTA() {
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Your project, your terms.
+                  Set the budget, scope, and schedule
                   <br />
-                  <span className="gradient-text">One contractor who earns it.</span>
+                  <span className="gradient-text">before any contractor sees your request.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   Define your project completely before anyone is contacted. Set the budget ceiling, choose your consultation

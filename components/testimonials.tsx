@@ -87,11 +87,11 @@ export function Testimonials() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">From our contractors</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Why contractors join.
-            <span className="gradient-text"> Why they stay.</span>
+            What contractors get
+            <span className="gradient-text"> that shared-lead platforms don&apos;t.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Exclusive projects. Better customers. No per-lead fees.
+            Every project is exclusively theirs the moment they claim it. Full documentation upfront. No per-lead fees — ever.
           </p>
         </div>
 
@@ -162,10 +162,10 @@ export function Testimonials() {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">
-              Every project is exclusive.
+              No shared leads, at any tier.
             </p>
             <p className="text-sm text-muted-foreground">
-              Claim a project and it's yours. No one else gets it.
+              The moment a contractor claims a project, it is removed from every other contractor&apos;s feed and cannot be reclaimed. The homeowner hears from exactly one professional.
             </p>
           </div>
         </div>

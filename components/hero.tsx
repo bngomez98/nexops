@@ -93,7 +93,7 @@ export function Hero() {
               <br />
               <span className="gradient-text">Exclusively yours.</span>
               <br />
-              <span className="text-foreground/70">Built for predictability.</span>
+              <span className="text-foreground/70">Consultation confirmed within 24 hours.</span>
             </h1>
 
             <p

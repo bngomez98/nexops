@@ -15,7 +15,7 @@ const values = [
   {
     icon: ShieldCheck,
     title: "Contractors own their projects",
-    body: "Claim a project and it's yours alone. No bidding wars, no competing for the same job.",
+    body: "The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed. One contractor contacts the homeowner — no one else.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -23,14 +23,14 @@ const values = [
   {
     icon: FileText,
     title: "Both sides come prepared",
-    body: "Every project includes photos, scope, and budget before matching. Consultations are productive from minute one.",
+    body: "Every project requires photos, a written scope description, a maximum budget, and pre-selected consultation windows before any contractor is notified. The contractor arrives having reviewed all of it — no discovery conversation required.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
   {
     icon: Award,
-    title: "Quality matters",
+    title: "Verified credentials, tracked outcomes",
     body: "Every contractor in the network is license-verified, insurance-confirmed, and background-checked before gaining access to project requests. Performance ratings reflect actual project outcomes — not self-reported reviews.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
@@ -117,14 +117,9 @@ export function MissionValues() {
           className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
           style={{ transitionDelay: "500ms" }}
         >
-          <blockquote className="text-center">
-            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;One request, one contractor. Every time, without exception.&rdquo;
-            </p>
-            <footer className="mt-4 text-sm text-muted-foreground">
-              Nexus Operations — Topeka, KS
-            </footer>
-          </blockquote>
+          <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
+            Every project request includes photos, a written scope, a defined budget ceiling, and pre-selected consultation windows — all collected before any contractor is notified. The contractor who claims your project has reviewed all of it before showing up.
+          </p>
         </div>
       </div>
     </section>

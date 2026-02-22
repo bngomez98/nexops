@@ -86,12 +86,12 @@ export default function PropertyManagersPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For property managers</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Maintenance without
+                Submit once.
                 <br />
-                <span className="text-primary">the overhead.</span>
+                <span className="text-primary">One verified contractor. 24 hours.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                One workflow for maintenance across your entire portfolio. No vetting vendors. No chasing estimates.
+                One submission per job — with photos, scope, and a budget cap. A single pre-vetted contractor claims it and a consultation is scheduled within 24 hours. No vendor sourcing, no quote chasing, no callbacks.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -362,10 +362,10 @@ export default function PropertyManagersPage() {
         <section id="corporate" className="py-24 lg:py-32">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Interested in a Corporate Account?
+              Corporate accounts for portfolios managing 10 or more properties
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Manage multiple properties efficiently. Contact us for corporate onboarding specific to your portfolio size and needs.
+              Consolidated billing, a single dashboard across all properties, volume pricing, and a dedicated account contact. Contact us to discuss your portfolio size and active service categories.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
