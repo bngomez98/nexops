@@ -46,11 +46,11 @@ export function Comparison() {
         <div className="max-w-2xl mb-12 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built differently from the start.
-            <span className="gradient-text"> One request. One contractor.</span>
+            Other platforms sell your number to 5–15 contractors.
+            <span className="gradient-text"> We send it to one.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most other services sell your number to 5–15 contractors. We connect you with one verified professional instead.
+            That contractor has seen your photos, your scope, and your budget before contacting you. They are already committed to the consultation window you selected.
           </p>
         </div>
 
@@ -113,9 +113,9 @@ export function Comparison() {
             <Check className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Commitment</p>
+            <p className="text-sm font-semibold text-foreground mb-0.5">What this means in practice</p>
             <p className="text-sm text-muted-foreground">
-              One request. One verified contractor. Zero unsolicited calls. We'll tell you immediately if coverage isn't available in your area.
+              One verified contractor contacts you — no one else. If coverage is unavailable in your area, we notify you immediately rather than leaving your request to expire unmatched.
             </p>
           </div>
         </div>

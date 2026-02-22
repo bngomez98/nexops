@@ -93,8 +93,8 @@ const contractorSteps = [
   {
     icon: ClipboardCheck,
     number: "04",
-    title: "Arrive prepared, close efficiently",
-    detail: "You've seen the job before the consultation. Deliver a written estimate on-site and convert at a higher rate with less back-and-forth.",
+    title: "Deliver a written estimate on-site",
+    detail: "You've reviewed the photos, scope, and budget before the consultation. Arrive with the information needed to write an estimate on the spot — no second visit required.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -315,7 +315,7 @@ export function HowItWorks() {
               <Star className="h-4 w-4 text-amber-400 flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
                 <span className="font-semibold text-foreground">No per-lead charges.</span>{" "}
-                Your membership covers unlimited project claims. Upgrade to Elite for exclusive advance access on high-value jobs.
+                Your membership covers unlimited project claims. Elite members receive a 10-minute exclusive claim window on every project valued at $5,000 or more.
               </p>
             </div>
           )}
