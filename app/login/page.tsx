@@ -141,16 +141,16 @@ function LoginContent() {
         </Link>
 
         <div>
-          <p className="text-primary text-sm font-medium tracking-wide mb-4">The smarter way to grow</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors in Topeka, KS</p>
           <h2 className="text-3xl font-semibold leading-snug tracking-tight mb-8">
-            Exclusive projects.<br />Predictable revenue.<br />Zero phone tag.
+            Exclusive projects.<br />Full documentation upfront.<br />One flat monthly fee.
           </h2>
           <ul className="flex flex-col gap-4">
             {[
-              "One project, one contractor — always exclusive",
-              "Pre-qualified requests with photos and budgets",
-              "Flexible monthly plans, cancel any time",
-              "Real-time notifications and analytics",
+              "One project, one contractor — the moment you claim it, no one else can",
+              "Every request includes photos, written scope, and a defined budget cap",
+              "Month-to-month membership — cancel from your dashboard at any time",
+              "Real-time notifications and performance analytics",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
@@ -261,7 +261,7 @@ function LoginContent() {
             <TabsContent value="signup">
               <div className="mb-6">
                 <h1 className="text-2xl font-semibold mb-1">Create your account</h1>
-                <p className="text-sm text-muted-foreground">Join Nexus Operations today.</p>
+                <p className="text-sm text-muted-foreground">Submit a project request or apply to join the contractor network.</p>
               </div>
 
               {/* Role picker */}

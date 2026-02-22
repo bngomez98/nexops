@@ -38,7 +38,7 @@ const benefits = [
     icon: DollarSign,
     title: "Predictable, flat monthly membership",
     description:
-      "Starting at $299/month for unlimited project claims. No per-lead fees. No surprise charges. No annual contracts. One closed project per month typically covers your membership cost many times over.",
+      "Starting at $299/month for unlimited project claims. No per-lead fees. No surprise charges. No annual contracts. The median project on our platform is $4,200 — a single closed job covers 14 months of Standard membership.",
   },
   {
     icon: BarChart3,
