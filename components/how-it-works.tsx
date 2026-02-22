@@ -2,107 +2,55 @@
 
 import { useState, useEffect, useRef } from "react"
 import {
-  Camera,
-  MousePointerClick,
-  CalendarCheck,
-  Star,
-  Briefcase,
-  Bell,
-  ClipboardCheck,
+  MessageSquare,
+  ClipboardList,
+  Network,
+  Monitor,
   TrendingUp,
 } from "lucide-react"
 
-// ─── Homeowner process ────────────────────────────────────────────────────────
-
-const homeownerSteps = [
+const steps = [
   {
-    icon: Camera,
+    icon: MessageSquare,
     number: "01",
-    title: "Document your project",
-    detail: "Photos, written description, budget range, and preferred consultation windows. One submission — no repeat calls.",
+    title: "Initial consultation",
+    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
     accent: "oklch(0.75 0.18 155)",
   },
   {
-    icon: MousePointerClick,
+    icon: ClipboardList,
     number: "02",
-    title: "One contractor claims it",
-    detail: "A licensed, insured professional in your area claims your project exclusively. It drops off all other feeds the instant it's claimed.",
+    title: "Operations assessment",
+    detail: "We document your existing vendor relationships, active workflows, and coordination gaps. Within two weeks, you receive a written operations overview with prioritized recommendations.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
     accent: "oklch(0.82 0.17 85)",
   },
   {
-    icon: CalendarCheck,
+    icon: Network,
     number: "03",
-    title: "Consultation within 24 hours",
-    detail: "You receive a confirmed appointment time. The contractor arrives already briefed on scope, budget, and photos — no discovery call needed.",
+    title: "Consulting engagement begins",
+    detail: "Your dedicated NexOps partner steps in as your operations coordinator — managing vendor calls, scheduling, scope documentation, and follow-through so your team can focus on properties.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
     accent: "oklch(0.70 0.15 300)",
   },
   {
-    icon: Star,
+    icon: Monitor,
     number: "04",
-    title: "Review the estimate, decide freely",
-    detail: "A written estimate lands in your inbox. Accept, decline, or ask questions — with zero pressure and no obligation to proceed.",
+    title: "Platform access at launch",
+    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
     accent: "oklch(0.72 0.17 160)",
   },
 ]
-
-// ─── Contractor process ───────────────────────────────────────────────────────
-
-const contractorSteps = [
-  {
-    icon: Briefcase,
-    number: "01",
-    title: "Choose a membership tier",
-    detail: "Standard gets real-time feed access. Premium unlocks a 60-second advance window. Elite sees $5K+ projects 5 minutes before everyone else.",
-    color: "text-primary",
-    bg: "bg-primary/10",
-    border: "border-primary/20",
-    accent: "oklch(0.75 0.18 155)",
-  },
-  {
-    icon: Bell,
-    number: "02",
-    title: "Receive qualified project alerts",
-    detail: "Every alert includes photos, a written description, a defined budget range, and a consultation window. You know the scope before you claim.",
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-    border: "border-amber-400/20",
-    accent: "oklch(0.82 0.17 85)",
-  },
-  {
-    icon: MousePointerClick,
-    number: "03",
-    title: "Claim it — exclusively",
-    detail: "One tap locks the project to your account. It disappears from every other contractor's feed permanently. No split leads, no bidding.",
-    color: "text-violet-400",
-    bg: "bg-violet-400/10",
-    border: "border-violet-400/20",
-    accent: "oklch(0.70 0.15 300)",
-  },
-  {
-    icon: ClipboardCheck,
-    number: "04",
-    title: "Arrive prepared, close efficiently",
-    detail: "You've seen the job before the consultation. Deliver a written estimate on-site and convert at a higher rate with less back-and-forth.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-    border: "border-emerald-400/20",
-    accent: "oklch(0.72 0.17 160)",
-  },
-]
-
-// ─── Step card ────────────────────────────────────────────────────────────────
 
 function StepCard({
   step,
@@ -110,7 +58,7 @@ function StepCard({
   activeStep,
   onHover,
 }: {
-  step: (typeof homeownerSteps)[number]
+  step: (typeof steps)[number]
   index: number
   activeStep: number | null
   onHover: (i: number | null) => void
@@ -176,13 +124,10 @@ function StepCard({
   )
 }
 
-// ─── Main section ─────────────────────────────────────────────────────────────
-
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
   const [activeStep, setActiveStep] = useState<number | null>(null)
   const [inView, setInView] = useState(false)
-  const [perspective, setPerspective] = useState<"homeowner" | "contractor">("homeowner")
 
   useEffect(() => {
     const el = sectionRef.current
@@ -204,21 +149,6 @@ export function HowItWorks() {
     return () => observer.disconnect()
   }, [])
 
-  // Re-trigger reveal animations when the perspective switches
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el || !inView) return
-    el.querySelectorAll(".reveal").forEach((node) => node.classList.remove("in-view"))
-    const timeout = setTimeout(() => {
-      el.querySelectorAll(".reveal").forEach((node, i) => {
-        setTimeout(() => node.classList.add("in-view"), i * 100)
-      })
-    }, 50)
-    return () => clearTimeout(timeout)
-  }, [perspective, inView])
-
-  const steps = perspective === "homeowner" ? homeownerSteps : contractorSteps
-
   return (
     <section ref={sectionRef} id="how-it-works" className="py-24 lg:py-32 relative overflow-hidden">
       {/* Ambient background */}
@@ -229,48 +159,15 @@ export function HowItWorks() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 reveal">
-          <div className="max-w-xl">
-            <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
-            <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
-              {perspective === "homeowner"
-                ? "From submission to consultation in under 24 hours"
-                : "From alert to closed job — without the bidding"}
-            </h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              {perspective === "homeowner"
-                ? "Submit once with documentation. A single verified contractor claims your project — no callbacks from five companies, no inbox spam."
-                : "Every project arrives pre-documented. You see the scope, photos, and budget before you claim — arrive at the consultation ready to close."}
-            </p>
-          </div>
-
-          {/* Perspective toggle */}
-          <div className="flex-shrink-0">
-            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-secondary border border-border/40">
-              <button
-                type="button"
-                onClick={() => setPerspective("homeowner")}
-                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                  perspective === "homeowner"
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Homeowner
-              </button>
-              <button
-                type="button"
-                onClick={() => setPerspective("contractor")}
-                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                  perspective === "contractor"
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Contractor
-              </button>
-            </div>
-          </div>
+        <div className="max-w-2xl mb-14 reveal">
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
+            From first conversation to coordinated operations
+          </h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            We start with your portfolio, not a template. Every engagement begins with understanding
+            your actual vendor relationships and workflows — then we build from there.
+          </p>
         </div>
 
         {/* Connecting timeline line (desktop) */}
@@ -290,7 +187,7 @@ export function HowItWorks() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, i) => (
               <StepCard
-                key={`${perspective}-${step.number}`}
+                key={step.number}
                 step={step}
                 index={i}
                 activeStep={activeStep}
@@ -300,25 +197,16 @@ export function HowItWorks() {
           </div>
         </div>
 
-        {/* Bottom callout — different for each perspective */}
+        {/* Bottom callout */}
         <div className="mt-12 reveal">
-          {perspective === "homeowner" ? (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
-              <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">Free for homeowners.</span>{" "}
-                Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.
-              </p>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/15 max-w-2xl">
-              <Star className="h-4 w-4 text-amber-400 flex-shrink-0" />
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">No per-lead charges.</span>{" "}
-                Your membership covers unlimited project claims. Upgrade to Elite for exclusive advance access on high-value jobs.
-              </p>
-            </div>
-          )}
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
+            <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">No long-term contract required.</span>{" "}
+              Engagements are structured around defined scope and outcomes. Early clients who begin now
+              get first access to the platform when it launches in 2026.
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ChevronDown, CheckCircle2, Lock, Zap } from "lucide-react"
+import { ArrowRight, ChevronDown, Users, Network, BarChart3 } from "lucide-react"
 import { useState, useEffect } from "react"
 
-const cyclingWords = ["Roofing", "Tree Removal", "Concrete", "Fencing", "HVAC", "Electrical"]
+const cyclingWords = ["Coordination", "Operations", "Vendor Management", "Workflows", "Relationships"]
 
 export function Hero() {
   const [wordIndex, setWordIndex] = useState(0)
@@ -67,18 +67,15 @@ export function Hero() {
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-8 animate-fade-in-up"
               style={{ animationDelay: "0.05s" }}
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              <span className="text-primary text-xs font-medium tracking-wide">
+                Early access open &mdash; launching 2026
               </span>
-              <span className="text-primary text-xs font-medium tracking-wide">Now serving Topeka, KS &mdash; one project, one professional</span>
             </div>
 
             <h1
               className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6 animate-fade-in-up"
               style={{ animationDelay: "0.15s", opacity: 0 }}
             >
-              One{" "}
               <span
                 className="inline-block transition-all duration-300"
                 style={{
@@ -89,19 +86,19 @@ export function Hero() {
                 {cyclingWords[wordIndex]}
               </span>
               <span className="animate-cursor-blink text-primary ml-1">|</span>
-              {" "}contractor.
               <br />
-              <span className="gradient-text">Exclusively yours.</span>
+              <span className="gradient-text">built on relationship.</span>
               <br />
-              <span className="text-foreground/70">Built for predictability.</span>
+              <span className="text-foreground/70">For property managers.</span>
             </h1>
 
             <p
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Submit your project once. One licensed, insured contractor reviews your scope and claims it exclusively.
-              You know who is coming, and they know the job in full before they arrive. No unsolicited calls. No competing bids.
+              NexOps is a consulting agency and SaaS platform for property management companies.
+              We coordinate your vendor relationships, document your workflows, and serve as your
+              dedicated operations partner.
             </p>
 
             <div
@@ -109,30 +106,30 @@ export function Hero() {
               style={{ animationDelay: "0.35s", opacity: 0 }}
             >
               <Link
-                href="/login?tab=signup"
+                href="/contact"
                 className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Start Your Project — Free
+                Request Early Access
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/contractors"
+                href="/#how-it-works"
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                I&apos;m a contractor
+                How It Works
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
-            {/* Trust indicators */}
+            {/* Value indicators */}
             <div
               className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground animate-fade-in-up"
               style={{ animationDelay: "0.45s", opacity: 0 }}
             >
               {[
-                { icon: Lock, text: "Your project details are never sold or shared with third parties" },
-                { icon: CheckCircle2, text: "Every contractor is license-verified, insured, and background-checked" },
-                { icon: Zap, text: "Consultation confirmed within 24 hours, at a time you select" },
+                { icon: Users, text: "Relationship-based operations management" },
+                { icon: Network, text: "Vendor coordination and workflow documentation" },
+                { icon: BarChart3, text: "Consulting available now — platform launching 2026" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
@@ -152,21 +149,21 @@ export function Hero() {
                 {/* Card header */}
                 <div className="flex items-center justify-between mb-5">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Exclusive project claimed</p>
-                    <p className="text-sm font-semibold">Roofing — Full Shingle Replacement</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Operations overview</p>
+                    <p className="text-sm font-semibold">Greenbrook Property Group</p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium text-emerald-400">
-                    Confirmed
+                  <span className="px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-medium text-primary">
+                    Active
                   </span>
                 </div>
 
-                {/* Lead details */}
+                {/* Metrics */}
                 <div className="space-y-3 mb-5">
                   {[
-                    { label: "Budget cap", value: "$8,500 maximum" },
-                    { label: "Location", value: "NE Topeka, KS" },
-                    { label: "Documentation", value: "9 photos · written scope" },
-                    { label: "Consultation", value: "Sat, 10–11am — confirmed" },
+                    { label: "Properties under management", value: "47 units" },
+                    { label: "Active vendor relationships", value: "23 vendors" },
+                    { label: "Open workflows", value: "8 in progress" },
+                    { label: "Next coordination review", value: "Thu, 9–10am" },
                   ].map(({ label, value }) => (
                     <div key={label} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{label}</span>
@@ -175,23 +172,23 @@ export function Hero() {
                   ))}
                 </div>
 
-                {/* Exclusivity bar */}
+                {/* Relationship note */}
                 <div className="mb-5 p-3 rounded-xl bg-primary/5 border border-primary/15">
                   <div className="flex items-center gap-2 text-xs text-primary font-medium">
-                    <Lock className="h-3 w-3" />
-                    This project is locked to one contractor. No one else can claim it.
+                    <Users className="h-3 w-3" />
+                    All vendor relationships coordinated through one dedicated NexOps partner.
                   </div>
                 </div>
 
                 {/* Status */}
                 <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                  <span>Posted 6 minutes ago</span>
+                  <span>Engagement started Q1 2025</span>
                   <span className="flex items-center gap-1 text-emerald-400 font-medium">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
                     </span>
-                    Claimed exclusively
+                    Operations coordinated
                   </span>
                 </div>
               </div>

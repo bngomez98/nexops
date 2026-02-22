@@ -1,38 +1,38 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Lock, FileText, DollarSign, TrendingUp, BarChart3 } from "lucide-react"
+import { ArrowRight, Users, Network, DollarSign, FileText } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const benefits = [
   {
-    icon: Lock,
-    title: "Projects are exclusively yours",
-    description: "Claim a project and no one else can touch it. You're the only contractor the homeowner hears from.",
+    icon: Users,
+    title: "One dedicated partner per account",
+    description: "Every NexOps client works with one dedicated operations partner. You're not assigned to a shared inbox or a rotating support team.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
-    icon: FileText,
-    title: "Full details before you claim",
-    description: "Photos, written scope, and budget are all there. You only take jobs that fit your business.",
+    icon: Network,
+    title: "Vendor-agnostic coordination",
+    description: "We work with your existing vendors — not against them. We optimize how you coordinate the relationships you've already built.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "Flat membership, no surprises",
-    description: "Starting at $299/month. No per-lead fees, no cancellation penalties, unlimited claims.",
+    title: "Transparent, flat engagement terms",
+    description: "No per-project fees, no surprise charges. You know the scope and the cost before we begin. We don't bill for activity we can't justify.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
   },
   {
-    icon: BarChart3,
-    title: "Reputation based on real work",
-    description: "Your standing comes from actual project outcomes, not gamed reviews. Quality contractors get priority access.",
+    icon: FileText,
+    title: "Documentation that stays with you",
+    description: "Every workflow document, vendor contact, and coordination record belongs to your organization — not locked inside our systems.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -40,9 +40,9 @@ const benefits = [
 ]
 
 const miniStats = [
-  { value: "1", label: "Contractor per project" },
-  { value: "$299", label: "Starting membership" },
-  { value: "$0", label: "Per-lead fees, ever" },
+  { value: "1", label: "Dedicated partner per account" },
+  { value: "$0", label: "Per-project fees" },
+  { value: "100%", label: "Documentation ownership" },
 ]
 
 export function ContractorCTA() {
@@ -82,14 +82,15 @@ export function ContractorCTA() {
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left — copy */}
           <div className="reveal">
-            <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
+            <p className="text-primary text-sm font-medium tracking-wide mb-3">Who we serve</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop competing for projects.
+              Built for property management companies
               <br />
-              <span className="gradient-text">Start owning them.</span>
+              <span className="gradient-text">that need more than software.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Claim fully documented projects that are exclusively yours. No competing bids. No per-lead fees. One flat membership.
+              We serve residential and commercial property management companies that need a better
+              way to coordinate the vendors, workflows, and relationships that keep their portfolios running.
             </p>
 
             {/* Mini stats row */}
@@ -104,18 +105,18 @@ export function ContractorCTA() {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/contractors"
+                href="/contact"
                 className="btn-shimmer inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Join the Network
+                Request Early Access
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/pricing"
+                href="/#how-it-works"
                 className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                <TrendingUp className="h-4 w-4" />
-                View Membership Plans
+                See how it works
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>

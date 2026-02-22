@@ -11,10 +11,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { prefix: "$", value: 600, suffix: "B", label: "U.S. home improvement market, annually" },
-  { value: 1, suffix: "", label: "Licensed contractor assigned per project — exclusively" },
-  { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners — no fees, no exceptions" },
-  { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
+  { prefix: "$", value: 88, suffix: "B+", label: "U.S. property management industry revenue, annually" },
+  { value: 30, suffix: "+", label: "Active vendor relationships managed by the average property management company" },
+  { value: 1, suffix: "", label: "Dedicated NexOps operations partner per client account — not a shared inbox" },
+  { prefix: "$", value: 0, suffix: "", label: "Per-project fees — flat, transparent engagement terms from day one" },
 ]
 
 function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {
@@ -72,7 +72,6 @@ export function Stats() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true)
-          // Add in-view class to all reveal elements
           el.querySelectorAll(".reveal").forEach((node) => node.classList.add("in-view"))
           observer.disconnect()
         }
