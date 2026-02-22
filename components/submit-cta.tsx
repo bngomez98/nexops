@@ -1,29 +1,29 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, FileText, DollarSign, CalendarRange, CheckCircle2, Shield, Lock } from "lucide-react"
+import { ArrowRight, MessageSquare, ClipboardList, Network, Monitor, Shield, Lock } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 const steps = [
   {
-    icon: FileText,
-    title: "Document your project",
-    description: "You upload 2–10 photos of the work area and describe the scope in your own words — what needs to be done, any materials involved, and anything the contractor needs to know before showing up. More detail means a faster match and a contractor who arrives already knowing the job.",
+    icon: MessageSquare,
+    title: "Schedule an intro call",
+    description: "A 45-minute conversation about your portfolio, current vendor setup, and where coordination is costing your team the most time. No forms, no obligation.",
   },
   {
-    icon: DollarSign,
-    title: "Define your budget ceiling",
-    description: "You enter the maximum dollar amount you're willing to spend before any contractor sees your request. Every contractor who considers claiming your job knows your ceiling upfront — no surprise estimates on-site, no pressure to negotiate up.",
+    icon: ClipboardList,
+    title: "Receive your operations assessment",
+    description: "We document your vendor relationships, active workflows, and coordination gaps. You receive a written operations overview within two weeks of the initial call.",
   },
   {
-    icon: CalendarRange,
-    title: "Set your consultation window",
-    description: "You pick 3–4 available time slots from your own calendar. The contractor who claims your request commits to one of those windows before the match is locked — no callbacks required, no back-and-forth scheduling.",
+    icon: Network,
+    title: "Consulting engagement begins",
+    description: "Your dedicated NexOps partner takes over day-to-day operations coordination — vendors, scheduling, scope documentation, and follow-through.",
   },
   {
-    icon: CheckCircle2,
-    title: "One professional claims it",
-    description: "One licensed, insured contractor in your area reviews your photos, scope, budget, and available windows — then commits to the job exclusively. From that moment, no other contractor in the network can see or respond to your request.",
+    icon: Monitor,
+    title: "Platform access at launch",
+    description: "When NexOps launches in 2026, your team gets early access to the platform built from your actual workflows — not a generic template applied to your business.",
   },
 ]
 
@@ -69,47 +69,45 @@ export function SubmitCTA() {
               {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
-                  </span>
-                  <span className="text-primary text-xs font-medium">Always free for homeowners</span>
+                  <span className="text-primary text-xs font-medium">Early access — consulting available now</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+                  Work with us
+                  <br />
+                  <span className="gradient-text">before we launch.</span>
                   Set the budget, scope, and schedule
                   <br />
                   <span className="gradient-text">before any contractor sees your request.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Define your project completely before anyone is contacted. Set the budget ceiling, choose your consultation
-                  window, and document the scope. A single verified professional reviews every detail and commits
-                  to your job — not to winning a bid against six competitors.
-                  There is no cost to homeowners, at any tier, ever.
+                  Consulting engagements are open now. Every early client gets a dedicated NexOps
+                  partner, a documented operations framework, and first access to the platform
+                  when it launches in 2026. There&apos;s no commitment required to start the conversation.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
                   <Link
-                    href="/login?tab=signup"
+                    href="/contact"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Start Your Project — Free
+                    Schedule an Intro Call
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">
                     <span className="flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-primary" /> You control the terms
+                      <Lock className="h-3.5 w-3.5 text-primary" /> No commitment required
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Shield className="h-3.5 w-3.5 text-primary" /> Verified professionals only
+                      <Shield className="h-3.5 w-3.5 text-primary" /> 45 minutes, no forms
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Right — 4-step outcome flow */}
+              {/* Right — engagement flow */}
               <div className="hidden lg:block">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How your project moves</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How we start working together</p>
                 <div className="relative">
                   {steps.map((step, i) => (
                     <div key={step.title} className="flex items-start gap-4 mb-4 last:mb-0">

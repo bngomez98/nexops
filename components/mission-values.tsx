@@ -1,18 +1,21 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Users, ShieldCheck, FileText, Award } from "lucide-react"
+import { Users, FileText, TrendingUp, Shield } from "lucide-react"
 
 const values = [
   {
     icon: Users,
-    title: "Homeowners control their projects",
-    body: "Homeowners define the project scope, maximum budget, and available consultation windows before any contractor is notified. The terms are established before the match is made.",
+    title: "Relationship before process",
+    body: "We coordinate through genuine relationships — with your vendors, your team, and your clients. Systems and software support relationships; they don't replace them. Every engagement is managed by a dedicated human partner, not a workflow automation.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
+    icon: Shield,
+    title: "Clients define the scope",
+    body: "You set the priorities, the budget, and the outcomes you need. We operate within your framework and report to you — not to our own internal metrics. The engagement looks like what you need it to look like.",
     icon: ShieldCheck,
     title: "Contractors own their projects",
     body: "The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed. One contractor contacts the homeowner — no one else.",
@@ -22,6 +25,8 @@ const values = [
   },
   {
     icon: FileText,
+    title: "Documentation as infrastructure",
+    body: "Every vendor relationship, workflow decision, and coordination record is written down and accessible. When something needs to be referenced — or when your team changes — the knowledge stays with your organization.",
     title: "Both sides come prepared",
     body: "Every project requires photos, a written scope description, a maximum budget, and pre-selected consultation windows before any contractor is notified. The contractor arrives having reviewed all of it — no discovery conversation required.",
     color: "text-violet-400",
@@ -29,6 +34,9 @@ const values = [
     border: "border-violet-400/20",
   },
   {
+    icon: TrendingUp,
+    title: "Outcomes over activity",
+    body: "We don't measure success by calls made or emails sent. We measure it by whether your operations run more smoothly because of what we did. If it doesn't move the needle for your portfolio, we won't bill you for it.",
     icon: Award,
     title: "Verified credentials, tracked outcomes",
     body: "Every contractor in the network is license-verified, insurance-confirmed, and background-checked before gaining access to project requests. Performance ratings reflect actual project outcomes — not self-reported reviews.",
@@ -76,11 +84,14 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            One request, one contractor.
-            <span className="gradient-text"> No bidding wars, no exceptions.</span>
+            Property management operations deserve
+            <span className="gradient-text"> more than a dashboard.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most platforms distribute your contact information to 5–15 contractors simultaneously and present that as a service. We built the opposite: exclusive, fully documented project requests for contractors, and a single verified professional for homeowners.
+            Most software assumes your team has the time and bandwidth to manage every vendor,
+            document every workflow, and follow through on every coordination task. Most consultants
+            deliver a report and leave. NexOps does both — we serve as your dedicated operations
+            partner and, in 2026, deliver the platform built from your actual workflows.
           </p>
         </div>
 
@@ -117,6 +128,14 @@ export function MissionValues() {
           className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
           style={{ transitionDelay: "500ms" }}
         >
+          <blockquote className="text-center">
+            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
+              &ldquo;Operations management built on relationship — not just software.&rdquo;
+            </p>
+            <footer className="mt-4 text-sm text-muted-foreground">
+              Nexus Operations
+            </footer>
+          </blockquote>
           <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
             Every project request includes photos, a written scope, a defined budget ceiling, and pre-selected consultation windows — all collected before any contractor is notified. The contractor who claims your project has reviewed all of it before showing up.
           </p>

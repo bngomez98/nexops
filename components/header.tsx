@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Logo } from "@/components/logo"
-import { Menu, X, User } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export function Header() {
@@ -18,7 +18,6 @@ export function Header() {
   const nav = [
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Services", href: "/services" },
-    { label: "For Contractors", href: "/contractors" },
     { label: "For Property Managers", href: "/property-managers" },
     { label: "Contact", href: "/contact" },
   ]
@@ -51,17 +50,10 @@ export function Header() {
 
           <div className="hidden lg:flex items-center gap-2">
             <Link
-              href="/login"
-              className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-foreground/55 hover:text-foreground rounded-lg transition-colors"
-            >
-              <User className="h-4 w-4" />
-              Log In
-            </Link>
-            <Link
-              href="/login?tab=signup"
+              href="/contact"
               className="inline-flex items-center px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
             >
-              Get Started
+              Request Access
             </Link>
           </div>
 
@@ -91,19 +83,11 @@ export function Header() {
               ))}
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/40">
                 <Link
-                  href="/login"
-                  className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-foreground/70 rounded-lg border border-border/40 hover:bg-secondary transition-colors"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <User className="h-4 w-4" />
-                  Log In
-                </Link>
-                <Link
-                  href="/login?tab=signup"
+                  href="/contact"
                   className="flex items-center justify-center px-4 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Get Started
+                  Request Access
                 </Link>
               </div>
             </div>
