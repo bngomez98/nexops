@@ -21,13 +21,16 @@ const SECURITY_HEADERS: Record<string, string> = {
   "Content-Security-Policy": [
     "default-src 'self'",
     // Next.js requires unsafe-inline for style and script injection; eval for RSC
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+    // Google Tag Manager, Google Analytics, and iubenda CMP scripts are also permitted
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://cs.iubenda.com https://cdn.iubenda.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     // Allow images from self, data URIs, blobs, and any HTTPS source (for OG/meta images)
     "img-src 'self' data: blob: https:",
-    // Vercel Analytics ingestion endpoint
-    "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+    // Vercel Analytics, Google Analytics (GA4 + Ads), and iubenda endpoints
+    "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://region1.google-analytics.com https://region1.analytics.google.com https://www.googleadservices.com https://cs.iubenda.com https://cdn.iubenda.com",
+    // Google Ads conversion measurement uses DoubleClick iframes
+    "frame-src https://bid.g.doubleclick.net https://td.doubleclick.net",
     // No embedding of this page in any frame
     "frame-ancestors 'none'",
     // No plugin objects

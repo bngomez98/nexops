@@ -2,7 +2,6 @@ import type React from "react"
 import type { Metadata } from "next"
 import Script from "next/script"
 import { Analytics } from "@vercel/analytics/next"
-import { CookieConsent } from "@/components/cookie-consent"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -63,6 +62,20 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* iubenda Cookie Consent Management Platform
+            Must be first in <head> so the autoblocking script can gate
+            all third-party tags (Google Analytics, Ads) before they fire. */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `var _iub = _iub || []; _iub.csConfiguration = {"siteId":4438048,"cookiePolicyId":45986836,"lang":"en","storage":{"useSiteId":true}};`,
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script type="text/javascript" src="https://cs.iubenda.com/autoblocking/4438048.js" />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script type="text/javascript" src="https://cdn.iubenda.com/cs/gpp/stub.js" />
+        <script type="text/javascript" src="https://cdn.iubenda.com/cs/iubenda_cs.js" async />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -122,7 +135,6 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         {children}
-        <CookieConsent />
         <Analytics />
         {/* Google Analytics + Google Ads */}
         <Script
