@@ -21,7 +21,16 @@ export function Header() {
     { label: "For Property Managers", href: "/property-managers" },
     { label: "Contact", href: "/contact" },
   ]
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF">
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-713FG73CGF');
+</script>
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
