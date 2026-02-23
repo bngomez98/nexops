@@ -69,3 +69,23 @@ model Request {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime?
 }
+
+// Post Implementation Review — submitted by the homeowner after a project is completed.
+// Provides intelligence on contractor performance and surfaces next maintenance needs.
+model Review {
+  id                   String   @id @default(cuid())
+  requestId            String   @unique
+  homeownerId          String
+  contractorId         String?
+  contractorName       String?
+  service              String
+  overallRating        Int      // 1–5
+  qualityRating        Int      // 1–5
+  timelinessRating     Int      // 1–5
+  communicationRating  Int      // 1–5
+  whatWentWell         String?
+  improvements         String?
+  wouldRecommend       Boolean  @default(true)
+  nextMaintenanceNeeds String?
+  createdAt            DateTime @default(now())
+}

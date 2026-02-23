@@ -8,7 +8,7 @@ const benefits = [
   {
     icon: Users,
     title: "One dedicated partner per account",
-    description: "Every NexOps client works with one dedicated operations partner. You're not assigned to a shared inbox or a rotating support team.",
+    description: "Every NexOps client works with one dedicated operations partner. You are not assigned to a shared inbox or a rotating support team.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -16,7 +16,7 @@ const benefits = [
   {
     icon: Network,
     title: "Vendor-agnostic coordination",
-    description: "We work with your existing vendors — not against them. We optimize how you coordinate the relationships you've already built.",
+    description: "We work with your existing vendors — not against them. We optimize how you coordinate the relationships you have already built.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -24,7 +24,7 @@ const benefits = [
   {
     icon: DollarSign,
     title: "Transparent, flat engagement terms",
-    description: "No per-project fees, no surprise charges. You know the scope and the cost before we begin. We don't bill for activity we can't justify.",
+    description: "No per-project fees, no surprise charges. You know the scope and the cost before we begin. We do not bill for activity we cannot justify.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -33,9 +33,6 @@ const benefits = [
     icon: FileText,
     title: "Documentation that stays with you",
     description: "Every workflow document, vendor contact, and coordination record belongs to your organization — not locked inside our systems.",
-    icon: BarChart3,
-    title: "Reputation based on real work",
-    description: "Your standing is calculated from actual project outcomes — consultation attendance, quote-to-close rate, and homeowner satisfaction scores. Contractors with strong performance receive earlier notification windows on new projects.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -94,12 +91,8 @@ export function ContractorCTA() {
             <p className="text-muted-foreground leading-relaxed mb-8">
               We serve residential and commercial property management companies that need a better
               way to coordinate the vendors, workflows, and relationships that keep their portfolios running.
-              Pre-documented projects.
-              <br />
-              <span className="gradient-text">Exclusively yours the moment you claim.</span>
-            </h2>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              Every project arrives with photos, a written scope, and a defined budget cap. Claim it and the project is removed from every other contractor&apos;s feed — permanently. No competing bids, no per-lead fees, one flat monthly membership.
+              One dedicated NexOps partner. End-to-end coordination.
+              Post Implementation Review after every completed job.
             </p>
 
             {/* Mini stats row */}

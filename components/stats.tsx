@@ -11,10 +11,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { prefix: "$", value: 88, suffix: "B+", label: "U.S. property management industry revenue, annually" },
-  { value: 30, suffix: "+", label: "Active vendor relationships managed by the average property management company" },
-  { value: 1, suffix: "", label: "Dedicated NexOps operations partner per client account — not a shared inbox" },
-  { prefix: "$", value: 0, suffix: "", label: "Per-project fees — flat, transparent engagement terms from day one" },
+  { value: 1, suffix: "", label: "Verified contractor per request — exclusive match, no bidding wars, no spam" },
+  { value: 11, suffix: "+", label: "Service categories from emergency response to remediation and general maintenance" },
+  { prefix: "$", value: 0, suffix: "", label: "Per-project fees for homeowners and property managers — free to submit" },
+  { value: 100, suffix: "%", label: "Coordinated end-to-end with a Post Implementation Review after every completed job" },
 ]
 
 function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {

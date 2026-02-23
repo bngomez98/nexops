@@ -15,10 +15,14 @@ import {
   AlertCircle,
   ArrowLeft,
   Zap,
+  Siren,
 } from "lucide-react"
 import { isFullSentences } from "@/lib/utils"
 
+const EMERGENCY_CATEGORY = "Emergency Response"
+
 const SERVICE_CATEGORIES = [
+  "Emergency Response",
   "Tree Removal",
   "Concrete Work",
   "Roofing",
@@ -27,7 +31,10 @@ const SERVICE_CATEGORIES = [
   "Electrical",
   "Plumbing",
   "Excavation",
+  "Water Damage / Remediation",
+  "General Maintenance",
 ]
+
 const BUDGET_RANGES = [
   "Under $500",
   "$500 – $1,000",
@@ -37,6 +44,7 @@ const BUDGET_RANGES = [
   "Over $10,000",
 ]
 const CONSULTATION_WINDOWS = [
+  "As soon as possible (emergency)",
   "Weekday morning (8–12 AM)",
   "Weekday afternoon (12–5 PM)",
   "Saturday morning (8–12 AM)",
@@ -59,6 +67,8 @@ export default function NewRequestPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
+  const isEmergency = service === EMERGENCY_CATEGORY
+
   useEffect(() => {
     const stored = getStoredUser()
     if (!stored || stored.role !== "homeowner") {
@@ -68,6 +78,13 @@ export default function NewRequestPage() {
     setUser(stored)
     if (stored.address) setAddress(stored.address)
   }, [router])
+
+  // Auto-set emergency consultation window
+  useEffect(() => {
+    if (isEmergency) {
+      setConsultWindow("As soon as possible (emergency)")
+    }
+  }, [isEmergency])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -119,12 +136,16 @@ export default function NewRequestPage() {
       <div className="max-w-lg mx-auto">
         <Card>
           <CardContent className="py-14 text-center">
-            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/15 mx-auto mb-5">
-              <CheckCircle2 className="h-7 w-7 text-emerald-400" />
+            <div className={`flex items-center justify-center w-14 h-14 rounded-full mx-auto mb-5 ${isEmergency ? "bg-red-500/15" : "bg-emerald-500/15"}`}>
+              <CheckCircle2 className={`h-7 w-7 ${isEmergency ? "text-red-400" : "text-emerald-400"}`} />
             </div>
-            <h2 className="text-xl font-semibold mb-2">Request submitted!</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              {isEmergency ? "Emergency request submitted!" : "Request submitted!"}
+            </h2>
             <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
-              Your request is now in the auto-matching queue. A verified, licensed contractor will be assigned and reach out to schedule a consultation.
+              {isEmergency
+                ? "Your emergency request is being prioritized. A verified, licensed contractor will be dispatched and contact you immediately."
+                : "Your request is now in the auto-matching queue. A verified, licensed contractor will be assigned and reach out to schedule a consultation."}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
@@ -177,14 +198,30 @@ export default function NewRequestPage() {
         </p>
       </div>
 
-      {/* Automation note */}
-      <div className="mb-6 flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20">
-        <Zap className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-        <p className="text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">Exclusive matching —</span>{" "}
-          your request is sent to a single licensed, insured contractor who specializes in your service category and serves your area.
-        </p>
-      </div>
+      {/* Emergency banner */}
+      {isEmergency && (
+        <div className="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/8 border border-red-500/30">
+          <Siren className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-red-400 mb-0.5">Emergency Response Selected</p>
+            <p className="text-xs text-muted-foreground">
+              Emergency requests are prioritized and routed immediately. A contractor will contact you as soon as possible.
+              If this is a life-threatening emergency, call 911 first.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Automation note (non-emergency) */}
+      {!isEmergency && (
+        <div className="mb-6 flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20">
+          <Zap className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">Exclusive matching —</span>{" "}
+            your request is sent to a single licensed, insured contractor who specializes in your service category and serves your area.
+          </p>
+        </div>
+      )}
 
       <Card>
         <CardHeader>
@@ -199,20 +236,28 @@ export default function NewRequestPage() {
                 Service needed <span className="text-primary">*</span>
               </label>
               <div className="flex flex-wrap gap-2">
-                {SERVICE_CATEGORIES.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setService(cat)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                      service === cat
-                        ? "bg-primary/20 border-primary text-primary"
-                        : "border-border/40 text-muted-foreground hover:border-border hover:text-foreground"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
+                {SERVICE_CATEGORIES.map((cat) => {
+                  const isEmerg = cat === EMERGENCY_CATEGORY
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setService(cat)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                        service === cat
+                          ? isEmerg
+                            ? "bg-red-500/20 border-red-500 text-red-400"
+                            : "bg-primary/20 border-primary text-primary"
+                          : isEmerg
+                          ? "border-red-500/30 text-red-400/70 hover:border-red-500/60 hover:text-red-400"
+                          : "border-border/40 text-muted-foreground hover:border-border hover:text-foreground"
+                      }`}
+                    >
+                      {isEmerg && <span className="mr-1">⚡</span>}
+                      {cat}
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
@@ -223,7 +268,11 @@ export default function NewRequestPage() {
               </label>
               <Textarea
                 id="description"
-                placeholder="Describe your project — scope, urgency, special conditions, dimensions, etc."
+                placeholder={
+                  isEmergency
+                    ? "Describe the emergency situation — what happened, current condition, and any immediate safety concerns."
+                    : "Describe your project — scope, urgency, special conditions, dimensions, etc."
+                }
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
@@ -316,9 +365,13 @@ export default function NewRequestPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+                className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg transition-opacity disabled:opacity-50 ${
+                  isEmergency
+                    ? "bg-red-600 text-white hover:opacity-90"
+                    : "bg-primary text-primary-foreground hover:opacity-90"
+                }`}
               >
-                {loading ? "Submitting…" : "Submit Request"}
+                {loading ? "Submitting…" : isEmergency ? "Submit Emergency Request" : "Submit Request"}
                 {!loading && <ArrowRight className="h-4 w-4" />}
               </button>
               <button

@@ -7,16 +7,18 @@ import {
   Network,
   Monitor,
   TrendingUp,
+  Shield,
+  Star,
+  Wrench,
+  FileCheck,
 } from "lucide-react"
 
-const steps = [
+const propertyManagerSteps = [
   {
     icon: MessageSquare,
     number: "01",
     title: "Initial consultation",
     detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
-    title: "Choose a membership tier",
-    detail: "Standard receives real-time notifications when projects are posted. Premium receives a 90-second advance window before the general pool opens. Elite receives a 10-minute exclusive window on all projects valued at $5,000 or more.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -47,8 +49,49 @@ const steps = [
     number: "04",
     title: "Platform access at launch",
     detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
-    title: "Deliver a written estimate on-site",
-    detail: "You've reviewed the photos, scope, and budget before the consultation. Arrive with the information needed to write an estimate on the spot — no second visit required.",
+    color: "text-emerald-400",
+    bg: "bg-emerald-400/10",
+    border: "border-emerald-400/20",
+    accent: "oklch(0.72 0.17 160)",
+  },
+]
+
+const homeownerSteps = [
+  {
+    icon: FileCheck,
+    number: "01",
+    title: "Submit your request",
+    detail: "Describe your project — scope, urgency, and budget. We handle emergency and non-emergency requests. No bidding process, no juggling multiple contractors.",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
+    accent: "oklch(0.75 0.18 155)",
+  },
+  {
+    icon: Shield,
+    number: "02",
+    title: "Exclusive contractor match",
+    detail: "We route your project to a single verified, licensed, and insured contractor who specializes in your service category. They review your photos and scope before contacting you.",
+    color: "text-amber-400",
+    bg: "bg-amber-400/10",
+    border: "border-amber-400/20",
+    accent: "oklch(0.82 0.17 85)",
+  },
+  {
+    icon: Wrench,
+    number: "03",
+    title: "Coordinated from start to finish",
+    detail: "Nexus manages your project end-to-end — scheduling, scope confirmation, on-site coordination, and follow-through. You stay informed without managing day-to-day operations.",
+    color: "text-violet-400",
+    bg: "bg-violet-400/10",
+    border: "border-violet-400/20",
+    accent: "oklch(0.70 0.15 300)",
+  },
+  {
+    icon: Star,
+    number: "04",
+    title: "Post Implementation Review",
+    detail: "After every completed project, we deliver a written Post Implementation Review — documenting what was done, evaluating quality and timeliness, and identifying your next maintenance priorities.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -62,7 +105,7 @@ function StepCard({
   activeStep,
   onHover,
 }: {
-  step: (typeof steps)[number]
+  step: (typeof propertyManagerSteps)[number]
   index: number
   activeStep: number | null
   onHover: (i: number | null) => void
@@ -132,6 +175,9 @@ export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
   const [activeStep, setActiveStep] = useState<number | null>(null)
   const [inView, setInView] = useState(false)
+  const [perspective, setPerspective] = useState<"homeowner" | "property-manager">("homeowner")
+
+  const steps = perspective === "homeowner" ? homeownerSteps : propertyManagerSteps
 
   useEffect(() => {
     const el = sectionRef.current
@@ -163,15 +209,46 @@ export function HowItWorks() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
-        <div className="max-w-2xl mb-14 reveal">
+        <div className="max-w-2xl mb-10 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
-            From first conversation to coordinated operations
+            {perspective === "homeowner"
+              ? "From request to completion — fully coordinated"
+              : "From first conversation to coordinated operations"}
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            We start with your portfolio, not a template. Every engagement begins with understanding
-            your actual vendor relationships and workflows — then we build from there.
+            {perspective === "homeowner"
+              ? "Submit your project request and Nexus handles the rest — contractor matching, scheduling, on-site coordination, and a written review when the job is done."
+              : "We start with your portfolio, not a template. Every engagement begins with understanding your actual vendor relationships and workflows — then we build from there."}
           </p>
+        </div>
+
+        {/* Perspective toggle */}
+        <div className="flex items-center gap-1 mb-10 reveal" style={{ transitionDelay: "50ms" }}>
+          <div className="inline-flex rounded-xl border border-border/40 bg-secondary/30 p-1 gap-1">
+            <button
+              type="button"
+              onClick={() => setPerspective("homeowner")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                perspective === "homeowner"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              For Homeowners
+            </button>
+            <button
+              type="button"
+              onClick={() => setPerspective("property-manager")}
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                perspective === "property-manager"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              For Property Managers
+            </button>
+          </div>
         </div>
 
         {/* Connecting timeline line (desktop) */}
@@ -203,28 +280,21 @@ export function HowItWorks() {
 
         {/* Bottom callout */}
         <div className="mt-12 reveal">
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
-            <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">No long-term contract required.</span>{" "}
-              Engagements are structured around defined scope and outcomes. Early clients who begin now
-              get first access to the platform when it launches in 2026.
-            </p>
-          </div>
           {perspective === "homeowner" ? (
             <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
               <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">Free for homeowners.</span>{" "}
-                Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.
+                <span className="font-semibold text-foreground">Free for homeowners and property managers.</span>{" "}
+                Nexus Operations charges contractors a monthly membership — not homeowners, not per-project fees.
               </p>
             </div>
           ) : (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/15 max-w-2xl">
-              <Star className="h-4 w-4 text-amber-400 flex-shrink-0" />
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
+              <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
               <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">No per-lead charges.</span>{" "}
-                Your membership covers unlimited project claims. Elite members receive a 10-minute exclusive claim window on every project valued at $5,000 or more.
+                <span className="font-semibold text-foreground">No long-term contract required.</span>{" "}
+                Engagements are structured around defined scope and outcomes. Early clients who begin now
+                get first access to the platform when it launches in 2026.
               </p>
             </div>
           )}

@@ -35,9 +35,14 @@ const rows = [
     them: "Coordination burden grows with every property added",
   },
   {
-    feature: "Your existing vendor relationships",
-    us: "We coordinate them — no replacement required",
-    them: "You manage them yourself or switch platforms entirely",
+    feature: "Contractor matching",
+    us: "One verified contractor contacts you — no bidding wars",
+    them: "Your number sold to 5–15 contractors simultaneously",
+  },
+  {
+    feature: "Post-project accountability",
+    us: "Written Post Implementation Review after every completed job",
+    them: "No follow-up — you find out if the work was good on your own",
   },
 ]
 
@@ -77,14 +82,15 @@ export function Comparison() {
             Built differently from the start.
             <span className="gradient-text"> A partner, not just a tool.</span>
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed mb-3">
             Most solutions hand you software and expect your team to handle the rest. NexOps provides
-            the coordination layer your portfolio actually needs — before, during, and after the platform launches.
-            Other platforms sell your number to 5–15 contractors.
-            <span className="gradient-text"> We send it to one.</span>
-          </h2>
+            the coordination layer your portfolio actually needs — before, during, and after every project.
+          </p>
           <p className="text-muted-foreground leading-relaxed">
-            That contractor has seen your photos, your scope, and your budget before contacting you. They are already committed to the consultation window you selected.
+            Other platforms sell your number to 5–15 contractors.{" "}
+            <span className="text-foreground font-semibold">We send it to one.</span>{" "}
+            That contractor has reviewed your photos, scope, and budget before contacting you —
+            and is already committed to the consultation window you selected.
           </p>
         </div>
 
@@ -149,11 +155,9 @@ export function Comparison() {
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">The NexOps commitment</p>
             <p className="text-sm text-muted-foreground">
-              One dedicated partner. Your vendor relationships, coordinated. Your workflows, documented.
-              Your operations, running. We&apos;ll tell you immediately if we&apos;re not the right fit for your portfolio.
-            <p className="text-sm font-semibold text-foreground mb-0.5">What this means in practice</p>
-            <p className="text-sm text-muted-foreground">
-              One verified contractor contacts you — no one else. If coverage is unavailable in your area, we notify you immediately rather than leaving your request to expire unmatched.
+              One dedicated partner. One verified contractor. Your projects coordinated end-to-end —
+              from the moment a request is submitted to the Post Implementation Review after completion.
+              We will tell you immediately if we are not the right fit for your portfolio.
             </p>
           </div>
         </div>

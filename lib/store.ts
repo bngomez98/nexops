@@ -66,6 +66,24 @@ export interface Request {
   updatedAt?: string
 }
 
+export interface Review {
+  id: string
+  requestId: string
+  homeownerId: string
+  contractorId?: string
+  contractorName?: string
+  service: string
+  overallRating: number
+  qualityRating: number
+  timelinessRating: number
+  communicationRating: number
+  whatWentWell?: string
+  improvements?: string
+  wouldRecommend: boolean
+  nextMaintenanceNeeds?: string
+  createdAt: string
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function hashPassword(password: string): string {
@@ -531,4 +549,79 @@ export async function updateRequestStatus(
     data: { status, updatedAt: new Date() },
   })
   return toRequest(row)
+}
+
+// ─── Reviews (Post Implementation Review) ────────────────────────────────────
+
+function toReview(row: {
+  id: string
+  requestId: string
+  homeownerId: string
+  contractorId: string | null
+  contractorName: string | null
+  service: string
+  overallRating: number
+  qualityRating: number
+  timelinessRating: number
+  communicationRating: number
+  whatWentWell: string | null
+  improvements: string | null
+  wouldRecommend: boolean
+  nextMaintenanceNeeds: string | null
+  createdAt: Date
+}): Review {
+  return {
+    id: row.id,
+    requestId: row.requestId,
+    homeownerId: row.homeownerId,
+    contractorId: row.contractorId ?? undefined,
+    contractorName: row.contractorName ?? undefined,
+    service: row.service,
+    overallRating: row.overallRating,
+    qualityRating: row.qualityRating,
+    timelinessRating: row.timelinessRating,
+    communicationRating: row.communicationRating,
+    whatWentWell: row.whatWentWell ?? undefined,
+    improvements: row.improvements ?? undefined,
+    wouldRecommend: row.wouldRecommend,
+    nextMaintenanceNeeds: row.nextMaintenanceNeeds ?? undefined,
+    createdAt: row.createdAt.toISOString(),
+  }
+}
+
+export async function getReviewsForHomeowner(homeownerId: string): Promise<Review[]> {
+  const rows = await db.review.findMany({
+    where: { homeownerId },
+    orderBy: { createdAt: "desc" },
+  })
+  return rows.map(toReview)
+}
+
+export async function getReviewByRequestId(requestId: string): Promise<Review | undefined> {
+  const row = await db.review.findUnique({ where: { requestId } })
+  return row ? toReview(row) : undefined
+}
+
+export async function createReview(
+  homeownerId: string,
+  data: Omit<Review, "id" | "createdAt" | "homeownerId">,
+): Promise<Review> {
+  const row = await db.review.create({
+    data: {
+      requestId: data.requestId,
+      homeownerId,
+      contractorId: data.contractorId,
+      contractorName: data.contractorName,
+      service: data.service,
+      overallRating: data.overallRating,
+      qualityRating: data.qualityRating,
+      timelinessRating: data.timelinessRating,
+      communicationRating: data.communicationRating,
+      whatWentWell: data.whatWentWell,
+      improvements: data.improvements,
+      wouldRecommend: data.wouldRecommend,
+      nextMaintenanceNeeds: data.nextMaintenanceNeeds,
+    },
+  })
+  return toReview(row)
 }

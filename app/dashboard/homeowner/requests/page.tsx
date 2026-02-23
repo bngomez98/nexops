@@ -19,6 +19,8 @@ import {
   XCircle,
   ChevronDown,
   Filter,
+  ClipboardList,
+  Star,
 } from "lucide-react"
 
 interface ServiceRequest {
@@ -109,6 +111,7 @@ function StatusTimeline({ status }: { status: ServiceRequest["status"] }) {
 export default function RequestsPage() {
   const router = useRouter()
   const [requests, setRequests] = useState<ServiceRequest[]>([])
+  const [reviews, setReviews] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<"all" | ServiceRequest["status"]>("all")
   const [cancelling, setCancelling] = useState<string | null>(null)
@@ -121,9 +124,17 @@ export default function RequestsPage() {
       return
     }
 
-    fetch("/api/requests")
-      .then((r) => r.json())
-      .then((d) => setRequests(d.requests ?? []))
+    Promise.all([
+      fetch("/api/requests").then((r) => r.json()),
+      fetch("/api/reviews").then((r) => r.json()),
+    ])
+      .then(([reqData, reviewData]) => {
+        setRequests(reqData.requests ?? [])
+        const reviewedIds = new Set<string>(
+          (reviewData.reviews ?? []).map((rv: { requestId: string }) => rv.requestId)
+        )
+        setReviews(reviewedIds)
+      })
       .finally(() => setLoading(false))
   }, [router])
 
@@ -156,6 +167,10 @@ export default function RequestsPage() {
     cancelled: requests.filter((r) => r.status === "cancelled").length,
   }
 
+  const pendingReviews = requests.filter(
+    (r) => r.status === "completed" && !reviews.has(r.id)
+  ).length
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
@@ -173,6 +188,22 @@ export default function RequestsPage() {
           New Request
         </Link>
       </div>
+
+      {/* PIR pending prompt */}
+      {!loading && pendingReviews > 0 && (
+        <div className="mb-5 flex items-start gap-3 p-4 rounded-xl bg-amber-500/8 border border-amber-500/25">
+          <Star className="h-4 w-4 text-amber-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-amber-400">
+              {pendingReviews} completed project{pendingReviews > 1 ? "s" : ""} awaiting Post Implementation Review
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Your feedback helps us evaluate performance and surfaces your next maintenance priorities.
+              Expand completed projects below to submit a review.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Filter bar */}
       <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
@@ -223,8 +254,12 @@ export default function RequestsPage() {
           {filtered.map((req) => {
             const expanded = expandedId === req.id
             const cancellable = req.status === "pending"
+            const needsReview = req.status === "completed" && !reviews.has(req.id)
             return (
-              <Card key={req.id} className="border-border/60 overflow-hidden">
+              <Card
+                key={req.id}
+                className={`overflow-hidden ${needsReview ? "border-amber-500/25" : "border-border/60"}`}
+              >
                 {/* Row header */}
                 <button
                   type="button"
@@ -234,9 +269,21 @@ export default function RequestsPage() {
                   <CardContent className="pt-5 pb-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <h3 className="font-semibold text-sm">{req.service}</h3>
                           <Badge variant={STATUS_LABELS[req.status].variant}>{STATUS_LABELS[req.status].label}</Badge>
+                          {needsReview && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 border border-amber-500/25 text-amber-400">
+                              <Star className="h-2.5 w-2.5" />
+                              Review pending
+                            </span>
+                          )}
+                          {req.status === "completed" && reviews.has(req.id) && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-400">
+                              <CheckCircle2 className="h-2.5 w-2.5" />
+                              Reviewed
+                            </span>
+                          )}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-1">{req.description}</p>
                       </div>
@@ -301,7 +348,7 @@ export default function RequestsPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
                       {req.status === "matched" && (
                         <div className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full">
                           <CheckCircle2 className="h-3.5 w-3.5" />
@@ -314,6 +361,25 @@ export default function RequestsPage() {
                           Auto-routing in progress…
                         </div>
                       )}
+
+                      {/* PIR button for completed requests without a review */}
+                      {needsReview && (
+                        <Link
+                          href={`/dashboard/homeowner/review/${req.id}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/10 border border-amber-500/25 text-amber-400 hover:bg-amber-500/20 transition-colors"
+                        >
+                          <ClipboardList className="h-3.5 w-3.5" />
+                          Submit Post Implementation Review
+                        </Link>
+                      )}
+
+                      {req.status === "completed" && reviews.has(req.id) && (
+                        <div className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          Post Implementation Review submitted
+                        </div>
+                      )}
+
                       {cancellable && (
                         <button
                           type="button"

@@ -21,7 +21,22 @@ import {
   TrendingUp,
   MapPin,
   Sparkles,
+  ClipboardList,
+  Star,
 } from "lucide-react"
+
+interface Review {
+  id: string
+  requestId: string
+  service: string
+  overallRating: number
+  qualityRating: number
+  timelinessRating: number
+  communicationRating: number
+  wouldRecommend: boolean
+  nextMaintenanceNeeds?: string
+  createdAt: string
+}
 
 interface ServiceRequest {
   id: string
@@ -147,6 +162,7 @@ export default function HomeownerDashboard() {
   const router = useRouter()
   const [user, setUser] = useState<AuthUser | null>(null)
   const [requests, setRequests] = useState<ServiceRequest[]>([])
+  const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -157,9 +173,14 @@ export default function HomeownerDashboard() {
     }
     setUser(stored)
 
-    fetch("/api/requests")
-      .then((r) => r.json())
-      .then((d) => setRequests(d.requests ?? []))
+    Promise.all([
+      fetch("/api/requests").then((r) => r.json()),
+      fetch("/api/reviews").then((r) => r.json()),
+    ])
+      .then(([reqData, reviewData]) => {
+        setRequests(reqData.requests ?? [])
+        setReviews(reviewData.reviews ?? [])
+      })
       .finally(() => setLoading(false))
   }, [router])
 
@@ -169,6 +190,17 @@ export default function HomeownerDashboard() {
   const completedRequests = requests.filter((r) => r.status === "completed")
   const pendingMatch = requests.filter((r) => r.status === "pending")
   const recentRequests = requests.slice(0, 3)
+
+  // PIR derived data
+  const reviewedIds = new Set(reviews.map((rv) => rv.requestId))
+  const pendingReviews = completedRequests.filter((r) => !reviewedIds.has(r.id))
+  const avgOverall = reviews.length > 0
+    ? (reviews.reduce((s, r) => s + r.overallRating, 0) / reviews.length).toFixed(1)
+    : null
+  const latestMaintenanceNeeds = reviews
+    .filter((r) => r.nextMaintenanceNeeds)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 1)[0]
 
   const stats = [
     {
@@ -384,8 +416,51 @@ export default function HomeownerDashboard() {
                 <FileText className="h-4 w-4" />
                 Track All Requests
               </Link>
+              {pendingReviews.length > 0 && (
+                <Link
+                  href="/dashboard/homeowner/requests"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-amber-400 hover:bg-amber-500/10 transition-colors border border-amber-500/25 bg-amber-500/8"
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  {pendingReviews.length} Review{pendingReviews.length > 1 ? "s" : ""} Pending
+                </Link>
+              )}
             </CardContent>
           </Card>
+
+          {/* PIR insights */}
+          {reviews.length > 0 && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Star className="h-3.5 w-3.5 text-amber-400" />
+                  Project Intelligence
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3 pt-0">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground text-xs">Reviews submitted</span>
+                  <span className="font-bold">{reviews.length}</span>
+                </div>
+                {avgOverall && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground text-xs">Avg. satisfaction</span>
+                    <span className="font-bold text-amber-400">{avgOverall} / 5</span>
+                  </div>
+                )}
+                {latestMaintenanceNeeds && (
+                  <div className="p-3 rounded-xl bg-primary/5 border border-primary/15">
+                    <p className="text-[10px] font-semibold text-primary mb-1 uppercase tracking-wide">
+                      Upcoming need on file
+                    </p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {latestMaintenanceNeeds.nextMaintenanceNeeds}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Recent requests */}
           <Card>
