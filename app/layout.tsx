@@ -124,7 +124,7 @@ export default function RootLayout({
         {children}
         <CookieConsent />
         <Analytics />
-        {/* Google Analytics */}
+        {/* Google Analytics + Google Ads */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF"
           strategy="afterInteractive"
@@ -135,6 +135,7 @@ export default function RootLayout({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-713FG73CGF');
+            gtag('config', 'AW-17873510977');
           `}
         </Script>
       </body>
