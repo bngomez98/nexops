@@ -129,6 +129,10 @@ export default function RootLayout({
           src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF"
           strategy="afterInteractive"
         />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-17T4WZRZG4"
+          strategy="afterInteractive"
+        />
         <Script id="gtag-init" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -136,6 +140,7 @@ export default function RootLayout({
             gtag('js', new Date());
             gtag('config', 'G-713FG73CGF');
             gtag('config', 'AW-17873510977');
+            gtag('config', 'G-17T4WZRZG4');
           `}
         </Script>
       </body>
