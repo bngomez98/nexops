@@ -82,7 +82,7 @@ export function Comparison() {
             the coordination layer your portfolio actually needs — before, during, and after the platform launches.
             Other platforms sell your number to 5–15 contractors.
             <span className="gradient-text"> We send it to one.</span>
-          </h2>
+          </p>
           <p className="text-muted-foreground leading-relaxed">
             That contractor has seen your photos, your scope, and your budget before contacting you. They are already committed to the consultation window you selected.
           </p>
@@ -151,6 +151,7 @@ export function Comparison() {
             <p className="text-sm text-muted-foreground">
               One dedicated partner. Your vendor relationships, coordinated. Your workflows, documented.
               Your operations, running. We&apos;ll tell you immediately if we&apos;re not the right fit for your portfolio.
+            </p>
             <p className="text-sm font-semibold text-foreground mb-0.5">What this means in practice</p>
             <p className="text-sm text-muted-foreground">
               One verified contractor contacts you — no one else. If coverage is unavailable in your area, we notify you immediately rather than leaving your request to expire unmatched.

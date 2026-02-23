@@ -33,9 +33,6 @@ const benefits = [
     icon: FileText,
     title: "Documentation that stays with you",
     description: "Every workflow document, vendor contact, and coordination record belongs to your organization — not locked inside our systems.",
-    icon: BarChart3,
-    title: "Reputation based on real work",
-    description: "Your standing is calculated from actual project outcomes — consultation attendance, quote-to-close rate, and homeowner satisfaction scores. Contractors with strong performance receive earlier notification windows on new projects.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -97,7 +94,7 @@ export function ContractorCTA() {
               Pre-documented projects.
               <br />
               <span className="gradient-text">Exclusively yours the moment you claim.</span>
-            </h2>
+            </p>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Every project arrives with photos, a written scope, and a defined budget cap. Claim it and the project is removed from every other contractor&apos;s feed — permanently. No competing bids, no per-lead fees, one flat monthly membership.
             </p>
