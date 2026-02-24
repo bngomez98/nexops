@@ -140,8 +140,7 @@ export function FAQ() {
               <span className="gradient-text"> that matter before you commit.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              How matching works, what contractors are required to carry, what happens if no contractor is
-              available, and what your obligations are — answered before you submit a project or join the network.
+              Common questions from property management companies about how NexOps works, what consulting looks like, and what to expect from our engagement process.
             </p>
           </div>
 
