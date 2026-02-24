@@ -14,7 +14,7 @@ const steps = [
     icon: Upload,
     number: "01",
     title: "Submit your project",
-    detail: "Property owners upload photographs, provide a written description of the work needed, set a maximum budget, and select preferred times for a consultation.",
+    detail: "Upload photos, describe the work needed, set a budget cap, and choose your preferred consultation windows.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -24,7 +24,7 @@ const steps = [
     icon: Lock,
     number: "02",
     title: "One contractor claims it exclusively",
-    detail: "A licensed and insured contractor in the local area reviews and claims the project. Once claimed, the project is permanently removed from view for all other contractors.",
+    detail: "A licensed, insured local contractor reviews and claims your project — permanently removing it from every other contractor's feed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -44,7 +44,7 @@ const steps = [
     icon: ClipboardList,
     number: "04",
     title: "Review the estimate and decide",
-    detail: "The contractor provides a written estimate. The property owner reviews the scope of work and timeline, then decides whether to proceed. There is no obligation to continue if the estimate does not meet expectations.",
+    detail: "The contractor delivers a written estimate. Review the scope and timeline, then decide — no obligation if it doesn't meet your expectations.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -165,9 +165,8 @@ export function HowItWorks() {
             From submission to confirmed consultation
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            The process from submitting a project to confirming a consultation typically occurs
-            within 24 hours. Property owners submit their project details once, and the platform
-            assigns the project to a single verified contractor.
+            From submission to confirmed consultation in as little as 24 hours. Submit your
+            project once — the platform assigns it to a single verified contractor.
           </p>
         </div>
 

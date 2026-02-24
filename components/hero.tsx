@@ -70,9 +70,8 @@ export function Hero() {
               className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
               style={{ animationDelay: "0.25s", opacity: 0 }}
             >
-              Submit your project details once. A single licensed and insured contractor reviews
-              your complete scope and claims the project exclusively. No unsolicited calls.
-              No competing bids.
+              Submit once. One verified contractor reviews your full scope and claims it
+              exclusively — no unsolicited calls, no competing bids.
             </p>
 
             <div

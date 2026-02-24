@@ -17,7 +17,7 @@ const propertyOwnerFaqs: FAQItem[] = [
   {
     question: "How many contractors will contact me?",
     answer:
-      "Only one contractor will contact you. Once a contractor claims your project, it is permanently removed from view for all other contractors. No competing quotes, no unsolicited calls.",
+      "Only one contractor will contact you — once claimed, your project is permanently removed from all other contractor feeds. No competing quotes. No unsolicited calls.",
   },
   {
     question: "Is there a cost for property owners?",
@@ -27,7 +27,7 @@ const propertyOwnerFaqs: FAQItem[] = [
   {
     question: "How are contractors screened and verified?",
     answer:
-      "Contractors must pass license verification, insurance confirmation, and background checks before gaining access to the network. No contractor can access project requests until all three are complete.",
+      "All contractors are license-verified, insurance-confirmed, and background-checked before network access. No contractor sees project requests until all three requirements are met.",
   },
   {
     question: "What happens if no contractor is available in my area?",
@@ -55,7 +55,7 @@ const contractorFaqs: FAQItem[] = [
   {
     question: "How does membership pricing work?",
     answer:
-      "Membership is billed monthly at a flat rate — $299 for Basic, $499 for Standard, or $749 for Premium. There are no per-project fees, no penalties for cancellation, and no limits on the number of projects you can claim.",
+      "Membership is billed monthly at a flat rate — $299 for Standard, $499 for Premium, or $749 for Elite. No per-project fees, no cancellation penalties, and no limits on the number of projects you can claim.",
   },
   {
     question: "How are contractor ratings determined?",
