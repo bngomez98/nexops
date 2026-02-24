@@ -7,7 +7,7 @@ import { ArrowRight, Check, HelpCircle } from "lucide-react"
 export const metadata: Metadata = {
   title: "Membership Plans | Contractor Access Tiers",
   description:
-    "Simple, transparent monthly membership for contractors. Standard, Premium, and Elite plans. Fixed pricing — no per-lead fees, no annual contracts, no hidden charges. Exclusive leads for licensed, insured contractors.",
+    "Simple, transparent monthly membership for contractors. Standard, Premium, and Elite plans. Fixed pricing — no per-lead fees, no annual contracts, no hidden charges. Exclusive projects for licensed, insured contractors.",
 }
 
 const tiers = [
@@ -16,9 +16,9 @@ const tiers = [
     price: "$299",
     period: "/month",
     description:
-      "Full access to every pre-qualified lead in your service category and coverage area. First-come, first-served.",
+      "Full access to every pre-qualified project in your service category and coverage area. First-come, first-served.",
     features: [
-      "All leads in your approved categories",
+      "All projects in your approved categories",
       "Real-time push, email, and SMS notifications",
       "Unlimited claim attempts per month",
       "Full project documentation before you claim",
@@ -37,7 +37,7 @@ const tiers = [
       "A 90-second advance notification window before the general pool opens, plus deep analytics to sharpen your close rate.",
     features: [
       "Everything in Standard",
-      "90-second head-start on every new lead",
+      "90-second head-start on every new project",
       "Priority placement on high-value requests",
       "Advanced analytics — benchmarks, trends, pipeline",
       "Custom budget-floor filter (see only jobs above your minimum)",
@@ -86,11 +86,11 @@ const faqs = [
   },
   {
     q: "What does 'first-come, first-served' mean in practice?",
-    a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the lead exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
+    a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the project exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
   },
   {
     q: "Are there any per-lead fees on top of my subscription?",
-    a: "No. Your monthly membership is the only charge. You can claim as many leads as you can handle with no additional cost per claim.",
+    a: "No. Your monthly membership is the only charge. You can claim as many projects as you can handle with no additional cost per claim.",
   },
 ]
 
@@ -105,11 +105,11 @@ export default function PricingPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                One price. Unlimited leads.
+                One price. Unlimited projects.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 No per-lead fees. No price ranges. No annual contracts. Choose the access tier that fits your
-                business — and start claiming exclusive, pre-qualified leads the day you are approved.
+                business — and start claiming exclusive, pre-qualified projects the day you are approved.
               </p>
             </div>
           </div>
@@ -182,32 +182,35 @@ export default function PricingPage() {
         {/* ROI callout */}
         <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div className="p-8 rounded-2xl bg-card border border-border/40">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
-                  What you replace
-                </p>
-                <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>$15–$80 per shared lead, 3–7 contractors calling the same homeowner</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>Sub-15% conversion rate on contested leads</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>30–40% no-show rate on estimate visits</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>5–10 hours per week on unqualified outreach</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>Zero documentation before you drive to the site</li>
-                </ul>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20">
-                <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-5">
-                  What you get
-                </p>
-                <ul className="flex flex-col gap-3 text-sm text-foreground">
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One flat monthly fee — claim as many leads as you can handle</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>You are the only contractor on every job you claim</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Photos, specs, and a defined budget before you commit</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Consultation pre-scheduled by the homeowner — no callbacks</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One closed project typically covers 6+ months of membership</li>
-                </ul>
-              </div>
+            <div className="max-w-2xl mx-auto text-center mb-10">
+              <h2 className="text-2xl font-semibold tracking-tight mb-3">How the membership pays for itself</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Active members close an average of 2–5 projects per month. The math is simple.
+              </p>
+            </div>
+            <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20">
+              <ul className="flex flex-col gap-4 text-sm text-foreground">
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>One flat monthly fee — claim as many projects as you can handle, with no additional cost per claim</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Every project you claim is exclusively yours — permanently removed from all other contractor feeds the moment you claim it</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Full documentation before you commit: photos, written scope, and a defined budget cap</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Consultations pre-scheduled by the homeowner — no callbacks, no voicemail chains</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
+                </li>
+              </ul>
             </div>
           </div>
         </section>

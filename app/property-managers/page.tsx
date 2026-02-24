@@ -6,45 +6,45 @@ import {
   ArrowRight,
   ShieldCheck,
   Clock,
-  DollarSign,
   CheckCircle,
   BarChart3,
   Building2,
   Users,
   Eye,
   Layers,
+  Zap
 } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "For Property Managers | Nexus Operations",
   description:
-    "Nexus Operations gives property managers a centralized, high-efficiency solution for maintenance — with pre-vetted contractors, photo documentation, budget caps, and automatic scheduling. Manage your entire portfolio without the overhead.",
+    "Manage maintenance across your entire portfolio. One workflow. Pre-vetted contractors. No vendor coordination.",
 }
 
 const benefits = [
   {
     icon: ShieldCheck,
-    title: "Automated contractor vetting & compliance",
+    title: "Pre-vetted contractors",
     description:
-      "Every contractor claiming a job has been pre-verified for active licensing at the state and local levels, general liability and workers' comp documentation, and tracked performance metrics across all jobs. Your liability exposure is managed before a contractor ever sets foot on a property.",
+      "All contractors are verified for licensing, insurance, and performance. Liability is managed before anyone touches a property.",
   },
   {
     icon: Clock,
-    title: "Drastic reduction in soft costs",
+    title: "Less time coordinating estimates",
     description:
-      "Stop calling five contractors to get three quotes. Submit your photos and specs once. You don't manage outreach — the contractor claims the job and the consultation is automatically scheduled based on your or your tenant's availability. No phone tag.",
+      "Submit once. One contractor claims it. Consultation scheduled automatically. No phone tag.",
   },
   {
     icon: Eye,
-    title: "Remote maintenance management",
+    title: "Remote management",
     description:
-      "Photo documentation and budget caps are required upfront, so you can manage repairs across a wide portfolio without being on-site for every estimate. See the tree damage or the roof leak before the contractor does. Set the maximum spend you're authorized by the property owner before the lead is even claimed.",
+      "Manage repairs across multiple properties without being on-site. You see photos and set budgets upfront.",
   },
   {
     icon: Layers,
-    title: "Scalability for large portfolios",
+    title: "Same process at scale",
     description:
-      "Whether you manage 10 doors or 500, the process is identical. One consolidated vendor pool replaces your Rolodex of subcontractors across Tree, Concrete, and Roofing categories — with HVAC, Fencing, and more coming soon. Every job follows the same documentation and quoting process.",
+      "Whether you manage 10 doors or 500, every job follows the same documented process.",
   },
 ]
 
@@ -52,30 +52,26 @@ const howItWorks = [
   {
     icon: Building2,
     step: "01",
-    title: "Submit your request",
-    description:
-      "Upload photos of the issue, write a brief description, and set your authorized budget cap. One submission covers the full scope — no follow-up calls required.",
+    title: "Submit",
+    description: "Upload photos, describe the issue, set your budget cap.",
   },
   {
     icon: ShieldCheck,
     step: "02",
-    title: "A verified contractor claims the job",
-    description:
-      "Your request enters the feed of pre-vetted, licensed, and insured contractors in the right category. The first to claim it locks the job exclusively. No competing contractors contacting your tenant.",
+    title: "Contractor claims it",
+    description: "One verified contractor locks the job. Exclusively.",
   },
   {
     icon: Clock,
     step: "03",
-    title: "Consultation is auto-scheduled",
-    description:
-      "Once claimed, the platform schedules the on-site consultation against your availability or your tenant's — within 24 hours of submission in most cases. No coordination overhead on your end.",
+    title: "Auto-scheduled",
+    description: "Consultation scheduled within 24 hours. No coordination needed.",
   },
   {
     icon: CheckCircle,
     step: "04",
-    title: "Review, approve, and close",
-    description:
-      "Receive a standardized quote with documentation for owner approval. Every job follows the same process, making it easy to present options, track history, and report across your portfolio.",
+    title: "Review & approve",
+    description: "Standardized quote. Easy to report. Done.",
   },
 ]
 
@@ -88,24 +84,24 @@ export default function PropertyManagersPage() {
         <section className="pt-32 pb-20 lg:pt-40 lg:pb-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">For property managers</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+                <Zap className="h-4 w-4" />
+                Now accepting Topeka PMs for our 30-Day Free Pilot
+              </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Maintenance without
+                Stop chasing quotes.
                 <br />
-                <span className="text-primary">the overhead.</span>
+                <span className="text-primary">Dispatch verified contractors in 24 hours.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations gives property managers a centralized, high-efficiency solution for
-                maintenance requests — pre-vetted contractors, photo documentation, budget controls, and
-                automatic scheduling. Manage your entire portfolio without vetting vendors or chasing
-                estimates.
+                One submission per job — with photos, scope, and a budget cap. A single pre-vetted contractor claims it and a consultation is scheduled within 24 hours. No vendor sourcing, no phone tag, no bidding wars.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
                 >
-                  Request Corporate Onboarding
+                  Apply for the 30-Day Pilot
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
@@ -120,17 +116,40 @@ export default function PropertyManagersPage() {
           </div>
         </section>
 
+        {/* 30-Day Pilot Banner */}
+        <section className="py-12 bg-primary/5 border-y border-primary/10">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">The 30-Day Zero-Risk Pilot</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+              We know property managers are burned out on broken promises from contractor platforms. 
+              We'll prove our dispatch speed and completion rates before you ever pay us a dime.
+            </p>
+            <div className="grid sm:grid-cols-3 gap-6 text-left max-w-4xl mx-auto">
+              <div className="bg-card p-5 rounded-xl border border-border/40">
+                <h3 className="font-semibold text-primary mb-2">0% Platform Markup</h3>
+                <p className="text-sm text-muted-foreground">During the 30-day pilot, you pay only the direct contractor cost. We take zero margin.</p>
+              </div>
+              <div className="bg-card p-5 rounded-xl border border-border/40">
+                <h3 className="font-semibold text-primary mb-2">Priority Dispatch</h3>
+                <p className="text-sm text-muted-foreground">Your tickets get priority routing to our top-rated, pre-vetted local contractors.</p>
+              </div>
+              <div className="bg-card p-5 rounded-xl border border-border/40">
+                <h3 className="font-semibold text-primary mb-2">Performance Data</h3>
+                <p className="text-sm text-muted-foreground">At the end of the pilot, we'll present hard data on response times and hours saved.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Key Benefits */}
         <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Built for portfolio-scale operations
+                Built for property managers
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Property managers face unique pressures: liability exposure, soft-cost accumulation from
-                chasing estimates, and tenant satisfaction tied directly to maintenance speed. Nexus
-                Operations addresses all three with a single, standardized workflow.
+                Manage liability. Save time on estimates. Keep tenants satisfied. One workflow for all three.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -155,12 +174,10 @@ export default function PropertyManagersPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                One workflow for every property
+                Same process at any scale
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Whether you manage 10 doors or 500, every maintenance request follows the same
-                documented, auditable process — making it easy to report to property owners and keep
-                tenants informed.
+                10 properties or 500. Same documented process. Easy to report.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -268,9 +285,7 @@ export default function PropertyManagersPage() {
                   The same process whether you manage 10 doors or 500
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Nexus Operations replaces a fragmented vendor Rolodex with a single point of entry
-                  for your maintenance needs. Every contractor is pre-verified. Every job is documented
-                  the same way. Every quote is structured for owner approval.
+                  One entry point for all maintenance. Every contractor verified. Every job documented the same way. Easy owner approval.
                 </p>
                 <ul className="flex flex-col gap-3">
                   {[
@@ -337,9 +352,7 @@ export default function PropertyManagersPage() {
                 Tenant satisfaction is a retention metric
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-                Maintenance delays are the number one driver of tenant turnover. When tenants call
-                with a problem, Nexus Operations puts a verified, professional contractor on the job
-                within 24 hours — not a week of scheduling calls and no-shows.
+                Maintenance delays drive tenant turnover. Get a verified contractor on the job within 24 hours.
               </p>
               <div className="grid sm:grid-cols-3 gap-6 text-left">
                 {[
@@ -377,27 +390,18 @@ export default function PropertyManagersPage() {
         <section id="corporate" className="py-24 lg:py-32">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Interested in a Corporate Account?
+              Stop coordinating contractors. Let us prove it.
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              If you manage a portfolio in the Topeka area and want to streamline your maintenance
-              workflow, contact us for specialized property management onboarding. We&apos;ll walk
-              through your portfolio size, service needs, and how Nexus integrates with your
-              current process.
+              Our 30-day free pilot is currently open to Property Management firms in the Topeka area. 
+              Zero markup. Zero platform fees. Just fast, verified dispatch.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Contact Us for Onboarding
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/services"
-                className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
-              >
-                View Service Categories
+                Apply for the 30-Day Pilot
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

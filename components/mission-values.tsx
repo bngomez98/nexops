@@ -6,32 +6,32 @@ import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 const values = [
   {
     icon: Users,
-    title: "The homeowner deserves control",
-    body: "You own the project. You should set the scope, the budget ceiling, and the consultation window — before a single contractor is contacted. Not after you have already given your number to six strangers who all received it at the same time.",
+    title: "Property owners set the terms",
+    body: "Property owners establish the details of their project, including the scope of work, the maximum budget, and preferred times for consultation, before any contractor is notified. These terms are fixed prior to the assignment of the project.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: ShieldCheck,
-    title: "The contractor deserves exclusivity",
-    body: "A skilled professional should not have to fight five competitors for the same job, or undercut their margin just to win a bid. When a contractor claims a request on Nexus, they have earned it outright — no auction, no race to the bottom, no erosion of their craft.",
+    title: "Contractors own their projects",
+    body: "Contractors gain full ownership of the projects they claim, without any competition from other contractors for the same job. The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: FileText,
-    title: "Both sides deserve preparation",
-    body: "Bad projects start with bad information. We require full documentation — photos, written scope, a defined budget cap — before any match is made. The result is a consultation that is productive from the first minute, not a fishing expedition for someone who already called seven people.",
+    title: "Both sides come prepared",
+    body: "Both property owners and contractors receive all relevant documentation — photographs, a written description of the scope, and the budget — before the consultation begins. This preparation allows for efficient discussions from the start.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
   {
     icon: Award,
-    title: "Quality is tracked, not assumed",
-    body: "Every contractor in the network earned their place through license verification, insurance confirmation, and background review. Every completed project updates their standing. The standard is not a hurdle — it is the reason homeowners trust the match they receive.",
+    title: "Verified credentials, tracked outcomes",
+    body: "Every contractor in the network undergoes verification of their license, confirmation of their insurance, and a background check before they can access project requests. Ratings for contractors are based on the outcomes of actual projects completed through the platform.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -74,29 +74,22 @@ export function MissionValues() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Mission statement */}
         <div className="max-w-3xl mb-16 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why we exist</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">The purpose of Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            Home improvement became adversarial.
-            <span className="gradient-text"> We built an alternative.</span>
+            A two-sided marketplace built on
+            <span className="gradient-text"> exclusivity and trust.</span>
           </h2>
-          <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p>
-              Homeowners brace for spam calls the moment they submit a request. Contractors undercut their margin
-              to survive a bidding war they never agreed to enter. The platforms connecting them profit by
-              distributing contact information as widely as possible — five, ten, fifteen contractors
-              per lead — and calling that a service.
-            </p>
-            <p className="text-foreground/80 font-medium">
-              Nexus Operations was built on a different premise: one request, one verified contractor,
-              no exceptions. Not as a feature. As a founding belief.
-            </p>
-          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            Nexus Operations connects property owners with licensed contractors through a
+            two-sided marketplace — assigning each project to a single contractor exclusively.
+            No competitive bidding. No unsolicited calls. No wasted time.
+          </p>
         </div>
 
         {/* Divider */}
         <div className="flex items-center gap-4 mb-12 reveal" style={{ transitionDelay: "80ms" }}>
           <div className="h-px flex-1 bg-border/30" />
-          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">Our core commitments</span>
+          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">Core commitments</span>
           <div className="h-px flex-1 bg-border/30" />
         </div>
 
@@ -126,16 +119,11 @@ export function MissionValues() {
           className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
           style={{ transitionDelay: "500ms" }}
         >
-          <blockquote className="text-center">
-            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;This is what we mean by operations. Not just a marketplace.
-              A system that runs the logistics so contractors can focus on the craft —
-              and homeowners can focus on their lives.&rdquo;
-            </p>
-            <footer className="mt-4 text-sm text-muted-foreground">
-              Nexus Operations — Topeka, KS
-            </footer>
-          </blockquote>
+          <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
+            Every project request includes photos, a written scope, a defined budget ceiling, and
+            pre-selected consultation windows &mdash; all collected before any contractor is notified.
+            The contractor who claims your project has reviewed all of it before showing up.
+          </p>
         </div>
       </div>
     </section>
