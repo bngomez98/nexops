@@ -8,46 +8,69 @@ type FAQItem = {
   answer: string
 }
 
-const faqs: FAQItem[] = [
+const propertyOwnerFaqs: FAQItem[] = [
   {
-    question: "What does NexOps actually do?",
+    question: "How does the assignment process work?",
     answer:
-      "NexOps is a consulting agency and, soon, a SaaS platform built for property management companies. We coordinate your vendor relationships, document your workflows, and serve as a dedicated operations partner for your portfolio. Consulting engagements are available now — the platform launches in 2026.",
+      "Property owners submit photographs, a scope of work, a budget, and available times. One contractor in the area claims the project exclusively. A consultation is confirmed within 24 hours.",
   },
   {
-    question: "Are you a software company, a consulting agency, or both?",
+    question: "How many contractors will contact me?",
     answer:
-      "Both. Consulting is available now. Our SaaS platform — built from real client engagements — is planned for a 2026 launch. You don't need to wait for the software to start working with us, and early clients will have direct input into how the platform gets built.",
+      "Only one contractor will contact you. Once a contractor claims your project, it is permanently removed from view for all other contractors. No competing quotes, no unsolicited calls.",
   },
   {
-    question: "When will the platform launch?",
+    question: "Is there a cost for property owners?",
     answer:
-      "We're targeting a 2026 launch. The platform is being built from the ground up using the actual workflows and vendor coordination models we develop through client engagements — not a generic template. Early clients who start consulting now get first access when it's ready.",
+      "The service is free for property owners at all levels. Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.",
   },
   {
-    question: "Can we start consulting before the platform is ready?",
+    question: "How are contractors screened and verified?",
     answer:
-      "Yes. Consulting engagements are the primary way we work with clients today. We manage your vendor relationships and workflows directly, and the platform will support and extend that work when it launches — it doesn't replace it.",
+      "Contractors must pass license verification, insurance confirmation, and background checks before gaining access to the network. No contractor can access project requests until all three are complete.",
   },
   {
-    question: "How does NexOps handle our existing vendor relationships?",
+    question: "What happens if no contractor is available in my area?",
     answer:
-      "We work with your vendors — not around them. We coordinate, document, and manage your existing relationships on your behalf. We don't push replacements or require you to switch platforms. Your relationships stay yours; we just make them run better.",
+      "The platform notifies the property owner immediately if coverage is unavailable in their specific area.",
   },
   {
-    question: "What does the first 30 days look like?",
+    question: "Can I cancel or update my request?",
     answer:
-      "An initial call to understand your portfolio, followed by an operations assessment of your current vendor landscape and workflows. By the end of the first 30 days, you have a written operations overview, a clear scope for your engagement, and an assigned NexOps partner.",
+      "Property owners can update or cancel their request before a contractor claims it. Once a contractor claims the project, the assignment is exclusive and the project cannot be reclaimed by another contractor.",
+  },
+]
+
+const contractorFaqs: FAQItem[] = [
+  {
+    question: "What does exclusive assignment mean?",
+    answer:
+      "The moment you claim a project, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner. No competing quotes, no race to the bottom on price.",
   },
   {
-    question: "Is there a long-term contract or commitment required?",
+    question: "What information is included with each project?",
     answer:
-      "No long-term commitments. Engagements are structured around defined scope and outcomes. We want you to stay because the work is valuable — not because you're locked in. Pause or end your engagement with reasonable notice at any time.",
+      "Every project includes 2–10 photographs of the work area, a written description of the scope, the maximum budget the property owner has approved, and pre-selected consultation windows. You have everything you need before deciding to claim.",
   },
   {
-    question: "What types of property management companies do you work with?",
+    question: "How does membership pricing work?",
     answer:
-      "We work with residential and commercial property management companies of any size. Whether you manage 10 units or 500, the core challenge is the same: coordinating vendors, documenting workflows, and keeping operations consistent as the portfolio grows.",
+      "Membership is billed monthly at a flat rate — $299 for Basic, $499 for Standard, or $749 for Premium. There are no per-project fees, no penalties for cancellation, and no limits on the number of projects you can claim.",
+  },
+  {
+    question: "How are contractor ratings determined?",
+    answer:
+      "Ratings are derived from the outcomes of projects completed through the platform. They reflect actual job results, not self-reported credentials or reviews that could be manipulated.",
+  },
+  {
+    question: "What is the verification process?",
+    answer:
+      "Before gaining access to the network, all contractors must complete license verification, insurance confirmation, and a background check. This process protects both property owners and the contractors in the network.",
+  },
+  {
+    question: "Can I claim projects in any service category?",
+    answer:
+      "You can claim projects in the service categories that match your verified credentials. Contractors must hold the appropriate license for the category they claim projects in.",
   },
 ]
 
@@ -91,7 +114,10 @@ function AccordionItem({
 
 export function FAQ() {
   const sectionRef = useRef<HTMLElement>(null)
+  const [activeTab, setActiveTab] = useState<"owners" | "contractors">("owners")
   const [openItems, setOpenItems] = useState<Set<number>>(new Set([0]))
+
+  const faqs = activeTab === "owners" ? propertyOwnerFaqs : contractorFaqs
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) => {
@@ -103,6 +129,11 @@ export function FAQ() {
       }
       return next
     })
+  }
+
+  const switchTab = (tab: "owners" | "contractors") => {
+    setActiveTab(tab)
+    setOpenItems(new Set([0]))
   }
 
   useEffect(() => {
@@ -136,12 +167,37 @@ export function FAQ() {
           <div className="reveal lg:sticky lg:top-24">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">FAQ</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Answers to the questions
-              <span className="gradient-text"> that matter before you commit.</span>
+              Common questions
+              <span className="gradient-text"> answered directly.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Common questions from property management companies about how NexOps works, what consulting looks like, and what to expect from our engagement process.
+              The platform provides clear information so users understand the terms before
+              submitting a project or joining as a contractor.
             </p>
+
+            {/* Tab switcher */}
+            <div className="flex gap-2 p-1 rounded-xl bg-secondary/40 border border-border/30 w-fit">
+              <button
+                onClick={() => switchTab("owners")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeTab === "owners"
+                    ? "bg-card text-foreground border border-border/40 shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Property Owners
+              </button>
+              <button
+                onClick={() => switchTab("contractors")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeTab === "contractors"
+                    ? "bg-card text-foreground border border-border/40 shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Contractors
+              </button>
+            </div>
           </div>
 
           {/* Right — accordion */}

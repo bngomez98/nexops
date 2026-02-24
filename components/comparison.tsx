@@ -5,39 +5,39 @@ import { useEffect, useRef, useState } from "react"
 
 const rows = [
   {
-    feature: "Who coordinates your vendors",
-    us: "Your dedicated NexOps partner",
-    them: "Your property managers, on top of everything else",
+    feature: "Who contacts the property owner",
+    us: "Only one contractor contacts the property owner for each project",
+    them: "Between 3 and 7 contractors may call about the same job",
   },
   {
-    feature: "Workflow documentation",
-    us: "Standardized, written, and accessible to your team",
-    them: "Email threads, sticky notes, and institutional memory",
+    feature: "Cost to the property owner",
+    us: "The service is free for property owners, with no hidden costs",
+    them: "Services may appear free, but property owner information is often sold to contractors",
   },
   {
-    feature: "Vendor relationship management",
-    us: "Proactive, relationship-driven, handled by NexOps",
-    them: "Reactive — called when something breaks",
+    feature: "Budget clarity",
+    us: "Property owners set their maximum budget before any contractor is assigned",
+    them: "Budget discussions typically occur only after a contractor arrives",
   },
   {
-    feature: "Operations continuity",
-    us: "Documented processes that outlast any single employee",
-    them: "Lost when a key team member leaves",
+    feature: "Project documentation",
+    us: "Photographs, a written scope, and the budget are collected before assignment",
+    them: "Documentation is often incomplete or skipped",
   },
   {
-    feature: "Software + coordination",
-    us: "Both included — platform built from your actual workflows",
-    them: "Software you buy, then figure out how to use",
+    feature: "Scheduling",
+    us: "Property owners select preferred times during submission",
+    them: "Scheduling involves back-and-forth communications, voicemails, and potential missed connections",
   },
   {
-    feature: "Scalability",
-    us: "Operations scale with your portfolio without adding overhead",
-    them: "Coordination burden grows with every property added",
+    feature: "Contractor quality",
+    us: "Contractors undergo license verification, insurance confirmation, and background checks",
+    them: "Contractors often self-report their qualifications without independent verification",
   },
   {
-    feature: "Your existing vendor relationships",
-    us: "We coordinate them — no replacement required",
-    them: "You manage them yourself or switch platforms entirely",
+    feature: "Expected contractor calls",
+    us: "One call from the assigned contractor",
+    them: "Between 5 and 15 calls may occur within the first hour",
   },
 ]
 
@@ -72,14 +72,15 @@ export function Comparison() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why NexOps</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built differently from the start.
-            <span className="gradient-text"> A partner, not just a tool.</span>
+            Built differently from other platforms.
+            <span className="gradient-text"> One contractor, not seven.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most solutions hand you software and expect your team to handle the rest. NexOps provides
-            the coordination layer your portfolio actually needs — before, during, and after the platform launches.
+            Many services share project details with multiple contractors, resulting in several
+            inquiries for the same job. This platform assigns each project to only one contractor.
+            The business model relies on contractor memberships rather than charging fees per project assignment.
           </p>
         </div>
 
@@ -87,15 +88,15 @@ export function Comparison() {
         <div className="rounded-2xl border border-border/40 overflow-hidden bg-card reveal" style={{ transitionDelay: "100ms" }}>
           {/* Header */}
           <div className="grid grid-cols-3 border-b border-border/40 bg-secondary/30">
-            <div className="py-4 px-6 text-sm font-semibold text-muted-foreground">Consideration</div>
+            <div className="py-4 px-6 text-sm font-semibold text-muted-foreground">Feature</div>
             <div className="py-4 px-6 border-l border-border/40">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-primary" />
-                <span className="text-sm font-bold text-primary">NexOps</span>
+                <span className="text-sm font-bold text-primary">Nexus Operations</span>
               </div>
             </div>
             <div className="py-4 px-6 border-l border-border/40 text-sm font-medium text-muted-foreground">
-              Traditional Approach
+              Traditional Platforms
             </div>
           </div>
 
@@ -142,10 +143,11 @@ export function Comparison() {
             <Check className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">The NexOps commitment</p>
+            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus Operations commitment</p>
             <p className="text-sm text-muted-foreground">
-              One dedicated partner. Your vendor relationships, coordinated. Your workflows, documented.
-              Your operations, running. We&apos;ll tell you immediately if we&apos;re not the right fit for your portfolio.
+              Each project request is assigned to one verified contractor. No unsolicited calls are
+              made. If coverage is not available in a specific area, the platform notifies the
+              property owner immediately.
             </p>
           </div>
         </div>

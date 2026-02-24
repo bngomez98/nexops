@@ -2,53 +2,49 @@
 
 import { useState, useEffect, useRef } from "react"
 import {
-  MessageSquare,
+  Upload,
+  Lock,
+  CalendarCheck,
   ClipboardList,
-  Network,
-  Monitor,
-  TrendingUp,
+  CheckCircle,
 } from "lucide-react"
 
 const steps = [
   {
-    icon: MessageSquare,
+    icon: Upload,
     number: "01",
-    title: "Initial consultation",
-    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
-    title: "Choose a membership tier",
-    detail: "Standard receives real-time notifications when projects are posted. Premium receives a 90-second advance window before the general pool opens. Elite receives a 10-minute exclusive window on all projects valued at $5,000 or more.",
+    title: "Submit your project",
+    detail: "Property owners upload photographs, provide a written description of the work needed, set a maximum budget, and select preferred times for a consultation.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
     accent: "oklch(0.75 0.18 155)",
   },
   {
-    icon: ClipboardList,
+    icon: Lock,
     number: "02",
-    title: "Operations assessment",
-    detail: "We document your existing vendor relationships, active workflows, and coordination gaps. Within two weeks, you receive a written operations overview with prioritized recommendations.",
+    title: "One contractor claims it exclusively",
+    detail: "A licensed and insured contractor in the local area reviews and claims the project. Once claimed, the project is permanently removed from view for all other contractors.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
     accent: "oklch(0.82 0.17 85)",
   },
   {
-    icon: Network,
+    icon: CalendarCheck,
     number: "03",
-    title: "Consulting engagement begins",
-    detail: "Your dedicated NexOps partner steps in as your operations coordinator — managing vendor calls, scheduling, scope documentation, and follow-through so your team can focus on properties.",
+    title: "Consultation is confirmed",
+    detail: "An appointment is scheduled and confirmed within 24 hours. The contractor has access to all project details — photos, scope, and budget — in advance.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
     accent: "oklch(0.70 0.15 300)",
   },
   {
-    icon: Monitor,
+    icon: ClipboardList,
     number: "04",
-    title: "Platform access at launch",
-    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
-    title: "Deliver a written estimate on-site",
-    detail: "You've reviewed the photos, scope, and budget before the consultation. Arrive with the information needed to write an estimate on the spot — no second visit required.",
+    title: "Review the estimate and decide",
+    detail: "The contractor provides a written estimate. The property owner reviews the scope of work and timeline, then decides whether to proceed. There is no obligation to continue if the estimate does not meet expectations.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -166,11 +162,12 @@ export function HowItWorks() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
-            From first conversation to coordinated operations
+            From submission to confirmed consultation
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            We start with your portfolio, not a template. Every engagement begins with understanding
-            your actual vendor relationships and workflows — then we build from there.
+            The process from submitting a project to confirming a consultation typically occurs
+            within 24 hours. Property owners submit their project details once, and the platform
+            assigns the project to a single verified contractor.
           </p>
         </div>
 
@@ -204,30 +201,12 @@ export function HowItWorks() {
         {/* Bottom callout */}
         <div className="mt-12 reveal">
           <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
-            <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
+            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
             <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">No long-term contract required.</span>{" "}
-              Engagements are structured around defined scope and outcomes. Early clients who begin now
-              get first access to the platform when it launches in 2026.
+              <span className="font-semibold text-foreground">Free for property owners.</span>{" "}
+              Nexus Operations charges contractors a monthly membership &mdash; not homeowners, not per-lead fees.
             </p>
           </div>
-          {perspective === "homeowner" ? (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
-              <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">Free for homeowners.</span>{" "}
-                Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.
-              </p>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/15 max-w-2xl">
-              <Star className="h-4 w-4 text-amber-400 flex-shrink-0" />
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">No per-lead charges.</span>{" "}
-                Your membership covers unlimited project claims. Elite members receive a 10-minute exclusive claim window on every project valued at $5,000 or more.
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </section>

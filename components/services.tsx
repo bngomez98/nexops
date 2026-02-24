@@ -1,49 +1,51 @@
 "use client"
 
-import { Users, Network, FileText, Monitor, ArrowRight, LayoutDashboard } from "lucide-react"
+import { TreePine, Hammer, Home, Wind, Fence, Zap, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 
 const services = [
   {
-    icon: Users,
-    name: "Operations Consulting",
-    description: "We analyze your current workflows, vendor relationships, and coordination processes — and deliver a documented operations framework tailored to your portfolio.",
-    tag: "Launching Soon",
-    available: false,
-    tagStyle: "early",
+    icon: TreePine,
+    name: "Tree Removal",
+    description: "This category covers tree removal and stump grinding services. Contractors are licensed professionals with the required certifications.",
+    range: "$500 – $8,000",
+    available: true,
   },
   {
-    icon: Network,
-    name: "Workflow Coordination",
-    description: "A dedicated coordination layer between your team and your vendors. Scheduling, scope documentation, and follow-through managed by your NexOps partner.",
-    tag: "Launching Soon",
-    available: false,
-    tagStyle: "early",
+    icon: Hammer,
+    name: "Concrete Work",
+    description: "This includes installation and repair of driveways, patios, walkways, and retaining walls, as well as structural repairs and custom finishes.",
+    range: "$1,200 – $15,000",
+    available: true,
   },
   {
-    icon: FileText,
-    name: "Vendor Relationship Management",
-    description: "We build, maintain, and coordinate your vendor network on your behalf — from onboarding to ongoing relationship management. Your relationships, better managed.",
-    tag: "Launching Soon",
-    available: false,
-    tagStyle: "early",
+    icon: Home,
+    name: "Roofing",
+    description: "Services encompass full roof replacements, repairs, and emergency measures to address leaks. All contractors are licensed and insured.",
+    range: "$300 – $25,000",
+    available: true,
   },
   {
-    icon: LayoutDashboard,
-    name: "Fractional Operations Director",
-    description: "For companies that need ongoing strategic operations leadership without a full-time hire. Your NexOps partner serves as your dedicated fractional ops director.",
-    tag: "Launching Soon",
-    available: false,
-    tagStyle: "early",
+    icon: Wind,
+    name: "HVAC",
+    description: "This category involves the installation and replacement of heating and cooling systems. Technicians are licensed and hold EPA certification.",
+    range: "$3,000 – $20,000",
+    available: true,
   },
   {
-    icon: Monitor,
-    name: "NexOps Platform",
-    description: "A purpose-built SaaS platform for tracking projects, vendors, workflows, and relationships across your entire portfolio — built from real client engagements.",
-    tag: "2026",
-    available: false,
-    tagStyle: "platform",
+    icon: Fence,
+    name: "Fencing",
+    description: "Services include the installation of privacy fencing, perimeter fencing, and decorative fencing options.",
+    range: "$1,500 – $8,000",
+    available: true,
+  },
+  {
+    icon: Zap,
+    name: "Electrical",
+    description: "This covers panel upgrades, wiring installations, and EV charger setups. A licensed electrician is assigned to each project.",
+    range: "$500 – $10,000",
+    available: true,
   },
 ]
 
@@ -80,13 +82,14 @@ export function Services() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className="max-w-2xl mb-10 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">What we offer</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Consulting now. Platform in 2026.
+            All services available now in Topeka.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Every service is built around your actual operations — not a generic implementation.
-            Early clients who engage now help shape what the platform becomes.
+            Six service categories are currently available. Every project request must include
+            photographs, a written scope of work, and a defined maximum budget before a contractor
+            is assigned. The platform expands categories based on demand.
           </p>
         </div>
 
@@ -95,22 +98,16 @@ export function Services() {
           {services.map((svc, i) => (
             <div
               key={svc.name}
-              className={`reveal group relative flex flex-col p-6 rounded-2xl border transition-all duration-300 cursor-default bg-card border-border/40 hover-glow ${
+              className={`reveal group relative flex flex-col p-6 rounded-2xl border transition-all duration-300 bg-card border-border/40 hover-glow ${
                 hoveredCard === svc.name ? "translate-y-[-2px]" : ""
               }`}
               style={{ transitionDelay: `${i * 80}ms` }}
               onMouseEnter={() => setHoveredCard(svc.name)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              {/* Tag badge */}
-              <span
-                className={`absolute top-4 right-4 text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded ${
-                  svc.tagStyle === "platform"
-                    ? "text-violet-400 bg-violet-400/10 border border-violet-400/20"
-                    : "text-primary bg-primary/10 border border-primary/20"
-                }`}
-              >
-                {svc.tag}
+              {/* Available badge */}
+              <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded text-primary bg-primary/10 border border-primary/20">
+                Available
               </span>
 
               {/* Icon */}
@@ -121,25 +118,29 @@ export function Services() {
               </div>
 
               <h3 className="text-base font-semibold mb-1.5">{svc.name}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed flex-1">{svc.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">{svc.description}</p>
+
+              <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                <span className="text-xs text-muted-foreground">Typical range: {svc.range}</span>
+                <Link
+                  href="/dashboard/homeowner/new"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                >
+                  Request
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center reveal" style={{ transitionDelay: "500ms" }}>
-          <Link
-            href="/contact"
-            className="btn-shimmer inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Request Early Access
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <p className="text-sm text-muted-foreground">
-            Not sure what you need?{" "}
+        <div className="mt-10 p-5 rounded-xl border border-border/40 bg-card/50 reveal" style={{ transitionDelay: "500ms" }}>
+          <p className="text-sm text-muted-foreground text-center">
+            If the required category is not listed, property owners can{" "}
             <Link href="/contact" className="text-primary hover:underline">
-              Schedule a call
-            </Link>{" "}
-            — no obligation, no pressure.
+              submit details about their needs
+            </Link>
+            . The platform uses this information to prioritize future expansions.
           </p>
         </div>
       </div>

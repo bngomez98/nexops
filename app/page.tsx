@@ -6,6 +6,7 @@ import { HowItWorks } from "@/components/how-it-works"
 import { Services } from "@/components/services"
 import { Comparison } from "@/components/comparison"
 import { ContractorCTA } from "@/components/contractor-cta"
+import { Testimonials } from "@/components/testimonials"
 import { FAQ } from "@/components/faq"
 import { SubmitCTA } from "@/components/submit-cta"
 import { Footer } from "@/components/footer"
@@ -22,6 +23,7 @@ export default function HomePage() {
         <Services />
         <Comparison />
         <ContractorCTA />
+        <Testimonials />
         <FAQ />
         <SubmitCTA />
       </main>
