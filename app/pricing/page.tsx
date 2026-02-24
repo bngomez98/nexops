@@ -182,32 +182,35 @@ export default function PricingPage() {
         {/* ROI callout */}
         <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div className="p-8 rounded-2xl bg-card border border-border/40">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
-                  What you replace
-                </p>
-                <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>$15–$80 per shared lead, 3–7 contractors calling the same homeowner</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>Sub-15% conversion rate on contested leads</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>30–40% no-show rate on estimate visits</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>5–10 hours per week on unqualified outreach</li>
-                  <li className="flex items-start gap-2"><span className="text-red-400 mt-0.5">✕</span>Zero documentation before you drive to the site</li>
-                </ul>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20">
-                <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-5">
-                  What you get
-                </p>
-                <ul className="flex flex-col gap-3 text-sm text-foreground">
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>One flat monthly fee — claim as many projects as you can handle</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>You are the only contractor on every job you claim</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Photos, specs, and a defined budget before you commit</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Consultation pre-scheduled by the homeowner — no callbacks</li>
-                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">✓</span>Median project value is $4,200 — 14 months of Standard membership from a single closed job</li>
-                </ul>
-              </div>
+            <div className="max-w-2xl mx-auto text-center mb-10">
+              <h2 className="text-2xl font-semibold tracking-tight mb-3">How the membership pays for itself</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Active members close an average of 2–5 projects per month. The math is simple.
+              </p>
+            </div>
+            <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20">
+              <ul className="flex flex-col gap-4 text-sm text-foreground">
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>One flat monthly fee — claim as many projects as you can handle, with no additional cost per claim</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Every project you claim is exclusively yours — permanently removed from all other contractor feeds the moment you claim it</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Full documentation before you commit: photos, written scope, and a defined budget cap</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Consultations pre-scheduled by the homeowner — no callbacks, no voicemail chains</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
+                </li>
+              </ul>
             </div>
           </div>
         </section>

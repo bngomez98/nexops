@@ -1,49 +1,48 @@
 "use client"
 
-import { Check, X } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { Check } from "lucide-react"
+import { useEffect, useRef } from "react"
 
-const rows = [
+const features = [
   {
-    feature: "Who contacts the property owner",
-    us: "Only one contractor contacts the property owner for each project",
-    them: "Between 3 and 7 contractors may call about the same job",
+    feature: "One contractor per project",
+    detail:
+      "Each project is assigned to a single verified contractor. Once claimed, it is removed from all other feeds permanently.",
   },
   {
-    feature: "Cost to the property owner",
-    us: "The service is free for property owners, with no hidden costs",
-    them: "Services may appear free, but property owner information is often sold to contractors",
+    feature: "Free for property owners",
+    detail:
+      "There is no cost to submit a project or receive a match. The platform is funded entirely through contractor memberships.",
   },
   {
-    feature: "Budget clarity",
-    us: "Property owners set their maximum budget before any contractor is assigned",
-    them: "Budget discussions typically occur only after a contractor arrives",
+    feature: "Budget set before assignment",
+    detail:
+      "Property owners define their maximum budget during submission — before any contractor is involved.",
   },
   {
-    feature: "Project documentation",
-    us: "Photographs, a written scope, and the budget are collected before assignment",
-    them: "Documentation is often incomplete or skipped",
+    feature: "Full documentation collected upfront",
+    detail:
+      "Photographs, a written scope, and the confirmed budget are gathered before any contractor sees the request.",
   },
   {
-    feature: "Scheduling",
-    us: "Property owners select preferred times during submission",
-    them: "Scheduling involves back-and-forth communications, voicemails, and potential missed connections",
+    feature: "Scheduling handled at submission",
+    detail:
+      "Property owners select preferred consultation windows when they submit — no back-and-forth required.",
   },
   {
-    feature: "Contractor quality",
-    us: "Contractors undergo license verification, insurance confirmation, and background checks",
-    them: "Contractors often self-report their qualifications without independent verification",
+    feature: "Verified credentials on every contractor",
+    detail:
+      "Every contractor in the network has passed license verification, insurance confirmation, and a background check.",
   },
   {
-    feature: "Expected contractor calls",
-    us: "One call from the assigned contractor",
-    them: "Between 5 and 15 calls may occur within the first hour",
+    feature: "One call. That's it.",
+    detail:
+      "Only the assigned contractor will reach out — one professional, for the project that belongs to them.",
   },
 ]
 
 export function Comparison() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null)
 
   useEffect(() => {
     const el = sectionRef.current
@@ -72,63 +71,29 @@ export function Comparison() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus Operations</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works for you</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built differently from other platforms.
-            <span className="gradient-text"> One contractor, not seven.</span>
+            What every project includes.
+            <span className="gradient-text"> From submission to consultation.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Many services share project details with multiple contractors, resulting in several
-            inquiries for the same job. This platform assigns each project to only one contractor.
-            The business model relies on contractor memberships rather than charging fees per project assignment.
+            Each project request is structured so that property owners stay in control and contractors
+            arrive prepared. Every step is defined before any contractor is assigned.
           </p>
         </div>
 
-        {/* Comparison table */}
-        <div className="rounded-2xl border border-border/40 overflow-hidden bg-card reveal" style={{ transitionDelay: "100ms" }}>
-          {/* Header */}
-          <div className="grid grid-cols-3 border-b border-border/40 bg-secondary/30">
-            <div className="py-4 px-6 text-sm font-semibold text-muted-foreground">Feature</div>
-            <div className="py-4 px-6 border-l border-border/40">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <span className="text-sm font-bold text-primary">Nexus Operations</span>
-              </div>
-            </div>
-            <div className="py-4 px-6 border-l border-border/40 text-sm font-medium text-muted-foreground">
-              Traditional Platforms
-            </div>
-          </div>
-
-          {rows.map((row, i) => (
+        <div className="grid sm:grid-cols-2 gap-4 reveal" style={{ transitionDelay: "100ms" }}>
+          {features.map((item) => (
             <div
-              key={row.feature}
-              className={`grid grid-cols-3 border-b border-border/20 last:border-0 transition-colors duration-150 cursor-default ${
-                hoveredRow === i ? "bg-secondary/20" : ""
-              }`}
-              onMouseEnter={() => setHoveredRow(i)}
-              onMouseLeave={() => setHoveredRow(null)}
+              key={item.feature}
+              className="flex items-start gap-4 p-5 rounded-xl border border-border/40 bg-card hover:border-primary/30 transition-colors"
             >
-              <div className="py-4 px-6 text-sm text-foreground/80 flex items-center">
-                {row.feature}
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
+                <Check className="h-3.5 w-3.5 text-primary" />
               </div>
-              <div className={`py-4 px-6 border-l transition-colors duration-150 ${
-                hoveredRow === i ? "border-primary/30" : "border-border/40"
-              }`}>
-                <div className="flex items-center gap-2.5">
-                  <div className={`flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 border border-primary/20 shrink-0 transition-transform duration-200 ${hoveredRow === i ? "scale-110" : ""}`}>
-                    <Check className="h-3 w-3 text-primary" />
-                  </div>
-                  <span className="text-sm text-foreground font-medium">{row.us}</span>
-                </div>
-              </div>
-              <div className="py-4 px-6 border-l border-border/40">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-secondary shrink-0">
-                    <X className="h-3 w-3 text-muted-foreground/50" />
-                  </div>
-                  <span className="text-sm text-muted-foreground">{row.them}</span>
-                </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground mb-1">{item.feature}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
               </div>
             </div>
           ))}
