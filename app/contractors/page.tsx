@@ -11,38 +11,40 @@ import {
   FileText,
   BadgeCheck,
   BarChart3,
+  Users,
+  Lock,
 } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Get exclusive, pre-qualified leads delivered to your portal. Licensed and insured contractors only. Monthly subscription, no per-lead fees. First-come, first-served.",
+    "Nexus Operations gives licensed, insured contractors in Topeka and the surrounding region access to exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Flat monthly membership starting at $299.",
 }
 
 const benefits = [
   {
-    icon: ShieldCheck,
-    title: "Exclusive leads, not shared",
+    icon: Lock,
+    title: "True exclusivity — not just priority",
     description:
-      "When you claim a request, it disappears from every other contractor's feed. You are the only one contacting this homeowner. No competing quotes, no race to the bottom.",
+      "The instant you claim a request, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner. No competing quotes, no race to the bottom on price.",
   },
   {
     icon: Clock,
-    title: "Pre-qualified with full documentation",
+    title: "Fully documented before you commit",
     description:
-      "Every request includes 2-10 photos, detailed specifications, a budget cap, and pre-selected consultation windows. You know exactly what the project is before claiming.",
+      "Every request comes with 2–10 project photos, a written description, a defined budget cap, and pre-selected consultation windows. You know the full scope before you decide whether to claim.",
   },
   {
     icon: DollarSign,
-    title: "Predictable monthly cost",
+    title: "Predictable, flat monthly membership",
     description:
-      "Flat monthly subscription from $200 to $400 depending on your service category. No per-lead fees, no surprise charges, no annual contracts. Cancel anytime.",
+      "Starting at $299/month for unlimited project claims. No per-lead fees. No surprise charges. No annual contracts. The median project on our platform is $4,200 — a single closed job covers 14 months of Standard membership.",
   },
   {
     icon: BarChart3,
-    title: "Performance dashboard",
+    title: "Dashboard built for performance",
     description:
-      "Track your response time, claim-to-consultation rate, quote conversion rate, and customer ratings. Premium and Elite tiers get advanced analytics and benchmarking.",
+      "Track your response time, claim-to-consultation rate, quote acceptance rate, and customer satisfaction scores. Premium and Elite members get advanced analytics, benchmarking, and pipeline reporting.",
   },
 ]
 
@@ -51,28 +53,29 @@ const verificationSteps = [
     icon: FileText,
     step: "01",
     title: "Apply online",
-    description: "Complete application with business info, service categories, and coverage area.",
+    description:
+      "Complete your application with business information, service categories you are approved to perform, and your target coverage area.",
   },
   {
     icon: BadgeCheck,
     step: "02",
-    title: "Upload documents",
+    title: "Submit credentials",
     description:
-      "Business license, trade licenses, liability insurance ($500K minimum), and workers comp if applicable.",
+      "Upload your business license, applicable trade licenses, general liability insurance ($500K per occurrence, $1M aggregate), and workers' compensation if you have employees.",
   },
   {
     icon: ShieldCheck,
     step: "03",
     title: "Verification review",
     description:
-      "We verify licenses against state databases, confirm insurance with providers, and run background screening.",
+      "We cross-reference your licenses against state and county databases, confirm your insurance directly with your provider, and complete a business background check. Process typically takes 3–5 business days.",
   },
   {
     icon: CheckCircle,
     step: "04",
-    title: "Start claiming leads",
+    title: "Activate your portal",
     description:
-      "Once approved, set up your portal, configure notifications, and start claiming requests immediately.",
+      "Once approved, configure your notification preferences, set your coverage boundaries, and begin claiming projects immediately. No onboarding delay.",
   },
 ]
 
@@ -85,29 +88,31 @@ export default function ContractorsPage() {
         <section className="pt-32 pb-20 lg:pt-40 lg:pb-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">For contractors</p>
+              <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Exclusive leads.
+                Projects that belong
                 <br />
-                <span className="text-primary">Zero competition.</span>
+                <span className="text-primary">to you alone.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Stop paying for shared leads that 5 other contractors are also calling. Nexus Operations
-                delivers pre-qualified, exclusive requests directly to your portal. First-come, first-served.
+                Nexus Operations provides licensed, insured contractors in Topeka and the surrounding region
+                with access to pre-qualified, exclusive project requests. No shared leads. No competing bids.
+                No cold calling into a crowded market. First-come, first-served — and every request you claim
+                is permanently, exclusively yours.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
                 >
                   Apply to Join
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/pricing"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
                 >
-                  View Pricing Tiers
+                  View Membership Plans
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -120,17 +125,20 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Why contractors choose Nexus
+                Designed around how contractors do business
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Better economics than shared lead platforms, higher conversion rates, and zero wasted estimate visits.
+                Your membership funds a pipeline that works exclusively for you. Every request you claim is
+                permanently, exclusively yours — no competing bids, no shared leads, no race to submit a quote
+                before someone else gets there first. The platform is built so that when you commit to a project,
+                you already know the scope, the budget, and when the homeowner is available.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
               {benefits.map((b) => (
                 <div
                   key={b.title}
-                  className="p-6 rounded-xl bg-card border border-border/40 hover:border-primary/30 transition-colors"
+                  className="p-6 rounded-2xl bg-card border border-border/40 hover:border-primary/30 transition-colors"
                 >
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 mb-4">
                     <b.icon className="h-5 w-5 text-primary" />
@@ -147,34 +155,42 @@ export default function ContractorsPage() {
         <section className="py-24 lg:py-32">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-8 text-center">
-                The math works in your favor
+              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3 text-center">
+                The economics are straightforward
               </h2>
-              <div className="grid sm:grid-cols-2 gap-6 mb-10">
-                <div className="p-6 rounded-xl bg-card border border-border/40">
-                  <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground mb-4">Traditional platforms</p>
-                  <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-                    <li>$15-$80 per shared lead</li>
-                    <li>3-7 contractors calling same homeowner</li>
-                    <li>Below 15% conversion rate</li>
-                    <li>30-40% no-show rate on estimates</li>
-                    <li>5-10 hours/week on unqualified leads</li>
-                  </ul>
-                </div>
-                <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
-                  <p className="text-xs font-medium uppercase tracking-widest text-primary mb-4">Nexus Operations</p>
-                  <ul className="flex flex-col gap-3 text-sm text-foreground">
-                    <li>$200-$400/month flat subscription</li>
-                    <li>You are the only contractor</li>
-                    <li>Pre-qualified with photos and budget</li>
-                    <li>Consultation pre-scheduled by homeowner</li>
-                    <li>Claim unlimited leads per month</li>
-                  </ul>
-                </div>
-              </div>
-              <p className="text-center text-sm text-muted-foreground">
-                One closed project per month covers your subscription cost many times over.
+              <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
+                A flat monthly membership with unlimited claims — and every project you claim is fully documented and exclusively yours.
               </p>
+              <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20 mb-6">
+                <ul className="flex flex-col gap-4 text-sm text-foreground">
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">$299/month flat</span> — claim unlimited projects with no per-project fees or hidden charges</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span>You are <span className="font-semibold">the only contractor</span> on every job you claim — permanently exclusive, removed from all other feeds instantly</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">Full project documentation</span> before you commit — photos, written scope, and a defined budget cap</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">Pre-scheduled consultations</span> — homeowners select their preferred windows at submission, no callbacks needed</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="p-5 rounded-xl border border-border/40 bg-card/50 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Median residential project value on our platform: <span className="font-semibold text-foreground">$4,200</span>.
+                  That&apos;s 14 months of Standard membership from a single closed job.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -184,16 +200,18 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Verification process
+                Verification keeps everyone protected
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                We verify every contractor to protect homeowners and maintain platform quality. The process
-                takes 3-5 business days.
+                Every contractor in the Nexus Operations network is manually reviewed and credentialed before
+                gaining access to project requests. This protects homeowners and ensures that when you win a
+                job, you are competing against verified professionals — not unlicensed or uninsured operators.
+                Verification typically takes 3–5 business days.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {verificationSteps.map((s) => (
-                <div key={s.step} className="p-6 rounded-xl bg-card border border-border/40">
+                <div key={s.step} className="p-6 rounded-2xl bg-card border border-border/40">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
                       <s.icon className="h-5 w-5 text-primary" />
@@ -208,33 +226,102 @@ export default function ContractorsPage() {
           </div>
         </section>
 
+        {/* Who This Is For */}
+        <section className="py-24 lg:py-32">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <p className="text-primary text-sm font-medium tracking-wide mb-3">Who qualifies</p>
+                <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+                  We accept established, insured trade professionals
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  Nexus Operations is not a general handyman directory. Our homeowners expect licensed,
+                  insured trade professionals, and our network is built and maintained to that standard.
+                  Applications from unlicensed or uninsured operators are declined without exception.
+                </p>
+                <ul className="flex flex-col gap-3">
+                  {[
+                    "Valid state or county business license",
+                    "Applicable trade licenses for your category",
+                    "General liability insurance — $500K per occurrence minimum",
+                    "Workers' compensation (if you employ field staff)",
+                    "Three verifiable business or customer references",
+                    "Currently operating within our service area",
+                  ].map((req) => (
+                    <li key={req} className="flex items-start gap-2.5 text-sm">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-foreground/80">{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="p-8 rounded-2xl bg-card border border-border/40">
+                <div className="flex items-center gap-3 mb-6">
+                  <Users className="h-5 w-5 text-primary" />
+                  <h3 className="text-base font-semibold">Service categories we cover</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { name: "Tree Removal", status: "Live" },
+                    { name: "Concrete Work", status: "Live" },
+                    { name: "Roofing", status: "Live" },
+                    { name: "HVAC", status: "Coming Q3" },
+                    { name: "Fencing", status: "Coming Q3" },
+                    { name: "Electrical", status: "Coming Q4" },
+                    { name: "Plumbing", status: "Coming Q4" },
+                    { name: "Excavation", status: "Coming 2026" },
+                  ].map((cat) => (
+                    <div key={cat.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/30">
+                      <span className="text-sm font-medium">{cat.name}</span>
+                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                        cat.status === "Live"
+                          ? "bg-primary/10 text-primary"
+                          : "bg-secondary text-muted-foreground"
+                      }`}>{cat.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
-        <section id="faq" className="py-24 lg:py-32">
+        <section id="faq" className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-3xl mx-auto px-6 lg:px-8">
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-12">
-              Frequently asked questions
+              Common questions from contractors
             </h2>
             <div className="flex flex-col gap-8">
               {[
                 {
-                  q: "What service categories are available?",
-                  a: "We are launching with tree removal, concrete work, and roofing in Topeka, KS. HVAC, fencing, and electrical are coming in months 7-12. We expand categories based on demand.",
+                  q: "Which service categories are available right now?",
+                  a: "Tree removal, concrete work, and roofing are live in Topeka, KS. HVAC and fencing are launching in Q3 of this year; electrical and plumbing follow in Q4. We expand categories based on verified contractor and homeowner demand.",
                 },
                 {
-                  q: "What are the requirements to join?",
-                  a: "Valid business license, applicable trade licenses, general liability insurance ($500K occurrence, $1M aggregate), workers comp if you have employees, and 3 business or customer references.",
+                  q: "What are the minimum requirements to apply?",
+                  a: "A valid business license, applicable trade licenses for your category, general liability insurance ($500K per occurrence, $1M aggregate), workers' compensation if you have employees, and three verifiable business or customer references.",
                 },
                 {
-                  q: "How does first-come, first-served work?",
-                  a: "When a homeowner submits a request, all qualified contractors in the matching category and area are notified simultaneously. The first contractor to click 'Claim' locks the request exclusively. Premium and Elite tiers get advance notification windows.",
+                  q: "How does the first-come, first-served system work?",
+                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the project exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                 },
                 {
-                  q: "Can I set a minimum budget threshold?",
-                  a: "Yes. In your portal settings, you can set a minimum budget cap so you only see requests above your threshold. This keeps your feed focused on jobs worth your time.",
+                  q: "Can I set a minimum project size?",
+                  a: "Yes. In your portal settings you can define a budget floor so only requests above your threshold appear in your feed. This keeps your attention on jobs that fit your business model.",
                 },
                 {
-                  q: "What if I need to cancel?",
-                  a: "No annual contracts. Cancel anytime. Your account stays active through the end of your current billing period.",
+                  q: "What happens if I claim a project and the homeowner doesn't respond?",
+                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows, not just excuses.",
+                },
+                {
+                  q: "Can I cover multiple service categories?",
+                  a: "Yes, provided you hold the appropriate licenses and insurance for each category. Your membership covers all approved categories under a single subscription.",
+                },
+                {
+                  q: "What does cancellation look like?",
+                  a: "No annual contracts. Cancel anytime from your dashboard. Your account stays active through the end of the current billing period. No cancellation fees, no hard conversations.",
                 },
               ].map((faq) => (
                 <div key={faq.q} className="border-b border-border/40 pb-6">
@@ -243,12 +330,19 @@ export default function ContractorsPage() {
                 </div>
               ))}
             </div>
-            <div className="mt-12">
+            <div className="mt-12 flex flex-col sm:flex-row gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
                 Apply to Join
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
+              >
+                View Membership Plans
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

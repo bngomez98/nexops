@@ -1,27 +1,29 @@
 import type React from "react"
 import type { Metadata } from "next"
+import Script from "next/script"
 import { Analytics } from "@vercel/analytics/next"
+import { CookieConsent } from "@/components/cookie-consent"
 import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
-    default: "Nexus Operations | Exclusive Contractor Leads for Home Services",
-    template: "%s | Nexus Operations",
+    default: "NexOps | Operations Partner for Property Management",
+    template: "%s | NexOps",
   },
   description:
-    "Get matched with a single licensed, insured contractor for your home project. Upload photos, set your budget, and schedule a consultation. No phone tag, no bidding wars.",
+    "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate your vendor relationships, document your workflows, and serve as your dedicated operations partner. Consulting available now — platform launching 2026.",
   keywords: [
-    "home services",
-    "contractor leads",
-    "tree removal",
-    "roofing contractor",
-    "concrete work",
-    "licensed contractors",
-    "home repair",
-    "exclusive leads",
-    "contractor matching",
-    "Topeka contractors",
+    "property management consulting",
+    "vendor coordination property management",
+    "operations partner property managers",
+    "property management software",
+    "workflow documentation property management",
+    "vendor relationship management",
+    "property portfolio operations",
+    "property management SaaS",
+    "residential property management consulting",
+    "commercial property management operations",
   ],
   authors: [{ name: "Nexus Operations" }],
   creator: "Nexus Operations",
@@ -30,15 +32,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
-    title: "Nexus Operations | Exclusive Contractor Leads for Home Services",
+    title: "NexOps | Operations Partner for Property Management",
     description:
-      "Upload photos, set your budget, get matched with one verified contractor. No phone tag. No shared leads.",
-    siteName: "Nexus Operations",
+      "NexOps coordinates your vendor relationships, documents your workflows, and serves as a dedicated operations partner for property management companies. Consulting available now — platform launching 2026.",
+    siteName: "NexOps",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus Operations | Exclusive Contractor Leads for Home Services",
-    description: "One request. One verified contractor. No runaround.",
+    title: "NexOps | Operations Partner for Property Management",
+    description: "A consulting agency and SaaS platform for property management companies. One dedicated partner. Your vendors coordinated. Your workflows documented.",
   },
   robots: {
     index: true,
@@ -51,7 +53,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-    generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -68,11 +69,11 @@ export default function RootLayout({
             __html: JSON.stringify([
               {
                 "@context": "https://schema.org",
-                "@type": "LocalBusiness",
+                "@type": "ProfessionalService",
                 "@id": "https://nexusoperations.org/#organization",
-                name: "Nexus Operations",
+                name: "NexOps",
                 description:
-                  "Two-sided marketplace connecting homeowners with licensed, insured contractors through exclusive lead distribution.",
+                  "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate vendor relationships, document workflows, and serve as a dedicated operations partner.",
                 url: "https://nexusoperations.org",
                 telephone: "+1-913-951-1711",
                 email: "admin@nexusoperations.org",
@@ -87,16 +88,13 @@ export default function RootLayout({
                   { "@type": "State", name: "Kansas" },
                 ],
                 serviceType: [
-                  "Tree Removal",
-                  "Roofing",
-                  "Concrete Work",
-                  "HVAC",
-                  "Fencing",
-                  "Electrical",
-                  "Plumbing",
-                  "Excavation",
+                  "Property Management Consulting",
+                  "Vendor Relationship Management",
+                  "Workflow Documentation",
+                  "Operations Coordination",
+                  "Property Management SaaS",
                 ],
-                priceRange: "Free for homeowners",
+                priceRange: "$$",
                 openingHoursSpecification: {
                   "@type": "OpeningHoursSpecification",
                   dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -121,7 +119,27 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         {children}
+        <CookieConsent />
         <Analytics />
+        {/* Google Analytics + Google Ads */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-17T4WZRZG4"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-713FG73CGF');
+            gtag('config', 'AW-17873510977');
+            gtag('config', 'G-17T4WZRZG4');
+          `}
+        </Script>
       </body>
     </html>
   )

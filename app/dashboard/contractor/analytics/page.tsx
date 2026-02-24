@@ -25,18 +25,18 @@ interface Lead {
   id: string
   service: string
   status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "basic" | "premium" | "elite"
+  tier: "standard" | "premium" | "elite"
   value: number
   createdAt: string
 }
 
 const weeklyData = [
-  { week: "Nov W1", leads: 2, revenue: 2800, closeRate: 50 },
-  { week: "Nov W2", leads: 3, revenue: 4200, closeRate: 67 },
-  { week: "Nov W3", leads: 1, revenue: 950, closeRate: 100 },
-  { week: "Nov W4", leads: 4, revenue: 7100, closeRate: 75 },
-  { week: "Dec W1", leads: 3, revenue: 5600, closeRate: 67 },
-  { week: "Dec W2", leads: 4, revenue: 6900, closeRate: 50 },
+  { week: "Nov W1", projects: 2, revenue: 2800, closeRate: 50 },
+  { week: "Nov W2", projects: 3, revenue: 4200, closeRate: 67 },
+  { week: "Nov W3", projects: 1, revenue: 950, closeRate: 100 },
+  { week: "Nov W4", projects: 4, revenue: 7100, closeRate: 75 },
+  { week: "Dec W1", projects: 3, revenue: 5600, closeRate: 67 },
+  { week: "Dec W2", projects: 4, revenue: 6900, closeRate: 50 },
 ]
 
 const COLORS = {
@@ -106,7 +106,7 @@ export default function ContractorAnalyticsPage() {
       up: true,
     },
     {
-      label: "Total Leads",
+      label: "Total Projects",
       value: leads.length.toString(),
       sub: `${leads.filter((l) => l.status === "new").length} new`,
       icon: Users,
@@ -212,10 +212,10 @@ export default function ContractorAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Lead status pie */}
+        {/* Project status pie */}
         <Card>
           <CardHeader>
-            <CardTitle>Lead Status</CardTitle>
+            <CardTitle>Project Status</CardTitle>
             <CardDescription>Breakdown by current status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -256,11 +256,11 @@ export default function ContractorAnalyticsPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Leads per week bar */}
+        {/* Projects per week bar */}
         <Card>
           <CardHeader>
-            <CardTitle>Weekly Lead Volume</CardTitle>
-            <CardDescription>Leads received each week</CardDescription>
+            <CardTitle>Weekly Project Volume</CardTitle>
+            <CardDescription>Projects received each week</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
@@ -269,7 +269,7 @@ export default function ContractorAnalyticsPage() {
                 <XAxis dataKey="week" tick={chartStyle.tick} axisLine={false} tickLine={false} />
                 <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={25} />
                 <Tooltip contentStyle={chartStyle.contentStyle} labelStyle={chartStyle.labelStyle} />
-                <Bar dataKey="leads" name="Leads" fill="oklch(0.75 0.18 155)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="projects" name="Projects" fill="oklch(0.75 0.18 155)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -278,7 +278,7 @@ export default function ContractorAnalyticsPage() {
         {/* Service breakdown */}
         <Card>
           <CardHeader>
-            <CardTitle>Leads by Service</CardTitle>
+            <CardTitle>Projects by Service</CardTitle>
             <CardDescription>Won vs. lost per service category</CardDescription>
           </CardHeader>
           <CardContent>

@@ -1,59 +1,130 @@
-import { Check, X } from "lucide-react"
+"use client"
 
-const rows = [
-  { feature: "Lead exclusivity", us: "1 contractor per request", them: "3-7 contractors per lead" },
-  { feature: "Homeowner cost", us: "Free, always", them: "$0 but data sold" },
-  { feature: "Budget transparency", us: "Set upfront by homeowner", them: "Discovered after estimate visit" },
-  { feature: "Photo documentation", us: "Required before match", them: "Optional or not available" },
-  { feature: "Consultation scheduling", us: "Pre-scheduled, confirmed", them: "Phone tag and callbacks" },
-  { feature: "Contractor verification", us: "License, insurance, background", them: "Varies by platform" },
-  { feature: "Phone calls to homeowner", us: "1 contractor contacts you", them: "5-15 calls within hours" },
+import { Check } from "lucide-react"
+import { useEffect, useRef } from "react"
+
+const features = [
+  {
+    feature: "One contractor per project",
+    detail:
+      "Each project is assigned to a single verified contractor. Once claimed, it is removed from all other feeds permanently.",
+  },
+  {
+    feature: "Free for property owners",
+    detail:
+      "There is no cost to submit a project or receive a match. The platform is funded entirely through contractor memberships.",
+  },
+  {
+    feature: "Budget set before assignment",
+    detail:
+      "Property owners define their maximum budget during submission — before any contractor is involved.",
+  },
+  {
+    feature: "Full documentation collected upfront",
+    detail:
+      "Photographs, a written scope, and the confirmed budget are gathered before any contractor sees the request.",
+  },
+  {
+    feature: "Scheduling handled at submission",
+    detail:
+      "Property owners select preferred consultation windows when they submit — no back-and-forth required.",
+  },
+  {
+    feature: "Verified credentials on every contractor",
+    detail:
+      "Every contractor in the network has passed license verification, insurance confirmation, and a background check.",
+  },
+  {
+    feature: "One call. That's it.",
+    detail:
+      "Only the assigned contractor will reach out — one professional, for the project that belongs to them.",
+  },
 ]
 
 export function Comparison() {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.querySelectorAll(".reveal").forEach((node, i) => {
+            setTimeout(() => node.classList.add("in-view"), i * 80)
+          })
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <section className="py-24 lg:py-32">
+    <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
+      <div
+        className="absolute right-0 bottom-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.03]"
+        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
+      />
+
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-16">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus</p>
+        <div className="max-w-2xl mb-12 reveal">
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works for you</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built to fix what's broken in home services
+            What every project includes.
+            <span className="gradient-text"> From submission to consultation.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms sell your info to multiple contractors. You get bombarded with calls.
-            Contractors waste time on shared leads with low conversion. We eliminate both problems.
+            Most solutions hand you software and expect your team to handle the rest. NexOps provides
+            the coordination layer your portfolio actually needs — before, during, and after the platform launches.
+            Other platforms sell your number to 5–15 contractors.
+            <span className="gradient-text"> We send it to one.</span>
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            That contractor has seen your photos, your scope, and your budget before contacting you. They are already committed to the consultation window you selected.
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border/40">
-                <th className="text-left py-4 pr-6 text-muted-foreground font-medium w-1/3">Feature</th>
-                <th className="text-left py-4 px-6 font-semibold text-primary">Nexus Operations</th>
-                <th className="text-left py-4 pl-6 font-medium text-muted-foreground">Traditional Platforms</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.feature} className="border-b border-border/20">
-                  <td className="py-4 pr-6 text-foreground/80">{row.feature}</td>
-                  <td className="py-4 px-6">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-primary shrink-0" />
-                      <span className="text-foreground">{row.us}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 pl-6">
-                    <div className="flex items-center gap-2">
-                      <X className="h-4 w-4 text-muted-foreground/40 shrink-0" />
-                      <span className="text-muted-foreground">{row.them}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid sm:grid-cols-2 gap-4 reveal" style={{ transitionDelay: "100ms" }}>
+          {features.map((item) => (
+            <div
+              key={item.feature}
+              className="flex items-start gap-4 p-5 rounded-xl border border-border/40 bg-card hover:border-primary/30 transition-colors"
+            >
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
+                <Check className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground mb-1">{item.feature}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Callout */}
+        <div
+          className="mt-6 p-5 rounded-xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 reveal"
+          style={{ transitionDelay: "200ms" }}
+        >
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 shrink-0">
+            <Check className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground mb-0.5">The NexOps commitment</p>
+            <p className="text-sm text-muted-foreground">
+              One dedicated partner. Your vendor relationships, coordinated. Your workflows, documented.
+              Your operations, running. We&apos;ll tell you immediately if we&apos;re not the right fit for your portfolio.
+            </p>
+            <p className="text-sm font-semibold text-foreground mb-0.5">What this means in practice</p>
+            <p className="text-sm text-muted-foreground">
+              Each project request is assigned to one verified contractor. No unsolicited calls are
+              made. If coverage is not available in a specific area, the platform notifies the
+              property owner immediately.
+            </p>
+          </div>
         </div>
       </div>
     </section>

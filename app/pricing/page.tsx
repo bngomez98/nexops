@@ -2,72 +2,96 @@ import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
-import { ArrowRight, Check } from "lucide-react"
+import { ArrowRight, Check, HelpCircle } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Contractor Pricing | Subscription Tiers",
+  title: "Membership Plans | Contractor Access Tiers",
   description:
-    "Monthly subscription pricing for contractors. Basic, Premium, and Elite tiers. No per-lead fees, no annual contracts. Exclusive leads for licensed, insured contractors.",
+    "Simple, transparent monthly membership for contractors. Standard, Premium, and Elite plans. Fixed pricing — no per-lead fees, no annual contracts, no hidden charges. Exclusive projects for licensed, insured contractors.",
 }
 
 const tiers = [
   {
-    name: "Basic",
-    price: "$200-$300",
+    name: "Standard",
+    price: "$299",
     period: "/month",
-    description: "Standard FCFS access to all leads in your category and coverage area.",
+    description:
+      "Full access to every pre-qualified project in your service category and coverage area. First-come, first-served.",
     features: [
-      "All requests in your service category",
-      "Real-time notifications when posted",
-      "Unlimited claims per month",
-      "Standard FCFS visibility",
-      "Basic account dashboard",
-      "Email and SMS notifications",
+      "All projects in your approved categories",
+      "Real-time push, email, and SMS notifications",
+      "Unlimited claim attempts per month",
+      "Full project documentation before you claim",
+      "Performance dashboard — close rate, response time",
+      "Cancel anytime, no commitment",
     ],
-    cta: "Get Started",
+    cta: "Apply for Standard",
     highlighted: false,
+    badge: null,
   },
   {
     name: "Premium",
-    price: "$350-$450",
+    price: "$499",
     period: "/month",
-    description: "60-second advance notification and performance analytics.",
+    description:
+      "A 90-second advance notification window before the general pool opens, plus deep analytics to sharpen your close rate.",
     features: [
-      "Everything in Basic",
-      "60-second advance notification window",
-      "Priority visibility on high-value requests",
-      "Performance analytics dashboard",
-      "Conversion metrics and benchmarking",
-      "Custom notification preferences",
+      "Everything in Standard",
+      "90-second head-start on every new project",
+      "Priority placement on high-value requests",
+      "Advanced analytics — benchmarks, trends, pipeline",
+      "Custom budget-floor filter (see only jobs above your minimum)",
+      "Coverage area fine-tuning by ZIP code",
     ],
-    cta: "Get Started",
+    cta: "Apply for Premium",
     highlighted: true,
+    badge: "Most Popular",
   },
   {
     name: "Elite",
-    price: "$550-$700",
+    price: "$749",
     period: "/month",
-    description: "5-minute exclusive window on top 20% requests, plus dedicated support.",
+    description:
+      "A 10-minute exclusive claim window on every premium-tier request ($5K+), plus a dedicated account manager.",
     features: [
       "Everything in Premium",
-      "5-minute exclusive window on top 20% requests",
-      "Dedicated account manager",
-      "Custom service area configuration",
-      "Custom budget threshold settings",
-      "Priority support line",
+      "10-minute exclusive window on $5K+ projects",
+      "Dedicated account manager (direct line)",
+      "Custom coverage configuration across counties",
+      "Early access to new service categories",
+      "Priority support with same-business-day response",
     ],
-    cta: "Contact Us",
+    cta: "Apply for Elite",
     highlighted: false,
+    badge: "Best ROI",
   },
 ]
 
-const categories = [
-  { name: "Tree Removal", basic: "$300", premium: "$400", elite: "$600" },
-  { name: "Concrete Work", basic: "$300", premium: "$400", elite: "$600" },
-  { name: "Roofing", basic: "$350", premium: "$450", elite: "$650" },
-  { name: "HVAC", basic: "$350", premium: "$450", elite: "$650" },
-  { name: "Fencing", basic: "$250", premium: "$350", elite: "$550" },
-  { name: "Electrical", basic: "$300", premium: "$400", elite: "$600" },
+const faqs = [
+  {
+    q: "Why fixed prices instead of price ranges?",
+    a: "Ranges introduce ambiguity — you deserve to know exactly what you will pay before you sign up. Our pricing is standardized across all service categories. No negotiation, no surprises.",
+  },
+  {
+    q: "Is pricing the same regardless of my service category?",
+    a: "Yes. Whether you do tree removal, roofing, concrete work, or electrical, the membership tier price is identical. You pay for platform access, not for a particular trade category.",
+  },
+  {
+    q: "How does the ROI math work?",
+    a: "The median residential project on our platform is $4,200. A single closed job at that value covers your Standard membership for 14 months. Most active members close 2–5 projects per month.",
+  },
+  {
+    q: "Can I upgrade or downgrade my tier?",
+    a: "Yes, at any time. Changes take effect at the start of your next billing cycle. Upgrades can also take effect immediately upon request.",
+  },
+  {
+    q: "What does 'first-come, first-served' mean in practice?",
+    a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the project exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
+  },
+  {
+    q: "Are there any per-lead fees on top of my subscription?",
+    a: "No. Your monthly membership is the only charge. You can claim as many projects as you can handle with no additional cost per claim.",
+  },
 ]
 
 export default function PricingPage() {
@@ -79,13 +103,13 @@ export default function PricingPage() {
         <section className="pt-32 pb-16 lg:pt-40 lg:pb-20">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">Pricing</p>
+              <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Simple monthly subscription
+                One price. Unlimited projects.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                No per-lead fees. No annual contracts. Choose a tier, pick your category,
-                and start claiming exclusive leads. Pricing varies by service category value.
+                No per-lead fees. No price ranges. No annual contracts. Choose the access tier that fits your
+                business — and start claiming exclusive, pre-qualified projects the day you are approved.
               </p>
             </div>
           </div>
@@ -98,23 +122,27 @@ export default function PricingPage() {
               {tiers.map((tier) => (
                 <div
                   key={tier.name}
-                  className={`p-8 rounded-xl border flex flex-col ${
+                  className={`relative p-8 rounded-2xl border flex flex-col ${
                     tier.highlighted
-                      ? "bg-primary/5 border-primary/30"
+                      ? "bg-primary/5 border-primary/30 shadow-xl shadow-primary/5"
                       : "bg-card border-border/40"
                   }`}
                 >
-                  {tier.highlighted && (
-                    <span className="text-[10px] font-medium uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded self-start mb-4">
-                      Most Popular
+                  {tier.badge && (
+                    <span className="absolute -top-3 left-8 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground bg-primary px-3 py-1 rounded-full">
+                      {tier.badge}
                     </span>
                   )}
-                  <h3 className="text-lg font-semibold mb-1">{tier.name}</h3>
-                  <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-3xl font-semibold text-primary">{tier.price}</span>
-                    <span className="text-sm text-muted-foreground">{tier.period}</span>
+
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold mb-2">{tier.name}</h3>
+                    <div className="flex items-baseline gap-1 mb-3">
+                      <span className="text-4xl font-bold text-primary tracking-tight">{tier.price}</span>
+                      <span className="text-sm text-muted-foreground">{tier.period}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{tier.description}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-6">{tier.description}</p>
+
                   <ul className="flex flex-col gap-3 mb-8 flex-grow">
                     {tier.features.map((f) => (
                       <li key={f} className="flex items-start gap-2.5 text-sm">
@@ -123,12 +151,13 @@ export default function PricingPage() {
                       </li>
                     ))}
                   </ul>
+
                   <Link
                     href="/contact"
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg transition-opacity ${
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
                       tier.highlighted
-                        ? "bg-primary text-primary-foreground hover:opacity-90"
-                        : "bg-secondary text-secondary-foreground hover:opacity-80"
+                        ? "bg-primary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
+                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                     }`}
                   >
                     {tier.cta}
@@ -137,56 +166,86 @@ export default function PricingPage() {
                 </div>
               ))}
             </div>
+
+            {/* Guarantee strip */}
+            <div className="mt-8 p-5 rounded-xl border border-border/40 bg-card/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <Check className="h-5 w-5 text-primary shrink-0" />
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">No lock-in.</span> Cancel anytime from your
+                dashboard. Your account remains active through the end of the current billing period.
+                No cancellation fees.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Category Pricing Table */}
+        {/* ROI callout */}
         <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <h2 className="text-2xl font-semibold tracking-tight mb-8">Pricing by service category</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border/40">
-                    <th className="text-left py-3 pr-6 font-medium text-muted-foreground">Category</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Basic</th>
-                    <th className="text-left py-3 px-4 font-medium text-primary">Premium</th>
-                    <th className="text-left py-3 pl-4 font-medium text-muted-foreground">Elite</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {categories.map((cat) => (
-                    <tr key={cat.name} className="border-b border-border/20">
-                      <td className="py-3 pr-6 text-foreground">{cat.name}</td>
-                      <td className="py-3 px-4 text-muted-foreground">{cat.basic}/mo</td>
-                      <td className="py-3 px-4 text-foreground font-medium">{cat.premium}/mo</td>
-                      <td className="py-3 pl-4 text-muted-foreground">{cat.elite}/mo</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="max-w-2xl mx-auto text-center mb-10">
+              <h2 className="text-2xl font-semibold tracking-tight mb-3">How the membership pays for itself</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Active members close an average of 2–5 projects per month. The math is simple.
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground mt-6">
-              Commercial service access adds a 50% premium on top of residential pricing.
-              All prices in USD. No setup fees.
-            </p>
+            <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20">
+              <ul className="flex flex-col gap-4 text-sm text-foreground">
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>One flat monthly fee — claim as many projects as you can handle, with no additional cost per claim</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Every project you claim is exclusively yours — permanently removed from all other contractor feeds the moment you claim it</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Full documentation before you commit: photos, written scope, and a defined budget cap</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Consultations pre-scheduled by the homeowner — no callbacks, no voicemail chains</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary shrink-0 mt-0.5">✓</span>
+                  <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-24 lg:py-32">
+          <div className="max-w-3xl mx-auto px-6 lg:px-8">
+            <div className="flex items-center gap-3 mb-10">
+              <HelpCircle className="h-5 w-5 text-primary" />
+              <h2 className="text-2xl font-semibold tracking-tight">Pricing questions</h2>
+            </div>
+            <div className="flex flex-col gap-6">
+              {faqs.map((faq) => (
+                <div key={faq.q} className="border-b border-border/40 pb-6">
+                  <h3 className="text-sm font-semibold mb-2 text-foreground">{faq.q}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Free for homeowners */}
-        <section className="py-24 lg:py-32">
+        <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight mb-4">Free for homeowners</h2>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              Property owners never pay to submit a request. Our service is funded entirely by
-              contractor subscriptions. Submit your project, get matched, and schedule a
-              consultation at no cost.
+            <h2 className="text-3xl font-semibold tracking-tight mb-4">Always free for homeowners</h2>
+            <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
+              Property owners never pay to submit a request or receive a match. Our platform is funded
+              entirely by contractor memberships — so homeowners get a premium matching experience at zero cost.
             </p>
             <Link
-              href="/#submit"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              href="/login?tab=signup"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
             >
-              Submit a Request
+              Submit a Request — It&apos;s Free
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
