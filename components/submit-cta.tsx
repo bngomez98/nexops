@@ -73,9 +73,9 @@ export function SubmitCTA() {
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Submit your project.
+                  Submit your project details once
                   <br />
-                  <span className="gradient-text">One contractor. Your terms.</span>
+                  <span className="gradient-text">and receive an exclusive contractor assignment.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   Property owners submit their project details once, including documentation and a

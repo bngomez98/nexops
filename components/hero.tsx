@@ -59,11 +59,11 @@ export function Hero() {
               className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6 animate-fade-in-up"
               style={{ animationDelay: "0.15s", opacity: 0 }}
             >
-              One contractor.
+              One verified contractor
               <br />
-              <span className="gradient-text">Your project.</span>
+              <span className="gradient-text">assigned exclusively</span>
               <br />
-              <span className="text-foreground/70">No competing bids.</span>
+              <span className="text-foreground/70">to your project.</span>
             </h1>
 
             <p

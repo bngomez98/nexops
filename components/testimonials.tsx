@@ -6,7 +6,7 @@ import { Quote, TrendingUp, Star } from "lucide-react"
 const testimonials = [
   {
     quote:
-      "I was skeptical at first — I'd been burned by services that sent the same lead to seven other contractors. Within two weeks of joining Nexus, I landed a full roof replacement I never would have seen otherwise. The homeowner already knew my name before I showed up. That's a different world.",
+      "I was skeptical at first — I'd been burned by services that sent the same lead to seven other contractors. Within two weeks of joining Nexus, I landed a full roof replacement I never would have seen otherwise. The homeowner already had my information before I arrived.",
     name: "Marcus T.",
     company: "MT Roofing Solutions",
     service: "Roofing",
@@ -18,7 +18,7 @@ const testimonials = [
   },
   {
     quote:
-      "What sold me was the documentation. Every project comes with photos, a written scope, and a budget cap the homeowner already agreed to. I'm not driving out to give a quote on a job that was never real — I'm showing up to a pre-qualified consultation. My close rate is through the roof.",
+      "What convinced me was the documentation. Every project comes with photos, a written scope, and a budget cap the homeowner already agreed to. I'm not driving out to give a quote on a job that was never real — I'm showing up to a pre-qualified consultation with all the information I need.",
     name: "Denise K.",
     company: "Cornerstone Concrete & Flatwork",
     service: "Concrete Work",
@@ -30,7 +30,7 @@ const testimonials = [
   },
   {
     quote:
-      "I spent years fighting for shared leads on the big platforms. Now I pay one flat membership and every project I claim is mine — period. No one else calls that homeowner. No one undercuts me. The jobs I'm getting are bigger and the customers are better prepared. It's not even close.",
+      "I spent years competing for shared leads on the big platforms. Now I pay one flat membership and every project I claim is assigned exclusively to me. No one else contacts that homeowner. The projects I'm getting are larger and the customers are better prepared going into the consultation.",
     name: "Ray A.",
     company: "Apex Tree & Land Services",
     service: "Tree Removal",
@@ -87,11 +87,11 @@ export function Testimonials() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">From our contractors</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            What contractors get
-            <span className="gradient-text"> that shared-lead platforms don&apos;t.</span>
+            What contractors receive
+            <span className="gradient-text"> through Nexus Operations.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Every project is exclusively theirs the moment they claim it. Full documentation upfront. No per-lead fees — ever.
+            Projects are exclusively assigned upon claiming. Full documentation is included. There are no per-lead fees.
           </p>
         </div>
 
@@ -162,7 +162,7 @@ export function Testimonials() {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">
-              No shared leads, at any tier.
+              Leads are not shared across contractors, regardless of membership tier.
             </p>
             <p className="text-sm text-muted-foreground">
               The moment a contractor claims a project, it is removed from every other contractor&apos;s feed and cannot be reclaimed. The homeowner hears from exactly one professional.

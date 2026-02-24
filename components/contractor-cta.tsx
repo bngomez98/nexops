@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react"
 const benefits = [
   {
     icon: Lock,
-    title: "True exclusivity on every project",
+    title: "Exclusive assignment on every project",
     description: "The instant you claim a project, it is permanently removed from every other contractor's feed. No competing bids. No one else contacts that homeowner.",
     color: "text-primary",
     bg: "bg-primary/10",
@@ -15,7 +15,7 @@ const benefits = [
   },
   {
     icon: FileText,
-    title: "Full documentation before you commit",
+    title: "Complete documentation provided before claiming",
     description: "Every project includes 2–10 photos, a written scope, a defined budget cap, and pre-selected consultation windows. You know the full scope before deciding to claim.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
@@ -23,7 +23,7 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "Flat membership — no per-project fees",
+    title: "Flat monthly membership with no per-project fees",
     description: "No fees per project, no penalties for cancellation, and no limits on the number of projects that can be claimed. Subscribe at the tier that fits your business.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
@@ -31,7 +31,7 @@ const benefits = [
   },
   {
     icon: Star,
-    title: "Ratings from real project outcomes",
+    title: "Contractor ratings based on project outcomes",
     description: "Contractor ratings are derived from the outcomes of projects completed through the platform, not from reviews that could be manipulated.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
@@ -90,9 +90,9 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Exclusive projects.
+              Exclusive project assignments
               <br />
-              <span className="gradient-text">Flat monthly membership.</span>
+              <span className="gradient-text">with flat monthly membership pricing.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Contractors receive exclusive assignments for projects. There are no competing bids.

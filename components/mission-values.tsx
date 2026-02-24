@@ -6,7 +6,7 @@ import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 const values = [
   {
     icon: Users,
-    title: "Property owners set the terms",
+    title: "Property owners define the project terms",
     body: "Property owners establish the details of their project, including the scope of work, the maximum budget, and preferred times for consultation, before any contractor is notified. These terms are fixed prior to the assignment of the project.",
     color: "text-primary",
     bg: "bg-primary/10",
@@ -14,7 +14,7 @@ const values = [
   },
   {
     icon: ShieldCheck,
-    title: "Contractors own their projects",
+    title: "Contractors receive exclusive project assignments",
     body: "Contractors gain full ownership of the projects they claim, without any competition from other contractors for the same job. The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
@@ -22,7 +22,7 @@ const values = [
   },
   {
     icon: FileText,
-    title: "Both sides come prepared",
+    title: "All project details are shared before consultation",
     body: "Both property owners and contractors receive all relevant documentation — photographs, a written description of the scope, and the budget — before the consultation begins. This preparation allows for efficient discussions from the start.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
@@ -30,7 +30,7 @@ const values = [
   },
   {
     icon: Award,
-    title: "Verified credentials, tracked outcomes",
+    title: "Credential verification and performance tracking",
     body: "Every contractor in the network undergoes verification of their license, confirmation of their insurance, and a background check before they can access project requests. Ratings for contractors are based on the outcomes of actual projects completed through the platform.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
@@ -76,8 +76,8 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">The purpose of Nexus Operations</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            A two-sided marketplace built on
-            <span className="gradient-text"> exclusivity and trust.</span>
+            A two-sided marketplace connecting
+            <span className="gradient-text"> property owners with verified contractors.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Nexus Operations exists to connect property owners with licensed contractors in the

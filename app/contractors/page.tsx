@@ -24,9 +24,9 @@ export const metadata: Metadata = {
 const benefits = [
   {
     icon: Lock,
-    title: "True exclusivity — not just priority",
+    title: "Exclusive project assignment",
     description:
-      "The instant you claim a request, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner. No competing quotes, no race to the bottom on price.",
+      "The instant you claim a request, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner.",
   },
   {
     icon: Clock,
@@ -90,15 +90,14 @@ export default function ContractorsPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Projects that belong
+                Exclusive project assignments
                 <br />
-                <span className="text-primary">to you alone.</span>
+                <span className="text-primary">for licensed contractors.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
                 Nexus Operations provides licensed, insured contractors in Topeka and the surrounding region
-                with access to pre-qualified, exclusive project requests. No shared leads. No competing bids.
-                No cold calling into a crowded market. First-come, first-served — and every request you claim
-                is permanently, exclusively yours.
+                with access to pre-qualified, exclusive project requests. Each request you claim is assigned
+                to you permanently and exclusively, with no competing bids from other contractors.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -125,13 +124,12 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Designed around how contractors do business
+                Built for established trade professionals
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Your membership funds a pipeline that works exclusively for you. Every request you claim is
-                permanently, exclusively yours — no competing bids, no shared leads, no race to submit a quote
-                before someone else gets there first. The platform is built so that when you commit to a project,
-                you already know the scope, the budget, and when the homeowner is available.
+                Each project claim is exclusive and permanent — no competing bids, no shared leads. When you
+                commit to a project, you already have the full scope, the budget, and the homeowner&apos;s
+                available consultation windows.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -156,7 +154,7 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3 text-center">
-                The economics are straightforward
+                Membership pricing overview
               </h2>
               <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
                 A flat monthly membership with unlimited claims — and every project you claim is fully documented and exclusively yours.
@@ -200,7 +198,7 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Verification keeps everyone protected
+                Contractor verification process
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Every contractor in the Nexus Operations network is manually reviewed and credentialed before
@@ -313,7 +311,7 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "What happens if I claim a project and the homeowner doesn't respond?",
-                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows, not just excuses.",
+                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows.",
                 },
                 {
                   q: "Can I cover multiple service categories?",
@@ -321,7 +319,7 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "What does cancellation look like?",
-                  a: "No annual contracts. Cancel anytime from your dashboard. Your account stays active through the end of the current billing period. No cancellation fees, no hard conversations.",
+                  a: "No annual contracts. Cancel anytime from your dashboard. Your account stays active through the end of the current billing period. No cancellation fees.",
                 },
               ].map((faq) => (
                 <div key={faq.q} className="border-b border-border/40 pb-6">
