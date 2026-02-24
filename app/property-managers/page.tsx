@@ -6,13 +6,13 @@ import {
   ArrowRight,
   ShieldCheck,
   Clock,
-  DollarSign,
   CheckCircle,
   BarChart3,
   Building2,
   Users,
   Eye,
   Layers,
+  Zap
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -84,21 +84,24 @@ export default function PropertyManagersPage() {
         <section className="pt-32 pb-20 lg:pt-40 lg:pb-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">For property managers</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+                <Zap className="h-4 w-4" />
+                Now accepting Topeka PMs for our 30-Day Free Pilot
+              </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Submit once.
+                Stop chasing quotes.
                 <br />
-                <span className="text-primary">One verified contractor. 24 hours.</span>
+                <span className="text-primary">Dispatch verified contractors in 24 hours.</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                One submission per job — with photos, scope, and a budget cap. A single pre-vetted contractor claims it and a consultation is scheduled within 24 hours. No vendor sourcing, no quote chasing, no callbacks.
+                One submission per job — with photos, scope, and a budget cap. A single pre-vetted contractor claims it and a consultation is scheduled within 24 hours. No vendor sourcing, no phone tag, no bidding wars.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
                 >
-                  Request Corporate Onboarding
+                  Apply for the 30-Day Pilot
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
@@ -108,6 +111,31 @@ export default function PropertyManagersPage() {
                   See How It Works
                   <ArrowRight className="h-4 w-4" />
                 </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 30-Day Pilot Banner */}
+        <section className="py-12 bg-primary/5 border-y border-primary/10">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">The 30-Day Zero-Risk Pilot</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+              We know property managers are burned out on broken promises from contractor platforms. 
+              We'll prove our dispatch speed and completion rates before you ever pay us a dime.
+            </p>
+            <div className="grid sm:grid-cols-3 gap-6 text-left max-w-4xl mx-auto">
+              <div className="bg-card p-5 rounded-xl border border-border/40">
+                <h3 className="font-semibold text-primary mb-2">0% Platform Markup</h3>
+                <p className="text-sm text-muted-foreground">During the 30-day pilot, you pay only the direct contractor cost. We take zero margin.</p>
+              </div>
+              <div className="bg-card p-5 rounded-xl border border-border/40">
+                <h3 className="font-semibold text-primary mb-2">Priority Dispatch</h3>
+                <p className="text-sm text-muted-foreground">Your tickets get priority routing to our top-rated, pre-vetted local contractors.</p>
+              </div>
+              <div className="bg-card p-5 rounded-xl border border-border/40">
+                <h3 className="font-semibold text-primary mb-2">Performance Data</h3>
+                <p className="text-sm text-muted-foreground">At the end of the pilot, we'll present hard data on response times and hours saved.</p>
               </div>
             </div>
           </div>
@@ -362,24 +390,18 @@ export default function PropertyManagersPage() {
         <section id="corporate" className="py-24 lg:py-32">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Corporate accounts for portfolios managing 10 or more properties
+              Stop coordinating contractors. Let us prove it.
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Consolidated billing, a single dashboard across all properties, volume pricing, and a dedicated account contact. Contact us to discuss your portfolio size and active service categories.
+              Our 30-day free pilot is currently open to Property Management firms in the Topeka area. 
+              Zero markup. Zero platform fees. Just fast, verified dispatch.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Contact Us for Onboarding
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/services"
-                className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
-              >
-                View Service Categories
+                Apply for the 30-Day Pilot
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
