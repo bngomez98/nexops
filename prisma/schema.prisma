@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Core user model for both homeowners and contractors.
+// serviceCategories is stored as a JSON string (SQLite has no array type).
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  passwordHash      String
+  name              String
+  role              String   // "homeowner" | "contractor"
+  phone             String?
+  businessName      String?
+  licenseNumber     String?
+  serviceCategories String?  // JSON-encoded string[]
+  subscription      String?  // "standard" | "premium" | "elite"
+  address           String?
+  createdAt         DateTime @default(now())
+}
+
+// HTTP-only server-side sessions.
+// token is the UUID stored in the cookie; userId links back to the User.
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// A lead is a project that a contractor has claimed from the public feed.
+// homeownerId may reference either a real User or an external/demo homeowner ID.
+model Lead {
+  id                 String   @id @default(cuid())
+  contractorId       String
+  homeownerId        String
+  homeownerName      String
+  service            String
+  description        String
+  budget             String
+  address            String
+  photos             Int      @default(0)
+  status             String   @default("new") // "new" | "contacted" | "scheduled" | "won" | "lost"
+  tier               String   // "standard" | "premium" | "elite"
+  value              Float
+  consultationWindow String?
+  notes              String?
+  createdAt          DateTime @default(now())
+}
+
+// A request submitted by a homeowner before a contractor claims it.
+model Request {
+  id                 String    @id @default(cuid())
+  homeownerId        String
+  service            String
+  description        String
+  budget             String
+  address            String
+  photos             Int       @default(0)
+  status             String    @default("pending") // "pending" | "matched" | "in_progress" | "completed" | "cancelled"
+  contractorName     String?
+  contractorId       String?
+  consultationWindow String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime?
+}

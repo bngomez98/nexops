@@ -60,7 +60,7 @@ const NEXT_LABEL: Record<Lead["status"], string> = {
 
 function tierBadge(tier: Lead["tier"]) {
   const colors: Record<Lead["tier"], string> = {
-    basic: "text-muted-foreground border-border/40",
+    standard: "text-muted-foreground border-border/40",
     premium: "text-amber-400 border-amber-500/30 bg-amber-500/10",
     elite: "text-violet-400 border-violet-500/30 bg-violet-500/10",
   }
@@ -78,7 +78,7 @@ function timeAgo(iso: string) {
   return `${Math.floor(h / 24)}d ago`
 }
 
-export default function ContractorLeadsPage() {
+export default function ContractorProjectsPage() {
   const router = useRouter()
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
@@ -94,8 +94,11 @@ export default function ContractorLeadsPage() {
     }
 
     fetch("/api/leads")
-      .then((r) => r.json())
-      .then((d) => setLeads(d.leads ?? []))
+      .then((r) => {
+        if (r.status === 401) { router.replace("/login"); return null }
+        return r.json()
+      })
+      .then((d) => { if (d) setLeads(d.leads ?? []) })
       .finally(() => setLoading(false))
   }, [router])
 
@@ -132,9 +135,9 @@ export default function ContractorLeadsPage() {
       {/* Header */}
       <div className="mb-6">
         <p className="text-primary text-sm font-medium mb-1">Contractor Portal</p>
-        <h1 className="text-2xl font-semibold">Leads Pipeline</h1>
+        <h1 className="text-2xl font-semibold">Projects Pipeline</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {leads.length} total leads — advance statuses to track your pipeline.
+          {leads.length} total projects — advance statuses to track your pipeline.
         </p>
       </div>
 
@@ -158,7 +161,7 @@ export default function ContractorLeadsPage() {
         ))}
       </div>
 
-      {/* Lead list */}
+      {/* Project list */}
       {loading ? (
         <div className="flex justify-center py-16">
           <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -166,8 +169,8 @@ export default function ContractorLeadsPage() {
       ) : filtered.length === 0 ? (
         <Card>
           <CardContent className="py-14 text-center">
-            <p className="font-medium mb-1">{filter === "all" ? "No leads yet" : `No ${filter} leads`}</p>
-            <p className="text-sm text-muted-foreground">Leads are automatically assigned based on your service categories and location.</p>
+            <p className="font-medium mb-1">{filter === "all" ? "No projects yet" : `No ${filter} projects`}</p>
+            <p className="text-sm text-muted-foreground">Projects are automatically assigned based on your service categories and location.</p>
           </CardContent>
         </Card>
       ) : (
@@ -263,7 +266,7 @@ export default function ContractorLeadsPage() {
 
                       <div className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Phone className="h-3.5 w-3.5" />
-                        <span>Call homeowner to progress this lead</span>
+                        <span>Call homeowner to progress this project</span>
                         <ArrowRight className="h-3 w-3" />
                       </div>
                     </div>
