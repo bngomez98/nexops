@@ -1,50 +1,128 @@
 "use client"
 
-import { Camera, MousePointerClick, CalendarCheck, Star } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import {
+  Upload,
+  Lock,
+  CalendarCheck,
+  ClipboardList,
+  CheckCircle,
+} from "lucide-react"
 
 const steps = [
   {
-    icon: Camera,
+    icon: Upload,
     number: "01",
     title: "Submit your project",
-    description:
-      "Upload 2–10 photos, describe the scope, set a budget cap, and select 3–4 available consultation windows. Complete submissions get faster, better matches.",
+    detail: "Upload photos, describe the work needed, set a budget cap, and choose your preferred consultation windows.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
+    accent: "oklch(0.75 0.18 155)",
   },
   {
-    icon: MousePointerClick,
+    icon: Lock,
     number: "02",
-    title: "A contractor claims it",
-    description:
-      "Verified contractors in your category and area are notified immediately. The first to claim your request locks it exclusively — it disappears from every other contractor's feed.",
+    title: "One contractor claims it exclusively",
+    detail: "A licensed, insured local contractor reviews and claims your project — permanently removing it from every other contractor's feed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
+    accent: "oklch(0.82 0.17 85)",
   },
   {
     icon: CalendarCheck,
     number: "03",
     title: "Consultation is confirmed",
-    description:
-      "Both you and the contractor receive a calendar confirmation for the window you chose. They arrive already briefed on your scope, budget, and project photos.",
+    detail: "An appointment is scheduled and confirmed within 24 hours. The contractor has access to all project details — photos, scope, and budget — in advance.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
+    accent: "oklch(0.70 0.15 300)",
   },
   {
-    icon: Star,
+    icon: ClipboardList,
     number: "04",
-    title: "Project moves forward",
-    description:
-      "You receive a written quote after the consultation. Accept it and work begins. We follow up on every closed project to maintain contractor quality standards.",
+    title: "Review the estimate and decide",
+    detail: "The contractor delivers a written estimate. Review the scope and timeline, then decide — no obligation if it doesn't meet your expectations.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
+    accent: "oklch(0.72 0.17 160)",
   },
 ]
+
+function StepCard({
+  step,
+  index,
+  activeStep,
+  onHover,
+}: {
+  step: (typeof steps)[number]
+  index: number
+  activeStep: number | null
+  onHover: (i: number | null) => void
+}) {
+  const isActive = activeStep === index
+
+  return (
+    <div
+      className="reveal group relative"
+      style={{ transitionDelay: `${index * 130}ms` }}
+      onMouseEnter={() => onHover(index)}
+      onMouseLeave={() => onHover(null)}
+    >
+      <div
+        className="relative p-6 rounded-2xl border bg-card transition-all duration-300 cursor-default h-full"
+        style={
+          isActive
+            ? { borderColor: `${step.accent}55`, boxShadow: `0 8px 30px oklch(0 0 0 / 0.3)` }
+            : { borderColor: "oklch(0.25 0.01 240 / 0.4)" }
+        }
+      >
+        {/* Icon + number */}
+        <div className="flex items-center gap-3 mb-5">
+          <div
+            className={`flex items-center justify-center w-12 h-12 rounded-xl ${step.bg} border ${step.border} transition-transform duration-300 ${isActive ? "scale-110" : ""}`}
+          >
+            <step.icon className={`h-5 w-5 ${step.color}`} />
+          </div>
+          <span className="text-2xl font-bold font-mono text-muted-foreground/30 group-hover:text-muted-foreground/50 transition-colors">
+            {step.number}
+          </span>
+        </div>
+
+        <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
+
+        {/* Bottom accent bar */}
+        <div
+          className="absolute bottom-0 left-6 right-6 h-0.5 rounded-full transition-all duration-300"
+          style={{
+            background: step.accent,
+            opacity: isActive ? 0.6 : 0,
+          }}
+        />
+      </div>
+
+      {/* Arrow connector (desktop, non-last) */}
+      {index < 3 && (
+        <div className="hidden lg:flex absolute -right-3 top-[52px] z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border/40">
+          <svg width="10" height="10" viewBox="0 0 10 10" className="text-muted-foreground/40">
+            <path
+              d="M3 2L7 5L3 8"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -65,7 +143,7 @@ export function HowItWorks() {
           observer.disconnect()
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 },
     )
     observer.observe(el)
     return () => observer.disconnect()
@@ -73,32 +151,32 @@ export function HowItWorks() {
 
   return (
     <section ref={sectionRef} id="how-it-works" className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background decoration */}
+      {/* Ambient background */}
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.03]"
         style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section header */}
-        <div className="max-w-2xl mb-16 reveal">
+        {/* Header */}
+        <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            From submission to consultation in under 24 hours
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
+            From submission to confirmed consultation
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            No phone tag. No waiting on callbacks. No inbox flooded by five contractors who all got
-            your number. Submit your project once and get matched with one.
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            From submission to confirmed consultation in as little as 24 hours. Submit your
+            project once — the platform assigns it to a single verified contractor.
           </p>
         </div>
 
-        {/* Steps */}
+        {/* Connecting timeline line (desktop) */}
         <div className="relative">
-          {/* Connecting line (desktop) */}
           <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-px">
             <div
-              className="h-full bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full"
+              className="h-full rounded-full"
               style={{
+                background: "linear-gradient(to right, oklch(0.75 0.18 155 / 0.2), oklch(0.75 0.18 155 / 0.4), oklch(0.75 0.18 155 / 0.2))",
                 transform: inView ? "scaleX(1)" : "scaleX(0)",
                 transformOrigin: "left",
                 transition: "transform 1.2s ease 0.4s",
@@ -108,60 +186,25 @@ export function HowItWorks() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, i) => (
-              <div
+              <StepCard
                 key={step.number}
-                className="reveal group relative"
-                style={{ transitionDelay: `${i * 130}ms` }}
-                onMouseEnter={() => setActiveStep(i)}
-                onMouseLeave={() => setActiveStep(null)}
-              >
-                {/* Card */}
-                <div
-                  className={`relative p-6 rounded-2xl border bg-card transition-all duration-300 cursor-default ${
-                    activeStep === i
-                      ? `border-[${step.color}] shadow-lg`
-                      : "border-border/40 hover:border-border/70"
-                  }`}
-                  style={
-                    activeStep === i
-                      ? { borderColor: "oklch(0.75 0.18 155 / 0.35)", boxShadow: "0 8px 30px oklch(0 0 0 / 0.3)" }
-                      : {}
-                  }
-                >
-                  {/* Step number + icon row */}
-                  <div className="flex items-center gap-3 mb-5">
-                    <div
-                      className={`flex items-center justify-center w-12 h-12 rounded-xl ${step.bg} border ${step.border} transition-transform duration-300 ${activeStep === i ? "scale-110" : ""}`}
-                    >
-                      <step.icon className={`h-5 w-5 ${step.color}`} />
-                    </div>
-                    <span
-                      className="text-2xl font-bold font-mono text-muted-foreground/30 group-hover:text-muted-foreground/50 transition-colors"
-                    >
-                      {step.number}
-                    </span>
-                  </div>
-
-                  <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-
-                  {/* Active indicator bar */}
-                  <div
-                    className={`absolute bottom-0 left-6 right-6 h-0.5 rounded-full ${step.bg} transition-all duration-300 ${activeStep === i ? "opacity-100" : "opacity-0"}`}
-                    style={activeStep === i ? { background: `var(--${step.color.replace("text-", "color-")})` } : {}}
-                  />
-                </div>
-
-                {/* Arrow between steps (desktop) */}
-                {i < steps.length - 1 && (
-                  <div className="hidden lg:flex absolute -right-3 top-[52px] z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border/40">
-                    <svg width="10" height="10" viewBox="0 0 10 10" className="text-muted-foreground/40">
-                      <path d="M3 2L7 5L3 8" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
-              </div>
+                step={step}
+                index={i}
+                activeStep={activeStep}
+                onHover={setActiveStep}
+              />
             ))}
+          </div>
+        </div>
+
+        {/* Bottom callout */}
+        <div className="mt-12 reveal">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
+            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">Free for property owners.</span>{" "}
+              Nexus Operations charges contractors a monthly membership &mdash; not homeowners, not per-lead fees.
+            </p>
           </div>
         </div>
       </div>

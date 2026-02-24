@@ -11,10 +11,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { prefix: "$", value: 600, suffix: "B", label: "U.S. home improvement market, annually" },
-  { value: 1, suffix: "", label: "Contractor per request — not 3 to 7" },
-  { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners — free, every time" },
-  { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
+  { prefix: "$", value: 553, suffix: "B", label: "Projected total home improvement sales in the U.S. in 2026" },
+  { value: 1, suffix: "", label: "Licensed contractor assigned per project on an exclusive basis" },
+  { prefix: "$", value: 0, suffix: "", label: "Cost to property owners, with no fees charged" },
+  { value: 24, suffix: " hours", label: "Median time from project submission to confirmed consultation" },
 ]
 
 function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {
@@ -72,7 +72,6 @@ export function Stats() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true)
-          // Add in-view class to all reveal elements
           el.querySelectorAll(".reveal").forEach((node) => node.classList.add("in-view"))
           observer.disconnect()
         }

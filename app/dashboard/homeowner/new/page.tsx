@@ -16,6 +16,7 @@ import {
   ArrowLeft,
   Zap,
 } from "lucide-react"
+import { isFullSentences } from "@/lib/utils"
 
 const SERVICE_CATEGORIES = [
   "Tree Removal",
@@ -74,6 +75,13 @@ export default function NewRequestPage() {
 
     if (!service || !description || !budget || !address) {
       setFormError("Please fill in all required fields.")
+      return
+    }
+
+    if (!isFullSentences(description)) {
+      setFormError(
+        "Project description must be written in full sentences. Start each sentence with a capital letter and end it with a period, exclamation mark, or question mark."
+      )
       return
     }
 
@@ -221,6 +229,9 @@ export default function NewRequestPage() {
                 rows={4}
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                Use full sentences. Each sentence must start with a capital letter and end with a period, exclamation mark, or question mark.
+              </p>
             </div>
 
             {/* Budget + Address */}

@@ -11,7 +11,9 @@ export function Footer() {
               <Logo />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              A two-sided marketplace built around one principle: one project, one verified contractor. No shared leads. No bidding wars. Free for homeowners.
+              A two-sided marketplace connecting property owners with verified contractors in
+              the home improvement sector. Each project is assigned to a single contractor on
+              an exclusive basis.
             </p>
           </div>
 
@@ -21,7 +23,7 @@ export function Footer() {
               <li><Link href="/#how-it-works" className="text-foreground/60 hover:text-primary transition-colors">How It Works</Link></li>
               <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Service Categories</Link></li>
               <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Membership Plans</Link></li>
-              <li><Link href="/login?tab=signup" className="text-foreground/60 hover:text-primary transition-colors">Submit a Request</Link></li>
+              <li><Link href="/dashboard/homeowner/new" className="text-foreground/60 hover:text-primary transition-colors">Submit a Request</Link></li>
             </ul>
           </div>
 
@@ -36,11 +38,23 @@ export function Footer() {
           </div>
 
           <div>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Property Managers</h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li><Link href="/property-managers" className="text-foreground/60 hover:text-primary transition-colors">Overview</Link></li>
+              <li><Link href="/property-managers#corporate" className="text-foreground/60 hover:text-primary transition-colors">Corporate Accounts</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Service Categories</Link></li>
+              <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Get Onboarded</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10 pt-8 border-t border-border/30">
+          <div className="col-span-2 md:col-span-1">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Company</h3>
             <ul className="flex flex-col gap-3 text-sm">
               <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</Link></li>
               <li><a href="mailto:admin@nexusoperations.org" className="text-foreground/60 hover:text-primary transition-colors">admin@nexusoperations.org</a></li>
-              <li><a href="tel:+19139511711" className="text-foreground/60 hover:text-primary transition-colors">(913) 951-1711</a></li>
+              <li><a href="tel:+18008702734" className="text-foreground/60 hover:text-primary transition-colors">(800) 870-2734</a></li>
               <li><Link href="/privacy" className="text-foreground/60 hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-foreground/60 hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>

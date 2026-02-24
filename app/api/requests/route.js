@@ -1,16 +1,19 @@
-import { NextRequest, NextResponse } from "next/server"
-import { getSession, getUserById, getRequestsForHomeowner, addRequest, updateRequestStatus } from "@/lib/store"
+import { NextResponse } from "next/server"
+import { getSession, getUserById, getRequestsForHomeowner, addRequest, updateRequestStatus, seedIfEmpty } from "@/lib/store"
+import { isFullSentences } from "@/lib/utils"
 
-function getAuthUser(req: NextRequest) {
+async function getAuthUser(req) {
   const sessionToken = req.cookies.get("nexops_session")?.value
   if (!sessionToken) return null
-  const userId = getSession(sessionToken)
+  const userId = await getSession(sessionToken)
   if (!userId) return null
   return getUserById(userId)
 }
 
-export async function GET(req: NextRequest) {
-  const user = getAuthUser(req)
+export async function GET(req) {
+  await seedIfEmpty()
+
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -18,12 +21,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const requests = getRequestsForHomeowner(user.id)
+  const requests = await getRequestsForHomeowner(user.id)
   return NextResponse.json({ requests })
 }
 
-export async function POST(req: NextRequest) {
-  const user = getAuthUser(req)
+export async function POST(req) {
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -33,20 +36,20 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { service, description, budget, address, photos, consultationWindow } = body as {
-      service: string
-      description: string
-      budget: string
-      address: string
-      photos: number
-      consultationWindow?: string
-    }
+    const { service, description, budget, address, photos, consultationWindow } = body
 
     if (!service || !description || !budget || !address) {
       return NextResponse.json({ error: "Required fields missing" }, { status: 400 })
     }
 
-    const request = addRequest(user.id, {
+    if (!isFullSentences(description)) {
+      return NextResponse.json(
+        { error: "Project description must be written in full sentences. Start each sentence with a capital letter and end it with a period, exclamation mark, or question mark." },
+        { status: 422 }
+      )
+    }
+
+    const request = await addRequest(user.id, {
       homeownerId: user.id,
       service,
       description,
@@ -62,8 +65,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest) {
-  const user = getAuthUser(req)
+export async function PATCH(req) {
+  const user = await getAuthUser(req)
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
@@ -73,7 +76,7 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { requestId, status } = body as { requestId: string; status: string }
+    const { requestId, status } = body
 
     if (!requestId || !status) {
       return NextResponse.json({ error: "requestId and status are required" }, { status: 400 })
@@ -84,7 +87,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 })
     }
 
-    const updated = updateRequestStatus(user.id, requestId, status as "pending" | "matched" | "in_progress" | "completed" | "cancelled")
+    const updated = await updateRequestStatus(user.id, requestId, status)
     if (!updated) {
       return NextResponse.json({ error: "Request not found" }, { status: 404 })
     }

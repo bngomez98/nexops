@@ -1,40 +1,54 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ShieldCheck, Clock, DollarSign, TrendingUp } from "lucide-react"
+import { ArrowRight, Lock, FileText, DollarSign, Star } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const benefits = [
   {
-    icon: ShieldCheck,
-    title: "Leads no one else can touch",
-    description: "The moment you claim a request, it vanishes from every other contractor's feed. You are the only one contacting this homeowner — no price wars, no chasing.",
+    icon: Lock,
+    title: "True exclusivity on every project",
+    description: "The instant you claim a project, it is permanently removed from every other contractor's feed. No competing bids. No one else contacts that homeowner.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
-    icon: Clock,
-    title: "Fully documented before you commit",
-    description: "Every lead includes 2–10 project photos, a written scope, a defined budget cap, and a pre-selected consultation window. Know what you're walking into before you claim it.",
+    icon: FileText,
+    title: "Full documentation before you commit",
+    description: "Every project includes 2–10 photos, a written scope, a defined budget cap, and pre-selected consultation windows. You know the full scope before deciding to claim.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "Flat monthly membership",
-    description: "Starting at $299/month. Claim as many leads as you can handle — no per-lead charges, no surprise fees, no annual commitment. Cancel anytime.",
+    title: "Flat membership — no per-project fees",
+    description: "No fees per project, no penalties for cancellation, and no limits on the number of projects that can be claimed. Subscribe at the tier that fits your business.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
   },
+  {
+    icon: Star,
+    title: "Ratings from real project outcomes",
+    description: "Contractor ratings are derived from the outcomes of projects completed through the platform, not from reviews that could be manipulated.",
+    color: "text-violet-400",
+    bg: "bg-violet-400/10",
+    border: "border-violet-400/20",
+  },
+]
+
+const tiers = [
+  { label: "Basic", price: "$299", suffix: "/mo" },
+  { label: "Standard", price: "$499", suffix: "/mo" },
+  { label: "Premium", price: "$749", suffix: "/mo" },
 ]
 
 const miniStats = [
-  { value: "1", label: "Contractor per lead" },
-  { value: "$299", label: "Starting membership" },
-  { value: "$0", label: "Per-lead fees" },
+  { value: "1", label: "Contractor per project" },
+  { value: "$0", label: "Fees per project" },
+  { value: "3", label: "Membership tiers" },
 ]
 
 export function ContractorCTA() {
@@ -65,6 +79,10 @@ export function ContractorCTA() {
         className="absolute left-0 bottom-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.04]"
         style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
       />
+      <div
+        className="absolute right-0 top-0 w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.03]"
+        style={{ background: "radial-gradient(circle, oklch(0.70 0.15 85), transparent 70%)" }}
+      />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
@@ -72,12 +90,15 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Build your pipeline on leads that are actually yours
+              Exclusive projects.
+              <br />
+              <span className="gradient-text">Flat monthly membership.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Licensed, insured contractors in Topeka and surrounding areas use Nexus Operations
-              to replace unpredictable shared-lead platforms with a dependable, exclusive pipeline.
-              Every job you claim belongs to you alone.
+              Contractors receive exclusive assignments for projects. There are no competing bids.
+              Membership is based on a flat monthly fee structure with three tiers. Contractors do
+              not pay fees per project; instead, they subscribe to access and claim as many projects
+              as they choose.
             </p>
 
             {/* Mini stats row */}
@@ -86,6 +107,20 @@ export function ContractorCTA() {
                 <div key={s.label} className="text-center">
                   <div className="text-xl font-bold text-primary mb-0.5">{s.value}</div>
                   <div className="text-xs text-muted-foreground">{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pricing tiers */}
+            <div className="flex items-center gap-3 mb-8 flex-wrap">
+              {tiers.map((t) => (
+                <div
+                  key={t.label}
+                  className="flex flex-col items-center px-5 py-3 rounded-xl bg-card border border-border/40"
+                >
+                  <span className="text-xs text-muted-foreground mb-1">{t.label}</span>
+                  <span className="text-lg font-bold text-primary">{t.price}</span>
+                  <span className="text-xs text-muted-foreground">{t.suffix}</span>
                 </div>
               ))}
             </div>
@@ -102,8 +137,8 @@ export function ContractorCTA() {
                 href="/pricing"
                 className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                <TrendingUp className="h-4 w-4" />
                 View Membership Plans
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
