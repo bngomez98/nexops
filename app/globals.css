@@ -4,6 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --background: oklch(0.09 0.01 240);
   --foreground: oklch(0.95 0.005 90);
   --card: oklch(0.12 0.012 240);
