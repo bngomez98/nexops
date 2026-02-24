@@ -1,30 +1,30 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Users, Network, DollarSign, FileText } from "lucide-react"
+import { ArrowRight, Lock, FileText, DollarSign, Star } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const benefits = [
   {
-    icon: Users,
-    title: "One dedicated partner per account",
-    description: "Every NexOps client works with one dedicated operations partner. You're not assigned to a shared inbox or a rotating support team.",
+    icon: Lock,
+    title: "True exclusivity on every project",
+    description: "The instant you claim a project, it is permanently removed from every other contractor's feed. No competing bids. No one else contacts that homeowner.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
-    icon: Network,
-    title: "Vendor-agnostic coordination",
-    description: "We work with your existing vendors — not against them. We optimize how you coordinate the relationships you've already built.",
+    icon: FileText,
+    title: "Full documentation before you commit",
+    description: "Every project includes 2–10 photos, a written scope, a defined budget cap, and pre-selected consultation windows. You know the full scope before deciding to claim.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "Transparent, flat engagement terms",
-    description: "No per-project fees, no surprise charges. You know the scope and the cost before we begin. We don't bill for activity we can't justify.",
+    title: "Flat membership — no per-project fees",
+    description: "No fees per project, no penalties for cancellation, and no limits on the number of projects that can be claimed. Subscribe at the tier that fits your business.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -33,16 +33,25 @@ const benefits = [
     icon: FileText,
     title: "Documentation that stays with you",
     description: "Every workflow document, vendor contact, and coordination record belongs to your organization — not locked inside our systems.",
+    icon: Star,
+    title: "Ratings from real project outcomes",
+    description: "Contractor ratings are derived from the outcomes of projects completed through the platform, not from reviews that could be manipulated.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
 ]
 
+const tiers = [
+  { label: "Basic", price: "$299", suffix: "/mo" },
+  { label: "Standard", price: "$499", suffix: "/mo" },
+  { label: "Premium", price: "$749", suffix: "/mo" },
+]
+
 const miniStats = [
-  { value: "1", label: "Dedicated partner per account" },
-  { value: "$0", label: "Per-project fees" },
-  { value: "100%", label: "Documentation ownership" },
+  { value: "1", label: "Contractor per project" },
+  { value: "$0", label: "Fees per project" },
+  { value: "3", label: "Membership tiers" },
 ]
 
 export function ContractorCTA() {
@@ -82,11 +91,11 @@ export function ContractorCTA() {
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left — copy */}
           <div className="reveal">
-            <p className="text-primary text-sm font-medium tracking-wide mb-3">Who we serve</p>
+            <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Built for property management companies
+              Exclusive projects.
               <br />
-              <span className="gradient-text">that need more than software.</span>
+              <span className="gradient-text">Flat monthly membership.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               We serve residential and commercial property management companies that need a better
@@ -97,6 +106,10 @@ export function ContractorCTA() {
             </p>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Every project arrives with photos, a written scope, and a defined budget cap. Claim it and the project is removed from every other contractor&apos;s feed — permanently. No competing bids, no per-lead fees, one flat monthly membership.
+              Contractors receive exclusive assignments for projects. There are no competing bids.
+              Membership is based on a flat monthly fee structure with three tiers. Contractors do
+              not pay fees per project; instead, they subscribe to access and claim as many projects
+              as they choose.
             </p>
 
             {/* Mini stats row */}
@@ -109,19 +122,33 @@ export function ContractorCTA() {
               ))}
             </div>
 
+            {/* Pricing tiers */}
+            <div className="flex items-center gap-3 mb-8 flex-wrap">
+              {tiers.map((t) => (
+                <div
+                  key={t.label}
+                  className="flex flex-col items-center px-5 py-3 rounded-xl bg-card border border-border/40"
+                >
+                  <span className="text-xs text-muted-foreground mb-1">{t.label}</span>
+                  <span className="text-lg font-bold text-primary">{t.price}</span>
+                  <span className="text-xs text-muted-foreground">{t.suffix}</span>
+                </div>
+              ))}
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/contact"
+                href="/contractors"
                 className="btn-shimmer inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
               >
-                Request Early Access
+                Join the Network
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/#how-it-works"
+                href="/pricing"
                 className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                See how it works
+                View Membership Plans
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

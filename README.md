@@ -1,8 +1,4 @@
-# Nexus Operations
 
-Contractor marketplace platform connecting homeowners with a single, verified contractor per project. No shared leads. No bidding wars. One request, one professional.
-
-## Overview
 
 Nexus Operations is a Next.js web application serving Topeka, KS and the surrounding region. Homeowners submit a documented project request — including photos, written scope, and a maximum budget — and one licensed, insured contractor claims it exclusively. The project is immediately removed from all other contractors' feeds upon claim.
 
@@ -137,4 +133,7 @@ All tiers include unlimited project claims, full project documentation before cl
 
 The application is configured for deployment on Vercel. No additional configuration is required beyond connecting the repository. The `next.config.mjs` file does not require environment-specific overrides for basic deployment.
 
-For production deployments that require a persistent data layer, replace the in-memory store in `lib/store.ts` with a database-backed implementation.
+1. Create and modify your project using [v0.app](https://v0.app)
+2. Deploy your chats from the v0 interface
+3. Changes are automatically pushed to this repository
+4. Vercel deploys the latest version from this repository
