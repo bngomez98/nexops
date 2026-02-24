@@ -30,6 +30,9 @@ const benefits = [
     border: "border-emerald-400/20",
   },
   {
+    icon: FileText,
+    title: "Documentation that stays with you",
+    description: "Every workflow document, vendor contact, and coordination record belongs to your organization — not locked inside our systems.",
     icon: Star,
     title: "Ratings from real project outcomes",
     description: "Contractor ratings are derived from the outcomes of projects completed through the platform, not from reviews that could be manipulated.",
@@ -95,6 +98,14 @@ export function ContractorCTA() {
               <span className="gradient-text">Flat monthly membership.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
+              We serve residential and commercial property management companies that need a better
+              way to coordinate the vendors, workflows, and relationships that keep their portfolios running.
+              Pre-documented projects.
+              <br />
+              <span className="gradient-text">Exclusively yours the moment you claim.</span>
+            </p>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              Every project arrives with photos, a written scope, and a defined budget cap. Claim it and the project is removed from every other contractor&apos;s feed — permanently. No competing bids, no per-lead fees, one flat monthly membership.
               Contractors receive exclusive assignments for projects. There are no competing bids.
               Membership is based on a flat monthly fee structure with three tiers. Contractors do
               not pay fees per project; instead, they subscribe to access and claim as many projects
