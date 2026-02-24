@@ -80,10 +80,9 @@ export function MissionValues() {
             <span className="gradient-text"> exclusivity and trust.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Nexus Operations exists to connect property owners with licensed contractors in the
-            home improvement sector through a two-sided marketplace. The platform assigns each
-            project request to a single contractor on an exclusive basis &mdash; eliminating competitive
-            bidding, unsolicited communications, and wasted time for everyone involved.
+            Nexus Operations connects property owners with licensed contractors through a
+            two-sided marketplace — assigning each project to a single contractor exclusively.
+            No competitive bidding. No unsolicited calls. No wasted time.
           </p>
         </div>
 
