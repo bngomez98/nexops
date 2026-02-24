@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { deleteSession } from "@/lib/store"
 
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   const sessionToken = req.cookies.get("nexops_session")?.value
 
   if (sessionToken) {
