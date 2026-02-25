@@ -13,8 +13,6 @@ const steps = [
   {
     icon: Upload,
     number: "01",
-    title: "Initial consultation",
-    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
     title: "Submit your project",
     detail: "Upload photos, describe the work needed, set a budget cap, and choose your preferred consultation windows.",
     color: "text-primary",
@@ -45,8 +43,6 @@ const steps = [
   {
     icon: ClipboardList,
     number: "04",
-    title: "Platform access at launch",
-    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
     title: "Review the estimate and decide",
     detail: "The contractor delivers a written estimate. Review the scope and timeline, then decide — no obligation if it doesn't meet your expectations.",
     color: "text-emerald-400",
@@ -169,8 +165,8 @@ export function HowItWorks() {
             From submission to confirmed consultation
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            From submission to confirmed consultation in as little as 24 hours. Submit your
-            project once — the platform assigns it to a single verified contractor.
+            Submit your project once — the platform assigns it to a single verified contractor
+            and confirms a consultation within 24 hours.
           </p>
         </div>
 
