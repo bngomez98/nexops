@@ -84,6 +84,12 @@ export function Services() {
         <div className="max-w-2xl mb-10 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+            Residential trade categories in the Topeka area
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            We add categories only when there are enough verified contractors in the area to maintain
+            response time and quality standards. Every request requires photos, a written scope, and a defined
+            budget cap before a contractor is matched.
             All services available now in Topeka.
           </h2>
           <p className="text-muted-foreground leading-relaxed">

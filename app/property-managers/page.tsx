@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight, CheckCircle, Clock, ShieldCheck, DollarSign, FlaskConical } from "lucide-react"
+import { ArrowRight, CheckCircle, Clock, ShieldCheck, DollarSign } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
@@ -39,6 +40,22 @@ export default function PropertyManagersPage() {
                 <br />
                 <span className="text-primary">Defined response guarantees.</span>
               </h1>
+                Shawnee County commercial maintenance coordination
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
+                One submission per issue.
+                <br />
+                <span className="text-primary">One verified contractor assigned.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
+                Nexus Operations handles contractor vetting, scheduling, and documentation for property
+                managers. Submit photos and a budget cap for any maintenance issue, and a pre-verified
+                contractor is assigned and scheduled within 24 hours. No vendor management, no chasing
+                estimates, no unvetted operators on your properties.
+                Verified dispatch.
+                <br />
+                <span className="text-primary">Defined response guarantees.</span>
+              </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
                 Nexus Operations acts as your outsourced maintenance coordination team. We intake requests,
                 route verified contractors, enforce backup assignment rules, confirm completion, and send
@@ -60,6 +77,7 @@ export default function PropertyManagersPage() {
                   className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
                 >
                   Join the Pilot Program
+                  Request Onboarding
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
@@ -79,6 +97,9 @@ export default function PropertyManagersPage() {
               <h2 className="text-3xl font-semibold tracking-tight mb-3">Pilot response-time guarantees</h2>
               <p className="text-muted-foreground">
                 Dispatch and arrival targets are enforced during pilot operations, with automatic reassignment when a contractor does not accept in time.
+              <h2 className="text-3xl font-semibold tracking-tight mb-3">Response-time guarantees</h2>
+              <p className="text-muted-foreground">
+                Dispatch and arrival targets are based on urgency category, with automatic reassignment when a contractor does not accept in time.
               </p>
             </div>
             <div className="overflow-x-auto rounded-2xl border border-border/40 bg-card">
@@ -130,12 +151,14 @@ export default function PropertyManagersPage() {
               <div className="flex items-center gap-2 mb-4">
                 <DollarSign className="h-5 w-5 text-primary" />
                 <h3 className="text-base font-semibold">Post-pilot cost-plus markup model</h3>
+                <h3 className="text-base font-semibold">Cost-plus markup model</h3>
               </div>
               <div className="space-y-3">
                 {markupBands.map((band) => (
                   <div key={band.label} className="p-4 rounded-lg border border-border/40">
                     <p className="text-sm font-semibold">{band.label}</p>
                     <p className="text-sm text-muted-foreground">Standard markup: {band.markup}</p>
+                    <p className="text-sm text-muted-foreground">Markup: {band.markup}</p>
                     <p className="text-sm text-primary">Example: {band.example}</p>
                   </div>
                 ))}

@@ -16,6 +16,8 @@ const values = [
   },
   {
     icon: Shield,
+    title: "Clients define the scope",
+    body: "You set the priorities, the budget, and the outcomes you need. We operate within your framework and report to you — not to our own internal metrics. The engagement looks like what you need it to look like.",
     title: "Clear accountability",
     body: "We define owners, deadlines, and escalation paths for vendor coordination so issues are resolved quickly and responsibility is obvious.",
     icon: ShieldCheck,
@@ -27,6 +29,8 @@ const values = [
   },
   {
     icon: FileText,
+    title: "Documentation as infrastructure",
+    body: "Every vendor relationship, workflow decision, and coordination record is written down and accessible. When something needs to be referenced — or when your team changes — the knowledge stays with your organization.",
     title: "Documented operating playbooks",
     body: "Every recurring workflow is documented in plain language your team can follow. When staff changes, process knowledge stays with your business.",
     title: "Both sides come prepared",
@@ -37,6 +41,8 @@ const values = [
   },
   {
     icon: TrendingUp,
+    title: "Outcomes over activity",
+    body: "We don't measure success by calls made or emails sent. We measure it by whether your operations run more smoothly because of what we did. If it doesn't move the needle for your portfolio, we won't bill you for it.",
     title: "Measured outcomes",
     body: "We report on response times, completion rates, and execution quality so leadership sees whether operations are improving month over month.",
     icon: Award,
@@ -84,6 +90,21 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">What we do</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
+            Most platforms profit by sharing your information with as many contractors as possible.
+            <span className="gradient-text"> We took the opposite approach.</span>
+          </h2>
+          <div className="space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              When a homeowner submits a request on a traditional platform, their phone number is sold
+              to 5–15 contractors at once. Contractors pay per lead, then compete against each other to
+              win the same job. Both sides lose — homeowners get flooded with calls, and contractors
+              burn time and margin chasing leads they may never close.
+            </p>
+            <p className="text-foreground/80 font-medium">
+              Nexus Operations was built on a different premise: one request routes to one verified
+              contractor, and that contractor is the only professional who contacts the homeowner.
+            </p>
+          </div>
             We run day-to-day operations support for property managers.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
@@ -134,6 +155,17 @@ export function MissionValues() {
           className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
           style={{ transitionDelay: "500ms" }}
         >
+          <blockquote className="text-center">
+            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
+              &ldquo;This is what we mean by operations. Not lead generation —
+              exclusive matching and routing so contractors can focus on the craft
+              and homeowners can focus on their lives.&rdquo;
+              &ldquo;Operations management built on relationship — not just software.&rdquo;
+            </p>
+            <footer className="mt-4 text-sm text-muted-foreground">
+              Nexus Operations
+            </footer>
+          </blockquote>
           <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
             Every project request includes photos, a written scope, a defined budget ceiling, and
             pre-selected consultation windows &mdash; all collected before any contractor is notified.

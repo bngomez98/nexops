@@ -8,6 +8,9 @@ const steps = [
     icon: PhoneCall,
     number: "01",
     title: "Request intake",
+    title: "Initial consultation",
+    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
+    title: "Discovery call",
     detail:
       "Property managers submit by phone, text, or email with address, unit, issue details, urgency level, and tenant availability.",
   },
@@ -29,6 +32,9 @@ const steps = [
     icon: Receipt,
     number: "04",
     title: "Monthly invoicing",
+    title: "Platform access at launch",
+    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
+    title: "Platform rollout",
     detail:
       "Clients receive a line-item invoice showing contractor costs and markup by urgency category, with net payment terms.",
   },

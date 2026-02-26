@@ -105,6 +105,12 @@ export default function PricingPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
+                Flat monthly membership with unlimited lead claims
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Every tier includes unlimited lead claims with no per-lead fees, no annual contracts, and
+                no cancellation penalties. Higher tiers add advance notification windows and priority access
+                to high-value projects.
                 One price. Unlimited projects.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
@@ -236,10 +242,10 @@ export default function PricingPage() {
         {/* Free for homeowners */}
         <section className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight mb-4">Always free for homeowners</h2>
+            <h2 className="text-3xl font-semibold tracking-tight mb-4">Homeowners never pay to use Nexus Operations</h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Property owners never pay to submit a request or receive a match. Our platform is funded
-              entirely by contractor memberships — so homeowners get a premium matching experience at zero cost.
+              Submitting a project request and receiving a contractor match is free for homeowners.
+              Nexus Operations is funded entirely by contractor memberships.
             </p>
             <Link
               href="/login?tab=signup"

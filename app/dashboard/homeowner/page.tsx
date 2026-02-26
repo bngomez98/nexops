@@ -259,7 +259,7 @@ export default function HomeownerDashboard() {
               {pendingMatch.length} request{pendingMatch.length > 1 ? "s" : ""} in auto-matching queue
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Our system is routing to verified, licensed contractors in your area. This typically takes under 24 hours.
+              We're routing your request to verified, licensed contractors in your area. This typically takes under 24 hours.
             </p>
           </div>
         </div>

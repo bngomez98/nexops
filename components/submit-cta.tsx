@@ -73,6 +73,14 @@ export function SubmitCTA() {
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+                  You define the project before
+                  <br />
+                  <span className="gradient-text">any contractor is contacted.</span>
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-8">
+                  Upload photos, write the scope, set a budget ceiling, and choose your consultation window.
+                  One verified contractor reviews your full project profile and claims it exclusively. There
+                  is no cost to homeowners.
                   Submit your project.
                   <br />
                   <span className="gradient-text">One contractor. Your terms.</span>

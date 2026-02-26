@@ -29,12 +29,30 @@ export function Hero() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-8">
               <span className="text-primary text-xs font-medium tracking-wide">
                 Topeka pilot program: $50–$100 flat request fee for first 30–60 days
+                Commercial maintenance coordination for Topeka property managers
               </span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6">
               Guaranteed contractor response.
               <br />
+              <span className="gradient-text">Zero vendor chasing.</span>
+            </h1>
+
+              <span className="gradient-text">Exclusively yours.</span>
+              <br />
+              <span className="text-foreground/70">No shared leads. No competing bids.</span>
+            </h1>
+
+            <p
+              className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
+              style={{ animationDelay: "0.25s", opacity: 0 }}
+            >
+              Nexus Operations matches homeowners with one licensed, insured contractor per project —
+              not a list. You submit once with photos, a written scope, and a real budget ceiling. One
+              verified contractor in your area claims it exclusively before your phone rings. They arrive
+              at your consultation already knowing the scope. You already know who&apos;s coming. That&apos;s
+              what it means to hire with confidence.
               <span className="gradient-text">Zero vendor chasing.</span>
             </h1>
 
@@ -65,6 +83,7 @@ export function Hero() {
                 { icon: Shield, text: "Licensed, insured, and re-verified contractor network" },
                 { icon: Clock, text: "Emergency assignment in 1 hour" },
                 { icon: CheckCircle, text: "Pilot pricing: $50–$100 flat fee per project/job request" },
+                { icon: CheckCircle, text: "Cost-plus pricing with 25–35% markup" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
@@ -81,6 +100,12 @@ export function Hero() {
                 <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
                   <span>Emergency</span>
                   <span className="text-primary font-semibold">1h assign / 4h on-site</span>
+                </div>
+                <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
+                  <span>Urgent</span>
+                  <span className="text-primary font-semibold">4h assign / next day</span>
+                </div>
+                <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
                 </div>
                 <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
                   <span>Urgent</span>

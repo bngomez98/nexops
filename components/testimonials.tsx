@@ -87,6 +87,11 @@ export function Testimonials() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">From our contractors</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+            What contractors experience after joining the Nexus Operations network
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            These contractors previously used platforms where every lead was shared with five or more
+            competitors. After switching to exclusive matching, their close rates and project values changed.
             What contractors get
             <span className="gradient-text"> that shared-lead platforms don&apos;t.</span>
           </h2>
