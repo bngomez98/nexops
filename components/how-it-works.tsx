@@ -14,6 +14,8 @@ const steps = [
   {
     icon: Upload,
     number: "01",
+    title: "Initial consultation",
+    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
     title: "Discovery call",
     detail:
       "We run a focused 45-minute call with your leadership team to map your portfolio, current vendor setup, and your most expensive coordination bottlenecks.",
@@ -53,6 +55,8 @@ const steps = [
   {
     icon: ClipboardList,
     number: "04",
+    title: "Platform access at launch",
+    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
     title: "Platform rollout",
     detail:
       "When the NexOps platform launches in 2026, your team starts with workflows already built around your real operating model, not a generic template.",

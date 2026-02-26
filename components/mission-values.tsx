@@ -16,6 +16,8 @@ const values = [
   },
   {
     icon: Shield,
+    title: "Clients define the scope",
+    body: "You set the priorities, the budget, and the outcomes you need. We operate within your framework and report to you — not to our own internal metrics. The engagement looks like what you need it to look like.",
     title: "Clear accountability",
     body: "We define owners, deadlines, and escalation paths for vendor coordination so issues are resolved quickly and responsibility is obvious.",
     icon: ShieldCheck,
@@ -27,6 +29,8 @@ const values = [
   },
   {
     icon: FileText,
+    title: "Documentation as infrastructure",
+    body: "Every vendor relationship, workflow decision, and coordination record is written down and accessible. When something needs to be referenced — or when your team changes — the knowledge stays with your organization.",
     title: "Documented operating playbooks",
     body: "Every recurring workflow is documented in plain language your team can follow. When staff changes, process knowledge stays with your business.",
     title: "Both sides come prepared",
@@ -37,6 +41,8 @@ const values = [
   },
   {
     icon: TrendingUp,
+    title: "Outcomes over activity",
+    body: "We don't measure success by calls made or emails sent. We measure it by whether your operations run more smoothly because of what we did. If it doesn't move the needle for your portfolio, we won't bill you for it.",
     title: "Measured outcomes",
     body: "We report on response times, completion rates, and execution quality so leadership sees whether operations are improving month over month.",
     icon: Award,
@@ -134,6 +140,14 @@ export function MissionValues() {
           className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
           style={{ transitionDelay: "500ms" }}
         >
+          <blockquote className="text-center">
+            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
+              &ldquo;Operations management built on relationship — not just software.&rdquo;
+            </p>
+            <footer className="mt-4 text-sm text-muted-foreground">
+              Nexus Operations
+            </footer>
+          </blockquote>
           <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
             Every project request includes photos, a written scope, a defined budget ceiling, and
             pre-selected consultation windows &mdash; all collected before any contractor is notified.
