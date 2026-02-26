@@ -4,6 +4,7 @@ import { Stats } from "@/components/stats"
 import { MissionValues } from "@/components/mission-values"
 import { HowItWorks } from "@/components/how-it-works"
 import { Services } from "@/components/services"
+import { MainCommandCenter } from "@/components/main-command-center"
 import { Comparison } from "@/components/comparison"
 import { ContractorCTA } from "@/components/contractor-cta"
 import { Testimonials } from "@/components/testimonials"
@@ -21,6 +22,7 @@ export default function HomePage() {
         <MissionValues />
         <HowItWorks />
         <Services />
+        <MainCommandCenter />
         <Comparison />
         <ContractorCTA />
         <Testimonials />
