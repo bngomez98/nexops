@@ -6,48 +6,32 @@ import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 const values = [
   {
     icon: Users,
-    title: "Relationship-led execution",
-    body: "You work with a dedicated NexOps operator who knows your properties, your vendors, and your standards. No ticket queue, no outsourced handoff model.",
-    title: "Property owners set the terms",
-    body: "Property owners establish the details of their project, including the scope of work, the maximum budget, and preferred times for consultation, before any contractor is notified. These terms are fixed prior to the assignment of the project.",
+    title: "Service built around client context",
+    body: "Each account is managed with a clear understanding of portfolio goals, property history, and operating priorities so day-to-day decisions stay aligned with leadership expectations.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
-    icon: Shield,
-    title: "Clients define the scope",
-    body: "You set the priorities, the budget, and the outcomes you need. We operate within your framework and report to you — not to our own internal metrics. The engagement looks like what you need it to look like.",
-    title: "Clear accountability",
-    body: "We define owners, deadlines, and escalation paths for vendor coordination so issues are resolved quickly and responsibility is obvious.",
     icon: ShieldCheck,
-    title: "Contractors own their projects",
-    body: "Contractors gain full ownership of the projects they claim, without any competition from other contractors for the same job. The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed.",
+    title: "Accountability in execution",
+    body: "Work ownership, deadlines, and escalation paths are documented for every request so responsibilities remain clear from intake through completion.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: FileText,
-    title: "Documentation as infrastructure",
-    body: "Every vendor relationship, workflow decision, and coordination record is written down and accessible. When something needs to be referenced — or when your team changes — the knowledge stays with your organization.",
-    title: "Documented operating playbooks",
-    body: "Every recurring workflow is documented in plain language your team can follow. When staff changes, process knowledge stays with your business.",
-    title: "Both sides come prepared",
-    body: "Both property owners and contractors receive all relevant documentation — photographs, a written description of the scope, and the budget — before the consultation begins. This preparation allows for efficient discussions from the start.",
+    title: "Documentation as an operating asset",
+    body: "The business operations manual defines repeatable procedures, and each service request produces traceable records that support reporting, review, and continuity.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
   {
-    icon: TrendingUp,
-    title: "Outcomes over activity",
-    body: "We don't measure success by calls made or emails sent. We measure it by whether your operations run more smoothly because of what we did. If it doesn't move the needle for your portfolio, we won't bill you for it.",
-    title: "Measured outcomes",
-    body: "We report on response times, completion rates, and execution quality so leadership sees whether operations are improving month over month.",
     icon: Award,
-    title: "Verified credentials, tracked outcomes",
-    body: "Every contractor in the network undergoes verification of their license, confirmation of their insurance, and a background check before they can access project requests. Ratings for contractors are based on the outcomes of actual projects completed through the platform.",
+    title: "Quality measured over time",
+    body: "Response time, completion quality, and communication performance are tracked continuously so teams can improve process reliability with objective data.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -88,45 +72,26 @@ export function MissionValues() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-3xl mb-16 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">What we do</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">Business introduction</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            Most platforms profit by sharing your information with as many contractors as possible.
-            <span className="gradient-text"> We took the opposite approach.</span>
+            Mission, values, process, and documentation are part of one operating system.
           </h2>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
-              When a homeowner submits a request on a traditional platform, their phone number is sold
-              to 5–15 contractors at once. Contractors pay per lead, then compete against each other to
-              win the same job. Both sides lose — homeowners get flooded with calls, and contractors
-              burn time and margin chasing leads they may never close.
+              Nexus Operations exists to support property management teams with dependable maintenance coordination. Our mission is to
+              reduce operational friction by providing a structured process that clarifies decisions, timelines, and service ownership.
             </p>
-            <p className="text-foreground/80 font-medium">
-              Nexus Operations was built on a different premise: one request routes to one verified
-              contractor, and that contractor is the only professional who contacts the homeowner.
+            <p>
+              The business operations manual serves as the source of truth for workflow standards, communication expectations, and
+              quality control checkpoints. This gives each stakeholder clear context on how work is initiated, assigned, confirmed,
+              and closed with complete documentation.
             </p>
           </div>
-            We run day-to-day operations support for property managers.
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            NexOps helps property management teams run cleaner operations by coordinating vendors,
-            documenting repeatable workflows, and driving follow-through on maintenance execution.
-            We combine consulting and software so you get immediate support now and a purpose-built platform in 2026.
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">The purpose of Nexus Operations</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            A two-sided marketplace built on
-            <span className="gradient-text"> exclusivity and trust.</span>
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Nexus Operations connects property owners with licensed contractors through a
-            two-sided marketplace — assigning each project to a single contractor exclusively.
-            No competitive bidding. No unsolicited calls. One project, one professional.
-          </p>
         </div>
 
         <div className="flex items-center gap-4 mb-12 reveal" style={{ transitionDelay: "80ms" }}>
           <div className="h-px flex-1 bg-border/30" />
-          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">How we operate</span>
-          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">Core commitments</span>
+          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">Core values in practice</span>
           <div className="h-px flex-1 bg-border/30" />
         </div>
 
@@ -148,29 +113,6 @@ export function MissionValues() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Closing brand statement */}
-        <div
-          className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
-          style={{ transitionDelay: "500ms" }}
-        >
-          <blockquote className="text-center">
-            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;This is what we mean by operations. Not lead generation —
-              exclusive matching and routing so contractors can focus on the craft
-              and homeowners can focus on their lives.&rdquo;
-              &ldquo;Operations management built on relationship — not just software.&rdquo;
-            </p>
-            <footer className="mt-4 text-sm text-muted-foreground">
-              Nexus Operations
-            </footer>
-          </blockquote>
-          <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
-            Every project request includes photos, a written scope, a defined budget ceiling, and
-            pre-selected consultation windows &mdash; all collected before any contractor is notified.
-            The contractor who claims your project has reviewed all of it before showing up.
-          </p>
         </div>
       </div>
     </section>

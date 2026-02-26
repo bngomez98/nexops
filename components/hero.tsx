@@ -28,33 +28,24 @@ export function Hero() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-8">
               <span className="text-primary text-xs font-medium tracking-wide">
-                Commercial maintenance coordination for Topeka property managers
+                Operations coordination for property managers in Topeka, Kansas
               </span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6">
-              Guaranteed contractor response.
-              <br />
-              <span className="gradient-text">Exclusively yours.</span>
-              <br />
-              <span className="text-foreground/70">No shared leads. No competing bids.</span>
+              Nexus Operations introduces a managed maintenance workflow that supports day-to-day property operations.
             </h1>
 
-            <p
-              className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
-              style={{ animationDelay: "0.25s", opacity: 0 }}
-            >
-              Nexus Operations matches homeowners with one licensed, insured contractor per project —
-              not a list. You submit once with photos, a written scope, and a real budget ceiling. One
-              verified contractor in your area claims it exclusively before your phone rings. They arrive
-              at your consultation already knowing the scope. You already know who&apos;s coming. That&apos;s
-              what it means to hire with confidence.
-              <span className="gradient-text">Zero vendor chasing.</span>
-            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-6">
+              Our business operations manual defines how work is requested, assigned, documented, and reviewed. Property managers
+              receive a clear process with service-level targets, contractor verification standards, and complete records for each
+              request.
+            </p>
 
             <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-              Nexus Operations coordinates verified contractors across emergency, urgent, and
-              routine maintenance requests, with automated backup assignment when a vendor declines.
+              The mission is to provide dependable maintenance coordination through transparent communication, documented execution,
+              and accountable follow-through. Our values center on clarity, reliability, professional conduct, and well-maintained
+              documentation at every stage of service.
             </p>
 
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-12">
@@ -62,23 +53,23 @@ export function Hero() {
                 href="/property-managers"
                 className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
               >
-                See the Operations Model
+                Review Mission, Values, and Process
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                Request a 30-Day Pilot
+                Request an Operations Consultation
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
             <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
               {[
-                { icon: Shield, text: "Licensed, insured, and re-verified contractor network" },
-                { icon: Clock, text: "Emergency assignment in 1 hour" },
-                { icon: CheckCircle, text: "Cost-plus pricing with 25–35% markup" },
+                { icon: Shield, text: "Verified contractor onboarding with license and insurance review" },
+                { icon: Clock, text: "Documented response-time targets by priority level" },
+                { icon: CheckCircle, text: "Complete records from request intake through completion" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
@@ -90,23 +81,23 @@ export function Hero() {
 
           <div className="hidden lg:flex justify-center items-center">
             <div className="glass-card rounded-2xl p-6 w-[360px] shadow-2xl shadow-black/40">
-              <p className="text-xs text-muted-foreground mb-3">Response SLA snapshot</p>
+              <p className="text-xs text-muted-foreground mb-3">Operating targets from the business operations manual</p>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
                   <span>Emergency</span>
-                  <span className="text-primary font-semibold">1h assign / 4h on-site</span>
+                  <span className="text-primary font-semibold">1h assignment / 4h on-site</span>
                 </div>
                 <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
                   <span>Urgent</span>
-                  <span className="text-primary font-semibold">4h assign / next day</span>
+                  <span className="text-primary font-semibold">4h assignment / next day</span>
                 </div>
                 <div className="flex items-center justify-between border border-border/40 rounded-lg p-3">
                   <span>Routine</span>
-                  <span className="text-primary font-semibold">24h assign / 3–5 days</span>
+                  <span className="text-primary font-semibold">24h assignment / 3–5 days</span>
                 </div>
               </div>
               <a href="#how-it-works" className="inline-flex items-center gap-2 mt-6 text-xs text-primary hover:underline">
-                Explore workflow details <ChevronDown className="h-3.5 w-3.5" />
+                View service process details <ChevronDown className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>

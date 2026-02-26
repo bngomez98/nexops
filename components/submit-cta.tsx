@@ -7,23 +7,23 @@ import { useEffect, useRef } from "react"
 const steps = [
   {
     icon: Upload,
-    title: "Upload photos and describe the work",
-    description: "Provide 2 to 10 photographs and a written description of the scope, including what needs to be done, any materials required, and other relevant details.",
+    title: "Document the service request",
+    description: "Upload photographs and provide a written scope so the assignment team can classify the request accurately.",
   },
   {
     icon: Lock,
-    title: "Set your budget and preferred times",
-    description: "Specify the maximum budget you are willing to spend. Select 3 to 4 available time slots for the consultation. A contractor commits to one of those slots.",
+    title: "Define budget and availability",
+    description: "Set a budget limit and consultation windows to keep scheduling and cost expectations explicit from the start.",
   },
   {
     icon: CalendarCheck,
-    title: "One contractor claims your project",
-    description: "A single licensed and insured contractor reviews your project details and claims it exclusively. No other contractors can view or respond to your request after the claim.",
+    title: "Contractor assignment and confirmation",
+    description: "A verified contractor reviews the full request package, accepts the work, and confirms the consultation window.",
   },
   {
     icon: ClipboardList,
-    title: "Review the estimate and decide",
-    description: "The contractor arrives with full knowledge of your project. They provide a written estimate. You decide whether to proceed. There is no obligation to continue.",
+    title: "Estimate review with full context",
+    description: "The consultation proceeds with complete project information already in hand, followed by a written estimate for decision-making.",
   },
 ]
 
@@ -42,7 +42,7 @@ export function SubmitCTA() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     )
     observer.observe(el)
     return () => observer.disconnect()
@@ -52,7 +52,6 @@ export function SubmitCTA() {
     <section ref={sectionRef} id="submit" className="py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="relative rounded-3xl border border-border/40 bg-card overflow-hidden reveal">
-          {/* Animated background */}
           <div className="absolute inset-0 pointer-events-none">
             <div
               className="animate-orb-1 absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.06]"
@@ -66,30 +65,22 @@ export function SubmitCTA() {
 
           <div className="relative p-10 lg:p-16">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-                  <span className="text-primary text-xs font-medium">Free for property owners &mdash; no hidden fees</span>
+                  <span className="text-primary text-xs font-medium">Process and documentation framework</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  You define the project before
-                  <br />
-                  <span className="gradient-text">any contractor is contacted.</span>
+                  Service requests are structured around documented operations standards.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Upload photos, write the scope, set a budget ceiling, and choose your consultation window.
-                  One verified contractor reviews your full project profile and claims it exclusively. There
-                  is no cost to homeowners.
-                  Submit your project.
-                  <br />
-                  <span className="gradient-text">One contractor. Your terms.</span>
-                </h2>
+                  The workflow in our business operations manual guides intake, assignment, consultation scheduling, and completion
+                  records. This gives property owners and managers a predictable process with full context at each step.
+                </p>
+
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Property owners submit their project details once, including documentation and a
-                  specified budget. The platform then assigns the project to a single verified
-                  contractor. A consultation is confirmed within 24 hours at a time selected by
-                  the property owner.
+                  Each request includes supporting documentation, defined budget parameters, and a confirmed consultation window.
+                  The assigned contractor receives the full request package prior to the appointment.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
@@ -97,12 +88,12 @@ export function SubmitCTA() {
                     href="/dashboard/homeowner/new"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Start Your Project &mdash; Free
+                    Start a Service Request
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">
                     <span className="flex items-center gap-1.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-primary" /> No obligation
+                      <CheckCircle className="h-3.5 w-3.5 text-primary" /> Documented workflow
                     </span>
                     <span className="flex items-center gap-1.5">
                       <Shield className="h-3.5 w-3.5 text-primary" /> Verified contractors only
@@ -111,22 +102,17 @@ export function SubmitCTA() {
                 </div>
               </div>
 
-              {/* Right — process flow */}
               <div className="hidden lg:block">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How it works for property owners</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How the process is executed</p>
                 <div className="relative">
                   {steps.map((step, i) => (
                     <div key={step.title} className="flex items-start gap-4 mb-4 last:mb-0">
-                      {/* Left column: number + line */}
                       <div className="flex flex-col items-center pt-1">
                         <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[11px] font-bold text-primary shrink-0">
                           {i + 1}
                         </div>
-                        {i < steps.length - 1 && (
-                          <div className="w-px h-7 bg-border/40 my-1" />
-                        )}
+                        {i < steps.length - 1 && <div className="w-px h-7 bg-border/40 my-1" />}
                       </div>
-                      {/* Content */}
                       <div className="flex-1 pb-1">
                         <div className="flex items-center gap-2.5 p-3 rounded-xl bg-secondary/30 border border-border/30 hover:bg-secondary/50 hover:border-border/50 transition-colors duration-200">
                           <step.icon className="h-4 w-4 text-primary shrink-0" />
