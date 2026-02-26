@@ -90,6 +90,21 @@ export function MissionValues() {
         <div className="max-w-3xl mb-16 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">What we do</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
+            Most platforms profit by sharing your information with as many contractors as possible.
+            <span className="gradient-text"> We took the opposite approach.</span>
+          </h2>
+          <div className="space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              When a homeowner submits a request on a traditional platform, their phone number is sold
+              to 5–15 contractors at once. Contractors pay per lead, then compete against each other to
+              win the same job. Both sides lose — homeowners get flooded with calls, and contractors
+              burn time and margin chasing leads they may never close.
+            </p>
+            <p className="text-foreground/80 font-medium">
+              Nexus Operations was built on a different premise: one request routes to one verified
+              contractor, and that contractor is the only professional who contacts the homeowner.
+            </p>
+          </div>
             We run day-to-day operations support for property managers.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
@@ -142,6 +157,9 @@ export function MissionValues() {
         >
           <blockquote className="text-center">
             <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
+              &ldquo;This is what we mean by operations. Not lead generation —
+              exclusive matching and routing so contractors can focus on the craft
+              and homeowners can focus on their lives.&rdquo;
               &ldquo;Operations management built on relationship — not just software.&rdquo;
             </p>
             <footer className="mt-4 text-sm text-muted-foreground">

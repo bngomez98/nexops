@@ -167,6 +167,12 @@ export function FAQ() {
           <div className="reveal lg:sticky lg:top-24">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">FAQ</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+              Frequently asked questions about
+              <span className="gradient-text"> how Nexus Operations works</span>
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              Everything homeowners and contractors need to know about submitting requests, claiming
+              leads, membership pricing, and the verification process.
               Common questions
               <span className="gradient-text"> answered directly.</span>
             </h2>

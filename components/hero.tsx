@@ -35,6 +35,20 @@ export function Hero() {
             <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight mb-6">
               Guaranteed contractor response.
               <br />
+              <span className="gradient-text">Exclusively yours.</span>
+              <br />
+              <span className="text-foreground/70">No shared leads. No competing bids.</span>
+            </h1>
+
+            <p
+              className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10 animate-fade-in-up"
+              style={{ animationDelay: "0.25s", opacity: 0 }}
+            >
+              Nexus Operations matches homeowners with one licensed, insured contractor per project —
+              not a list. You submit once with photos, a written scope, and a real budget ceiling. One
+              verified contractor in your area claims it exclusively before your phone rings. They arrive
+              at your consultation already knowing the scope. You already know who&apos;s coming. That&apos;s
+              what it means to hire with confidence.
               <span className="gradient-text">Zero vendor chasing.</span>
             </h1>
 

@@ -73,6 +73,13 @@ export function Comparison() {
         <div className="max-w-2xl mb-12 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works for you</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+            How Nexus Operations compares to traditional lead platforms
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Traditional platforms distribute your contact information to 5–15 contractors per request and
+            charge each one for the same lead. Nexus Operations routes each project to one verified
+            contractor — the homeowner sets the scope and budget upfront, and only one professional
+            is ever assigned.
             What every project includes.
             <span className="gradient-text"> From submission to consultation.</span>
           </h2>

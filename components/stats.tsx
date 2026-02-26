@@ -11,6 +11,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
+  { value: 1, suffix: "", label: "Contractor matched per project" },
+  { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners, always" },
+  { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
+  { prefix: "$", value: 4200, suffix: "", label: "Median residential project value" },
   { value: 1, suffix: " hr", label: "Emergency contractor assignment target" },
   { value: 4, suffix: " hrs", label: "Emergency on-site arrival target" },
   { value: 25, suffix: "–35%", label: "Standard service markup range" },

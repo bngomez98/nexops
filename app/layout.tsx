@@ -7,6 +7,22 @@ import "./globals.css"
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
+    default: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
+    template: "%s | Nexus Operations",
+  },
+  description:
+    "Nexus Operations matches each home project to one licensed, insured contractor in the Topeka, KS area. Homeowners submit photos, a written scope, and a budget cap. One verified contractor is assigned exclusively. Free for homeowners.",
+  keywords: [
+    "home services Topeka Kansas",
+    "exclusive contractor leads",
+    "tree removal Topeka",
+    "roofing contractor Kansas",
+    "concrete work Topeka",
+    "licensed insured contractors",
+    "home repair matching",
+    "exclusive contractor matching",
+    "HVAC contractor Topeka",
+    "fencing contractor Kansas",
     default: "NexOps | Operations Partner for Property Management",
     template: "%s | NexOps",
   },
@@ -31,6 +47,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
+    title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
+    description:
+      "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Homeowners submit photos, scope, and budget. One verified contractor is assigned exclusively. Free for homeowners.",
+    siteName: "Nexus Operations",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
+    description: "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Free for homeowners. Flat monthly membership for contractors.",
     title: "NexOps | Operations Partner for Property Management",
     description:
       "NexOps coordinates your vendor relationships, documents your workflows, and serves as a dedicated operations partner for property management companies. Consulting available now — platform launching 2026.",

@@ -35,6 +35,15 @@ export default function PropertyManagersPage() {
                 Shawnee County commercial maintenance coordination
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
+                One submission per issue.
+                <br />
+                <span className="text-primary">One verified contractor assigned.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
+                Nexus Operations handles contractor vetting, scheduling, and documentation for property
+                managers. Submit photos and a budget cap for any maintenance issue, and a pre-verified
+                contractor is assigned and scheduled within 24 hours. No vendor management, no chasing
+                estimates, no unvetted operators on your properties.
                 Verified dispatch.
                 <br />
                 <span className="text-primary">Defined response guarantees.</span>

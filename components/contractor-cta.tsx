@@ -90,6 +90,15 @@ export function ContractorCTA() {
           <div className="reveal">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+              Every project you claim belongs
+              <br />
+              <span className="gradient-text">exclusively to you.</span>
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              Nexus Operations gives licensed, insured contractors in the Topeka area a direct pipeline
+              of pre-documented project requests. Each request includes photos, a written scope, and a
+              homeowner-defined budget. When you claim a project, no other contractor can see it or
+              contact that homeowner. One flat monthly membership covers unlimited claims.
               Exclusive projects.
               <br />
               <span className="gradient-text">Flat monthly membership.</span>
