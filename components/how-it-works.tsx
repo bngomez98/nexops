@@ -165,8 +165,8 @@ export function HowItWorks() {
             From submission to confirmed consultation
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            From submission to confirmed consultation in as little as 24 hours. Submit your
-            project once — the platform assigns it to a single verified contractor.
+            Submit your project once — the platform assigns it to a single verified contractor
+            and confirms a consultation within 24 hours.
           </p>
         </div>
 

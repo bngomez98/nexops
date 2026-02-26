@@ -82,7 +82,7 @@ export function MissionValues() {
           <p className="text-muted-foreground leading-relaxed">
             Nexus Operations connects property owners with licensed contractors through a
             two-sided marketplace — assigning each project to a single contractor exclusively.
-            No competitive bidding. No unsolicited calls. No wasted time.
+            No competitive bidding. No unsolicited calls. One project, one professional.
           </p>
         </div>
 
