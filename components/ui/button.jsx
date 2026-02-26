@@ -21,7 +21,7 @@ const sizeClasses = {
   'icon-lg': 'size-10',
 }
 
-function Button({ className, variant = 'default', size = 'default', asChild = false, ...props }) {
+function Button({ className = "", variant = 'default', size = 'default', asChild = false, ...props }) {
   const Comp = asChild ? Slot : 'button'
   return (
     <Comp

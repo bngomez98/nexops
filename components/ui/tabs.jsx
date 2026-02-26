@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 const Tabs = TabsPrimitive.Root
 
-function TabsList({ className, ref, ...props }) {
+function TabsList({ className = "", ref = null, ...props }) {
   return (
     <TabsPrimitive.List
       ref={ref}
@@ -18,7 +18,7 @@ function TabsList({ className, ref, ...props }) {
   )
 }
 
-function TabsTrigger({ className, ref, ...props }) {
+function TabsTrigger({ className = "", ref = null, ...props }) {
   return (
     <TabsPrimitive.Trigger
       ref={ref}
@@ -31,7 +31,7 @@ function TabsTrigger({ className, ref, ...props }) {
   )
 }
 
-function TabsContent({ className, ref, ...props }) {
+function TabsContent({ className = "", ref = null, ...props }) {
   return (
     <TabsPrimitive.Content
       ref={ref}

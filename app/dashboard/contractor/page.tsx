@@ -293,7 +293,7 @@ export default function ContractorDashboard() {
               </span>
             </div>
             <h1 className="text-xl font-bold">
-              Welcome back, <span className="gradient-text">{user.name.split(" ")[0]}</span>
+              Welcome back, <span className="gradient-text">{(user.name ?? user.fullName ?? "there").split(" ")[0]}</span>
             </h1>
             {user.businessName && (
               <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">

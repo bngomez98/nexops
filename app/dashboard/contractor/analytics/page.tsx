@@ -18,8 +18,13 @@ import {
   Legend,
 } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { getStoredUser, type AuthUser } from "@/lib/auth"
+import { getStoredUser } from "@/lib/auth"
 import { TrendingUp, DollarSign, Target, Users, ArrowUpRight, ArrowDownRight } from "lucide-react"
+
+interface AuthUser {
+  role: string
+  fullName?: string
+}
 
 interface Lead {
   id: string
@@ -197,7 +202,7 @@ export default function ContractorAnalyticsPage() {
                 <Tooltip
                   contentStyle={chartStyle.contentStyle}
                   labelStyle={chartStyle.labelStyle}
-                  formatter={(v: number) => [`$${v.toLocaleString()}`, "Revenue"]}
+                  formatter={(v) => [`$${Number(v ?? 0).toLocaleString()}`, "Revenue"]}
                 />
                 <Line
                   type="monotone"

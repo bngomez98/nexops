@@ -32,7 +32,7 @@ const SECURITY_HEADERS = {
   ].join("; "),
 }
 
-export function middleware(request) {
+export function proxy(request) {
   const { pathname, hostname } = request.nextUrl
 
   // Redirect www → non-www (canonical domain enforcement)
