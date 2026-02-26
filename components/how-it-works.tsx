@@ -1,143 +1,42 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { MessageSquare, ClipboardList, Network, Monitor, TrendingUp } from "lucide-react"
-import {
-  Upload,
-  Lock,
-  CalendarCheck,
-  ClipboardList,
-  CheckCircle,
-} from "lucide-react"
+import { PhoneCall, UserCheck, Wrench, Receipt, CheckCircle } from "lucide-react"
 
 const steps = [
   {
-    icon: Upload,
+    icon: PhoneCall,
     number: "01",
-    title: "Discovery call",
+    title: "Request intake",
     detail:
-      "We run a focused 45-minute call with your leadership team to map your portfolio, current vendor setup, and your most expensive coordination bottlenecks.",
-    title: "Submit your project",
-    detail: "Upload photos, describe the work needed, set a budget cap, and choose your preferred consultation windows.",
-    color: "text-primary",
-    bg: "bg-primary/10",
-    border: "border-primary/20",
-    accent: "oklch(0.75 0.18 155)",
+      "Property managers submit by phone, text, or email with address, unit, issue details, urgency level, and tenant availability.",
   },
   {
-    icon: Lock,
+    icon: UserCheck,
     number: "02",
-    title: "Operations assessment",
+    title: "Contractor assignment",
     detail:
-      "Within two weeks, we document your current workflows and hand you a written operations plan with priorities, owners, and execution timelines.",
-    title: "One contractor claims it exclusively",
-    detail: "A licensed, insured local contractor reviews and claims your project — permanently removing it from every other contractor's feed.",
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-    border: "border-amber-400/20",
-    accent: "oklch(0.82 0.17 85)",
+      "Nexus Operations routes to a verified contractor by trade, proximity, and performance. If declined, backup reassignment runs automatically.",
   },
   {
-    icon: CalendarCheck,
+    icon: Wrench,
     number: "03",
-    title: "Hands-on coordination",
+    title: "Work completion + QA",
     detail:
-      "A dedicated NexOps operator coordinates vendors, scheduling, scope follow-through, and communication so your property team can stay focused on residents and assets.",
-    title: "Consultation is confirmed",
-    detail: "An appointment is scheduled and confirmed within 24 hours. The contractor has access to all project details — photos, scope, and budget — in advance.",
-    color: "text-violet-400",
-    bg: "bg-violet-400/10",
-    border: "border-violet-400/20",
-    accent: "oklch(0.70 0.15 300)",
+      "Contractors submit photos and work notes. We confirm completion with the property manager and track quality before payment release.",
   },
   {
-    icon: ClipboardList,
+    icon: Receipt,
     number: "04",
-    title: "Platform rollout",
+    title: "Monthly invoicing",
     detail:
-      "When the NexOps platform launches in 2026, your team starts with workflows already built around your real operating model, not a generic template.",
-    title: "Review the estimate and decide",
-    detail: "The contractor delivers a written estimate. Review the scope and timeline, then decide — no obligation if it doesn't meet your expectations.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-    border: "border-emerald-400/20",
-    accent: "oklch(0.72 0.17 160)",
+      "Clients receive a line-item invoice showing contractor costs and markup by urgency category, with net payment terms.",
   },
 ]
-
-function StepCard({
-  step,
-  index,
-  activeStep,
-  onHover,
-}: {
-  step: (typeof steps)[number]
-  index: number
-  activeStep: number | null
-  onHover: (i: number | null) => void
-}) {
-  const isActive = activeStep === index
-
-  return (
-    <div
-      className="reveal group relative"
-      style={{ transitionDelay: `${index * 130}ms` }}
-      onMouseEnter={() => onHover(index)}
-      onMouseLeave={() => onHover(null)}
-    >
-      <div
-        className="relative p-6 rounded-2xl border bg-card transition-all duration-300 cursor-default h-full"
-        style={
-          isActive
-            ? { borderColor: `${step.accent}55`, boxShadow: `0 8px 30px oklch(0 0 0 / 0.3)` }
-            : { borderColor: "oklch(0.25 0.01 240 / 0.4)" }
-        }
-      >
-        <div className="flex items-center gap-3 mb-5">
-          <div
-            className={`flex items-center justify-center w-12 h-12 rounded-xl ${step.bg} border ${step.border} transition-transform duration-300 ${isActive ? "scale-110" : ""}`}
-          >
-            <step.icon className={`h-5 w-5 ${step.color}`} />
-          </div>
-          <span className="text-2xl font-bold font-mono text-muted-foreground/30 group-hover:text-muted-foreground/50 transition-colors">
-            {step.number}
-          </span>
-        </div>
-
-        <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
-
-        <div
-          className="absolute bottom-0 left-6 right-6 h-0.5 rounded-full transition-all duration-300"
-          style={{
-            background: step.accent,
-            opacity: isActive ? 0.6 : 0,
-          }}
-        />
-      </div>
-
-      {index < 3 && (
-        <div className="hidden lg:flex absolute -right-3 top-[52px] z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border/40">
-          <svg width="10" height="10" viewBox="0 0 10 10" className="text-muted-foreground/40">
-            <path
-              d="M3 2L7 5L3 8"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      )}
-    </div>
-  )
-}
 
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
   const [activeStep, setActiveStep] = useState<number | null>(null)
-  const [inView, setInView] = useState(false)
 
   useEffect(() => {
     const el = sectionRef.current
@@ -146,75 +45,64 @@ export function HowItWorks() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true)
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 130)
+            setTimeout(() => node.classList.add("in-view"), i * 120)
           })
           observer.disconnect()
         }
       },
       { threshold: 0.12 },
     )
+
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
     <section ref={sectionRef} id="how-it-works" className="py-24 lg:py-32 relative overflow-hidden">
-      <div
-        className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
-      />
-
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-14 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">How we work</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
-            Clear process. Direct ownership. Measurable operations support.
+            Maintenance coordination built for multifamily operations.
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            We are not a software-only product. We are an operations partner that documents your process,
-            coordinates your vendors, and then gives your team software built around how you actually work.
-            From submission to confirmed consultation
-          </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            Submit your project once — the platform assigns it to a single verified contractor
-            and confirms a consultation within 24 hours.
+            We operate as an outsourced coordination layer for Topeka property managers: faster dispatch,
+            contractor accountability, and standardized reporting.
           </p>
         </div>
 
-        <div className="relative">
-          <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-px">
-            <div
-              className="h-full rounded-full"
-              style={{
-                background:
-                  "linear-gradient(to right, oklch(0.75 0.18 155 / 0.2), oklch(0.75 0.18 155 / 0.4), oklch(0.75 0.18 155 / 0.2))",
-                transform: inView ? "scaleX(1)" : "scaleX(0)",
-                transformOrigin: "left",
-                transition: "transform 1.2s ease 0.4s",
-              }}
-            />
-          </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step, i) => {
+            const isActive = activeStep === i
+            return (
+              <div
+                key={step.number}
+                className="reveal group relative p-6 rounded-2xl border bg-card transition-all duration-300"
+                onMouseEnter={() => setActiveStep(i)}
+                onMouseLeave={() => setActiveStep(null)}
+                style={isActive ? { borderColor: "oklch(0.75 0.18 155 / 0.6)" } : {}}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 border border-primary/20">
+                    <step.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="text-2xl font-bold font-mono text-muted-foreground/30">{step.number}</span>
+                </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {steps.map((step, i) => (
-              <StepCard key={step.number} step={step} index={i} activeStep={activeStep} onHover={setActiveStep} />
-            ))}
-          </div>
+                <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
+              </div>
+            )
+          })}
         </div>
 
-        <div className="mt-12 reveal">
+        <div className="mt-10 reveal">
           <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-3xl">
-            <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">What we deliver:</span> documented workflows,
-              vendor accountability, recurring operations reviews, and executive reporting your team can act on.
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
             <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
             <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">Free for property owners.</span>{" "}
-              Nexus Operations charges contractors a monthly membership &mdash; not homeowners, not per-lead fees.
+              <span className="font-semibold text-foreground">Service levels:</span> Emergency (1h assignment, 4h on-site),
+              Urgent (4h assignment, next business day arrival), Routine (24h assignment, 3–5 business day arrival).
             </p>
           </div>
         </div>
