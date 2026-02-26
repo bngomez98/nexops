@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { ArrowRight, CheckCircle, Clock, ShieldCheck, DollarSign, FlaskConical } from "lucide-react"
 import { ArrowRight, CheckCircle, Clock, ShieldCheck, DollarSign } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -32,6 +33,13 @@ export default function PropertyManagersPage() {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                 <Clock className="h-4 w-4" />
+                Pilot program live in Shawnee County (first 30–60 days)
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
+                Verified dispatch.
+                <br />
+                <span className="text-primary">Defined response guarantees.</span>
+              </h1>
                 Shawnee County commercial maintenance coordination
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
@@ -53,11 +61,22 @@ export default function PropertyManagersPage() {
                 route verified contractors, enforce backup assignment rules, confirm completion, and send
                 transparent monthly billing.
               </p>
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 mb-8 max-w-2xl">
+                <div className="flex items-start gap-3">
+                  <FlaskConical className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <p className="text-sm text-foreground/80 leading-relaxed">
+                    <span className="font-semibold text-foreground">Pilot pricing:</span> During the first 30–60 days,
+                    property managers pay a flat <span className="font-semibold text-primary">$50–$100 fee</span> to
+                    request projects/jobs while we validate dispatch speed and reporting.
+                  </p>
+                </div>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
                 >
+                  Join the Pilot Program
                   Request Onboarding
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -75,6 +94,9 @@ export default function PropertyManagersPage() {
         <section className="py-20 bg-card/30 border-y border-border/40">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-8">
+              <h2 className="text-3xl font-semibold tracking-tight mb-3">Pilot response-time guarantees</h2>
+              <p className="text-muted-foreground">
+                Dispatch and arrival targets are enforced during pilot operations, with automatic reassignment when a contractor does not accept in time.
               <h2 className="text-3xl font-semibold tracking-tight mb-3">Response-time guarantees</h2>
               <p className="text-muted-foreground">
                 Dispatch and arrival targets are based on urgency category, with automatic reassignment when a contractor does not accept in time.
@@ -128,12 +150,14 @@ export default function PropertyManagersPage() {
             <div className="p-8 rounded-2xl bg-card border border-border/40">
               <div className="flex items-center gap-2 mb-4">
                 <DollarSign className="h-5 w-5 text-primary" />
+                <h3 className="text-base font-semibold">Post-pilot cost-plus markup model</h3>
                 <h3 className="text-base font-semibold">Cost-plus markup model</h3>
               </div>
               <div className="space-y-3">
                 {markupBands.map((band) => (
                   <div key={band.label} className="p-4 rounded-lg border border-border/40">
                     <p className="text-sm font-semibold">{band.label}</p>
+                    <p className="text-sm text-muted-foreground">Standard markup: {band.markup}</p>
                     <p className="text-sm text-muted-foreground">Markup: {band.markup}</p>
                     <p className="text-sm text-primary">Example: {band.example}</p>
                   </div>
@@ -151,6 +175,9 @@ export default function PropertyManagersPage() {
             <p className="text-muted-foreground leading-relaxed mb-8">
               We partner with Topeka property management teams to implement standardized intake,
               dispatch, QA, and billing workflows across your portfolio.
+            </p>
+            <p className="text-sm text-primary font-medium mb-8">
+              Pilot access: $50–$100 flat request fee for the first 30–60 days.
             </p>
             <div className="flex items-center justify-center gap-2 mb-8 text-sm text-muted-foreground">
               <CheckCircle className="h-4 w-4 text-primary" />
