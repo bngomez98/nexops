@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Stop paying per lead shared with five competitors. Nexus Operations delivers exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Licensed and insured contractors only. Flat monthly membership starting at $299.",
+    "Nexus Operations gives licensed, insured contractors in Topeka and the surrounding region access to exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Flat monthly membership starting at $299.",
 }
 
 const benefits = [
@@ -125,13 +125,13 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Built around contractor economics
+                Designed around how contractors do business
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Shared-lead platforms are optimized to sell your contact information as many times as possible —
-                maximizing their revenue at the cost of your close rate. Nexus Operations is structured around
-                the opposite model: your membership funds a pipeline that works exclusively for you, with every
-                request you claim guaranteed off-limits to every other contractor on the platform.
+                Your membership funds a pipeline that works exclusively for you. Every request you claim is
+                permanently, exclusively yours — no competing bids, no shared leads, no race to submit a quote
+                before someone else gets there first. The platform is built so that when you commit to a project,
+                you already know the scope, the budget, and when the homeowner is available.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -159,33 +159,31 @@ export default function ContractorsPage() {
                 The economics are straightforward
               </h2>
               <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
-                Compare what you spend now versus what a flat-rate exclusive pipeline actually costs.
+                A flat monthly membership with unlimited claims — and every project you claim is fully documented and exclusively yours.
               </p>
-              <div className="grid sm:grid-cols-2 gap-6 mb-10">
-                <div className="p-7 rounded-2xl bg-card border border-border/40">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
-                    Shared-lead platforms
-                  </p>
-                  <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>$15–$80 per lead — shared with 3 to 7 others</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>Sub-15% conversion — you are competing on every job</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>30–40% no-show rate on site visits</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>5–10 hours per week chasing unqualified contacts</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>No project documentation before you commit to visiting</li>
-                  </ul>
-                </div>
-                <div className="p-7 rounded-2xl bg-primary/5 border border-primary/20">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-5">
-                    Nexus Operations
-                  </p>
-                  <ul className="flex flex-col gap-3 text-sm text-foreground">
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$299/month flat — claim unlimited projects</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>You are the only contractor on every claimed job</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Photos and budget defined before you commit</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Consultation pre-confirmed by homeowner — no callbacks</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Median project value is $4,200 — 14 months of Standard membership from a single closed job</li>
-                  </ul>
-                </div>
+              <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20 mb-6">
+                <ul className="flex flex-col gap-4 text-sm text-foreground">
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">$299/month flat</span> — claim unlimited projects with no per-project fees or hidden charges</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span>You are <span className="font-semibold">the only contractor</span> on every job you claim — permanently exclusive, removed from all other feeds instantly</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">Full project documentation</span> before you commit — photos, written scope, and a defined budget cap</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">Pre-scheduled consultations</span> — homeowners select their preferred windows at submission, no callbacks needed</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
+                  </li>
+                </ul>
               </div>
               <div className="p-5 rounded-xl border border-border/40 bg-card/50 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -344,7 +342,7 @@ export default function ContractorsPage() {
                 href="/pricing"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                Compare Membership Plans
+                View Membership Plans
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
