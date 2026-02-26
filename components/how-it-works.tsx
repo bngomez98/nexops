@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { MessageSquare, ClipboardList, Network, Monitor, TrendingUp } from "lucide-react"
 import {
   Upload,
   Lock,
@@ -13,6 +14,9 @@ const steps = [
   {
     icon: Upload,
     number: "01",
+    title: "Discovery call",
+    detail:
+      "We run a focused 45-minute call with your leadership team to map your portfolio, current vendor setup, and your most expensive coordination bottlenecks.",
     title: "Submit your project",
     detail: "Upload photos, describe the work needed, set a budget cap, and choose your preferred consultation windows.",
     color: "text-primary",
@@ -23,6 +27,9 @@ const steps = [
   {
     icon: Lock,
     number: "02",
+    title: "Operations assessment",
+    detail:
+      "Within two weeks, we document your current workflows and hand you a written operations plan with priorities, owners, and execution timelines.",
     title: "One contractor claims it exclusively",
     detail: "A licensed, insured local contractor reviews and claims your project — permanently removing it from every other contractor's feed.",
     color: "text-amber-400",
@@ -33,6 +40,9 @@ const steps = [
   {
     icon: CalendarCheck,
     number: "03",
+    title: "Hands-on coordination",
+    detail:
+      "A dedicated NexOps operator coordinates vendors, scheduling, scope follow-through, and communication so your property team can stay focused on residents and assets.",
     title: "Consultation is confirmed",
     detail: "An appointment is scheduled and confirmed within 24 hours. The contractor has access to all project details — photos, scope, and budget — in advance.",
     color: "text-violet-400",
@@ -43,6 +53,9 @@ const steps = [
   {
     icon: ClipboardList,
     number: "04",
+    title: "Platform rollout",
+    detail:
+      "When the NexOps platform launches in 2026, your team starts with workflows already built around your real operating model, not a generic template.",
     title: "Review the estimate and decide",
     detail: "The contractor delivers a written estimate. Review the scope and timeline, then decide — no obligation if it doesn't meet your expectations.",
     color: "text-emerald-400",
@@ -80,7 +93,6 @@ function StepCard({
             : { borderColor: "oklch(0.25 0.01 240 / 0.4)" }
         }
       >
-        {/* Icon + number */}
         <div className="flex items-center gap-3 mb-5">
           <div
             className={`flex items-center justify-center w-12 h-12 rounded-xl ${step.bg} border ${step.border} transition-transform duration-300 ${isActive ? "scale-110" : ""}`}
@@ -95,7 +107,6 @@ function StepCard({
         <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
 
-        {/* Bottom accent bar */}
         <div
           className="absolute bottom-0 left-6 right-6 h-0.5 rounded-full transition-all duration-300"
           style={{
@@ -105,7 +116,6 @@ function StepCard({
         />
       </div>
 
-      {/* Arrow connector (desktop, non-last) */}
       {index < 3 && (
         <div className="hidden lg:flex absolute -right-3 top-[52px] z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border/40">
           <svg width="10" height="10" viewBox="0 0 10 10" className="text-muted-foreground/40">
@@ -151,17 +161,20 @@ export function HowItWorks() {
 
   return (
     <section ref={sectionRef} id="how-it-works" className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Ambient background */}
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.03]"
         style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Header */}
         <div className="max-w-2xl mb-14 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How we work</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
+            Clear process. Direct ownership. Measurable operations support.
+          </h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            We are not a software-only product. We are an operations partner that documents your process,
+            coordinates your vendors, and then gives your team software built around how you actually work.
             From submission to confirmed consultation
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
@@ -170,13 +183,13 @@ export function HowItWorks() {
           </p>
         </div>
 
-        {/* Connecting timeline line (desktop) */}
         <div className="relative">
           <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-px">
             <div
               className="h-full rounded-full"
               style={{
-                background: "linear-gradient(to right, oklch(0.75 0.18 155 / 0.2), oklch(0.75 0.18 155 / 0.4), oklch(0.75 0.18 155 / 0.2))",
+                background:
+                  "linear-gradient(to right, oklch(0.75 0.18 155 / 0.2), oklch(0.75 0.18 155 / 0.4), oklch(0.75 0.18 155 / 0.2))",
                 transform: inView ? "scaleX(1)" : "scaleX(0)",
                 transformOrigin: "left",
                 transition: "transform 1.2s ease 0.4s",
@@ -186,19 +199,17 @@ export function HowItWorks() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, i) => (
-              <StepCard
-                key={step.number}
-                step={step}
-                index={i}
-                activeStep={activeStep}
-                onHover={setActiveStep}
-              />
+              <StepCard key={step.number} step={step} index={i} activeStep={activeStep} onHover={setActiveStep} />
             ))}
           </div>
         </div>
 
-        {/* Bottom callout */}
         <div className="mt-12 reveal">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-3xl">
+            <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">What we deliver:</span> documented workflows,
+              vendor accountability, recurring operations reviews, and executive reporting your team can act on.
           <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
             <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
             <p className="text-sm text-muted-foreground">
