@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Stop paying per lead shared with five competitors. Nexus Operations delivers exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Licensed and insured contractors only. Flat monthly membership starting at $299.",
+    "Nexus Operations gives licensed, insured contractors in Topeka and the surrounding region access to exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Flat monthly membership starting at $299.",
 }
 
 const benefits = [
@@ -38,7 +38,7 @@ const benefits = [
     icon: DollarSign,
     title: "Predictable, flat monthly membership",
     description:
-      "Starting at $299/month for unlimited lead claims. No per-lead fees. No surprise charges. No annual contracts. One closed project per month typically covers your membership cost many times over.",
+      "Starting at $299/month for unlimited project claims. No per-lead fees. No surprise charges. No annual contracts. The median project on our platform is $4,200 — a single closed job covers 14 months of Standard membership.",
   },
   {
     icon: BarChart3,
@@ -75,7 +75,7 @@ const verificationSteps = [
     step: "04",
     title: "Activate your portal",
     description:
-      "Once approved, configure your notification preferences, set your coverage boundaries, and begin claiming leads immediately. No onboarding delay.",
+      "Once approved, configure your notification preferences, set your coverage boundaries, and begin claiming projects immediately. No onboarding delay.",
   },
 ]
 
@@ -91,6 +91,7 @@ export default function ContractorsPage() {
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
                 Exclusive, pre-documented
+                Projects that belong
                 <br />
                 <span className="text-primary">project requests in Topeka.</span>
               </h1>
@@ -132,6 +133,13 @@ export default function ContractorsPage() {
                 trade category and coverage area. When you claim a request, it is removed from all other
                 contractor feeds permanently. There are no per-lead charges and no competing bids on the
                 same project.
+                Designed around how contractors do business
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Your membership funds a pipeline that works exclusively for you. Every request you claim is
+                permanently, exclusively yours — no competing bids, no shared leads, no race to submit a quote
+                before someone else gets there first. The platform is built so that when you commit to a project,
+                you already know the scope, the budget, and when the homeowner is available.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -161,32 +169,31 @@ export default function ContractorsPage() {
               <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
                 What contractors typically spend on shared-lead platforms compared to the Nexus Operations
                 flat-rate membership.
+                A flat monthly membership with unlimited claims — and every project you claim is fully documented and exclusively yours.
               </p>
-              <div className="grid sm:grid-cols-2 gap-6 mb-10">
-                <div className="p-7 rounded-2xl bg-card border border-border/40">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">
-                    Shared-lead platforms
-                  </p>
-                  <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>$15–$80 per lead — shared with 3 to 7 others</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>Sub-15% conversion — you are competing on every job</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>30–40% no-show rate on site visits</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>5–10 hours per week chasing unqualified contacts</li>
-                    <li className="flex items-start gap-2"><span className="text-red-400 shrink-0 mt-0.5">✕</span>No project documentation before you commit to visiting</li>
-                  </ul>
-                </div>
-                <div className="p-7 rounded-2xl bg-primary/5 border border-primary/20">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-5">
-                    Nexus Operations
-                  </p>
-                  <ul className="flex flex-col gap-3 text-sm text-foreground">
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>$299/month flat — claim unlimited leads</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>You are the only contractor on every claimed job</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Photos and budget defined before you commit</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>Consultation pre-confirmed by homeowner — no callbacks</li>
-                    <li className="flex items-start gap-2"><span className="text-primary shrink-0 mt-0.5">✓</span>One closed project typically pays your membership for months</li>
-                  </ul>
-                </div>
+              <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20 mb-6">
+                <ul className="flex flex-col gap-4 text-sm text-foreground">
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">$299/month flat</span> — claim unlimited projects with no per-project fees or hidden charges</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span>You are <span className="font-semibold">the only contractor</span> on every job you claim — permanently exclusive, removed from all other feeds instantly</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">Full project documentation</span> before you commit — photos, written scope, and a defined budget cap</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span><span className="font-semibold">Pre-scheduled consultations</span> — homeowners select their preferred windows at submission, no callbacks needed</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
+                  </li>
+                </ul>
               </div>
               <div className="p-5 rounded-xl border border-border/40 bg-card/50 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -309,14 +316,16 @@ export default function ContractorsPage() {
                 {
                   q: "How does first-come, first-served claiming work?",
                   a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
+                  q: "How does the first-come, first-served system work?",
+                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the project exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                 },
                 {
                   q: "Can I set a minimum project size?",
                   a: "Yes. In your portal settings you can define a budget floor so only requests above your threshold appear in your feed. This keeps your attention on jobs that fit your business model.",
                 },
                 {
-                  q: "What happens if I claim a lead and the homeowner doesn't respond?",
-                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue lead credits for confirmed no-shows, not just excuses.",
+                  q: "What happens if I claim a project and the homeowner doesn't respond?",
+                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows, not just excuses.",
                 },
                 {
                   q: "Can I cover multiple service categories?",
@@ -345,7 +354,7 @@ export default function ContractorsPage() {
                 href="/pricing"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                Compare Membership Plans
+                View Membership Plans
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

@@ -5,13 +5,16 @@ export function Footer() {
   return (
     <footer className="border-t border-border/40 bg-card/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           <div className="col-span-2 md:col-span-1">
             <div className="mb-5">
               <Logo />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               Exclusive contractor matching for homeowners — one project, one verified professional. No shared leads. No bidding wars. Always free.
+              A two-sided marketplace connecting property owners with verified contractors in
+              the home improvement sector. Each project is assigned to a single contractor on
+              an exclusive basis.
             </p>
           </div>
 
@@ -21,7 +24,7 @@ export function Footer() {
               <li><Link href="/#how-it-works" className="text-foreground/60 hover:text-primary transition-colors">How It Works</Link></li>
               <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Service Categories</Link></li>
               <li><Link href="/pricing" className="text-foreground/60 hover:text-primary transition-colors">Membership Plans</Link></li>
-              <li><Link href="/login?tab=signup" className="text-foreground/60 hover:text-primary transition-colors">Submit a Request</Link></li>
+              <li><Link href="/dashboard/homeowner/new" className="text-foreground/60 hover:text-primary transition-colors">Submit a Request</Link></li>
             </ul>
           </div>
 
@@ -44,13 +47,15 @@ export function Footer() {
               <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Get Onboarded</Link></li>
             </ul>
           </div>
+        </div>
 
-          <div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10 pt-8 border-t border-border/30">
+          <div className="col-span-2 md:col-span-1">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Company</h3>
             <ul className="flex flex-col gap-3 text-sm">
               <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</Link></li>
               <li><a href="mailto:admin@nexusoperations.org" className="text-foreground/60 hover:text-primary transition-colors">admin@nexusoperations.org</a></li>
-              <li><a href="tel:+19139511711" className="text-foreground/60 hover:text-primary transition-colors">(913) 951-1711</a></li>
+              <li><a href="tel:+18008702734" className="text-foreground/60 hover:text-primary transition-colors">(800) 870-2734</a></li>
               <li><Link href="/privacy" className="text-foreground/60 hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-foreground/60 hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>

@@ -18,19 +18,19 @@ const testimonials = [
   },
   {
     quote:
-      "What sold me was the documentation. Every lead comes with photos, a written scope, and a budget cap the homeowner already agreed to. I'm not driving out to give a quote on a job that was never real — I'm showing up to a pre-qualified consultation. My close rate is through the roof.",
+      "What sold me was the documentation. Every project comes with photos, a written scope, and a budget cap the homeowner already agreed to. I'm not driving out to give a quote on a job that was never real — I'm showing up to a pre-qualified consultation. My close rate is through the roof.",
     name: "Denise K.",
     company: "Cornerstone Concrete & Flatwork",
     service: "Concrete Work",
     metric: "~80%",
-    metricLabel: "Close rate on claimed leads",
+    metricLabel: "Close rate on claimed projects",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     quote:
-      "I spent years fighting for shared leads on the big platforms. Now I pay one flat membership and every lead I claim is mine — period. No one else calls that homeowner. No one undercuts me. The jobs I'm getting are bigger and the customers are better prepared. It's not even close.",
+      "I spent years fighting for shared leads on the big platforms. Now I pay one flat membership and every project I claim is mine — period. No one else calls that homeowner. No one undercuts me. The jobs I'm getting are bigger and the customers are better prepared. It's not even close.",
     name: "Ray A.",
     company: "Apex Tree & Land Services",
     service: "Tree Removal",
@@ -92,6 +92,11 @@ export function Testimonials() {
           <p className="text-muted-foreground leading-relaxed">
             These contractors previously used platforms where every lead was shared with five or more
             competitors. After switching to exclusive matching, their close rates and project values changed.
+            What contractors get
+            <span className="gradient-text"> that shared-lead platforms don&apos;t.</span>
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Every project is exclusively theirs the moment they claim it. Full documentation upfront. No per-lead fees — ever.
           </p>
         </div>
 
@@ -162,10 +167,10 @@ export function Testimonials() {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">
-              Every lead in the network goes to one contractor.
+              No shared leads, at any tier.
             </p>
             <p className="text-sm text-muted-foreground">
-              No other platform in the Topeka area guarantees full exclusivity on every request. If you claim it, it belongs to you — permanently, from that moment forward.
+              The moment a contractor claims a project, it is removed from every other contractor&apos;s feed and cannot be reclaimed. The homeowner hears from exactly one professional.
             </p>
           </div>
         </div>

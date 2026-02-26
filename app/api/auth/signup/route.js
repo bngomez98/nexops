@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from "next/server"
-import { getUserByEmail, createUser, createSession, toSafeUser, hashNewPassword } from "@/lib/store"
+import { NextResponse } from "next/server"
+import { getUserByEmail, createUser, createSession, toSafeUser, hashNewPassword, seedIfEmpty } from "@/lib/store"
 
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   try {
+    await seedIfEmpty()
+
     const body = await req.json()
     const {
       email,
@@ -15,18 +17,7 @@ export async function POST(req: NextRequest) {
       serviceCategories,
       subscription,
       address,
-    } = body as {
-      email: string
-      password: string
-      name: string
-      role: "homeowner" | "contractor"
-      phone?: string
-      businessName?: string
-      licenseNumber?: string
-      serviceCategories?: string[]
-      subscription?: "standard" | "premium" | "elite"
-      address?: string
-    }
+    } = body
 
     if (!email || !password || !name || !role) {
       return NextResponse.json({ error: "Required fields missing" }, { status: 400 })
@@ -36,12 +27,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 })
     }
 
-    const existing = getUserByEmail(email)
+    const existing = await getUserByEmail(email)
     if (existing) {
       return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 })
     }
 
-    const user = createUser({
+    const user = await createUser({
       email: email.toLowerCase(),
       passwordHash: hashNewPassword(password),
       name,
@@ -54,7 +45,7 @@ export async function POST(req: NextRequest) {
       address,
     })
 
-    const sessionToken = createSession(user.id)
+    const sessionToken = await createSession(user.id)
     const safeUser = toSafeUser(user)
 
     const response = NextResponse.json({ user: safeUser }, { status: 201 })

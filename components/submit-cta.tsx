@@ -1,29 +1,29 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, FileText, DollarSign, CalendarRange, CheckCircle2, Shield, Lock } from "lucide-react"
+import { ArrowRight, Upload, Lock, CalendarCheck, ClipboardList, Shield, CheckCircle } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 const steps = [
   {
-    icon: FileText,
-    title: "Document your project",
-    description: "Photos, written scope, and the specifics — so the contractor arrives knowing exactly what the job entails.",
+    icon: Upload,
+    title: "Upload photos and describe the work",
+    description: "Provide 2 to 10 photographs and a written description of the scope, including what needs to be done, any materials required, and other relevant details.",
   },
   {
-    icon: DollarSign,
-    title: "Define your budget ceiling",
-    description: "Set a hard cap before anyone is contacted. No surprises on-site. No negotiating blind.",
+    icon: Lock,
+    title: "Set your budget and preferred times",
+    description: "Specify the maximum budget you are willing to spend. Select 3 to 4 available time slots for the consultation. A contractor commits to one of those slots.",
   },
   {
-    icon: CalendarRange,
-    title: "Set your consultation window",
-    description: "Choose when works for you. The contractor commits to that window before the match is confirmed.",
+    icon: CalendarCheck,
+    title: "One contractor claims your project",
+    description: "A single licensed and insured contractor reviews your project details and claims it exclusively. No other contractors can view or respond to your request after the claim.",
   },
   {
-    icon: CheckCircle2,
-    title: "One professional claims it",
-    description: "A single verified contractor reviews your full project profile and commits — exclusively, permanently.",
+    icon: ClipboardList,
+    title: "Review the estimate and decide",
+    description: "The contractor arrives with full knowledge of your project. They provide a written estimate. You decide whether to proceed. There is no obligation to continue.",
   },
 ]
 
@@ -69,11 +69,7 @@ export function SubmitCTA() {
               {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
-                  </span>
-                  <span className="text-primary text-xs font-medium">Always free for homeowners</span>
+                  <span className="text-primary text-xs font-medium">Free for property owners &mdash; no hidden fees</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
@@ -85,30 +81,39 @@ export function SubmitCTA() {
                   Upload photos, write the scope, set a budget ceiling, and choose your consultation window.
                   One verified contractor reviews your full project profile and claims it exclusively. There
                   is no cost to homeowners.
+                  Submit your project.
+                  <br />
+                  <span className="gradient-text">One contractor. Your terms.</span>
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-8">
+                  Property owners submit their project details once, including documentation and a
+                  specified budget. The platform then assigns the project to a single verified
+                  contractor. A consultation is confirmed within 24 hours at a time selected by
+                  the property owner.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
                   <Link
-                    href="/login?tab=signup"
+                    href="/dashboard/homeowner/new"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Start Your Project — Free
+                    Start Your Project &mdash; Free
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">
                     <span className="flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-primary" /> You control the terms
+                      <CheckCircle className="h-3.5 w-3.5 text-primary" /> No obligation
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Shield className="h-3.5 w-3.5 text-primary" /> Verified professionals only
+                      <Shield className="h-3.5 w-3.5 text-primary" /> Verified contractors only
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Right — 4-step outcome flow */}
+              {/* Right — process flow */}
               <div className="hidden lg:block">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How your project moves</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How it works for property owners</p>
                 <div className="relative">
                   {steps.map((step, i) => (
                     <div key={step.title} className="flex items-start gap-4 mb-4 last:mb-0">

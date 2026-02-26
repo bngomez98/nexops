@@ -8,74 +8,69 @@ type FAQItem = {
   answer: string
 }
 
-const homeownerFAQs: FAQItem[] = [
+const propertyOwnerFaqs: FAQItem[] = [
   {
-    question: "How does the matching process work?",
+    question: "How does the assignment process work?",
     answer:
-      "You submit your project with 2–10 photos, a written scope, a hard budget cap, and 3–4 available consultation windows. The moment a verified contractor in your trade category and area claims your request, it is removed from every other contractor's view — permanently. You receive a confirmed appointment for one of your selected windows. No phone tag, no competing calls.",
+      "Property owners submit photographs, a scope of work, a budget, and available times. One contractor in the area claims the project exclusively. A consultation is confirmed within 24 hours.",
   },
   {
-    question: "How many contractors will contact me after I submit?",
+    question: "How many contractors will contact me?",
     answer:
-      "Exactly one. That is the entire point. The instant your request is claimed, it becomes exclusive to that contractor. No other contractor can see or contact you about it. You will not receive a flood of calls within the first hour — you will receive one confirmed consultation from one verified professional.",
+      "Only one contractor will contact you — once claimed, your project is permanently removed from all other contractor feeds. No competing quotes. No unsolicited calls.",
   },
   {
-    question: "Is there any cost to homeowners?",
+    question: "Is there a cost for property owners?",
     answer:
-      "None. Nexus Operations is completely free for homeowners at every tier, with no hidden fees, subscriptions, or data-selling. Our revenue comes from contractor memberships, not from distributing your contact information.",
+      "The service is free for property owners at all levels. Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.",
   },
   {
-    question: "How are contractors verified?",
+    question: "How are contractors screened and verified?",
     answer:
-      "Every contractor in the network has passed license verification, proof-of-insurance review, and a background check before being admitted. Their standing is updated after each completed project based on documented outcomes — not self-reported reviews anyone can game.",
+      "All contractors are license-verified, insurance-confirmed, and background-checked before network access. No contractor sees project requests until all three requirements are met.",
   },
   {
     question: "What happens if no contractor is available in my area?",
     answer:
-      "You are told immediately and clearly — no indefinite wait, no ambiguity. We do not hold your request open hoping something changes. If coverage expands to your area, we will notify you. You are not obligated to resubmit.",
+      "The platform notifies the property owner immediately if coverage is unavailable in their specific area.",
   },
   {
-    question: "Can I cancel or update my request after submitting?",
+    question: "Can I cancel or update my request?",
     answer:
-      "Yes. You can update your request or cancel it at any time before a contractor claims it. Once a contractor has claimed your project and a consultation is confirmed, you should contact support to discuss changes.",
+      "Property owners can update or cancel their request before a contractor claims it. Once a contractor claims the project, the assignment is exclusive and the project cannot be reclaimed by another contractor.",
   },
 ]
 
-const contractorFAQs: FAQItem[] = [
+const contractorFaqs: FAQItem[] = [
   {
-    question: "How many leads can I expect each week?",
+    question: "What does exclusive assignment mean?",
     answer:
-      "Lead volume depends on your trade category, service area, time of year, and local demand. We cannot guarantee a specific number. What we can guarantee is that every lead you receive is exclusive to you — no one else in the network receives the same request simultaneously.",
+      "The moment you claim a project, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner. No competing quotes, no race to the bottom on price.",
   },
   {
-    question: "When will I receive my first lead?",
+    question: "What information is included with each project?",
     answer:
-      "Most partners receive their first claimed lead within the first two weeks of account activation. The timeline varies based on active requests in your area and how quickly you respond to new notifications.",
+      "Every project includes 2–10 photographs of the work area, a written description of the scope, the maximum budget the property owner has approved, and pre-selected consultation windows. You have everything you need before deciding to claim.",
   },
   {
-    question: "How do I receive leads?",
+    question: "How does membership pricing work?",
     answer:
-      "Leads appear in your contractor dashboard as soon as a homeowner request is submitted in your trade category and service area. You review the full project profile — photos, written scope, budget cap, and consultation windows — and claim it if it fits your business. Claiming is instantaneous and removes the request from all other contractors.",
+      "Membership is billed monthly at a flat rate — $299 for Standard, $499 for Premium, or $749 for Elite. No per-project fees, no cancellation penalties, and no limits on the number of projects you can claim.",
   },
   {
-    question: "What is included in the membership?",
+    question: "How are contractor ratings determined?",
     answer:
-      "Your membership covers unlimited lead claims across every trade category you are approved for, access to the full project documentation before you commit to a lead, dashboard analytics, and priority support. There are no per-lead fees, no setup fees, and no cancellation penalties.",
+      "Ratings are derived from the outcomes of projects completed through the platform. They reflect actual job results, not self-reported credentials or reviews that could be manipulated.",
   },
   {
-    question: "Are there long-term contracts?",
+    question: "What is the verification process?",
     answer:
-      "No. Membership is month-to-month with no long-term commitment. You can pause or cancel at any time. We do limit the number of contractors per service area and trade category, so if you cancel, re-entry cannot be guaranteed.",
+      "Before gaining access to the network, all contractors must complete license verification, insurance confirmation, and a background check. This process protects both property owners and the contractors in the network.",
   },
   {
-    question: "What makes a lead billable or valid?",
+    question: "Can I claim projects in any service category?",
     answer:
-      "A lead is counted against your membership when you claim it from the dashboard. Unlike per-lead billing models, your flat membership covers all claims. The only requirement is that you follow through on the confirmed consultation — no-shows affect your standing in the network.",
-  },
-  {
-    question: "Can I pause my account?",
-    answer:
-      "Yes. If you are on a job, taking time off, or need a break, you can pause incoming notifications for individual counties or your entire service area. Pauses are available in durations from a few hours up to seven days.",
+      "You can claim projects in the service categories that match your verified credentials. Contractors must hold the appropriate license for the category they claim projects in.",
   },
 ]
 
@@ -117,18 +112,12 @@ function AccordionItem({
   )
 }
 
-type Tab = "homeowners" | "contractors"
-
 export function FAQ() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [activeTab, setActiveTab] = useState<Tab>("homeowners")
+  const [activeTab, setActiveTab] = useState<"owners" | "contractors">("owners")
   const [openItems, setOpenItems] = useState<Set<number>>(new Set([0]))
 
-  // Reset open items when tab changes
-  const handleTabChange = (tab: Tab) => {
-    setActiveTab(tab)
-    setOpenItems(new Set([0]))
-  }
+  const faqs = activeTab === "owners" ? propertyOwnerFaqs : contractorFaqs
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) => {
@@ -140,6 +129,11 @@ export function FAQ() {
       }
       return next
     })
+  }
+
+  const switchTab = (tab: "owners" | "contractors") => {
+    setActiveTab(tab)
+    setOpenItems(new Set([0]))
   }
 
   useEffect(() => {
@@ -160,8 +154,6 @@ export function FAQ() {
     return () => observer.disconnect()
   }, [])
 
-  const items = activeTab === "homeowners" ? homeownerFAQs : contractorFAQs
-
   return (
     <section ref={sectionRef} id="faq" className="py-24 lg:py-32 bg-card/30 relative overflow-hidden">
       <div
@@ -181,32 +173,45 @@ export function FAQ() {
             <p className="text-muted-foreground leading-relaxed mb-8">
               Everything homeowners and contractors need to know about submitting requests, claiming
               leads, membership pricing, and the verification process.
+              Common questions
+              <span className="gradient-text"> answered directly.</span>
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              The platform provides clear information so users understand the terms before
+              submitting a project or joining as a contractor.
             </p>
 
-            {/* Tab toggle */}
-            <div className="inline-flex p-1 rounded-xl bg-secondary/60 border border-border/40 gap-1">
-              {(["homeowners", "contractors"] as Tab[]).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => handleTabChange(tab)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-all duration-200 ${
-                    activeTab === tab
-                      ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+            {/* Tab switcher */}
+            <div className="flex gap-2 p-1 rounded-xl bg-secondary/40 border border-border/30 w-fit">
+              <button
+                onClick={() => switchTab("owners")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeTab === "owners"
+                    ? "bg-card text-foreground border border-border/40 shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Property Owners
+              </button>
+              <button
+                onClick={() => switchTab("contractors")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeTab === "contractors"
+                    ? "bg-card text-foreground border border-border/40 shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Contractors
+              </button>
             </div>
           </div>
 
           {/* Right — accordion */}
           <div className="reveal" style={{ transitionDelay: "100ms" }}>
             <div className="rounded-2xl border border-border/40 bg-card px-6">
-              {items.map((item, i) => (
+              {faqs.map((item, i) => (
                 <AccordionItem
-                  key={`${activeTab}-${i}`}
+                  key={i}
                   item={item}
                   isOpen={openItems.has(i)}
                   onToggle={() => toggleItem(i)}

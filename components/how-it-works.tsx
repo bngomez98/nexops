@@ -1,55 +1,48 @@
 "use client"
 
-import { Camera, MousePointerClick, CalendarCheck, Star } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { PhoneCall, UserCheck, Wrench, Receipt, CheckCircle } from "lucide-react"
 
 const steps = [
   {
-    icon: Camera,
+    icon: PhoneCall,
     number: "01",
-    title: "Submit your project",
-    description:
-      "Upload 2–10 project photos, document the scope of work, set a hard budget cap, and select 3–4 available consultation windows. A thorough submission produces a faster match and ensures the contractor arrives fully prepared.",
-    color: "text-primary",
-    bg: "bg-primary/10",
-    border: "border-primary/20",
+    title: "Request intake",
+    title: "Initial consultation",
+    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
+    title: "Discovery call",
+    detail:
+      "Property managers submit by phone, text, or email with address, unit, issue details, urgency level, and tenant availability.",
   },
   {
-    icon: MousePointerClick,
+    icon: UserCheck,
     number: "02",
-    title: "A contractor claims it",
-    description:
-      "Every qualified, verified contractor in your trade category and geographic area is notified simultaneously. The first to claim your request secures it exclusively — the listing is removed from every other contractor's portal immediately and permanently.",
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-    border: "border-amber-400/20",
+    title: "Contractor assignment",
+    detail:
+      "Nexus Operations routes to a verified contractor by trade, proximity, and performance. If declined, backup reassignment runs automatically.",
   },
   {
-    icon: CalendarCheck,
+    icon: Wrench,
     number: "03",
-    title: "Consultation is confirmed",
-    description:
-      "Both you and the contractor receive a confirmed calendar appointment for the window you selected during submission. The contractor reviews your photos, written scope, and budget cap in advance — so the consultation is productive, not exploratory.",
-    color: "text-violet-400",
-    bg: "bg-violet-400/10",
-    border: "border-violet-400/20",
+    title: "Work completion + QA",
+    detail:
+      "Contractors submit photos and work notes. We confirm completion with the property manager and track quality before payment release.",
   },
   {
-    icon: Star,
+    icon: Receipt,
     number: "04",
-    title: "Project moves forward",
-    description:
-      "Following the on-site consultation, you receive a written, itemized estimate. Accept, negotiate, or decline — with no obligation. Every completed project is reviewed for quality, and contractor standing in the network is updated accordingly.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-    border: "border-emerald-400/20",
+    title: "Monthly invoicing",
+    title: "Platform access at launch",
+    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
+    title: "Platform rollout",
+    detail:
+      "Clients receive a line-item invoice showing contractor costs and markup by urgency category, with net payment terms.",
   },
 ]
 
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
   const [activeStep, setActiveStep] = useState<number | null>(null)
-  const [inView, setInView] = useState(false)
 
   useEffect(() => {
     const el = sectionRef.current
@@ -58,110 +51,65 @@ export function HowItWorks() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true)
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 130)
+            setTimeout(() => node.classList.add("in-view"), i * 120)
           })
           observer.disconnect()
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 },
     )
+
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
     <section ref={sectionRef} id="how-it-works" className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background decoration */}
-      <div
-        className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
-      />
-
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section header */}
-        <div className="max-w-2xl mb-16 reveal">
+        <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            From submission to consultation in under 24 hours
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
+            Maintenance coordination built for multifamily operations.
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            No phone tag. No inbox flooded by contractors who all received your number at the same time.
-            Submit your project once — with documentation and a defined budget — and we match you with a single verified professional.
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            We operate as an outsourced coordination layer for Topeka property managers: faster dispatch,
+            contractor accountability, and standardized reporting.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-          {/* Connecting line (desktop) */}
-          <div className="hidden lg:block absolute top-[52px] left-[12.5%] right-[12.5%] h-px">
-            <div
-              className="h-full bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-full"
-              style={{
-                transform: inView ? "scaleX(1)" : "scaleX(0)",
-                transformOrigin: "left",
-                transition: "transform 1.2s ease 0.4s",
-              }}
-            />
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {steps.map((step, i) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step, i) => {
+            const isActive = activeStep === i
+            return (
               <div
                 key={step.number}
-                className="reveal group relative"
-                style={{ transitionDelay: `${i * 130}ms` }}
+                className="reveal group relative p-6 rounded-2xl border bg-card transition-all duration-300"
                 onMouseEnter={() => setActiveStep(i)}
                 onMouseLeave={() => setActiveStep(null)}
+                style={isActive ? { borderColor: "oklch(0.75 0.18 155 / 0.6)" } : {}}
               >
-                {/* Card */}
-                <div
-                  className={`relative p-6 rounded-2xl border bg-card transition-all duration-300 cursor-default ${
-                    activeStep === i
-                      ? `border-[${step.color}] shadow-lg`
-                      : "border-border/40 hover:border-border/70"
-                  }`}
-                  style={
-                    activeStep === i
-                      ? { borderColor: "oklch(0.75 0.18 155 / 0.35)", boxShadow: "0 8px 30px oklch(0 0 0 / 0.3)" }
-                      : {}
-                  }
-                >
-                  {/* Step number + icon row */}
-                  <div className="flex items-center gap-3 mb-5">
-                    <div
-                      className={`flex items-center justify-center w-12 h-12 rounded-xl ${step.bg} border ${step.border} transition-transform duration-300 ${activeStep === i ? "scale-110" : ""}`}
-                    >
-                      <step.icon className={`h-5 w-5 ${step.color}`} />
-                    </div>
-                    <span
-                      className="text-2xl font-bold font-mono text-muted-foreground/30 group-hover:text-muted-foreground/50 transition-colors"
-                    >
-                      {step.number}
-                    </span>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 border border-primary/20">
+                    <step.icon className="h-5 w-5 text-primary" />
                   </div>
-
-                  <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-
-                  {/* Active indicator bar */}
-                  <div
-                    className={`absolute bottom-0 left-6 right-6 h-0.5 rounded-full ${step.bg} transition-all duration-300 ${activeStep === i ? "opacity-100" : "opacity-0"}`}
-                    style={activeStep === i ? { background: `var(--${step.color.replace("text-", "color-")})` } : {}}
-                  />
+                  <span className="text-2xl font-bold font-mono text-muted-foreground/30">{step.number}</span>
                 </div>
 
-                {/* Arrow between steps (desktop) */}
-                {i < steps.length - 1 && (
-                  <div className="hidden lg:flex absolute -right-3 top-[52px] z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border/40">
-                    <svg width="10" height="10" viewBox="0 0 10 10" className="text-muted-foreground/40">
-                      <path d="M3 2L7 5L3 8" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
+                <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
               </div>
-            ))}
+            )
+          })}
+        </div>
+
+        <div className="mt-10 reveal">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-3xl">
+            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">Service levels:</span> Emergency (1h assignment, 4h on-site),
+              Urgent (4h assignment, next business day arrival), Routine (24h assignment, 3–5 business day arrival).
+            </p>
           </div>
         </div>
       </div>

@@ -23,6 +23,22 @@ export const metadata: Metadata = {
     "exclusive contractor matching",
     "HVAC contractor Topeka",
     "fencing contractor Kansas",
+    default: "NexOps | Operations Partner for Property Management",
+    template: "%s | NexOps",
+  },
+  description:
+    "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate your vendor relationships, document your workflows, and serve as your dedicated operations partner. Consulting available now — platform launching 2026.",
+  keywords: [
+    "property management consulting",
+    "vendor coordination property management",
+    "operations partner property managers",
+    "property management software",
+    "workflow documentation property management",
+    "vendor relationship management",
+    "property portfolio operations",
+    "property management SaaS",
+    "residential property management consulting",
+    "commercial property management operations",
   ],
   authors: [{ name: "Nexus Operations" }],
   creator: "Nexus Operations",
@@ -40,6 +56,15 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
     description: "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Free for homeowners. Flat monthly membership for contractors.",
+    title: "NexOps | Operations Partner for Property Management",
+    description:
+      "NexOps coordinates your vendor relationships, documents your workflows, and serves as a dedicated operations partner for property management companies. Consulting available now — platform launching 2026.",
+    siteName: "NexOps",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NexOps | Operations Partner for Property Management",
+    description: "A consulting agency and SaaS platform for property management companies. One dedicated partner. Your vendors coordinated. Your workflows documented.",
   },
   robots: {
     index: true,
@@ -62,17 +87,32 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-713FG73CGF');
+              gtag('config', 'AW-17873510977');
+              gtag('config', 'G-17T4WZRZG4');
+            `,
+          }}
+        />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-17T4WZRZG4" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
               {
                 "@context": "https://schema.org",
-                "@type": "LocalBusiness",
+                "@type": "ProfessionalService",
                 "@id": "https://nexusoperations.org/#organization",
-                name: "Nexus Operations",
+                name: "NexOps",
                 description:
-                  "Exclusive contractor matching platform connecting homeowners with a single licensed, insured professional per project — eliminating shared leads, bidding wars, and unsolicited contractor contact.",
+                  "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate vendor relationships, document workflows, and serve as a dedicated operations partner.",
                 url: "https://nexusoperations.org",
                 telephone: "+1-913-951-1711",
                 email: "admin@nexusoperations.org",
@@ -87,16 +127,13 @@ export default function RootLayout({
                   { "@type": "State", name: "Kansas" },
                 ],
                 serviceType: [
-                  "Tree Removal",
-                  "Roofing",
-                  "Concrete Work",
-                  "HVAC",
-                  "Fencing",
-                  "Electrical",
-                  "Plumbing",
-                  "Excavation",
+                  "Property Management Consulting",
+                  "Vendor Relationship Management",
+                  "Workflow Documentation",
+                  "Operations Coordination",
+                  "Property Management SaaS",
                 ],
-                priceRange: "Free for homeowners",
+                priceRange: "$$",
                 openingHoursSpecification: {
                   "@type": "OpeningHoursSpecification",
                   dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],

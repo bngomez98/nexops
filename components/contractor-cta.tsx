@@ -1,48 +1,54 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Lock, FileText, DollarSign, TrendingUp, BarChart3 } from "lucide-react"
+import { ArrowRight, Lock, FileText, DollarSign, Star } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 const benefits = [
   {
     icon: Lock,
-    title: "Leads that belong to you — entirely",
-    description: "The instant you claim a request, it is removed from every other contractor's portal — permanently. You are the sole point of contact for this homeowner. No competing bids. No price undercutting. No wasted site visits against someone who will drop their margin to close the job.",
+    title: "True exclusivity on every project",
+    description: "The instant you claim a project, it is permanently removed from every other contractor's feed. No competing bids. No one else contacts that homeowner.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
   },
   {
     icon: FileText,
-    title: "Full project context before you commit",
-    description: "Every request includes 2–10 photos, a written scope, a homeowner-defined budget cap, and a pre-confirmed consultation window. You review the complete project profile before claiming — so you only take jobs that make sense for your business.",
+    title: "Full documentation before you commit",
+    description: "Every project includes 2–10 photos, a written scope, a defined budget cap, and pre-selected consultation windows. You know the full scope before deciding to claim.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
   },
   {
     icon: DollarSign,
-    title: "One flat membership. No per-lead fees.",
-    description: "Starting at $299 per month with no per-lead charges, no cancellation penalties, and no annual lock-in. Your membership covers unlimited lead claims across every category you are approved for. One closed residential project typically returns your monthly cost many times over.",
+    title: "Flat membership — no per-project fees",
+    description: "No fees per project, no penalties for cancellation, and no limits on the number of projects that can be claimed. Subscribe at the tier that fits your business.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
   },
   {
-    icon: BarChart3,
-    title: "A reputation built on documented outcomes",
-    description: "Your standing in the network reflects actual project performance — not reviews anyone can game. Consistent quality earns you priority notifications, advanced access to high-value leads, and long-term eligibility for the Elite tier. The standard protects contractors who meet it.",
+    icon: Star,
+    title: "Ratings from real project outcomes",
+    description: "Contractor ratings are derived from the outcomes of projects completed through the platform, not from reviews that could be manipulated.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
   },
 ]
 
+const tiers = [
+  { label: "Standard", price: "$299", suffix: "/mo" },
+  { label: "Premium", price: "$499", suffix: "/mo" },
+  { label: "Elite", price: "$749", suffix: "/mo" },
+]
+
 const miniStats = [
-  { value: "1", label: "Contractor per lead" },
-  { value: "$299", label: "Starting membership" },
-  { value: "$0", label: "Per-lead fees, ever" },
+  { value: "1", label: "Contractor per project" },
+  { value: "$0", label: "Fees per project" },
+  { value: "3", label: "Membership tiers" },
 ]
 
 export function ContractorCTA() {
@@ -93,6 +99,12 @@ export function ContractorCTA() {
               of pre-documented project requests. Each request includes photos, a written scope, and a
               homeowner-defined budget. When you claim a project, no other contractor can see it or
               contact that homeowner. One flat monthly membership covers unlimited claims.
+              Exclusive projects.
+              <br />
+              <span className="gradient-text">Flat monthly membership.</span>
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              Every project arrives with photos, a written scope, and a defined budget cap. Claim it and the project is removed from every other contractor&apos;s feed — permanently. No competing bids, no per-lead fees, one flat monthly membership.
             </p>
 
             {/* Mini stats row */}
@@ -101,6 +113,20 @@ export function ContractorCTA() {
                 <div key={s.label} className="text-center">
                   <div className="text-xl font-bold text-primary mb-0.5">{s.value}</div>
                   <div className="text-xs text-muted-foreground">{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pricing tiers */}
+            <div className="flex items-center gap-3 mb-8 flex-wrap">
+              {tiers.map((t) => (
+                <div
+                  key={t.label}
+                  className="flex flex-col items-center px-5 py-3 rounded-xl bg-card border border-border/40"
+                >
+                  <span className="text-xs text-muted-foreground mb-1">{t.label}</span>
+                  <span className="text-lg font-bold text-primary">{t.price}</span>
+                  <span className="text-xs text-muted-foreground">{t.suffix}</span>
                 </div>
               ))}
             </div>
@@ -117,8 +143,8 @@ export function ContractorCTA() {
                 href="/pricing"
                 className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                <TrendingUp className="h-4 w-4" />
                 View Membership Plans
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
