@@ -1,49 +1,48 @@
 "use client"
 
-import { Check, X } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { Check } from "lucide-react"
+import { useEffect, useRef } from "react"
 
-const rows = [
+const features = [
   {
-    feature: "Who coordinates your vendors",
-    us: "Your dedicated NexOps partner",
-    them: "Your property managers, on top of everything else",
+    feature: "One contractor per project",
+    detail:
+      "Each project is assigned to a single verified contractor. Once claimed, it is removed from all other feeds permanently.",
   },
   {
-    feature: "Workflow documentation",
-    us: "Standardized, written, and accessible to your team",
-    them: "Email threads, sticky notes, and institutional memory",
+    feature: "Free for property owners",
+    detail:
+      "There is no cost to submit a project or receive a match. The platform is funded entirely through contractor memberships.",
   },
   {
-    feature: "Vendor relationship management",
-    us: "Proactive, relationship-driven, handled by NexOps",
-    them: "Reactive — called when something breaks",
+    feature: "Budget set before assignment",
+    detail:
+      "Property owners define their maximum budget during submission — before any contractor is involved.",
   },
   {
-    feature: "Operations continuity",
-    us: "Documented processes that outlast any single employee",
-    them: "Lost when a key team member leaves",
+    feature: "Full documentation collected upfront",
+    detail:
+      "Photographs, a written scope, and the confirmed budget are gathered before any contractor sees the request.",
   },
   {
-    feature: "Software + coordination",
-    us: "Both included — platform built from your actual workflows",
-    them: "Software you buy, then figure out how to use",
+    feature: "Scheduling handled at submission",
+    detail:
+      "Property owners select preferred consultation windows when they submit — no back-and-forth required.",
   },
   {
-    feature: "Scalability",
-    us: "Operations scale with your portfolio without adding overhead",
-    them: "Coordination burden grows with every property added",
+    feature: "Verified credentials on every contractor",
+    detail:
+      "Every contractor in the network has passed license verification, insurance confirmation, and a background check.",
   },
   {
-    feature: "Your existing vendor relationships",
-    us: "We coordinate them — no replacement required",
-    them: "You manage them yourself or switch platforms entirely",
+    feature: "One call. That's it.",
+    detail:
+      "Only the assigned contractor will reach out — one professional, for the project that belongs to them.",
   },
 ]
 
 export function Comparison() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null)
 
   useEffect(() => {
     const el = sectionRef.current
@@ -72,67 +71,30 @@ export function Comparison() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why NexOps</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works for you</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built differently from the start.
-            <span className="gradient-text"> A partner, not just a tool.</span>
+            What every project includes.
+            <span className="gradient-text"> From submission to consultation.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Most solutions hand you software and expect your team to handle the rest. NexOps provides
-            the coordination layer your portfolio actually needs — before, during, and after the platform launches.
-            Other platforms sell your number to 5–15 contractors.
-            <span className="gradient-text"> We send it to one.</span>
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            That contractor has seen your photos, your scope, and your budget before contacting you. They are already committed to the consultation window you selected.
+            Every project submitted through Nexus Operations is assigned to one verified contractor.
+            That contractor has seen your photos, your scope, and your budget before contacting you —
+            and is already committed to the consultation window you selected.
           </p>
         </div>
 
-        {/* Comparison table */}
-        <div className="rounded-2xl border border-border/40 overflow-hidden bg-card reveal" style={{ transitionDelay: "100ms" }}>
-          {/* Header */}
-          <div className="grid grid-cols-3 border-b border-border/40 bg-secondary/30">
-            <div className="py-4 px-6 text-sm font-semibold text-muted-foreground">Consideration</div>
-            <div className="py-4 px-6 border-l border-border/40">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <span className="text-sm font-bold text-primary">NexOps</span>
-              </div>
-            </div>
-            <div className="py-4 px-6 border-l border-border/40 text-sm font-medium text-muted-foreground">
-              Traditional Approach
-            </div>
-          </div>
-
-          {rows.map((row, i) => (
+        <div className="grid sm:grid-cols-2 gap-4 reveal" style={{ transitionDelay: "100ms" }}>
+          {features.map((item) => (
             <div
-              key={row.feature}
-              className={`grid grid-cols-3 border-b border-border/20 last:border-0 transition-colors duration-150 cursor-default ${
-                hoveredRow === i ? "bg-secondary/20" : ""
-              }`}
-              onMouseEnter={() => setHoveredRow(i)}
-              onMouseLeave={() => setHoveredRow(null)}
+              key={item.feature}
+              className="flex items-start gap-4 p-5 rounded-xl border border-border/40 bg-card hover:border-primary/30 transition-colors"
             >
-              <div className="py-4 px-6 text-sm text-foreground/80 flex items-center">
-                {row.feature}
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
+                <Check className="h-3.5 w-3.5 text-primary" />
               </div>
-              <div className={`py-4 px-6 border-l transition-colors duration-150 ${
-                hoveredRow === i ? "border-primary/30" : "border-border/40"
-              }`}>
-                <div className="flex items-center gap-2.5">
-                  <div className={`flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 border border-primary/20 shrink-0 transition-transform duration-200 ${hoveredRow === i ? "scale-110" : ""}`}>
-                    <Check className="h-3 w-3 text-primary" />
-                  </div>
-                  <span className="text-sm text-foreground font-medium">{row.us}</span>
-                </div>
-              </div>
-              <div className="py-4 px-6 border-l border-border/40">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-secondary shrink-0">
-                    <X className="h-3 w-3 text-muted-foreground/50" />
-                  </div>
-                  <span className="text-sm text-muted-foreground">{row.them}</span>
-                </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground mb-1">{item.feature}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
               </div>
             </div>
           ))}
@@ -149,11 +111,9 @@ export function Comparison() {
           <div>
             <p className="text-sm font-semibold text-foreground mb-0.5">The NexOps commitment</p>
             <p className="text-sm text-muted-foreground">
-              One dedicated partner. Your vendor relationships, coordinated. Your workflows, documented.
-              Your operations, running. We&apos;ll tell you immediately if we&apos;re not the right fit for your portfolio.
-            <p className="text-sm font-semibold text-foreground mb-0.5">What this means in practice</p>
-            <p className="text-sm text-muted-foreground">
-              One verified contractor contacts you — no one else. If coverage is unavailable in your area, we notify you immediately rather than leaving your request to expire unmatched.
+              Each project request is assigned to one verified contractor. No unsolicited calls are
+              made. If coverage is not available in a specific area, the platform notifies the
+              property owner immediately.
             </p>
           </div>
         </div>

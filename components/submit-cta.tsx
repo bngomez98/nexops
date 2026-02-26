@@ -1,29 +1,29 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, MessageSquare, ClipboardList, Network, Monitor, Shield, Lock } from "lucide-react"
+import { ArrowRight, Upload, Lock, CalendarCheck, ClipboardList, Shield, CheckCircle } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 const steps = [
   {
-    icon: MessageSquare,
-    title: "Schedule an intro call",
-    description: "A 45-minute conversation about your portfolio, current vendor setup, and where coordination is costing your team the most time. No forms, no obligation.",
+    icon: Upload,
+    title: "Upload photos and describe the work",
+    description: "Provide 2 to 10 photographs and a written description of the scope, including what needs to be done, any materials required, and other relevant details.",
+  },
+  {
+    icon: Lock,
+    title: "Set your budget and preferred times",
+    description: "Specify the maximum budget you are willing to spend. Select 3 to 4 available time slots for the consultation. A contractor commits to one of those slots.",
+  },
+  {
+    icon: CalendarCheck,
+    title: "One contractor claims your project",
+    description: "A single licensed and insured contractor reviews your project details and claims it exclusively. No other contractors can view or respond to your request after the claim.",
   },
   {
     icon: ClipboardList,
-    title: "Receive your operations assessment",
-    description: "We document your vendor relationships, active workflows, and coordination gaps. You receive a written operations overview within two weeks of the initial call.",
-  },
-  {
-    icon: Network,
-    title: "Consulting engagement begins",
-    description: "Your dedicated NexOps partner takes over day-to-day operations coordination — vendors, scheduling, scope documentation, and follow-through.",
-  },
-  {
-    icon: Monitor,
-    title: "Platform access at launch",
-    description: "When NexOps launches in 2026, your team gets early access to the platform built from your actual workflows — not a generic template applied to your business.",
+    title: "Review the estimate and decide",
+    description: "The contractor arrives with full knowledge of your project. They provide a written estimate. You decide whether to proceed. There is no obligation to continue.",
   },
 ]
 
@@ -69,45 +69,43 @@ export function SubmitCTA() {
               {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-                  <span className="text-primary text-xs font-medium">Early access — consulting available now</span>
+                  <span className="text-primary text-xs font-medium">Free for property owners &mdash; no hidden fees</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Work with us
+                  Submit your project.
                   <br />
-                  <span className="gradient-text">before we launch.</span>
-                  Set the budget, scope, and schedule
-                  <br />
-                  <span className="gradient-text">before any contractor sees your request.</span>
+                  <span className="gradient-text">One contractor. Your terms.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Consulting engagements are open now. Every early client gets a dedicated NexOps
-                  partner, a documented operations framework, and first access to the platform
-                  when it launches in 2026. There&apos;s no commitment required to start the conversation.
+                  Property owners submit their project details once, including documentation and a
+                  specified budget. The platform then assigns the project to a single verified
+                  contractor. A consultation is confirmed within 24 hours at a time selected by
+                  the property owner.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
                   <Link
-                    href="/contact"
+                    href="/dashboard/homeowner/new"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Schedule an Intro Call
+                    Start Your Project &mdash; Free
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">
                     <span className="flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-primary" /> No commitment required
+                      <CheckCircle className="h-3.5 w-3.5 text-primary" /> No obligation
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Shield className="h-3.5 w-3.5 text-primary" /> 45 minutes, no forms
+                      <Shield className="h-3.5 w-3.5 text-primary" /> Verified contractors only
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Right — engagement flow */}
+              {/* Right — process flow */}
               <div className="hidden lg:block">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How we start working together</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-5">How it works for property owners</p>
                 <div className="relative">
                   {steps.map((step, i) => (
                     <div key={step.title} className="flex items-start gap-4 mb-4 last:mb-0">

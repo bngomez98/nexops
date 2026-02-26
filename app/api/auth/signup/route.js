@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { getUserByEmail, createUser, createSession, toSafeUser, hashNewPassword, seedIfEmpty } from "@/lib/store"
 
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   try {
     await seedIfEmpty()
 
@@ -17,18 +17,7 @@ export async function POST(req: NextRequest) {
       serviceCategories,
       subscription,
       address,
-    } = body as {
-      email: string
-      password: string
-      name: string
-      role: "homeowner" | "contractor"
-      phone?: string
-      businessName?: string
-      licenseNumber?: string
-      serviceCategories?: string[]
-      subscription?: "standard" | "premium" | "elite"
-      address?: string
-    }
+    } = body
 
     if (!email || !password || !name || !role) {
       return NextResponse.json({ error: "Required fields missing" }, { status: 400 })

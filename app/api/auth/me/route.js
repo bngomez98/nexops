@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { getSession, getUserById, toSafeUser } from "@/lib/store"
 
-export async function GET(req: NextRequest) {
+export async function GET(req) {
   const sessionToken = req.cookies.get("nexops_session")?.value
 
   if (!sessionToken) {

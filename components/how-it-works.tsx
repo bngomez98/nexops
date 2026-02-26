@@ -2,47 +2,62 @@
 
 import { useState, useEffect, useRef } from "react"
 import { MessageSquare, ClipboardList, Network, Monitor, TrendingUp } from "lucide-react"
+import {
+  Upload,
+  Lock,
+  CalendarCheck,
+  ClipboardList,
+  CheckCircle,
+} from "lucide-react"
 
 const steps = [
   {
-    icon: MessageSquare,
+    icon: Upload,
     number: "01",
     title: "Discovery call",
     detail:
       "We run a focused 45-minute call with your leadership team to map your portfolio, current vendor setup, and your most expensive coordination bottlenecks.",
+    title: "Submit your project",
+    detail: "Upload photos, describe the work needed, set a budget cap, and choose your preferred consultation windows.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
     accent: "oklch(0.75 0.18 155)",
   },
   {
-    icon: ClipboardList,
+    icon: Lock,
     number: "02",
     title: "Operations assessment",
     detail:
       "Within two weeks, we document your current workflows and hand you a written operations plan with priorities, owners, and execution timelines.",
+    title: "One contractor claims it exclusively",
+    detail: "A licensed, insured local contractor reviews and claims your project — permanently removing it from every other contractor's feed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
     accent: "oklch(0.82 0.17 85)",
   },
   {
-    icon: Network,
+    icon: CalendarCheck,
     number: "03",
     title: "Hands-on coordination",
     detail:
       "A dedicated NexOps operator coordinates vendors, scheduling, scope follow-through, and communication so your property team can stay focused on residents and assets.",
+    title: "Consultation is confirmed",
+    detail: "An appointment is scheduled and confirmed within 24 hours. The contractor has access to all project details — photos, scope, and budget — in advance.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
     accent: "oklch(0.70 0.15 300)",
   },
   {
-    icon: Monitor,
+    icon: ClipboardList,
     number: "04",
     title: "Platform rollout",
     detail:
       "When the NexOps platform launches in 2026, your team starts with workflows already built around your real operating model, not a generic template.",
+    title: "Review the estimate and decide",
+    detail: "The contractor delivers a written estimate. Review the scope and timeline, then decide — no obligation if it doesn't meet your expectations.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -160,6 +175,11 @@ export function HowItWorks() {
           <p className="text-muted-foreground text-sm leading-relaxed">
             We are not a software-only product. We are an operations partner that documents your process,
             coordinates your vendors, and then gives your team software built around how you actually work.
+            From submission to confirmed consultation
+          </h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Submit your project once — the platform assigns it to a single verified contractor
+            and confirms a consultation within 24 hours.
           </p>
         </div>
 
@@ -190,6 +210,11 @@ export function HowItWorks() {
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">What we deliver:</span> documented workflows,
               vendor accountability, recurring operations reviews, and executive reporting your team can act on.
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-2xl">
+            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">Free for property owners.</span>{" "}
+              Nexus Operations charges contractors a monthly membership &mdash; not homeowners, not per-lead fees.
             </p>
           </div>
         </div>

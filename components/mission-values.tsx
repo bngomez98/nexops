@@ -1,13 +1,15 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Users, FileText, TrendingUp, Shield } from "lucide-react"
+import { Users, ShieldCheck, FileText, Award } from "lucide-react"
 
 const values = [
   {
     icon: Users,
     title: "Relationship-led execution",
     body: "You work with a dedicated NexOps operator who knows your properties, your vendors, and your standards. No ticket queue, no outsourced handoff model.",
+    title: "Property owners set the terms",
+    body: "Property owners establish the details of their project, including the scope of work, the maximum budget, and preferred times for consultation, before any contractor is notified. These terms are fixed prior to the assignment of the project.",
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/20",
@@ -16,6 +18,9 @@ const values = [
     icon: Shield,
     title: "Clear accountability",
     body: "We define owners, deadlines, and escalation paths for vendor coordination so issues are resolved quickly and responsibility is obvious.",
+    icon: ShieldCheck,
+    title: "Contractors own their projects",
+    body: "Contractors gain full ownership of the projects they claim, without any competition from other contractors for the same job. The moment a contractor claims a project, it is removed from every other contractor's feed and cannot be reclaimed.",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
     border: "border-amber-400/20",
@@ -24,6 +29,8 @@ const values = [
     icon: FileText,
     title: "Documented operating playbooks",
     body: "Every recurring workflow is documented in plain language your team can follow. When staff changes, process knowledge stays with your business.",
+    title: "Both sides come prepared",
+    body: "Both property owners and contractors receive all relevant documentation — photographs, a written description of the scope, and the budget — before the consultation begins. This preparation allows for efficient discussions from the start.",
     color: "text-violet-400",
     bg: "bg-violet-400/10",
     border: "border-violet-400/20",
@@ -32,6 +39,9 @@ const values = [
     icon: TrendingUp,
     title: "Measured outcomes",
     body: "We report on response times, completion rates, and execution quality so leadership sees whether operations are improving month over month.",
+    icon: Award,
+    title: "Verified credentials, tracked outcomes",
+    body: "Every contractor in the network undergoes verification of their license, confirmation of their insurance, and a background check before they can access project requests. Ratings for contractors are based on the outcomes of actual projects completed through the platform.",
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     border: "border-emerald-400/20",
@@ -80,12 +90,22 @@ export function MissionValues() {
             NexOps helps property management teams run cleaner operations by coordinating vendors,
             documenting repeatable workflows, and driving follow-through on maintenance execution.
             We combine consulting and software so you get immediate support now and a purpose-built platform in 2026.
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">The purpose of Nexus Operations</p>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
+            A two-sided marketplace built on
+            <span className="gradient-text"> exclusivity and trust.</span>
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Nexus Operations connects property owners with licensed contractors through a
+            two-sided marketplace — assigning each project to a single contractor exclusively.
+            No competitive bidding. No unsolicited calls. One project, one professional.
           </p>
         </div>
 
         <div className="flex items-center gap-4 mb-12 reveal" style={{ transitionDelay: "80ms" }}>
           <div className="h-px flex-1 bg-border/30" />
           <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">How we operate</span>
+          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">Core commitments</span>
           <div className="h-px flex-1 bg-border/30" />
         </div>
 
@@ -107,6 +127,18 @@ export function MissionValues() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Closing brand statement */}
+        <div
+          className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
+          style={{ transitionDelay: "500ms" }}
+        >
+          <p className="text-base lg:text-lg text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center">
+            Every project request includes photos, a written scope, a defined budget ceiling, and
+            pre-selected consultation windows &mdash; all collected before any contractor is notified.
+            The contractor who claims your project has reviewed all of it before showing up.
+          </p>
         </div>
       </div>
     </section>
