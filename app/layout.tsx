@@ -1,6 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import Script from "next/script"
 import { Analytics } from "@vercel/analytics/next"
 import { CookieConsent } from "@/components/cookie-consent"
 import "./globals.css"
@@ -63,6 +62,21 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-713FG73CGF');
+              gtag('config', 'AW-17873510977');
+              gtag('config', 'G-17T4WZRZG4');
+            `,
+          }}
+        />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-17T4WZRZG4" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -121,25 +135,6 @@ export default function RootLayout({
         {children}
         <CookieConsent />
         <Analytics />
-        {/* Google Analytics + Google Ads */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF"
-          strategy="afterInteractive"
-        />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-17T4WZRZG4"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-713FG73CGF');
-            gtag('config', 'AW-17873510977');
-            gtag('config', 'G-17T4WZRZG4');
-          `}
-        </Script>
       </body>
     </html>
   )
