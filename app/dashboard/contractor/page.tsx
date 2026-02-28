@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { Fragment, useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   ComposedChart,
@@ -190,13 +190,18 @@ export default function ContractorDashboard() {
     }
     setUser(stored)
 
-    fetch("/api/leads")
+    const controller = new AbortController()
+    fetch("/api/leads", { signal: controller.signal })
       .then((r) => {
         if (r.status === 401) { router.replace("/login"); return null }
+        if (!r.ok) return null
         return r.json()
       })
       .then((d) => { if (d) setLeads(d.leads ?? []) })
+      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to fetch leads:", err) })
       .finally(() => setLoading(false))
+
+    return () => controller.abort()
   }, [router])
 
   const updateStatus = useCallback(
@@ -222,7 +227,14 @@ export default function ContractorDashboard() {
     [],
   )
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <div className="max-w-7xl mx-auto flex items-center justify-center py-24 gap-3">
+        <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        <span className="text-sm text-muted-foreground">Loading dashboard…</span>
+      </div>
+    )
+  }
 
   const totalValue = leads.filter((l) => l.status === "won").reduce((s, l) => s + l.value, 0)
   const wonLeads = leads.filter((l) => l.status === "won").length
@@ -513,9 +525,8 @@ export default function ContractorDashboard() {
                 </thead>
                 <tbody>
                   {leads.map((lead, i) => (
-                    <>
+                    <Fragment key={lead.id}>
                       <tr
-                        key={lead.id}
                         className={`${i < leads.length - 1 ? "border-b border-border/20" : ""} hover:bg-secondary/30 transition-colors cursor-pointer ${
                           lead.status === "new" ? "bg-blue-500/[0.03]" : ""
                         }`}
@@ -624,7 +635,7 @@ export default function ContractorDashboard() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </Fragment>
                   ))}
                 </tbody>
               </table>
