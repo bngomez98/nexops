@@ -93,13 +93,18 @@ export default function ContractorProjectsPage() {
       return
     }
 
-    fetch("/api/leads")
+    const controller = new AbortController()
+    fetch("/api/leads", { signal: controller.signal })
       .then((r) => {
         if (r.status === 401) { router.replace("/login"); return null }
+        if (!r.ok) return null
         return r.json()
       })
       .then((d) => { if (d) setLeads(d.leads ?? []) })
+      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to fetch leads:", err) })
       .finally(() => setLoading(false))
+
+    return () => controller.abort()
   }, [router])
 
   async function updateStatus(leadId: string, status: Lead["status"]) {
