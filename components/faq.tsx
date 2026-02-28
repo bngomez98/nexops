@@ -17,12 +17,12 @@ const propertyOwnerFaqs: FAQItem[] = [
   {
     question: "How many contractors will contact me?",
     answer:
-      "Only one contractor will contact you — once claimed, your project is permanently removed from all other contractor feeds. No competing quotes. No unsolicited calls.",
+      "Only one contractor will contact you. Once claimed, your project is permanently removed from all other contractor feeds.",
   },
   {
-    question: "Is there a cost for property owners?",
+    question: "Is there a cost for homeowners or property managers?",
     answer:
-      "The service is free for property owners at all levels. Nexus Operations charges contractors a monthly membership — not homeowners, not per-lead fees.",
+      "There is no cost to homeowners. Nexus Operations is funded through contractor memberships.",
   },
   {
     question: "How are contractors screened and verified?",
@@ -45,17 +45,17 @@ const contractorFaqs: FAQItem[] = [
   {
     question: "What does exclusive assignment mean?",
     answer:
-      "The moment you claim a project, it is removed from every other contractor's feed permanently. You are the only person contacting this homeowner. No competing quotes, no race to the bottom on price.",
+      "The moment you claim a project, it is removed from every other contractor's feed permanently. You are the only professional contacting this homeowner, and you own the project from claim through completion.",
   },
   {
     question: "What information is included with each project?",
     answer:
-      "Every project includes 2–10 photographs of the work area, a written description of the scope, the maximum budget the property owner has approved, and pre-selected consultation windows. You have everything you need before deciding to claim.",
+      "Every project includes 2\u201310 photographs of the work area, a written description of the scope, the maximum budget the property owner has approved, and pre-selected consultation windows. You have everything you need before deciding to claim.",
   },
   {
     question: "How does membership pricing work?",
     answer:
-      "Membership is billed monthly at a flat rate — $299 for Standard, $499 for Premium, or $749 for Elite. No per-project fees, no cancellation penalties, and no limits on the number of projects you can claim.",
+      "Membership is billed monthly at a flat rate \u2014 $299 for Standard, $499 for Premium, or $749 for Elite. No per-project fees, no cancellation penalties, and no limits on the number of projects you can claim.",
   },
   {
     question: "How are contractor ratings determined?",
@@ -158,7 +158,7 @@ export function FAQ() {
     <section ref={sectionRef} id="faq" className="py-24 lg:py-32 bg-card/30 relative overflow-hidden">
       <div
         className="absolute right-0 top-1/4 w-[400px] h-[400px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -167,18 +167,12 @@ export function FAQ() {
           <div className="reveal lg:sticky lg:top-24">
             <p className="text-primary text-sm font-medium tracking-wide mb-3">FAQ</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Frequently asked questions about
-              <span className="gradient-text"> how Nexus Operations works</span>
-            </h2>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              Everything homeowners and contractors need to know about submitting requests, claiming
-              leads, membership pricing, and the verification process.
               Common questions
               <span className="gradient-text"> answered directly.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              The platform provides clear information so users understand the terms before
-              submitting a project or joining as a contractor.
+              Clear information so homeowners, property managers, and contractors understand the process
+              before submitting a project or joining the network.
             </p>
 
             {/* Tab switcher */}
@@ -191,7 +185,7 @@ export function FAQ() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Property Owners
+                Homeowners & Property Managers
               </button>
               <button
                 onClick={() => switchTab("contractors")}
@@ -211,7 +205,7 @@ export function FAQ() {
             <div className="rounded-2xl border border-border/40 bg-card px-6">
               {faqs.map((item, i) => (
                 <AccordionItem
-                  key={i}
+                  key={`${activeTab}-${i}`}
                   item={item}
                   isOpen={openItems.has(i)}
                   onToggle={() => toggleItem(i)}

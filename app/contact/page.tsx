@@ -24,8 +24,9 @@ export default function ContactPage() {
                 Let&apos;s talk
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Whether you are a homeowner with a project, a contractor ready to join our network, or
-                a potential partner — we respond to every message within one business day.
+                Whether you are a homeowner with a project, a property manager looking for coordination
+                support, a contractor ready to join our network, or a potential partner — we respond to
+                every message within one business day.
               </p>
             </div>
 

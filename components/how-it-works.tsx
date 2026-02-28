@@ -1,42 +1,43 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { PhoneCall, UserCheck, Wrench, Receipt, CheckCircle } from "lucide-react"
+import { PhoneCall, UserCheck, Wrench, ClipboardCheck, CheckCircle, FileSearch } from "lucide-react"
 
 const steps = [
   {
     icon: PhoneCall,
     number: "01",
-    title: "Request intake",
-    title: "Initial consultation",
-    detail: "A 45-minute conversation about your portfolio, your current vendor setup, and where coordination is costing your team the most time. No forms, no intake questionnaires — just a direct conversation.",
-    title: "Discovery call",
+    title: "Service requested",
     detail:
-      "Property managers submit by phone, text, or email with address, unit, issue details, urgency level, and tenant availability.",
+      "Homeowner or property manager submits a request with photos, written scope, budget ceiling, and preferred consultation times.",
+  },
+  {
+    icon: FileSearch,
+    number: "02",
+    title: "Project coordinated",
+    detail:
+      "Nexus manages project requirements and routes to a verified contractor by trade, proximity, and performance history.",
   },
   {
     icon: UserCheck,
-    number: "02",
-    title: "Contractor assignment",
+    number: "03",
+    title: "Contractor assigned",
     detail:
-      "Nexus Operations routes to a verified contractor by trade, proximity, and performance. If declined, backup reassignment runs automatically.",
+      "One verified contractor is exclusively assigned. If declined, backup reassignment runs automatically within service-level timelines.",
   },
   {
     icon: Wrench,
-    number: "03",
-    title: "Work completion + QA",
+    number: "04",
+    title: "Work completed",
     detail:
-      "Contractors submit photos and work notes. We confirm completion with the property manager and track quality before payment release.",
+      "Full coordination continues until job completion. Contractors submit photos and work notes. Quality confirmation is verified before close-out.",
   },
   {
-    icon: Receipt,
-    number: "04",
-    title: "Monthly invoicing",
-    title: "Platform access at launch",
-    detail: "When the NexOps SaaS platform launches in 2026, your team gets early access to the tools built from your actual workflows — not a generic template applied to your business.",
-    title: "Platform rollout",
+    icon: ClipboardCheck,
+    number: "05",
+    title: "Post Implementation Review",
     detail:
-      "Clients receive a line-item invoice showing contractor costs and markup by urgency category, with net payment terms.",
+      "Nexus delivers a Post Implementation Review evaluating project outcomes, contractor performance, and insights for future decision-making.",
   },
 ]
 
@@ -70,24 +71,23 @@ export function HowItWorks() {
         <div className="max-w-2xl mb-14 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
-            Maintenance coordination built for multifamily operations.
+            How Nexus coordinates every project from request to completion.
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            We operate as an outsourced coordination layer for Topeka property managers: faster dispatch,
-            contractor accountability, and standardized reporting.
+            End-to-end coordination for homeowners and property managers: structured dispatch,
+            contractor accountability, and a Post Implementation Review on every project.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {steps.map((step, i) => {
             const isActive = activeStep === i
             return (
               <div
                 key={step.number}
-                className="reveal group relative p-6 rounded-2xl border bg-card transition-all duration-300"
+                className={`reveal group relative p-6 rounded-2xl border bg-card transition-all duration-300 ${isActive ? "border-primary/60" : "border-border/40"}`}
                 onMouseEnter={() => setActiveStep(i)}
                 onMouseLeave={() => setActiveStep(null)}
-                style={isActive ? { borderColor: "oklch(0.75 0.18 155 / 0.6)" } : {}}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 border border-primary/20">
@@ -108,7 +108,7 @@ export function HowItWorks() {
             <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">Service levels:</span> Emergency (1h assignment, 4h on-site),
-              Urgent (4h assignment, next business day arrival), Routine (24h assignment, 3–5 business day arrival).
+              Urgent (4h assignment, next business day arrival), Routine (24h assignment, 3\u20135 business day arrival).
             </p>
           </div>
         </div>

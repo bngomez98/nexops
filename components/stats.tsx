@@ -12,17 +12,9 @@ interface Stat {
 
 const stats: Stat[] = [
   { value: 1, suffix: " hr", label: "Emergency contractor assignment target" },
-  { value: 4, suffix: " hrs", label: "Emergency on-site arrival target" },
-  { value: 50, suffix: "–100", prefix: "$", label: "Pilot flat fee range per project/job request" },
-  { value: 30, suffix: "–60 days", label: "Pilot period length before standard pricing" },
   { value: 1, suffix: "", label: "Contractor matched per project" },
-  { prefix: "$", value: 0, suffix: "", label: "Cost to homeowners, always" },
   { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
   { prefix: "$", value: 4200, suffix: "", label: "Median residential project value" },
-  { value: 1, suffix: " hr", label: "Emergency contractor assignment target" },
-  { value: 4, suffix: " hrs", label: "Emergency on-site arrival target" },
-  { value: 25, suffix: "–35%", label: "Standard service markup range" },
-  { value: 15, suffix: " mins", label: "Business-hours intake acknowledgment target" },
 ]
 
 function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {
@@ -92,7 +84,7 @@ export function Stats() {
     <section ref={sectionRef} className="py-20 border-y border-border/40 bg-card/30 relative overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none opacity-30"
-        style={{ background: "radial-gradient(ellipse at 50% 50%, oklch(0.75 0.18 155 / 0.04), transparent 60%)" }}
+        style={{ background: "radial-gradient(ellipse at 50% 50%, var(--primary) / 0.04, transparent 60%)" }}
       />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
