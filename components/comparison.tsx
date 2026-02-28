@@ -39,6 +39,11 @@ const features = [
     detail:
       "Only the assigned contractor will reach out — one professional, for the project that belongs to them.",
   },
+  {
+    feature: "Post Implementation Review",
+    detail:
+      "After every project, Nexus delivers a Post Implementation Review evaluating outcomes and providing insights for future decisions.",
+  },
 ]
 
 export function Comparison() {
@@ -66,20 +71,13 @@ export function Comparison() {
     <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
       <div
         className="absolute right-0 bottom-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works for you</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">What you get</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            How Nexus Operations compares to traditional lead platforms
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms distribute your contact information to 5–15 contractors per request and
-            charge each one for the same lead. Nexus Operations routes each project to one verified
-            contractor — the homeowner sets the scope and budget upfront, and only one professional
-            is ever assigned.
             What every project includes.
             <span className="gradient-text"> From submission to consultation.</span>
           </h2>
@@ -116,7 +114,7 @@ export function Comparison() {
             <Check className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">The NexOps commitment</p>
+            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus commitment</p>
             <p className="text-sm text-muted-foreground">
               Each project request is assigned to one verified contractor. No unsolicited calls are
               made. If coverage is not available in a specific area, the platform notifies the

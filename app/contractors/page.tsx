@@ -90,16 +90,13 @@ export default function ContractorsPage() {
             <div className="max-w-3xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors</p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Exclusive, pre-documented
-                Projects that belong
-                <br />
-                <span className="text-primary">project requests in Topeka.</span>
+                Projects that belong to you.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations gives licensed, insured contractors access to homeowner project requests
-                that include photos, a written scope, and a defined budget. When you claim a request, it is
-                removed from every other contractor&apos;s feed permanently. You are the only professional
-                who contacts that homeowner.
+                Nexus Operations delivers exclusive, pre-documented project requests to licensed, insured
+                contractors. Every request includes photos, a written scope, and a defined budget. When you
+                claim a project, it is permanently yours — removed from every other contractor&apos;s feed
+                the moment you commit.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -126,20 +123,13 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-16">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                How membership works for contractors
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                A flat monthly membership gives you access to every pre-qualified project request in your
-                trade category and coverage area. When you claim a request, it is removed from all other
-                contractor feeds permanently. There are no per-lead charges and no competing bids on the
-                same project.
                 Designed around how contractors do business
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Your membership funds a pipeline that works exclusively for you. Every request you claim is
-                permanently, exclusively yours — no competing bids, no shared leads, no race to submit a quote
-                before someone else gets there first. The platform is built so that when you commit to a project,
-                you already know the scope, the budget, and when the homeowner is available.
+                permanently yours — no competing bids, no per-lead charges. The platform is built so that
+                when you commit to a project, you already know the scope, the budget, and when the homeowner
+                is available.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -164,33 +154,31 @@ export default function ContractorsPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3 text-center">
-                Membership cost versus shared-lead platforms
+                How membership pays for itself
               </h2>
               <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
-                What contractors typically spend on shared-lead platforms compared to the Nexus Operations
-                flat-rate membership.
                 A flat monthly membership with unlimited claims — and every project you claim is fully documented and exclusively yours.
               </p>
               <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20 mb-6">
                 <ul className="flex flex-col gap-4 text-sm text-foreground">
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
                     <span><span className="font-semibold">$299/month flat</span> — claim unlimited projects with no per-project fees or hidden charges</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
                     <span>You are <span className="font-semibold">the only contractor</span> on every job you claim — permanently exclusive, removed from all other feeds instantly</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
                     <span><span className="font-semibold">Full project documentation</span> before you commit — photos, written scope, and a defined budget cap</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">✓</span>
-                    <span><span className="font-semibold">Pre-scheduled consultations</span> — homeowners select their preferred windows at submission, no callbacks needed</span>
+                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
+                    <span><span className="font-semibold">Pre-scheduled consultations</span> — homeowners select their preferred windows at submission, so you can plan your day</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">✓</span>
+                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
                     <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
                   </li>
                 </ul>
@@ -214,8 +202,8 @@ export default function ContractorsPage() {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Every contractor in the Nexus Operations network is manually reviewed and credentialed before
-                gaining access to project requests. This protects homeowners and ensures that when you win a
-                job, you are competing against verified professionals — not unlicensed or uninsured operators.
+                gaining access to project requests. This protects homeowners and ensures that every professional
+                in the network meets a consistent standard of licensing and insurance coverage.
                 Verification typically takes 3–5 business days.
               </p>
             </div>
@@ -246,8 +234,8 @@ export default function ContractorsPage() {
                   We accept established, insured trade professionals
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Nexus Operations is not a general handyman directory. Our homeowners expect licensed,
-                  insured trade professionals, and our network is built and maintained to that standard.
+                  Nexus Operations serves licensed, insured trade professionals. Our homeowners expect
+                  credentialed contractors, and our network is built and maintained to that standard.
                   Applications from unlicensed or uninsured operators are declined without exception.
                 </p>
                 <ul className="flex flex-col gap-3">
@@ -273,19 +261,19 @@ export default function ContractorsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { name: "Tree Removal", status: "Live" },
-                    { name: "Concrete Work", status: "Live" },
-                    { name: "Roofing", status: "Live" },
-                    { name: "HVAC", status: "Coming Q3" },
-                    { name: "Fencing", status: "Coming Q3" },
-                    { name: "Electrical", status: "Coming Q4" },
-                    { name: "Plumbing", status: "Coming Q4" },
-                    { name: "Excavation", status: "Coming 2026" },
+                    { name: "Tree Removal", status: "Available" },
+                    { name: "Concrete Work", status: "Available" },
+                    { name: "Roofing", status: "Available" },
+                    { name: "HVAC", status: "Available" },
+                    { name: "Fencing", status: "Available" },
+                    { name: "Electrical", status: "Expanding" },
+                    { name: "Plumbing", status: "Expanding" },
+                    { name: "Excavation", status: "Expanding" },
                   ].map((cat) => (
                     <div key={cat.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/30">
                       <span className="text-sm font-medium">{cat.name}</span>
                       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        cat.status === "Live"
+                        cat.status === "Available"
                           ? "bg-primary/10 text-primary"
                           : "bg-secondary text-muted-foreground"
                       }`}>{cat.status}</span>
@@ -307,16 +295,14 @@ export default function ContractorsPage() {
               {[
                 {
                   q: "Which service categories are available right now?",
-                  a: "Tree removal, concrete work, and roofing are live in Topeka, KS. HVAC and fencing are launching in Q3 of this year; electrical and plumbing follow in Q4. We expand categories based on verified contractor and homeowner demand.",
+                  a: "Tree removal, concrete work, roofing, HVAC, and fencing are available in Topeka, KS. Electrical, plumbing, and excavation are expanding — we add categories based on verified contractor and homeowner demand.",
                 },
                 {
                   q: "What are the minimum requirements to apply?",
                   a: "A valid business license, applicable trade licenses for your category, general liability insurance ($500K per occurrence, $1M aggregate), workers' compensation if you have employees, and three verifiable business or customer references.",
                 },
                 {
-                  q: "How does first-come, first-served claiming work?",
-                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
-                  q: "How does the first-come, first-served system work?",
+                  q: "How does the first-come, first-served claiming work?",
                   a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the project exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                 },
                 {
@@ -325,7 +311,7 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "What happens if I claim a project and the homeowner doesn't respond?",
-                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows, not just excuses.",
+                  a: "If a homeowner becomes unresponsive after you claim their request, contact our support team. We review these cases and issue project credits for confirmed no-shows.",
                 },
                 {
                   q: "Can I cover multiple service categories?",
@@ -333,7 +319,7 @@ export default function ContractorsPage() {
                 },
                 {
                   q: "What does cancellation look like?",
-                  a: "No annual contracts. Cancel anytime from your dashboard. Your account stays active through the end of the current billing period. No cancellation fees, no hard conversations.",
+                  a: "No annual contracts. Cancel anytime from your dashboard. Your account stays active through the end of the current billing period. No cancellation fees.",
                 },
               ].map((faq) => (
                 <div key={faq.q} className="border-b border-border/40 pb-6">

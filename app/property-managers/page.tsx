@@ -1,15 +1,9 @@
-import type { Metadata } from "next"
+"use client"
+
 import Link from "next/link"
-import { ArrowRight, CheckCircle, Clock, ShieldCheck, DollarSign, FlaskConical } from "lucide-react"
-import { ArrowRight, CheckCircle, Clock, ShieldCheck, DollarSign } from "lucide-react"
+import { ArrowRight, CheckCircle, ShieldCheck, DollarSign } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-
-export const metadata: Metadata = {
-  title: "For Property Managers | Nexus Operations",
-  description:
-    "Outsourced maintenance coordination for Topeka multifamily portfolios with verified contractor response SLAs.",
-}
 
 const responseTargets = [
   { urgency: "Emergency", assignment: "1 hour", onsite: "4 hours" },
@@ -18,9 +12,27 @@ const responseTargets = [
 ]
 
 const markupBands = [
-  { label: "Routine Maintenance", markup: "25%", example: "$300 → $375" },
-  { label: "Urgent Repairs", markup: "30%", example: "$500 → $650" },
-  { label: "Emergency Response", markup: "35%", example: "$800 → $1,080" },
+  {
+    label: "Routine Maintenance",
+    markup: "25%",
+    example: "$300 → $375",
+    description:
+      "Scheduled repairs, appliance servicing, and general upkeep requests are coordinated at a 25% markup on the contractor invoice.",
+  },
+  {
+    label: "Urgent Repairs",
+    markup: "30%",
+    example: "$500 → $650",
+    description:
+      "Time-sensitive issues such as HVAC failures, plumbing leaks, or electrical faults that require next-business-day resolution carry a 30% markup.",
+  },
+  {
+    label: "Emergency Response",
+    markup: "35%",
+    example: "$800 → $1,080",
+    description:
+      "After-hours and immediate-response dispatches — including water intrusion, gas leaks, and fire damage — are coordinated at a 35% markup.",
+  },
 ]
 
 export default function PropertyManagersPage() {
@@ -28,55 +40,26 @@ export default function PropertyManagersPage() {
     <div className="min-h-screen">
       <Header />
       <main>
+        {/* Hero */}
         <section className="pt-32 pb-20 lg:pt-40 lg:pb-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-                <Clock className="h-4 w-4" />
-                Pilot program live in Shawnee County (first 30–60 days)
-              </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                Verified dispatch.
-                <br />
-                <span className="text-primary">Defined response guarantees.</span>
-              </h1>
-                Shawnee County commercial maintenance coordination
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6">
-                One submission per issue.
-                <br />
-                <span className="text-primary">One verified contractor assigned.</span>
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
-                Nexus Operations handles contractor vetting, scheduling, and documentation for property
-                managers. Submit photos and a budget cap for any maintenance issue, and a pre-verified
-                contractor is assigned and scheduled within 24 hours. No vendor management, no chasing
-                estimates, no unvetted operators on your properties.
-                Verified dispatch.
-                <br />
-                <span className="text-primary">Defined response guarantees.</span>
+                Nexus is your outsourced maintenance coordination team.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
-                Nexus Operations acts as your outsourced maintenance coordination team. We intake requests,
-                route verified contractors, enforce backup assignment rules, confirm completion, and send
-                transparent monthly billing.
+                Submit a maintenance request once — with photos, scope, and a budget cap — and
+                Nexus handles everything from there. One verified contractor is assigned per issue.
+                We coordinate scheduling, enforce response-time guarantees, confirm completion with
+                a Post Implementation Review, and deliver transparent monthly billing. The result is
+                an ongoing partnership that removes vendor management from your operations entirely.
               </p>
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 mb-8 max-w-2xl">
-                <div className="flex items-start gap-3">
-                  <FlaskConical className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <p className="text-sm text-foreground/80 leading-relaxed">
-                    <span className="font-semibold text-foreground">Pilot pricing:</span> During the first 30–60 days,
-                    property managers pay a flat <span className="font-semibold text-primary">$50–$100 fee</span> to
-                    request projects/jobs while we validate dispatch speed and reporting.
-                  </p>
-                </div>
-              </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90"
+                  style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
                 >
-                  Join the Pilot Program
                   Request Onboarding
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -91,15 +74,14 @@ export default function PropertyManagersPage() {
           </div>
         </section>
 
+        {/* Response-time SLA table */}
         <section className="py-20 bg-card/30 border-y border-border/40">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-8">
-              <h2 className="text-3xl font-semibold tracking-tight mb-3">Pilot response-time guarantees</h2>
-              <p className="text-muted-foreground">
-                Dispatch and arrival targets are enforced during pilot operations, with automatic reassignment when a contractor does not accept in time.
               <h2 className="text-3xl font-semibold tracking-tight mb-3">Response-time guarantees</h2>
               <p className="text-muted-foreground">
-                Dispatch and arrival targets are based on urgency category, with automatic reassignment when a contractor does not accept in time.
+                Dispatch and arrival targets are based on urgency category, with automatic
+                reassignment when a contractor does not accept in time.
               </p>
             </div>
             <div className="overflow-x-auto rounded-2xl border border-border/40 bg-card">
@@ -125,12 +107,15 @@ export default function PropertyManagersPage() {
           </div>
         </section>
 
+        {/* Contractor network + Cost model */}
         <section className="py-24 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <p className="text-primary text-sm font-medium tracking-wide mb-3">Contractor network standards</p>
+              <p className="text-sm font-medium tracking-wide mb-3" style={{ color: "var(--primary)" }}>
+                Contractor network standards
+              </p>
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                Built on verification, not vendor roulette
+                A verified contractor marketplace
               </h2>
               <ul className="space-y-3">
                 {[
@@ -141,7 +126,7 @@ export default function PropertyManagersPage() {
                   "Automated backup assignment when primary vendors decline",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm">
-                    <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5" style={{ color: "var(--primary)" }} />
                     <span className="text-foreground/80">{item}</span>
                   </li>
                 ))}
@@ -149,17 +134,18 @@ export default function PropertyManagersPage() {
             </div>
             <div className="p-8 rounded-2xl bg-card border border-border/40">
               <div className="flex items-center gap-2 mb-4">
-                <DollarSign className="h-5 w-5 text-primary" />
-                <h3 className="text-base font-semibold">Post-pilot cost-plus markup model</h3>
+                <DollarSign className="h-5 w-5" style={{ color: "var(--primary)" }} />
                 <h3 className="text-base font-semibold">Cost-plus markup model</h3>
               </div>
               <div className="space-y-3">
                 {markupBands.map((band) => (
                   <div key={band.label} className="p-4 rounded-lg border border-border/40">
                     <p className="text-sm font-semibold">{band.label}</p>
-                    <p className="text-sm text-muted-foreground">Standard markup: {band.markup}</p>
                     <p className="text-sm text-muted-foreground">Markup: {band.markup}</p>
-                    <p className="text-sm text-primary">Example: {band.example}</p>
+                    <p className="text-sm text-muted-foreground">{band.description}</p>
+                    <p className="text-sm" style={{ color: "var(--primary)" }}>
+                      Example: {band.example}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -167,25 +153,26 @@ export default function PropertyManagersPage() {
           </div>
         </section>
 
+        {/* Corporate CTA */}
         <section id="corporate" className="py-24 lg:py-32 bg-card/30">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
               Reduce maintenance coordination overhead in 90 days
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              We partner with Topeka property management teams to implement standardized intake,
-              dispatch, QA, and billing workflows across your portfolio.
-            </p>
-            <p className="text-sm text-primary font-medium mb-8">
-              Pilot access: $50–$100 flat request fee for the first 30–60 days.
+              Nexus partners with property management teams to implement standardized intake,
+              dispatch, quality assurance, and billing workflows across your entire portfolio.
+              Every request is documented, every contractor is verified, and every invoice is
+              transparent.
             </p>
             <div className="flex items-center justify-center gap-2 mb-8 text-sm text-muted-foreground">
-              <CheckCircle className="h-4 w-4 text-primary" />
-              Designed for firms managing 100–800 units in Shawnee County
+              <CheckCircle className="h-4 w-4" style={{ color: "var(--primary)" }} />
+              Designed for multifamily and commercial portfolios of any size
             </div>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-90"
+              style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
             >
               Talk to Nexus Operations
               <ArrowRight className="h-4 w-4" />

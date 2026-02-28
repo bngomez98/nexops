@@ -22,8 +22,8 @@ const steps = [
   },
   {
     icon: ClipboardList,
-    title: "Review the estimate and decide",
-    description: "The contractor arrives with full knowledge of your project. They provide a written estimate. You decide whether to proceed. There is no obligation to continue.",
+    title: "Coordination through completion and review",
+    description: "Nexus coordinates the project from consultation through completion. After the work is done, a Post Implementation Review delivers insights on outcomes and contractor performance.",
   },
 ]
 
@@ -56,11 +56,11 @@ export function SubmitCTA() {
           <div className="absolute inset-0 pointer-events-none">
             <div
               className="animate-orb-1 absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.06]"
-              style={{ background: "radial-gradient(circle, oklch(0.75 0.18 155), transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
             />
             <div
               className="animate-orb-2 absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full opacity-[0.04]"
-              style={{ background: "radial-gradient(circle, oklch(0.70 0.15 85), transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, var(--chart-2), transparent 70%)" }}
             />
           </div>
 
@@ -69,27 +69,18 @@ export function SubmitCTA() {
               {/* Left */}
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-                  <span className="text-primary text-xs font-medium">Free for property owners &mdash; no hidden fees</span>
+                  <span className="text-primary text-xs font-medium">Free for homeowners and property managers</span>
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  You define the project before
-                  <br />
-                  <span className="gradient-text">any contractor is contacted.</span>
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-8">
-                  Upload photos, write the scope, set a budget ceiling, and choose your consultation window.
-                  One verified contractor reviews your full project profile and claims it exclusively. There
-                  is no cost to homeowners.
                   Submit your project.
                   <br />
-                  <span className="gradient-text">One contractor. Your terms.</span>
+                  <span className="gradient-text">One contractor. Full coordination.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   Property owners submit their project details once, including documentation and a
-                  specified budget. The platform then assigns the project to a single verified
-                  contractor. A consultation is confirmed within 24 hours at a time selected by
-                  the property owner.
+                  specified budget. Nexus assigns the project to a single verified contractor and
+                  coordinates through completion, including a Post Implementation Review.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">
@@ -97,7 +88,7 @@ export function SubmitCTA() {
                     href="/dashboard/homeowner/new"
                     className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/25 animate-pulse-glow"
                   >
-                    Start Your Project &mdash; Free
+                    Start Your Project
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground self-center">

@@ -1,14 +1,9 @@
-import type { Metadata } from "next"
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { ArrowRight, Check, HelpCircle } from "lucide-react"
-
-export const metadata: Metadata = {
-  title: "Membership Plans | Contractor Access Tiers",
-  description:
-    "Simple, transparent monthly membership for contractors. Standard, Premium, and Elite plans. Fixed pricing — no per-lead fees, no annual contracts, no hidden charges. Exclusive projects for licensed, insured contractors.",
-}
 
 const tiers = [
   {
@@ -89,7 +84,7 @@ const faqs = [
     a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the project exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
   },
   {
-    q: "Are there any per-lead fees on top of my subscription?",
+    q: "Are there any per-project fees on top of my subscription?",
     a: "No. Your monthly membership is the only charge. You can claim as many projects as you can handle with no additional cost per claim.",
   },
 ]
@@ -105,17 +100,12 @@ export default function PricingPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Flat monthly membership with unlimited lead claims
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Every tier includes unlimited lead claims with no per-lead fees, no annual contracts, and
-                no cancellation penalties. Higher tiers add advance notification windows and priority access
-                to high-value projects.
                 One price. Unlimited projects.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                No per-lead fees. No price ranges. No annual contracts. Choose the access tier that fits your
-                business — and start claiming exclusive, pre-qualified projects the day you are approved.
+                Every tier includes unlimited project claims with no per-project fees, no annual contracts,
+                and no cancellation penalties. Higher tiers add advance notification windows and priority
+                access to high-value projects.
               </p>
             </div>
           </div>
@@ -143,7 +133,9 @@ export default function PricingPage() {
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold mb-2">{tier.name}</h3>
                     <div className="flex items-baseline gap-1 mb-3">
-                      <span className="text-4xl font-bold text-primary tracking-tight">{tier.price}</span>
+                      <span className="text-4xl font-bold tracking-tight" style={{ color: "var(--primary)" }}>
+                        {tier.price}
+                      </span>
                       <span className="text-sm text-muted-foreground">{tier.period}</span>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">{tier.description}</p>

@@ -197,7 +197,7 @@ export default function ContractorAnalyticsPage() {
                 <Tooltip
                   contentStyle={chartStyle.contentStyle}
                   labelStyle={chartStyle.labelStyle}
-                  formatter={(v: number) => [`$${v.toLocaleString()}`, "Revenue"]}
+                  formatter={(v: unknown) => [`$${Number(v).toLocaleString()}`, "Revenue"]}
                 />
                 <Line
                   type="monotone"

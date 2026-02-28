@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { Logo } from "@/components/logo"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { getStoredUser, clearUser, type AuthUser } from "@/lib/auth"
 import {
   LayoutDashboard,
@@ -150,6 +151,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Bottom actions */}
       <div className="px-4 py-4 border-t border-border/40 space-y-0.5">
+        <ThemeToggle compact />
         <Link
           href="/"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"

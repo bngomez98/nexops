@@ -6,9 +6,9 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Service Categories | Home Services in Topeka, KS",
+  title: "Service Categories | Maintenance, Restoration, and Remediation",
   description:
-    "Nexus Operations covers residential trade categories in the Topeka, KS area including tree removal, concrete, roofing, HVAC, fencing, and electrical. Every request requires photos, a written scope, and a defined budget before a contractor is matched.",
+    "Nexus Operations coordinates maintenance, restoration, remediation, and emergency response services. Every request requires photos, a written scope, and a defined budget before a contractor is matched.",
 }
 
 export default function ServicesPage() {
@@ -22,12 +22,12 @@ export default function ServicesPage() {
             <div className="max-w-2xl">
               <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Residential trade categories in the Topeka area
+                Maintenance, restoration, and remediation services
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Nexus Operations covers the highest-demand residential trades and expands based on
-                verified contractor availability and homeowner demand. New categories are added only
-                when enough qualified contractors exist in the area to meet our response and quality standards.
+                Nexus Operations coordinates residential and commercial property services across a growing
+                range of trade categories. New categories are activated when verified contractor depth is
+                strong enough to maintain response quality and service-level commitments.
               </p>
             </div>
           </div>
@@ -42,9 +42,9 @@ export default function ServicesPage() {
               Ready to submit your project?
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Document your project with photos, a written scope, and a budget cap. We match you with one
-              verified, insured contractor in your area — no competing bids, no unsolicited calls.
-              Always free for homeowners.
+              Document your project with photos, a written scope, and a budget ceiling. Nexus matches you
+              with one verified, insured contractor and coordinates the project through completion.
+              Free for homeowners and property managers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

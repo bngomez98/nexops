@@ -11,10 +11,9 @@ export function Footer() {
               <Logo />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Exclusive contractor matching for homeowners — one project, one verified professional. No shared leads. No bidding wars. Always free.
-              A two-sided marketplace connecting property owners with verified contractors in
-              the home improvement sector. Each project is assigned to a single contractor on
-              an exclusive basis.
+              Nexus Operations connects homeowners and property managers with licensed, insured
+              contractors. End-to-end coordination from service request through completion, including
+              Post Implementation Review.
             </p>
           </div>
 

@@ -2,43 +2,28 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { CookieConsent } from "@/components/cookie-consent"
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
-    default: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
+    default: "Nexus Operations | Contractor Marketplace for Homeowners and Property Managers",
     template: "%s | Nexus Operations",
   },
   description:
-    "Nexus Operations matches each home project to one licensed, insured contractor in the Topeka, KS area. Homeowners submit photos, a written scope, and a budget cap. One verified contractor is assigned exclusively. Free for homeowners.",
+    "Nexus is a contractor marketplace connecting homeowners and property managers with licensed, insured contractors. End-to-end coordination from service request through project completion, including emergency response and Post Implementation Review.",
   keywords: [
-    "home services Topeka Kansas",
-    "exclusive contractor leads",
-    "tree removal Topeka",
-    "roofing contractor Kansas",
-    "concrete work Topeka",
-    "licensed insured contractors",
-    "home repair matching",
-    "exclusive contractor matching",
-    "HVAC contractor Topeka",
-    "fencing contractor Kansas",
-    default: "NexOps | Operations Partner for Property Management",
-    template: "%s | NexOps",
-  },
-  description:
-    "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate your vendor relationships, document your workflows, and serve as your dedicated operations partner. Consulting available now — platform launching 2026.",
-  keywords: [
-    "property management consulting",
-    "vendor coordination property management",
-    "operations partner property managers",
-    "property management software",
-    "workflow documentation property management",
-    "vendor relationship management",
-    "property portfolio operations",
-    "property management SaaS",
-    "residential property management consulting",
-    "commercial property management operations",
+    "contractor marketplace",
+    "licensed contractors Topeka",
+    "property maintenance coordination",
+    "emergency contractor response",
+    "homeowner contractor matching",
+    "property manager maintenance",
+    "restoration and remediation services",
+    "insured contractors Kansas",
+    "project coordination",
+    "post implementation review",
   ],
   authors: [{ name: "Nexus Operations" }],
   creator: "Nexus Operations",
@@ -47,24 +32,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
-    title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
+    title: "Nexus Operations | Contractor Marketplace for Homeowners and Property Managers",
     description:
-      "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Homeowners submit photos, scope, and budget. One verified contractor is assigned exclusively. Free for homeowners.",
+      "Nexus is a contractor marketplace connecting homeowners and property managers with licensed, insured contractors. End-to-end coordination from service request through project completion.",
     siteName: "Nexus Operations",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus Operations | Exclusive Contractor Matching in Topeka, KS",
-    description: "Nexus Operations matches each home project to one licensed, insured contractor in Topeka, KS. Free for homeowners. Flat monthly membership for contractors.",
-    title: "NexOps | Operations Partner for Property Management",
+    title: "Nexus Operations | Contractor Marketplace for Homeowners and Property Managers",
     description:
-      "NexOps coordinates your vendor relationships, documents your workflows, and serves as a dedicated operations partner for property management companies. Consulting available now — platform launching 2026.",
-    siteName: "NexOps",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "NexOps | Operations Partner for Property Management",
-    description: "A consulting agency and SaaS platform for property management companies. One dedicated partner. Your vendors coordinated. Your workflows documented.",
+      "Nexus is a contractor marketplace connecting homeowners and property managers with licensed, insured contractors. End-to-end coordination from service request through project completion.",
   },
   robots: {
     index: true,
@@ -85,8 +62,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* Inline script to prevent flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("nexops-theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme:dark)").matches);if(d)document.documentElement.classList.add("dark")}catch(e){}})()`,
+          }}
+        />
         {/* Google tag (gtag.js) */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF" />
         <script
@@ -110,9 +93,9 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "ProfessionalService",
                 "@id": "https://nexusoperations.org/#organization",
-                name: "NexOps",
+                name: "Nexus Operations",
                 description:
-                  "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate vendor relationships, document workflows, and serve as a dedicated operations partner.",
+                  "Nexus is a contractor marketplace connecting homeowners and property managers with licensed, insured contractors for maintenance, restoration, remediation, and emergency response services.",
                 url: "https://nexusoperations.org",
                 telephone: "+1-913-951-1711",
                 email: "admin@nexusoperations.org",
@@ -127,11 +110,12 @@ export default function RootLayout({
                   { "@type": "State", name: "Kansas" },
                 ],
                 serviceType: [
-                  "Property Management Consulting",
-                  "Vendor Relationship Management",
-                  "Workflow Documentation",
-                  "Operations Coordination",
-                  "Property Management SaaS",
+                  "Contractor Marketplace",
+                  "Maintenance Coordination",
+                  "Restoration Services",
+                  "Remediation Services",
+                  "Emergency Response",
+                  "Post Implementation Review",
                 ],
                 priceRange: "$$",
                 openingHoursSpecification: {
@@ -157,7 +141,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <CookieConsent />
         <Analytics />
       </body>
