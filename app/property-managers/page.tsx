@@ -48,11 +48,12 @@ export default function PropertyManagersPage() {
                 Nexus is your outsourced maintenance coordination team.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
-                Submit a maintenance request once — with photos, scope, and a budget cap — and
-                Nexus handles everything from there. One verified contractor is assigned per issue.
-                We coordinate scheduling, enforce response-time guarantees, confirm completion with
-                a Post Implementation Review, and deliver transparent monthly billing. The result is
-                an ongoing partnership that removes vendor management from your operations entirely.
+                Nexus replaces fragmented vendor management with a single coordination layer that
+                handles every maintenance issue from intake through resolution. Each request is
+                documented with photos, a written scope, and a budget ceiling, then assigned to
+                one verified contractor who is held to defined response-time guarantees. Nexus
+                coordinates scheduling, confirms completion through a Post Implementation Review,
+                and delivers transparent monthly billing across your entire portfolio.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link

@@ -73,14 +73,15 @@ export function SubmitCTA() {
                 </div>
 
                 <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-                  Submit your project.
-                  <br />
-                  <span className="gradient-text">One contractor. Full coordination.</span>
+                  Nexus coordinates your project{" "}
+                  <span className="gradient-text">from request through completion.</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Property owners submit their project details once, including documentation and a
-                  specified budget. Nexus assigns the project to a single verified contractor and
-                  coordinates through completion, including a Post Implementation Review.
+                  Property owners describe the work needed, upload photos, and set a maximum budget.
+                  Nexus then assigns the project to a single licensed, insured contractor who reviews
+                  every detail before making contact. Coordination continues through scheduling,
+                  work completion, and a Post Implementation Review that delivers performance insights
+                  and project documentation back to you.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-3">

@@ -35,9 +35,9 @@ const features = [
       "Every contractor in the network has passed license verification, insurance confirmation, and a background check.",
   },
   {
-    feature: "One call. That's it.",
+    feature: "You only hear from one contractor",
     detail:
-      "Only the assigned contractor will reach out — one professional, for the project that belongs to them.",
+      "Only the assigned contractor will reach out to you, fully briefed on the project scope and ready to begin.",
   },
   {
     feature: "Post Implementation Review",
@@ -78,13 +78,14 @@ export function Comparison() {
         <div className="max-w-2xl mb-12 reveal">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">What you get</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            What every project includes.
-            <span className="gradient-text"> From submission to consultation.</span>
+            Every project is coordinated
+            <span className="gradient-text"> from request through completion.</span>
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Every project submitted through Nexus Operations is assigned to one verified contractor.
-            That contractor has seen your photos, your scope, and your budget before contacting you —
-            and is already committed to the consultation window you selected.
+            Nexus assigns every project to one verified contractor who has already reviewed your
+            photos, your written scope, and your budget ceiling before making contact. The assigned
+            contractor arrives at the consultation window you selected, prepared and committed to
+            the work.
           </p>
         </div>
 
