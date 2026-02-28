@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ChevronDown, Shield, Clock3, CheckCircle2, ClipboardCheck } from "lucide-react"
+import { ArrowRight, Shield, Clock3, CheckCircle2, ClipboardCheck } from "lucide-react"
 
 const trustPoints = [
   { icon: Shield, text: "Licensed and insured contractor network" },
@@ -50,17 +50,17 @@ export function Hero() {
 
             <div className="flex flex-col sm:flex-row items-start gap-3 mb-10">
               <Link
-                href="/#how-it-works"
+                href="/login?tab=signup"
                 className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
               >
-                How It Works
+                Submit a Request — Free
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/contact"
+                href="/#how-it-works"
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
-                Get Started
+                How It Works
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -95,7 +95,7 @@ export function Hero() {
               </div>
 
               <a href="#how-it-works" className="inline-flex items-center gap-2 mt-5 text-xs text-primary hover:underline">
-                Explore workflow details <ChevronDown className="h-3.5 w-3.5" />
+                Explore workflow details <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>

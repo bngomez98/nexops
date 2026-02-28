@@ -19,6 +19,7 @@ export function Header() {
   const nav = [
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Services", href: "/services" },
+    { label: "Pricing", href: "/pricing" },
     { label: "For Contractors", href: "/contractors" },
     { label: "For Property Managers", href: "/property-managers" },
     { label: "Contact", href: "/contact" },
