@@ -19,7 +19,19 @@ import {
   Home,
   Briefcase,
   ExternalLink,
+  ArrowUpRight,
 } from "lucide-react"
+
+const pageTitles: Record<string, string> = {
+  "/dashboard/contractor": "Dashboard",
+  "/dashboard/contractor/projects": "Projects",
+  "/dashboard/contractor/analytics": "Analytics",
+  "/dashboard/contractor/settings": "Settings",
+  "/dashboard/homeowner": "Dashboard",
+  "/dashboard/homeowner/new": "New Request",
+  "/dashboard/homeowner/requests": "My Requests",
+  "/dashboard/homeowner/settings": "Settings",
+}
 
 const contractorNav = [
   { label: "Dashboard", href: "/dashboard/contractor", icon: LayoutDashboard },
@@ -131,7 +143,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   onClick={() => setSidebarOpen(false)}
                   className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                     active
-                      ? "bg-primary/12 text-primary"
+                      ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}
                 >
@@ -219,6 +231,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Logo />
           <div className="ml-auto flex items-center gap-2">
             <span className="text-xs text-primary font-medium">{portalLabel}</span>
+          </div>
+        </header>
+
+        {/* Desktop topbar */}
+        <header className="hidden lg:flex items-center justify-between gap-4 px-8 h-14 border-b border-border/40 bg-background/95 backdrop-blur-md sticky top-0 z-30 flex-shrink-0">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">{portalLabel}</span>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+            <span className="font-semibold text-foreground">{pageTitles[pathname] ?? "Dashboard"}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {!isContractor && pathname !== "/dashboard/homeowner/new" && (
+              <Link
+                href="/dashboard/homeowner/new"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                New Request
+              </Link>
+            )}
+            {isContractor && user.subscription !== "elite" && (
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border/50 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <ArrowUpRight className="h-3.5 w-3.5" />
+                Upgrade plan
+              </Link>
+            )}
+            <ThemeToggle />
+            <div className="flex items-center gap-2 pl-2 border-l border-border/40 ml-1">
+              <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground text-xs font-bold uppercase">
+                {user.name.charAt(0)}
+              </div>
+              <span className="text-sm font-medium">{user.name.split(" ")[0]}</span>
+            </div>
           </div>
         </header>
 

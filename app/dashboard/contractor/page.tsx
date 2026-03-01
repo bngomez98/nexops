@@ -76,7 +76,7 @@ const tierConfig = {
     colors: "text-amber-400 border-amber-500/30 bg-amber-500/10",
     accent: "text-amber-400",
     headerBg: "from-amber-500/8 to-background",
-    advance: "60 sec early",
+    advance: "90 sec early",
   },
   elite: {
     label: "Elite",

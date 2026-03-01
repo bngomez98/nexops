@@ -141,23 +141,47 @@ function LoginContent() {
         </Link>
 
         <div>
-          <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors in Topeka, KS</p>
-          <h2 className="text-3xl font-semibold leading-snug tracking-tight mb-8">
-            Exclusive projects.<br />Full documentation upfront.<br />One flat monthly fee.
-          </h2>
-          <ul className="flex flex-col gap-4">
-            {[
-              "One project, one contractor — the moment you claim it, no one else can",
-              "Every request includes photos, written scope, and a defined budget cap",
-              "Month-to-month membership — cancel from your dashboard at any time",
-              "Real-time notifications and performance analytics",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
-                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                {item}
-              </li>
-            ))}
-          </ul>
+          {tab === "signup" && role === "homeowner" ? (
+            <>
+              <p className="text-primary text-sm font-medium tracking-wide mb-4">For homeowners in Topeka, KS</p>
+              <h2 className="text-3xl font-semibold leading-snug tracking-tight mb-8">
+                One request.<br />One verified contractor.<br />No bidding wars.
+              </h2>
+              <ul className="flex flex-col gap-4">
+                {[
+                  "Free to submit — no cost to homeowners, ever",
+                  "Matched with a single licensed, insured contractor",
+                  "Photos and written scope collected before any contractor is involved",
+                  "Post Implementation Review on every completed project",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <>
+              <p className="text-primary text-sm font-medium tracking-wide mb-4">For licensed contractors in Topeka, KS</p>
+              <h2 className="text-3xl font-semibold leading-snug tracking-tight mb-8">
+                Exclusive projects.<br />Full documentation upfront.<br />One flat monthly fee.
+              </h2>
+              <ul className="flex flex-col gap-4">
+                {[
+                  "One project, one contractor — the moment you claim it, no one else can",
+                  "Every request includes photos, written scope, and a defined budget cap",
+                  "Month-to-month membership — cancel from your dashboard at any time",
+                  "Real-time notifications and performance analytics",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
 
         <p className="text-xs text-muted-foreground">
