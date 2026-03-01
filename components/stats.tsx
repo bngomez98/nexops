@@ -7,7 +7,8 @@ interface Stat {
   value: number
   suffix: string
   label: string
-  decimals?: number
+  context: string
+  accent: string
 }
 
 const stats: Stat[] = [
@@ -15,44 +16,72 @@ const stats: Stat[] = [
   { value: 1, suffix: "", label: "Contractor assigned per project — exclusively yours" },
   { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
   { prefix: "$", value: 4200, suffix: "", label: "Median residential project value" },
+  {
+    value: 1,
+    suffix: "",
+    label: "Contractor per project",
+    context: "One exclusive assignment — never shared, never auctioned.",
+    accent: "from-primary/20 to-primary/5",
+  },
+  {
+    value: 24,
+    suffix: "h",
+    label: "Consultation confirmation",
+    context: "From submission to confirmed appointment window.",
+    accent: "from-amber-500/20 to-amber-500/5",
+  },
+  {
+    value: 1,
+    suffix: "h",
+    label: "Emergency assignment target",
+    context: "On-site response within 4 hours of assignment.",
+    accent: "from-rose-500/20 to-rose-500/5",
+  },
+  {
+    prefix: "$",
+    value: 4200,
+    suffix: "",
+    label: "Median residential project",
+    context: "Roofing, concrete, HVAC, electrical, tree removal, and more.",
+    accent: "from-emerald-500/20 to-emerald-500/5",
+  },
 ]
 
-function useCountUp(target: number, duration = 1400, enabled = false, decimals = 0) {
+function useCountUp(target: number, duration = 1200, enabled = false) {
   const [count, setCount] = useState(0)
-
   useEffect(() => {
     if (!enabled) return
-    if (target === 0) {
-      setCount(0)
-      return
-    }
+    if (target === 0) { setCount(0); return }
     let start: number | null = null
     const step = (ts: number) => {
       if (!start) start = ts
       const progress = Math.min((ts - start) / duration, 1)
       const ease = 1 - Math.pow(1 - progress, 3)
-      setCount(parseFloat((ease * target).toFixed(decimals)))
+      setCount(Math.round(ease * target))
       if (progress < 1) requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
-  }, [target, duration, enabled, decimals])
-
+  }, [target, duration, enabled])
   return count
 }
 
-function StatItem({ stat, enabled }: { stat: Stat; enabled: boolean }) {
-  const count = useCountUp(stat.value, 1200, enabled, stat.decimals ?? 0)
-  const displayValue = stat.decimals ? count.toFixed(stat.decimals) : Math.round(count).toString()
-
+function StatCard({ stat, enabled }: { stat: Stat; enabled: boolean }) {
+  const count = useCountUp(stat.value, 1200, enabled)
   return (
-    <div className="group text-center lg:text-left reveal">
-      <div className="hidden lg:block h-0.5 w-8 bg-primary rounded-full mb-4 group-hover:w-14 transition-all duration-300" />
-      <div className="text-3xl lg:text-4xl font-bold tracking-tight text-primary mb-1.5 tabular-nums">
-        {stat.prefix ?? ""}
-        {displayValue}
-        {stat.suffix}
+    <div className="reveal group relative rounded-2xl border border-border/40 bg-card overflow-hidden hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20 hover:-translate-y-0.5 transition-all duration-300">
+      {/* Gradient top accent */}
+      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.accent} opacity-80`} />
+
+      <div className="p-6 pt-7">
+        <div className="text-4xl lg:text-5xl font-bold tracking-tight text-primary mb-2 tabular-nums font-mono">
+          {stat.prefix ?? ""}{count.toLocaleString()}{stat.suffix}
+        </div>
+        <p className="text-sm font-semibold text-foreground mb-1">{stat.label}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">{stat.context}</p>
       </div>
-      <div className="text-sm text-muted-foreground leading-snug">{stat.label}</div>
+
+      {/* Subtle inner glow on hover */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${stat.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
     </div>
   )
 }
@@ -64,33 +93,32 @@ export function Stats() {
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true)
-          el.querySelectorAll(".reveal").forEach((node) => node.classList.add("in-view"))
+          el.querySelectorAll(".reveal").forEach((node, i) => {
+            setTimeout(() => node.classList.add("in-view"), i * 100)
+          })
           observer.disconnect()
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0.2 },
     )
-
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-20 border-y border-border/40 bg-card/30 relative overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none opacity-30"
-        style={{ background: "radial-gradient(ellipse at 50% 50%, var(--primary) / 0.04, transparent 60%)" }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
+    <section ref={sectionRef} className="py-20 lg:py-28 border-b border-border/40 bg-card/20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex items-center gap-4 mb-12 reveal">
+          <span className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground">By the numbers</span>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           {stats.map((stat) => (
-            <StatItem key={stat.label} stat={stat} enabled={inView} />
+            <StatCard key={stat.label} stat={stat} enabled={inView} />
           ))}
         </div>
       </div>

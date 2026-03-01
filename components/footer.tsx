@@ -1,9 +1,37 @@
 import Link from "next/link"
 import { Logo } from "@/components/logo"
+import { Shield, CheckCircle2, Clock3, FileText } from "lucide-react"
+
+const trustItems = [
+  { icon: Shield, label: "License Verified", sub: "Every contractor" },
+  { icon: CheckCircle2, label: "Insured & Background Checked", sub: "Before platform access" },
+  { icon: Clock3, label: "24-Hour Consultation", sub: "Guaranteed on every project" },
+  { icon: FileText, label: "Post Implementation Review", sub: "Included on every project" },
+]
 
 export function Footer() {
   return (
     <footer className="border-t border-border/40 bg-card/50">
+
+      {/* Trust bar */}
+      <div className="border-b border-border/30 bg-secondary/20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {trustItems.map(({ icon: Icon, label, sub }) => (
+              <div key={label} className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-foreground leading-tight">{label}</p>
+                  <p className="text-[11px] text-muted-foreground">{sub}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           <div className="col-span-2 md:col-span-1">
@@ -53,8 +81,8 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Company</h3>
             <ul className="flex flex-col gap-3 text-sm">
               <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</Link></li>
-              <li><a href="mailto:admin@nexusoperations.org" className="text-foreground/60 hover:text-primary transition-colors">admin@nexusoperations.org</a></li>
-              <li><a href="tel:+18008702734" className="text-foreground/60 hover:text-primary transition-colors">(800) 870-2734</a></li>
+              <li><a href="mailto:contact@nexusoperations.org" className="text-foreground/60 hover:text-primary transition-colors">contact@nexusoperations.org</a></li>
+              <li><a href="tel:+17854280244" className="text-foreground/60 hover:text-primary transition-colors">785-428-0244</a></li>
               <li><Link href="/privacy" className="text-foreground/60 hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-foreground/60 hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>

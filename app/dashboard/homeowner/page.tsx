@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -127,17 +127,16 @@ function RequestPipeline({ status }: { status: ServiceRequest["status"] }) {
   return (
     <div className="flex items-start gap-0 w-full">
       {steps.map((step, i) => (
-        <>
+        <Fragment key={step.key}>
           <PipelineStep
-            key={step.key}
             label={step.label}
             description={step.description}
             active={order[currentIdx] === step.key}
             done={i < currentIdx}
             icon={step.icon}
           />
-          {i < steps.length - 1 && <PipelineConnector key={`conn-${i}`} done={i < currentIdx} />}
-        </>
+          {i < steps.length - 1 && <PipelineConnector done={i < currentIdx} />}
+        </Fragment>
       ))}
     </div>
   )
