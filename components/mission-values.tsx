@@ -1,40 +1,24 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Users, ShieldCheck, FileText, Award } from "lucide-react"
+import Link from "next/link"
 
-const values = [
+const principles = [
   {
-    icon: Users,
-    title: "Dedicated coordination for every project",
-    body: "Nexus manages each project end-to-end. One contractor is assigned exclusively per request, and coordination continues from the initial service request through completion.",
-    color: "text-primary",
-    bg: "bg-primary/10",
-    border: "border-primary/20",
+    label: "Exclusivity is structural.",
+    body: "When a contractor claims a project, it is removed from every other contractor's view immediately and permanently. This is how the platform is built — a technical constraint, not a policy statement.",
   },
   {
-    icon: ShieldCheck,
-    title: "Licensed, insured, verified contractors",
-    body: "Every contractor in the Nexus network undergoes license verification, insurance confirmation, and a background check before they can access project requests.",
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-    border: "border-amber-400/20",
+    label: "Documentation is the default.",
+    body: "Every project generates a complete, timestamped audit trail — from submission through consultation, estimate, execution, and Post Implementation Review. It lives in your account automatically, without any action on your part.",
   },
   {
-    icon: FileText,
-    title: "Complete documentation before dispatch",
-    body: "Property owners submit photos, a written scope, and a defined budget ceiling before any contractor is notified. Contractors review all documentation before claiming and arriving prepared.",
-    color: "text-violet-400",
-    bg: "bg-violet-400/10",
-    border: "border-violet-400/20",
+    label: "Verification is mandatory.",
+    body: "No contractor accesses the platform without license verification, insurance confirmation, and a background check. All three are required before a contractor views a single project. The integrity of the network depends on it.",
   },
   {
-    icon: Award,
-    title: "Post Implementation Review on every project",
-    body: "After completion, Nexus delivers a Post Implementation Review evaluating project outcomes and providing insights to homeowners and property managers for ongoing strategic decision-making.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-    border: "border-emerald-400/20",
+    label: "Transparency before contact.",
+    body: "Budget ceilings are set by property owners before any contractor is notified. Contractors see the complete scope, photographs, and budget before they decide to claim. Every party enters the relationship informed.",
   },
 ]
 
@@ -48,85 +32,81 @@ export function MissionValues() {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 100)
+            setTimeout(() => node.classList.add("in-view"), i * 90)
           })
           observer.disconnect()
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.08 },
     )
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden bg-card/20">
-      <div
-        className="absolute left-0 top-0 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
-      />
-      <div
-        className="absolute right-0 bottom-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-[0.025]"
-        style={{ background: "radial-gradient(circle, var(--chart-2), transparent 70%)" }}
-      />
-
+    <section ref={sectionRef} className="py-28 lg:py-40 border-b border-border/40">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-3xl mb-16 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">What Nexus delivers</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-6">
-            End-to-end coordination built on
-            <span className="gradient-text"> verification, documentation, and accountability.</span>
+
+        {/* Top: mission narrative */}
+        <div className="reveal mb-20 lg:mb-28 max-w-4xl">
+          <div className="flex items-center gap-4 mb-8">
+            <span className="h-px w-10 bg-primary shrink-0" />
+            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">Why Nexus Exists</p>
+          </div>
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] mb-8 text-balance">
+            Built around the principle that a property owner
+            <br className="hidden lg:block" />
+            {" "}deserves one expert — not a crowd.
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Nexus Operations connects property owners and managers with licensed contractors through a
-            structured coordination process. Every project is exclusively assigned to one verified contractor,
-            fully documented before dispatch, and reviewed after completion.
-          </p>
+          <div className="space-y-5 text-lg text-muted-foreground leading-relaxed max-w-3xl">
+            <p>
+              Nexus Operations was founded on a straightforward premise: property owners and managers
+              deserve a structured, accountable path to getting work done. One submission.
+              One verified professional. A documented outcome.
+            </p>
+            <p>
+              That structure protects everyone involved. The property owner works with a single contractor
+              who has studied their project before arriving. The contractor invests their time in a project
+              already matched to their capabilities — with full information, no surprises, and a defined scope.
+            </p>
+            <p className="font-medium text-foreground/90">
+              Every feature of this platform flows from that principle.
+              Exclusivity, verification, documentation, and the Post Implementation Review are not additions
+              to the model — they are the model.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4 mb-12 reveal" style={{ transitionDelay: "80ms" }}>
-          <div className="h-px flex-1 bg-border/30" />
-          <span className="text-xs text-muted-foreground tracking-wider uppercase font-medium">Core commitments</span>
-          <div className="h-px flex-1 bg-border/30" />
+        {/* Divider with label */}
+        <div className="reveal flex items-center gap-4 mb-16">
+          <div className="h-px flex-1 bg-border/40" />
+          <span className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground shrink-0">Core Principles</span>
+          <div className="h-px flex-1 bg-border/40" />
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-5">
-          {values.map((v, i) => (
+        {/* Principles — editorial list */}
+        <div className="space-y-0">
+          {principles.map((p, i) => (
             <div
-              key={v.title}
-              className="reveal group flex gap-5 p-6 rounded-2xl bg-card border border-border/40 hover:border-border/70 transition-all duration-300 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20 cursor-default"
-              style={{ transitionDelay: `${(i + 2) * 80}ms` }}
+              key={p.label}
+              className="reveal border-t border-border/40 py-10 last:border-b flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-16"
+              style={{ transitionDelay: `${i * 80}ms` }}
             >
-              <div
-                className={`flex items-center justify-center w-12 h-12 rounded-xl ${v.bg} border ${v.border} shrink-0 transition-transform duration-300 group-hover:scale-110`}
-              >
-                <v.icon className={`h-5 w-5 ${v.color}`} />
+              <div className="lg:w-80 shrink-0">
+                <h3 className="text-base font-bold text-foreground leading-snug">{p.label}</h3>
               </div>
-              <div>
-                <h3 className="text-base font-semibold mb-2 leading-snug">{v.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{v.body}</p>
-              </div>
+              <p className="text-muted-foreground leading-relaxed text-[15px] max-w-2xl">{p.body}</p>
             </div>
           ))}
         </div>
 
-        {/* Closing brand statement */}
-        <div
-          className="mt-12 p-7 rounded-2xl border border-border/30 bg-secondary/20 reveal"
-          style={{ transitionDelay: "500ms" }}
-        >
-          <blockquote className="text-center">
-            <p className="text-lg lg:text-xl font-medium text-foreground/90 leading-relaxed max-w-3xl mx-auto">
-              &ldquo;Nexus is a strategic and dependable partner providing skilled labor and intelligence &mdash;
-              from the first request through project completion and beyond.&rdquo;
-            </p>
-            <footer className="mt-4 text-sm text-muted-foreground">
-              Nexus Operations
-            </footer>
+        {/* Pull quote */}
+        <div className="reveal mt-20 border-l-4 border-primary pl-8 max-w-3xl" style={{ transitionDelay: "360ms" }}>
+          <blockquote className="text-xl lg:text-2xl font-medium text-foreground/90 leading-relaxed mb-4">
+            &ldquo;Nexus is not just an app. We are a coordination partner — purpose-built to give property owners a professional, documented, and fully accountable path from problem to resolution.&rdquo;
           </blockquote>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-3xl mx-auto text-center mt-4">
-            Every project request includes photos, a written scope, a defined budget ceiling, and
-            pre-selected consultation windows &mdash; all collected before any contractor is notified.
+          <p className="text-sm text-muted-foreground">
+            Brianna Gomez &mdash; Chief Executive Member, Founder
           </p>
         </div>
       </div>

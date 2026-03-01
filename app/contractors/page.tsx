@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "For Contractors | Join the Nexus Operations Network",
   description:
-    "Nexus Operations gives licensed, insured contractors in Topeka and the surrounding region access to exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. Flat monthly membership starting at $299.",
+    "Nexus Operations gives licensed, insured contractors in Topeka and the surrounding region free access to exclusive, fully documented project requests — with photos, written scope, and a confirmed budget. No membership fees.",
 }
 
 const benefits = [
@@ -36,9 +36,9 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "Predictable, flat monthly membership",
+    title: "Free to join. No membership fees.",
     description:
-      "Starting at $299/month for unlimited project claims. No per-lead fees. No surprise charges. No annual contracts. The median project on our platform is $4,200 — a single closed job covers 14 months of Standard membership.",
+      "Joining and using the Nexus platform is free for verified contractors. No per-lead fees, no subscription charges, no surprise costs. Your cost is your time — and every project you claim is exclusively yours.",
   },
   {
     icon: BarChart3,
