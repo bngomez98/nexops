@@ -53,8 +53,8 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Company</h3>
             <ul className="flex flex-col gap-3 text-sm">
               <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</Link></li>
-              <li><a href="mailto:admin@nexusoperations.org" className="text-foreground/60 hover:text-primary transition-colors">admin@nexusoperations.org</a></li>
-              <li><a href="tel:+18008702734" className="text-foreground/60 hover:text-primary transition-colors">(800) 870-2734</a></li>
+              <li><a href="mailto:contact@nexusoperation.org" className="text-foreground/60 hover:text-primary transition-colors">contact@nexusoperation.org</a></li>
+              <li><a href="tel:+17854280244" className="text-foreground/60 hover:text-primary transition-colors">785-428-0244</a></li>
               <li><Link href="/privacy" className="text-foreground/60 hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-foreground/60 hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>

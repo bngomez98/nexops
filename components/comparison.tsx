@@ -1,48 +1,45 @@
 "use client"
 
-import { Check } from "lucide-react"
 import { useEffect, useRef } from "react"
+import { Check, X } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
-const features = [
+const rows = [
   {
-    feature: "One contractor per project",
-    detail:
-      "Each project is assigned to a single verified contractor. Once claimed, it is removed from all other feeds permanently.",
+    item: "Who contacts the property owner",
+    nexus: "One contractor — exclusively assigned",
+    others: "4–8 contractors calling simultaneously",
   },
   {
-    feature: "Free for property owners",
-    detail:
-      "There is no cost to submit a project or receive a match. The platform is funded entirely through contractor memberships.",
+    item: "What the contractor knows before showing up",
+    nexus: "Photos, written scope, full budget ceiling",
+    others: "Nothing — they learn it on the call",
   },
   {
-    feature: "Budget set before assignment",
-    detail:
-      "Property owners define their maximum budget during submission — before any contractor is involved.",
+    item: "Budget transparency",
+    nexus: "Set by property owner before any contractor is notified",
+    others: "Discussed live, subject to negotiation",
   },
   {
-    feature: "Full documentation collected upfront",
-    detail:
-      "Photographs, a written scope, and the confirmed budget are gathered before any contractor sees the request.",
+    item: "Cost to property owners",
+    nexus: "Free — always",
+    others: "Varies; some charge listing or platform fees",
   },
   {
-    feature: "Scheduling handled at submission",
-    detail:
-      "Property owners select preferred consultation windows when they submit — no back-and-forth required.",
+    item: "Documentation produced",
+    nexus: "Complete timestamped audit trail on every project",
+    others: "None — no record unless you create it yourself",
   },
   {
-    feature: "Verified credentials on every contractor",
-    detail:
-      "Every contractor in the network has passed license verification, insurance confirmation, and a background check.",
+    item: "Contractor verification",
+    nexus: "License, insurance, background check — all three required",
+    others: "Self-reported credentials, sometimes unverified",
   },
   {
-    feature: "One call. That's it.",
-    detail:
-      "Only the assigned contractor will reach out — one professional, for the project that belongs to them.",
-  },
-  {
-    feature: "Post Implementation Review",
-    detail:
-      "After every project, Nexus delivers a Post Implementation Review evaluating outcomes and providing insights for future decisions.",
+    item: "Post-project insight",
+    nexus: "Post Implementation Review delivered after every job",
+    others: "A review form, if you remember to fill it out",
   },
 ]
 
@@ -56,71 +53,84 @@ export function Comparison() {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 80)
+            setTimeout(() => node.classList.add("in-view"), i * 70)
           })
           observer.disconnect()
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 },
     )
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
-      <div
-        className="absolute right-0 bottom-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
-      />
-
+    <section ref={sectionRef} className="py-28 lg:py-40 bg-card/20 border-b border-border/40">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">What you get</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            What every project includes.
-            <span className="gradient-text"> From submission to consultation.</span>
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Every project submitted through Nexus Operations is assigned to one verified contractor.
-            That contractor has seen your photos, your scope, and your budget before contacting you —
-            and is already committed to the consultation window you selected.
-          </p>
-        </div>
 
-        <div className="grid sm:grid-cols-2 gap-4 reveal" style={{ transitionDelay: "100ms" }}>
-          {features.map((item) => (
-            <div
-              key={item.feature}
-              className="flex items-start gap-4 p-5 rounded-xl border border-border/40 bg-card hover:border-primary/30 transition-colors"
-            >
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
-                <Check className="h-3.5 w-3.5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground mb-1">{item.feature}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Callout */}
-        <div
-          className="mt-6 p-5 rounded-xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 reveal"
-          style={{ transitionDelay: "200ms" }}
-        >
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 shrink-0">
-            <Check className="h-5 w-5 text-primary" />
+        {/* Header */}
+        <div className="reveal mb-16 lg:mb-20">
+          <div className="flex items-center gap-4 mb-8">
+            <span className="h-px w-10 bg-primary shrink-0" />
+            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">What You Actually Get</p>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">The Nexus commitment</p>
-            <p className="text-sm text-muted-foreground">
-              Each project request is assigned to one verified contractor. No unsolicited calls are
-              made. If coverage is not available in a specific area, the platform notifies the
-              property owner immediately.
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] text-balance max-w-2xl">
+              What changes when exclusivity is the foundation — not a feature.
+            </h2>
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-[15px]">
+              Every item below is structural, not a policy statement.
+              It is the way the platform works by design.
             </p>
           </div>
+        </div>
+
+        {/* Comparison table — editorial list */}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px]">
+            <thead>
+              <tr className="border-b border-border/40">
+                <th className="text-left pb-4 text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground w-1/3">What we're comparing</th>
+                <th className="text-left pb-4 pl-8 text-xs font-semibold tracking-[0.14em] uppercase text-primary w-1/3">Nexus Operations</th>
+                <th className="text-left pb-4 pl-8 text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground/60 w-1/3">Other Platforms</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr
+                  key={row.item}
+                  className={`reveal border-b border-border/30 last:border-0 ${i % 2 === 0 ? "bg-transparent" : "bg-card/40"}`}
+                  style={{ transitionDelay: `${i * 60}ms` }}
+                >
+                  <td className="py-6 pr-8 text-sm font-medium text-foreground/80 align-top leading-snug">{row.item}</td>
+                  <td className="py-6 px-8 align-top">
+                    <div className="flex items-start gap-2.5">
+                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-sm text-foreground leading-snug">{row.nexus}</span>
+                    </div>
+                  </td>
+                  <td className="py-6 pl-8 align-top">
+                    <div className="flex items-start gap-2.5">
+                      <X className="h-4 w-4 text-muted-foreground/40 shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground leading-snug">{row.others}</span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* CTA nudge */}
+        <div className="reveal mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <Link
+            href="/dashboard/homeowner/new"
+            className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shadow-lg shadow-primary/20"
+          >
+            Submit a Project
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <p className="text-sm text-muted-foreground">Free for homeowners and property managers. No account required to start.</p>
         </div>
       </div>
     </section>
