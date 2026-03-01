@@ -95,7 +95,7 @@ export default function ContractorsPage() {
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
                 Nexus Operations delivers exclusive, pre-documented project requests to licensed, insured
                 contractors. Every request includes photos, a written scope, and a defined budget. When you
-                claim a project, it is permanently yours — removed from every other contractor&apos;s feed
+                claim a project, it is permanently yours — removed from every other contractor's feed
                 the moment you commit.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -162,23 +162,23 @@ export default function ContractorsPage() {
               <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20 mb-6">
                 <ul className="flex flex-col gap-4 text-sm text-foreground">
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
                     <span><span className="font-semibold">$299/month flat</span> — claim unlimited projects with no per-project fees or hidden charges</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
                     <span>You are <span className="font-semibold">the only contractor</span> on every job you claim — permanently exclusive, removed from all other feeds instantly</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
                     <span><span className="font-semibold">Full project documentation</span> before you commit — photos, written scope, and a defined budget cap</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
                     <span><span className="font-semibold">Pre-scheduled consultations</span> — homeowners select their preferred windows at submission, so you can plan your day</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-primary shrink-0 mt-0.5">&#10003;</span>
+                    <span className="text-primary shrink-0 mt-0.5">✓</span>
                     <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
                   </li>
                 </ul>
@@ -186,7 +186,7 @@ export default function ContractorsPage() {
               <div className="p-5 rounded-xl border border-border/40 bg-card/50 text-center">
                 <p className="text-sm text-muted-foreground">
                   Median residential project value on our platform: <span className="font-semibold text-foreground">$4,200</span>.
-                  That&apos;s 14 months of Standard membership from a single closed job.
+                  That's 14 months of Standard membership from a single closed job.
                 </p>
               </div>
             </div>
