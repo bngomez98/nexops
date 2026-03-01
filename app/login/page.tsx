@@ -246,7 +246,7 @@ function LoginContent() {
               </form>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                Don&apos;t have an account?{" "}
+                Don't have an account?{" "}
                 <button
                   type="button"
                   onClick={() => { setTab("signup"); setError("") }}

@@ -1,45 +1,37 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Check, X } from "lucide-react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
-const rows = [
+const guarantees = [
   {
-    item: "Who contacts the property owner",
-    nexus: "One contractor — exclusively assigned",
-    others: "4–8 contractors calling simultaneously",
+    label: "One contractor, exclusively assigned.",
+    body: "The moment a contractor claims your project, it is closed to everyone else in the network. Your submission is not visible to any other contractor from that point forward. The relationship is yours alone.",
   },
   {
-    item: "What the contractor knows before showing up",
-    nexus: "Photos, written scope, full budget ceiling",
-    others: "Nothing — they learn it on the call",
+    label: "Complete project information, before any contact.",
+    body: "Your photographs, written scope, and budget ceiling are shared with the assigned contractor before the consultation is confirmed. They arrive informed — not asking introductory questions that waste your time.",
   },
   {
-    item: "Budget transparency",
-    nexus: "Set by property owner before any contractor is notified",
-    others: "Discussed live, subject to negotiation",
+    label: "Budget ceiling set by you, upfront.",
+    body: "You define the maximum you're willing to spend before any contractor is notified. That number is part of the submission. A contractor who claims your project has already accepted your budget parameters.",
   },
   {
-    item: "Cost to property owners",
-    nexus: "Free — always",
-    others: "Varies; some charge listing or platform fees",
+    label: "Free for property owners. Always.",
+    body: "Nexus charges contractors a flat monthly membership fee. Property owners and managers pay nothing to submit a project, consult with a contractor, or receive a Post Implementation Review.",
   },
   {
-    item: "Documentation produced",
-    nexus: "Complete timestamped audit trail on every project",
-    others: "None — no record unless you create it yourself",
+    label: "A full audit trail on every project.",
+    body: "Every submission, consultation confirmation, estimate, approval, and outcome is timestamped and stored in your account. The record is complete and available permanently — useful for property management documentation, boards, and insurance.",
   },
   {
-    item: "Contractor verification",
-    nexus: "License, insurance, background check — all three required",
-    others: "Self-reported credentials, sometimes unverified",
+    label: "Verified credentials, confirmed before assignment.",
+    body: "Every contractor in the Nexus network has completed license verification, insurance confirmation, and a background check before accessing the platform. These are not self-reported. They are confirmed by Nexus.",
   },
   {
-    item: "Post-project insight",
-    nexus: "Post Implementation Review delivered after every job",
-    others: "A review form, if you remember to fill it out",
+    label: "Post Implementation Review on every project.",
+    body: "After completion, Nexus delivers a structured PIR evaluating outcomes, contractor performance, materials cost, and labor cost. It is standard on every project — not optional, not an add-on.",
   },
 ]
 
@@ -72,53 +64,33 @@ export function Comparison() {
         <div className="reveal mb-16 lg:mb-20">
           <div className="flex items-center gap-4 mb-8">
             <span className="h-px w-10 bg-primary shrink-0" />
-            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">What You Actually Get</p>
+            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">What You Receive</p>
           </div>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] text-balance max-w-2xl">
-              What changes when exclusivity is the foundation — not a feature.
+              Every project on Nexus includes the following, without exception.
             </h2>
             <p className="text-muted-foreground leading-relaxed max-w-sm text-[15px]">
-              Every item below is structural, not a policy statement.
-              It is the way the platform works by design.
+              These are not premium features or optional upgrades.
+              They are the baseline — built into every submission, every assignment, every outcome.
             </p>
           </div>
         </div>
 
-        {/* Comparison table — editorial list */}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px]">
-            <thead>
-              <tr className="border-b border-border/40">
-                <th className="text-left pb-4 text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground w-1/3">What we're comparing</th>
-                <th className="text-left pb-4 pl-8 text-xs font-semibold tracking-[0.14em] uppercase text-primary w-1/3">Nexus Operations</th>
-                <th className="text-left pb-4 pl-8 text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground/60 w-1/3">Other Platforms</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, i) => (
-                <tr
-                  key={row.item}
-                  className={`reveal border-b border-border/30 last:border-0 ${i % 2 === 0 ? "bg-transparent" : "bg-card/40"}`}
-                  style={{ transitionDelay: `${i * 60}ms` }}
-                >
-                  <td className="py-6 pr-8 text-sm font-medium text-foreground/80 align-top leading-snug">{row.item}</td>
-                  <td className="py-6 px-8 align-top">
-                    <div className="flex items-start gap-2.5">
-                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm text-foreground leading-snug">{row.nexus}</span>
-                    </div>
-                  </td>
-                  <td className="py-6 pl-8 align-top">
-                    <div className="flex items-start gap-2.5">
-                      <X className="h-4 w-4 text-muted-foreground/40 shrink-0 mt-0.5" />
-                      <span className="text-sm text-muted-foreground leading-snug">{row.others}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Guarantee list — editorial */}
+        <div className="space-y-0">
+          {guarantees.map((g, i) => (
+            <div
+              key={g.label}
+              className="reveal border-t border-border/40 last:border-b py-10 flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-16"
+              style={{ transitionDelay: `${i * 60}ms` }}
+            >
+              <div className="lg:w-80 shrink-0">
+                <h3 className="text-base font-bold text-foreground leading-snug">{g.label}</h3>
+              </div>
+              <p className="text-muted-foreground leading-relaxed text-[15px] max-w-2xl">{g.body}</p>
+            </div>
+          ))}
         </div>
 
         {/* CTA nudge */}

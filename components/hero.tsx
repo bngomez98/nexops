@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react"
 const signals = [
   { label: "One contractor per project", sub: "Mechanically enforced" },
   { label: "24-hour consultation confirmed", sub: "Guaranteed, every time" },
-  { label: "Free for property owners", sub: "Contractor memberships fund the platform" },
+  { label: "Free for everyone", sub: "Property owners and contractors" },
   { label: "Post Implementation Review", sub: "Every project, every time" },
 ]
 
@@ -55,23 +55,22 @@ export function Hero() {
         {/* Main headline */}
         <div className="reveal-hero opacity-0 transition-all duration-700 mb-8" style={{ transform: "translateY(20px)", transitionDelay: "110ms" }}>
           <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-bold leading-[1.0] tracking-tight text-balance max-w-4xl">
-            The contractor platform{" "}
+            One project.{" "}
             <br className="hidden lg:block" />
-            that doesn&rsquo;t sell{" "}
-            <span className="gradient-text">your lead.</span>
+            One contractor.{" "}
+            <span className="gradient-text">Full documentation.</span>
           </h1>
         </div>
 
         {/* Sub-narrative */}
         <div className="reveal-hero opacity-0 transition-all duration-700" style={{ transform: "translateY(20px)", transitionDelay: "220ms" }}>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mb-4">
-            Every other platform sells your request to four, six, eight contractors at once. They call you simultaneously,
-            repeat the same pitch, and compete on price — not quality.
+            Nexus Operations connects Topeka property owners and managers with a single,
+            verified contractor — exclusively assigned to their project from the moment of submission.
           </p>
           <p className="text-xl font-medium text-foreground/90 leading-relaxed max-w-2xl mb-10">
-            Nexus Operations assigns one verified contractor exclusively to your project.
-            That contractor arrives already knowing your scope, your photos, and your budget.
-            No phone tag. No pressure. No surprises.
+            That contractor arrives knowing your scope, your photographs, and your budget ceiling.
+            The conversation starts at a professional level. Every step is documented, timestamped, and available in your account.
           </p>
         </div>
 
@@ -105,17 +104,12 @@ export function Hero() {
         </div>
 
         {/* Contact line */}
-        <div className="reveal-hero opacity-0 transition-all duration-700 mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
-          <a
-            href="tel:+17854280244"
-            className="inline-flex items-center gap-2 hover:text-primary transition-colors"
-          >
-            <Phone className="h-3.5 w-3.5" />
-            <span className="font-mono tracking-wide">785-428-0244</span>
-          </a>
-          <span className="text-border/70">·</span>
-          <a href="mailto:contact@nexusoperation.org" className="hover:text-primary transition-colors">contact@nexusoperation.org</a>
-        </div>
+        <p className="reveal-hero opacity-0 transition-all duration-700 mt-8 flex items-center gap-2 text-sm text-muted-foreground" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
+          <Phone className="h-3.5 w-3.5 shrink-0" />
+          <a href="tel:+17854280244" className="font-mono tracking-wide hover:text-primary transition-colors">785-428-0244</a>
+          <span className="text-border/70 select-none">&middot;</span>
+          <a href="mailto:contact@nexusoperations.org" className="hover:text-primary transition-colors">contact@nexusoperations.org</a>
+        </p>
       </div>
     </section>
   )
