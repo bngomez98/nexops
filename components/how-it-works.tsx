@@ -1,116 +1,132 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { PhoneCall, UserCheck, Wrench, ClipboardCheck, CheckCircle, FileSearch } from "lucide-react"
+import { useEffect, useRef } from "react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 const steps = [
   {
-    icon: PhoneCall,
     number: "01",
-    title: "Service requested",
-    detail:
-      "Homeowner or property manager submits a request with photos, written scope, budget ceiling, and preferred consultation times.",
+    title: "You submit once — and only once.",
+    body: "Upload 2–10 photographs of the work area. Write a description of what needs to be done. Set the maximum you're willing to spend. Pick 3–4 available windows for a consultation. That's it. You never repeat this to anyone. No callbacks, no re-explaining, no contractor showing up unprepared.",
+    aside: "Most platforms send your request to 4–8 contractors simultaneously. Nexus sends it to one.",
   },
   {
-    icon: FileSearch,
     number: "02",
-    title: "Project coordinated",
-    detail:
-      "Nexus manages project requirements and routes to a verified contractor by trade, proximity, and performance history.",
+    title: "A single verified contractor claims your project.",
+    body: "Contractors in the Nexus network see your complete submission — scope, photos, budget ceiling, and your available times. One contractor decides the project fits their business and claims it exclusively. The moment that happens, it disappears from every other contractor's feed. Permanently.",
+    aside: "License verified. Insurance confirmed. Background checked. Before they ever see a single project.",
   },
   {
-    icon: UserCheck,
     number: "03",
-    title: "Contractor assigned",
-    detail:
-      "One verified contractor is exclusively assigned. If declined, backup reassignment runs automatically within service-level timelines.",
+    title: "Consultation confirmed within 24 hours.",
+    body: "Nexus confirms the consultation with both parties. You receive the contractor's name, license number, insurance verification, and the confirmed time slot. The contractor arrives having already studied your photographs and read your scope description. The conversation starts at a professional level — not with \"So what's the problem?\"",
+    aside: "Emergency response: contractor assigned within 1 hour, on-site within 4.",
   },
   {
-    icon: Wrench,
     number: "04",
-    title: "Work completed",
-    detail:
-      "Full coordination continues until job completion. Contractors submit photos and work notes. Quality confirmation is verified before close-out.",
+    title: "Agreement, then execution.",
+    body: "The contractor delivers a documented estimate — scope of work, materials, labor breakdown, timeline, and total cost. You review it. If it meets your expectations, you proceed. If it doesn't, you decline without obligation, fees, or follow-up pressure. Every exchange is documented in the platform.",
+    aside: "No obligation to proceed. No pressure. No penalty for walking away.",
   },
   {
-    icon: ClipboardCheck,
     number: "05",
-    title: "Post Implementation Review",
-    detail:
-      "Nexus delivers a Post Implementation Review evaluating project outcomes, contractor performance, and insights for future decision-making.",
+    title: "Post Implementation Review delivered.",
+    body: "After the work is complete, Nexus delivers a Post Implementation Review. It evaluates project outcomes, contractor performance, materials cost, labor cost, and operational insights — so the next decision is better than the last. Every project. No exceptions.",
+    aside: "Documentation that lives in your account. Useful for property owners, boards, and insurance claims.",
   },
 ]
 
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [activeStep, setActiveStep] = useState<number | null>(null)
 
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 120)
+            setTimeout(() => node.classList.add("in-view"), i * 100)
           })
           observer.disconnect()
         }
       },
-      { threshold: 0.12 },
+      { threshold: 0.05 },
     )
-
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} id="how-it-works" className="py-24 lg:py-32 relative overflow-hidden">
+    <section ref={sectionRef} id="how-it-works" className="py-28 lg:py-40 border-b border-border/40">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-14 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-3">
-            How Nexus coordinates every project from request to completion.
-          </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            End-to-end coordination for homeowners and property managers: structured dispatch,
-            contractor accountability, and a Post Implementation Review on every project.
-          </p>
-        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {steps.map((step, i) => {
-            const isActive = activeStep === i
-            return (
-              <div
-                key={step.number}
-                className={`reveal group relative p-6 rounded-2xl border bg-card transition-all duration-300 ${isActive ? "border-primary/60" : "border-border/40"}`}
-                onMouseEnter={() => setActiveStep(i)}
-                onMouseLeave={() => setActiveStep(null)}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 border border-primary/20">
-                    <step.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-2xl font-bold font-mono text-muted-foreground/30">{step.number}</span>
-                </div>
-
-                <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="mt-10 reveal">
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15 max-w-3xl">
-            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">Service levels:</span> Emergency (1h assignment, 4h on-site),
-              Urgent (4h assignment, next business day arrival), Routine (24h assignment, 3\u20135 business day arrival).
+        {/* Section header */}
+        <div className="reveal flex items-start gap-8 mb-20 lg:mb-28">
+          <div className="hidden lg:block pt-1">
+            <span className="h-px w-16 bg-primary inline-block" />
+          </div>
+          <div className="max-w-3xl">
+            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase mb-5">The Process</p>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] mb-6 text-balance">
+              Understand exactly what happens after you submit a project.
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Most platforms describe a process that sounds reasonable until you experience it.
+              Here is what Nexus Operations actually does, step by step, with no ambiguity.
             </p>
           </div>
+        </div>
+
+        {/* Steps — editorial vertical flow */}
+        <div className="space-y-0">
+          {steps.map((step, i) => (
+            <div
+              key={step.number}
+              className={`reveal group border-t border-border/40 py-14 lg:py-18 ${i === steps.length - 1 ? "border-b" : ""}`}
+              style={{ transitionDelay: `${i * 80}ms` }}
+            >
+              <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16">
+                {/* Step number */}
+                <div className="lg:w-20 shrink-0">
+                  <span className="text-5xl font-bold font-mono text-muted-foreground/20 group-hover:text-primary/30 transition-colors duration-300 leading-none">
+                    {step.number}
+                  </span>
+                </div>
+
+                {/* Main content */}
+                <div className="flex-1 max-w-2xl">
+                  <h3 className="text-xl lg:text-2xl font-bold tracking-tight mb-4 leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed text-[15px]">{step.body}</p>
+                </div>
+
+                {/* Aside note */}
+                <div className="lg:w-72 shrink-0">
+                  <div className="border-l-2 border-primary/40 pl-5 group-hover:border-primary/70 transition-colors duration-300">
+                    <p className="text-sm text-muted-foreground leading-relaxed italic">{step.aside}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Closing CTA */}
+        <div className="reveal mt-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <p className="text-base text-muted-foreground max-w-lg leading-relaxed">
+            The process is the same for every project — emergency, routine, or anything in between.
+            It doesn't change based on budget or property type. That's the point.
+          </p>
+          <Link
+            href="/dashboard/homeowner/new"
+            className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shrink-0 shadow-lg shadow-primary/20"
+          >
+            Start Your Project
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

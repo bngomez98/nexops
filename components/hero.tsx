@@ -1,104 +1,120 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ChevronDown, Shield, Clock3, CheckCircle2, ClipboardCheck } from "lucide-react"
+import { ArrowRight, Phone } from "lucide-react"
+import { useEffect, useRef } from "react"
 
-const trustPoints = [
-  { icon: Shield, text: "Licensed and insured contractor network" },
-  { icon: Clock3, text: "Emergency response in as little as 1 hour" },
-  { icon: CheckCircle2, text: "End-to-end coordination through completion" },
-  { icon: ClipboardCheck, text: "Post Implementation Review on every project" },
-]
-
-const slaRows = [
-  { priority: "Emergency", response: "1h assign / 4h on-site" },
-  { priority: "Urgent", response: "4h assign / next business day" },
-  { priority: "Routine", response: "24h assign / 3\u20135 business days" },
+const signals = [
+  { label: "One contractor per project", sub: "Mechanically enforced" },
+  { label: "24-hour consultation confirmed", sub: "Guaranteed, every time" },
+  { label: "Free for property owners", sub: "Contractor memberships fund the platform" },
+  { label: "Post Implementation Review", sub: "Every project, every time" },
 ]
 
 export function Hero() {
+  const ref = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const nodes = el.querySelectorAll(".reveal-hero")
+    nodes.forEach((node, i) => {
+      setTimeout(() => node.classList.add("in-view"), 120 + i * 110)
+    })
+  }, [])
+
   return (
-    <section className="relative min-h-[95vh] flex items-center overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="animate-orb-1 absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
-        />
-        <div
-          className="animate-orb-2 absolute bottom-1/3 right-1/6 w-[350px] h-[350px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, var(--chart-2), transparent 70%)" }}
-        />
-      </div>
+    <section ref={ref} className="relative min-h-screen flex flex-col justify-center overflow-hidden border-b border-border/40">
+      {/* Fine grid overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+        }}
+      />
 
-      <div className="absolute bottom-0 left-0 w-full h-px bg-border/40" />
+      {/* Accent glow — top right */}
+      <div
+        className="absolute -top-40 right-0 w-[700px] h-[700px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle at 70% 20%, oklch(from var(--primary) l c h / 0.09), transparent 65%)" }}
+      />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-24 w-full">
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
-          <div>
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-semibold leading-[1.1] tracking-tight mb-5">
-              Nexus is end-to-end
-              <br />
-              <span className="gradient-text">contractor coordination.</span>
-            </h1>
-
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-9">
-              Nexus Operations is a contractor marketplace platform that connects homeowners and property
-              managers with licensed, insured contractors for maintenance, restoration, remediation, and
-              emergency response. Every project is fully coordinated from service request through completion,
-              then a Post Implementation Review delivers insights so you stay in control.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-start gap-3 mb-10">
-              <Link
-                href="/#how-it-works"
-                className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200"
-              >
-                How It Works
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
-              >
-                Get Started
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-3 text-sm text-muted-foreground">
-              {trustPoints.map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-start gap-2.5 rounded-lg border border-border/40 bg-card/40 px-3.5 py-3">
-                  <Icon className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>{text}</span>
-                </div>
-              ))}
-            </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-36 pb-28 w-full">
+        {/* Eyebrow */}
+        <div className="reveal-hero opacity-0 transition-all duration-700" style={{ transform: "translateY(20px)" }}>
+          <div className="inline-flex items-center gap-3 mb-10">
+            <span className="h-px w-10 bg-primary" />
+            <span className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
+              Topeka, Kansas &middot; Contractor Coordination
+            </span>
           </div>
+        </div>
 
-          <div className="hidden lg:flex justify-center items-center">
-            <div className="glass-card rounded-2xl p-6 w-[380px] shadow-2xl shadow-black/10 dark:shadow-black/40 border border-border/40">
-              <p className="text-xs text-muted-foreground mb-4 uppercase tracking-[0.16em]">Service delivery snapshot</p>
-              <div className="space-y-3 text-sm mb-5">
-                {slaRows.map((row) => (
-                  <div key={row.priority} className="flex items-center justify-between border border-border/40 rounded-lg p-3">
-                    <span>{row.priority}</span>
-                    <span className="text-primary font-semibold">{row.response}</span>
-                  </div>
-                ))}
+        {/* Main headline */}
+        <div className="reveal-hero opacity-0 transition-all duration-700 mb-8" style={{ transform: "translateY(20px)", transitionDelay: "110ms" }}>
+          <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-bold leading-[1.0] tracking-tight text-balance max-w-4xl">
+            The contractor platform{" "}
+            <br className="hidden lg:block" />
+            that doesn&rsquo;t sell{" "}
+            <span className="gradient-text">your lead.</span>
+          </h1>
+        </div>
+
+        {/* Sub-narrative */}
+        <div className="reveal-hero opacity-0 transition-all duration-700" style={{ transform: "translateY(20px)", transitionDelay: "220ms" }}>
+          <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mb-4">
+            Every other platform sells your request to four, six, eight contractors at once. They call you simultaneously,
+            repeat the same pitch, and compete on price — not quality.
+          </p>
+          <p className="text-xl font-medium text-foreground/90 leading-relaxed max-w-2xl mb-10">
+            Nexus Operations assigns one verified contractor exclusively to your project.
+            That contractor arrives already knowing your scope, your photos, and your budget.
+            No phone tag. No pressure. No surprises.
+          </p>
+        </div>
+
+        {/* CTAs */}
+        <div className="reveal-hero opacity-0 transition-all duration-700 flex flex-col sm:flex-row items-start gap-4 mb-16" style={{ transform: "translateY(20px)", transitionDelay: "330ms" }}>
+          <Link
+            href="/dashboard/homeowner/new"
+            className="btn-shimmer inline-flex items-center gap-2.5 px-7 py-4 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shadow-xl shadow-primary/20"
+          >
+            Submit a Project — It&rsquo;s Free
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2.5 px-7 py-4 text-sm font-medium border border-border/60 rounded-xl hover:bg-secondary/50 hover:border-border transition-all duration-200"
+          >
+            Talk to Us First
+          </Link>
+        </div>
+
+        {/* Divider + signal strip */}
+        <div className="reveal-hero opacity-0 transition-all duration-700 border-t border-border/40 pt-10" style={{ transform: "translateY(20px)", transitionDelay: "440ms" }}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6">
+            {signals.map((s) => (
+              <div key={s.label}>
+                <p className="text-sm font-semibold text-foreground mb-0.5 leading-snug">{s.label}</p>
+                <p className="text-xs text-muted-foreground">{s.sub}</p>
               </div>
-
-              <div className="rounded-lg bg-secondary/60 border border-border/40 p-3.5">
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Every project includes photos, written scope confirmation, and budget ceiling validation before contractor
-                  assignment.
-                </p>
-              </div>
-
-              <a href="#how-it-works" className="inline-flex items-center gap-2 mt-5 text-xs text-primary hover:underline">
-                Explore workflow details <ChevronDown className="h-3.5 w-3.5" />
-              </a>
-            </div>
+            ))}
           </div>
+        </div>
+
+        {/* Contact line */}
+        <div className="reveal-hero opacity-0 transition-all duration-700 mt-8" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
+          <a
+            href="tel:+17854280244"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Phone className="h-3.5 w-3.5" />
+            <span className="font-mono tracking-wide">785-428-0244</span>
+            <span className="text-border/70">·</span>
+            <a href="mailto:contact@nexusoperation.org" className="hover:text-primary transition-colors">contact@nexusoperation.org</a>
+          </a>
         </div>
       </div>
     </section>
