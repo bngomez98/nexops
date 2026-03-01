@@ -55,23 +55,22 @@ export function Hero() {
         {/* Main headline */}
         <div className="reveal-hero opacity-0 transition-all duration-700 mb-8" style={{ transform: "translateY(20px)", transitionDelay: "110ms" }}>
           <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-bold leading-[1.0] tracking-tight text-balance max-w-4xl">
-            The contractor platform{" "}
+            One project.{" "}
             <br className="hidden lg:block" />
-            that doesn&rsquo;t sell{" "}
-            <span className="gradient-text">your lead.</span>
+            One contractor.{" "}
+            <span className="gradient-text">Full documentation.</span>
           </h1>
         </div>
 
         {/* Sub-narrative */}
         <div className="reveal-hero opacity-0 transition-all duration-700" style={{ transform: "translateY(20px)", transitionDelay: "220ms" }}>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mb-4">
-            Every other platform sells your request to four, six, eight contractors at once. They call you simultaneously,
-            repeat the same pitch, and compete on price — not quality.
+            Nexus Operations connects Topeka property owners and managers with a single,
+            verified contractor — exclusively assigned to their project from the moment of submission.
           </p>
           <p className="text-xl font-medium text-foreground/90 leading-relaxed max-w-2xl mb-10">
-            Nexus Operations assigns one verified contractor exclusively to your project.
-            That contractor arrives already knowing your scope, your photos, and your budget.
-            No phone tag. No pressure. No surprises.
+            That contractor arrives knowing your scope, your photographs, and your budget ceiling.
+            The conversation starts at a professional level. Every step is documented, timestamped, and available in your account.
           </p>
         </div>
 

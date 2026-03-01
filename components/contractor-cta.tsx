@@ -60,12 +60,12 @@ export function ContractorCTA() {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
             <div className="max-w-2xl">
               <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] mb-6 text-balance">
-                Stop paying per lead. Start owning every project you claim.
+                Every project you claim is yours — from submission to completion.
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                When you join the Nexus network, every project you claim is yours alone. You see the scope, the photos,
-                and the budget ceiling before you commit. The homeowner hears from exactly one professional: you.
-                Flat monthly membership. Unlimited claims. No race to the bottom.
+                Join the Nexus network and work exclusively on projects matched to your capabilities.
+                You review the full scope, photographs, and budget ceiling before committing.
+                One flat monthly membership. Unlimited project claims. Full information before every consultation.
               </p>
             </div>
             <Link
@@ -83,24 +83,24 @@ export function ContractorCTA() {
           <p className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-10">What changes when you join</p>
           <div className="grid lg:grid-cols-3 gap-px bg-border/40 border border-border/40 rounded-2xl overflow-hidden">
             <div className="bg-background p-8">
-              <p className="text-2xl font-bold mb-3">Every project is yours.</p>
+              <p className="text-2xl font-bold mb-3">Exclusively assigned.</p>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
-                The moment you claim a project, it vanishes from every other feed. No competing bids.
-                No shared assignments. You own the relationship from claim through completion.
+                The moment you claim a project, it is closed to every other contractor permanently.
+                You own the relationship from claim through completion — with the homeowner's full attention.
               </p>
             </div>
             <div className="bg-background p-8">
-              <p className="text-2xl font-bold mb-3">Show up prepared.</p>
+              <p className="text-2xl font-bold mb-3">Fully informed before you commit.</p>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
-                You see the homeowner's photos, their written scope, and their budget ceiling before you commit.
-                The consultation starts informed — not with you asking, "So what's the problem?"
+                You review the homeowner's photographs, written scope, and budget ceiling before claiming.
+                Every consultation begins with complete information already in hand.
               </p>
             </div>
             <div className="bg-background p-8">
-              <p className="text-2xl font-bold mb-3">Predictable cost. No surprises.</p>
+              <p className="text-2xl font-bold mb-3">One flat membership.</p>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
-                One flat monthly membership. Claim as many projects as fit your schedule.
-                No per-lead fees, no pay-to-win ranking, no hidden costs at checkout.
+                One monthly fee covers unlimited project claims — no per-project costs,
+                no variable pricing based on project size or location. Predictable overhead.
               </p>
             </div>
           </div>
