@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Shield, Clock3, CheckCircle2, ClipboardCheck } from "lucide-react"
 import { ArrowRight, Phone, CheckCircle2, Shield, Clock, FileText } from "lucide-react"
 import { useEffect, useRef } from "react"
 
@@ -106,11 +105,6 @@ export function Hero() {
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-foreground/70 hover:text-foreground border border-border/40 rounded-xl hover:border-border/70 hover:bg-secondary/50 transition-all duration-200"
               >
                 How It Works
-                <ArrowRight className="h-4 w-4" />
-                href="/dashboard/homeowner/new"
-                className="btn-shimmer inline-flex items-center gap-2.5 px-7 py-4 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shadow-xl shadow-primary/20"
-              >
-                Submit a Project — It&rsquo;s Free
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
