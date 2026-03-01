@@ -66,13 +66,28 @@ export default function ContractorAnalyticsPage() {
     }
     setUser(stored)
 
-    fetch("/api/leads")
-      .then((r) => r.json())
-      .then((d) => setLeads(d.leads ?? []))
+    const controller = new AbortController()
+    fetch("/api/leads", { signal: controller.signal })
+      .then((r) => {
+        if (r.status === 401) { router.replace("/login"); return null }
+        if (!r.ok) return null
+        return r.json()
+      })
+      .then((d) => { if (d) setLeads(d.leads ?? []) })
+      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to fetch leads:", err) })
       .finally(() => setLoading(false))
+
+    return () => controller.abort()
   }, [router])
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <div className="max-w-6xl mx-auto flex items-center justify-center py-24 gap-3">
+        <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        <span className="text-sm text-muted-foreground">Loading analytics…</span>
+      </div>
+    )
+  }
 
   const totalRevenue = leads.filter((l) => l.status === "won").reduce((s, l) => s + l.value, 0)
   const wonLeads = leads.filter((l) => l.status === "won").length
@@ -202,7 +217,7 @@ export default function ContractorAnalyticsPage() {
                 <Tooltip
                   contentStyle={chartStyle.contentStyle}
                   labelStyle={chartStyle.labelStyle}
-                  formatter={(v) => [`$${Number(v ?? 0).toLocaleString()}`, "Revenue"]}
+                  formatter={(v: unknown) => [`$${Number(v).toLocaleString()}`, "Revenue"]}
                 />
                 <Line
                   type="monotone"
