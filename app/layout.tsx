@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
+import { ChatAgent } from "@/components/chat-agent"
 import { CookieConsent } from "@/components/cookie-consent"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
@@ -144,6 +145,7 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <ChatAgent />
         <CookieConsent />
         <Analytics />
       </body>
