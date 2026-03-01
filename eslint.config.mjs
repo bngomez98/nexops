@@ -1,7 +1,6 @@
 export default [
   {
-    ignores: [".next/**", "node_modules/**", "out/**", "build/**"],
-    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/build/**"],
+    ignores: [".next/**", "node_modules/**", "out/**", "build/**", "dist/**"],
   },
   {
     files: ["**/*.{js,mjs,cjs}"],
