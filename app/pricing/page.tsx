@@ -243,7 +243,7 @@ export default function PricingPage() {
               href="/login?tab=signup"
               className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
             >
-              Submit a Request — It&apos;s Free
+              Submit a Request — It's Free
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

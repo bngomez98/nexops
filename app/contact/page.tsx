@@ -21,7 +21,7 @@ export default function ContactPage() {
             <div className="max-w-2xl mb-16">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Contact</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Let&apos;s talk
+                Let's talk
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Whether you are a homeowner with a project, a property manager looking for coordination
