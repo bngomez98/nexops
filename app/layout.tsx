@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ChatAgent } from "@/components/chat-agent"
 import { CookieConsent } from "@/components/cookie-consent"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -148,6 +149,7 @@ export default function RootLayout({
         <ChatAgent />
         <CookieConsent />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

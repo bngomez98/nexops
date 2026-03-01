@@ -12,10 +12,35 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 1, suffix: " hr", label: "Emergency contractor assignment target" },
-  { value: 1, suffix: "", label: "Contractor assigned per project — exclusively yours" },
-  { value: 24, suffix: "hr", label: "Median time from submission to consultation" },
-  { prefix: "$", value: 4200, suffix: "", label: "Median residential project value" },
+  { 
+    value: 1, 
+    suffix: " hr", 
+    label: "Emergency contractor assignment target",
+    context: "On-site response within 4 hours of assignment.",
+    accent: "from-rose-500/20 to-rose-500/5",
+  },
+  { 
+    value: 1, 
+    suffix: "", 
+    label: "Contractor assigned per project — exclusively yours",
+    context: "One exclusive assignment — never shared, never auctioned.",
+    accent: "from-primary/20 to-primary/5",
+  },
+  { 
+    value: 24, 
+    suffix: "hr", 
+    label: "Median time from submission to consultation",
+    context: "From submission to confirmed appointment window.",
+    accent: "from-amber-500/20 to-amber-500/5",
+  },
+  { 
+    prefix: "$", 
+    value: 4200, 
+    suffix: "", 
+    label: "Median residential project value",
+    context: "Roofing, concrete, HVAC, electrical, tree removal, and more.",
+    accent: "from-emerald-500/20 to-emerald-500/5",
+  },
   {
     value: 1,
     suffix: "",
