@@ -17,7 +17,7 @@ export function Hero() {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const nodes = el.querySelectorAll(".reveal-hero")
+    const nodes = el.querySelectorAll(".reveal")
     nodes.forEach((node, i) => {
       setTimeout(() => node.classList.add("in-view"), 120 + i * 110)
     })
@@ -43,7 +43,7 @@ export function Hero() {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-36 pb-28 w-full">
         {/* Eyebrow */}
-        <div className="reveal-hero opacity-0 transition-all duration-700" style={{ transform: "translateY(20px)" }}>
+        <div className="reveal">
           <div className="inline-flex items-center gap-3 mb-10">
             <span className="h-px w-10 bg-primary" />
             <span className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">
@@ -53,7 +53,7 @@ export function Hero() {
         </div>
 
         {/* Main headline */}
-        <div className="reveal-hero opacity-0 transition-all duration-700 mb-8" style={{ transform: "translateY(20px)", transitionDelay: "110ms" }}>
+        <div className="reveal mb-8" style={{ transitionDelay: "110ms" }}>
           <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-bold leading-[1.0] tracking-tight text-balance max-w-4xl">
             One project.{" "}
             <br className="hidden lg:block" />
@@ -63,7 +63,7 @@ export function Hero() {
         </div>
 
         {/* Sub-narrative */}
-        <div className="reveal-hero opacity-0 transition-all duration-700" style={{ transform: "translateY(20px)", transitionDelay: "220ms" }}>
+        <div className="reveal" style={{ transitionDelay: "220ms" }}>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mb-4">
             Nexus Operations connects Topeka property owners and managers with a single,
             verified contractor — exclusively assigned to their project from the moment of submission.
@@ -75,7 +75,7 @@ export function Hero() {
         </div>
 
         {/* CTAs */}
-        <div className="reveal-hero opacity-0 transition-all duration-700 flex flex-col sm:flex-row items-start gap-4 mb-16" style={{ transform: "translateY(20px)", transitionDelay: "330ms" }}>
+        <div className="reveal flex flex-col sm:flex-row items-start gap-4 mb-16" style={{ transitionDelay: "330ms" }}>
           <Link
             href="/dashboard/homeowner/new"
             className="btn-shimmer inline-flex items-center gap-2.5 px-7 py-4 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shadow-xl shadow-primary/20"
@@ -92,7 +92,7 @@ export function Hero() {
         </div>
 
         {/* Divider + signal strip */}
-        <div className="reveal-hero opacity-0 transition-all duration-700 border-t border-border/40 pt-10" style={{ transform: "translateY(20px)", transitionDelay: "440ms" }}>
+        <div className="reveal border-t border-border/40 pt-10" style={{ transitionDelay: "440ms" }}>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6">
             {signals.map((s) => (
               <div key={s.label}>
@@ -104,7 +104,7 @@ export function Hero() {
         </div>
 
         {/* Contact line */}
-        <p className="reveal-hero opacity-0 transition-all duration-700 mt-8 flex items-center gap-2 text-sm text-muted-foreground" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
+        <p className="reveal mt-8 flex items-center gap-2 text-sm text-muted-foreground" style={{ transitionDelay: "550ms" }}>
           <Phone className="h-3.5 w-3.5 shrink-0" />
           <a href="tel:+17854280244" className="font-mono tracking-wide hover:text-primary transition-colors">785-428-0244</a>
           <span className="text-border/70 select-none">&middot;</span>
