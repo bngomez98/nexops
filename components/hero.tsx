@@ -105,16 +105,16 @@ export function Hero() {
         </div>
 
         {/* Contact line */}
-        <div className="reveal-hero opacity-0 transition-all duration-700 mt-8" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
+        <div className="reveal-hero opacity-0 transition-all duration-700 mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
           <a
             href="tel:+17854280244"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+            className="inline-flex items-center gap-2 hover:text-primary transition-colors"
           >
             <Phone className="h-3.5 w-3.5" />
             <span className="font-mono tracking-wide">785-428-0244</span>
-            <span className="text-border/70">·</span>
-            <a href="mailto:contact@nexusoperation.org" className="hover:text-primary transition-colors">contact@nexusoperation.org</a>
           </a>
+          <span className="text-border/70">·</span>
+          <a href="mailto:contact@nexusoperation.org" className="hover:text-primary transition-colors">contact@nexusoperation.org</a>
         </div>
       </div>
     </section>
