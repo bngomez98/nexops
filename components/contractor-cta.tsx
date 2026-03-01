@@ -1,21 +1,39 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Lock, BookOpen, CreditCard } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 const benefits = [
   {
+    icon: Lock,
     label: "No cost to join.",
     body: "Joining the Nexus network is free for licensed, insured contractors. Verification, onboarding, and full platform access carry no upfront or ongoing fees.",
   },
   {
+    icon: BookOpen,
     label: "Claim projects instantly.",
     body: "When a homeowner submits a project, you see the full scope, photographs, and budget ceiling. The first verified contractor to claim it owns it — exclusively and permanently.",
   },
   {
+    icon: CreditCard,
     label: "Show up prepared.",
     body: "Every project includes 2–10 photographs, a written scope, and a confirmed consultation window. You arrive informed. The homeowner expects a professional conversation from the first minute.",
+  },
+]
+
+const panels = [
+  {
+    heading: "Exclusively assigned.",
+    body: "The moment you claim a project, it is closed to every other contractor permanently. You own the relationship from claim through completion — with the homeowner's full attention.",
+  },
+  {
+    heading: "Fully informed before you commit.",
+    body: "You review the homeowner's photographs, written scope, and budget ceiling before claiming. Every consultation begins with complete information already in hand.",
+  },
+  {
+    heading: "One flat membership.",
+    body: "One monthly fee covers unlimited project claims — no per-project costs, no variable pricing based on project size or location. Predictable overhead.",
   },
 ]
 
@@ -71,31 +89,23 @@ export function ContractorCTA() {
           </div>
         </div>
 
-        {/* What contractors get — narrative list */}
+        {/* What contractors get — panel grid */}
         <div className="reveal border-t border-border/40 pt-12 mb-16">
           <p className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-10">What changes when you join</p>
-          <div className="grid lg:grid-cols-3 gap-px bg-border/40 border border-border/40 rounded-2xl overflow-hidden">
-            <div className="bg-background p-8">
-              <p className="text-2xl font-bold mb-3">Exclusively assigned.</p>
-              <p className="text-muted-foreground leading-relaxed text-[15px]">
-                The moment you claim a project, it is closed to every other contractor permanently.
-                You own the relationship from claim through completion — with the homeowner's full attention.
-              </p>
-            </div>
-            <div className="bg-background p-8">
-              <p className="text-2xl font-bold mb-3">Fully informed before you commit.</p>
-              <p className="text-muted-foreground leading-relaxed text-[15px]">
-                You review the homeowner's photographs, written scope, and budget ceiling before claiming.
-                Every consultation begins with complete information already in hand.
-              </p>
-            </div>
-            <div className="bg-background p-8">
-              <p className="text-2xl font-bold mb-3">One flat membership.</p>
-              <p className="text-muted-foreground leading-relaxed text-[15px]">
-                One monthly fee covers unlimited project claims — no per-project costs,
-                no variable pricing based on project size or location. Predictable overhead.
-              </p>
-            </div>
+          <div className="grid lg:grid-cols-3 gap-4">
+            {panels.map((p, i) => (
+              <div
+                key={p.heading}
+                className="group relative rounded-2xl border border-border/40 bg-card p-8 overflow-hidden hover:border-primary/30 hover:shadow-md transition-all duration-300"
+              >
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center mb-5">
+                  <span className="text-xs font-bold text-primary font-mono">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+                <p className="text-xl font-bold mb-3 text-foreground">{p.heading}</p>
+                <p className="text-muted-foreground leading-relaxed text-[15px]">{p.body}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -104,9 +114,14 @@ export function ContractorCTA() {
           <p className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-8">What you get</p>
           <div className="flex flex-col lg:flex-row gap-4">
             {benefits.map((b) => (
-              <div key={b.label} className="flex-1 p-8 rounded-2xl border border-border/40 bg-card">
-                <p className="text-xl font-bold mb-3">{b.label}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{b.body}</p>
+              <div key={b.label} className="flex-1 p-8 rounded-2xl border border-border/40 bg-card/60 flex gap-5">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                  <b.icon className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-base font-bold mb-2 text-foreground">{b.label}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{b.body}</p>
+                </div>
               </div>
             ))}
           </div>
