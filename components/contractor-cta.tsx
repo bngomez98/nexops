@@ -4,25 +4,18 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useRef } from "react"
 
-const tiers = [
+const benefits = [
   {
-    name: "Standard",
-    price: "$299",
-    period: "/mo",
-    description: "Unlimited project claims. No per-project fees. Ideal for contractors building pipeline.",
+    label: "No cost to join.",
+    body: "Joining the Nexus network is free for licensed, insured contractors. Verification, onboarding, and full platform access carry no upfront or ongoing fees.",
   },
   {
-    name: "Premium",
-    price: "$499",
-    period: "/mo",
-    description: "Priority project visibility and enhanced profile placement within the network.",
-    highlight: true,
+    label: "Claim projects instantly.",
+    body: "When a homeowner submits a project, you see the full scope, photographs, and budget ceiling. The first verified contractor to claim it owns it — exclusively and permanently.",
   },
   {
-    name: "Elite",
-    price: "$749",
-    period: "/mo",
-    description: "Full network access, top-tier placement, and dedicated account coordination.",
+    label: "Show up prepared.",
+    body: "Every project includes 2–10 photographs, a written scope, and a confirmed consultation window. You arrive informed. The homeowner expects a professional conversation from the first minute.",
   },
 ]
 
@@ -106,33 +99,20 @@ export function ContractorCTA() {
           </div>
         </div>
 
-        {/* Membership tiers */}
+        {/* Free benefits */}
         <div className="reveal">
-          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-8">Membership plans</p>
+          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-8">What you get</p>
           <div className="flex flex-col lg:flex-row gap-4">
-            {tiers.map((tier) => (
-              <div
-                key={tier.name}
-                className={`flex-1 p-8 rounded-2xl border transition-colors ${
-                  tier.highlight
-                    ? "border-primary/50 bg-primary/5"
-                    : "border-border/40 bg-card"
-                }`}
-              >
-                <div className="flex items-end gap-1 mb-1">
-                  <span className="text-3xl font-bold tracking-tight text-foreground font-mono">{tier.price}</span>
-                  <span className="text-muted-foreground text-sm mb-1">{tier.period}</span>
-                </div>
-                <p className={`text-sm font-semibold mb-3 ${tier.highlight ? "text-primary" : "text-foreground"}`}>
-                  {tier.name}
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{tier.description}</p>
+            {benefits.map((b) => (
+              <div key={b.label} className="flex-1 p-8 rounded-2xl border border-border/40 bg-card">
+                <p className="text-xl font-bold mb-3">{b.label}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{b.body}</p>
               </div>
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-4">
-            No cancellation penalties. No per-project fees. No limits on projects claimed.
-            <Link href="/pricing" className="text-primary hover:underline ml-1">See full plan details</Link>
+            Joining is free. Verification typically takes 3–5 business days.
+            <Link href="/contact" className="text-primary hover:underline ml-1">Start your application</Link>
           </p>
         </div>
       </div>

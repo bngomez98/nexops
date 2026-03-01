@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react"
 const signals = [
   { label: "One contractor per project", sub: "Mechanically enforced" },
   { label: "24-hour consultation confirmed", sub: "Guaranteed, every time" },
-  { label: "Free for property owners", sub: "Contractor memberships fund the platform" },
+  { label: "Free for everyone", sub: "Property owners and contractors" },
   { label: "Post Implementation Review", sub: "Every project, every time" },
 ]
 
@@ -104,16 +104,12 @@ export function Hero() {
         </div>
 
         {/* Contact line */}
-        <div className="reveal-hero opacity-0 transition-all duration-700 mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
-          <Phone className="h-3.5 w-3.5" />
-          <a href="tel:+17854280244" className="font-mono tracking-wide hover:text-primary transition-colors">
-            785-428-0244
-          </a>
-          <span className="text-border/70">·</span>
-          <a href="mailto:contact@nexusoperation.org" className="hover:text-primary transition-colors">
-            contact@nexusoperation.org
-          </a>
-        </div>
+        <p className="reveal-hero opacity-0 transition-all duration-700 mt-8 flex items-center gap-2 text-sm text-muted-foreground" style={{ transform: "translateY(20px)", transitionDelay: "550ms" }}>
+          <Phone className="h-3.5 w-3.5 shrink-0" />
+          <a href="tel:+17854280244" className="font-mono tracking-wide hover:text-primary transition-colors">785-428-0244</a>
+          <span className="text-border/70 select-none">&middot;</span>
+          <a href="mailto:contact@nexusoperations.org" className="hover:text-primary transition-colors">contact@nexusoperations.org</a>
+        </p>
       </div>
     </section>
   )
