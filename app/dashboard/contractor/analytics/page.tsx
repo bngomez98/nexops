@@ -47,11 +47,25 @@ const COLORS = {
   scheduled: "oklch(0.70 0.18 155)",
 }
 
+
+function useIsDark() {
+  const [isDark, setIsDark] = useState(false)
+  useEffect(() => {
+    const update = () => setIsDark(document.documentElement.classList.contains("dark"))
+    update()
+    const observer = new MutationObserver(update)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+    return () => observer.disconnect()
+  }, [])
+  return isDark
+}
+
 export default function ContractorAnalyticsPage() {
   const router = useRouter()
   const [user, setUser] = useState<AuthUser | null>(null)
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
+  const isDark = useIsDark()
 
   useEffect(() => {
     const stored = getStoredUser()
@@ -154,13 +168,13 @@ export default function ContractorAnalyticsPage() {
 
   const chartStyle = {
     contentStyle: {
-      background: "oklch(0.12 0.012 240)",
-      border: "1px solid oklch(0.20 0.015 240)",
+      background: isDark ? "oklch(0.12 0.012 240)" : "oklch(1.0 0 0)",
+      border: `1px solid ${isDark ? "oklch(0.20 0.015 240)" : "oklch(0.88 0.01 240)"}`,
       borderRadius: "8px",
       fontSize: "12px",
     },
-    labelStyle: { color: "oklch(0.95 0.005 90)" },
-    tick: { fill: "oklch(0.60 0.01 240)", fontSize: 11 },
+    labelStyle: { color: isDark ? "oklch(0.95 0.005 90)" : "oklch(0.15 0.01 240)" },
+    tick: { fill: isDark ? "oklch(0.60 0.01 240)" : "oklch(0.45 0.01 240)", fontSize: 11 },
   }
 
   return (
@@ -206,7 +220,7 @@ export default function ContractorAnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={weeklyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "oklch(0.20 0.015 240)" : "oklch(0.88 0.01 240)"} />
                 <XAxis dataKey="week" tick={chartStyle.tick} axisLine={false} tickLine={false} />
                 <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={45} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                 <Tooltip
@@ -280,7 +294,7 @@ export default function ContractorAnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={weeklyData} barCategoryGap="35%">
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "oklch(0.20 0.015 240)" : "oklch(0.88 0.01 240)"} />
                 <XAxis dataKey="week" tick={chartStyle.tick} axisLine={false} tickLine={false} />
                 <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={25} />
                 <Tooltip contentStyle={chartStyle.contentStyle} labelStyle={chartStyle.labelStyle} />
@@ -304,7 +318,7 @@ export default function ContractorAnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={serviceData} barCategoryGap="30%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "oklch(0.20 0.015 240)" : "oklch(0.88 0.01 240)"} />
                   <XAxis dataKey="service" tick={chartStyle.tick} axisLine={false} tickLine={false} />
                   <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={25} />
                   <Tooltip contentStyle={chartStyle.contentStyle} labelStyle={chartStyle.labelStyle} />

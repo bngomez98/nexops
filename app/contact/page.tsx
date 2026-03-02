@@ -1,17 +1,27 @@
+"use client"
+
 import type { Metadata } from "next"
+import { useState } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, Phone, Clock } from "lucide-react"
-
-export const metadata: Metadata = {
-  title: "Contact | Get in Touch with Nexus Operations",
-  description:
-    "Reach out to Nexus Operations — whether you are a homeowner with a project, a contractor interested in joining our network, or a potential partner. Email contact@nexusoperations.org or call 785-428-0244.",
-}
+import { Mail, Phone, Clock, CheckCircle2, ArrowRight } from "lucide-react"
 
 export default function ContactPage() {
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+    // Simulate form submission (replace with real API call when backend is ready)
+    setTimeout(() => {
+      setLoading(false)
+      setSubmitted(true)
+    }, 800)
+  }
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -90,65 +100,89 @@ export default function ContactPage() {
 
               {/* Form */}
               <div className="lg:col-span-3 p-8 rounded-xl bg-card border border-border/40">
-                <h2 className="text-lg font-semibold mb-6">Send a message</h2>
-                <form className="flex flex-col gap-5">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="firstName" className="text-sm font-medium">First name <span className="text-primary">*</span></label>
-                      <Input id="firstName" placeholder="John" required />
+                {submitted ? (
+                  <div className="flex flex-col items-center text-center py-8">
+                    <div className="w-14 h-14 rounded-full bg-emerald-500/15 flex items-center justify-center mb-5">
+                      <CheckCircle2 className="h-7 w-7 text-emerald-400" />
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="lastName" className="text-sm font-medium">Last name <span className="text-primary">*</span></label>
-                      <Input id="lastName" placeholder="Smith" required />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="text-sm font-medium">Email <span className="text-primary">*</span></label>
-                    <Input id="email" type="email" placeholder="john@example.com" required />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="phone" className="text-sm font-medium">Phone</label>
-                    <Input id="phone" type="tel" placeholder="(555) 000-0000" />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="type" className="text-sm font-medium">I am a... <span className="text-primary">*</span></label>
-                    <select
-                      id="type"
-                      className="flex h-10 w-full rounded-lg border border-input bg-input px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      required
+                    <h2 className="text-xl font-semibold mb-2">Message sent!</h2>
+                    <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+                      Thank you for reaching out. We'll respond within one business day.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setSubmitted(false)}
+                      className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
                     >
-                      <option value="">Select one...</option>
-                      <option value="homeowner">Homeowner with a project</option>
-                      <option value="commercial">Commercial property owner/manager</option>
-                      <option value="contractor">Contractor interested in joining</option>
-                      <option value="partner">Potential partner (real estate, insurance, etc.)</option>
-                      <option value="other">Other inquiry</option>
-                    </select>
+                      Send another message
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
                   </div>
+                ) : (
+                  <>
+                    <h2 className="text-lg font-semibold mb-6">Send a message</h2>
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label htmlFor="firstName" className="text-sm font-medium">First name <span className="text-primary">*</span></label>
+                          <Input id="firstName" placeholder="John" required />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label htmlFor="lastName" className="text-sm font-medium">Last name <span className="text-primary">*</span></label>
+                          <Input id="lastName" placeholder="Smith" required />
+                        </div>
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="message" className="text-sm font-medium">Message <span className="text-primary">*</span></label>
-                    <Textarea
-                      id="message"
-                      placeholder="Tell us about your project, or what service categories you cover..."
-                      rows={5}
-                      required
-                    />
-                  </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="email" className="text-sm font-medium">Email <span className="text-primary">*</span></label>
+                        <Input id="email" type="email" placeholder="john@example.com" required />
+                      </div>
 
-                  <button
-                    type="submit"
-                    className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity mt-2"
-                  >
-                    Send Message
-                  </button>
-                  <p className="text-xs text-muted-foreground">
-                    By submitting, you agree to receive communications from Nexus Operations. We respect your privacy.
-                  </p>
-                </form>
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="phone" className="text-sm font-medium">Phone</label>
+                        <Input id="phone" type="tel" placeholder="(555) 000-0000" />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="type" className="text-sm font-medium">I am a... <span className="text-primary">*</span></label>
+                        <select
+                          id="type"
+                          className="flex h-10 w-full rounded-lg border border-input bg-input px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          required
+                        >
+                          <option value="">Select one...</option>
+                          <option value="homeowner">Homeowner with a project</option>
+                          <option value="commercial">Commercial property owner/manager</option>
+                          <option value="contractor">Contractor interested in joining</option>
+                          <option value="partner">Potential partner (real estate, insurance, etc.)</option>
+                          <option value="other">Other inquiry</option>
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="message" className="text-sm font-medium">Message <span className="text-primary">*</span></label>
+                        <Textarea
+                          id="message"
+                          placeholder="Tell us about your project, or what service categories you cover..."
+                          rows={5}
+                          required
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity mt-2 disabled:opacity-50"
+                      >
+                        {loading ? "Sending…" : "Send Message"}
+                        {!loading && <ArrowRight className="h-4 w-4" />}
+                      </button>
+                      <p className="text-xs text-muted-foreground">
+                        By submitting, you agree to receive communications from Nexus Operations. We respect your privacy.
+                      </p>
+                    </form>
+                  </>
+                )}
               </div>
             </div>
           </div>

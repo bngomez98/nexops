@@ -196,7 +196,7 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 var(--primary) / 0.4;
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 40%, transparent);
   }
   50% {
     box-shadow: 0 0 0 8px transparent;
@@ -332,8 +332,7 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .hover-glow:hover {
-  border-color: var(--primary) / 0.4;
-  box-shadow: 0 0 20px oklch(from var(--primary) l c h / 0.08);
+  box-shadow: 0 0 20px color-mix(in oklch, var(--primary) 10%, transparent);
 }
 
 /* Glass card effect */
@@ -345,7 +344,7 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary), oklch(from var(--primary) calc(l + 0.1) calc(c - 0.02) calc(h + 20)));
+  background: linear-gradient(135deg, var(--primary), color-mix(in oklch, var(--primary) 80%, oklch(0.9 0.05 90)));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -369,7 +368,7 @@
 
 /* Focus ring enhancement */
 *:focus-visible {
-  outline: 2px solid oklch(from var(--primary) l c h / 0.7);
+  outline: 2px solid color-mix(in oklch, var(--primary) 75%, transparent);
   outline-offset: 2px;
 }
 
@@ -407,7 +406,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, oklch(from var(--primary) l c h / 0.06) 0%, transparent 60%);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--primary) 8%, transparent) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -428,8 +427,8 @@
   background: linear-gradient(
     90deg,
     transparent,
-    oklch(from var(--primary) l c h / 0.3) 30%,
-    oklch(from var(--primary) l c h / 0.3) 70%,
+    color-mix(in oklch, var(--primary) 35%, transparent) 30%,
+    color-mix(in oklch, var(--primary) 35%, transparent) 70%,
     transparent
   );
   border: none;
