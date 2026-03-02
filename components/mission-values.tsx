@@ -1,74 +1,61 @@
-"use client"
-
-import { useEffect, useRef } from "react"
 import { ShieldCheck, Workflow, Users, ClipboardCheck } from "lucide-react"
 
 const values = [
   {
     icon: ShieldCheck,
-    title: "Verified execution",
-    body: "Every project is matched with credentialed contractors and tracked through completion.",
+    title: "Credentialed contractor network",
+    body: "Trade licenses, insurance, and performance history are verified before assignments are enabled.",
   },
   {
     icon: Workflow,
-    title: "Operational consistency",
-    body: "We standardize intake, dispatch, and closeout workflows across your maintenance portfolio.",
+    title: "Standardized dispatch logic",
+    body: "Every request follows the same intake, assignment, and closeout sequence to avoid operational drift.",
   },
   {
     icon: Users,
-    title: "Dedicated partnership",
-    body: "NexOps works as an extension of your operations team instead of a generic vendor marketplace.",
+    title: "Operations-team collaboration",
+    body: "Property managers get a dedicated coordination partner instead of juggling multiple disconnected vendors.",
   },
   {
     icon: ClipboardCheck,
-    title: "Documented accountability",
-    body: "Each request includes status visibility, timestamps, and structured notes for reporting and audits.",
+    title: "Documented service accountability",
+    body: "Milestones, response timestamps, and status updates are tracked so decisions are evidence-based.",
   },
 ]
 
 export function MissionValues() {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal").forEach((node) => node.classList.add("in-view"))
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-card/30">
+    <section className="py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-3xl mb-16 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">What we do</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Operations support for property management teams
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            NexOps combines consulting and software to improve vendor coordination, workflow execution,
-            and service reliability across maintenance operations.
-          </p>
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-12">
+          <div>
+            <p className="text-primary text-sm font-medium tracking-wide mb-3">Operating principles</p>
+            <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-5">
+              Built for property operations teams that need reliability, not marketplace noise
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              NexOps combines services and software to reduce maintenance coordination overhead. The model is simple:
+              one structured request, one verified contractor, one accountable workflow.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              This removes duplicate outreach, improves response consistency, and gives managers a clean record of what
+              happened on every project.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
+            <p className="text-xs uppercase tracking-wider text-primary font-semibold mb-3">NexOps focus</p>
+            <ul className="space-y-3 text-sm text-foreground/85">
+              <li>• Fewer communication breakdowns between owners, managers, and contractors</li>
+              <li>• Faster assignment-to-consultation movement on urgent maintenance work</li>
+              <li>• Better visibility for billing, vendor performance, and portfolio-level reporting</li>
+            </ul>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-5">
-          {values.map((v, i) => (
-            <div
-              key={v.title}
-              className="reveal group flex gap-5 p-6 rounded-2xl bg-card border border-border/40"
-              style={{ transitionDelay: `${(i + 1) * 80}ms` }}
-            >
+          {values.map((v) => (
+            <div key={v.title} className="group flex gap-5 p-6 rounded-2xl bg-card border border-border/40 hover:border-primary/30 transition-colors">
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 shrink-0">
                 <v.icon className="h-5 w-5 text-primary" />
               </div>

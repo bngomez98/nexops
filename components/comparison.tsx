@@ -1,77 +1,60 @@
-"use client"
+import { Check, X } from "lucide-react"
 
-import { useEffect, useRef } from "react"
-import { Check } from "lucide-react"
-
-const features = [
+const comparisonRows = [
   {
-    feature: "Single-contractor assignment",
-    detail: "Each project request is routed to one verified contractor, not broadcast to multiple bidders.",
+    topic: "Lead distribution",
+    old: "Same request sold to multiple contractors.",
+    modern: "One request assigned to one verified contractor.",
   },
   {
-    feature: "Defined scope up front",
-    detail: "Owners submit photos, scope details, and budget expectations before assignment.",
+    topic: "Owner experience",
+    old: "High call volume and inconsistent follow-up.",
+    modern: "Single point of contact with scheduled consultation.",
   },
   {
-    feature: "No unsolicited vendor spam",
-    detail: "Only the assigned contractor receives the request and makes contact.",
+    topic: "Project data quality",
+    old: "Limited context before first call.",
+    modern: "Photos, scope, urgency, and budget submitted up front.",
   },
   {
-    feature: "Verification-first network",
-    detail: "Contractors are credentialed before they can receive projects.",
+    topic: "Operational accountability",
+    old: "Minimal dispatch transparency.",
+    modern: "Tracked assignment, status milestones, and closeout records.",
   },
 ]
 
 export function Comparison() {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal").forEach((node) => {
-              node.classList.add("in-view")
-            })
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
+    <section className="py-24 lg:py-32 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-12 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works for you</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            How NexOps differs from traditional lead platforms
-          </h2>
+        <div className="max-w-3xl mb-12">
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">Platform comparison</p>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">Traditional lead platforms vs. NexOps operations model</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional marketplaces often sell the same lead to several contractors. NexOps assigns each
-            project to one verified contractor, with scope and budget context provided before first contact.
+            The difference is not cosmetic. It changes response speed, communication quality, and execution control across your maintenance pipeline.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4 reveal" style={{ transitionDelay: "100ms" }}>
-          {features.map((item) => (
-            <div key={item.feature} className="flex items-start gap-4 p-5 rounded-xl border border-border/40 bg-card">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
-                <Check className="h-3.5 w-3.5 text-primary" />
+        <div className="rounded-2xl border border-border/40 overflow-hidden bg-card">
+          <div className="grid grid-cols-[1.2fr_1fr_1fr] text-sm">
+            <div className="p-4 border-b border-border/40 font-semibold">Capability</div>
+            <div className="p-4 border-b border-border/40 font-semibold text-muted-foreground">Traditional platforms</div>
+            <div className="p-4 border-b border-border/40 font-semibold text-primary">NexOps</div>
+
+            {comparisonRows.map((row) => (
+              <div key={row.topic} className="contents">
+                <div key={`${row.topic}-topic`} className="p-4 border-b border-border/20 font-medium">{row.topic}</div>
+                <div key={`${row.topic}-old`} className="p-4 border-b border-border/20 text-muted-foreground flex gap-2">
+                  <X className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+                  <span>{row.old}</span>
+                </div>
+                <div key={`${row.topic}-modern`} className="p-4 border-b border-border/20 flex gap-2">
+                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <span>{row.modern}</span>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground mb-1">{item.feature}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
