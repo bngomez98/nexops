@@ -44,6 +44,14 @@ export const metadata: Metadata = {
     description:
       "Nexus is a contractor marketplace connecting homeowners and property managers with licensed, insured contractors. End-to-end coordination from service request through project completion.",
   },
+  icons: {
+    icon: [
+      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-icon.png",
+  },
   robots: {
     index: true,
     follow: true,
