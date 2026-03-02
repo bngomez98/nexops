@@ -11,7 +11,7 @@ const variantClasses = {
   muted: 'border-transparent bg-muted text-muted-foreground',
 }
 
-function Badge({ className, variant = 'default', ...props }) {
+function Badge({ className = "", variant = 'default', ...props }) {
   return (
     <div
       className={cn(

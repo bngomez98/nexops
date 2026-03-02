@@ -133,13 +133,6 @@ export default function ContractorsPage() {
                 trade category and coverage area. When you claim a request, it is removed from all other
                 contractor feeds permanently. There are no per-lead charges and no competing bids on the
                 same project.
-                Designed around how contractors do business
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Your membership funds a pipeline that works exclusively for you. Every request you claim is
-                permanently, exclusively yours — no competing bids, no shared leads, no race to submit a quote
-                before someone else gets there first. The platform is built so that when you commit to a project,
-                you already know the scope, the budget, and when the homeowner is available.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -314,8 +307,6 @@ export default function ContractorsPage() {
                   a: "A valid business license, applicable trade licenses for your category, general liability insurance ($500K per occurrence, $1M aggregate), workers' compensation if you have employees, and three verifiable business or customer references.",
                 },
                 {
-                  q: "How does first-come, first-served claiming work?",
-                  a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the lead exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                   q: "How does the first-come, first-served system work?",
                   a: "When a homeowner submits a request, every qualified contractor in that category and geographic area is notified simultaneously. The first to click 'Claim' locks the project exclusively and it is immediately removed from all other feeds. Standard members compete in the open pool. Premium members receive a 90-second advance window. Elite members receive a 10-minute exclusive window on premium-value requests ($5K+).",
                 },

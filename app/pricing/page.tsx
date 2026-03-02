@@ -112,10 +112,6 @@ export default function PricingPage() {
                 no cancellation penalties. Higher tiers add advance notification windows and priority access
                 to high-value projects.
                 One price. Unlimited projects.
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                No per-lead fees. No price ranges. No annual contracts. Choose the access tier that fits your
-                business — and start claiming exclusive, pre-qualified projects the day you are approved.
               </p>
             </div>
           </div>

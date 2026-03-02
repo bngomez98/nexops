@@ -3,7 +3,7 @@
 import * as LabelPrimitive from '@radix-ui/react-label'
 import { cn } from '@/lib/utils'
 
-function Label({ className, ref, ...props }) {
+function Label({ className = "", ref = null, ...props }) {
   return (
     <LabelPrimitive.Root
       ref={ref}
