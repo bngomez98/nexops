@@ -9,13 +9,23 @@ import { useState, useEffect } from "react"
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [bannerDismissed, setBannerDismissed] = useState(false)
+  const [bannerDismissed, setBannerDismissed] = useState(true)
+
+  useEffect(() => {
+    const dismissed = localStorage.getItem("nexops-banner-dismissed")
+    if (!dismissed) setBannerDismissed(false)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
+
+  const dismissBanner = () => {
+    setBannerDismissed(true)
+    localStorage.setItem("nexops-banner-dismissed", "true")
+  }
 
   const nav = [
     { label: "How It Works", href: "/#how-it-works" },
@@ -43,7 +53,7 @@ export function Header() {
           </Link>
           <button
             type="button"
-            onClick={() => setBannerDismissed(true)}
+            onClick={dismissBanner}
             aria-label="Dismiss"
             className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100 transition-opacity p-1"
           >

@@ -109,7 +109,7 @@ export function Hero() {
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2.5 px-7 py-4 text-sm font-medium border border-border/60 rounded-xl hover:bg-secondary/50 hover:border-border transition-all duration-200"
+                className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium border border-border/40 rounded-xl hover:bg-secondary/50 hover:border-border/70 transition-all duration-200"
               >
                 Talk to Us First
               </Link>
