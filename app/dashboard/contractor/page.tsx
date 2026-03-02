@@ -174,6 +174,19 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
   )
 }
 
+
+function useIsDark() {
+  const [isDark, setIsDark] = useState(false)
+  useEffect(() => {
+    const update = () => setIsDark(document.documentElement.classList.contains("dark"))
+    update()
+    const observer = new MutationObserver(update)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+    return () => observer.disconnect()
+  }, [])
+  return isDark
+}
+
 export default function ContractorDashboard() {
   const router = useRouter()
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -181,6 +194,7 @@ export default function ContractorDashboard() {
   const [loading, setLoading] = useState(true)
   const [expandedLead, setExpandedLead] = useState<string | null>(null)
   const [updating, setUpdating] = useState<string | null>(null)
+  const isDark = useIsDark()
 
   useEffect(() => {
     const stored = getStoredUser()
@@ -366,16 +380,16 @@ export default function ContractorDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={240}>
               <ComposedChart data={weeklyData} barCategoryGap="35%">
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "oklch(0.20 0.015 240)" : "oklch(0.88 0.01 240)"} vertical={false} />
                 <XAxis
                   dataKey="week"
-                  tick={{ fill: "oklch(0.60 0.01 240)", fontSize: 11 }}
+                  tick={{ fill: isDark ? "oklch(0.60 0.01 240)" : "oklch(0.45 0.01 240)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
                   yAxisId="left"
-                  tick={{ fill: "oklch(0.60 0.01 240)", fontSize: 11 }}
+                  tick={{ fill: isDark ? "oklch(0.60 0.01 240)" : "oklch(0.45 0.01 240)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   width={25}
@@ -383,7 +397,7 @@ export default function ContractorDashboard() {
                 <YAxis
                   yAxisId="right"
                   orientation="right"
-                  tick={{ fill: "oklch(0.60 0.01 240)", fontSize: 11 }}
+                  tick={{ fill: isDark ? "oklch(0.60 0.01 240)" : "oklch(0.45 0.01 240)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   width={45}
@@ -392,7 +406,7 @@ export default function ContractorDashboard() {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   wrapperStyle={{ fontSize: "11px", paddingTop: "12px" }}
-                  formatter={(value) => <span style={{ color: "oklch(0.70 0.01 240)" }}>{value}</span>}
+                  formatter={(value) => <span style={{ color: isDark ? "oklch(0.70 0.01 240)" : "oklch(0.45 0.01 240)" }}>{value}</span>}
                 />
                 <Bar
                   yAxisId="left"

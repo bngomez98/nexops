@@ -34,7 +34,7 @@ export function CookieConsent() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 p-4"
+      className="fixed bottom-0 left-0 right-0 z-[60] p-4"
       style={{
         animation: "slide-up 0.4s ease-out",
       }}
