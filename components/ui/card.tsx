@@ -9,7 +9,7 @@ function Card({ className, ref, ...props }: CardProps) {
   return (
     <div
       ref={ref}
-      className={cn('rounded-xl border border-border/40 bg-card text-card-foreground shadow-sm', className)}
+      className={cn('border-2 border-border bg-card text-card-foreground', className)}
       {...props}
     />
   )
@@ -21,7 +21,7 @@ function CardHeader({ className, ref, ...props }: CardProps) {
 
 function CardTitle({ className, ref, ...props }: CardProps & HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 ref={ref as Ref<HTMLHeadingElement>} className={cn('text-lg font-semibold leading-none tracking-tight', className)} {...props} />
+    <h3 ref={ref as Ref<HTMLHeadingElement>} className={cn('text-lg font-bold leading-none tracking-tight uppercase', className)} {...props} />
   )
 }
 

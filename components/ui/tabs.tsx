@@ -11,7 +11,7 @@ function TabsList({ className, ref, ...props }: ComponentPropsWithRef<typeof Tab
     <TabsPrimitive.List
       ref={ref}
       className={cn(
-        'inline-flex h-10 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground',
+        'inline-flex h-10 items-center justify-center border-2 border-foreground bg-background text-muted-foreground p-0',
         className,
       )}
       {...props}
@@ -24,7 +24,7 @@ function TabsTrigger({ className, ref, ...props }: ComponentPropsWithRef<typeof 
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
-        'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm',
+        'inline-flex items-center justify-center whitespace-nowrap px-4 py-2 text-xs font-black tracking-widest uppercase transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:hover:bg-secondary data-[state=inactive]:hover:text-foreground border-r-2 border-foreground last:border-r-0',
         className,
       )}
       {...props}
@@ -37,7 +37,7 @@ function TabsContent({ className, ref, ...props }: ComponentPropsWithRef<typeof 
     <TabsPrimitive.Content
       ref={ref}
       className={cn(
-        'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
         className,
       )}
       {...props}

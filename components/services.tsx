@@ -98,7 +98,7 @@ export function Services() {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 100)
+            setTimeout(() => node.classList.add("in-view"), i * 80)
           })
           observer.disconnect()
         }
@@ -110,16 +110,11 @@ export function Services() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="services" className="py-24 lg:py-32 bg-card/30 relative overflow-hidden">
-      <div
-        className="absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
-      />
-
+    <section ref={sectionRef} id="services" className="py-24 lg:py-32 border-b-2 border-foreground bg-secondary">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-3xl mb-10 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+        <div className="max-w-3xl mb-12 reveal">
+          <div className="construct-label mb-4">Service categories</div>
+          <h2 className="text-4xl lg:text-5xl font-display uppercase mb-4">
             Maintenance, restoration, and remediation services
           </h2>
           <p className="text-muted-foreground leading-relaxed">
@@ -129,44 +124,45 @@ export function Services() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/15">
           {services.map((svc, i) => (
             <div
               key={svc.name}
-              className={`reveal group relative flex flex-col p-6 rounded-2xl border transition-all duration-300 bg-card border-border/40 hover-glow ${
-                hoveredCard === svc.name ? "translate-y-[-2px]" : ""
+              className={`reveal group relative flex flex-col p-6 bg-secondary border-0 transition-all duration-200 ${
+                hoveredCard === svc.name ? "bg-card" : "bg-secondary"
               }`}
-              style={{ transitionDelay: `${i * 80}ms` }}
+              style={{ transitionDelay: `${i * 60}ms` }}
               onMouseEnter={() => setHoveredCard(svc.name)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <span className="absolute top-4 right-4 text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded text-primary bg-primary/10 border border-primary/20">
+              {/* Left accent on hover */}
+              <div className={`absolute left-0 top-0 bottom-0 w-1 bg-primary transition-opacity duration-200 ${
+                hoveredCard === svc.name ? "opacity-100" : "opacity-0"
+              }`} />
+
+              <span className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 border-2 border-primary text-primary bg-transparent">
                 {svc.status}
               </span>
 
-              <div
-                className={`flex items-center justify-center w-12 h-12 rounded-xl mb-4 bg-primary/10 transition-transform duration-300 ${
-                  hoveredCard === svc.name ? "scale-110" : ""
-                }`}
-              >
-                <svc.icon className="h-5 w-5 text-primary" />
+              <div className="flex items-center justify-center w-11 h-11 mb-5 bg-primary text-primary-foreground border-2 border-foreground">
+                <svc.icon className="h-5 w-5" />
               </div>
 
-              <h3 className="text-base font-semibold mb-1.5">{svc.name}</h3>
+              <h3 className="text-base font-black mb-2 uppercase tracking-tight">{svc.name}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">{svc.description}</p>
 
-              <div className="rounded-lg border border-border/40 bg-secondary/40 px-3 py-2 mb-4">
-                <p className="text-xs text-muted-foreground">Typical range: {svc.range}</p>
-                <p className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1.5">
-                  <Clock3 className="h-3 w-3" />
+              <div className="border-2 border-foreground/20 bg-background px-3 py-2 mb-4">
+                <p className="text-xs text-muted-foreground font-bold">Typical range: <span className="text-foreground">{svc.range}</span></p>
+                <p className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1.5 font-medium">
+                  <Clock3 className="h-3 w-3 text-primary" />
                   {svc.timeline}
                 </p>
               </div>
 
-              <div className="flex items-center justify-end pt-2 border-t border-border/30">
+              <div className="flex items-center justify-end pt-2 border-t-2 border-foreground/10">
                 <Link
                   href="/dashboard/homeowner/new"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline uppercase tracking-wide"
                 >
                   Request service
                   <ArrowRight className="h-3 w-3" />
@@ -176,10 +172,10 @@ export function Services() {
           ))}
         </div>
 
-        <div className="mt-10 p-5 rounded-xl border border-border/40 bg-card/50 reveal" style={{ transitionDelay: "500ms" }}>
+        <div className="mt-0 p-5 border-2 border-foreground/20 bg-background reveal" style={{ transitionDelay: "500ms" }}>
           <p className="text-sm text-muted-foreground text-center">
             Need a category that is not listed? Share the project details through our{" "}
-            <Link href="/contact" className="text-primary hover:underline">
+            <Link href="/contact" className="text-primary hover:underline font-bold">
               contact workflow
             </Link>
             , and we will use your request data to prioritize expansion.

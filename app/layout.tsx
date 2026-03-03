@@ -1,10 +1,31 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { Inter, JetBrains_Mono, Bebas_Neue } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ChatAgent } from "@/components/chat-agent"
 import { CookieConsent } from "@/components/cookie-consent"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jb-mono",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+})
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-bebas",
+  display: "swap",
+  weight: ["400"],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
@@ -44,6 +65,14 @@ export const metadata: Metadata = {
     description:
       "Nexus is a contractor marketplace connecting homeowners and property managers with licensed, insured contractors. End-to-end coordination from service request through project completion.",
   },
+  icons: {
+    icon: [
+      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-icon.png",
+  },
   robots: {
     index: true,
     follow: true,
@@ -63,8 +92,19 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className={`scroll-smooth ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable}`} suppressHydrationWarning>
       <head>
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
         {/* Inline script to prevent flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
@@ -142,6 +182,16 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-PL3NBCWD"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        {/* End Google Tag Manager (noscript) */}
         <ThemeProvider>
           {children}
         </ThemeProvider>
