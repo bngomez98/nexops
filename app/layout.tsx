@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono, Bebas_Neue } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ChatAgent } from "@/components/chat-agent"
 import { CookieConsent } from "@/components/cookie-consent"
@@ -18,6 +18,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jb-mono",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+})
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-bebas",
+  display: "swap",
+  weight: ["400"],
 })
 
 export const metadata: Metadata = {
@@ -85,7 +92,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`scroll-smooth ${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`scroll-smooth ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable}`} suppressHydrationWarning>
       <head>
         {/* Google Tag Manager */}
         <script

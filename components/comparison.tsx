@@ -57,20 +57,19 @@ export function Comparison() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-28 lg:py-40 bg-card/20 border-b border-border/40">
+    <section ref={sectionRef} className="py-28 lg:py-40 border-b-2 border-foreground">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Header */}
         <div className="reveal mb-16 lg:mb-20">
           <div className="flex items-center gap-4 mb-8">
-            <span className="h-px w-10 bg-primary shrink-0" />
-            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">What You Receive</p>
+            <div className="construct-label">What You Receive</div>
           </div>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] text-balance max-w-2xl">
+            <h2 className="text-4xl lg:text-6xl font-display uppercase leading-[1.0] text-balance max-w-2xl">
               Every project on Nexus includes the following, without exception.
             </h2>
-            <p className="text-muted-foreground leading-relaxed max-w-sm text-[15px]">
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-[15px] border-l-4 border-primary pl-4">
               These are not premium features or optional upgrades.
               They are the baseline — built into every submission, every assignment, every outcome.
             </p>
@@ -82,11 +81,12 @@ export function Comparison() {
           {guarantees.map((g, i) => (
             <div
               key={g.label}
-              className="reveal border-t border-border/40 last:border-b py-10 flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-16"
+              className="reveal border-t-2 border-foreground/20 last:border-b-2 py-9 flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-16 group hover:bg-secondary/60 transition-colors px-0 hover:px-4 duration-200"
               style={{ transitionDelay: `${i * 60}ms` }}
             >
-              <div className="lg:w-80 shrink-0">
-                <h3 className="text-base font-bold text-foreground leading-snug">{g.label}</h3>
+              <div className="lg:w-80 shrink-0 flex items-start gap-3">
+                <span className="text-xs font-black font-mono text-primary mt-1 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="text-sm font-black text-foreground leading-snug uppercase tracking-tight">{g.label}</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed text-[15px] max-w-2xl">{g.body}</p>
             </div>
@@ -97,7 +97,7 @@ export function Comparison() {
         <div className="reveal mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-5">
           <Link
             href="/dashboard/homeowner/new"
-            className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shadow-lg shadow-primary/20"
+            className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold tracking-widest uppercase bg-primary text-primary-foreground hover:bg-primary/90 construct-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-none transition-all duration-150"
           >
             Submit a Project
             <ArrowRight className="h-4 w-4" />

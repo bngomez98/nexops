@@ -2,14 +2,14 @@ import { cn } from '@/lib/utils'
 import type { HTMLAttributes } from 'react'
 
 const variantClasses: Record<string, string> = {
-  default: 'border-transparent bg-primary text-primary-foreground',
-  secondary: 'border-transparent bg-secondary text-secondary-foreground',
-  destructive: 'border-border bg-secondary text-destructive',
-  outline: 'text-foreground',
-  success: 'border-border bg-secondary text-foreground',
-  warning: 'border-border bg-secondary text-foreground',
-  info: 'border-border bg-secondary text-foreground',
-  muted: 'border-transparent bg-muted text-muted-foreground',
+  default: 'border-2 border-primary bg-primary text-primary-foreground',
+  secondary: 'border-2 border-foreground bg-secondary text-secondary-foreground',
+  destructive: 'border-2 border-destructive bg-destructive text-destructive-foreground',
+  outline: 'border-2 border-foreground text-foreground bg-background',
+  success: 'border-2 border-foreground bg-secondary text-foreground',
+  warning: 'border-2 border-foreground bg-secondary text-foreground',
+  info: 'border-2 border-primary bg-background text-primary',
+  muted: 'border-2 border-muted-foreground bg-muted text-muted-foreground',
 }
 
 interface BadgeProps extends HTMLAttributes<HTMLDivElement> {
@@ -20,7 +20,7 @@ function Badge({ className, variant = 'default', ...props }: BadgeProps) {
   return (
     <div
       className={cn(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring/50',
+        'inline-flex items-center px-2 py-0.5 text-[10px] font-bold tracking-widest uppercase transition-colors focus:outline-none focus:ring-2 focus:ring-ring/50',
         variantClasses[variant],
         className,
       )}
