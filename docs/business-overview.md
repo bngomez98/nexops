@@ -128,7 +128,7 @@ Nexus Operations occupies a differentiated position that other platforms cannot 
 
 ## 4 — THE NEXUS OPERATIONS SOLUTION
 
-Nexus Operations is a two-sided marketplace, and managed maintenance service that provides an ongoing network of vetted vendors who can supply the skilled labor necessary to maintain the properties and homes of our clients. The moment a contractor claims a specific project, they are provided with the support to convert each one into a lucrative opportunity that could potentially go beyond the initial work they provide. Managers, Homeowners, and other Property owners are relieved of managing their own staff, recruiting vendors, and other cost and time intensive aspects of the maintenance lifecycle. Nexus handles it with end-to-end documentation and transparency, providing the owner with full control while allowing them to avoid burnout for both themselves and their employees or staff.
+Nexus Operations is a two-sided marketplace and managed maintenance service built to connect property owners with vetted, skilled contractors through a clear and accountable process. Property managers, homeowners, and other property owners submit documented projects that include scope, timing, and budget parameters. Contractors review complete project details before claiming work, then receive structured support to deliver and expand each opportunity with confidence. Nexus manages the maintenance lifecycle with end-to-end documentation, verified participation standards, and transparent communication so owners keep control without carrying the operational burden alone.
 
 ### What Nexus Operations Is
 
@@ -136,12 +136,6 @@ Nexus Operations is a two-sided marketplace, and managed maintenance service tha
 - A verification system where every contractor is licensed, insured, and background-checked before network access, creating no delays or lapses in availability once onboarded.
 - A documentation SOP that produces valuable insights for the property owners, from operations management, to materials cost and labor cost, as well as performance metrics for our network vendors.
 - A scheduling and confirmation page on our site that guarantees 24-hour response for both parties. Emergencies can be handled within 4 hours.
-
-### What Nexus Operations Is Not
-
-- Not a lead generation service—project details are never sold to third parties
-- Not a directory or referral platform—contractors do not compete for visibility or ranking
-- Not a bidding marketplace—budget ceilings are set before any contractor sees the project
 
 ### Our USP
 
