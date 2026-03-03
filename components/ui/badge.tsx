@@ -4,11 +4,11 @@ import type { HTMLAttributes } from 'react'
 const variantClasses: Record<string, string> = {
   default: 'border-transparent bg-primary text-primary-foreground',
   secondary: 'border-transparent bg-secondary text-secondary-foreground',
-  destructive: 'border-transparent bg-destructive text-destructive-foreground',
+  destructive: 'border-border bg-secondary text-destructive',
   outline: 'text-foreground',
-  success: 'border-transparent bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-  warning: 'border-transparent bg-amber-500/20 text-amber-400 border-amber-500/30',
-  info: 'border-transparent bg-blue-500/20 text-blue-400 border-blue-500/30',
+  success: 'border-border bg-secondary text-foreground',
+  warning: 'border-border bg-secondary text-foreground',
+  info: 'border-border bg-secondary text-foreground',
   muted: 'border-transparent bg-muted text-muted-foreground',
 }
 
