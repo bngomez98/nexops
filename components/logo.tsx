@@ -10,8 +10,7 @@ export function Logo({ className = "", compact = false }: { className?: string; 
         className="shrink-0"
         aria-hidden="true"
       >
-        <rect width="180" height="180" rx="32" fill="currentColor" className="text-primary" />
-        {/* N connection pattern — same as favicon */}
+        <rect width="180" height="180" rx="36" fill="currentColor" className="text-primary" />
         <path
           d="M40 140V40L90 90L140 40V140L90 90L40 140Z"
           fill="white"
@@ -25,8 +24,8 @@ export function Logo({ className = "", compact = false }: { className?: string; 
       </svg>
       {!compact && (
         <div className="flex flex-col leading-none">
-          <span className="text-[17px] font-bold tracking-[0.06em] text-foreground">NEXUS</span>
-          <span className="text-[9px] font-semibold tracking-[0.32em] uppercase text-muted-foreground">OPERATIONS</span>
+          <span className="text-[17px] font-bold tracking-tight text-foreground">Nexus</span>
+          <span className="text-[10px] font-medium tracking-wider text-muted-foreground">Operations</span>
         </div>
       )}
     </div>

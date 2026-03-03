@@ -3,22 +3,22 @@ import { cn } from '@/lib/utils'
 import type { ButtonHTMLAttributes } from 'react'
 
 const variantClasses: Record<string, string> = {
-  default: 'bg-primary text-primary-foreground hover:bg-primary/90 construct-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-none',
+  default: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90',
   destructive:
-    'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20',
+    'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus-visible:ring-destructive/20',
   outline:
-    'border-2 border-foreground bg-background hover:bg-foreground hover:text-background transition-colors',
-  secondary: 'bg-secondary text-secondary-foreground border-2 border-foreground hover:bg-foreground hover:text-background transition-colors',
+    'border border-border bg-background text-foreground shadow-sm hover:bg-secondary hover:text-secondary-foreground',
+  secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
   ghost: 'hover:bg-secondary hover:text-foreground',
   link: 'text-primary underline-offset-4 hover:underline',
 }
 
 const sizeClasses: Record<string, string> = {
   default: 'h-10 px-5 py-2 has-[>svg]:px-3',
-  sm: 'h-8 gap-1.5 px-4 has-[>svg]:px-2.5',
-  lg: 'h-12 px-7 has-[>svg]:px-5',
+  sm: 'h-9 gap-1.5 px-3.5 text-sm has-[>svg]:px-2.5',
+  lg: 'h-12 px-8 text-base has-[>svg]:px-5',
   icon: 'size-10',
-  'icon-sm': 'size-8',
+  'icon-sm': 'size-9',
   'icon-lg': 'size-12',
 }
 
@@ -34,7 +34,7 @@ function Button({ className, variant = 'default', size = 'default', asChild = fa
     <Comp
       data-slot="button"
       className={cn(
-        "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-bold tracking-wide uppercase transition-all duration-150 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px]",
         variantClasses[variant],
         sizeClasses[size],
         className,

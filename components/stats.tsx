@@ -56,25 +56,15 @@ function useCountUp(target: number, duration = 1200, enabled = false) {
   return count
 }
 
-function StatCard({ stat, enabled, index }: { stat: Stat; enabled: boolean; index: number }) {
+function StatCard({ stat, enabled }: { stat: Stat; enabled: boolean }) {
   const count = useCountUp(stat.value, 1200, enabled)
   return (
-    <div className="reveal stat-card group relative overflow-hidden">
-      {/* Constructivist index number — faint background */}
-      <div className="absolute bottom-2 right-3 text-7xl font-black text-foreground/[0.04] leading-none select-none font-mono pointer-events-none">
-        {String(index + 1).padStart(2, "0")}
+    <div className="reveal p-6 lg:p-8">
+      <div className="text-4xl lg:text-5xl font-bold text-primary mb-2 tabular-nums font-mono leading-none">
+        {stat.prefix ?? ""}{count.toLocaleString()}{stat.suffix}
       </div>
-
-      {/* Red top accent */}
-      <div className="h-1 bg-primary w-full mb-5" />
-
-      <div className="p-6 relative">
-        <div className="text-5xl lg:text-6xl font-black text-primary mb-3 tabular-nums font-mono leading-none">
-          {stat.prefix ?? ""}{count.toLocaleString()}{stat.suffix}
-        </div>
-        <p className="text-[10px] font-bold tracking-widest uppercase text-foreground mb-2">{stat.label}</p>
-        <p className="text-sm text-muted-foreground leading-relaxed">{stat.context}</p>
-      </div>
+      <p className="text-sm font-semibold text-foreground mb-1.5">{stat.label}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed">{stat.context}</p>
     </div>
   )
 }
@@ -103,16 +93,16 @@ export function Stats() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="border-b-2 border-foreground bg-secondary">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28">
-        <div className="flex items-center gap-4 mb-12 reveal">
-          <div className="construct-label">By the numbers</div>
-          <div className="h-0.5 flex-1 bg-foreground/15" />
+    <section ref={sectionRef} className="bg-secondary border-y border-border">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+        <div className="flex items-center gap-4 mb-10 reveal">
+          <p className="section-label">By the numbers</p>
+          <div className="h-px flex-1 bg-border" />
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-foreground/20">
-          {stats.map((stat, i) => (
-            <div key={stat.label} className="bg-secondary">
-              <StatCard stat={stat} enabled={inView} index={i} />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden border border-border">
+          {stats.map((stat) => (
+            <div key={stat.label} className="bg-card">
+              <StatCard stat={stat} enabled={inView} />
             </div>
           ))}
         </div>

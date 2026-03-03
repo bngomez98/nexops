@@ -2,103 +2,93 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Constructivist Design System ────────────────────────────────────────── */
-/* Inspired by Russian Constructivism: El Lissitzky, Rodchenko, Klutsis       */
-/* Bold red · black · white · geometric shapes · no rounded corners           */
+/* ─── Professional Design System ──────────────────────────────────────────── */
+/* Clean, modern, trustworthy — authoritative without being aggressive         */
+/* Warm neutrals · deep navy accent · refined red · generous whitespace        */
 
 /* ─── Light Mode (Default) ────────────────────────────────────────────────── */
 :root {
-  --background: oklch(1.0 0 0);
-  --foreground: oklch(0.08 0 0);
+  --background: oklch(0.985 0.002 75);
+  --foreground: oklch(0.145 0.015 260);
   --card: oklch(1.0 0 0);
-  --card-foreground: oklch(0.08 0 0);
+  --card-foreground: oklch(0.145 0.015 260);
   --popover: oklch(1.0 0 0);
-  --popover-foreground: oklch(0.08 0 0);
-  --primary: oklch(0.46 0.22 27);
-  --primary-foreground: oklch(1.0 0 0);
-  --secondary: oklch(0.92 0 0);
-  --secondary-foreground: oklch(0.08 0 0);
-  --muted: oklch(0.88 0 0);
-  --muted-foreground: oklch(0.42 0 0);
-  --accent: oklch(0.46 0.22 27);
-  --accent-foreground: oklch(1.0 0 0);
-  --destructive: oklch(0.50 0.22 27);
-  --destructive-foreground: oklch(1.0 0 0);
-  --border: oklch(0.10 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.46 0.22 27);
-  --chart-1: oklch(0.46 0.22 27);
-  --chart-2: oklch(0.08 0 0);
-  --chart-3: oklch(0.50 0 0);
-  --chart-4: oklch(0.88 0.18 90);
-  --chart-5: oklch(0.70 0 0);
-  --radius: 0rem;
-  /* Sidebar — always dark for constructivist authority */
-  --sidebar: oklch(0.08 0 0);
-  --sidebar-foreground: oklch(0.96 0 0);
-  --sidebar-primary: oklch(0.46 0.22 27);
-  --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.16 0 0);
-  --sidebar-accent-foreground: oklch(0.96 0 0);
-  --sidebar-border: oklch(0.22 0 0);
-  --sidebar-ring: oklch(0.46 0.22 27);
-  /* Constructivist accent colors */
-  --construct-yellow: oklch(0.88 0.18 90);
-  --construct-red: oklch(0.46 0.22 27);
-  --construct-black: oklch(0.08 0 0);
-  --construct-white: oklch(1.0 0 0);
-  /* Replaced glassmorphism with solid surfaces */
-  --glass-bg: var(--card);
-  --glass-border: var(--border);
-  --scrollbar-track: oklch(0.92 0 0);
-  --scrollbar-thumb: oklch(0.60 0 0);
-  --scrollbar-thumb-hover: oklch(0.46 0.22 27);
-  --pipeline-bg: oklch(0.82 0 0);
-  --pipeline-done: oklch(0.46 0.22 27);
+  --popover-foreground: oklch(0.145 0.015 260);
+  --primary: oklch(0.50 0.18 27);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.965 0.003 75);
+  --secondary-foreground: oklch(0.20 0.015 260);
+  --muted: oklch(0.945 0.005 75);
+  --muted-foreground: oklch(0.45 0.01 260);
+  --accent: oklch(0.965 0.003 75);
+  --accent-foreground: oklch(0.20 0.015 260);
+  --destructive: oklch(0.55 0.20 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.905 0.005 75);
+  --input: oklch(0.965 0.003 75);
+  --ring: oklch(0.50 0.18 27);
+  --chart-1: oklch(0.50 0.18 27);
+  --chart-2: oklch(0.35 0.06 260);
+  --chart-3: oklch(0.55 0.10 150);
+  --chart-4: oklch(0.70 0.12 80);
+  --chart-5: oklch(0.60 0.10 310);
+  --radius: 0.625rem;
+  /* Sidebar */
+  --sidebar: oklch(0.17 0.02 260);
+  --sidebar-foreground: oklch(0.94 0.005 75);
+  --sidebar-primary: oklch(0.55 0.18 27);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.22 0.02 260);
+  --sidebar-accent-foreground: oklch(0.94 0.005 75);
+  --sidebar-border: oklch(0.25 0.02 260);
+  --sidebar-ring: oklch(0.55 0.18 27);
+  /* Functional accents */
+  --success: oklch(0.55 0.14 155);
+  --success-foreground: oklch(0.99 0 0);
+  --scrollbar-track: oklch(0.945 0.005 75);
+  --scrollbar-thumb: oklch(0.75 0.005 75);
+  --scrollbar-thumb-hover: oklch(0.50 0.18 27);
 }
 
 /* ─── Dark Mode ───────────────────────────────────────────────────────────── */
 .dark {
-  --background: oklch(0.07 0 0);
-  --foreground: oklch(0.96 0 0);
-  --card: oklch(0.10 0 0);
-  --card-foreground: oklch(0.96 0 0);
-  --popover: oklch(0.10 0 0);
-  --popover-foreground: oklch(0.96 0 0);
-  --primary: oklch(0.58 0.22 27);
-  --primary-foreground: oklch(1.0 0 0);
-  --secondary: oklch(0.14 0 0);
-  --secondary-foreground: oklch(0.94 0 0);
-  --muted: oklch(0.17 0 0);
-  --muted-foreground: oklch(0.56 0 0);
-  --accent: oklch(0.58 0.22 27);
-  --accent-foreground: oklch(1.0 0 0);
-  --destructive: oklch(0.58 0.22 27);
-  --destructive-foreground: oklch(1.0 0 0);
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.14 0 0);
-  --ring: oklch(0.58 0.22 27);
-  --chart-1: oklch(0.58 0.22 27);
-  --chart-2: oklch(0.96 0 0);
-  --chart-3: oklch(0.55 0 0);
-  --chart-4: oklch(0.88 0.18 90);
-  --chart-5: oklch(0.75 0 0);
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(0.96 0 0);
-  --sidebar-primary: oklch(0.58 0.22 27);
-  --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.14 0 0);
-  --sidebar-accent-foreground: oklch(0.96 0 0);
-  --sidebar-border: oklch(0.20 0 0);
-  --sidebar-ring: oklch(0.58 0.22 27);
-  --construct-red: oklch(0.58 0.22 27);
-  --glass-bg: var(--card);
-  --glass-border: var(--border);
-  --scrollbar-track: oklch(0.10 0 0);
-  --scrollbar-thumb: oklch(0.30 0 0);
-  --scrollbar-thumb-hover: oklch(0.58 0.22 27);
-  --pipeline-bg: oklch(0.22 0 0);
-  --pipeline-done: oklch(0.58 0.22 27);
+  --background: oklch(0.115 0.015 260);
+  --foreground: oklch(0.94 0.005 75);
+  --card: oklch(0.15 0.015 260);
+  --card-foreground: oklch(0.94 0.005 75);
+  --popover: oklch(0.15 0.015 260);
+  --popover-foreground: oklch(0.94 0.005 75);
+  --primary: oklch(0.60 0.18 27);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.19 0.015 260);
+  --secondary-foreground: oklch(0.90 0.005 75);
+  --muted: oklch(0.22 0.015 260);
+  --muted-foreground: oklch(0.58 0.01 75);
+  --accent: oklch(0.19 0.015 260);
+  --accent-foreground: oklch(0.90 0.005 75);
+  --destructive: oklch(0.60 0.18 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.25 0.015 260);
+  --input: oklch(0.19 0.015 260);
+  --ring: oklch(0.60 0.18 27);
+  --chart-1: oklch(0.60 0.18 27);
+  --chart-2: oklch(0.90 0.005 75);
+  --chart-3: oklch(0.60 0.10 150);
+  --chart-4: oklch(0.75 0.12 80);
+  --chart-5: oklch(0.65 0.10 310);
+  --sidebar: oklch(0.10 0.015 260);
+  --sidebar-foreground: oklch(0.94 0.005 75);
+  --sidebar-primary: oklch(0.60 0.18 27);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.17 0.015 260);
+  --sidebar-accent-foreground: oklch(0.94 0.005 75);
+  --sidebar-border: oklch(0.22 0.015 260);
+  --sidebar-ring: oklch(0.60 0.18 27);
+  --success: oklch(0.60 0.14 155);
+  --success-foreground: oklch(0.99 0 0);
+  --scrollbar-track: oklch(0.15 0.015 260);
+  --scrollbar-thumb: oklch(0.35 0.015 260);
+  --scrollbar-thumb-hover: oklch(0.60 0.18 27);
 }
 
 @theme {
@@ -132,10 +122,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: 0rem;
-  --radius-md: 0rem;
-  --radius-lg: 0rem;
-  --radius-xl: 0rem;
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -154,17 +144,20 @@
     @apply bg-background text-foreground antialiased;
   }
 
-  /* Constructivist typography: bold display headings */
+  /* Professional heading hierarchy — Bebas Neue for h1/h2 display, Inter for smaller headings */
   h1, h2 {
     font-family: var(--font-display);
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
+  }
+  h3, h4, h5, h6 {
+    font-weight: 600;
   }
 }
 
 /* ─── Animations ───────────────────────────────────────────────────────────── */
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -174,7 +167,7 @@
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-16px); }
+  from { opacity: 0; transform: translateX(-20px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
@@ -189,7 +182,7 @@
 }
 
 @keyframes scale-in {
-  from { transform: scale(0.94); opacity: 0; }
+  from { transform: scale(0.96); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
 
@@ -205,15 +198,15 @@
 /* ─── Animation Utilities ──────────────────────────────────────────────────── */
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.45s ease forwards;
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.45s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scale-in 0.3s ease forwards;
+  animation: scale-in 0.35s ease-out forwards;
 }
 
 .animate-cursor-blink {
@@ -230,114 +223,31 @@
 
 .opacity-0-init { opacity: 0; }
 
-/* ─── Constructivist Design Utilities ──────────────────────────────────────── */
+/* ─── Refined Component Utilities ──────────────────────────────────────────── */
 
-/* Hard offset block shadow — no blur, pure geometric */
-.construct-shadow {
-  box-shadow: 4px 4px 0 var(--foreground);
+/* Soft card shadows */
+.shadow-card {
+  box-shadow: 0 1px 3px oklch(0 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.04);
 }
-.construct-shadow-sm {
-  box-shadow: 2px 2px 0 var(--foreground);
+.shadow-card-hover {
+  box-shadow: 0 4px 12px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0 0 0 / 0.04);
 }
-.construct-shadow-lg {
-  box-shadow: 6px 6px 0 var(--foreground);
-}
-.construct-shadow-red {
-  box-shadow: 4px 4px 0 var(--primary);
-}
-.construct-shadow-red-sm {
-  box-shadow: 2px 2px 0 var(--primary);
+.shadow-elevated {
+  box-shadow: 0 8px 24px oklch(0 0 0 / 0.08), 0 4px 8px oklch(0 0 0 / 0.04);
 }
 
-/* Bold 2px borders */
-.construct-border {
-  border: 2px solid var(--foreground);
-}
-.construct-border-red {
-  border: 2px solid var(--primary);
-}
-
-/* Red top-accent stripe */
-.construct-top-accent {
-  border-top: 4px solid var(--primary);
-}
-.construct-left-accent {
-  border-left: 4px solid var(--primary);
-}
-
-/* Diagonal stripe pattern — constructivist background texture */
-.construct-stripes {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--primary) 0px,
-    var(--primary) 2px,
-    transparent 2px,
-    transparent 14px
-  );
-}
-.construct-stripes-muted {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--foreground) 0px,
-    var(--foreground) 1px,
-    transparent 1px,
-    transparent 12px
-  );
-  opacity: 0.07;
-}
-
-/* Diagonal rule — wide decorative stripe (for section accents) */
-.construct-diagonal-bar {
-  position: relative;
-  overflow: hidden;
-}
-.construct-diagonal-bar::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -20%;
-  width: 140%;
-  height: 4px;
-  background: var(--primary);
-  transform: skewX(-15deg);
-}
-
-/* Section label — bold uppercase with red left rule */
-.construct-label {
+/* Section label — refined with dot separator */
+.section-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--primary);
-}
-.construct-label::before {
-  content: "";
-  display: block;
-  width: 1.5rem;
-  height: 3px;
-  background: var(--primary);
-  flex-shrink: 0;
-}
-
-/* Black section band (dark inversion strip) */
-.construct-dark-band {
-  background: var(--foreground);
-  color: var(--background);
-}
-
-/* Geometric number badge */
-.construct-number {
-  font-family: var(--font-mono);
-  font-size: 4rem;
-  font-weight: 900;
-  line-height: 1;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--primary);
 }
 
-/* ─── btn-shimmer (kept, now with block shadow) ────────────────────────────── */
+/* btn-shimmer — subtle CTA hover */
 .btn-shimmer {
   position: relative;
   overflow: hidden;
@@ -349,36 +259,31 @@
   left: 0;
   width: 40%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.14), transparent);
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.12), transparent);
   transform: translateX(-100%) skewX(-12deg);
 }
 .btn-shimmer:hover::after {
-  animation: shimmer 0.65s ease-in-out;
-}
-
-/* glass-card — now solid surface (no glass in constructivism) */
-.glass-card {
-  background: var(--card);
-  border: 2px solid var(--border);
+  animation: shimmer 0.6s ease-in-out;
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
-::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 0; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
-/* Focus ring — red, square */
+/* Focus ring */
 *:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+  border-radius: var(--radius);
 }
 
 /* Scroll reveal */
 .reveal {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
 }
 .reveal.in-view {
   opacity: 1;
@@ -388,7 +293,7 @@
 .reveal-left {
   opacity: 0;
   transform: translateX(-16px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
 }
 .reveal-left.in-view {
   opacity: 1;
@@ -399,54 +304,69 @@
 
 /* Stat card */
 .stat-card {
-  padding: 1.25rem;
+  padding: 1.5rem;
   background: var(--card);
-  border: 2px solid var(--border);
-  transition: box-shadow 0.12s ease, transform 0.12s ease;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .stat-card:hover {
-  box-shadow: 4px 4px 0 var(--primary);
-  transform: translate(-2px, -2px);
+  box-shadow: 0 4px 12px oklch(0 0 0 / 0.08);
+  transform: translateY(-2px);
 }
 
 /* Sidebar active indicator */
 .nav-active-strip {
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
+  top: 4px;
+  bottom: 4px;
   width: 3px;
   background: var(--primary);
+  border-radius: 0 2px 2px 0;
 }
 
-/* Pipeline connector */
-.pipeline-connector {
-  flex: 1;
-  height: 2px;
-  margin-top: 1rem;
-  background: var(--pipeline-bg);
-}
-.pipeline-connector.done {
-  background: var(--pipeline-done);
-}
-
-/* Gradient text → replaced with solid red in constructivism */
+/* Gradient text */
 .gradient-text {
   color: var(--primary);
 }
 
-/* Brand divider — bold red line */
+/* Brand divider */
 .brand-divider {
-  height: 3px;
+  height: 2px;
   background: var(--primary);
   border: none;
   margin: 0;
+  border-radius: 1px;
 }
+
+/* Legacy class compatibility — now refined */
+.glass-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.construct-shadow { box-shadow: none; }
+.construct-shadow-sm { box-shadow: none; }
+.construct-shadow-lg { box-shadow: none; }
+.construct-shadow-red { box-shadow: none; }
+.construct-shadow-red-sm { box-shadow: none; }
+.construct-border { border: 1px solid var(--border); }
+.construct-border-red { border: 1px solid var(--primary); }
+.construct-top-accent { border-top: 3px solid var(--primary); }
+.construct-left-accent { border-left: 3px solid var(--primary); }
+.construct-label { @apply section-label; }
+.construct-stripes { display: none; }
+.construct-stripes-muted { display: none; }
+.construct-dark-band { background: var(--foreground); color: var(--background); }
+.construct-number { font-family: var(--font-mono); font-size: 3rem; font-weight: 800; line-height: 1; color: var(--primary); }
+.construct-diagonal-bar::before { display: none; }
 
 /* Tier badges */
 .tier-elite {
-  outline: 2px solid oklch(0.60 0.12 270);
+  outline: 2px solid oklch(0.50 0.18 27);
 }
 .tier-premium {
-  outline: 2px solid oklch(0.70 0.12 80);
+  outline: 2px solid oklch(0.65 0.12 80);
 }

@@ -31,86 +31,70 @@ export function Hero() {
   }, [])
 
   return (
-    <section ref={ref} className="relative min-h-screen flex flex-col justify-center overflow-hidden border-b-2 border-foreground">
-      {/* Constructivist diagonal stripe overlay — top right corner block */}
-      <div
-        className="absolute top-0 right-0 w-[340px] h-[340px] pointer-events-none opacity-[0.04] construct-stripes-muted"
-        style={{ backgroundSize: "14px 14px" }}
-      />
+    <section ref={ref} className="relative pt-28 lg:pt-36 pb-20 lg:pb-28 overflow-hidden">
+      {/* Soft background accent */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
 
-      {/* Red geometric block — top left accent */}
-      <div className="absolute top-0 left-0 w-1.5 h-full bg-primary pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px] gap-12 xl:gap-16 items-center">
 
-      {/* Bold red horizontal rule at top */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-primary/30 pointer-events-none" />
-
-      <div className="relative max-w-7xl mx-auto px-8 lg:px-10 pt-36 pb-28 w-full">
-        <div className="grid lg:grid-cols-[1fr_440px] xl:grid-cols-[1fr_480px] gap-16 xl:gap-20 items-center">
-
-          {/* ── Left column: text ── */}
+          {/* Left column: text */}
           <div>
-            {/* Eyebrow — constructivist label */}
             <div className="reveal">
-              <div className="construct-label mb-10">
+              <p className="section-label mb-6">
                 Topeka, Kansas &middot; Contractor Coordination
-              </div>
+              </p>
             </div>
 
-            {/* Main headline — Bebas Neue display type */}
             <div className="reveal mb-6" style={{ transitionDelay: "110ms" }}>
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-display leading-[0.95] tracking-[0.01em] text-balance max-w-3xl uppercase">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-display leading-[0.95] tracking-tight text-balance max-w-2xl">
                 One project.{" "}
-                <br />
+                <br className="hidden sm:block" />
                 One contractor.{" "}
                 <span className="text-primary">Full documentation.</span>
               </h1>
             </div>
 
-            {/* Bold red accent bar */}
-            <div className="reveal h-1 w-24 bg-primary mb-8" style={{ transitionDelay: "160ms" }} />
-
-            {/* Sub-narrative */}
             <div className="reveal" style={{ transitionDelay: "220ms" }}>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-3">
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-4">
                 Nexus Operations connects Topeka property owners and managers with a single,
-                verified contractor — exclusively assigned to their project from the moment of submission.
+                verified contractor exclusively assigned to their project.
               </p>
-              <p className="text-lg font-semibold text-foreground leading-relaxed max-w-2xl mb-10">
+              <p className="text-lg font-medium text-foreground leading-relaxed max-w-xl mb-8">
                 That contractor arrives knowing your scope, your photographs, and your budget ceiling.
-                The conversation starts at a professional level. Every step is documented, timestamped, and available in your account.
+                Every step is documented, timestamped, and available in your account.
               </p>
             </div>
 
             {/* CTAs */}
-            <div className="reveal flex flex-col sm:flex-row items-start gap-3 mb-14" style={{ transitionDelay: "330ms" }}>
+            <div className="reveal flex flex-col sm:flex-row items-start gap-3 mb-12" style={{ transitionDelay: "330ms" }}>
               <Link
                 href="/login?tab=signup"
-                className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold tracking-widest uppercase bg-primary text-primary-foreground hover:bg-primary/90 construct-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-none transition-all duration-150"
+                className="btn-shimmer inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm"
               >
                 Submit a Request — Free
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/#how-it-works"
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold tracking-widest uppercase text-foreground border-2 border-foreground hover:bg-foreground hover:text-background transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-md text-foreground border border-border hover:bg-secondary transition-colors"
               >
                 How It Works
-                <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold tracking-widest uppercase border-2 border-foreground/30 text-foreground/60 hover:border-foreground hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 Talk to Us First
               </Link>
             </div>
 
             {/* Signal strip */}
-            <div className="reveal border-t-2 border-foreground/20 pt-10" style={{ transitionDelay: "440ms" }}>
+            <div className="reveal border-t border-border pt-8" style={{ transitionDelay: "440ms" }}>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-5">
                 {signals.map((s) => (
-                  <div key={s.label} className="border-l-2 border-primary pl-3">
-                    <p className="text-xs font-bold tracking-wide text-foreground uppercase leading-snug mb-0.5">{s.label}</p>
+                  <div key={s.label} className="border-l-2 border-primary/40 pl-3">
+                    <p className="text-sm font-semibold text-foreground leading-snug mb-0.5">{s.label}</p>
                     <p className="text-xs text-muted-foreground">{s.sub}</p>
                   </div>
                 ))}
@@ -118,58 +102,57 @@ export function Hero() {
             </div>
 
             {/* Contact line */}
-            <p className="reveal mt-7 flex items-center gap-2 text-sm text-muted-foreground" style={{ transitionDelay: "550ms" }}>
+            <p className="reveal mt-6 flex items-center gap-2 text-sm text-muted-foreground" style={{ transitionDelay: "550ms" }}>
               <Phone className="h-3.5 w-3.5 shrink-0 text-primary" />
-              <a href="tel:+17854280244" className="font-mono tracking-wide hover:text-primary transition-colors">785-428-0244</a>
-              <span className="text-foreground/30 select-none">&middot;</span>
+              <a href="tel:+17854280244" className="font-mono hover:text-primary transition-colors">785-428-0244</a>
+              <span className="text-border">&middot;</span>
               <a href="mailto:contact@nexusoperations.org" className="hover:text-primary transition-colors">contact@nexusoperations.org</a>
             </p>
           </div>
 
-          {/* ── Right column: project card mockup ── */}
+          {/* Right column: project card mockup */}
           <div className="hidden lg:flex flex-col items-center justify-center reveal" style={{ transitionDelay: "200ms" }}>
             <div className="relative w-full">
-              {/* Main card — sharp constructivist style */}
-              <div className="border-2 border-foreground bg-card construct-shadow-lg overflow-hidden">
+              {/* Main card */}
+              <div className="rounded-xl border border-border bg-card shadow-elevated overflow-hidden">
 
-                {/* Card header — red accent bar */}
-                <div className="px-5 py-4 border-b-2 border-foreground flex items-center justify-between bg-foreground text-background">
+                {/* Card header */}
+                <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-secondary">
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-widest text-background/60">Nexus Project</p>
-                    <p className="text-sm font-black text-background">#NX-2847</p>
+                    <p className="text-xs text-muted-foreground font-medium">Nexus Project</p>
+                    <p className="text-sm font-bold text-foreground">#NX-2847</p>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-primary text-primary-foreground border border-primary/50">
-                    <span className="w-1.5 h-1.5 bg-primary-foreground" />
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md bg-primary/10 text-primary">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                     Contractor Assigned
                   </span>
                 </div>
 
                 {/* Card body */}
                 <div className="p-5 space-y-3">
-                  {/* Project info */}
                   <div>
-                    <p className="text-base font-black text-foreground mb-1 uppercase tracking-tight">Roof Repair — 3,200 sqft</p>
+                    <p className="text-base font-bold text-foreground mb-1">Roof Repair — 3,200 sqft</p>
                     <p className="text-xs text-muted-foreground font-mono">1847 SW Gage Blvd, Topeka KS</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 border-2 border-foreground/30 bg-secondary">
-                      <span className="text-[10px] text-muted-foreground font-bold uppercase">Budget ceiling:</span>
-                      <span className="text-[10px] font-black text-foreground">$12,500</span>
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary border border-border">
+                      <span className="text-xs text-muted-foreground">Budget ceiling:</span>
+                      <span className="text-xs font-bold text-foreground">$12,500</span>
                     </div>
                   </div>
 
                   {/* Contractor info */}
-                  <div className="p-3 border-2 border-foreground/30 bg-secondary">
+                  <div className="p-3 rounded-lg bg-secondary border border-border">
                     <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 bg-primary border-2 border-foreground flex items-center justify-center text-primary-foreground font-black text-sm shrink-0">
+                      <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shrink-0">
                         MT
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-black text-foreground uppercase">Marcus T.</p>
-                        <p className="text-[11px] text-muted-foreground">MT Roofing Solutions</p>
+                        <p className="text-sm font-bold text-foreground">Marcus T.</p>
+                        <p className="text-xs text-muted-foreground">MT Roofing Solutions</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 text-[10px] text-primary font-bold">
-                            <CheckCircle2 className="h-3 w-3" /> License verified
+                          <span className="inline-flex items-center gap-1 text-xs text-primary font-medium">
+                            <CheckCircle2 className="h-3 w-3" /> Licensed
                           </span>
-                          <span className="inline-flex items-center gap-1 text-[10px] text-primary font-bold">
+                          <span className="inline-flex items-center gap-1 text-xs text-primary font-medium">
                             <Shield className="h-3 w-3" /> Insured
                           </span>
                         </div>
@@ -178,40 +161,40 @@ export function Hero() {
                   </div>
 
                   {/* Consultation time */}
-                  <div className="flex items-center gap-2.5 p-2.5 border-l-4 border-primary bg-secondary">
+                  <div className="flex items-center gap-2.5 p-2.5 rounded-lg border-l-3 border-l-primary bg-primary/5">
                     <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
                     <div>
-                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wide">Consultation confirmed</p>
-                      <p className="text-xs font-black text-foreground">Tomorrow &middot; 2:00 PM</p>
+                      <p className="text-xs text-muted-foreground font-medium">Consultation confirmed</p>
+                      <p className="text-sm font-semibold text-foreground">Tomorrow &middot; 2:00 PM</p>
                     </div>
                   </div>
 
                   {/* PIR note */}
-                  <div className="flex items-center gap-2.5 p-2.5 border-l-4 border-foreground/20 bg-secondary">
+                  <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-secondary">
                     <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                    <p className="text-[10px] text-muted-foreground font-medium">Post Implementation Review included on completion</p>
+                    <p className="text-xs text-muted-foreground">Post Implementation Review included on completion</p>
                   </div>
                 </div>
 
                 {/* Progress strip */}
-                <div className="px-5 pb-5 border-t-2 border-foreground/10 pt-4">
+                <div className="px-5 pb-5 border-t border-border pt-4">
                   <div className="flex items-start">
                     {steps.map((step, i) => (
                       <div key={step.label} className="flex items-center flex-1">
                         <div className="flex flex-col items-center">
                           <div
-                            className={`w-5 h-5 flex items-center justify-center text-[9px] font-black border-2 shrink-0 transition-colors ${
+                            className={`w-6 h-6 flex items-center justify-center text-xs font-semibold rounded-full shrink-0 transition-colors ${
                               step.done
-                                ? "bg-primary border-primary text-primary-foreground"
+                                ? "bg-primary text-primary-foreground"
                                 : step.active
-                                ? "bg-background border-primary text-primary"
-                                : "bg-background border-foreground/40 text-muted-foreground"
+                                ? "bg-primary/10 border-2 border-primary text-primary"
+                                : "bg-secondary border border-border text-muted-foreground"
                             }`}
                           >
-                            {step.done ? "✓" : i + 1}
+                            {step.done ? <CheckCircle2 className="h-3.5 w-3.5" /> : i + 1}
                           </div>
                           <p
-                            className={`text-[9px] mt-1 font-bold uppercase tracking-wide whitespace-nowrap ${
+                            className={`text-[10px] mt-1.5 font-medium whitespace-nowrap ${
                               step.done || step.active ? "text-foreground" : "text-muted-foreground"
                             }`}
                           >
@@ -220,7 +203,7 @@ export function Hero() {
                         </div>
                         {i < steps.length - 1 && (
                           <div
-                            className={`h-0.5 flex-1 mb-3.5 mx-1 ${step.done ? "bg-primary" : "bg-foreground/15"}`}
+                            className={`h-0.5 flex-1 mb-4 mx-1.5 rounded-full ${step.done ? "bg-primary" : "bg-border"}`}
                           />
                         )}
                       </div>
@@ -230,19 +213,15 @@ export function Hero() {
               </div>
 
               {/* Floating badge: 1 contractor */}
-              <div className="absolute -top-4 -right-4 border-2 border-foreground bg-background px-3 py-2.5 construct-shadow-sm">
-                <p className="text-[10px] font-black text-foreground uppercase tracking-wide">1 Contractor Only</p>
-                <p className="text-[9px] text-muted-foreground font-medium">Exclusively assigned</p>
+              <div className="absolute -top-3 -right-3 rounded-lg border border-border bg-card px-3 py-2 shadow-card">
+                <p className="text-xs font-bold text-foreground">1 Contractor Only</p>
+                <p className="text-[10px] text-muted-foreground">Exclusively assigned</p>
               </div>
 
-              <a href="#how-it-works" className="inline-flex items-center gap-2 mt-4 text-xs font-bold text-primary hover:underline uppercase tracking-wide">
-                Explore workflow details <ArrowRight className="h-3.5 w-3.5" />
-              </a>
-
               {/* Floating badge: free */}
-              <div className="absolute -bottom-4 -left-4 border-2 border-primary bg-primary px-3 py-2.5 construct-shadow-sm">
-                <p className="text-[10px] font-black text-primary-foreground uppercase tracking-wide">Free for Owners</p>
-                <p className="text-[9px] text-primary-foreground/80 font-medium">No cost, ever</p>
+              <div className="absolute -bottom-3 -left-3 rounded-lg bg-primary px-3 py-2 shadow-sm">
+                <p className="text-xs font-bold text-primary-foreground">Free for Owners</p>
+                <p className="text-[10px] text-primary-foreground/70">No cost, ever</p>
               </div>
             </div>
           </div>

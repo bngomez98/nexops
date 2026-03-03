@@ -32,22 +32,22 @@ export function Header() {
     { label: "Services", href: "/services" },
     { label: "Pricing", href: "/pricing" },
     { label: "For Contractors", href: "/contractors" },
-    { label: "For Property Managers", href: "/property-managers" },
+    { label: "Property Managers", href: "/property-managers" },
     { label: "Contact", href: "/contact" },
   ]
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
-      {/* Announcement banner — bold red */}
+      {/* Announcement banner */}
       {!bannerDismissed && (
-        <div className="bg-primary text-primary-foreground text-xs font-bold py-2 px-4 text-center flex items-center justify-center gap-3 relative tracking-wide uppercase">
-          <span className="hidden sm:inline">
+        <div className="bg-foreground text-background text-sm py-2.5 px-4 text-center flex items-center justify-center gap-3 relative">
+          <span className="hidden sm:inline font-medium">
             Free for property owners &mdash; no account required to submit a project.
           </span>
-          <span className="sm:hidden">Free for property owners.</span>
+          <span className="sm:hidden font-medium">Free for property owners.</span>
           <Link
             href="/dashboard/homeowner/new"
-            className="inline-flex items-center gap-1 font-black underline underline-offset-2 hover:no-underline opacity-90 hover:opacity-100"
+            className="inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:no-underline"
           >
             Get started <ArrowRight className="h-3 w-3" />
           </Link>
@@ -55,7 +55,7 @@ export function Header() {
             type="button"
             onClick={dismissBanner}
             aria-label="Dismiss"
-            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100 transition-opacity p-1"
+            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-60 hover:opacity-100 transition-opacity p-1"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -64,44 +64,41 @@ export function Header() {
 
       {/* Main nav */}
       <header
-        className={`transition-all duration-150 border-b-2 ${
+        className={`transition-all duration-200 ${
           scrolled
-            ? "bg-background border-foreground"
-            : "bg-background/96 border-foreground/20"
+            ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm"
+            : "bg-background/80 backdrop-blur-sm border-b border-transparent"
         }`}
       >
-        {/* Red top rule — constructivist accent */}
-        <div className="h-1 bg-primary w-full" />
-
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 lg:h-16">
+          <div className="flex items-center justify-between h-16">
             <Link href="/" aria-label="Nexus Operations home">
               <Logo />
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-7" aria-label="Main">
+            <nav className="hidden lg:flex items-center gap-8" aria-label="Main">
               {nav.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="text-[11px] font-bold tracking-widest uppercase text-foreground/50 hover:text-primary transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {l.label}
                 </Link>
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-3">
               <ThemeToggle />
               <Link
                 href="/login"
-                className="inline-flex items-center px-4 py-2 text-[11px] font-bold tracking-widest uppercase text-foreground border-2 border-foreground hover:bg-foreground hover:text-background transition-colors"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
               >
-                Log In
+                Log in
               </Link>
               <Link
                 href="/dashboard/homeowner/new"
-                className="inline-flex items-center px-4 py-2 text-[11px] font-bold tracking-widest uppercase bg-primary text-primary-foreground hover:bg-primary/90 transition-colors construct-shadow"
+                className="btn-shimmer inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
               >
                 Get Started
               </Link>
@@ -109,7 +106,7 @@ export function Header() {
 
             <button
               type="button"
-              className="lg:hidden p-2 text-foreground/70 hover:text-foreground border-2 border-transparent hover:border-foreground transition-colors"
+              className="lg:hidden p-2 text-muted-foreground hover:text-foreground rounded-md hover:bg-secondary transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Menu"
               aria-expanded={mobileOpen}
@@ -119,33 +116,33 @@ export function Header() {
           </div>
 
           {mobileOpen && (
-            <nav className="lg:hidden pb-5 pt-2 border-t-2 border-foreground" aria-label="Mobile">
-              <div className="flex flex-col gap-0.5 pt-2">
+            <nav className="lg:hidden pb-6 pt-2 border-t border-border" aria-label="Mobile">
+              <div className="flex flex-col gap-1 pt-3">
                 {nav.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="text-xs font-bold tracking-widest uppercase text-foreground/60 hover:text-primary hover:bg-secondary py-2.5 px-3 transition-colors border-l-2 border-transparent hover:border-primary"
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary py-2.5 px-3 rounded-md transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
                     {l.label}
                   </Link>
                 ))}
-                <div className="flex flex-col gap-2 mt-4 pt-4 border-t-2 border-foreground">
+                <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
                   <div className="flex items-center justify-between px-3 py-2">
-                    <span className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Theme</span>
+                    <span className="text-sm text-muted-foreground">Theme</span>
                     <ThemeToggle />
                   </div>
                   <Link
                     href="/login"
-                    className="flex items-center justify-center px-4 py-3 text-xs font-bold tracking-widest uppercase text-foreground border-2 border-foreground hover:bg-foreground hover:text-background transition-colors"
+                    className="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-foreground border border-border rounded-md hover:bg-secondary transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
-                    Log In
+                    Log in
                   </Link>
                   <Link
                     href="/dashboard/homeowner/new"
-                    className="flex items-center justify-center px-4 py-3 text-xs font-bold tracking-widest uppercase bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                    className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
                     Get Started

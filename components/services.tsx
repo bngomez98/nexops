@@ -5,86 +5,16 @@ import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 
 const services = [
-  {
-    icon: TreePine,
-    name: "Tree Removal",
-    description: "Removal, trimming coordination, and stump grinding for hazardous or overgrown trees.",
-    range: "$500 – $8,000",
-    timeline: "2–7 days typical scheduling",
-    status: "Available",
-  },
-  {
-    icon: Hammer,
-    name: "Concrete Work",
-    description: "Driveways, patios, walkways, retaining walls, and structural concrete repair scopes.",
-    range: "$1,200 – $15,000",
-    timeline: "3–10 days based on curing windows",
-    status: "Available",
-  },
-  {
-    icon: Home,
-    name: "Roofing",
-    description: "Leak mitigation, repair scopes, and full replacement projects by licensed roofers.",
-    range: "$300 – $25,000",
-    timeline: "Emergency tarping same day when needed",
-    status: "Available",
-  },
-  {
-    icon: Wind,
-    name: "HVAC",
-    description: "System replacement, major repairs, and installation work handled by EPA-certified technicians.",
-    range: "$3,000 – $20,000",
-    timeline: "Priority dispatch for heating/cooling outages",
-    status: "Available",
-  },
-  {
-    icon: Fence,
-    name: "Fencing",
-    description: "Privacy, perimeter, and decorative fence installation with repair options.",
-    range: "$1,500 – $8,000",
-    timeline: "Material-dependent lead times",
-    status: "Available",
-  },
-  {
-    icon: Zap,
-    name: "Electrical",
-    description: "Panel upgrades, code-compliant wiring, and EV charger installations.",
-    range: "$500 – $10,000",
-    timeline: "Permit and inspection support included",
-    status: "Available",
-  },
-  {
-    icon: Wrench,
-    name: "Plumbing",
-    description: "Pipe repair, fixture installation, water heater replacement, and drainage solutions.",
-    range: "$200 – $12,000",
-    timeline: "Emergency service available",
-    status: "Available",
-  },
-  {
-    icon: Droplets,
-    name: "Water Damage Restoration",
-    description: "Water extraction, structural drying, mold prevention, and damage assessment coordination.",
-    range: "$1,000 – $15,000",
-    timeline: "Emergency response within hours",
-    status: "Available",
-  },
-  {
-    icon: Flame,
-    name: "Fire & Smoke Remediation",
-    description: "Smoke damage assessment, odor removal, structural cleaning, and restoration coordination.",
-    range: "$2,000 – $30,000",
-    timeline: "Assessment within 24 hours",
-    status: "Available",
-  },
-  {
-    icon: AlertTriangle,
-    name: "Emergency Response",
-    description: "After-hours and emergency coordination for urgent property damage requiring immediate contractor dispatch.",
-    range: "Varies by scope",
-    timeline: "1-hour assignment target",
-    status: "Available",
-  },
+  { icon: TreePine, name: "Tree Removal", description: "Removal, trimming coordination, and stump grinding for hazardous or overgrown trees.", range: "$500 - $8,000", timeline: "2-7 days typical scheduling" },
+  { icon: Hammer, name: "Concrete Work", description: "Driveways, patios, walkways, retaining walls, and structural concrete repair.", range: "$1,200 - $15,000", timeline: "3-10 days based on curing" },
+  { icon: Home, name: "Roofing", description: "Leak mitigation, repair scopes, and full replacement by licensed roofers.", range: "$300 - $25,000", timeline: "Emergency tarping same day" },
+  { icon: Wind, name: "HVAC", description: "System replacement, major repairs, and installation by EPA-certified technicians.", range: "$3,000 - $20,000", timeline: "Priority dispatch available" },
+  { icon: Fence, name: "Fencing", description: "Privacy, perimeter, and decorative fence installation with repair options.", range: "$1,500 - $8,000", timeline: "Material-dependent lead times" },
+  { icon: Zap, name: "Electrical", description: "Panel upgrades, code-compliant wiring, and EV charger installations.", range: "$500 - $10,000", timeline: "Permit and inspection support" },
+  { icon: Wrench, name: "Plumbing", description: "Pipe repair, fixture installation, water heater replacement, and drainage.", range: "$200 - $12,000", timeline: "Emergency service available" },
+  { icon: Droplets, name: "Water Damage Restoration", description: "Water extraction, structural drying, mold prevention, and damage assessment.", range: "$1,000 - $15,000", timeline: "Emergency response within hours" },
+  { icon: Flame, name: "Fire & Smoke Remediation", description: "Smoke damage assessment, odor removal, structural cleaning, and restoration.", range: "$2,000 - $30,000", timeline: "Assessment within 24 hours" },
+  { icon: AlertTriangle, name: "Emergency Response", description: "After-hours and emergency coordination for urgent property damage.", range: "Varies by scope", timeline: "1-hour assignment target" },
 ]
 
 export function Services() {
@@ -98,7 +28,7 @@ export function Services() {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 80)
+            setTimeout(() => node.classList.add("in-view"), i * 60)
           })
           observer.disconnect()
         }
@@ -110,72 +40,60 @@ export function Services() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="services" className="py-24 lg:py-32 border-b-2 border-foreground bg-secondary">
+    <section ref={sectionRef} id="services" className="py-24 lg:py-32 bg-secondary">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-3xl mb-12 reveal">
-          <div className="construct-label mb-4">Service categories</div>
-          <h2 className="text-4xl lg:text-5xl font-display uppercase mb-4">
+          <p className="section-label mb-4">Service categories</p>
+          <h2 className="text-4xl lg:text-5xl font-display mb-4">
             Maintenance, restoration, and remediation services
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Nexus coordinates residential and commercial property needs across a growing range of trade
-            categories. Each request requires project photos, a written scope, and a budget ceiling before
-            dispatch, so contractors arrive prepared and property owners get a predictable project experience.
+            categories. Each request requires project photos, a written scope, and a budget ceiling before dispatch.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/15">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {services.map((svc, i) => (
             <div
               key={svc.name}
-              className={`reveal group relative flex flex-col p-6 bg-secondary border-0 transition-all duration-200 ${
-                hoveredCard === svc.name ? "bg-card" : "bg-secondary"
-              }`}
-              style={{ transitionDelay: `${i * 60}ms` }}
+              className={`reveal group relative flex flex-col p-5 rounded-xl border border-border bg-card transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5`}
+              style={{ transitionDelay: `${i * 50}ms` }}
               onMouseEnter={() => setHoveredCard(svc.name)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              {/* Left accent on hover */}
-              <div className={`absolute left-0 top-0 bottom-0 w-1 bg-primary transition-opacity duration-200 ${
-                hoveredCard === svc.name ? "opacity-100" : "opacity-0"
-              }`} />
-
-              <span className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 border-2 border-primary text-primary bg-transparent">
-                {svc.status}
-              </span>
-
-              <div className="flex items-center justify-center w-11 h-11 mb-5 bg-primary text-primary-foreground border-2 border-foreground">
-                <svc.icon className="h-5 w-5" />
+              <div className="flex items-center justify-center w-10 h-10 mb-4 rounded-lg bg-primary/10">
+                <svc.icon className="h-5 w-5 text-primary" />
               </div>
 
-              <h3 className="text-base font-black mb-2 uppercase tracking-tight">{svc.name}</h3>
+              <h3 className="text-base font-semibold mb-1.5">{svc.name}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">{svc.description}</p>
 
-              <div className="border-2 border-foreground/20 bg-background px-3 py-2 mb-4">
-                <p className="text-xs text-muted-foreground font-bold">Typical range: <span className="text-foreground">{svc.range}</span></p>
-                <p className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1.5 font-medium">
+              <div className="rounded-lg bg-secondary border border-border px-3 py-2 mb-4">
+                <p className="text-xs text-muted-foreground">Typical range: <span className="font-semibold text-foreground">{svc.range}</span></p>
+                <p className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1.5">
                   <Clock3 className="h-3 w-3 text-primary" />
                   {svc.timeline}
                 </p>
               </div>
 
-              <div className="flex items-center justify-end pt-2 border-t-2 border-foreground/10">
+              <div className="flex items-center justify-end pt-2 border-t border-border">
                 <Link
                   href="/dashboard/homeowner/new"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline uppercase tracking-wide"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                 >
                   Request service
-                  <ArrowRight className="h-3 w-3" />
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-0 p-5 border-2 border-foreground/20 bg-background reveal" style={{ transitionDelay: "500ms" }}>
-          <p className="text-sm text-muted-foreground text-center">
+        <div className="mt-6 p-5 rounded-xl border border-border bg-card text-center reveal" style={{ transitionDelay: "400ms" }}>
+          <p className="text-sm text-muted-foreground">
             Need a category that is not listed? Share the project details through our{" "}
-            <Link href="/contact" className="text-primary hover:underline font-bold">
+            <Link href="/contact" className="text-primary hover:underline font-medium">
               contact workflow
             </Link>
             , and we will use your request data to prioritize expansion.
