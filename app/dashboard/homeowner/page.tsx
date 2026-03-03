@@ -20,7 +20,6 @@ import {
   Zap,
   TrendingUp,
   MapPin,
-  Sparkles,
 } from "lucide-react"
 
 interface ServiceRequest {
@@ -52,13 +51,13 @@ function statusBadge(status: ServiceRequest["status"]) {
 function statusIcon(status: ServiceRequest["status"]) {
   switch (status) {
     case "pending":
-      return <Clock className="h-4 w-4 text-amber-400" />
+      return <Clock className="h-4 w-4 text-muted-foreground" />
     case "matched":
-      return <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+      return <CheckCircle2 className="h-4 w-4 text-primary" />
     case "in_progress":
-      return <Wrench className="h-4 w-4 text-blue-400" />
+      return <Wrench className="h-4 w-4 text-primary" />
     case "completed":
-      return <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+      return <CheckCircle2 className="h-4 w-4 text-primary" />
     default:
       return <AlertCircle className="h-4 w-4 text-muted-foreground" />
   }
@@ -72,7 +71,6 @@ function timeAgo(iso: string) {
   return `${d}d ago`
 }
 
-// Pipeline step component
 function PipelineStep({
   label,
   description,
@@ -87,19 +85,19 @@ function PipelineStep({
   icon: React.ElementType
 }) {
   return (
-    <div className={`flex flex-col items-center gap-1.5 flex-1 min-w-0 ${done || active ? "opacity-100" : "opacity-40"}`}>
+    <div className={`flex flex-col items-center gap-1.5 flex-1 min-w-0 ${done || active ? "opacity-100" : "opacity-35"}`}>
       <div
-        className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors ${
+        className={`w-7 h-7 rounded-full flex items-center justify-center border transition-colors ${
           done
-            ? "bg-emerald-500/20 border-emerald-500/60"
+            ? "bg-primary/10 border-primary/40"
             : active
-            ? "bg-primary/20 border-primary animate-pulse-glow"
-            : "bg-secondary border-border/40"
+            ? "bg-primary border-primary"
+            : "bg-secondary border-border"
         }`}
       >
-        <Icon className={`h-3.5 w-3.5 ${done ? "text-emerald-400" : active ? "text-primary" : "text-muted-foreground"}`} />
+        <Icon className={`h-3.5 w-3.5 ${done ? "text-primary" : active ? "text-primary-foreground" : "text-muted-foreground"}`} />
       </div>
-      <p className={`text-[10px] font-semibold text-center ${done ? "text-emerald-400" : active ? "text-primary" : "text-muted-foreground"}`}>
+      <p className={`text-[10px] font-medium text-center ${done || active ? "text-foreground" : "text-muted-foreground"}`}>
         {label}
       </p>
       <p className="text-[9px] text-muted-foreground/60 text-center leading-tight hidden sm:block">{description}</p>
@@ -107,10 +105,9 @@ function PipelineStep({
   )
 }
 
-// Connector line between pipeline steps
 function PipelineConnector({ done }: { done: boolean }) {
   return (
-    <div className={`flex-1 h-px mt-4 ${done ? "bg-emerald-500/40" : "bg-border/30"}`} />
+    <div className={`flex-1 h-px mt-3.5 ${done ? "bg-primary/30" : "bg-border"}`} />
   )
 }
 
@@ -170,92 +167,43 @@ export default function HomeownerDashboard() {
   const recentRequests = requests.slice(0, 3)
 
   const stats = [
-    {
-      label: "Total Requests",
-      value: requests.length,
-      sub: "All time",
-      icon: FileText,
-      accent: "text-primary",
-      bg: "bg-primary/10",
-      border: "border-primary/20",
-    },
-    {
-      label: "Active",
-      value: activeRequests.length,
-      sub: "In flight",
-      icon: TrendingUp,
-      accent: "text-blue-400",
-      bg: "bg-blue-500/10",
-      border: "border-blue-500/20",
-    },
-    {
-      label: "Awaiting Match",
-      value: pendingMatch.length,
-      sub: "Auto-routing",
-      icon: Zap,
-      accent: "text-amber-400",
-      bg: "bg-amber-500/10",
-      border: "border-amber-500/20",
-    },
-    {
-      label: "Completed",
-      value: completedRequests.length,
-      sub: "Jobs done",
-      icon: CheckCircle2,
-      accent: "text-emerald-400",
-      bg: "bg-emerald-500/10",
-      border: "border-emerald-500/20",
-    },
+    { label: "Total Requests", value: requests.length, sub: "All time", icon: FileText },
+    { label: "Active", value: activeRequests.length, sub: "In flight", icon: TrendingUp },
+    { label: "Awaiting Match", value: pendingMatch.length, sub: "Auto-routing", icon: Zap },
+    { label: "Completed", value: completedRequests.length, sub: "Jobs done", icon: CheckCircle2 },
   ]
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Welcome banner */}
-      <div className="relative rounded-2xl overflow-hidden border border-border/40">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-background pointer-events-none" />
-        <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
-
-        <div className="relative px-6 py-5 flex items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <p className="text-xs font-semibold text-primary uppercase tracking-wider">Homeowner Portal</p>
-            </div>
-            <h1 className="text-xl font-bold">
-              Welcome back, <span className="gradient-text">{user.name.split(" ")[0]}</span>
-            </h1>
-            {user.address && (
-              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5 text-primary/60" />
-                {user.address}
-              </p>
-            )}
-          </div>
-          <Link
-            href="/dashboard/homeowner/new"
-            className="btn-shimmer inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] flex-shrink-0 shadow-lg shadow-primary/20"
-          >
-            <PlusCircle className="h-4 w-4" />
-            New Request
-          </Link>
+      {/* Page header */}
+      <div className="flex items-center justify-between gap-4 pb-2 border-b border-border">
+        <div>
+          <h1 className="text-xl font-semibold">
+            Welcome back, {user.name.split(" ")[0]}
+          </h1>
+          {user.address && (
+            <p className="text-sm text-muted-foreground mt-0.5 flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5" />
+              {user.address}
+            </p>
+          )}
         </div>
+        <Link
+          href="/dashboard/homeowner/new"
+          className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity flex-shrink-0"
+        >
+          <PlusCircle className="h-4 w-4" />
+          New Request
+        </Link>
       </div>
 
-      {/* Auto-matching alert */}
+      {/* Auto-matching notice */}
       {!loading && pendingMatch.length > 0 && (
-        <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/8 border border-amber-500/25">
-          <div className="flex-shrink-0 mt-0.5">
-            <span className="relative flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60" />
-              <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-amber-500/20 border border-amber-500/40">
-                <Zap className="h-2.5 w-2.5 text-amber-400" />
-              </span>
-            </span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-400">
-              {pendingMatch.length} request{pendingMatch.length > 1 ? "s" : ""} in auto-matching queue
+        <div className="flex items-start gap-3 p-4 rounded-md bg-secondary border border-border">
+          <Zap className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium">
+              {pendingMatch.length} request{pendingMatch.length > 1 ? "s" : ""} in the matching queue
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
               We're routing your request to verified, licensed contractors in your area. This typically takes under 24 hours.
@@ -266,25 +214,23 @@ export default function HomeownerDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {stats.map(({ label, value, sub, icon: Icon, accent, bg, border }) => (
-          <div key={label} className={`rounded-xl border ${border} ${bg} p-4 hover-glow transition-all duration-200`}>
+        {stats.map(({ label, value, sub, icon: Icon }) => (
+          <div key={label} className="stat-card">
             <div className="flex items-start justify-between mb-3">
               <p className="text-xs text-muted-foreground font-medium">{label}</p>
-              <div className={`p-1.5 rounded-lg bg-background/40`}>
-                <Icon className={`h-3.5 w-3.5 ${accent}`} />
-              </div>
+              <Icon className="h-3.5 w-3.5 text-muted-foreground/60" />
             </div>
-            <p className={`text-2xl font-bold ${accent}`}>{loading ? "—" : value}</p>
-            <p className="text-[10px] text-muted-foreground mt-1 font-medium">{sub}</p>
+            <p className="text-2xl font-semibold tracking-tight">{loading ? "—" : value}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{sub}</p>
           </div>
         ))}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Active request spotlight */}
+        {/* Active requests */}
         <div className="lg:col-span-2 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold">Active Requests</h2>
+            <h2 className="text-sm font-semibold">Active Requests</h2>
             <Link href="/dashboard/homeowner/requests" className="text-xs text-primary hover:underline flex items-center gap-1">
               View all <ArrowRight className="h-3 w-3" />
             </Link>
@@ -295,17 +241,17 @@ export default function HomeownerDashboard() {
               <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
             </div>
           ) : activeRequests.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border/50 bg-secondary/20 py-12 text-center">
-              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                <Home className="h-5 w-5 text-muted-foreground/40" />
+            <div className="rounded-md border border-dashed border-border bg-secondary/30 py-12 text-center">
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                <Home className="h-4 w-4 text-muted-foreground/40" />
               </div>
-              <p className="text-sm font-semibold mb-1">No active requests</p>
+              <p className="text-sm font-medium mb-1">No active requests</p>
               <p className="text-xs text-muted-foreground mb-4 max-w-xs mx-auto">
                 Submit a service request to get matched with a verified, licensed contractor in your area.
               </p>
               <Link
                 href="/dashboard/homeowner/new"
-                className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
+                className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity"
               >
                 <PlusCircle className="h-4 w-4" />
                 Submit Your First Request
@@ -313,10 +259,9 @@ export default function HomeownerDashboard() {
             </div>
           ) : (
             activeRequests.map((req) => (
-              <Card key={req.id} className="hover-glow transition-all duration-200 hover:translate-y-[-1px]">
+              <Card key={req.id} className="shadow-none">
                 <CardContent className="pt-5 pb-4">
-                  {/* Header */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex items-center gap-2">
                       {statusIcon(req.status)}
                       <h3 className="font-semibold text-sm">{req.service}</h3>
@@ -327,13 +272,13 @@ export default function HomeownerDashboard() {
                   <p className="text-xs text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{req.description}</p>
 
                   {/* Pipeline tracker */}
-                  <div className="mb-4 p-3 rounded-lg bg-secondary/30 border border-border/30">
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Request Progress</p>
+                  <div className="mb-4 p-3 rounded-md bg-secondary/50 border border-border">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-3">Request Progress</p>
                     {req.status !== "cancelled" && <RequestPipeline status={req.status} />}
                   </div>
 
-                  {/* Details grid */}
-                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/30">
+                  {/* Details */}
+                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
                     <div>
                       <p className="text-[10px] text-muted-foreground font-medium mb-0.5 uppercase tracking-wide">Budget</p>
                       <p className="text-sm font-semibold">{req.budget}</p>
@@ -361,24 +306,24 @@ export default function HomeownerDashboard() {
           )}
         </div>
 
-        {/* Sidebar: quick actions + recent + how it works */}
+        {/* Sidebar */}
         <div className="flex flex-col gap-4">
           {/* Quick actions */}
-          <Card>
+          <Card className="shadow-none">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2 pt-0">
               <Link
                 href="/dashboard/homeowner/new"
-                className="btn-shimmer flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-all duration-200 shadow-sm shadow-primary/20"
+                className="btn-shimmer flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
               >
                 <PlusCircle className="h-4 w-4" />
                 Submit New Request
               </Link>
               <Link
                 href="/dashboard/homeowner/requests"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors border border-border/40"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors border border-border"
               >
                 <FileText className="h-4 w-4" />
                 Track All Requests
@@ -386,8 +331,8 @@ export default function HomeownerDashboard() {
             </CardContent>
           </Card>
 
-          {/* Recent requests */}
-          <Card>
+          {/* Recent activity */}
+          <Card className="shadow-none">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm">Recent Activity</CardTitle>
             </CardHeader>
@@ -399,17 +344,14 @@ export default function HomeownerDashboard() {
               ) : recentRequests.length === 0 ? (
                 <p className="text-xs text-muted-foreground px-6 pb-4">No requests yet.</p>
               ) : (
-                <div className="divide-y divide-border/30">
+                <div className="divide-y divide-border">
                   {recentRequests.map((req) => (
-                    <div key={req.id} className="px-5 py-3 hover:bg-secondary/30 transition-colors group">
+                    <div key={req.id} className="px-5 py-3 hover:bg-secondary/30 transition-colors">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          {statusIcon(req.status)}
-                          <p className="text-sm font-medium truncate">{req.service}</p>
-                        </div>
+                        <p className="text-sm font-medium truncate">{req.service}</p>
                         <span className="text-[10px] text-muted-foreground flex-shrink-0">{timeAgo(req.createdAt)}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5 ml-6 truncate">{req.description}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5 truncate">{req.description}</p>
                     </div>
                   ))}
                 </div>
@@ -418,12 +360,10 @@ export default function HomeownerDashboard() {
           </Card>
 
           {/* Auto-matching info */}
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <div className="rounded-md border border-border p-4">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-              </div>
-              <p className="text-sm font-semibold text-primary">Smart Auto-Matching</p>
+              <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+              <p className="text-sm font-semibold">Smart Auto-Matching</p>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Each request is routed to a single verified, licensed, and insured contractor — no bidding wars, no spam.
