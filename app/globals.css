@@ -347,7 +347,14 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary), color-mix(in oklch, var(--primary) 80%, oklch(0.9 0.05 90)));
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary) 0%, oklch(0.62 0.18 135) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.dark .gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, oklch(0.82 0.16 135) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
