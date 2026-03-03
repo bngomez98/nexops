@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import Link from "next/link"
 
 const principles = [
   {
@@ -44,20 +43,18 @@ export function MissionValues() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-28 lg:py-40 border-b border-border/40">
+    <section ref={sectionRef} className="py-28 lg:py-40 border-b-2 border-foreground bg-secondary">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Top: mission narrative */}
         <div className="reveal mb-20 lg:mb-28 max-w-4xl">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="h-px w-10 bg-primary shrink-0" />
-            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">Why Nexus Exists</p>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] mb-8 text-balance">
+          <div className="construct-label mb-8">Why Nexus Exists</div>
+          <h2 className="text-4xl lg:text-6xl font-display uppercase leading-[1.0] mb-8 text-balance">
             Built around the principle that a property owner
-            <br className="hidden lg:block" />
             {" "}deserves one expert — not a crowd.
           </h2>
+          {/* Bold red accent bar */}
+          <div className="h-1 w-24 bg-primary mb-8" />
           <div className="space-y-5 text-lg text-muted-foreground leading-relaxed max-w-3xl">
             <p>
               Nexus Operations was founded on a straightforward premise: property owners and managers
@@ -69,7 +66,7 @@ export function MissionValues() {
               who has studied their project before arriving. The contractor invests their time in a project
               already matched to their capabilities — with full information, no surprises, and a defined scope.
             </p>
-            <p className="font-medium text-foreground/90">
+            <p className="font-bold text-foreground">
               Every feature of this platform flows from that principle.
               Exclusivity, verification, documentation, and the Post Implementation Review are not additions
               to the model — they are the model.
@@ -79,9 +76,9 @@ export function MissionValues() {
 
         {/* Divider with label */}
         <div className="reveal flex items-center gap-4 mb-16">
-          <div className="h-px flex-1 bg-border/40" />
-          <span className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground shrink-0">Core Principles</span>
-          <div className="h-px flex-1 bg-border/40" />
+          <div className="h-0.5 flex-1 bg-foreground/20" />
+          <span className="text-[10px] font-black tracking-[0.25em] uppercase text-muted-foreground shrink-0">Core Principles</span>
+          <div className="h-0.5 flex-1 bg-foreground/20" />
         </div>
 
         {/* Principles — editorial list */}
@@ -89,23 +86,24 @@ export function MissionValues() {
           {principles.map((p, i) => (
             <div
               key={p.label}
-              className="reveal border-t border-border/40 py-10 last:border-b flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-16"
+              className="reveal border-t-2 border-foreground/20 py-10 last:border-b-2 flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-16"
               style={{ transitionDelay: `${i * 80}ms` }}
             >
-              <div className="lg:w-80 shrink-0">
-                <h3 className="text-base font-bold text-foreground leading-snug">{p.label}</h3>
+              <div className="lg:w-80 shrink-0 flex items-start gap-3">
+                <span className="text-xs font-black font-mono text-primary mt-1 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="text-base font-black text-foreground leading-snug uppercase tracking-tight">{p.label}</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed text-[15px] max-w-2xl">{p.body}</p>
             </div>
           ))}
         </div>
 
-        {/* Pull quote */}
+        {/* Pull quote — constructivist bold style */}
         <div className="reveal mt-20 border-l-4 border-primary pl-8 max-w-3xl" style={{ transitionDelay: "360ms" }}>
-          <blockquote className="text-xl lg:text-2xl font-medium text-foreground/90 leading-relaxed mb-4">
+          <blockquote className="text-xl lg:text-2xl font-bold text-foreground leading-relaxed mb-4">
             &ldquo;Nexus is not just an app. We are a coordination partner — purpose-built to give property owners a professional, documented, and fully accountable path from problem to resolution.&rdquo;
           </blockquote>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Brianna Gomez &mdash; Chief Executive Member, Founder
           </p>
         </div>

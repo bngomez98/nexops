@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { ChevronDown } from "lucide-react"
+import { Plus, Minus } from "lucide-react"
 
 type FAQItem = {
   question: string
@@ -78,27 +78,32 @@ function AccordionItem({
   item,
   isOpen,
   onToggle,
+  index,
 }: {
   item: FAQItem
   isOpen: boolean
   onToggle: () => void
+  index: number
 }) {
   return (
-    <div className="border-b border-border/40 last:border-0">
+    <div className={`border-b-2 border-foreground/15 last:border-0 ${isOpen ? "bg-secondary" : ""} transition-colors`}>
       <button
-        className="w-full flex items-center justify-between gap-4 py-5 text-left group"
+        className="w-full flex items-center justify-between gap-4 py-5 px-0 text-left group"
         onClick={onToggle}
         aria-expanded={isOpen}
       >
-        <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-200 leading-snug">
-          {item.question}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="text-xs font-black font-mono text-primary shrink-0">{String(index + 1).padStart(2, "0")}</span>
+          <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-200 leading-snug uppercase tracking-tight">
+            {item.question}
+          </span>
+        </div>
         <div
-          className={`flex items-center justify-center w-7 h-7 rounded-lg bg-secondary/60 border border-border/40 shrink-0 transition-transform duration-300 ${
-            isOpen ? "rotate-180 bg-primary/10 border-primary/20" : ""
+          className={`flex items-center justify-center w-7 h-7 border-2 shrink-0 transition-colors duration-200 ${
+            isOpen ? "border-primary bg-primary text-primary-foreground" : "border-foreground/30 text-muted-foreground"
           }`}
         >
-          <ChevronDown className={`h-4 w-4 transition-colors duration-200 ${isOpen ? "text-primary" : "text-muted-foreground"}`} />
+          {isOpen ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
         </div>
       </button>
 
@@ -106,7 +111,7 @@ function AccordionItem({
         className="overflow-hidden transition-all duration-300"
         style={{ maxHeight: isOpen ? "300px" : "0px", opacity: isOpen ? 1 : 0 }}
       >
-        <p className="text-sm text-muted-foreground leading-relaxed pb-5 pr-10">{item.answer}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed pb-5 pl-8 pr-10">{item.answer}</p>
       </div>
     </div>
   )
@@ -155,44 +160,41 @@ export function FAQ() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="faq" className="py-24 lg:py-32 bg-card/30 relative overflow-hidden">
-      <div
-        className="absolute right-0 top-1/4 w-[400px] h-[400px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
-      />
-
+    <section ref={sectionRef} id="faq" className="py-24 lg:py-32 border-b-2 border-foreground bg-card">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-16 items-start">
           {/* Left — header */}
           <div className="reveal lg:sticky lg:top-24">
-            <p className="text-primary text-sm font-medium tracking-wide mb-3">FAQ</p>
-            <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Common questions
-              <span className="gradient-text"> answered directly.</span>
+            <div className="construct-label mb-4">FAQ</div>
+            <h2 className="text-4xl lg:text-5xl font-display uppercase leading-[1.0] mb-4">
+              Common questions answered directly.
             </h2>
+            {/* Red accent bar */}
+            <div className="h-1 w-16 bg-primary mb-6" />
             <p className="text-muted-foreground leading-relaxed mb-8">
               Clear information so homeowners, property managers, and contractors understand the process
               before submitting a project or joining the network.
             </p>
 
-            {/* Tab switcher */}
-            <div className="flex gap-2 p-1 rounded-xl bg-secondary/40 border border-border/30 w-fit">
+            {/* Tab switcher — constructivist square buttons */}
+            <div className="flex gap-0 border-2 border-foreground w-fit">
               <button
                 onClick={() => switchTab("owners")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-2.5 text-xs font-bold tracking-widest uppercase transition-colors duration-150 ${
                   activeTab === "owners"
-                    ? "bg-card text-foreground border border-border/40 shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
-                Homeowners & Property Managers
+                Homeowners
               </button>
+              <div className="w-0.5 bg-foreground" />
               <button
                 onClick={() => switchTab("contractors")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-2.5 text-xs font-bold tracking-widest uppercase transition-colors duration-150 ${
                   activeTab === "contractors"
-                    ? "bg-card text-foreground border border-border/40 shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
                 Contractors
@@ -202,13 +204,14 @@ export function FAQ() {
 
           {/* Right — accordion */}
           <div className="reveal" style={{ transitionDelay: "100ms" }}>
-            <div className="rounded-2xl border border-border/40 bg-card px-6">
+            <div className="border-2 border-foreground bg-background px-6">
               {faqs.map((item, i) => (
                 <AccordionItem
                   key={`${activeTab}-${i}`}
                   item={item}
                   isOpen={openItems.has(i)}
                   onToggle={() => toggleItem(i)}
+                  index={i}
                 />
               ))}
             </div>

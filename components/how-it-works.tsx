@@ -59,17 +59,17 @@ export function HowItWorks() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="how-it-works" className="py-28 lg:py-40 border-b border-border/40">
+    <section ref={sectionRef} id="how-it-works" className="py-28 lg:py-40 border-b-2 border-foreground">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Section header */}
         <div className="reveal flex items-start gap-8 mb-20 lg:mb-28">
-          <div className="hidden lg:block pt-1">
-            <span className="h-px w-16 bg-primary inline-block" />
+          <div className="hidden lg:block pt-2 shrink-0">
+            <div className="w-16 h-1 bg-primary" />
           </div>
           <div className="max-w-3xl">
-            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase mb-5">The Process</p>
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] mb-6 text-balance">
+            <div className="construct-label mb-5">The Process</div>
+            <h2 className="text-4xl lg:text-6xl font-display leading-[1.0] mb-6 text-balance uppercase">
               Understand exactly what happens after you submit a project.
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
@@ -84,13 +84,13 @@ export function HowItWorks() {
           {steps.map((step, i) => (
             <div
               key={step.number}
-              className={`reveal group border-t border-border/40 py-14 lg:py-18 ${i === steps.length - 1 ? "border-b" : ""}`}
+              className={`reveal group border-t-2 border-foreground/30 py-14 lg:py-16 ${i === steps.length - 1 ? "border-b-2 border-foreground/30" : ""}`}
               style={{ transitionDelay: `${i * 80}ms` }}
             >
               <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16">
-                {/* Step number */}
-                <div className="lg:w-20 shrink-0">
-                  <span className="text-5xl font-bold font-mono text-muted-foreground/20 group-hover:text-primary/30 transition-colors duration-300 leading-none">
+                {/* Step number — bold constructivist */}
+                <div className="lg:w-24 shrink-0">
+                  <span className="text-6xl font-black font-mono text-primary leading-none">
                     {step.number}
                   </span>
                 </div>
@@ -103,9 +103,9 @@ export function HowItWorks() {
                   <p className="text-muted-foreground leading-relaxed text-[15px]">{step.body}</p>
                 </div>
 
-                {/* Detail note */}
+                {/* Detail note — bold left border */}
                 <div className="lg:w-72 shrink-0">
-                  <div className="border-l-2 border-primary/40 pl-5 group-hover:border-primary/70 transition-colors duration-300">
+                  <div className="border-l-4 border-primary pl-5">
                     <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
                   </div>
                 </div>
@@ -122,7 +122,7 @@ export function HowItWorks() {
           </p>
           <Link
             href="/dashboard/homeowner/new"
-            className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shrink-0 shadow-lg shadow-primary/20"
+            className="btn-shimmer inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold tracking-widest uppercase bg-primary text-primary-foreground hover:bg-primary/90 construct-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-none transition-all duration-150 shrink-0"
           >
             Start Your Project
             <ArrowRight className="h-4 w-4" />

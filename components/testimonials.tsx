@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Quote, TrendingUp, Star } from "lucide-react"
+import { Quote, TrendingUp } from "lucide-react"
 
 const testimonials = [
   {
@@ -12,9 +12,6 @@ const testimonials = [
     service: "Roofing",
     metric: "$14,200",
     metricLabel: "First project claimed",
-    color: "text-primary",
-    bg: "bg-primary/10",
-    border: "border-primary/20",
   },
   {
     quote:
@@ -24,9 +21,6 @@ const testimonials = [
     service: "Concrete Work",
     metric: "~80%",
     metricLabel: "Close rate on claimed projects",
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-    border: "border-amber-400/20",
   },
   {
     quote:
@@ -36,21 +30,8 @@ const testimonials = [
     service: "Tree Removal",
     metric: "$299/mo",
     metricLabel: "Flat membership, unlimited projects",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-    border: "border-emerald-400/20",
   },
 ]
-
-function StarRow() {
-  return (
-    <div className="flex items-center gap-0.5 mb-4">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-      ))}
-    </div>
-  )
-}
 
 export function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -75,18 +56,12 @@ export function Testimonials() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background decoration */}
-      <div
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.03]"
-        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
-      />
-
+    <section ref={sectionRef} className="py-24 lg:py-32 border-b-2 border-foreground bg-secondary">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-2xl mb-14 reveal">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">From our contractors</p>
-          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
+          <div className="construct-label mb-4">From our contractors</div>
+          <h2 className="text-4xl lg:text-5xl font-display uppercase mb-4 leading-[1.0]">
             What contractors experience in the Nexus network
           </h2>
           <p className="text-muted-foreground leading-relaxed">
@@ -96,42 +71,46 @@ export function Testimonials() {
         </div>
 
         {/* Cards grid */}
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-px bg-foreground/15">
           {testimonials.map((t, i) => (
             <div
               key={t.name}
-              className={`reveal relative flex flex-col p-6 rounded-2xl border bg-card transition-all duration-300 cursor-default ${
-                activeCard === i
-                  ? "border-border/70 shadow-lg shadow-black/5 dark:shadow-black/20 translate-y-[-2px]"
-                  : "border-border/40"
+              className={`reveal relative flex flex-col p-7 bg-background transition-all duration-200 cursor-default ${
+                activeCard === i ? "bg-card" : "bg-background"
               }`}
               style={{ transitionDelay: `${i * 120}ms` }}
               onMouseEnter={() => setActiveCard(i)}
               onMouseLeave={() => setActiveCard(null)}
             >
-              {/* Quote icon */}
-              <div
-                className={`flex items-center justify-center w-10 h-10 rounded-xl ${t.bg} border ${t.border} mb-5 transition-transform duration-300 ${activeCard === i ? "scale-110" : ""}`}
-              >
-                <Quote className={`h-4 w-4 ${t.color}`} />
+              {/* Red top accent on hover */}
+              <div className={`absolute top-0 left-0 right-0 h-1 bg-primary transition-opacity duration-200 ${
+                activeCard === i ? "opacity-100" : "opacity-0"
+              }`} />
+
+              {/* Quote icon — bold square */}
+              <div className="flex items-center justify-center w-10 h-10 bg-primary border-2 border-foreground mb-5">
+                <Quote className="h-4 w-4 text-primary-foreground" />
               </div>
 
-              <StarRow />
+              {/* Stars */}
+              <div className="flex items-center gap-0.5 mb-4">
+                {Array.from({ length: 5 }).map((_, j) => (
+                  <div key={j} className="w-2.5 h-2.5 bg-primary" />
+                ))}
+              </div>
 
               <blockquote className="text-sm text-muted-foreground leading-relaxed flex-1 mb-6">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
 
               {/* Divider */}
-              <div className="border-t border-border/30 pt-5">
+              <div className="border-t-2 border-foreground/15 pt-5">
                 <div className="flex items-start justify-between gap-3">
                   {/* Author */}
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                    <p className="text-sm font-black text-foreground uppercase tracking-tight">{t.name}</p>
                     <p className="text-xs text-muted-foreground">{t.company}</p>
-                    <span
-                      className={`inline-block mt-1.5 px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide ${t.bg} ${t.color} border ${t.border}`}
-                    >
+                    <span className="inline-block mt-1.5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest border-2 border-primary text-primary">
                       {t.service}
                     </span>
                   </div>
@@ -139,8 +118,8 @@ export function Testimonials() {
                   {/* Metric */}
                   <div className="text-right shrink-0">
                     <div className="flex items-center justify-end gap-1 mb-0.5">
-                      <TrendingUp className={`h-3.5 w-3.5 ${t.color}`} />
-                      <span className={`text-lg font-bold tabular-nums ${t.color}`}>{t.metric}</span>
+                      <TrendingUp className="h-3.5 w-3.5 text-primary" />
+                      <span className="text-lg font-black tabular-nums text-foreground">{t.metric}</span>
                     </div>
                     <p className="text-[10px] text-muted-foreground leading-tight max-w-[100px] text-right">
                       {t.metricLabel}
@@ -154,17 +133,17 @@ export function Testimonials() {
 
         {/* Callout */}
         <div
-          className="mt-10 p-5 rounded-xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 reveal"
+          className="mt-0 p-6 border-2 border-foreground bg-foreground text-background flex flex-col sm:flex-row items-start sm:items-center gap-4 reveal"
           style={{ transitionDelay: "360ms" }}
         >
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 shrink-0">
-            <TrendingUp className="h-5 w-5 text-primary" />
+          <div className="flex items-center justify-center w-10 h-10 border-2 border-background/30 bg-primary shrink-0">
+            <TrendingUp className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground mb-0.5">
+            <p className="text-sm font-black text-background mb-0.5 uppercase tracking-tight">
               Exclusive project ownership at every tier.
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-background/70">
               The moment a contractor claims a project, it is exclusively theirs. The homeowner hears from exactly one professional, and the contractor owns the relationship from start to finish.
             </p>
           </div>
