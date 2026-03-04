@@ -4,10 +4,12 @@ import './globals.css'
 
 const geistSans = Geist({
   subsets: ['latin'],
+  variable: '--font-geist-sans',
 })
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
+  variable: '--font-geist-mono',
 })
 
 export const metadata: Metadata = {
@@ -32,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.className} ${geistMono.className}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

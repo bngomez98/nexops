@@ -1,58 +1,38 @@
 @import 'tailwindcss';
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
-  
+  /* Fonts */
+  --font-sans: var(--font-geist-sans), 'Geist Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback', ui-monospace, monospace;
+
   /* Color System - Dark Professional Theme */
   --color-background: #0f0f0f;
   --color-foreground: #ffffff;
   --color-primary: #22c55e;
-  --color-primary-dark: #16a34a;
-  --color-secondary: #1f2937;
-  --color-tertiary: #374151;
-  --color-border: #2d3748;
-  --color-accent: #22c55e;
-  --color-muted: #6b7280;
-  --color-muted-foreground: #9ca3af;
-  
+  --color-primary-hover: #16a34a;
+  --color-surface: #1a1a1a;
+  --color-surface-raised: #242424;
+  --color-border: #2a2a2a;
+  --color-border-hover: #22c55e40;
+  --color-subtle: #9ca3af;
+
   --radius: 0.5rem;
 }
 
-:root {
-  --background: #0f0f0f;
-  --foreground: #ffffff;
-  --primary: #22c55e;
-  --primary-dark: #16a34a;
-  --secondary: #1f2937;
-  --tertiary: #374151;
-  --border: #2d3748;
-  --accent: #22c55e;
-  --muted: #6b7280;
-  --muted-foreground: #9ca3af;
-}
-
-html, body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
-
-/* Semantic Design Tokens */
-.bg-background { background-color: var(--background); }
-.bg-secondary { background-color: var(--secondary); }
-.bg-tertiary { background-color: var(--tertiary); }
-.text-foreground { color: var(--foreground); }
-.text-muted { color: var(--muted-foreground); }
-.text-primary { color: var(--primary); }
-.border-base { border-color: var(--border); }
-
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  background-color: #0f0f0f;
+  color: #ffffff;
 }
 
-/* Selection styles */
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
 ::selection {
-  background-color: var(--primary);
-  color: var(--background);
+  background-color: var(--color-primary);
+  color: var(--color-background);
 }
