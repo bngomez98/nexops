@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Nexus Operations',
-  description: 'Service marketplace for homeowners and contractors in Topeka, KS',
+  description: 'Connect homeowners with licensed, insured contractors in Topeka, KS and surrounding regions.',
   icons: {
     icon: '/favicon.ico',
   },
