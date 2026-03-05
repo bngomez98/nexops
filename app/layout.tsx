@@ -6,14 +6,42 @@ import { CookieConsent } from "@/components/cookie-consent";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Nexus Operations | One Request. One Verified Contractor.",
+  title: "Nexus Operations | Maintenance, Remediation, Preventative, and Routine Services. When you need it, how you need it - managed from start to finish,
   description:
-    "Submit your project once. Get matched with one verified, licensed contractor. No competing contractors. No bidding wars. Free for property owners.",
+    " platform that connects homeowners and property managers with licensed, insured contractors for all maintenance, improvement, remediation, or emergency maintenance needs. Provides end-to-end maintenance, restoration, and remediation services; including emergency response. Fully coordinated from the moment the service is requested. Nexus manages and coordinates projects and operation requirements until the job is completed. We then provide a Post Implementation Review - this gives insights to homeowners and property managers, and evaluates our success in our work with them, allowing owners to stay in control without the burden of day-to-day operations. We remain a strategic and dependable partner, providing skilled labor and data-driven intelligence",
   icons: {
     icon: "/nexus-favicon.png",
     apple: "/nexus-favicon.png",
   },
 };
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
+
+const geistSans = Geist({
+  subsets: ['latin'],
+  variable: '--font-geist-sans',
+})
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+})
+
+export const metadata: Metadata = {
+  title: 'Nexus Operations',
+  description: 'Connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS and surrounding regions.',
+  icons: {
+    icon: '/favicon.ico',
+  },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  userScalable: true,
+  themeColor: '#1a1a1a',
+}
 
 export default function RootLayout({
   children,
@@ -58,4 +86,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </body>
     </html>
   );
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        {children}
+      </body>
+    </html>
+  )
 }
