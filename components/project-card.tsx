@@ -9,7 +9,7 @@ export function ProjectCard() {
             Roofing — Full Shingle<br />Replacement
           </p>
         </div>
-        <span className="text-xs font-semibold px-3 py-1 rounded-full border border-[var(--color-primary)] text-[var(--color-primary)] whitespace-nowrap ml-4">
+        <span className="text-xs font-semibold px-3 py-1 rounded-full border border-[var(--color-border)] text-[var(--color-foreground)] whitespace-nowrap ml-4">
           Confirmed
         </span>
       </div>
