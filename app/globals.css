@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-background: #0a0a0a;
+  --color-foreground: #fafafa;
+  --color-card: #141414;
+  --color-card-foreground: #fafafa;
+  --color-muted: #1f1f1f;
+  --color-muted-foreground: #a1a1a1;
+  --color-border: #262626;
+  --color-primary: #22c55e;
+  --color-primary-foreground: #0a0a0a;
+  --color-accent: #166534;
+  --color-accent-foreground: #fafafa;
+
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
