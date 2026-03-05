@@ -11,11 +11,12 @@ import {
   Hammer,
   Fence,
   Home,
-  ChevronRight,
   ArrowRight,
+  BadgeCheck,
   Users,
   Building2,
-  BadgeCheck,
+  Phone,
+  Mail,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -102,7 +103,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Trust indicators */}
+          {/* Stats */}
           <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="rounded-lg border border-border bg-card p-4 text-center">
               <div className="text-2xl font-bold text-foreground">$0</div>
@@ -122,11 +123,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Verification badges */}
+          {/* Trust badges */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
               <BadgeCheck className="h-4 w-4 text-primary" />
-              <span>Every contractor is licensed, insured, and verified</span>
+              <span>Licensed, insured, and verified contractors</span>
             </div>
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-primary" />
@@ -200,64 +201,55 @@ export default function HomePage() {
               {
                 icon: TreePine,
                 title: "Tree Removal",
-                description: "Hazardous and non-hazardous removal, crown reduction, stump grinding, and post-storm assessment.",
+                description: "Licensed removal, crown reduction, stump grinding, and post-storm assessment. ISA-certified arborists.",
                 range: "$500 – $8,000",
-                live: true,
               },
               {
                 icon: Thermometer,
                 title: "HVAC",
-                description: "Central air, heat pumps, ductless mini-splits, furnace replacement, and ductwork design.",
+                description: "Central air, heat pumps, ductless mini-splits, furnace replacement, and maintenance agreements.",
                 range: "$3,000 – $20,000",
-                live: true,
               },
               {
                 icon: Zap,
                 title: "Electrical",
-                description: "Panel upgrades, branch circuits, whole-home rewiring, subpanel installation, and EV charger rough-in.",
+                description: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in.",
                 range: "$500 – $10,000",
-                live: true,
               },
               {
                 icon: Home,
                 title: "Roofing",
                 description: "Full replacements, leak repairs, storm damage assessment, and insurance restoration.",
                 range: "$5,000 – $25,000",
-                live: true,
               },
               {
                 icon: Hammer,
                 title: "Concrete",
-                description: "Driveways, patios, sidewalks, foundations, and flatwork installation or replacement.",
+                description: "Driveways, patios, sidewalks, flatwork, and foundation repairs.",
                 range: "$2,000 – $15,000",
-                live: true,
               },
               {
                 icon: Fence,
                 title: "Fencing",
                 description: "Privacy, chain link, vinyl, wood, and specialty fencing for residential and commercial.",
                 range: "$1,500 – $10,000",
-                live: true,
               },
             ].map((service) => (
               <div
                 key={service.title}
-                className="group rounded-lg border border-border bg-card p-6 transition hover:border-primary/50"
+                className="rounded-lg border border-border bg-card p-6 transition hover:border-primary/50"
               >
                 <div className="flex items-start justify-between">
                   <service.icon className="h-6 w-6 text-primary" />
-                  {service.live && (
-                    <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                      LIVE
-                    </span>
-                  )}
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                    Live
+                  </span>
                 </div>
                 <h3 className="mt-4 font-semibold">{service.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{service.description}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">Typical range: {service.range}</span>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
-                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Typical range: <span className="font-medium text-foreground">{service.range}</span>
+                </p>
               </div>
             ))}
           </div>
@@ -266,9 +258,9 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground">
               Don&apos;t see your category?{" "}
               <a href="#start" className="text-primary hover:underline">
-                Tell us about it
-              </a>
-              —we prioritize expansion based on demand.
+                Submit a request
+              </a>{" "}
+              — we prioritize expansion based on demand.
             </p>
           </div>
         </div>
@@ -286,53 +278,53 @@ export default function HomePage() {
             <table className="w-full min-w-[600px] text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="py-4 pr-4 text-left font-semibold">Feature</th>
-                  <th className="py-4 px-4 text-left font-semibold text-primary">Nexus Operations</th>
-                  <th className="py-4 pl-4 text-left font-semibold text-muted-foreground">Traditional Platforms</th>
+                  <th className="py-3 text-left font-medium text-muted-foreground">Feature</th>
+                  <th className="py-3 text-left font-medium text-primary">Nexus Operations</th>
+                  <th className="py-3 text-left font-medium text-muted-foreground">Traditional Platforms</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Lead exclusivity</td>
-                  <td className="py-4 px-4 font-medium">One contractor per request, always</td>
-                  <td className="py-4 pl-4 text-muted-foreground">3–7 contractors competing</td>
+                  <td className="py-3 text-muted-foreground">Lead exclusivity</td>
+                  <td className="py-3 font-medium">One contractor per request</td>
+                  <td className="py-3 text-muted-foreground">3–7 contractors competing</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Homeowner cost</td>
-                  <td className="py-4 px-4 font-medium">Free — no hidden fees</td>
-                  <td className="py-4 pl-4 text-muted-foreground">Your data is sold</td>
+                  <td className="py-3 text-muted-foreground">Homeowner cost</td>
+                  <td className="py-3 font-medium">Free, always</td>
+                  <td className="py-3 text-muted-foreground">Free, but data is sold</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Budget transparency</td>
-                  <td className="py-4 px-4 font-medium">Set before matching</td>
-                  <td className="py-4 pl-4 text-muted-foreground">Guessed after site visit</td>
+                  <td className="py-3 text-muted-foreground">Budget transparency</td>
+                  <td className="py-3 font-medium">Set before matching</td>
+                  <td className="py-3 text-muted-foreground">Contractor guesses on-site</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Project documentation</td>
-                  <td className="py-4 px-4 font-medium">Photos + specs required</td>
-                  <td className="py-4 pl-4 text-muted-foreground">Optional, often absent</td>
+                  <td className="py-3 text-muted-foreground">Documentation</td>
+                  <td className="py-3 font-medium">Required before match</td>
+                  <td className="py-3 text-muted-foreground">Optional, often absent</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Consultation scheduling</td>
-                  <td className="py-4 px-4 font-medium">Pre-confirmed at submission</td>
-                  <td className="py-4 pl-4 text-muted-foreground">Phone tag, voicemails</td>
+                  <td className="py-3 text-muted-foreground">Consultation scheduling</td>
+                  <td className="py-3 font-medium">Pre-confirmed at submission</td>
+                  <td className="py-3 text-muted-foreground">Phone tag, missed calls</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Contractor vetting</td>
-                  <td className="py-4 px-4 font-medium">License, insurance, background verified</td>
-                  <td className="py-4 pl-4 text-muted-foreground">Self-reported</td>
+                  <td className="py-3 text-muted-foreground">Contractor vetting</td>
+                  <td className="py-3 font-medium">License, insurance, background verified</td>
+                  <td className="py-3 text-muted-foreground">Self-reported</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 text-muted-foreground">Inbound contact volume</td>
-                  <td className="py-4 px-4 font-medium">One contractor reaches out</td>
-                  <td className="py-4 pl-4 text-muted-foreground">5–15 calls in the first hour</td>
+                  <td className="py-3 text-muted-foreground">Inbound contact volume</td>
+                  <td className="py-3 font-medium">One contractor reaches out</td>
+                  <td className="py-3 text-muted-foreground">5–15 calls in the first hour</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div className="mt-12 rounded-lg border border-primary/20 bg-primary/5 p-6">
-            <h3 className="font-semibold">The Nexus Commitment</h3>
+          <div className="mt-12 rounded-lg border border-primary/20 bg-primary/5 p-6 text-center">
+            <h3 className="font-semibold text-foreground">The Nexus Commitment</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               One request. One verified contractor. Zero unsolicited calls. If no qualified contractor is currently available in your area, you are told immediately—no indefinite wait, no ambiguity.
             </p>
@@ -340,51 +332,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Core Commitments */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: Users,
-                title: "Homeowner control",
-                description: "You set the scope, budget, and consultation window before any contractor is contacted.",
-              },
-              {
-                icon: Shield,
-                title: "Contractor exclusivity",
-                description: "When a contractor claims a request, they earn it outright. No auction, no race to the bottom.",
-              },
-              {
-                icon: FileText,
-                title: "Full preparation",
-                description: "Complete documentation before any match. Consultations are productive from the first minute.",
-              },
-              {
-                icon: BadgeCheck,
-                title: "Quality tracked",
-                description: "Every contractor is verified. Every completed project updates their standing.",
-              },
-            ].map((item) => (
-              <div key={item.title}>
-                <item.icon className="h-8 w-8 text-primary" />
-                <h3 className="mt-4 font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* For Contractors */}
-      <section id="contractors" className="border-y border-border bg-card py-20">
+      <section id="contractors" className="py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-12 lg:grid-cols-2">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="text-2xl font-bold md:text-3xl">For contractors</h2>
+              <p className="text-sm font-medium text-primary">For Contractors</p>
+              <h2 className="mt-2 text-2xl font-bold md:text-3xl">
+                Exclusive leads. Flat monthly fee. No bidding wars.
+              </h2>
               <p className="mt-4 text-muted-foreground">
-                Stop paying $40–$80 per lead that gets sold to four other contractors. With Nexus, you pay a flat monthly membership. When you claim a project, it&apos;s yours exclusively.
+                Traditional platforms charge $40–$80 per lead and sell that same lead to multiple contractors. You invest time pursuing work you have a one-in-four chance of winning.
               </p>
+              <p className="mt-4 text-muted-foreground">
+                Nexus Operations works differently. Pay a flat monthly membership. When you claim a project, it is yours exclusively. The property owner is expecting your call and has already shared complete project details.
+              </p>
+
               <ul className="mt-6 space-y-3">
                 {[
                   "Flat monthly fee—no per-lead charges",
@@ -395,10 +358,11 @@ export default function HomePage() {
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-sm">
                     <CheckCircle className="h-4 w-4 shrink-0 text-primary" />
-                    <span>{item}</span>
+                    {item}
                   </li>
                 ))}
               </ul>
+
               <a
                 href="#start"
                 className="mt-8 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
@@ -407,24 +371,37 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
-            <div className="rounded-lg border border-border bg-background p-6">
+
+            <div className="rounded-lg border border-border bg-card p-8">
               <h3 className="font-semibold">Membership Requirements</h3>
-              <ul className="mt-4 space-y-4 text-sm text-muted-foreground">
+              <ul className="mt-6 space-y-4">
                 <li className="flex items-start gap-3">
                   <Shield className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <span>Valid state contractor license in your trade category</span>
+                  <div>
+                    <p className="font-medium">Valid state license</p>
+                    <p className="text-sm text-muted-foreground">In your trade category</p>
+                  </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <span>Current general liability insurance ($500K minimum)</span>
+                  <div>
+                    <p className="font-medium">General liability insurance</p>
+                    <p className="text-sm text-muted-foreground">$500K minimum coverage</p>
+                  </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <span>Clean background check</span>
+                  <div>
+                    <p className="font-medium">Background check</p>
+                    <p className="text-sm text-muted-foreground">Clean record required</p>
+                  </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <span>Commitment to 24-hour consultation confirmation</span>
+                  <div>
+                    <p className="font-medium">24-hour response commitment</p>
+                    <p className="text-sm text-muted-foreground">Consultation confirmation</p>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -433,25 +410,23 @@ export default function HomePage() {
       </section>
 
       {/* Who We Serve */}
-      <section className="py-20">
+      <section className="border-y border-border bg-card py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold md:text-3xl">Who we serve</h2>
-            <p className="mt-2 text-muted-foreground">Property owners and operators who need reliable coordination</p>
+            <p className="mt-2 text-muted-foreground">Property owners and operators who need reliable contractor coordination</p>
           </div>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: Home, title: "Homeowners", description: "One submission, one contractor, budget transparency." },
-              { icon: Building2, title: "Property Managers", description: "Complete documentation for every maintenance decision." },
-              { icon: Users, title: "Landlords", description: "Fast consultation confirmation minimizes vacancy periods." },
+              { icon: Home, title: "Homeowners", description: "One submission, one contractor, one consultation. Budget transparency prevents wasted time." },
+              { icon: Building2, title: "Property Managers", description: "Complete, timestamped documentation for every maintenance decision." },
+              { icon: Users, title: "Landlords", description: "Fast consultation confirmation supports tenant communication and minimizes vacancy." },
             ].map((item) => (
-              <div key={item.title} className="flex items-start gap-4 rounded-lg border border-border p-6">
-                <item.icon className="h-6 w-6 shrink-0 text-primary" />
-                <div>
-                  <h3 className="font-semibold">{item.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
-                </div>
+              <div key={item.title} className="rounded-lg border border-border bg-background p-6">
+                <item.icon className="h-6 w-6 text-primary" />
+                <h3 className="mt-4 font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
               </div>
             ))}
           </div>
@@ -459,10 +434,10 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section id="start" className="border-t border-border bg-card py-20">
-        <div className="mx-auto max-w-2xl px-6 text-center">
+      <section id="start" className="py-20">
+        <div className="mx-auto max-w-3xl px-6 text-center">
           <h2 className="text-2xl font-bold md:text-3xl">Ready to get started?</h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-2 text-muted-foreground">
             Submit your project or join our contractor network today.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -470,12 +445,14 @@ export default function HomePage() {
               href="mailto:admin@nexusoperations.org"
               className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
-              Contact Us
+              <Mail className="h-4 w-4" />
+              admin@nexusoperations.org
             </a>
             <a
               href="tel:9139511711"
               className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
             >
+              <Phone className="h-4 w-4" />
               (913) 951-1711
             </a>
           </div>
@@ -483,53 +460,57 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12">
+      <footer className="border-t border-border bg-card py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-8 md:grid-cols-4">
             <div>
               <Image
                 src="/nexus-logo.png"
                 alt="Nexus Operations"
-                width={120}
-                height={40}
-                className="h-8 w-auto"
+                width={140}
+                height={47}
+                className="h-9 w-auto"
               />
               <p className="mt-4 text-sm text-muted-foreground">
                 One project, one verified contractor. No shared leads. No bidding wars. Free for homeowners.
               </p>
             </div>
+
             <div>
-              <h4 className="text-sm font-semibold">Platform</h4>
+              <h4 className="font-semibold">Platform</h4>
               <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                 <li><a href="#how-it-works" className="hover:text-foreground">How It Works</a></li>
                 <li><a href="#services" className="hover:text-foreground">Service Categories</a></li>
                 <li><a href="#start" className="hover:text-foreground">Submit a Request</a></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="text-sm font-semibold">Contractors</h4>
+              <h4 className="font-semibold">Contractors</h4>
               <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                 <li><a href="#contractors" className="hover:text-foreground">Join the Network</a></li>
-                <li><a href="#contractors" className="hover:text-foreground">Membership</a></li>
-                <li><a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Help Center</a></li>
+                <li><a href="#contractors" className="hover:text-foreground">Membership Plans</a></li>
+                <li><a href="#contractors" className="hover:text-foreground">Verification Process</a></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="text-sm font-semibold">Company</h4>
+              <h4 className="font-semibold">Company</h4>
               <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                <li><a href="mailto:admin@nexusoperations.org" className="hover:text-foreground">admin@nexusoperations.org</a></li>
-                <li><a href="tel:9139511711" className="hover:text-foreground">(913) 951-1711</a></li>
+                <li><a href="mailto:admin@nexusoperations.org" className="hover:text-foreground">Contact</a></li>
+                <li><a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Help Center</a></li>
                 <li><Link href="/privacy" className="hover:text-foreground">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="hover:text-foreground">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
+
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
             <p className="text-sm text-muted-foreground">
-              © 2026 Nexus Operations, LLC. All rights reserved.
+              &copy; {new Date().getFullYear()} Nexus Operations, LLC. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground">
-              Serving Topeka, KS and surrounding areas · Verified contractors only
+              Serving Topeka, KS and surrounding areas
             </p>
           </div>
         </div>
