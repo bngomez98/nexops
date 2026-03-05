@@ -1,65 +1,125 @@
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
 
 export const metadata = {
   title: "Privacy Policy | Nexus Operations",
-  description: "Privacy policy for Nexus Operations, LLC",
-}
+  description: "Privacy Policy for Nexus Operations contractor matching platform.",
+};
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main className="py-20">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <Button variant="ghost" asChild className="mb-8">
-            <Link href="/">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Link>
-          </Button>
-
-          <h1 className="font-serif text-5xl font-light mb-8">Privacy Policy</h1>
-          <div className="prose prose-lg max-w-none">
-            <p className="text-muted-foreground">Last updated: January 2025</p>
-
-            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Information We Collect</h2>
-            <p>
-              When you use our services, we collect information necessary to fulfill your requests, including contact
-              details, project specifications, and payment information. We only collect what's needed to deliver
-              professional service.
-            </p>
-
-            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">How We Use Your Information</h2>
-            <p>
-              Your information is used exclusively to coordinate services, communicate about your projects, process
-              payments, and improve our offerings. We never sell or share your data with third parties for marketing
-              purposes.
-            </p>
-
-            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Data Security</h2>
-            <p>
-              We implement industry-standard security measures to protect your information. All payment processing is
-              handled through secure, encrypted channels.
-            </p>
-
-            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Your Rights</h2>
-            <p>
-              You have the right to access, correct, or delete your personal information at any time. Contact us at
-              admin@nexusoperations.org for any privacy-related requests.
-            </p>
-
-            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Contact</h2>
-            <p>
-              For questions about this privacy policy, contact us at admin@nexusoperations.org or call (913) 951-1711.
-            </p>
-          </div>
+    <main className="min-h-screen bg-background">
+      <header className="border-b border-border">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/">
+            <Image
+              src="/nexus-logo.png"
+              alt="Nexus Operations"
+              width={180}
+              height={60}
+              className="h-12 w-auto"
+            />
+          </Link>
         </div>
-      </main>
-      <Footer />
-    </div>
-  )
+      </header>
+
+      <div className="mx-auto max-w-3xl px-6 py-16">
+        <h1 className="text-3xl font-bold">Privacy Policy</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Last updated: March 5, 2026</p>
+
+        <div className="mt-8 space-y-8 text-sm leading-relaxed text-muted-foreground">
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">1. Information We Collect</h2>
+            <p className="mt-2">
+              We collect information you provide directly, including: name, email address, phone number, property address, project details, photographs, and budget information. For contractors, we also collect business information, license numbers, and insurance documentation.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">2. How We Use Your Information</h2>
+            <p className="mt-2">
+              We use your information to: match homeowners with appropriate contractors, facilitate consultations, process payments, communicate service updates, and improve our platform. We do not sell your personal information to third parties.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">3. Information Sharing</h2>
+            <p className="mt-2">
+              Project details submitted by homeowners are shared with a single matched contractor for the purpose of scheduling and conducting consultations. We do not share your information with multiple contractors or lead aggregators.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">4. Data Security</h2>
+            <p className="mt-2">
+              We implement industry-standard security measures to protect your information, including encryption in transit and at rest. However, no method of transmission over the Internet is 100% secure.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">5. Cookies and Tracking</h2>
+            <p className="mt-2">
+              We use cookies and similar technologies to improve user experience, analyze platform usage, and deliver relevant content. You can control cookie preferences through your browser settings.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">6. Third-Party Services</h2>
+            <p className="mt-2">
+              We use third-party services for payment processing, analytics, and customer support. These services have their own privacy policies governing their use of your information.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">7. Data Retention</h2>
+            <p className="mt-2">
+              We retain your information for as long as necessary to provide services and comply with legal obligations. You may request deletion of your account and associated data at any time.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">8. Your Rights</h2>
+            <p className="mt-2">
+              You have the right to access, correct, or delete your personal information. You may also opt out of marketing communications at any time. To exercise these rights, contact us at the address below.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">9. Children&apos;s Privacy</h2>
+            <p className="mt-2">
+              Our Platform is not intended for individuals under 18 years of age. We do not knowingly collect information from children.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">10. Changes to This Policy</h2>
+            <p className="mt-2">
+              We may update this Privacy Policy periodically. We will notify you of material changes by posting the updated policy on our website with a new effective date.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-foreground">11. Contact Us</h2>
+            <p className="mt-2">
+              For privacy-related inquiries, contact us at:{" "}
+              <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">
+                admin@nexusoperations.org
+              </a>
+            </p>
+            <p className="mt-2">
+              Nexus Operations, LLC<br />
+              405 SW Fillmore St<br />
+              Topeka, KS 66606
+            </p>
+          </section>
+        </div>
+
+        <div className="mt-12 border-t border-border pt-8">
+          <Link href="/" className="text-sm text-primary hover:underline">
+            &larr; Back to Home
+          </Link>
+        </div>
+      </div>
+    </main>
+  );
 }

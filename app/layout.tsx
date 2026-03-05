@@ -1,145 +1,97 @@
-import type React from "react"
-import type { Metadata } from "next"
-import Script from "next/script"
-import { Analytics } from "@vercel/analytics/next"
-import { CookieConsent } from "@/components/cookie-consent"
-import "./globals.css"
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { CookieConsent } from "@/components/cookie-consent";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexusoperations.org"),
-  title: {
-    default: "NexOps | Operations Partner for Property Management",
-    template: "%s | NexOps",
-  },
+  title: "Nexus Operations | Maintenance, Remediation, Preventative, and Routine Services. When you need it, how you need it - managed from start to finish,
   description:
-    "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate your vendor relationships, document your workflows, and serve as your dedicated operations partner. Consulting available now — platform launching 2026.",
-  keywords: [
-    "property management consulting",
-    "vendor coordination property management",
-    "operations partner property managers",
-    "property management software",
-    "workflow documentation property management",
-    "vendor relationship management",
-    "property portfolio operations",
-    "property management SaaS",
-    "residential property management consulting",
-    "commercial property management operations",
-  ],
-  authors: [{ name: "Nexus Operations" }],
-  creator: "Nexus Operations",
-  publisher: "Nexus Operations",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://nexusoperations.org",
-    title: "NexOps | Operations Partner for Property Management",
-    description:
-      "NexOps coordinates your vendor relationships, documents your workflows, and serves as a dedicated operations partner for property management companies. Consulting available now — platform launching 2026.",
-    siteName: "NexOps",
+    " platform that connects homeowners and property managers with licensed, insured contractors for all maintenance, improvement, remediation, or emergency maintenance needs. Provides end-to-end maintenance, restoration, and remediation services; including emergency response. Fully coordinated from the moment the service is requested. Nexus manages and coordinates projects and operation requirements until the job is completed. We then provide a Post Implementation Review - this gives insights to homeowners and property managers, and evaluates our success in our work with them, allowing owners to stay in control without the burden of day-to-day operations. We remain a strategic and dependable partner, providing skilled labor and data-driven intelligence",
+  icons: {
+    icon: "/nexus-favicon.png",
+    apple: "/nexus-favicon.png",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "NexOps | Operations Partner for Property Management",
-    description: "A consulting agency and SaaS platform for property management companies. One dedicated partner. Your vendors coordinated. Your workflows documented.",
+};
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
+
+const geistSans = Geist({
+  subsets: ['latin'],
+  variable: '--font-geist-sans',
+})
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+})
+
+export const metadata: Metadata = {
+  title: 'Nexus Operations',
+  description: 'Connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS and surrounding regions.',
+  icons: {
+    icon: '/favicon.ico',
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  userScalable: true,
+  themeColor: '#1a1a1a',
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <head>
+        {/* Google Tag Manager */}
         <script
-          type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "ProfessionalService",
-                "@id": "https://nexusoperations.org/#organization",
-                name: "NexOps",
-                description:
-                  "NexOps is a consulting agency and SaaS platform for property management companies. We coordinate vendor relationships, document workflows, and serve as a dedicated operations partner.",
-                url: "https://nexusoperations.org",
-                telephone: "+1-913-951-1711",
-                email: "admin@nexusoperations.org",
-                address: {
-                  "@type": "PostalAddress",
-                  addressLocality: "Topeka",
-                  addressRegion: "KS",
-                  addressCountry: "US",
-                },
-                areaServed: [
-                  { "@type": "City", name: "Topeka" },
-                  { "@type": "State", name: "Kansas" },
-                ],
-                serviceType: [
-                  "Property Management Consulting",
-                  "Vendor Relationship Management",
-                  "Workflow Documentation",
-                  "Operations Coordination",
-                  "Property Management SaaS",
-                ],
-                priceRange: "$$",
-                openingHoursSpecification: {
-                  "@type": "OpeningHoursSpecification",
-                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                  opens: "08:00",
-                  closes: "17:00",
-                },
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                name: "Nexus Operations",
-                url: "https://nexusoperations.org",
-                potentialAction: {
-                  "@type": "SearchAction",
-                  target: "https://nexusoperations.org/services?q={search_term_string}",
-                  "query-input": "required name=search_term_string",
-                },
-              },
-            ]),
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
           }}
         />
       </head>
-      <body className="font-sans antialiased">
+      <body className={inter.className}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-PL3NBCWD"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         {children}
+
         <CookieConsent />
-        <Analytics />
-        {/* Google Analytics + Google Ads */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-713FG73CGF"
-          strategy="afterInteractive"
+
+        {/* Zendesk Widget */}
+        <script
+          id="ze-snippet"
+          src="https://static.zdassets.com/ekr/snippet.js?key=d8a1128c-008a-443c-894e-4a0fd463bb57"
+          async
         />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-17T4WZRZG4"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-713FG73CGF');
-            gtag('config', 'AW-17873510977');
-            gtag('config', 'G-17T4WZRZG4');
-          `}
-        </Script>
+      </body>
+    </html>
+  );
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        {children}
       </body>
     </html>
   )

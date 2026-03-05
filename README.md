@@ -1,6 +1,6 @@
 
 
-Nexus Operations is a Next.js web application serving Topeka, KS and the surrounding region. Homeowners submit a documented project request — including photos, written scope, and a maximum budget — and one licensed, insured contractor claims it exclusively. The project is immediately removed from all other contractors' feeds upon claim.
+Nexus Operations is a Next.js web application serving Topeka, KS and the surrounding region. Homeowners submit documented project requests — including photos, written scope, and a maximum budget — and licensed, insured contractors can claim projects exclusively. Projects are immediately removed from all other contractors' feeds upon claim.
 
 **For homeowners:** Free to submit requests. Matched with one verified contractor, confirmed within 24 hours.
 
@@ -93,18 +93,16 @@ Session tokens are validated server-side on every protected request. Unauthentic
 
 ## Service Categories
 
-Three categories are currently active in Topeka, KS:
-
 | Category | Status | Typical Budget Range |
 |---|---|---|
-| Tree Removal | Live | $500 – $8,000 |
-| Concrete Work | Live | $1,200 – $15,000 |
-| Roofing | Live | $300 – $25,000 |
-| HVAC | Launching Q3 | $3,000 – $20,000 |
-| Fencing | Launching Q3 | $1,500 – $8,000 |
-| Electrical | Launching Q4 | $500 – $10,000 |
-| Plumbing | Launching Q4 | TBD |
-| Excavation | Planned 2026 | TBD |
+| Tree Removal | Available | $500 – $8,000 |
+| Concrete Work | Available | $1,200 – $15,000 |
+| Roofing | Available | $300 – $25,000 |
+| HVAC | Available | $3,000 – $20,000 |
+| Fencing | Available | $1,500 – $8,000 |
+| Electrical | Available | $500 – $10,000 |
+| Plumbing | Available | TBD |
+| Excavation | Available | TBD |
 
 ## Membership Tiers
 
