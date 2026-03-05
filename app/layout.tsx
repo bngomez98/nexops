@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { CookieConsent } from "@/components/cookie-consent";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Nexus Operations | One Request. One Verified Contractor.",
   description:
-    "Submit your project once. Get matched with one verified, licensed contractor. No shared leads. No bidding wars. Free for homeowners.",
+    "Submit your project once. Get matched with one verified, licensed contractor. No competing contractors. No bidding wars. Free for property owners.",
   icons: {
     icon: "/nexus-favicon.png",
     apple: "/nexus-favicon.png",
@@ -45,6 +46,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
 
         {children}
+
+        <CookieConsent />
 
         {/* Zendesk Widget */}
         <script

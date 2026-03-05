@@ -31,7 +31,7 @@ export default function HomePage() {
               alt="Nexus Operations"
               width={160}
               height={53}
-              className="h-10 w-auto"
+              style={{ height: "40px", width: "auto" }}
             />
           </Link>
           <nav className="hidden items-center gap-6 md:flex">
@@ -57,18 +57,18 @@ export default function HomePage() {
             </a>
           </nav>
           <div className="flex items-center gap-3">
-            <a
-              href="#contractors"
-              className="hidden text-sm font-medium text-foreground transition hover:text-primary md:block"
+            <Link
+              href="/auth/login"
+              className="hidden text-sm font-medium text-muted-foreground transition hover:text-foreground md:block"
             >
-              I&apos;m a contractor
-            </a>
-            <a
-              href="#start"
+              Sign In
+            </Link>
+            <Link
+              href="/auth/sign-up"
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
             >
-              Start Your Project
-            </a>
+              Get Started
+            </Link>
           </div>
         </div>
       </header>
@@ -84,22 +84,22 @@ export default function HomePage() {
               <span className="text-primary">Exclusively yours.</span>
             </h1>
             <p className="mt-6 text-pretty text-lg text-muted-foreground">
-              Submit your project once with photos, scope, and budget. A single verified contractor claims it exclusively before your phone rings. No bidding wars. No shared leads. Free for homeowners.
+              Submit your project once with photos, scope, and budget. A single verified contractor claims it exclusively before your phone rings. No bidding wars. No competing contractors. Free for property owners.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <a
-                href="#start"
+              <Link
+                href="/auth/sign-up"
                 className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
-                Start Your Project — Free
+                Start Your Project
                 <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href="#contractors"
+              </Link>
+              <Link
+                href="/auth/sign-up"
                 className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
               >
-                I&apos;m a contractor
-              </a>
+                Join as Contractor
+              </Link>
             </div>
           </div>
 
@@ -285,7 +285,7 @@ export default function HomePage() {
               </thead>
               <tbody className="divide-y divide-border">
                 <tr>
-                  <td className="py-3 text-muted-foreground">Lead exclusivity</td>
+                  <td className="py-3 text-muted-foreground">Contractor assignment</td>
                   <td className="py-3 font-medium">One contractor per request</td>
                   <td className="py-3 text-muted-foreground">3–7 contractors competing</td>
                 </tr>
@@ -339,10 +339,10 @@ export default function HomePage() {
             <div>
               <p className="text-sm font-medium text-primary">For Contractors</p>
               <h2 className="mt-2 text-2xl font-bold md:text-3xl">
-                Exclusive leads. Flat monthly fee. No bidding wars.
+                Exclusive projects. Flat monthly fee. No bidding wars.
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Traditional platforms charge $40–$80 per lead and sell that same lead to multiple contractors. You invest time pursuing work you have a one-in-four chance of winning.
+                Traditional platforms charge $40–$80 per job request and sell that same request to multiple contractors. You invest time pursuing work you have a one-in-four chance of winning.
               </p>
               <p className="mt-4 text-muted-foreground">
                 Nexus Operations works differently. Pay a flat monthly membership. When you claim a project, it is yours exclusively. The property owner is expecting your call and has already shared complete project details.
@@ -350,7 +350,7 @@ export default function HomePage() {
 
               <ul className="mt-6 space-y-3">
                 {[
-                  "Flat monthly fee—no per-lead charges",
+                  "Flat monthly fee—no per-job charges",
                   "Exclusive project assignment",
                   "Complete project details before you claim",
                   "Budget ceiling visible upfront",
@@ -363,13 +363,13 @@ export default function HomePage() {
                 ))}
               </ul>
 
-              <a
-                href="#start"
+              <Link
+                href="/auth/sign-up"
                 className="mt-8 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
                 Join the Network
                 <ArrowRight className="h-4 w-4" />
-              </a>
+              </Link>
             </div>
 
             <div className="rounded-lg border border-border bg-card p-8">
@@ -469,10 +469,10 @@ export default function HomePage() {
                 alt="Nexus Operations"
                 width={140}
                 height={47}
-                className="h-9 w-auto"
+                style={{ height: "36px", width: "auto" }}
               />
               <p className="mt-4 text-sm text-muted-foreground">
-                One project, one verified contractor. No shared leads. No bidding wars. Free for homeowners.
+                One project, one verified contractor. No competing contractors. No bidding wars. Free for property owners.
               </p>
             </div>
 
