@@ -21,6 +21,7 @@
   /* Accent */
   --color-accent: #166534;
   --color-accent-foreground: #fafafa;
+@import 'tailwindcss';
 
   /* Border */
   --color-border: #262626;
