@@ -346,39 +346,39 @@ export default function HomePage() {
       <section id="reporting" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-14">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Service reporting &amp; advisory</p>
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Data-driven reporting</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Your service record is a live document. It tells you where your money went, what is coming due, and what to do about it.
+              Every closed project generates a post-project report. Over time, that data builds a complete property service record.
             </h2>
           </div>
 
           <div className="grid gap-20 lg:grid-cols-[1fr_360px] items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                Every project that closes on Nexus adds to your property's service record. After a few projects, that record is an accurate picture of your property's maintenance history: what was done, when, by whom, and at what cost. After years, it is a verified ownership asset — useful for insurance claims, sale documentation, refinancing, and any situation where a buyer, lender, or insurer needs to understand what has been maintained and when.
+                <strong className="text-foreground">Post-project reports are generated after every completed project.</strong> Each report covers three categories: financial data (total cost, cost breakdown by labor and materials, comparison to budget ceiling), efficiency metrics (time from submission to completion, contractor response time, consultation-to-estimate interval), and recommendations (follow-up items identified during the project, suggested maintenance intervals, related services to consider).
               </p>
               <p>
-                Nexus uses service history to generate property-specific recommendations. If your HVAC has not had documented service in 18 months, Nexus flags it. If you have had three separate plumbing calls at the same address, Nexus identifies it as a recurring issue. The advisory output is derived from your actual project records and maintenance intervals.
+                <strong className="text-foreground">Reports draw on historical, current, and cross-property data.</strong> Historical data includes all prior projects at the same address and within the same trade category. Current data covers the project just completed. Cross-property data, available to property managers, benchmarks performance and spend against other properties in the same portfolio and service area.
               </p>
               <p>
-                For property managers, reporting aggregates across your entire portfolio: total maintenance spend by property, spend distribution by trade category, outstanding intervals by address, and recurring issue flags per property. Everything needed to make informed maintenance decisions for a portfolio is in one place, without reconstructing it from invoices and emails.
+                <strong className="text-foreground">The accumulated service record is a verified ownership asset.</strong> For insurance claims, sale documentation, refinancing, or due diligence, the Nexus service record provides a complete, timestamped history of what has been maintained, when, by whom, and at what cost. Property managers receive portfolio-level aggregation: spend by address, spend by trade, outstanding intervals, and recurring issue flags across all managed properties.
               </p>
             </div>
 
             {/* Report categories */}
             <div>
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-5">
-                What service reports include
+                Post-project report contents
               </p>
               <div className="border-t border-border text-[12.5px]">
                 {[
-                  ["Completed project log",     "Trade, address, date, scope, and final cost for every closed project."],
-                  ["Spend by category",          "Cost distribution across trades — current period and cumulative."],
-                  ["Deferred and open items",    "Requests submitted but not completed, with reason where recorded."],
-                  ["Maintenance interval flags", "Categories where elapsed time since last documented service exceeds standard intervals."],
-                  ["Recurring issue patterns",   "Repeated requests in the same trade or at the same address, identified over time."],
-                  ["Proactive recommendations",  "Actions recommended based on your property's actual service history."],
-                  ["Portfolio summary",          "For property managers: aggregate view across all managed addresses."],
+                  ["Financial summary",          "Total cost, labor vs. materials breakdown, variance from budget ceiling."],
+                  ["Efficiency metrics",         "Time to completion, contractor response time, scheduling turnaround."],
+                  ["Historical comparison",      "Cost and timeline compared to prior projects in the same trade category."],
+                  ["Maintenance intervals",      "Recommended next service date based on trade standards and property history."],
+                  ["Follow-up items",            "Issues identified during the project that require separate attention."],
+                  ["Recurring issue flags",      "Patterns detected across multiple projects at the same address or trade."],
+                  ["Portfolio benchmarking",     "For property managers: performance comparison across managed addresses."],
                 ].map(([item, detail]) => (
                   <div key={item} className="py-4 border-b border-border">
                     <p className="font-semibold mb-1 text-foreground">{item}</p>
