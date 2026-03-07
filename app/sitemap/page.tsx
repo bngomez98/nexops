@@ -54,7 +54,7 @@ const sections = [
   {
     label: "Support",
     links: [
-      { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", desc: "Documentation and support articles — nexusoperations.zendesk.com", external: true },
+      { href: "/faq", label: "FAQ", desc: "Frequently asked questions — process, verification, contractor network, and policies" },
       { href: "tel:+17854280244",          label: "(785) 428-0244",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
       { href: "mailto:admin@nexusoperations.org", label: "admin@nexusoperations.org", desc: "Email support for account, billing, and platform questions", external: true },
     ],

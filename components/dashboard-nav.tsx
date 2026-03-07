@@ -116,15 +116,13 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
 
       {/* Help */}
       <div className="border-t border-border px-2 py-2">
-        <a
-          href="https://nexusoperations.zendesk.com/hc/en-us"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/faq"
           className="flex items-center gap-3 rounded px-3 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
           <HelpCircle className="h-3.5 w-3.5 flex-shrink-0" />
-          Help Center
-        </a>
+          FAQ &amp; Help
+        </Link>
       </div>
 
       {/* User */}

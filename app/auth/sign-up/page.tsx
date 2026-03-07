@@ -1,27 +1,40 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, Loader2 } from "lucide-react"
 
-export default function SignUpPage() {
+type Role = "homeowner" | "property_manager" | "contractor"
+
+function SignUpForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const initialRole = (searchParams.get("role") as Role | null) ?? "homeowner"
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     fullName: "",
-    role: "homeowner" as "homeowner" | "contractor",
+    role: initialRole,
   })
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  // Sync role if the URL param changes (e.g., user navigates back/forward)
+  useEffect(() => {
+    const role = searchParams.get("role") as Role | null
+    if (role && ["homeowner", "property_manager", "contractor"].includes(role)) {
+      setFormData(prev => ({ ...prev, role }))
+    }
+  }, [searchParams])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,13 +42,13 @@ export default function SignUpPage() {
     setError(null)
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
+      setError("Passwords do not match.")
       setLoading(false)
       return
     }
 
     if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters")
+      setError("Password must be at least 8 characters.")
       setLoading(false)
       return
     }
@@ -45,7 +58,8 @@ export default function SignUpPage() {
       email: formData.email,
       password: formData.password,
       options: {
-        emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
+        emailRedirectTo:
+          process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
           `${window.location.origin}/dashboard`,
         data: {
           full_name: formData.fullName,
@@ -63,45 +77,115 @@ export default function SignUpPage() {
     router.push("/auth/sign-up-success")
   }
 
+  const roleLabels: Record<Role, string> = {
+    homeowner: "Property Owner",
+    property_manager: "Property Manager",
+    contractor: "Contractor",
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <Link href="/" className="mx-auto mb-4">
+    <div className="flex min-h-screen bg-background">
+      {/* Left panel — brand */}
+      <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] flex-col justify-between border-r border-border bg-card px-12 py-16 flex-shrink-0">
+        <Link href="/">
+          <Image
+            src="/nexus-logo.png"
+            alt="Nexus Operations"
+            width={150}
+            height={50}
+            style={{ height: "28px", width: "auto" }}
+            priority
+          />
+        </Link>
+
+        <div className="space-y-8">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-4">
+              Nexus Operations
+            </p>
+            <h2 className="text-2xl font-bold leading-snug tracking-tight">
+              Property service management for Topeka and Shawnee County.
+            </h2>
+          </div>
+
+          <div className="space-y-5 text-[13.5px] text-muted-foreground leading-[1.7]">
+            <p>
+              One verified contractor per request. No competing bids. No cold calls.
+              Documentation maintained through job completion.
+            </p>
+            <p>
+              Contractors join at no cost. Service requests receive a dedicated
+              contractor from our vetted network within the submission day.
+            </p>
+          </div>
+
+          <div className="border-t border-border pt-6 grid grid-cols-2 gap-0 divide-y divide-border [&>*]:py-4 [&>*:nth-child(odd)]:pr-6 [&>*:nth-child(even)]:pl-6 [&>*:nth-child(even)]:border-l [&>*:nth-child(even)]:border-border">
+            {[
+              { n: "8",    label: "Trade categories" },
+              { n: "1",    label: "Contractor per request" },
+              { n: "$0",   label: "Contractor cost" },
+              { n: "100%", label: "Manually reviewed" },
+            ].map(({ n, label }) => (
+              <div key={label}>
+                <p className="text-lg font-bold text-foreground">{n}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-[11px] text-muted-foreground">
+          Topeka, KS · (785) 428-0244 · admin@nexusoperations.org
+        </p>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
+        {/* Mobile logo */}
+        <div className="mb-8 lg:hidden">
+          <Link href="/">
             <Image
               src="/nexus-logo.png"
               alt="Nexus Operations"
-              width={160}
-              height={53}
-              style={{ height: "48px", width: "auto" }}
+              width={140}
+              height={47}
+              style={{ height: "32px", width: "auto" }}
+              priority
             />
           </Link>
-          <CardTitle className="text-2xl">Create your account</CardTitle>
-          <CardDescription>Join Nexus Operations today</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignUp} className="space-y-4">
+        </div>
+
+        <div className="w-full max-w-[400px]">
+          <div className="mb-8">
+            <h1 className="text-[22px] font-bold tracking-tight">Create your account</h1>
+            <p className="mt-1.5 text-[13.5px] text-muted-foreground">
+              Property service management in Topeka, Kansas.
+            </p>
+          </div>
+
+          <form onSubmit={handleSignUp} className="space-y-5">
             {error && (
-              <div className="flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-                <AlertCircle className="h-4 w-4" />
+              <div className="flex items-start gap-2.5 rounded border border-destructive/40 bg-destructive/8 p-3 text-[13px] text-destructive">
+                <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 {error}
               </div>
             )}
-            
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="fullName" className="text-[13px]">Full name</Label>
               <Input
                 id="fullName"
                 type="text"
-                placeholder="John Smith"
+                placeholder="Jane Smith"
                 value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 required
+                className="h-10 text-[13px]"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-[13px]">Email address</Label>
               <Input
                 id="email"
                 type="email"
@@ -109,11 +193,12 @@ export default function SignUpPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
+                className="h-10 text-[13px]"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-[13px]">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -121,76 +206,78 @@ export default function SignUpPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
+                className="h-10 text-[13px]"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword" className="text-[13px]">Confirm password</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder="Re-enter password"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 required
+                className="h-10 text-[13px]"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label>I am a...</Label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, role: "homeowner" })}
-                  className={`rounded-md border p-3 text-sm font-medium transition ${
-                    formData.role === "homeowner"
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  Property Owner
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, role: "contractor" })}
-                  className={`rounded-md border p-3 text-sm font-medium transition ${
-                    formData.role === "contractor"
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  Contractor
-                </button>
+            <div className="space-y-1.5">
+              <Label className="text-[13px]">Account type</Label>
+              <div className="grid grid-cols-3 gap-2">
+                {(["homeowner", "property_manager", "contractor"] as Role[]).map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, role: r })}
+                    className={`rounded border px-2 py-2.5 text-[11.5px] font-medium transition ${
+                      formData.role === r
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    {roleLabels[r]}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full h-10 text-[13px] font-semibold" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating account...
                 </>
               ) : (
-                "Create Account"
+                "Create account"
               )}
             </Button>
           </form>
 
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            By creating an account, you agree to our{" "}
+          <p className="mt-5 text-[11.5px] text-muted-foreground leading-relaxed">
+            By creating an account you agree to our{" "}
             <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
             {" "}and{" "}
-            <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+            <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
           </p>
 
-          <div className="mt-6 text-center text-sm text-muted-foreground">
+          <div className="mt-5 border-t border-border pt-5 text-[13px] text-muted-foreground text-center">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-primary hover:underline">
+            <Link href="/auth/login" className="text-primary hover:underline font-medium">
               Sign in
             </Link>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
+  )
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense>
+      <SignUpForm />
+    </Suspense>
   )
 }
