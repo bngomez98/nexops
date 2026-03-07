@@ -66,7 +66,7 @@ export default function HomePage() {
               href="/auth/sign-up"
               className="rounded-sm bg-primary px-4 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:opacity-90"
             >
-              Get Started
+              Create Account
             </Link>
           </div>
         </div>
@@ -85,8 +85,8 @@ export default function HomePage() {
           <div className="grid gap-16 lg:grid-cols-[1fr_280px] lg:items-end">
             <div>
               <h1 className="text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance">
-                Property service management.<br />
-                <span className="text-muted-foreground/40">Coordinated end to end.</span>
+                Property service<br />management for<br />
+                <span className="text-muted-foreground/40">Topeka, Kansas.</span>
               </h1>
 
               <div className="mt-8 space-y-4 max-w-2xl">
@@ -143,7 +143,7 @@ export default function HomePage() {
             <div className="space-y-7">
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">What we do</p>
               <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
-                Structured oversight of every project,<br />from intake to permanent record.
+                Full operational management of property maintenance and repair — intake through permanent record.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
@@ -195,10 +195,10 @@ export default function HomePage() {
           <div className="mb-16">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Who we serve</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Three account types. One coordinated platform.
+              The platform serves three distinct account types, each with a separate workflow.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
-              Each account type has a distinct role in the Nexus workflow. The platform is structured to reflect those differences — different dashboards, different data access, different actions available at each stage.
+              Homeowners, property managers, and contractors operate within the same platform but have access to different data, different actions, and different views at each stage of a project.
             </p>
           </div>
 
@@ -273,7 +273,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Trade categories</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Eight trades. Verified contractors across Shawnee County.
+              Eight active trade categories, served by verified contractors in Shawnee County.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
               Every submission requires photographs, a written scope, and a stated budget ceiling before it enters the contractor queue. Categories expand as additional verified contractors join the network.
@@ -308,10 +308,10 @@ export default function HomePage() {
           <div className="mb-16">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">How it works</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Six steps. No exceptions, no shortcuts.
+              A fixed six-step sequence, applied to every project.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
-              This is the complete sequence for a property owner submitting through Nexus. Each step follows in order.
+              The sequence below applies to every request submitted through Nexus, from the initial submission through final documentation. Steps occur in order and are not skipped.
             </p>
           </div>
 
@@ -373,7 +373,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Service reporting &amp; advisory</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Service history as an operational asset, not an archive.
+              Documented service history used to generate property-specific maintenance intelligence.
             </h2>
           </div>
 
@@ -424,7 +424,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">For contractors</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Qualified work. No bidding, no cold calls.
+              Access to pre-documented projects, exclusively claimed, without competitive bidding.
             </h2>
           </div>
 
@@ -485,7 +485,7 @@ export default function HomePage() {
             <div>
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Contact</p>
               <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-sm text-balance mb-10">
-                Service area and direct contact.
+                Current service area and contact information.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9] mb-10">
                 <p>
