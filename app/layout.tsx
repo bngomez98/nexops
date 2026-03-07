@@ -16,9 +16,9 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Nexus Operations | Property Service Management — Topeka, KS",
+  title: "Nexus Operations | Property Service Management in Topeka, KS",
   description:
-    "Nexus Operations manages property maintenance and repair coordination for homeowners and property managers in Topeka, Kansas. Licensed, verified contractors. Full service history and maintenance advisory.",
+    "Nexus Operations manages property maintenance, repair, and improvement coordination for homeowners and property managers in Topeka, Kansas. Verified contractors, documented service history, and maintenance advisory included.",
   icons: {
     icon: "/favicon.ico",
     apple: "/favicon.ico",

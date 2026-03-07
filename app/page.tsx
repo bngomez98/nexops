@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, ArrowRight, MapPin, ArrowUpRight } from "lucide-react"
 
-const services = [
+const services: { name: string; desc: string }[] = [
   { name: "Roofing",        desc: "Full replacements, storm damage assessment, leak repairs, and insurance restoration." },
   { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual service." },
   { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
