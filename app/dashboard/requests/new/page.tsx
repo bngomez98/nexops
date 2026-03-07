@@ -48,7 +48,7 @@ export default function NewRequestPage() {
 
   const handleSubmit = async () => {
     setLoading(true)
-    // Simulate submission
+    // TODO: replace with real API call to create the service request
     await new Promise((resolve) => setTimeout(resolve, 1500))
     router.push("/dashboard/requests")
   }
@@ -166,6 +166,7 @@ export default function NewRequestPage() {
                 </div>
               </div>
 
+              {/* TODO: wire up a real <input type="file"> for photo uploads */}
               <div className="rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center">
                 <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
                 <p className="mt-2 text-sm font-medium">Upload project photos</p>
