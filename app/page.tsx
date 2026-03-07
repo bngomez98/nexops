@@ -431,7 +431,7 @@ export default function Home() {
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: Home,      title: "Homeowners",        description: "Remodeling, home projects, restoration, prevention services, upgrades, and repairs." },
+              { icon: HomeIcon,  title: "Homeowners",        description: "Remodeling, home projects, restoration, prevention services, upgrades, and repairs." },
               { icon: Building2, title: "Property Managers", description: "Full maintenance lifecycle, turnover, repairs, and emergency maintenance." },
               { icon: Users,     title: "Landlords",         description: "Available 24/7, skilled in all major trades — your on-demand maintenance support." },
             ].map((item) => (
