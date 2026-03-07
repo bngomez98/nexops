@@ -2,17 +2,24 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { HeroTypewriter } from '@/components/hero-typewriter'
 import { ProjectCard } from '@/components/project-card'
-
-const services = [
-  { name: 'Tree Removal', icon: '🌲' },
-  { name: 'Concrete Work', icon: '🧱' },
-  { name: 'Roofing', icon: '🏠' },
-  { name: 'HVAC', icon: '❄️' },
-  { name: 'Fencing', icon: '🔩' },
-  { name: 'Electrical', icon: '⚡' },
-  { name: 'Plumbing', icon: '🔧' },
-  { name: 'Excavation', icon: '🚜' },
-]
+import {
+  TreePine,
+  Thermometer,
+  Zap,
+  Home,
+  Hammer,
+  Fence,
+  CheckCircle,
+  ArrowRight,
+  Shield,
+  FileText,
+  BadgeCheck,
+  Clock,
+  Building2,
+  Users,
+  Mail,
+  Phone,
+} from 'lucide-react'
 
 const steps = [
   {
@@ -108,7 +115,7 @@ export default function Home() {
               </h1>
 
               <p className="text-base text-[var(--color-subtle)] leading-relaxed mb-8 max-w-md text-pretty">
-                Nexus Operations connects you directly with a  licensed, insured contractor and does this while allowing you to have full control. It takes 5 minutes of your time to make a request a reality, and we handle the rest. On your terms oly.
+                Nexus Operations connects you directly with a licensed, insured contractor and does this while allowing you to have full control. It takes 5 minutes of your time to make a request a reality, and we handle the rest. On your terms only.
               </p>
 
               {/* CTAs */}
@@ -130,9 +137,9 @@ export default function Home() {
               {/* Trust row */}
               <ul className="flex flex-col gap-2.5">
                 {[
-                  { Icon: LockIcon,    text: 'Your project is never sold or shared with a list' },
-                  { Icon: ShieldIcon,  text: 'Every contractor is licensed, insured, and verified' },
-                  { Icon: BoltIcon,    text: 'Consultation confirmed within 24 hours — on your schedule' },
+                  { Icon: LockIcon,   text: 'Your project is never sold or shared with a list' },
+                  { Icon: ShieldIcon, text: 'Every contractor is licensed, insured, and verified' },
+                  { Icon: BoltIcon,   text: 'Consultation confirmed within 24 hours — on your schedule' },
                 ].map(({ Icon, text }) => (
                   <li key={text} className="flex items-center gap-2.5">
                     <Icon className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0" />
@@ -151,13 +158,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Service Categories */}
+      {/* ── How It Works ── */}
+      <section id="how-it-works" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-primary)] text-center mb-3">Process</p>
+          <h2 className="text-[2rem] font-black tracking-tight text-center mb-3">How It Works</h2>
+          <p className="text-center text-[var(--color-subtle)] mb-14 max-w-md mx-auto text-[14px] leading-relaxed">
+            Fast, direct, and transparent — from first submission to completed work
+          </p>
+          <div className="grid md:grid-cols-3 gap-5">
+            {steps.map(({ step, title, body }) => (
+              <div key={step} className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-2xl p-7">
+                <p className="text-[var(--color-primary)] text-xs font-bold tracking-widest mb-4">{step}</p>
+                <h3 className="text-[15px] font-bold mb-2.5">{title}</h3>
+                <p className="text-[var(--color-subtle)] text-[13px] leading-relaxed">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Services ── */}
       <section id="services" className="py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold md:text-3xl">Service categories</h2>
             <p className="mt-2 text-muted-foreground">
-              Every request requires project several photos, or a video, specifications, scope, and budget before submission. This allows us to provide you with specialized results, from a skilled trade specialist just for you.
+              Every request requires several photos or a video, specifications, scope, and budget before submission. This allows us to provide you with specialized results, from a skilled trade specialist just for you.
             </p>
           </div>
 
@@ -221,17 +248,17 @@ export default function Home() {
 
           <div className="mt-8 text-center">
             <p className="text-sm text-muted-foreground">
-              Don&apos;t see your category?{" "}
+              {"Don't see your category? "}
               <a href="#start" className="text-primary hover:underline">
                 Submit a request
-              </a>{" "}
-              — we prioritize expansion based on demand, tell us where we are needed, and what your trade is. We're open to all trades, and dedicated to meeting service demands across Kansas.
+              </a>
+              {" — we prioritize expansion based on demand. Tell us where we are needed and what your trade is. We're open to all trades, and dedicated to meeting service demands across Kansas."}
             </p>
           </div>
         </div>
       </section>
 
-      {/* Why Nexus */}
+      {/* ── Why Nexus ── */}
       <section id="why-nexus" className="border-y border-border bg-card py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
@@ -256,33 +283,33 @@ export default function Home() {
                 </tr>
                 <tr>
                   <td className="py-3 text-muted-foreground">Cost</td>
-                  <td className="py-3 font-medium">No fees or outrageous margins, prices are set by contractors and property owners. For more on this, see our Help Center or FAQ.</td>
-                  <td className="py-3 text-muted-foreground"></td>
+                  <td className="py-3 font-medium">No fees or outrageous margins — prices are set by contractors and property owners.</td>
+                  <td className="py-3 text-muted-foreground">Hidden fees and inflated margins</td>
                 </tr>
                 <tr>
                   <td className="py-3 text-muted-foreground">Budget transparency</td>
-                  <td className="py-3 font-medium">Set your budget limit in your submission request. While we can't guarantee that your cap will meet the contractors' minimums, they are immediately aware of your preferences. This saves everyone time</td>
+                  <td className="py-3 font-medium">Set your budget limit in your submission. Contractors see it immediately — saving everyone time.</td>
                   <td className="py-3 text-muted-foreground">Contractor guesses on-site</td>
                 </tr>
                 <tr>
                   <td className="py-3 text-muted-foreground">Documentation</td>
-                  <td className="py-3 font-medium">This is required so we can work our magic, with efficiency.</td>
+                  <td className="py-3 font-medium">Required so we can work with efficiency.</td>
                   <td className="py-3 text-muted-foreground">Optional, often absent</td>
                 </tr>
                 <tr>
                   <td className="py-3 text-muted-foreground">Consultation scheduling</td>
                   <td className="py-3 font-medium">Pre-confirmed at submission, dates pre-set by you.</td>
-                  <td className="py-3 text-muted-foreground"></td>
+                  <td className="py-3 text-muted-foreground">Scheduled after multiple calls</td>
                 </tr>
                 <tr>
-                  <td className="py-3 text-muted-foreground">Contractor Verification</td>
-                  <td className="py-3 font-medium">Licensed, insured, background verified by us. Your trust and safety are of top priority. Reliability is also non-negotiable.</td>
+                  <td className="py-3 text-muted-foreground">Contractor verification</td>
+                  <td className="py-3 font-medium">Licensed, insured, background verified. Trust and safety are top priority.</td>
                   <td className="py-3 text-muted-foreground">Self-reported, or non-existent.</td>
                 </tr>
                 <tr>
-                  <td className="py-3 text-muted-foreground">Ongoing Relationships</td>
-                  <td className="py-3 font-medium">Our flexible platform can be your one-stop-shop, or ongoing maintenance at your request. Save time and money by choosing us for all of your property needs, on demand. We can serve as your preferred specialists, or as your maintenance support staff. We provide the availability, skill, and price combined to maximize the quality of the work done.</td>
-                  <td className="py-3 text-muted-foreground">5–15 calls in the first hour</td>
+                  <td className="py-3 text-muted-foreground">Ongoing relationships</td>
+                  <td className="py-3 font-medium">Your one-stop-shop for all property needs — on demand, at your request.</td>
+                  <td className="py-3 text-muted-foreground">5–15 unsolicited calls in the first hour</td>
                 </tr>
               </tbody>
             </table>
@@ -291,121 +318,13 @@ export default function Home() {
           <div className="mt-12 rounded-lg border border-primary/20 bg-primary/5 p-6 text-center">
             <h3 className="font-semibold text-foreground">The Nexus Commitment</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              One request. One verified contractor. Zero unsolicited calls. If no qualified contractor is currently available in your area, you are told immediately—no indefinite wait, no ambiguity.
+              One request. One verified contractor. Zero unsolicited calls. If no qualified contractor is currently available in your area, you are told immediately — no indefinite wait, no ambiguity.
             </p>
-      {/* How It Works */}
-      <section id="how-it-works" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-primary)] text-center mb-3">Process</p>
-          <h2 className="text-[2rem] font-black tracking-tight text-center mb-3">How It Works</h2>
-          <p className="text-center text-[var(--color-subtle)] mb-14 max-w-md mx-auto text-[14px] leading-relaxed">
-            Fast, direct, and transparent — from first submission to completed work
-          </p>
-          <div className="grid md:grid-cols-3 gap-5">
-            {steps.map(({ step, title, body }) => (
-              <div key={step} className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-2xl p-7">
-                <p className="text-[var(--color-primary)] text-xs font-bold tracking-widest mb-4">{step}</p>
-                <h3 className="text-[15px] font-bold mb-2.5">{title}</h3>
-                <p className="text-[var(--color-subtle)] text-[13px] leading-relaxed">{body}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Services ── */}
-      <section id="services" className="py-20 px-5 sm:px-8">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-primary)] text-center mb-3">Coverage</p>
-          <h2 className="text-[2rem] font-black tracking-tight text-center mb-3">Service Categories</h2>
-          <p className="text-center text-[var(--color-subtle)] mb-14 max-w-md mx-auto text-[14px] leading-relaxed">
-            Home and commercial services across the Topeka region — with more added regularly
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {services.map(({ name }) => (
-              <div
-                key={name}
-                className="group bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-primary)] transition-colors"
-              >
-                <p className="font-semibold text-[var(--color-foreground)] text-[13px] mb-1.5">{name}</p>
-                <p className="text-[11px] text-[var(--color-primary)] font-medium uppercase tracking-wide">Available</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* For Contractors */}
-      <section id="contractors" className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div>
-              <p className="text-sm font-medium text-primary">For Contractors</p>
-              <h2 className="mt-2 text-2xl font-bold md:text-3xl">
-Want to scale, expand, or gain customers without paying for marketing, responding to calls, emails, and inquiries online? We hande all of it. You'll be notifieid when a qualified request is available to you, based  on your availability, trade, and preferences. We may be adaptable, but we don't expect you to be. You have full ownership over your business and work. We just make it easier.
-              </h2>
-              <p className="mt-4 text-muted-foreground">
-              </p>
-              <p className="mt-4 text-muted-foreground">
-                Nexus Operations works differently. Pay a flat monthly membership. When you claim a project, it is yours. Accepting a job costs you nothing, and your time is just as important to us, as it is to you.. The property owner is expecting your call and has already shared complete project details.
-              </p>
-
-              <ul className="mt-6 space-y-3">
-                {[
-                  "Charge your own prices for services provided,",
-                  "Exclusive projects, with full scope, specifications and scheduling - right away",
-                  "Track your jobs in the dashboard, have 24/7 support if problems arise",
-                  "Budget ceiling is visible upfront, transparency is critical to efficiency, and accuracy.",
-                  "Not lead generation, automated and managed.",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-primary" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/auth/sign-up"
-                className="mt-8 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-              >
-                Join the Network
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="rounded-lg border border-border bg-card p-8">
-              <h3 className="font-semibold">Membership Requirements</h3>
-              <ul className="mt-6 space-y-4">
-                <li className="flex items-start gap-3">
-                  <Shield className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <div>
-                    <p className="font-medium">Valid state license</p>
-                    <p className="text-sm text-muted-foreground">In your trade category</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <div>
-                    <p className="font-medium">General liability insurance</p>
-                    <p className="text-sm text-muted-foreground">$500K minimum coverage</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <div>
-                    <p className="font-medium">Background check</p>
-                    <p className="text-sm text-muted-foreground">Clean record required</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <div>
-                    <p className="font-medium">24-hour response commitment</p>
-                    <p className="text-sm text-muted-foreground">Consultation confirmation</p>
-                  </div>
-                </li>
-              </ul>
+      {/* ── For Contractors ── */}
       <section id="contractors" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -414,51 +333,95 @@ Want to scale, expand, or gain customers without paying for marketing, respondin
               <h2 className="text-4xl font-black mb-6 tracking-tight leading-tight">
                 Stop chasing leads.<br />Let them come to you.
               </h2>
-              <p className="text-[var(--color-subtle)] leading-relaxed mb-8 text-sm text-pretty">
-                You have full ownnership, and so do the property owners.
+              <p className="text-[var(--color-subtle)] leading-relaxed mb-6 text-sm text-pretty">
+                Want to scale, expand, or gain customers without paying for marketing or responding to endless calls and inquiries? We handle all of it. You&apos;ll be notified when a qualified request is available, based on your availability, trade, and preferences. You have full ownership over your business and work. We just make it easier.
               </p>
-              <ul className="space-y-4">
+              <p className="text-[var(--color-subtle)] leading-relaxed mb-8 text-sm text-pretty">
+                Nexus Operations works differently. Pay a flat monthly membership. When you claim a project, it is yours. Accepting a job costs you nothing, and your time is just as important to us as it is to you. The property owner is expecting your call and has already shared complete project details.
+              </p>
+              <ul className="space-y-4 mb-8">
                 {[
-                  'Join our Network, exclusively available to contractors who meet the Nexus Standard',
-                  'Timeliness, Professionalism, Reputable, Experienced, Efficient',
-                  'No cost upfront, no risk.',
-                  'Simple license and insurance verification',
-                  'Growing network across the NE Kansas region',
+                  'Charge your own prices for services provided',
+                  'Exclusive projects with full scope, specifications, and scheduling — right away',
+                  'Track your jobs in the dashboard, with 24/7 support if problems arise',
+                  'Budget ceiling is visible upfront — transparency is critical to efficiency',
+                  'Not lead generation — automated and managed',
                 ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="text-[var(--color-primary)] font-bold flex-shrink-0 mt-0.5">&#10003;</span>
-                    <span className="text-[var(--color-subtle)] text-sm leading-relaxed">{item}</span>
+                  <li key={item} className="flex items-center gap-3 text-sm">
+                    <CheckCircle className="h-4 w-4 shrink-0 text-primary" />
+                    <span className="text-[var(--color-subtle)]">{item}</span>
                   </li>
                 ))}
               </ul>
+              <Link
+                href="/auth/sign-up"
+                className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+              >
+                Join the Network
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
-            <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-2xl p-8">
-              <p className="text-xs text-[var(--color-subtle)] uppercase tracking-widest mb-6">Contractor dashboard preview</p>
-              <div className="space-y-3">
-                {[
-                  { label: 'Open projects near you', value: '14', highlight: true },
-                  { label: 'Projects claimed this month', value: '6' },
-                  { label: 'Avg. budget ceiling', value: '$6,200' },
-                  { label: 'Consultation rate', value: '94%' },
-                ].map(({ label, value, highlight }) => (
-                  <div key={label} className="flex items-center justify-between py-3 border-b border-[var(--color-border)] last:border-0">
-                    <span className="text-sm text-[var(--color-subtle)]">{label}</span>
-                    <span className={`text-sm font-bold ${highlight ? 'text-[var(--color-primary)]' : 'text-[var(--color-foreground)]'}`}>{value}</span>
-                  </div>
-                ))}
+
+            <div className="space-y-6">
+              <div className="rounded-lg border border-border bg-card p-8">
+                <h3 className="font-semibold mb-6">Membership Requirements</h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <Shield className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div>
+                      <p className="font-medium">Valid state license</p>
+                      <p className="text-sm text-muted-foreground">In your trade category</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <FileText className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div>
+                      <p className="font-medium">General liability insurance</p>
+                      <p className="text-sm text-muted-foreground">$500K minimum coverage</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div>
+                      <p className="font-medium">Background check</p>
+                      <p className="text-sm text-muted-foreground">Clean record required</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div>
+                      <p className="font-medium">24-hour response commitment</p>
+                      <p className="text-sm text-muted-foreground">Consultation confirmation</p>
+                    </div>
+                  </li>
+                </ul>
               </div>
-              <button className="w-full mt-6 py-3 bg-[var(--color-primary)] text-[var(--color-background)] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors text-sm">
-                Apply as a Contractor
-              </button>
+
+              <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-2xl p-8">
+                <p className="text-xs text-[var(--color-subtle)] uppercase tracking-widest mb-6">Contractor dashboard preview</p>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Open projects near you', value: '14', highlight: true },
+                    { label: 'Projects claimed this month', value: '6', highlight: false },
+                    { label: 'Avg. budget ceiling', value: '$6,200', highlight: false },
+                    { label: 'Consultation rate', value: '94%', highlight: false },
+                  ].map(({ label, value, highlight }) => (
+                    <div key={label} className="flex items-center justify-between py-3 border-b border-[var(--color-border)] last:border-0">
+                      <span className="text-sm text-[var(--color-subtle)]">{label}</span>
+                      <span className={`text-sm font-bold ${highlight ? 'text-[var(--color-primary)]' : 'text-[var(--color-foreground)]'}`}>{value}</span>
+                    </div>
+                  ))}
+                </div>
+                <button className="w-full mt-6 py-3 bg-[var(--color-primary)] text-black font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors text-sm">
+                  Apply as a Contractor
+                </button>
+              </div>
             </div>
-            <button className="w-full mt-6 h-10 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
-              Apply as a Contractor
-            </button>
           </div>
         </div>
       </section>
 
-      {/* Who We Serve */}
+      {/* ── Who We Serve ── */}
       <section className="border-y border-border bg-card py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center">
@@ -468,15 +431,21 @@ Want to scale, expand, or gain customers without paying for marketing, respondin
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: Home, title: "Homeowners", description: "Remodeling, Home Projects, Restoration, Preventation Services, Upgrades, Restoration, Repairs" },
-              { icon: Building2, title: "Property Managers", description: "Full Maintenance Lifecyce, Turnover, Repairs, Emergency Maintenance" },
-              { icon: Users, title: "Landlords", description: "Give your maintenance man a break, call us instead. Available 24/7, skilled in all major trades." },
+              { icon: Home,      title: "Homeowners",        description: "Remodeling, home projects, restoration, prevention services, upgrades, and repairs." },
+              { icon: Building2, title: "Property Managers", description: "Full maintenance lifecycle, turnover, repairs, and emergency maintenance." },
+              { icon: Users,     title: "Landlords",         description: "Available 24/7, skilled in all major trades — your on-demand maintenance support." },
             ].map((item) => (
               <div key={item.title} className="rounded-lg border border-border bg-background p-6">
                 <item.icon className="h-6 w-6 text-primary" />
                 <h3 className="mt-4 font-semibold">{item.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
-      {/* For Property Managers */}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── For Property Managers ── */}
       <section id="property-managers" className="py-20 px-6 lg:px-10">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-primary)] mb-3">For Property Managers</p>
@@ -486,9 +455,9 @@ Want to scale, expand, or gain customers without paying for marketing, respondin
           </p>
           <div className="grid md:grid-cols-3 gap-4 text-left">
             {[
-              { title: 'Portfolio-wide submissions',  body: 'Submit projects across all your properties from a single account.' },
-              { title: 'Verified contractors only',   body: 'Every contractor on the platform is licensed and insured — no exceptions.' },
-              { title: 'Full project records',        body: 'Photos, scopes, budgets, and timelines stored for every completed job.' },
+              { title: 'Portfolio-wide submissions', body: 'Submit projects across all your properties from a single account.' },
+              { title: 'Verified contractors only',  body: 'Every contractor on the platform is licensed and insured — no exceptions.' },
+              { title: 'Full project records',       body: 'Photos, scopes, budgets, and timelines stored for every completed job.' },
             ].map(({ title, body }) => (
               <div key={title} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6">
                 <h3 className="font-bold text-[14px] mb-2.5">{title}</h3>
@@ -499,17 +468,25 @@ Want to scale, expand, or gain customers without paying for marketing, respondin
         </div>
       </section>
 
-      {/* CTA */}
-      <section id="start" className="py-20">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-2xl font-bold md:text-3xl">Ready to get started?</h2>
-          <p className="mt-2 text-muted-foreground">
-            Submit your project or join our contractor network today.
+      {/* ── CTA / Contact ── */}
+      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
+          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
+            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
+              Start Your Project — Free
+            </button>
+            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
+              Apply as a Contractor
+            </button>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
               href="mailto:admin@nexusoperations.org"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
             >
               <Mail className="h-4 w-4" />
               admin@nexusoperations.org
@@ -521,24 +498,11 @@ Want to scale, expand, or gain customers without paying for marketing, respondin
               <Phone className="h-4 w-4" />
               (913) 951-1711
             </a>
-      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
-          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
-            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
-              Start Your Project — Free
-            </button>
-            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
-              Apply as a Contractor
-            </button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer className="border-t border-border bg-card py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-8 md:grid-cols-4">
@@ -594,8 +558,9 @@ Want to scale, expand, or gain customers without paying for marketing, respondin
           </div>
         </div>
       </footer>
+
     </main>
-  );
+  )
 }
 
 /* ── Inline icon components ── */
