@@ -109,7 +109,7 @@ export default async function ContractorDashboardPage() {
         <div className="mb-8 flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
           <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Your account is active and verified. License, insurance, and background check on file. To update your documentation, contact{" "}
+            Your account is active and verified. License and insurance documentation on file. To update your credentials, contact{" "}
             <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>.
           </p>
         </div>

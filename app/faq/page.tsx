@@ -46,7 +46,7 @@ const sections = [
     questions: [
       {
         q: "What is required to join as a contractor?",
-        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license), proof of current general liability insurance, and completion of a background check. Applications without all three items will not be approved.",
+        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license) and proof of current general liability insurance. Each application is manually reviewed by Nexus Operations staff. Applications missing required documentation will not be approved.",
       },
       {
         q: "How does the claim process work?",
@@ -79,7 +79,7 @@ const sections = [
       },
       {
         q: "How are contractors verified?",
-        a: "All contractors must submit a current contractor license, active insurance certificate, and consent to a background check before account approval. Documentation is reviewed manually by Nexus Operations staff. Accounts are not automatically approved.",
+        a: "All contractors must submit a current contractor license and active insurance certificate before account approval. Documentation is reviewed manually by Nexus Operations staff. Accounts are not automatically approved.",
       },
       {
         q: "What happens to my submitted photos and project data?",

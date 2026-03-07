@@ -9,7 +9,7 @@ export default function PrivacyPage() {
   return (
     <LegalShell title="Privacy Policy" updated="March 5, 2026">
       <Section title="1. Information We Collect">
-        We collect information you provide directly, including: full name, email address, phone number, property address, project descriptions, photographs, and stated budget ranges. For contractor accounts, we additionally collect: business name, contractor license number, insurance carrier and policy details, and background check authorization. We also collect usage data through cookies and similar technologies as described in Section 5.
+        We collect information you provide directly, including: full name, email address, phone number, property address, project descriptions, photographs, and stated budget ranges. For contractor accounts, we additionally collect: business name, contractor license number, and insurance carrier and policy details. We also collect usage data through cookies and similar technologies as described in Section 5.
       </Section>
 
       <Section title="2. How We Use Your Information">

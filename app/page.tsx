@@ -3,12 +3,12 @@ import Link from "next/link"
 import { Phone, Mail, ArrowRight, MapPin, ArrowUpRight } from "lucide-react"
 
 const services: { name: string; desc: string }[] = [
-  { name: "Roofing",        desc: "Full replacements, storm damage assessment, leak repairs, and insurance restoration." },
-  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual service." },
-  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
+  { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration coordination." },
+  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual maintenance." },
+  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger prep." },
   { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture replacement." },
   { name: "Concrete",       desc: "Driveways, patios, sidewalks, foundation repair, and structural flatwork." },
-  { name: "Tree Removal",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
+  { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
   { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
   { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 ]

@@ -13,7 +13,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="2. Platform Description">
-        Nexus Operations is a property service coordination platform that connects property owners, homeowners, and property managers with licensed, insured, and background-checked contractors in the Topeka, Kansas metropolitan area. The Platform manages exclusive project assignment — one contractor per submitted request. Nexus Operations is not a contractor, does not perform any work, and is not a party to any agreement between property owners and contractors.
+        Nexus Operations is a property service coordination platform that connects property owners, homeowners, and property managers with licensed and insured contractors in the Topeka, Kansas metropolitan area. The Platform manages exclusive project assignment — one contractor per submitted request. Nexus Operations is not a contractor, does not perform any work, and is not a party to any agreement between property owners and contractors.
       </Section>
 
       <Section title="3. User Eligibility">
@@ -25,7 +25,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="5. Contractor Responsibilities">
-        Contractors agree to: (a) maintain current, valid licenses and insurance as required by their trade and the State of Kansas; (b) pass and maintain a satisfactory background check; (c) contact the property owner only through Platform-designated channels prior to the consultation; (d) arrive at confirmed consultations as scheduled; and (e) provide a written, itemized estimate within the agreed budget ceiling unless scope discovered on-site materially differs.
+        Contractors agree to: (a) maintain current, valid licenses and insurance as required by their trade and the State of Kansas; (b) contact the property owner only through Platform-designated channels prior to the consultation; (c) arrive at confirmed consultations as scheduled; and (d) provide a written, itemized estimate within the agreed budget ceiling unless scope discovered on-site materially differs.
       </Section>
 
       <Section title="6. Exclusive Assignment Policy">
