@@ -3,40 +3,74 @@
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --radius: 0.25rem;
 
-  /* ── Backgrounds ─────────────────────── */
-  --color-background:    #080808;
-  --color-foreground:    #f2f2f0;
+  /* ── Dark theme (default) ────────────── */
+  --color-background:           #060606;
+  --color-foreground:           #fafaf9;
 
-  /* ── Surface / card ─────────────────── */
-  --color-card:          #0f0f0d;
-  --color-card-foreground: #f2f2f0;
+  --color-card:                 #0c0c0b;
+  --color-card-foreground:      #fafaf9;
 
-  /* ── Muted ────────────────────────────── */
-  --color-muted:          #161614;
-  --color-muted-foreground: #6b6b65;
+  --color-muted:                #141413;
+  --color-muted-foreground:     #71716a;
 
-  /* ── Brand green (darker, more refined) ─ */
-  --color-primary:          #16a34a;
-  --color-primary-foreground: #f0fdf4;
+  --color-primary:              #16a34a;
+  --color-primary-foreground:   #f0fdf4;
 
-  /* ── Accent ──────────────────────────── */
-  --color-accent:          #0f1f14;
-  --color-accent-foreground: #16a34a;
+  --color-secondary:            #1a1a18;
+  --color-secondary-foreground: #fafaf9;
 
-  /* ── Destructive ─────────────────────── */
-  --color-destructive:         #dc2626;
+  --color-accent:               #0d1f12;
+  --color-accent-foreground:    #22c55e;
+
+  --color-destructive:          #dc2626;
   --color-destructive-foreground: #fff;
 
-  /* ── Input / ring ───────────────────── */
-  --color-input:  #1a1a18;
-  --color-ring:   #16a34a;
+  --color-input:                #1c1c1a;
+  --color-ring:                 #16a34a;
+  --color-border:               #1e1e1b;
 
-  /* ── Border ─────────────────────────── */
-  --color-border: #1e1e1b;
+  /* Chart colors for dark */
+  --color-chart-1: #16a34a;
+  --color-chart-2: #22c55e;
+  --color-chart-3: #4ade80;
+  --color-chart-4: #86efac;
+  --color-chart-5: #bbf7d0;
+}
 
-  /* ── Radius ─────────────────────────── */
-  --radius: 0.25rem;
+/* ── Light theme ─────────────────────── */
+:root.light {
+  --color-background:           #fafaf9;
+  --color-foreground:           #0c0c0b;
+
+  --color-card:                 #ffffff;
+  --color-card-foreground:      #0c0c0b;
+
+  --color-muted:                #f3f3f2;
+  --color-muted-foreground:     #64645e;
+
+  --color-primary:              #15803d;
+  --color-primary-foreground:   #f0fdf4;
+
+  --color-secondary:            #f0f0ee;
+  --color-secondary-foreground: #0c0c0b;
+
+  --color-accent:               #dcfce7;
+  --color-accent-foreground:    #15803d;
+
+  --color-destructive:          #dc2626;
+  --color-destructive-foreground: #fff;
+
+  --color-input:                #e7e7e5;
+  --color-ring:                 #15803d;
+  --color-border:               #e4e4e2;
+
+  --color-chart-1: #15803d;
+  --color-chart-2: #16a34a;
+  --color-chart-3: #22c55e;
+  --color-chart-4: #4ade80;
+  --color-chart-5: #86efac;
 }
 
 *, *::before, *::after {
@@ -56,14 +90,50 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Refined scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--color-background); }
-::-webkit-scrollbar-thumb { background: #2a2a27; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #3a3a36; }
+/* Scrollbar - dark */
+:root.dark::-webkit-scrollbar { width: 6px; height: 6px; }
+:root.dark::-webkit-scrollbar-track { background: var(--color-background); }
+:root.dark::-webkit-scrollbar-thumb { background: #2a2a27; border-radius: 3px; }
+:root.dark::-webkit-scrollbar-thumb:hover { background: #3a3a36; }
+
+/* Scrollbar - light */
+:root.light::-webkit-scrollbar { width: 6px; height: 6px; }
+:root.light::-webkit-scrollbar-track { background: var(--color-background); }
+:root.light::-webkit-scrollbar-thumb { background: #d4d4d1; border-radius: 3px; }
+:root.light::-webkit-scrollbar-thumb:hover { background: #b8b8b4; }
 
 /* Selection */
 ::selection {
-  background: rgba(22, 163, 74, 0.25);
+  background: rgba(22, 163, 74, 0.2);
   color: var(--color-foreground);
+}
+
+/* Subtle gradient overlays */
+.gradient-mesh {
+  background-image: 
+    radial-gradient(at 40% 20%, rgba(22, 163, 74, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(22, 163, 74, 0.04) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(22, 163, 74, 0.06) 0px, transparent 50%);
+}
+
+:root.light .gradient-mesh {
+  background-image: 
+    radial-gradient(at 40% 20%, rgba(22, 163, 74, 0.06) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(22, 163, 74, 0.03) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(22, 163, 74, 0.04) 0px, transparent 50%);
+}
+
+/* Noise texture overlay */
+.noise-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+:root.light .noise-overlay::before {
+  opacity: 0.025;
 }

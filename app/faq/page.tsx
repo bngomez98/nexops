@@ -13,7 +13,7 @@ const sections = [
     questions: [
       {
         q: "What does it cost to submit a service request?",
-        a: "Nothing. Submitting a request is free for all property owners and property managers. There are no hidden fees, no lead charges, and no subscription costs.",
+        a: "Homeowners pay $25 per service request. Property managers pay $20 per request. This fee is charged when the request is submitted. There are no subscriptions, no hidden fees, and no additional charges regardless of the outcome.",
       },
       {
         q: "What information is required to submit a request?",
@@ -57,8 +57,8 @@ const sections = [
         a: "Before claiming, you can see: the service category, a brief project description, the property address, the budget ceiling, the number of photos attached, and the property owner's availability windows. Full photo access and direct contact information are provided after you claim.",
       },
       {
-        q: "Is there a fee to claim requests?",
-        a: "Individual claims are not charged per-claim. Contractors pay a monthly membership fee that provides access to all open requests in their service area and categories. See your membership agreement for current pricing.",
+        q: "Is there a fee to join or claim requests?",
+        a: "No. The Nexus contractor network is completely free. There are no signup fees, no monthly subscriptions, no per-claim charges, and no referral fees. You receive notifications, claim requests that fit your schedule, and work directly with property owners at no cost.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",

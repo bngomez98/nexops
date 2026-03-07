@@ -113,8 +113,8 @@ export default function SignUpPage() {
             {[
               { n: "8",    label: "Trade categories" },
               { n: "1",    label: "Contractor/request" },
-              { n: "$0",   label: "Owner cost" },
-              { n: "100%", label: "Manual reviews" },
+              { n: "$25",  label: "Per request" },
+              { n: "$0",   label: "For contractors" },
             ].map(({ n, label }) => (
               <div key={label} className="bg-card px-4 py-3">
                 <p className="text-[20px] font-bold">{n}</p>
@@ -143,7 +143,7 @@ export default function SignUpPage() {
           <div className="mb-8">
             <h1 className="text-[22px] font-bold tracking-tight">Create your account</h1>
             <p className="mt-1.5 text-[13.5px] text-muted-foreground">
-              Free for property owners and managers.
+              $25/request for homeowners. $20/request for managers. Free for contractors.
             </p>
           </div>
 

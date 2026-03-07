@@ -16,7 +16,10 @@ import {
   Hammer,
   User,
   ListChecks,
+  Sun,
+  Moon,
 } from "lucide-react"
+import { useTheme } from "@/components/theme-provider"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 const ownerNavItems = [
@@ -45,6 +48,8 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
     router.refresh()
   }
 
+  const { resolvedTheme, setTheme } = useTheme()
+  
   const role = user.user_metadata?.role || "homeowner"
   const isContractor = role === "contractor"
   const navItems = isContractor ? contractorNavItems : ownerNavItems
@@ -108,8 +113,8 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
         })}
       </div>
 
-      {/* Help */}
-      <div className="border-t border-border px-2 py-2">
+      {/* Help & Theme */}
+      <div className="border-t border-border px-2 py-2 space-y-0.5">
         <a
           href="https://nexusoperations.zendesk.com/hc/en-us"
           target="_blank"
@@ -119,6 +124,17 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
           <HelpCircle className="h-3.5 w-3.5 flex-shrink-0" />
           Help Center
         </a>
+        <button
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          className="flex w-full items-center gap-3 rounded-sm px-3 py-2 text-[12.5px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        >
+          {resolvedTheme === "dark" ? (
+            <Sun className="h-3.5 w-3.5 flex-shrink-0" />
+          ) : (
+            <Moon className="h-3.5 w-3.5 flex-shrink-0" />
+          )}
+          {resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}
+        </button>
       </div>
 
       {/* User */}
