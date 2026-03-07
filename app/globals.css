@@ -1,38 +1,31 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
+  /* Core palette */
   --color-background: #0a0a0a;
   --color-foreground: #fafafa;
+
+  /* Card / surface layers */
   --color-card: #141414;
   --color-card-foreground: #fafafa;
   --color-muted: #1f1f1f;
   --color-muted-foreground: #a1a1a1;
-  --color-border: #262626;
+
+  /* Brand */
   --color-primary: #22c55e;
   --color-primary-foreground: #0a0a0a;
+
+  /* Accent */
   --color-accent: #166534;
   --color-accent-foreground: #fafafa;
-@import 'tailwindcss';
 
-@theme inline {
-  /* Fonts */
-  --font-sans: var(--font-geist-sans), 'Geist Fallback', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback', ui-monospace, monospace;
+  /* Border */
+  --color-border: #262626;
 
-  /* Color System - Dark Professional Theme */
-  --color-background: #0f0f0f;
-  --color-foreground: #ffffff;
-  --color-primary: #22c55e;
-  --color-primary-hover: #16a34a;
-  --color-surface: #1a1a1a;
-  --color-surface-raised: #242424;
-  --color-border: #2a2a2a;
-  --color-border-hover: #22c55e40;
-  --color-subtle: #9ca3af;
-
+  /* Radius */
   --radius: 0.5rem;
 }
 
@@ -41,7 +34,7 @@
 }
 
 body {
-  background: var(--color-background);
+  background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
 }
