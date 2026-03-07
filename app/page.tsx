@@ -37,6 +37,7 @@ export default function HomePage() {
           <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
             {[
               { href: "#about",        label: "About" },
+              { href: "#mission",      label: "Mission" },
               { href: "#who-we-serve", label: "Who We Serve" },
               { href: "#services",     label: "Services" },
               { href: "#process",      label: "Process" },
@@ -91,10 +92,10 @@ export default function HomePage() {
 
               <div className="mt-8 space-y-4 max-w-2xl">
                 <p className="text-[15px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations manages property maintenance, repair, and improvement work for homeowners, landlords, and property managers in the Topeka metro. We handle the full operational arc — contractor coordination, project documentation, service history, and advisory reporting — from submission through permanent record.
+                  Nexus Operations is a property service management company based in Topeka, Kansas. We receive service requests from homeowners and property managers, assign a single verified contractor per project, and document every stage — from the initial submission through the final cost record.
                 </p>
                 <p className="text-[15px] text-muted-foreground leading-[1.85]">
-                  One contractor per project, assigned exclusively. Every stage documented. The record never leaves the platform.
+                  Every contractor in the network is licensed, insured, and approved by Nexus staff before receiving any project. Service history is stored permanently and used to generate property-specific maintenance reports and recommendations.
                 </p>
               </div>
 
@@ -141,22 +142,19 @@ export default function HomePage() {
           <div className="grid gap-20 lg:grid-cols-[1fr_380px] lg:items-start">
 
             <div className="space-y-7">
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">What we do</p>
+              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">About Nexus Operations</p>
               <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
-                Full operational management of property maintenance and repair — intake through permanent record.
+                We exist to bring accountability and documentation to property maintenance — a space where both have historically been absent.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  Nexus Operations manages the full operational lifecycle of a property service request — not just the referral. From submission, Nexus reviews the project documentation, coordinates the contractor assignment, confirms the consultation, and maintains the project record through completion. No stage is handed off or left to chance.
+                  Our mission is to give property owners a reliable, documented record of every maintenance and repair decision made on their property — and to give licensed contractors a direct pipeline to pre-qualified projects without the overhead of marketing or competitive bidding.
                 </p>
                 <p>
-                  Across projects and properties, the accumulated data builds an accurate picture of a property's maintenance posture: what has been completed, what recurs, what has been deferred, and how spend distributes across trade categories. Property managers with multiple addresses see that picture at the portfolio level — by address, by category, and in aggregate.
+                  Most property maintenance is transactional and undocumented. Work is sourced informally, estimates are verbal, and once a project closes, the details disappear. Nexus is built around the premise that documented service history has real value — for owners managing costs, for managers overseeing portfolios, and for properties at the point of sale or refinance.
                 </p>
                 <p>
-                  Nexus uses service history to surface actionable advisory guidance — upcoming intervals, deferred categories that carry compounding cost risk, recurring issue patterns by trade or address. The output is specific to the properties in the system, not imported from generic maintenance schedules.
-                </p>
-                <p>
-                  Every contractor in the network is approved manually: a current trade license and active general liability insurance are verified before any contractor receives a project notification. Requirements are maintained on an ongoing basis, not checked once at signup.
+                  We operate in Topeka, Kansas. Every contractor in the network holds a current trade license and active general liability insurance, verified by Nexus staff before activation. Every project generates a permanent, retrievable record.
                 </p>
               </div>
             </div>
@@ -189,16 +187,56 @@ export default function HomePage() {
 
       <div className="border-t border-border" />
 
+      {/* ── Mission & Values ── */}
+      <section id="mission" className="py-28 bg-muted/30">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="mb-14">
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Mission &amp; Values</p>
+            <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
+              Property maintenance should be documented, accountable, and managed — not improvised.
+            </h2>
+          </div>
+
+          <div className="grid gap-x-16 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
+            {[
+              {
+                label: "Verified contractors only",
+                body: "Every contractor in the Nexus network holds a current trade license and active general liability insurance. Credentials are verified by staff at application and maintained as an ongoing requirement — not a one-time checkbox.",
+              },
+              {
+                label: "One contractor per project",
+                body: "When a contractor claims a request, that project belongs to them exclusively. There is no competitive bidding, no re-assignment, and no situation where a property owner is managing multiple contractor relationships for a single project.",
+              },
+              {
+                label: "Permanent documentation",
+                body: "Every project generates a record that does not expire. Scope, photographs, cost, contractor, and outcome are stored in the platform and accessible to the property owner at any time — including years later.",
+              },
+              {
+                label: "Data-driven recommendations",
+                body: "Advisory guidance is derived from each property's own service history, not from generic maintenance schedules. Nexus flags what is overdue, what is recurring, and what is likely to cost more if deferred — based on actual project data.",
+              },
+            ].map(({ label, body }) => (
+              <div key={label} className="border-l-2 border-primary/30 pl-5">
+                <p className="text-[13px] font-semibold text-foreground mb-3">{label}</p>
+                <p className="text-[13px] text-muted-foreground leading-[1.8]">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
       {/* ── Who We Serve ── */}
       <section id="who-we-serve" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-16">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Who we serve</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              The platform serves three distinct account types, each with a separate workflow.
+              Nexus serves homeowners, property managers, and licensed contractors.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
-              Homeowners, property managers, and contractors operate within the same platform but have access to different data, different actions, and different views at each stage of a project.
+              Each account type has a distinct role and a separate set of tools. Property owners submit and track requests. Property managers do the same across multiple addresses with portfolio-level reporting. Contractors receive project notifications, claim work, and update records.
             </p>
           </div>
 
@@ -273,10 +311,10 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Trade categories</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Eight active trade categories, served by verified contractors in Shawnee County.
+              Eight trade categories currently active in the Nexus network.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
-              Every submission requires photographs, a written scope, and a stated budget ceiling before it enters the contractor queue. Categories expand as additional verified contractors join the network.
+              Requests require photographs, a written scope, and a maximum budget before entering the contractor queue. The network expands as additional licensed contractors are approved.
             </p>
           </div>
 
@@ -308,10 +346,10 @@ export default function HomePage() {
           <div className="mb-16">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">How it works</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              A fixed six-step sequence, applied to every project.
+              How a request moves through Nexus.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
-              The sequence below applies to every request submitted through Nexus, from the initial submission through final documentation. Steps occur in order and are not skipped.
+              Every project follows the same sequence. No steps are skipped. Each one is documented in the project record as it completes.
             </p>
           </div>
 
@@ -373,20 +411,20 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Service reporting &amp; advisory</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Documented service history used to generate property-specific maintenance intelligence.
+              Every project builds a record. That record becomes the basis for maintenance reporting.
             </h2>
           </div>
 
           <div className="grid gap-20 lg:grid-cols-[1fr_360px] items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                Every project that moves through Nexus generates a record: trade category, property address, date, scope, cost, and outcome. Across dozens of projects, that data describes something operationally meaningful — how a property is actually being maintained, where spend is concentrating, what is recurring, and what has been deferred past a reasonable interval.
+                Each closed project contributes a data point: trade category, address, date, scope, and cost. Over time, that data gives property owners an accurate, retrievable record of what has been done, how much it cost, and when. For property managers, the same data aggregates across addresses — by category, by property, and in total.
               </p>
               <p>
-                Property owners receive periodic service reports summarizing recent activity, breaking down spend by trade category, and flagging open or unresolved items. Property managers receive that same view at the portfolio level — by address, by category, and in aggregate — so maintenance obligations across a portfolio can be assessed in one place.
+                Nexus uses accumulated service history to generate maintenance recommendations that are specific to each property — not pulled from generic manufacturer schedules. A property with no documented HVAC service in 18 months generates a recommendation. Repeated requests in the same trade at the same address are flagged as a recurring issue. Categories where deferred maintenance is known to increase cost are identified before that point is reached.
               </p>
               <p>
-                Beyond summarizing what has happened, Nexus uses service history to provide proactive advisory guidance. A property with no documented HVAC service in 18 months appears in the record and generates a recommendation. Repeated repair requests in the same trade at the same address surface as a pattern. A category that historically escalates when deferred past a certain interval is flagged before cost compounds. The guidance is derived from Nexus's own operational data — not manufacturer documentation or generic maintenance calendars.
+                For property owners, this changes maintenance from reactive to planned. For property managers, it replaces scattered records and informal tracking with a single, searchable source.
               </p>
             </div>
 
@@ -424,23 +462,20 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">For contractors</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Access to pre-documented projects, exclusively claimed, without competitive bidding.
+              Licensed contractors receive project notifications, claim work exclusively, and arrive with full documentation.
             </h2>
           </div>
 
           <div className="grid gap-20 lg:grid-cols-2 items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                Contractors apply through the platform and are approved manually. Approval requires a current, active license for the trade being applied under and proof of general liability insurance. Applications that do not meet both requirements are not approved.
+                Contractors apply through the Nexus platform. Approval requires a current trade license and active general liability insurance — both verified by Nexus staff before the account is activated. There is no fee to join or participate.
               </p>
               <p>
-                Approved contractors receive notifications when new requests are submitted in their trade and service area. Each notification includes project type, general location, and the property owner's budget ceiling — enough to evaluate fit before committing. There is no obligation to claim any particular project.
+                When a request is submitted in their trade and service area, approved contractors receive a notification with project type, general location, and the owner's maximum budget. The first contractor to claim has exclusive access — the project is removed from all other feeds immediately. There is no obligation to claim any particular project.
               </p>
               <p>
-                When a contractor claims a request, it belongs exclusively to them. No other contractor sees it after that point. The full project documentation — photographs, scope description, and budget — is available immediately. The contractor arrives at the consultation having reviewed everything in advance, prepared to assess and quote.
-              </p>
-              <p>
-                Consultations are expected to be conducted as confirmed. License and insurance requirements are verified at application and periodically thereafter — not tracked once and forgotten.
+                Upon claiming, the contractor receives the complete project file: photographs, scope description, and budget ceiling. They arrive at the on-site consultation having already reviewed the work, prepared to provide a written estimate. License and insurance status are verified at application and maintained as an ongoing requirement.
               </p>
               <div className="pt-4">
                 <Link
@@ -565,6 +600,7 @@ export default function HomePage() {
               <ul className="space-y-2.5">
                 {[
                   { href: "#about",        label: "About Nexus" },
+                  { href: "#mission",      label: "Mission &amp; Values" },
                   { href: "#who-we-serve", label: "Who We Serve" },
                   { href: "#services",     label: "Services" },
                   { href: "#process",      label: "Process" },
