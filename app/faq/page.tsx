@@ -12,8 +12,8 @@ const sections = [
     category: "Property Owners",
     questions: [
       {
-        q: "What does it cost to submit a service request?",
-        a: "Nothing. Submitting a request is free for all property owners and property managers. There are no hidden fees, no lead charges, and no subscription costs.",
+        q: "How do I submit a service request?",
+        a: "Log in to your account, select the trade category, upload project photos, describe the scope of work, set a maximum budget, and provide your availability for a contractor consultation. Requests that meet all documentation requirements are routed to the contractor network.",
       },
       {
         q: "What information is required to submit a request?",
@@ -46,7 +46,7 @@ const sections = [
     questions: [
       {
         q: "What is required to join as a contractor?",
-        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license), proof of current general liability insurance, and completion of a background check. Applications without all three items will not be approved.",
+        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license) and proof of current general liability insurance. All applications are reviewed manually by Nexus Operations staff. Applications missing required documentation will not be approved.",
       },
       {
         q: "How does the claim process work?",
@@ -57,8 +57,8 @@ const sections = [
         a: "Before claiming, you can see: the service category, a brief project description, the property address, the budget ceiling, the number of photos attached, and the property owner's availability windows. Full photo access and direct contact information are provided after you claim.",
       },
       {
-        q: "Is there a fee to claim requests?",
-        a: "Individual claims are not charged per-claim. Contractors pay a monthly membership fee that provides access to all open requests in their service area and categories. See your membership agreement for current pricing.",
+        q: "Is there a fee to join or claim requests?",
+        a: "The Nexus contractor network is free to join and free to use. There are no signup fees, monthly subscriptions, per-claim charges, or referral percentages. Contractors receive project notifications, claim work, and are paid directly by the property owner.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",
@@ -79,7 +79,7 @@ const sections = [
       },
       {
         q: "How are contractors verified?",
-        a: "All contractors must submit a current contractor license, active insurance certificate, and consent to a background check before account approval. Documentation is reviewed manually by Nexus Operations staff. Accounts are not automatically approved.",
+        a: "All contractors must submit a current contractor license and active insurance certificate before account approval. Documentation is reviewed manually by Nexus Operations staff. Credentials must remain current for continued network access.",
       },
       {
         q: "What happens to my submitted photos and project data?",
@@ -87,7 +87,7 @@ const sections = [
       },
       {
         q: "How do I contact Nexus Operations for support?",
-        a: "Phone: (785) 428-0244, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org. Help Center: nexusoperations.zendesk.com/hc/en-us.",
+        a: "Phone: (785) 428-0244, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org.",
       },
     ],
   },
