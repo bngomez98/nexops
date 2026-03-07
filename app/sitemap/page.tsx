@@ -105,27 +105,35 @@ export default function SitemapPage() {
                 {section.label}
               </h2>
               <div className="rounded-lg border border-border bg-card overflow-hidden divide-y divide-border">
-                {section.links.map(({ href, label, desc, external }) => {
-                  const Wrapper = external ? "a" : Link
-                  const extraProps = external
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {}
-                  return (
-                    // @ts-expect-error — polymorphic href works for both Link and <a>
-                    <Wrapper
+                {section.links.map(({ href, label, desc, external }) => (
+                  external ? (
+                    <a
                       key={href}
                       href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-between px-5 py-4 transition hover:bg-muted/50 group"
-                      {...extraProps}
                     >
                       <div>
                         <p className="text-[13px] font-medium text-foreground">{label}</p>
                         <p className="text-[12px] text-muted-foreground mt-0.5">{desc}</p>
                       </div>
                       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition flex-shrink-0" />
-                    </Wrapper>
+                    </a>
+                  ) : (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="flex items-center justify-between px-5 py-4 transition hover:bg-muted/50 group"
+                    >
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground">{label}</p>
+                        <p className="text-[12px] text-muted-foreground mt-0.5">{desc}</p>
+                      </div>
+                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition flex-shrink-0" />
+                    </Link>
                   )
-                })}
+                ))}
               </div>
             </div>
           ))}
