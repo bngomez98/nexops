@@ -16,10 +16,7 @@ import {
   Hammer,
   User,
   ListChecks,
-  Sun,
-  Moon,
 } from "lucide-react"
-import { useTheme } from "@/components/theme-provider"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 const ownerNavItems = [
@@ -48,8 +45,6 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
     router.refresh()
   }
 
-  const { resolvedTheme, setTheme } = useTheme()
-  
   const role = user.user_metadata?.role || "homeowner"
   const isContractor = role === "contractor"
   const navItems = isContractor ? contractorNavItems : ownerNavItems
@@ -57,20 +52,26 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
   const roleLabel = role === "property_manager" ? "Property Manager" : isContractor ? "Contractor" : "Property Owner"
 
   return (
-    <nav className="flex w-[220px] flex-col border-r border-border bg-card flex-shrink-0" aria-label="Dashboard navigation">
+    <nav className="flex w-60 flex-col border-r border-border bg-card flex-shrink-0" aria-label="Dashboard navigation">
       {/* Logo */}
-      <div className="flex items-center border-b border-border px-5 h-[52px]">
+      <div className="flex items-center border-b border-border px-4 h-14">
         <Link href="/">
-          <Image src="/nexus-logo.png" alt="Nexus Operations" width={120} height={40}
-            style={{ height: "26px", width: "auto" }} />
+          <Image
+            src="/nexus-logo.png"
+            alt="Nexus Operations"
+            width={130}
+            height={43}
+            style={{ height: "32px", width: "auto" }}
+          />
         </Link>
       </div>
 
       {/* CTA */}
       {!isContractor && (
         <div className="px-3 py-3 border-b border-border">
-          <Link href="/dashboard/requests/new"
-            className="flex w-full items-center justify-center gap-2 rounded-sm bg-primary px-3 py-2 text-[11.5px] font-semibold text-primary-foreground transition hover:opacity-90"
+          <Link
+            href="/dashboard/requests/new"
+            className="flex w-full items-center justify-center gap-2 rounded bg-primary px-3 py-2 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             <Plus className="h-3.5 w-3.5" />
             New Request
@@ -79,13 +80,13 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
       )}
 
       {/* Role badge */}
-      <div className="px-5 py-2.5 border-b border-border">
+      <div className="px-4 py-3 border-b border-border">
         <div className="flex items-center gap-2">
           {isContractor
-            ? <Hammer className="h-2.5 w-2.5 text-primary flex-shrink-0" />
-            : <LayoutDashboard className="h-2.5 w-2.5 text-primary flex-shrink-0" />
+            ? <Hammer className="h-3 w-3 text-primary flex-shrink-0" />
+            : <LayoutDashboard className="h-3 w-3 text-primary flex-shrink-0" />
           }
-          <span className="text-[10.5px] font-medium text-muted-foreground tracking-wide uppercase">{roleLabel}</span>
+          <span className="text-[11px] font-medium text-muted-foreground">{roleLabel}</span>
         </div>
       </div>
 
@@ -100,7 +101,7 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-sm px-3 py-2 text-[12.5px] font-medium transition",
+                "flex items-center gap-3 rounded px-3 py-2 text-[13px] font-medium transition",
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -113,44 +114,33 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
         })}
       </div>
 
-      {/* Help & Theme */}
-      <div className="border-t border-border px-2 py-2 space-y-0.5">
+      {/* Help */}
+      <div className="border-t border-border px-2 py-2">
         <a
           href="https://nexusoperations.zendesk.com/hc/en-us"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-sm px-3 py-2 text-[12.5px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          className="flex items-center gap-3 rounded px-3 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
           <HelpCircle className="h-3.5 w-3.5 flex-shrink-0" />
           Help Center
         </a>
-        <button
-          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          className="flex w-full items-center gap-3 rounded-sm px-3 py-2 text-[12.5px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
-        >
-          {resolvedTheme === "dark" ? (
-            <Sun className="h-3.5 w-3.5 flex-shrink-0" />
-          ) : (
-            <Moon className="h-3.5 w-3.5 flex-shrink-0" />
-          )}
-          {resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}
-        </button>
       </div>
 
       {/* User */}
       <div className="border-t border-border p-3">
         <div className="mb-2 flex items-center gap-2.5 px-2 py-1">
-          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary">
+          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
             {fullName.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-[11.5px] font-medium">{fullName}</p>
-            <p className="truncate text-[10.5px] text-muted-foreground">{user.email}</p>
+            <p className="truncate text-[12px] font-medium">{fullName}</p>
+            <p className="truncate text-[11px] text-muted-foreground">{user.email}</p>
           </div>
         </div>
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-sm px-3 py-2 text-[12.5px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          className="flex w-full items-center gap-3 rounded px-3 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
           <LogOut className="h-3.5 w-3.5 flex-shrink-0" />
           Sign Out
