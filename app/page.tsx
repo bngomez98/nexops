@@ -6,7 +6,7 @@ import {
   TreePine,
   Thermometer,
   Zap,
-  Home,
+  Home as HomeIcon,
   Hammer,
   Fence,
   CheckCircle,
@@ -209,7 +209,7 @@ export default function Home() {
                 range: "$500 – $10,000",
               },
               {
-                icon: Home,
+                icon: HomeIcon,
                 title: "Roofing",
                 description: "Full replacements, leak repairs, storm damage assessment, and insurance restoration.",
                 range: "$5,000 – $25,000",
