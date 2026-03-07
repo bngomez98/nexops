@@ -41,39 +41,20 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* Prevent flash of wrong theme */}
+        {/* Prevent flash of wrong theme — must be synchronous */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('nexus-theme');
-                  if (theme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
-                  } else if (theme === 'system') {
-                    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    document.documentElement.classList.remove('dark', 'light');
-                    document.documentElement.classList.add(isDark ? 'dark' : 'light');
-                  }
-                } catch (e) {}
-              })();
-            `,
+            __html: `(function(){try{var t=localStorage.getItem('nexus-theme');var root=document.documentElement;root.classList.remove('dark','light');if(t==='light'){root.classList.add('light');}else if(t==='system'){root.classList.add(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');}else{root.classList.add('dark');}}catch(e){}})();`,
           }}
         />
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
           }}
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-PL3NBCWD"
@@ -89,7 +70,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <CookieConsent />
 
-        {/* Zendesk Widget */}
         <script
           id="ze-snippet"
           src="https://static.zdassets.com/ekr/snippet.js?key=d8a1128c-008a-443c-894e-4a0fd463bb57"

@@ -112,9 +112,9 @@ export default function SignUpPage() {
           <div className="border-t border-border pt-6 grid grid-cols-2 gap-px bg-border">
             {[
               { n: "8",    label: "Trade categories" },
-              { n: "1",    label: "Contractor/request" },
-              { n: "$25",  label: "Per request" },
-              { n: "$0",   label: "For contractors" },
+              { n: "1",    label: "Contractor per request" },
+              { n: "$0",   label: "Contractor cost" },
+              { n: "100%", label: "Manually reviewed" },
             ].map(({ n, label }) => (
               <div key={label} className="bg-card px-4 py-3">
                 <p className="text-[20px] font-bold">{n}</p>
@@ -143,7 +143,7 @@ export default function SignUpPage() {
           <div className="mb-8">
             <h1 className="text-[22px] font-bold tracking-tight">Create your account</h1>
             <p className="mt-1.5 text-[13.5px] text-muted-foreground">
-              $25/request for homeowners. $20/request for managers. Free for contractors.
+              Property service management in Topeka, Kansas.
             </p>
           </div>
 
