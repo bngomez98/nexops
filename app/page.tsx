@@ -144,7 +144,7 @@ export default function HomePage() {
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  Nexus Operations is a managed service platform — not a directory, not a referral network. When you submit a request, Nexus handles every step: reviewing documentation, selecting and assigning a verified contractor from the network, confirming the consultation, and storing the complete record. You are not managing a contractor relationship. Nexus is.
+                  Nexus Operations is a managed service platform. When you submit a request, Nexus handles every step: reviewing documentation, selecting and assigning a verified contractor from the network, confirming the consultation, and storing the complete record. The contractor relationship is managed by Nexus on your behalf.
                 </p>
                 <p>
                   The result is a clean, documented history of everything that has been done to a property, stored permanently on the platform. That history is useful immediately — for tracking active work and costs — and continues to generate value over time, as Nexus uses it to identify what needs attention and when.
@@ -196,20 +196,20 @@ export default function HomePage() {
           <div className="grid gap-x-16 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
             {[
               {
-                label: "Managed, not referred",
-                body: "Nexus does not send you a list of contractors and step back. We select the contractor, confirm the appointment, and maintain the record. Responsibility for the managed portion of the project stays with Nexus.",
+                label: "Fully managed service",
+                body: "Nexus selects the contractor, confirms the appointment, and maintains the project record. Responsibility for the managed portion of the project stays with Nexus throughout.",
               },
               {
                 label: "Exclusive assignment",
-                body: "One contractor per project, claimed first-come and held exclusively. No bidding wars, no parallel outreach, no situation where a property owner is fielding multiple contractors for the same job.",
+                body: "One contractor per project, claimed first-come and held exclusively. The property owner works with a single contractor for each request, from consultation through completion.",
               },
               {
                 label: "Permanent service record",
-                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property, not to the contractor or a third-party app.",
+                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property and remains accessible to the owner.",
               },
               {
                 label: "Property-specific intelligence",
-                body: "Over time, your service history tells Nexus what your property needs and when. Advisory recommendations are generated from your actual records, not from manufacturer PDFs or generic seasonal checklists.",
+                body: "Over time, your service history tells Nexus what your property needs and when. Advisory recommendations are generated from your actual project records and maintenance intervals.",
               },
             ].map(({ label, body }) => (
               <div key={label} className="border-l-2 border-primary/30 pl-5">
@@ -243,10 +243,7 @@ export default function HomePage() {
               </div>
               <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
                 <p>
-                  Your account is a service management dashboard for your property. Submit requests with photos and scope, track active projects in real time, review and approve contractor estimates, and access the complete history of everything Nexus has managed for you.
-                </p>
-                <p>
-                  You are never sourcing, vetting, or scheduling contractors. You are reviewing documented work and approving costs. Nexus handles the rest.
+                  Your account is a service management dashboard for your property. Submit requests with photos and scope, track active projects in real time, review and approve contractor estimates, and access the complete history of everything Nexus has managed for you. Contractor selection, scheduling, and verification are handled by Nexus.
                 </p>
               </div>
               <div className="lg:text-right">
@@ -288,7 +285,7 @@ export default function HomePage() {
               </div>
               <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
                 <p>
-                  Your account is a project feed. When a request is submitted in your trade and service area, you receive a notification. You decide whether to claim it. If you do, it is yours — no competition, no auction, no renegotiation. You arrive at the job site with the full project file already in hand. There is no fee to be part of the network.
+                  Your account is a project feed. When a request is submitted in your trade and service area, you receive a notification. You decide whether to claim it. If you do, it is yours exclusively. You arrive at the job site with the full project file already in hand. There is no fee to join or participate in the network.
                 </p>
               </div>
               <div className="lg:text-right">
@@ -358,7 +355,7 @@ export default function HomePage() {
                 Every project that closes on Nexus adds to your property's service record. After a few projects, that record is an accurate picture of your property's maintenance history: what was done, when, by whom, and at what cost. After years, it is a verified ownership asset — useful for insurance claims, sale documentation, refinancing, and any situation where a buyer, lender, or insurer needs to understand what has been maintained and when.
               </p>
               <p>
-                Nexus uses service history to generate property-specific recommendations. If your HVAC hasn't had documented service in 18 months, Nexus flags it. If you've had three separate plumbing calls at the same address, Nexus identifies it as a recurring issue. The advisory output is derived from your actual records — not from a generic seasonal checklist.
+                Nexus uses service history to generate property-specific recommendations. If your HVAC has not had documented service in 18 months, Nexus flags it. If you have had three separate plumbing calls at the same address, Nexus identifies it as a recurring issue. The advisory output is derived from your actual project records and maintenance intervals.
               </p>
               <p>
                 For property managers, reporting aggregates across your entire portfolio: total maintenance spend by property, spend distribution by trade category, outstanding intervals by address, and recurring issue flags per property. Everything needed to make informed maintenance decisions for a portfolio is in one place, without reconstructing it from invoices and emails.
@@ -409,7 +406,7 @@ export default function HomePage() {
                 The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
               </p>
               <p>
-                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you ever see it. You arrive at consultations informed. There is no back-and-forth gathering basic project details from a homeowner who isn't sure what they need.
+                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
               </p>
               <p>
                 Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
