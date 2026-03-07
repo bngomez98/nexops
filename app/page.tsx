@@ -140,17 +140,20 @@ export default function HomePage() {
             <div className="space-y-7">
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">About Nexus Operations</p>
               <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
-                A property service management platform built for owners and managers who want to know what is happening with their properties.
+                Nexus Operations is a property service management company headquartered in Topeka, Kansas.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  Nexus Operations is a managed service platform. When you submit a request, Nexus handles every step: reviewing documentation, selecting and assigning a verified contractor from the network, confirming the consultation, and storing the complete record. The contractor relationship is managed by Nexus on your behalf.
+                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, project tracking, and permanent record storage.
                 </p>
                 <p>
-                  The result is a clean, documented history of everything that has been done to a property, stored permanently on the platform. That history is useful immediately — for tracking active work and costs — and continues to generate value over time, as Nexus uses it to identify what needs attention and when.
+                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
                 </p>
                 <p>
-                  We founded Nexus in Topeka, Kansas because the local property market has real demand for this kind of managed service and a strong base of qualified tradespeople to build the network from. Service area expansion is planned as the contractor network grows.
+                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
+                </p>
+                <p>
+                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
                 </p>
               </div>
             </div>
