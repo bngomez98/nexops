@@ -192,7 +192,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Mission &amp; Values</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Property owners deserve the same level of documentation and accountability from a contractor that they expect from any other professional service.
+              Documentation and accountability are standard requirements for professional services. Nexus applies them to property maintenance.
             </h2>
           </div>
 
