@@ -38,12 +38,13 @@ export default function HomePage() {
 
           <nav className="hidden items-center md:flex" aria-label="Main">
             {[
-              { href: "#about",        label: "About" },
-              { href: "#who-we-serve", label: "Who We Serve" },
-              { href: "#services",     label: "Services" },
-              { href: "#process",      label: "Process" },
-              { href: "#contractors",  label: "Contractors" },
-              { href: "#contact",      label: "Contact" },
+              { href: "#about",       label: "About" },
+              { href: "#who-we-serve",label: "Who We Serve" },
+              { href: "#services",    label: "Services" },
+              { href: "#process",     label: "Process" },
+              { href: "#reporting",   label: "Reporting" },
+              { href: "#contractors", label: "Contractors" },
+              { href: "#contact",     label: "Contact" },
             ].map(({ href, label }) => (
               <a
                 key={href}
@@ -83,16 +84,16 @@ export default function HomePage() {
 
           <div className="mt-8 max-w-2xl">
             <p className="text-xl text-muted-foreground leading-relaxed font-normal">
-              A property service coordination company based in Topeka, Kansas.
+              A property service management company based in Topeka, Kansas.
             </p>
           </div>
 
           <div className="mt-10 max-w-3xl space-y-5">
             <p className="text-[15px] text-muted-foreground leading-[1.8]">
-              Nexus Operations works directly with homeowners, landlords, and property managers in the Topeka metro area to coordinate property maintenance, repair, and improvement projects. We maintain a network of licensed, insured, and background-checked contractors across the primary residential trades. When a property owner has work that needs to be done, Nexus handles the process of identifying the right contractor, confirming the engagement, and managing the project record — from initial request through on-site consultation and job completion.
+              Nexus Operations manages property maintenance, repair, and improvement work for homeowners, landlords, and property managers in the Topeka metro area. We coordinate contractor engagement, document project activity, track service history across property categories, and use that data to report on the condition and maintenance performance of the properties we serve — and to advise owners on what to do next.
             </p>
             <p className="text-[15px] text-muted-foreground leading-[1.8]">
-              The company is not a marketplace. Property owners do not browse contractor profiles or solicit competing bids. Nexus assigns one qualified contractor to each request. That contractor reviews the project documentation — photos, scope, and the owner&apos;s stated budget — before any contact occurs. If no qualified contractor is available in your area for the requested trade, you are told that directly. There is no indefinite hold.
+              We maintain a vetted network of licensed, insured, and background-checked contractors across the primary residential trades. Each project is handled from submission through completion: one contractor is assigned exclusively per request, documentation is collected at every stage, and Nexus remains involved through the life of the project — not just at intake. When the work is done, the record stays in the platform permanently.
             </p>
           </div>
 
@@ -122,17 +123,20 @@ export default function HomePage() {
             <div className="space-y-6">
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">What we do</p>
               <h2 className="text-3xl font-bold leading-snug">
-                Coordinating property work, end to end.
+                Property service management, start to finish.
               </h2>
               <div className="space-y-4 text-[15px] text-muted-foreground leading-[1.8]">
                 <p>
-                  When a property needs work — routine maintenance, an aging HVAC system, a failing roof, damaged concrete, a downed tree — the process of finding a qualified contractor and getting a legitimate estimate is often as difficult as the project itself. Phone calls go unreturned. Contractors who show up are unprepared. Multiple people are calling you about the same job.
+                  Nexus Operations handles the full operational lifecycle of a property service request — not just the introduction between owner and contractor. From the moment a request is submitted, Nexus is involved: reviewing the project documentation, coordinating the contractor assignment, confirming the consultation, and maintaining the project record through completion.
                 </p>
                 <p>
-                  Nexus Operations exists to remove that friction. Property owners and property managers submit a request through the platform with photographs, a written description of the work, and a budget ceiling. Nexus reviews the submission, enters it into the contractor queue for the applicable trade and service area, and notifies verified contractors. When a contractor claims the request, they receive the full project documentation immediately. Nexus confirms the consultation appointment with both parties. The contractor arrives prepared.
+                  Beyond individual projects, Nexus collects and organizes service data across trades, property addresses, timelines, and costs. Over time, that data produces a clear picture of a property's maintenance history: what work has been done, what categories of work recur, what has been deferred, and how spend is distributed across project types. Property managers with multiple addresses can see that picture at a portfolio level.
                 </p>
                 <p>
-                  Every contractor in the Nexus network has passed a manual approval process: a current contractor license, active general liability insurance, and a passed background check are required before any contractor receives access to submitted requests. These requirements are maintained — not just checked once at signup.
+                  That record isn't passive. Nexus uses it to surface maintenance recommendations and advisory guidance based on patterns in the data — upcoming service intervals, categories of deferred work that carry compounding risk, and contractor performance indicators. The goal is for property owners to stay ahead of their maintenance obligations with information rather than intuition.
+                </p>
+                <p>
+                  Every contractor in the network has passed a manual approval process: a current trade license, active general liability insurance, and a background check are required before any contractor receives a project notification. Requirements are maintained and reverified — not checked once at signup.
                 </p>
               </div>
             </div>
@@ -140,16 +144,17 @@ export default function HomePage() {
             {/* Sidebar facts */}
             <div className="space-y-0 border border-border rounded-sm overflow-hidden text-[13px]">
               {[
-                ["Founded",                "2025"],
-                ["Headquarters",           "Topeka, KS 66606"],
-                ["Service area",           "Shawnee County + surrounding"],
-                ["Phone",                  "(785) 428-0244"],
-                ["Email",                  "admin@nexusoperations.org"],
-                ["Cost to property owner", "No charge"],
-                ["Contractors per request","One, assigned exclusively"],
-                ["Contractor verification","License · Insurance · Background check"],
+                ["Founded",                  "2025"],
+                ["Headquarters",             "Topeka, KS 66606"],
+                ["Service area",             "Shawnee County + surrounding"],
+                ["Phone",                    "(785) 428-0244"],
+                ["Email",                    "admin@nexusoperations.org"],
+                ["Cost to property owner",   "No charge"],
+                ["Contractors per request",  "One, assigned exclusively"],
+                ["Contractor verification",  "License · Insurance · Background check"],
+                ["Post-project reporting",   "Included — service history, spend, maintenance advisory"],
               ].map(([label, value], i) => (
-                <div key={label} className={`flex justify-between gap-6 px-5 py-3.5 ${i < 7 ? "border-b border-border" : ""}`}>
+                <div key={label} className={`flex justify-between gap-6 px-5 py-3.5 ${i < 8 ? "border-b border-border" : ""}`}>
                   <span className="text-muted-foreground shrink-0">{label}</span>
                   <span className="text-right font-medium">{value}</span>
                 </div>
@@ -199,7 +204,7 @@ export default function HomePage() {
                 <p className="mt-1.5 text-sm font-semibold">Multi-property managers</p>
               </div>
               <p className="text-[14px] text-muted-foreground leading-[1.8] max-w-xl">
-                Property management accounts are designed for landlords and professional property managers who are responsible for maintenance across multiple addresses. A single account tracks requests, documentation, and job history per property address. Scope notes, photos, estimates, and completion records are stored and retrievable by address. The same verified contractor network and the same single-assignment process applies — there is no separate tier for property managers, only additional organizational tools within the platform.
+                Property management accounts are designed for landlords and professional managers responsible for maintenance across multiple addresses. A single account tracks requests, documentation, and job history by property address. Scope notes, photos, estimates, costs, and completion records are stored and retrievable at any time. In addition to coordinating service requests, property manager accounts receive aggregated reporting across their entire portfolio — maintenance spend by category, service history by address, open items, and Nexus advisory recommendations based on patterns in the data.
               </p>
               <div className="lg:text-right">
                 <Link href="/auth/sign-up?role=property_manager" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-primary hover:underline">
@@ -303,6 +308,11 @@ export default function HomePage() {
                 title: "On-site consultation and written estimate",
                 body: "The contractor arrives at the property at the confirmed time, having already reviewed the project documentation. They assess the work in person and provide a written, itemized estimate. The property owner reviews the estimate and decides whether to proceed. There is no obligation to accept. If the property owner declines, the project record is closed and no further action occurs.",
               },
+              {
+                n: "6",
+                title: "Job completion and documentation",
+                body: "When work proceeds, the contractor updates the project record in the platform with completion status, final scope, and cost. Nexus maintains the complete record: the original request, photographs, scope description, budget ceiling, the written estimate, and the final outcome. This record is permanent and retrievable at any time through the property owner's or property manager's portal.",
+              },
             ].map(({ n, title, body }) => (
               <div key={n} className="grid gap-6 py-10 lg:grid-cols-[80px_1fr]">
                 <p className="text-4xl font-bold text-border leading-none select-none">{n}</p>
@@ -312,6 +322,57 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Divider ── */}
+      <div className="border-t border-border" />
+
+      {/* ── Reporting & Advisory ── */}
+      <section id="reporting" className="py-24">
+        <div className="mx-auto max-w-6xl px-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-6">Service reporting and advisory</p>
+          <h2 className="text-3xl font-bold leading-snug mb-4 max-w-2xl">
+            What Nexus does with the data it collects.
+          </h2>
+
+          <div className="grid gap-16 lg:grid-cols-[1fr_380px] items-start mt-10">
+            <div className="space-y-5 text-[15px] text-muted-foreground leading-[1.8]">
+              <p>
+                Every project that moves through the Nexus platform generates a record. That record includes the trade category, the property address, the date, the scope of work, the cost, and the outcome. Across dozens of projects and multiple properties, that accumulated data describes something meaningful: how a property is actually being maintained, where money is going, what categories of work recur, and what is being deferred.
+              </p>
+              <p>
+                Nexus organizes this data and makes it readable. Property owners receive periodic service reports that summarize recent activity, break down spend by trade category, and flag any open or unresolved project items. Property managers with multiple addresses receive that same view at the portfolio level — by address, by category, and in aggregate — so that maintenance obligations across a portfolio can be evaluated in one place rather than reconstructed from scattered records.
+              </p>
+              <p>
+                Beyond reporting on what has happened, Nexus uses service history to provide proactive advisory guidance. If a property has not had a documented HVAC service in 18 months, that appears in the record and generates a recommendation. If the same category of repair is appearing across multiple units at an address, the pattern surfaces in the report. If a project category historically escalates in cost when deferred beyond a certain interval, that is noted. The intent is to give property owners and managers the information needed to make decisions about their properties before those decisions are forced by failure.
+              </p>
+              <p>
+                This advisory function is built on the data Nexus has collected through its own operations — not on generic maintenance schedules or manufacturer recommendations imported from outside. The guidance is specific to what has and has not been done at each property in the network.
+              </p>
+            </div>
+
+            {/* Report categories */}
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-5">What service reports include</p>
+              <div className="space-y-0 divide-y divide-border border-t border-b border-border text-[13px]">
+                {[
+                  ["Completed project log",         "Trade, address, date, scope, and final cost for every closed project."],
+                  ["Spend breakdown by category",   "Cost distribution across trades over the reporting period — and year over year where history exists."],
+                  ["Deferred and open items",       "Requests that were submitted but not completed, and the reason where recorded."],
+                  ["Maintenance interval flags",    "Categories where time elapsed since last documented service exceeds standard intervals."],
+                  ["Recurring issue patterns",      "Repeated service requests in the same trade or at the same address, noted as patterns."],
+                  ["Proactive recommendations",     "Suggested actions based on service history — specific to that property, not generic."],
+                  ["Portfolio summary",             "For property managers: an aggregate view across all managed addresses."],
+                ].map(([item, detail]) => (
+                  <div key={item} className="py-4">
+                    <p className="font-medium mb-1">{item}</p>
+                    <p className="text-muted-foreground leading-relaxed">{detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -467,6 +528,7 @@ export default function HomePage() {
                   { href: "#who-we-serve", label: "Who We Serve" },
                   { href: "#services",     label: "Services" },
                   { href: "#process",      label: "Process" },
+                  { href: "#reporting",    label: "Reporting & Advisory" },
                   { href: "/faq",          label: "FAQ" },
                 ].map(({ href, label }) => (
                   <li key={href}>
