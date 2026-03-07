@@ -131,7 +131,7 @@ export default async function DashboardPage() {
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="min-w-0">
-                      <p className="text-[13px] font-medium truncate">{req.category?.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</p>
+                      <p className="text-[13px] font-medium truncate">{req.category?.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}</p>
                       <div className="flex items-center gap-3 mt-0.5">
                         <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                           <MapPin className="h-3 w-3" />{req.city || "—"}

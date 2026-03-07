@@ -5,14 +5,14 @@ import Link from "next/link"
 import { Phone, Mail, MapPin, ArrowRight, ArrowUpRight } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-const services: { name: string; desc: string }[] = [
-  { name: "Roofing",        desc: "Replacement, storm damage evaluation, leak repair, and insurance restoration coordination." },
-  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual service intervals." },
-  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
-  { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture work." },
+const services: Array<{ name: string; desc: string }> = [
+  { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration coordination." },
+  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual maintenance." },
+  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger prep." },
+  { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture replacement." },
   { name: "Concrete",       desc: "Driveways, patios, sidewalks, foundation repair, and structural flatwork." },
   { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
-  { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter installation." },
+  { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
   { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 ]
 

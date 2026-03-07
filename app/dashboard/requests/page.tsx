@@ -45,7 +45,7 @@ export default async function RequestsPage() {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-3 mb-1">
           <p className="text-[13px] font-semibold">
-            {req.category?.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
+            {req.category?.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
           </p>
           <span className={`rounded border px-2 py-0.5 text-[11px] font-medium ${STATUS_COLOR[req.status] ?? "bg-muted text-muted-foreground border-border"}`}>
             {STATUS_LABEL[req.status] ?? req.status}
