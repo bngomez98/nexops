@@ -4,38 +4,66 @@
   --font-sans: "Inter", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* Core palette */
+  /* Backgrounds */
   --color-background: #0a0a0a;
-  --color-foreground: #fafafa;
+  --color-foreground: #ededed;
 
-  /* Card / surface layers */
-  --color-card: #141414;
-  --color-card-foreground: #fafafa;
-  --color-muted: #1f1f1f;
-  --color-muted-foreground: #a1a1a1;
+  /* Card / surface */
+  --color-card: #111111;
+  --color-card-foreground: #ededed;
 
-  /* Brand */
+  /* Muted */
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #888888;
+
+  /* Brand green */
   --color-primary: #22c55e;
-  --color-primary-foreground: #0a0a0a;
+  --color-primary-foreground: #020b04;
 
   /* Accent */
-  --color-accent: #166534;
-  --color-accent-foreground: #fafafa;
-@import 'tailwindcss';
+  --color-accent: #1a2e1e;
+  --color-accent-foreground: #22c55e;
+
+  /* Destructive */
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fff;
+
+  /* Input / ring */
+  --color-input: #1f1f1f;
+  --color-ring: #22c55e;
 
   /* Border */
-  --color-border: #262626;
+  --color-border: #222222;
 
   /* Radius */
-  --radius: 0.5rem;
+  --radius: 0.375rem;
 }
 
 * {
   border-color: var(--color-border);
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
 }

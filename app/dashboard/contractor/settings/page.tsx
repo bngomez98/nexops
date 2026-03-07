@@ -7,19 +7,16 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 
-export default function SettingsPage() {
+export default function ContractorSettingsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
-    address: "",
-    city: "",
-    state: "KS",
-    zip: "",
     emailNotifications: true,
-    smsNotifications: false,
+    smsNotifications: true,
+    availableForRequests: true,
   })
 
   const handleSave = async (e: React.FormEvent) => {
@@ -44,20 +41,20 @@ export default function SettingsPage() {
       <div className="mx-auto max-w-3xl px-6 py-8">
         <div className="mb-8">
           <h1 className="text-xl font-bold">Account Settings</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Profile, contact details, and notification preferences.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Contact details, notifications, and availability status.</p>
         </div>
 
         <form onSubmit={handleSave} className="space-y-5">
-          {/* Profile */}
+
           <section className="rounded-lg border border-border bg-card overflow-hidden">
             <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Profile</h2>
+              <h2 className="text-sm font-semibold">Contact Information</h2>
             </div>
             <div className="p-5 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label htmlFor="fullName" className="text-xs">Full Name</Label>
-                  <Input id="fullName" placeholder="Jane Smith" value={form.fullName}
+                  <Input id="fullName" placeholder="John Smith" value={form.fullName}
                     onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="text-sm" />
                 </div>
                 <div className="space-y-1.5">
@@ -69,47 +66,15 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          {/* Service address */}
           <section className="rounded-lg border border-border bg-card overflow-hidden">
             <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Primary Property Address</h2>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Default location for new requests</p>
-            </div>
-            <div className="p-5 space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="address" className="text-xs">Street Address</Label>
-                <Input id="address" placeholder="1234 SW Gage Blvd" value={form.address}
-                  onChange={(e) => setForm({ ...form, address: e.target.value })} className="text-sm" />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="city" className="text-xs">City</Label>
-                  <Input id="city" placeholder="Topeka" value={form.city}
-                    onChange={(e) => setForm({ ...form, city: e.target.value })} className="text-sm" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="state" className="text-xs">State</Label>
-                  <Input id="state" value={form.state}
-                    onChange={(e) => setForm({ ...form, state: e.target.value })} className="text-sm" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="zip" className="text-xs">ZIP</Label>
-                  <Input id="zip" placeholder="66604" value={form.zip}
-                    onChange={(e) => setForm({ ...form, zip: e.target.value })} className="text-sm" />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Notifications */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Notifications</h2>
+              <h2 className="text-sm font-semibold">Availability & Notifications</h2>
             </div>
             <div className="divide-y divide-border">
               {[
-                { key: "emailNotifications" as const, label: "Email notifications", sub: "Assignment, consultation confirmation, status updates" },
-                { key: "smsNotifications"   as const, label: "SMS notifications",   sub: "Critical updates only — consultation reminders and cancellations" },
+                { key: "availableForRequests" as const, label: "Available for new requests",    sub: "When off, you will not receive new request notifications" },
+                { key: "emailNotifications"   as const, label: "Email notifications",            sub: "New requests, claim confirmations, consultation reminders" },
+                { key: "smsNotifications"     as const, label: "SMS notifications",              sub: "New request alerts and urgent updates" },
               ].map(({ key, label, sub }) => (
                 <div key={key} className="flex items-center justify-between px-5 py-4">
                   <div>
@@ -142,6 +107,7 @@ export default function SettingsPage() {
               {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : "Save Changes"}
             </Button>
           </div>
+
         </form>
       </div>
     </div>
