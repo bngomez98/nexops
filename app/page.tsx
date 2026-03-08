@@ -192,7 +192,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Mission &amp; Values</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Documentation and accountability are standard requirements for professional services. Nexus applies them to property maintenance.
+              Every property owner deserves a complete, verified record of what has been maintained, when, and at what cost.
             </h2>
           </div>
 
@@ -232,7 +232,7 @@ export default function HomePage() {
           <div className="mb-16">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">The platform</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Built for three types of users. Each with a distinct account, dashboard, and set of capabilities.
+              Three account types — homeowners, property managers, and contractors — each with dedicated tools and capabilities.
             </h2>
           </div>
 
@@ -313,7 +313,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Trade categories</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Eight trade categories. Verified contractors active in each.
+              Eight trade categories with licensed, insured contractors active in each.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
               All requests must include photographs, a written scope, and a maximum budget before the project enters the contractor queue. The network expands as additional contractors are reviewed and approved.
@@ -399,7 +399,7 @@ export default function HomePage() {
           <div className="mb-14">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">For contractors</p>
             <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              A direct pipeline to verified, pre-documented residential and commercial projects — at no cost.
+              Join the Nexus contractor network. Receive pre-documented project notifications in your trade and service area.
             </h2>
           </div>
 
@@ -457,10 +457,10 @@ export default function HomePage() {
             <div>
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Get started</p>
               <h2 className="text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-balance">
-                Your property needs a record. Start building one.
+                Create an account and submit your first service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                Create an account to submit your first request. Nexus handles contractor selection, scheduling, and documentation. Your service history starts accumulating from the first project.
+                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property's permanent service record.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -511,7 +511,7 @@ export default function HomePage() {
             <div>
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Contact</p>
               <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-sm text-balance mb-10">
-                Service area and direct contact.
+                Headquarters: Topeka, Kansas. Serving Shawnee County and adjacent areas.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9] mb-10">
                 <p>
