@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import {
@@ -38,6 +39,19 @@ const contractorNavItems = [
 export function DashboardNav({ user }: { user: SupabaseUser }) {
   const pathname = usePathname()
   const router = useRouter()
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.avatar_url) setAvatarUrl(data.avatar_url)
+      })
+  }, [user.id])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -51,6 +65,7 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
   const navItems = isContractor ? contractorNavItems : ownerNavItems
   const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "User"
   const roleLabel = role === "property_manager" ? "Property Manager" : isContractor ? "Contractor" : "Property Owner"
+  const initials = fullName.charAt(0).toUpperCase()
 
   return (
     <nav className="flex w-60 flex-col border-r border-border bg-card flex-shrink-0" aria-label="Dashboard navigation">
@@ -133,8 +148,19 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
           <ThemeToggle />
         </div>
         <div className="mb-2 flex items-center gap-2.5 px-2 py-1">
-          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
-            {fullName.charAt(0).toUpperCase()}
+          <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded-full border border-border bg-primary/10">
+            {avatarUrl ? (
+              <Image
+                src={avatarUrl}
+                alt={fullName}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center text-[11px] font-bold text-primary">
+                {initials}
+              </span>
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <p className="truncate text-[12px] font-medium">{fullName}</p>
