@@ -1,16 +1,20 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { AvatarUpload } from "@/components/avatar-upload"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 
 export default function SettingsPage() {
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [uid, setUid] = useState("")
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
@@ -22,21 +26,63 @@ export default function SettingsPage() {
     smsNotifications: false,
   })
 
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      setUid(user.id)
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, phone, avatar_url")
+        .eq("id", user.id)
+        .single()
+
+      setForm((f) => ({
+        ...f,
+        fullName: profile?.full_name ?? user.user_metadata?.full_name ?? "",
+        phone: profile?.phone ?? user.user_metadata?.phone ?? "",
+      }))
+      setAvatarUrl(profile?.avatar_url ?? null)
+      setLoading(false)
+    }
+    load()
+  }, [])
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
     setError(null)
     const supabase = createClient()
-    const { error: updateError } = await supabase.auth.updateUser({
+
+    const { error: authError } = await supabase.auth.updateUser({
       data: { full_name: form.fullName, phone: form.phone },
     })
+
+    if (!authError) {
+      await supabase
+        .from("profiles")
+        .update({ full_name: form.fullName, phone: form.phone })
+        .eq("id", uid)
+    }
+
     setSaving(false)
-    if (updateError) {
-      setError(updateError.message)
+    if (authError) {
+      setError(authError.message)
     } else {
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
   return (
@@ -48,12 +94,19 @@ export default function SettingsPage() {
         </div>
 
         <form onSubmit={handleSave} className="space-y-5">
-          {/* Profile */}
+
+          {/* Profile photo + name */}
           <section className="rounded-lg border border-border bg-card overflow-hidden">
             <div className="border-b border-border px-5 py-3">
               <h2 className="text-sm font-semibold">Profile</h2>
             </div>
-            <div className="p-5 space-y-4">
+            <div className="p-5 space-y-5">
+              <AvatarUpload
+                uid={uid}
+                url={avatarUrl}
+                name={form.fullName || "User"}
+                onUpload={(url) => setAvatarUrl(url)}
+              />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label htmlFor="fullName" className="text-xs">Full Name</Label>
@@ -73,7 +126,7 @@ export default function SettingsPage() {
           <section className="rounded-lg border border-border bg-card overflow-hidden">
             <div className="border-b border-border px-5 py-3">
               <h2 className="text-sm font-semibold">Primary Property Address</h2>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Default location for new requests</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Default location pre-filled on new requests</p>
             </div>
             <div className="p-5 space-y-4">
               <div className="space-y-1.5">
@@ -108,8 +161,8 @@ export default function SettingsPage() {
             </div>
             <div className="divide-y divide-border">
               {[
-                { key: "emailNotifications" as const, label: "Email notifications", sub: "Assignment, consultation confirmation, status updates" },
-                { key: "smsNotifications"   as const, label: "SMS notifications",   sub: "Critical updates only — consultation reminders and cancellations" },
+                { key: "emailNotifications" as const, label: "Email notifications", sub: "Assignment, consultation confirmation, and status updates" },
+                { key: "smsNotifications"   as const, label: "SMS notifications",   sub: "Time-sensitive alerts only — consultation reminders and cancellations" },
               ].map(({ key, label, sub }) => (
                 <div key={key} className="flex items-center justify-between px-5 py-4">
                   <div>
@@ -139,7 +192,7 @@ export default function SettingsPage() {
 
           <div className="flex justify-end">
             <Button type="submit" disabled={saving} className="text-[13px]">
-              {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : "Save Changes"}
+              {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</> : "Save Changes"}
             </Button>
           </div>
         </form>

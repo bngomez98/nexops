@@ -30,9 +30,9 @@ export default async function DashboardPage() {
   const isPropertyManager = role === "property_manager"
 
   const stats = [
-    { label: "Open Requests",  value: "0", sub: "Awaiting contractor assignment", icon: FileText,    color: "text-foreground" },
-    { label: "In Progress",    value: "0", sub: "Contractor assigned, work active", icon: Clock,      color: "text-primary" },
-    { label: "Completed",      value: "0", sub: "All time, this account",           icon: CheckCircle, color: "text-foreground" },
+    { label: "Open Requests",  value: "0", sub: "Submitted and waiting for a contractor to claim",         icon: FileText,    color: "text-foreground" },
+    { label: "In Progress",    value: "0", sub: "A contractor has claimed the project and work is active",  icon: Clock,       color: "text-primary" },
+    { label: "Completed",      value: "0", sub: "Projects finished and closed on this account",             icon: CheckCircle, color: "text-foreground" },
   ]
 
   return (

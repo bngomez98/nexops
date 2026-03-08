@@ -92,10 +92,10 @@ export default async function ContractorDashboardPage() {
         {/* Stats */}
         <div className="mb-8 grid gap-4 sm:grid-cols-4">
           {[
-            { label: "Open Requests",       value: String(openRequests.length), sub: "Available to claim now",   color: "text-primary" },
-            { label: "Claimed This Month",   value: "0",                        sub: "Exclusively assigned",     color: "text-foreground" },
-            { label: "Avg. Budget Ceiling",  value: "$0",                       sub: "Across claimed requests",  color: "text-foreground" },
-            { label: "Consultation Rate",    value: "—",                        sub: "Claimed → consulted",      color: "text-foreground" },
+            { label: "Open Requests",      value: String(openRequests.length), sub: "Requests in your area you can claim right now",                                    color: "text-primary" },
+            { label: "Claimed This Month",  value: "0",                        sub: "Projects you've claimed and hold exclusively this month",                          color: "text-foreground" },
+            { label: "Avg. Budget Ceiling", value: "$0",                       sub: "Average owner-set budget ceiling on your claimed requests — not a guaranteed amount", color: "text-foreground" },
+            { label: "Consultation Rate",   value: "—",                        sub: "Share of your claimed requests that reached a booked consultation",                color: "text-foreground" },
           ].map(({ label, value, sub, color }) => (
             <div key={label} className="rounded-lg border border-border bg-card p-5">
               <p className="text-xs text-muted-foreground mb-3">{label}</p>
