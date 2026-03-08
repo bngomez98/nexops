@@ -9,11 +9,11 @@ export default function PrivacyPage() {
   return (
     <LegalShell title="Privacy Policy" updated="March 5, 2026">
       <Section title="1. Information We Collect">
-        We collect information you provide directly, including: full name, email address, phone number, property address, project descriptions, photographs, and stated budget ranges. For contractor accounts, we additionally collect: business name, contractor license number, insurance carrier and policy details, and background check authorization. We also collect usage data through cookies and similar technologies as described in Section 5.
+        We collect information you provide directly, including: full name, email address, phone number, property address, project descriptions, photographs, and stated budget ranges. For contractor accounts, we additionally collect: business name, contractor license number, and insurance carrier and policy details. We also collect usage data through cookies and similar technologies as described in Section 5.
       </Section>
 
       <Section title="2. How We Use Your Information">
-        Your information is used to: operate and improve the Platform; match property owners with qualified contractors; coordinate and confirm consultation appointments; process contractor membership fees; send transactional communications (assignment notifications, confirmation emails, scheduling reminders); and respond to support inquiries. We do not sell your personal information to third parties under any circumstances.
+        Your information is used to: operate and improve the Platform; match property owners with qualified contractors; coordinate and confirm consultation appointments; process service fees where applicable; send transactional communications (assignment notifications, confirmation emails, scheduling reminders); and respond to support inquiries. We do not sell your personal information to third parties under any circumstances.
       </Section>
 
       <Section title="3. Information Sharing">
