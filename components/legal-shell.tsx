@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 interface LegalShellProps {
   title: string
@@ -27,6 +28,7 @@ export function LegalShell({ title, updated, children }: LegalShellProps) {
             <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>
             <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
             <Link href="/faq"     className="hover:text-foreground transition">FAQ</Link>
+            <ThemeToggle />
           </div>
         </div>
       </header>
