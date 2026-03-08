@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import {
   FileText,
   Clock,
@@ -9,6 +8,9 @@ import {
   Plus,
   ArrowRight,
   AlertCircle,
+  Calendar,
+  MapPin,
+  DollarSign,
   ChevronRight,
 } from "lucide-react"
 
@@ -51,12 +53,13 @@ export default async function DashboardPage() {
                 : `Service requests for ${fullName}`}
             </p>
           </div>
-          <Button asChild size="sm">
-            <Link href="/dashboard/requests/new">
-              <Plus className="h-3.5 w-3.5" />
-              New Request
-            </Link>
-          </Button>
+          <Link
+            href="/dashboard/requests/new"
+            className="inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            New Request
+          </Link>
         </div>
 
         {/* Stats row */}
@@ -82,12 +85,13 @@ export default async function DashboardPage() {
           <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
             Submit a request with photos, a written scope, and a budget cap. A verified contractor will be assigned exclusively.
           </p>
-          <Button asChild size="sm">
-            <Link href="/dashboard/requests/new">
-              Submit First Request
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </Button>
+          <Link
+            href="/dashboard/requests/new"
+            className="inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+          >
+            Submit First Request
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
         {/* Process reference */}

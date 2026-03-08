@@ -17,7 +17,6 @@ import {
   User,
   ListChecks,
 } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 const ownerNavItems = [
@@ -128,10 +127,6 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
 
       {/* User */}
       <div className="border-t border-border p-3">
-        <div className="mb-1 flex items-center justify-between px-2 py-1">
-          <span className="text-[11px] text-muted-foreground">Theme</span>
-          <ThemeToggle />
-        </div>
         <div className="mb-2 flex items-center gap-2.5 px-2 py-1">
           <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
             {fullName.charAt(0).toUpperCase()}
