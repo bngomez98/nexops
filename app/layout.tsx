@@ -1,56 +1,43 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { CookieConsent } from "@/components/cookie-consent";
+import type { Metadata } from "next"
+import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google"
+import "./globals.css"
+import { CookieConsent } from "@/components/cookie-consent"
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" })
+const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
 
 export const metadata: Metadata = {
-  title: "Nexus Operations | Maintenance, Remediation, Preventative, and Routine Services. When you need it, how you need it - managed from start to finish,
+  title: "Nexus Operations | One contractor. Exclusively yours.",
   description:
-    " platform that connects homeowners and property managers with licensed, insured contractors for all maintenance, improvement, remediation, or emergency maintenance needs. Provides end-to-end maintenance, restoration, and remediation services; including emergency response. Fully coordinated from the moment the service is requested. Nexus manages and coordinates projects and operation requirements until the job is completed. We then provide a Post Implementation Review - this gives insights to homeowners and property managers, and evaluates our success in our work with them, allowing owners to stay in control without the burden of day-to-day operations. We remain a strategic and dependable partner, providing skilled labor and data-driven intelligence",
+    "Nexus Operations connects homeowners and property managers with licensed, insured contractors in Topeka, KS. Submit your project once — one verified contractor claims it exclusively.",
   icons: {
-    icon: "/nexus-favicon.png",
-    apple: "/nexus-favicon.png",
-  },
-};
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
-
-const geistSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist-sans',
-})
-
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-})
-
-export const metadata: Metadata = {
-  title: 'Nexus Operations',
-  description: 'Connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS and surrounding regions.',
-  icons: {
-    icon: '/favicon.ico',
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
   },
 }
 
 export const viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   userScalable: true,
-  themeColor: '#1a1a1a',
+  themeColor: "#0f0f0f",
 }
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Theme init — prevents flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='light'){document.documentElement.classList.add('light')}else{document.documentElement.classList.add('dark')}})()`,
+          }}
+        />
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
@@ -62,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} ${ibmPlexMono.variable} font-sans`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -78,21 +65,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <CookieConsent />
 
         {/* Zendesk Widget */}
-        <script
-          id="ze-snippet"
-          src="https://static.zdassets.com/ekr/snippet.js?key=d8a1128c-008a-443c-894e-4a0fd463bb57"
-          async
-        />
-      </body>
-    </html>
-  );
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        {children}
-        {/* Zendesk AI Agent Widget */}
         <script
           id="ze-snippet"
           src="https://static.zdassets.com/ekr/snippet.js?key=d8a1128c-008a-443c-894e-4a0fd463bb57"

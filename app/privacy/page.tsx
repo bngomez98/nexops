@@ -1,125 +1,58 @@
-import Link from "next/link";
-import Image from "next/image";
+import { LegalShell, Section } from "@/components/legal-shell"
 
 export const metadata = {
   title: "Privacy Policy | Nexus Operations",
-  description: "Privacy Policy for Nexus Operations contractor matching platform.",
-};
+  description: "Privacy Policy for the Nexus Operations property service management platform.",
+}
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={180}
-              height={60}
-              className="h-12 w-auto"
-            />
-          </Link>
-        </div>
-      </header>
+    <LegalShell title="Privacy Policy" updated="March 5, 2026">
+      <Section title="1. Information We Collect">
+        We collect information you provide directly, including: full name, email address, phone number, property address, project descriptions, photographs, and stated budget ranges. For contractor accounts, we additionally collect: business name, contractor license number, and insurance carrier and policy details. We also collect usage data through cookies and similar technologies as described in Section 5.
+      </Section>
 
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-3xl font-bold">Privacy Policy</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Last updated: March 5, 2026</p>
+      <Section title="2. How We Use Your Information">
+        Your information is used to: operate and improve the Platform; match property owners with qualified contractors; coordinate and confirm consultation appointments; process service fees where applicable; send transactional communications (assignment notifications, confirmation emails, scheduling reminders); and respond to support inquiries. We do not sell your personal information to third parties under any circumstances.
+      </Section>
 
-        <div className="mt-8 space-y-8 text-sm leading-relaxed text-muted-foreground">
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">1. Information We Collect</h2>
-            <p className="mt-2">
-              We collect information you provide directly, including: name, email address, phone number, property address, project details, photographs, and budget information. For contractors, we also collect business information, license numbers, and insurance documentation.
-            </p>
-          </section>
+      <Section title="3. Information Sharing">
+        Project details submitted by property owners — including photographs, scope descriptions, address, and budget ceiling — are shared with one matched contractor after that contractor claims the request. This sharing is limited to the single claiming contractor. We do not distribute your project information to multiple contractors, lead brokers, marketing firms, or aggregation services.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">2. How We Use Your Information</h2>
-            <p className="mt-2">
-              We use your information to: match homeowners with appropriate contractors, facilitate consultations, process payments, communicate service updates, and improve our platform. We do not sell your personal information to third parties.
-            </p>
-          </section>
+      <Section title="4. Data Security">
+        We use encryption in transit (TLS) and at rest for all stored data. Access to personal data is restricted to authorized personnel. We conduct regular security reviews. No method of electronic transmission is unconditionally secure; you assume the residual risks inherent to any internet-based communication.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">3. Information Sharing</h2>
-            <p className="mt-2">
-              Project details submitted by homeowners are shared with a single matched contractor for the purpose of scheduling and conducting consultations. We do not share your information with multiple contractors or lead aggregators.
-            </p>
-          </section>
+      <Section title="5. Cookies and Tracking">
+        We use session cookies for authentication and preference storage. We do not use third-party advertising cookies. Analytics data is collected in aggregate, not individually identifiable form. You may disable cookies in your browser, which may affect Platform functionality.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">4. Data Security</h2>
-            <p className="mt-2">
-              We implement industry-standard security measures to protect your information, including encryption in transit and at rest. However, no method of transmission over the Internet is 100% secure.
-            </p>
-          </section>
+      <Section title="6. Third-Party Services">
+        We use Supabase for database and authentication, Zendesk for customer support, and standard email providers for transactional messages. Each provider operates under their own data processing agreements. We do not use third-party advertising networks.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">5. Cookies and Tracking</h2>
-            <p className="mt-2">
-              We use cookies and similar technologies to improve user experience, analyze platform usage, and deliver relevant content. You can control cookie preferences through your browser settings.
-            </p>
-          </section>
+      <Section title="7. Data Retention">
+        Account data is kept for the life of the account. Following account closure, we retain a limited subset of data for up to 36 months to satisfy legal and dispute resolution obligations. Project documentation and photographs are retained for up to 5 years after project completion. You may request deletion of your account and associated data at any time by emailing <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>. Legal obligations may require us to retain certain transaction-related data even after a deletion request — we will be clear about what we can and cannot remove.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">6. Third-Party Services</h2>
-            <p className="mt-2">
-              We use third-party services for payment processing, analytics, and customer support. These services have their own privacy policies governing their use of your information.
-            </p>
-          </section>
+      <Section title="8. Your Rights">
+        You have the right to: access a copy of the personal data we hold about you; correct inaccurate data; request deletion of your account and associated data subject to retention requirements; opt out of non-transactional email communications at any time via the unsubscribe link. To exercise any of these rights, contact us at the address below.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">7. Data Retention</h2>
-            <p className="mt-2">
-              We retain your information for as long as necessary to provide services and comply with legal obligations. You may request deletion of your account and associated data at any time.
-            </p>
-          </section>
+      <Section title="9. Children">
+        The Platform is not intended for persons under 18 years of age. We do not knowingly collect personal information from minors. If you become aware that a minor has submitted information to the Platform, contact us immediately.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">8. Your Rights</h2>
-            <p className="mt-2">
-              You have the right to access, correct, or delete your personal information. You may also opt out of marketing communications at any time. To exercise these rights, contact us at the address below.
-            </p>
-          </section>
+      <Section title="10. Policy Updates">
+        We may update this Privacy Policy. Material changes will be communicated to registered users via email at least 14 days before taking effect. The effective date of the current version appears at the top of this document.
+      </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">9. Children&apos;s Privacy</h2>
-            <p className="mt-2">
-              Our Platform is not intended for individuals under 18 years of age. We do not knowingly collect information from children.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">10. Changes to This Policy</h2>
-            <p className="mt-2">
-              We may update this Privacy Policy periodically. We will notify you of material changes by posting the updated policy on our website with a new effective date.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground">11. Contact Us</h2>
-            <p className="mt-2">
-              For privacy-related inquiries, contact us at:{" "}
-              <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">
-                admin@nexusoperations.org
-              </a>
-            </p>
-            <p className="mt-2">
-              Nexus Operations, LLC<br />
-              405 SW Fillmore St<br />
-              Topeka, KS 66606
-            </p>
-          </section>
-        </div>
-
-        <div className="mt-12 border-t border-border pt-8">
-          <Link href="/" className="text-sm text-primary hover:underline">
-            &larr; Back to Home
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
+      <Section title="11. Contact">
+        Privacy inquiries: <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a><br />
+        Nexus Operations, LLC — Topeka, KS 66606<br />
+        Phone: <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a>
+      </Section>
+    </LegalShell>
+  )
 }

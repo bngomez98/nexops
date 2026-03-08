@@ -50,7 +50,7 @@ export function HeroTypewriter() {
   return (
     <span>
       {displayed}
-      <span className="inline-block w-[3px] h-[0.85em] bg-[var(--color-primary)] ml-0.5 align-middle animate-pulse" />
+      <span className="inline-block w-[3px] h-[0.85em] bg-primary ml-0.5 align-middle animate-pulse" />
     </span>
   )
 }
