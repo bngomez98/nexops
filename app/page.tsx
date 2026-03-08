@@ -240,7 +240,7 @@ export default function HomePage() {
 
               <div className="mt-8 max-w-xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work — backed by a network of licensed, insured contractors and a permanent service record for every property.
+                  Nexus Operations gives property owners and managers a single platform to request, assign, and track maintenance and repair work — backed by a network of licensed, insured contractors and full project history on every property.
                 </p>
               </div>
 
@@ -371,13 +371,13 @@ export default function HomePage() {
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, project tracking, and permanent record storage.
+                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, and project tracking.
                 </p>
                 <p>
-                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
+                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates and project updates for every request.
                 </p>
                 <p>
-                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
+                  <strong className="text-foreground">Your project history is used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's completed projects. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
                 </p>
                 <p>
                   <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
@@ -419,7 +419,7 @@ export default function HomePage() {
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">Mission &amp; Values</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every property owner deserves a complete, verified record of what has been maintained, when, and at what cost.
+              Every property owner deserves a clear, verified account of what has been maintained, when, and at what cost.
             </h2>
           </div>
 
@@ -557,22 +557,22 @@ export default function HomePage() {
       <section id="reporting" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">Data-driven reporting</p>
+            <p className="font-mono-label text-primary mb-5">Project reporting</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every closed project generates a post-project report. Over time, that data builds a complete property service record.
+              Every completed project generates a report. That data is used to surface useful insights about your property over time.
             </h2>
           </div>
 
           <div className="grid gap-20 lg:grid-cols-[1fr_360px] items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                <strong className="text-foreground">Post-project reports are generated after every completed project.</strong> Each report covers three categories: financial data (total cost, cost breakdown by labor and materials, comparison to budget ceiling), efficiency metrics (time from submission to completion, contractor response time, consultation-to-estimate interval), and recommendations (follow-up items identified during the project, suggested maintenance intervals, related services to consider).
+                <strong className="text-foreground">Each post-project report covers three areas.</strong> Financial: what the project cost, how that breaks down between labor and materials, and how it compared to your budget ceiling. Timeline: how long it took from submission to completion, and how quickly the contractor responded at each step. Recommendations: any follow-up items the contractor noted, suggested next-service dates by trade, and related work worth considering.
               </p>
               <p>
-                <strong className="text-foreground">Reports draw on historical, current, and cross-property data.</strong> Historical data includes all prior projects at the same address and within the same trade category. Current data covers the project just completed. Cross-property data, available to property managers, benchmarks performance and spend against other properties in the same portfolio and service area.
+                <strong className="text-foreground">Reports become more useful as your project history grows.</strong> Your costs and timelines for a given trade category are compared against your own prior projects at the same address — not against external benchmarks you have no context for. Property managers see the same breakdown across every address in their portfolio, making it straightforward to spot which properties are costing more and in which categories.
               </p>
               <p>
-                <strong className="text-foreground">The accumulated service record is a verified ownership asset.</strong> For insurance claims, sale documentation, refinancing, or due diligence, the Nexus service record provides a complete, timestamped history of what has been maintained, when, by whom, and at what cost. Property managers receive portfolio-level aggregation: spend by address, spend by trade, outstanding intervals, and recurring issue flags across all managed properties.
+                <strong className="text-foreground">Your project data belongs to you.</strong> Every project you complete through Nexus — scope, photos, contractor, cost, outcome — is accessible from your account and downloadable at any time. For insurance claims, sale documentation, or your own reference, you have a clear record of what was done, when, and what it cost. Property managers get the same at the portfolio level: total spend by address, spend by trade category, and flags for any addresses with overdue service intervals.
               </p>
             </div>
 
@@ -683,7 +683,7 @@ export default function HomePage() {
                 Create an account and submit your first service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property's permanent service record.
+                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Each completed project adds to your property's project history.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
