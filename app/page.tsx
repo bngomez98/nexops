@@ -218,7 +218,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div className="grid gap-16 lg:grid-cols-[1fr_280px] lg:items-end">
+          <div className="grid gap-12 lg:grid-cols-[1fr_420px] lg:items-center">
             <div>
               {/* Rotating hero headline */}
               <h1
@@ -238,7 +238,7 @@ export default function HomePage() {
                 </span>
               </h1>
 
-              <div className="mt-8 max-w-2xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
+              <div className="mt-8 max-w-xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
                   Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work — backed by a network of licensed, insured contractors and a permanent service record for every property.
                 </p>
@@ -262,30 +262,43 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Stat strip with pop animation */}
+            {/* Hero photo with stats overlay */}
             <div
               ref={statsRef}
-              className="hidden lg:flex flex-col divide-y divide-border border-t border-b border-border glow-primary rounded-sm animate-fade-up"
-              style={{ animationDelay: "0.28s" }}
+              className="hidden lg:block relative h-[560px] overflow-hidden rounded-2xl glow-primary animate-fade-up"
+              style={{ animationDelay: "0.2s" }}
             >
-              {[
-                { n: "8",    label: "Trade categories" },
-                { n: "1",    label: "Contractor per project" },
-                { n: "100%", label: "Manually reviewed" },
-                { n: "∞",    label: "Permanent records" },
-              ].map(({ n, label }, i) => (
-                <div key={label} className="py-5 px-4">
-                  <p
-                    className="font-heading text-2xl font-bold tracking-tight text-foreground"
-                    style={statsTriggered ? {
-                      animation: `stat-pop 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.09}s both`,
-                    } : { opacity: 0 }}
-                  >
-                    {n}
-                  </p>
-                  <p className="font-mono-label text-muted-foreground mt-1 normal-case tracking-normal text-[11px]">{label}</p>
-                </div>
-              ))}
+              <Image
+                src="/photo-home.jpg"
+                alt="Modern property managed by Nexus Operations"
+                fill
+                className="object-cover object-center"
+                priority
+              />
+              {/* gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+
+              {/* Stats bar overlaid at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-4 divide-x divide-border/30 bg-background/75 backdrop-blur-md">
+                {[
+                  { n: "8",    label: "Trade categories" },
+                  { n: "1",    label: "Per project" },
+                  { n: "100%", label: "Reviewed" },
+                  { n: "∞",    label: "Records" },
+                ].map(({ n, label }, i) => (
+                  <div key={label} className="py-4 px-4 text-center">
+                    <p
+                      className="font-heading text-xl font-bold tracking-tight text-foreground"
+                      style={statsTriggered ? {
+                        animation: `stat-pop 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.09}s both`,
+                      } : { opacity: 0 }}
+                    >
+                      {n}
+                    </p>
+                    <p className="font-mono-label text-muted-foreground mt-0.5 normal-case tracking-normal text-[10px]">{label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -601,7 +614,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid gap-20 lg:grid-cols-2 items-start">
+          <div className="grid gap-16 lg:grid-cols-2 items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
                 The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
@@ -612,7 +625,7 @@ export default function HomePage() {
               <p>
                 Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
               </p>
-              <div className="pt-4">
+              <div className="pt-2">
                 <Link
                   href="/auth/sign-up?role=contractor"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
@@ -620,6 +633,18 @@ export default function HomePage() {
                   Apply for network access
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
+              </div>
+
+              {/* Editorial photo */}
+              <div className="relative mt-6 h-52 overflow-hidden rounded-xl">
+                <Image
+                  src="/photo-work.jpg"
+                  alt="Contractor documenting project scope on site"
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
               </div>
             </div>
 
