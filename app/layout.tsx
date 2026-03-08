@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { CookieConsent } from "@/components/cookie-consent"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" })
+const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
 
 export const metadata: Metadata = {
   title: "Nexus Operations | One contractor. Exclusively yours.",
@@ -47,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} ${ibmPlexMono.variable} font-sans`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

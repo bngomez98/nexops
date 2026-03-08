@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, ArrowRight, MapPin } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useEffect } from "react"
 
 const services: Array<{ name: string; desc: string }> = [
   { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration." },
@@ -17,11 +18,25 @@ const services: Array<{ name: string; desc: string }> = [
 ]
 
 export default function HomePage() {
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-animate]")
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target) }
+        })
+      },
+      { threshold: 0.12 }
+    )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <main className="min-h-screen bg-background font-sans">
+    <main className="min-h-screen bg-background font-sans overflow-x-hidden">
 
       {/* ── Header ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-8 h-14">
           <Link href="/" className="flex-shrink-0">
             <Image
@@ -64,7 +79,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/auth/sign-up"
-              className="rounded-sm bg-primary px-4 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:opacity-90"
+              className="rounded-full bg-primary px-4 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:opacity-90"
             >
               Create Account
             </Link>
@@ -73,32 +88,38 @@ export default function HomePage() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="pt-36 pb-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="flex items-center gap-2 mb-12">
+      <section className="relative pt-36 pb-28">
+        {/* radial glow behind hero text */}
+        <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
+
+        <div className="relative mx-auto max-w-6xl px-8">
+          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span className="text-[11px] tracking-[0.1em] uppercase text-muted-foreground">
+            <span className="font-mono-label text-muted-foreground">
               Topeka, Kansas — Shawnee County and surrounding areas
             </span>
           </div>
 
           <div className="grid gap-16 lg:grid-cols-[1fr_280px] lg:items-end">
             <div>
-              <h1 className="text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance">
+              <h1
+                className="font-heading text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance animate-fade-up"
+                style={{ animationDelay: "0.12s" }}
+              >
                 Managed property<br />services for<br />
-                <span className="text-muted-foreground/40">Topeka, Kansas.</span>
+                <span className="text-muted-foreground/35">Topeka, Kansas.</span>
               </h1>
 
-              <div className="mt-8 max-w-2xl">
+              <div className="mt-8 max-w-2xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
                   Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work — backed by a network of licensed, insured contractors and a permanent service record for every property.
                 </p>
               </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-6">
+              <div className="mt-10 flex flex-wrap items-center gap-6 animate-fade-up" style={{ animationDelay: "0.32s" }}>
                 <Link
                   href="/auth/sign-up"
-                  className="inline-flex items-center gap-2 rounded-sm bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
                 >
                   Get started
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -113,16 +134,16 @@ export default function HomePage() {
             </div>
 
             {/* Stat strip */}
-            <div className="hidden lg:flex flex-col divide-y divide-border border-t border-b border-border">
+            <div className="hidden lg:flex flex-col divide-y divide-border border-t border-b border-border glow-primary rounded-sm animate-fade-up" style={{ animationDelay: "0.28s" }}>
               {[
                 { n: "8",    label: "Trade categories" },
                 { n: "1",    label: "Contractor per project" },
                 { n: "100%", label: "Manually reviewed" },
                 { n: "∞",    label: "Permanent records" },
               ].map(({ n, label }) => (
-                <div key={label} className="py-5 px-1">
-                  <p className="text-2xl font-bold tracking-tight text-foreground">{n}</p>
-                  <p className="text-[11px] text-muted-foreground mt-1">{label}</p>
+                <div key={label} className="py-5 px-4">
+                  <p className="font-heading text-2xl font-bold tracking-tight text-foreground">{n}</p>
+                  <p className="font-mono-label text-muted-foreground mt-1 normal-case tracking-normal text-[11px]">{label}</p>
                 </div>
               ))}
             </div>
@@ -137,9 +158,9 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-8">
           <div className="grid gap-20 lg:grid-cols-[1fr_380px] lg:items-start">
 
-            <div className="space-y-7">
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary">About Nexus Operations</p>
-              <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
+            <div className="space-y-7" data-animate>
+              <p className="font-mono-label text-primary">About Nexus Operations</p>
+              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
                 Nexus Operations is a property service management company headquartered in Topeka, Kansas.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
@@ -189,14 +210,14 @@ export default function HomePage() {
       {/* ── Mission & Values ── */}
       <section id="mission" className="py-28 bg-muted/30">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Mission &amp; Values</p>
-            <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
+          <div className="mb-14" data-animate>
+            <p className="font-mono-label text-primary mb-5">Mission &amp; Values</p>
+            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
               Every property owner deserves a complete, verified record of what has been maintained, when, and at what cost.
             </h2>
           </div>
 
-          <div className="grid gap-x-16 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
+          <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
             {[
               {
                 label: "Fully managed service",
@@ -214,8 +235,13 @@ export default function HomePage() {
                 label: "Property-specific intelligence",
                 body: "Over time, your service history tells Nexus what your property needs and when. Advisory recommendations are generated from your actual project records and maintenance intervals.",
               },
-            ].map(({ label, body }) => (
-              <div key={label} className="border-l-2 border-primary/30 pl-5">
+            ].map(({ label, body }, i) => (
+              <div
+                key={label}
+                className="rounded-2xl border border-border bg-card/50 p-5 backdrop-blur-sm"
+                data-animate
+                data-delay={String(i + 1)}
+              >
                 <p className="text-[13px] font-semibold text-foreground mb-3">{label}</p>
                 <p className="text-[13px] text-muted-foreground leading-[1.8]">{body}</p>
               </div>
@@ -229,9 +255,9 @@ export default function HomePage() {
       {/* ── Platform ── */}
       <section id="platform" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-16">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">The platform</p>
-            <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
+          <div className="mb-16" data-animate>
+            <p className="font-mono-label text-primary mb-5">The platform</p>
+            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
               Three account types — homeowners, property managers, and contractors — each with dedicated tools and capabilities.
             </h2>
           </div>
@@ -310,9 +336,9 @@ export default function HomePage() {
       {/* ── Services ── */}
       <section id="services" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Trade categories</p>
-            <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
+          <div className="mb-14" data-animate>
+            <p className="font-mono-label text-primary mb-5">Trade categories</p>
+            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
               Eight trade categories with licensed, insured contractors active in each.
             </h2>
             <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
@@ -345,9 +371,9 @@ export default function HomePage() {
       {/* ── Reporting ── */}
       <section id="reporting" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Data-driven reporting</p>
-            <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
+          <div className="mb-14" data-animate>
+            <p className="font-mono-label text-primary mb-5">Data-driven reporting</p>
+            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
               Every closed project generates a post-project report. Over time, that data builds a complete property service record.
             </h2>
           </div>
@@ -396,9 +422,9 @@ export default function HomePage() {
       {/* ── Contractors ── */}
       <section id="contractors" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">For contractors</p>
-            <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
+          <div className="mb-14" data-animate>
+            <p className="font-mono-label text-primary mb-5">For contractors</p>
+            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
               Join the Nexus contractor network. Receive pre-documented project notifications in your trade and service area.
             </h2>
           </div>
@@ -417,7 +443,7 @@ export default function HomePage() {
               <div className="pt-4">
                 <Link
                   href="/auth/sign-up?role=contractor"
-                  className="inline-flex items-center gap-2 rounded-sm bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
                 >
                   Apply for network access
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -454,9 +480,9 @@ export default function HomePage() {
       <section className="py-28 bg-muted/30">
         <div className="mx-auto max-w-6xl px-8">
           <div className="grid gap-16 lg:grid-cols-2 items-center">
-            <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Get started</p>
-              <h2 className="text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-balance">
+            <div data-animate>
+              <p className="font-mono-label text-primary mb-5">Get started</p>
+              <h2 className="font-heading text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-balance">
                 Create an account and submit your first service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
@@ -465,14 +491,14 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href="/auth/sign-up"
-                  className="inline-flex items-center gap-2 rounded-sm bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
                 >
                   Create a homeowner account
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
                 <Link
                   href="/auth/sign-up?role=property_manager"
-                  className="inline-flex items-center gap-2 rounded-sm border border-border px-6 py-2.5 text-[13px] font-medium text-foreground transition hover:border-foreground/30"
+                  className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-2.5 text-[13px] font-medium text-foreground transition hover:border-foreground/30"
                 >
                   Property manager account
                 </Link>
@@ -509,8 +535,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-8">
           <div className="grid gap-20 lg:grid-cols-2 items-start">
             <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-primary mb-5">Contact</p>
-              <h2 className="text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-sm text-balance mb-10">
+              <p className="font-mono-label text-primary mb-5">Contact</p>
+              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-sm text-balance mb-10">
                 Headquarters: Topeka, Kansas. Serving Shawnee County and adjacent areas.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9] mb-10">
