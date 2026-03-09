@@ -17,7 +17,8 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       <DashboardNav user={user} />
-      <main className="flex-1 overflow-auto bg-background">
+      {/* pt-14 on mobile to clear the fixed top bar; removed on md+ where sidebar is inline */}
+      <main className="flex-1 overflow-auto bg-background pt-14 md:pt-0">
         {children}
       </main>
     </div>
