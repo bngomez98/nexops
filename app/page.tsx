@@ -212,6 +212,10 @@ export default function HomePage() {
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-8">
+          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
+            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+            <span className="font-mono-label text-muted-foreground">
+              Topeka, Kansas. Serving Shawnee County and surrounding areas.
           {/* Location pill */}
           <div className="flex items-center gap-2 mb-10 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/6 px-3 py-1.5">
@@ -242,6 +246,11 @@ export default function HomePage() {
                 </span>
               </h1>
 
+              <div className="mt-8 max-w-2xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
+                <p className="text-[16px] text-muted-foreground leading-[1.85]">
+                  Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work. The platform is backed by a network of licensed, insured contractors and maintains a permanent service record for every property.
+                </p>
+              </div>
               <p className="text-base text-[var(--color-subtle)] leading-relaxed mb-8 max-w-md text-pretty">
                 Nexus Operations connects you directly with a licensed, insured contractor and does this while allowing you to have full control. It takes 5 minutes of your time to make a request a reality, and we handle the rest. On your terms only.
               </p>
@@ -449,6 +458,7 @@ export default function HomePage() {
               },
               {
                 label: "Permanent service record",
+                body: "Every project detail is stored on the platform and retrievable indefinitely, including scope, cost, contractor, photos, and outcome. The record belongs to the property and remains accessible to the owner.",
                 body:  "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
               },
               {
@@ -467,6 +477,85 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
+      {/* ── Platform ── */}
+      <section id="platform" className="py-28">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="mb-16" data-animate>
+            <p className="font-mono-label text-primary mb-5">The platform</p>
+            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
+              Three account types: homeowners, property managers, and contractors. Each has dedicated tools and capabilities built for their role.
+            </h2>
+          </div>
+
+          <div className="divide-y divide-border border-t border-b border-border">
+
+            {/* Homeowners */}
+            <div className="grid gap-8 py-10 lg:grid-cols-[200px_1fr_180px] lg:items-start">
+              <div>
+                <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Homeowners</p>
+                <p className="mt-2 text-[13.5px] font-semibold text-foreground">Single-property owners</p>
+              </div>
+              <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
+                <p>
+                  Your account is a service management dashboard for your property. Submit requests with photos and scope, track active projects in real time, review and approve contractor estimates, and access the complete history of everything Nexus has managed for you. Contractor selection, scheduling, and verification are handled by Nexus.
+                </p>
+              </div>
+              <div className="lg:text-right">
+                <Link
+                  href="/auth/sign-up"
+                  className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-primary hover:underline underline-offset-4"
+                >
+                  Create account <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Property Managers */}
+            <div className="grid gap-8 py-10 lg:grid-cols-[200px_1fr_180px] lg:items-start">
+              <div>
+                <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Property Managers</p>
+                <p className="mt-2 text-[13.5px] font-semibold text-foreground">Multi-property operators</p>
+              </div>
+              <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
+                <p>
+                  A single account covers your entire portfolio. Each property has its own request history, cost record, and service documentation. Portfolio-level reporting shows maintenance spend by address and by trade category, flags overdue service intervals, and identifies recurring issues so you can manage a portfolio's maintenance obligations without reconstructing records from scattered sources.
+                </p>
+              </div>
+              <div className="lg:text-right">
+                <Link
+                  href="/auth/sign-up?role=property_manager"
+                  className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-primary hover:underline underline-offset-4"
+                >
+                  Create account <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Contractors */}
+            <div className="grid gap-8 py-10 lg:grid-cols-[200px_1fr_180px] lg:items-start">
+              <div>
+                <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Contractors</p>
+                <p className="mt-2 text-[13.5px] font-semibold text-foreground">Licensed tradespeople</p>
+              </div>
+              <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
+                <p>
+                  Your account is a project feed. When a request is submitted in your trade and service area, you receive a notification. You decide whether to claim it. If you do, it is yours exclusively. You arrive at the job site with the full project file already in hand. There is no fee to join or participate in the network.
+                </p>
+              </div>
+              <div className="lg:text-right">
+                <Link
+                  href="/auth/sign-up?role=contractor"
+                  className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-primary hover:underline underline-offset-4"
+                >
+                  Apply for access <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
 
           <div className="mt-8 text-center">
             <p className="text-sm text-muted-foreground">
@@ -651,6 +740,45 @@ export default function HomePage() {
             <p className="mt-2 text-muted-foreground">Property owners and operators who need reliable contractor coordination</p>
           </div>
 
+          <div className="grid gap-20 lg:grid-cols-2 items-start">
+            <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
+              <p>
+                The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
+              </p>
+              <p>
+                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget. All projects are reviewed and validated by Nexus staff before the notification reaches you. You arrive at consultations informed and prepared to provide an estimate.
+              </p>
+              <p>
+                Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
+              </p>
+              <div className="pt-4">
+                <Link
+                  href="/auth/sign-up?role=contractor"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
+                >
+                  Apply for network access
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Requirements */}
+            <div>
+              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-5">
+                Application requirements
+              </p>
+              <div className="border-t border-border text-[12.5px]">
+                {[
+                  ["Active contractor license",    "Required for each applied trade. Must be current at application and maintained on renewal."],
+                  ["General liability insurance",  "Certificate of insurance required. Minimum coverage limits apply. Policy must remain active."],
+                  ["Shawnee County service area",  "Primary coverage required. Adjacent county coverage may be approved separately."],
+                  ["Manual review by Nexus staff", "All applications are reviewed individually. No account is activated automatically."],
+                ].map(([req, detail]) => (
+                  <div key={req} className="py-4 border-b border-border">
+                    <p className="font-semibold mb-1 text-foreground">{req}</p>
+                    <p className="text-muted-foreground leading-relaxed">{detail}</p>
+                  </div>
+                ))}
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: HomeIcon,  title: "Homeowners",        description: "Remodeling, home projects, restoration, prevention services, upgrades, and repairs." },
@@ -688,6 +816,10 @@ export default function HomePage() {
             </div>
             <div className="divide-y divide-border border-t border-b border-border">
               {[
+                { href: "/faq",                            label: "Frequently asked questions", sub: "Platform details, requirements, and policies" },
+                { href: "/auth/sign-up?role=contractor",   label: "Contractor network application", sub: "Free to join. Active license and insurance required." },
+                { href: "tel:+17854280244",                label: "(785) 428-0244", sub: "Monday through Friday, 8 am to 6 pm CT" },
+                { href: "mailto:admin@nexusoperations.org",label: "admin@nexusoperations.org", sub: "General inquiries and support" },
                 { href: "/faq",                            label: "Frequently asked questions",      sub: "Platform details, requirements, and policies" },
                 { href: "/auth/sign-up?role=contractor",   label: "Contractor network application",  sub: "Free to join. Active license and insurance required." },
                 { href: "tel:+17854280244",                label: "(785) 428-0244",                  sub: "Monday – Friday, 8 am – 6 pm CT" },
@@ -710,6 +842,67 @@ export default function HomePage() {
         </div>
       </section>
 
+      <div className="border-t border-border" />
+
+      {/* ── Contact ── */}
+      <section id="contact" className="py-28">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="grid gap-20 lg:grid-cols-2 items-start">
+            <div>
+              <p className="font-mono-label text-primary mb-5">Contact</p>
+              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-sm text-balance mb-10">
+                Headquarters: Topeka, Kansas. Serving Shawnee County and adjacent areas.
+              </h2>
+              <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9] mb-10">
+                <p>
+                  Nexus Operations is headquartered in Topeka, Kansas and currently serves Shawnee County and adjacent areas. As more contractors are approved, coverage expands outward.
+                </p>
+                <p>
+                  Outside our current service area? Contact us to be added to the geographic waitlist. We notify you when coverage reaches your location.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <a
+                  href="tel:+17854280244"
+                  className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
+                >
+                  <Phone className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                  (785) 428-0244. Monday through Friday, 8 am to 6 pm CT.
+                </a>
+                <a
+                  href="mailto:admin@nexusoperations.org"
+                  className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
+                >
+                  <Mail className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                  admin@nexusoperations.org
+                </a>
+                <p className="text-[12px] text-muted-foreground pt-1 pl-[1.375rem]">
+                  Nexus Operations, LLC. Topeka, KS 66606
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-2 lg:pt-16">
+              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-6">Quick links</p>
+              {[
+                { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
+                { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
+                { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
+              ].map(({ href, label, sub }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="group flex items-center justify-between border-b border-border py-4 transition-colors hover:border-primary/40"
+                >
+                  <div>
+                    <p className="text-[13.5px] font-medium text-foreground">{label}</p>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">{sub}</p>
+                  </div>
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
       {/* ── CTA / Contact ── */}
       <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
         <div className="max-w-2xl mx-auto text-center">

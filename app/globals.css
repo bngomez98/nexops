@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
 /*
   @theme (without `inline`) generates CSS custom properties on :root.
   Utility classes like bg-background reference var(--color-background) at
@@ -75,6 +79,9 @@ body {
 /* ── Typography utilities ─────────────────────── */
 .font-heading {
   font-family: var(--font-heading);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .font-mono-label {
