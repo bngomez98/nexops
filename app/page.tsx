@@ -212,6 +212,9 @@ export default function HomePage() {
             <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
             <span className="font-mono-label text-muted-foreground">
               Topeka, Kansas. Serving Shawnee County and surrounding areas.
+            </span>
+          </div>
+
           {/* Location pill */}
           <div className="flex items-center gap-2 mb-10 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/6 px-3 py-1.5">
