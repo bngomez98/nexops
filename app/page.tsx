@@ -77,18 +77,6 @@ export default function HomePage() {
     return () => io.disconnect()
   }, [])
 
-  /* ── Hero rotating text ── */
-  useEffect(() => {
-    const t = setInterval(() => {
-      setHeroVisible(false)
-      setTimeout(() => {
-        setHeroIdx(i => (i + 1) % heroTargets.length)
-        setHeroVisible(true)
-      }, 380)
-    }, 2700)
-    return () => clearInterval(t)
-  }, [])
-
   /* ── Stats pop animation trigger ── */
   useEffect(() => {
     if (!statsRef.current) return
@@ -204,50 +192,34 @@ export default function HomePage() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="relative pt-36 pb-28">
+      <section id="hero" className="relative pt-36 pb-28 overflow-hidden">
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-8">
           <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span className="font-mono-label text-muted-foreground">
-              Topeka, Kansas. Serving Shawnee County and surrounding areas.
+            <span className="text-[12px] text-muted-foreground font-mono">
+              Topeka, Kansas — Shawnee County and surrounding areas
             </span>
           </div>
 
-          {/* Location pill */}
-          <div className="flex items-center gap-2 mb-10 animate-fade-up" style={{ animationDelay: "0.05s" }}>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/6 px-3 py-1.5">
-              <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-              <span className="font-mono-label text-primary/80">
-                Topeka, Kansas — Shawnee County
-              </span>
-            </span>
-          </div>
-
-          <div className="grid gap-12 lg:grid-cols-[1fr_420px] lg:items-center">
+          <div className="grid gap-12 lg:grid-cols-[1fr_480px] lg:items-center">
             <div>
-              {/* Rotating hero headline */}
+              {/* Specialized hero headline */}
               <h1
                 className="font-heading text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance animate-fade-up"
                 style={{ animationDelay: "0.12s" }}
               >
-                Managed property<br />services for<br />
-                <span
-                  className="text-primary inline-block"
-                  style={{
-                    opacity:    heroVisible ? 1 : 0,
-                    transform:  heroVisible ? "translateY(0)" : "translateY(14px)",
-                    transition: "opacity 0.38s cubic-bezier(0.22,1,0.36,1), transform 0.38s cubic-bezier(0.22,1,0.36,1)",
-                  }}
-                >
-                  {heroTargets[heroIdx]}
-                </span>
+                Build a permanent<br />maintenance record.<br />
+                <span className="text-primary inline-block">Monetize the data.</span>
               </h1>
 
-              <div className="mt-8 max-w-xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
+              <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work — backed by a network of licensed, insured contractors and a permanent service record for every property.
+                  Every maintenance and repair project at your property is documented, stored permanently on the Nexus platform, and used to generate financial insights, maintenance recommendations, and professional records for insurance claims, refinancing, and resale.
+                </p>
+                <p className="text-[14px] text-muted-foreground/70 leading-[1.7]">
+                  Property managers access portfolio-level reporting across all managed addresses. Data aggregates by trade category, by address, and in total — replacing fragmented invoices and scattered records with a single, queryable source of truth.
                 </p>
               </div>
 
@@ -256,7 +228,7 @@ export default function HomePage() {
                   href="/auth/sign-up"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
                 >
-                  Get started
+                  Start building your record
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
@@ -269,34 +241,61 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero photo with stats overlay */}
+            {/* Hero visualization: live data dashboard preview */}
             <div
               ref={statsRef}
               className="hidden lg:block relative h-[560px] overflow-hidden rounded-2xl glow-primary animate-fade-up"
               style={{ animationDelay: "0.2s" }}
             >
-              <Image
-                src="/photo-home.jpg"
-                alt="Modern property managed by Nexus Operations"
-                fill
-                className="object-cover object-center"
-                priority
-              />
-              {/* gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+              {/* Dashboard mockup background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-muted/40 via-background to-background border border-border/30" />
+              
+              {/* Fake dashboard content */}
+              <div className="absolute inset-0 p-6 flex flex-col">
+                <div className="mb-6">
+                  <p className="text-[11px] font-mono text-muted-foreground/60">Portfolio Overview</p>
+                  <h2 className="text-lg font-heading font-bold mt-1">Maintenance Intelligence</h2>
+                </div>
 
-              {/* Stats bar overlaid at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-4 divide-x divide-border/30 bg-background/75 backdrop-blur-md">
-                {[
-                  { n: "8",    label: "Trade categories" },
-                  { n: "1",    label: "Per project" },
-                  { n: "100%", label: "Reviewed" },
-                  { n: "∞",    label: "Records" },
-                ].map(({ n, label }, i) => (
-                  <div key={label} className="py-4 px-4 text-center">
-                    <p
-                      className="font-heading text-xl font-bold tracking-tight text-foreground"
-                      style={statsTriggered ? {
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {[
+                    { label: "Total spend", value: "$12,847", change: "+$2,100 YTD" },
+                    { label: "Active projects", value: "3", change: "2 pending approval" },
+                    { label: "Overdue intervals", value: "2", change: "HVAC, Plumbing" },
+                    { label: "Cost efficiency", value: "94%", change: "vs. regional avg" },
+                  ].map(({ label, value, change }) => (
+                    <div key={label} className="border border-border/20 rounded-lg p-3 bg-background/40 backdrop-blur">
+                      <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-1">{label}</p>
+                      <p className="text-[18px] font-bold text-foreground">{value}</p>
+                      <p className="text-[10px] text-muted-foreground/50 mt-1">{change}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex-1 border border-border/20 rounded-lg p-4 bg-background/40 backdrop-blur overflow-hidden">
+                  <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-3">Recurring items</p>
+                  <div className="space-y-2">
+                    {["Plumbing: 3 calls in 8 mo.", "HVAC: No service in 16 mo.", "Roof inspection overdue"].map((item, i) => (
+                      <div key={item} className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
+                        <div className={`w-2 h-2 rounded-full ${i === 1 ? "bg-red-500/60" : "bg-yellow-500/60"}`} />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Animated accent line */}
+              <div
+                className="absolute top-0 right-0 w-1 h-32 bg-gradient-to-b from-primary to-transparent opacity-60"
+                style={{
+                  animation: "pulse 3s ease-in-out infinite",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
                         animation: `stat-pop 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.09}s both`,
                       } : { opacity: 0 }}
                     >
