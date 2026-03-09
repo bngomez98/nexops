@@ -3,66 +3,26 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import {
   FileText,
-  Clock,
-  CheckCircle,
   ArrowRight,
   MapPin,
   DollarSign,
   Calendar,
   ChevronRight,
   BadgeCheck,
-  Info,
 } from "lucide-react"
 
-// Demo open requests — replaced with DB queries once schema exists
-const openRequests = [
-  {
-    id: "req-001",
-    category: "HVAC",
-    title: "Central air system replacement",
-    address: "1421 SW Gage Blvd, Topeka, KS 66604",
-    budgetMax: 9500,
-    photoCount: 6,
-    submittedAt: "2026-03-05",
-    availability: "Weekday evenings, Saturdays",
-  },
-  {
-    id: "req-002",
-    category: "Roofing",
-    title: "Full roof replacement — storm damage",
-    address: "3310 SE 29th St, Topeka, KS 66605",
-    budgetMax: 18000,
-    photoCount: 8,
-    submittedAt: "2026-03-06",
-    availability: "Any weekday 8am–4pm",
-  },
-  {
-    id: "req-003",
-    category: "Electrical",
-    title: "200A panel upgrade + EV charger rough-in",
-    address: "823 NW Fairlawn Rd, Topeka, KS 66606",
-    budgetMax: 5800,
-    photoCount: 4,
-    submittedAt: "2026-03-06",
-    availability: "Monday or Tuesday",
-  },
-  {
-    id: "req-004",
-    category: "Concrete",
-    title: "Driveway replacement — 2-car width, 60ft",
-    address: "117 SE Adams St, Topeka, KS 66607",
-    budgetMax: 7200,
-    photoCount: 5,
-    submittedAt: "2026-03-07",
-    availability: "Flexible — any weekday",
-  },
-]
+const CATEGORY_LABELS: Record<string, string> = {
+  "tree-removal": "Tree Removal",
+  hvac:           "HVAC",
+  electrical:     "Electrical",
+  roofing:        "Roofing",
+  concrete:       "Concrete",
+  fencing:        "Fencing",
+}
 
 export default async function ContractorDashboardPage() {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect("/auth/login")
 
@@ -70,6 +30,38 @@ export default async function ContractorDashboardPage() {
   if (role !== "contractor") redirect("/dashboard")
 
   const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "Contractor"
+
+  // Open requests (in_queue, not yet assigned — requires 005 migration RLS policy)
+  const { data: openRequests } = await supabase
+    .from("service_requests")
+    .select("id, category, description, address, city, state, zip_code, budget_max, preferred_dates, created_at")
+    .in("status", ["pending_review", "in_queue"])
+    .is("assigned_contractor_id", null)
+    .order("created_at", { ascending: false })
+
+  // Claimed requests (assigned to this contractor)
+  const { data: claimedRequests } = await supabase
+    .from("service_requests")
+    .select("id, category, description, address, city, state, zip_code, budget_max, status, created_at")
+    .eq("assigned_contractor_id", user.id)
+    .not("status", "in", '("pending_review","in_queue")')
+    .order("created_at", { ascending: false })
+
+  const open = openRequests ?? []
+  const claimed = claimedRequests ?? []
+
+  const claimedThisMonth = claimed.filter((r) => {
+    const d = new Date(r.created_at)
+    const now = new Date()
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+  }).length
+
+  const avgBudget = claimed.length > 0 && claimed.some((r) => r.budget_max)
+    ? Math.round(
+        claimed.reduce((sum, r) => sum + (r.budget_max ? Number(r.budget_max) : 0), 0) /
+        claimed.filter((r) => r.budget_max).length
+      )
+    : null
 
   return (
     <div className="flex-1 overflow-auto">
@@ -92,10 +84,10 @@ export default async function ContractorDashboardPage() {
         {/* Stats */}
         <div className="mb-8 grid gap-4 sm:grid-cols-4">
           {[
-            { label: "Open Requests",      value: String(openRequests.length), sub: "Requests in your area you can claim right now",                                    color: "text-primary" },
-            { label: "Claimed This Month",  value: "0",                        sub: "Projects you've claimed and hold exclusively this month",                          color: "text-foreground" },
-            { label: "Avg. Budget Ceiling", value: "$0",                       sub: "Average owner-set budget ceiling on your claimed requests — not a guaranteed amount", color: "text-foreground" },
-            { label: "Consultation Rate",   value: "—",                        sub: "Share of your claimed requests that reached a booked consultation",                color: "text-foreground" },
+            { label: "Open Requests",      value: String(open.length),                                    sub: "Unclaimed requests in your area",                                              color: "text-primary" },
+            { label: "Claimed This Month", value: String(claimedThisMonth),                               sub: "Projects you hold exclusively this month",                                    color: "text-foreground" },
+            { label: "Avg. Budget",        value: avgBudget ? `$${avgBudget.toLocaleString()}` : "—",    sub: "Average budget ceiling across your claimed requests",                          color: "text-foreground" },
+            { label: "Total Claimed",      value: String(claimed.length),                                  sub: "All-time requests you've claimed",                                            color: "text-foreground" },
           ].map(({ label, value, sub, color }) => (
             <div key={label} className="rounded-lg border border-border bg-card p-5">
               <p className="text-xs text-muted-foreground mb-3">{label}</p>
@@ -117,64 +109,105 @@ export default async function ContractorDashboardPage() {
         {/* Open requests */}
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-sm font-semibold">Open Requests — Shawnee County</h2>
-          <span className="text-[11px] text-muted-foreground">{openRequests.length} available</span>
+          <span className="text-[11px] text-muted-foreground">{open.length} available</span>
         </div>
         <p className="text-[11px] text-muted-foreground mb-5">
-          Claiming a request removes it from all other contractor feeds immediately. Review the full scope and photos before claiming.
+          Claiming a request removes it from all other contractor feeds immediately. Review the full scope before claiming.
         </p>
 
-        <div className="space-y-3">
-          {openRequests.map((req) => (
-            <div
-              key={req.id}
-              className="rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/30"
-            >
-              <div className="flex items-start justify-between px-5 py-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      {req.category}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">{req.photoCount} photos attached</span>
-                  </div>
-                  <h3 className="text-sm font-semibold mb-1">{req.title}</h3>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-                    <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <MapPin className="h-3 w-3" />{req.address}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <DollarSign className="h-3 w-3" />Budget ceiling: <strong className="text-foreground">${req.budgetMax.toLocaleString()}</strong>
-                    </span>
-                    <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <Calendar className="h-3 w-3" />{req.availability}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-2 ml-6 flex-shrink-0">
-                  <p className="text-[11px] text-muted-foreground">Submitted {req.submittedAt}</p>
-                  <Link
-                    href={`/dashboard/contractor/requests/${req.id}`}
-                    className="inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary/90"
-                  >
-                    View & Claim
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Claimed requests section */}
-        <div className="mt-10">
-          <h2 className="text-sm font-semibold mb-4">Claimed Requests</h2>
+        {open.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border bg-card p-10 text-center">
             <FileText className="mx-auto h-5 w-5 text-muted-foreground mb-3" />
-            <h3 className="text-sm font-semibold">No claimed requests</h3>
-            <p className="mt-1 text-xs text-muted-foreground max-w-xs mx-auto">
-              Requests you claim will appear here with full scope documentation and the scheduled consultation details.
-            </p>
+            <h3 className="text-sm font-semibold">No open requests right now</h3>
+            <p className="mt-1 text-xs text-muted-foreground">New requests in Shawnee County will appear here as they come in.</p>
           </div>
+        ) : (
+          <div className="space-y-3">
+            {open.map((req) => (
+              <div
+                key={req.id}
+                className="rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/30"
+              >
+                <div className="flex items-start justify-between px-5 py-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        {CATEGORY_LABELS[req.category] ?? req.category}
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold line-clamp-2">{req.description}</p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+                      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                        <MapPin className="h-3 w-3" />{req.address}, {req.city}, {req.state} {req.zip_code}
+                      </span>
+                      {req.budget_max && (
+                        <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                          <DollarSign className="h-3 w-3" />Budget ceiling: <strong className="text-foreground">${Number(req.budget_max).toLocaleString()}</strong>
+                        </span>
+                      )}
+                      {req.preferred_dates && (
+                        <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                          <Calendar className="h-3 w-3" />{req.preferred_dates}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-2 ml-6 flex-shrink-0">
+                    <p className="text-[11px] text-muted-foreground">
+                      {new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </p>
+                    <Link
+                      href={`/dashboard/contractor/requests/${req.id}`}
+                      className="inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+                    >
+                      View & Claim
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Claimed requests */}
+        <div className="mt-10">
+          <h2 className="text-sm font-semibold mb-4">Claimed Requests</h2>
+          {claimed.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border bg-card p-10 text-center">
+              <FileText className="mx-auto h-5 w-5 text-muted-foreground mb-3" />
+              <h3 className="text-sm font-semibold">No claimed requests</h3>
+              <p className="mt-1 text-xs text-muted-foreground max-w-xs mx-auto">
+                Requests you claim will appear here with full scope documentation and consultation details.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {claimed.map((req) => (
+                <div key={req.id} className="rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/30">
+                  <div className="flex items-start justify-between px-5 py-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                          {CATEGORY_LABELS[req.category] ?? req.category}
+                        </span>
+                        <span className="text-[10px] font-medium text-muted-foreground capitalize">{req.status.replace(/_/g, " ")}</span>
+                      </div>
+                      <p className="text-sm font-medium line-clamp-2">{req.description}</p>
+                      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground mt-1">
+                        <MapPin className="h-3 w-3" />{req.address}, {req.city}, {req.state} {req.zip_code}
+                      </span>
+                    </div>
+                    <div className="ml-6 flex-shrink-0">
+                      <p className="text-[11px] text-muted-foreground">
+                        {new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Quick links */}
@@ -182,8 +215,8 @@ export default async function ContractorDashboardPage() {
           <h2 className="text-sm font-semibold mb-4">Resources</h2>
           <div className="grid gap-2 sm:grid-cols-3">
             {[
-              { href: "/dashboard/contractor/profile",   label: "Contractor Profile",     sub: "Services, service area, bio" },
-              { href: "/dashboard/messages",             label: "Messages",                sub: "Active threads with property owners" },
+              { href: "/dashboard/contractor/profile", label: "Contractor Profile", sub: "Services, service area, bio" },
+              { href: "/dashboard/messages",           label: "Messages",            sub: "Active threads with property owners" },
               { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform policies and claim process", external: true },
             ].map(({ href, label, sub, external }) => (
               <Link
