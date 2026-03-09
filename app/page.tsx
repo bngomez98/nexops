@@ -96,7 +96,7 @@ export default function HomePage() {
           <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
             <span className="font-mono-label text-muted-foreground">
-              Topeka, Kansas — Shawnee County and surrounding areas
+              Topeka, Kansas. Serving Shawnee County and surrounding areas.
             </span>
           </div>
 
@@ -112,7 +112,7 @@ export default function HomePage() {
 
               <div className="mt-8 max-w-2xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work — backed by a network of licensed, insured contractors and a permanent service record for every property.
+                  Nexus Operations gives property owners and managers a single platform to request, assign, document, and track maintenance and repair work. The platform is backed by a network of licensed, insured contractors and maintains a permanent service record for every property.
                 </p>
               </div>
 
@@ -229,7 +229,7 @@ export default function HomePage() {
               },
               {
                 label: "Permanent service record",
-                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property and remains accessible to the owner.",
+                body: "Every project detail is stored on the platform and retrievable indefinitely, including scope, cost, contractor, photos, and outcome. The record belongs to the property and remains accessible to the owner.",
               },
               {
                 label: "Property-specific intelligence",
@@ -258,7 +258,7 @@ export default function HomePage() {
           <div className="mb-16" data-animate>
             <p className="font-mono-label text-primary mb-5">The platform</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Three account types — homeowners, property managers, and contractors — each with dedicated tools and capabilities.
+              Three account types: homeowners, property managers, and contractors. Each has dedicated tools and capabilities built for their role.
             </h2>
           </div>
 
@@ -293,7 +293,7 @@ export default function HomePage() {
               </div>
               <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
                 <p>
-                  A single account covers your entire portfolio. Each property has its own request history, cost record, and service documentation. Portfolio-level reporting shows maintenance spend by address and by trade category, flags overdue service intervals, and identifies recurring issues — so you can manage a portfolio's maintenance obligations without reconstructing records from scattered sources.
+                  A single account covers your entire portfolio. Each property has its own request history, cost record, and service documentation. Portfolio-level reporting shows maintenance spend by address and by trade category, flags overdue service intervals, and identifies recurring issues so you can manage a portfolio's maintenance obligations without reconstructing records from scattered sources.
                 </p>
               </div>
               <div className="lg:text-right">
@@ -435,7 +435,7 @@ export default function HomePage() {
                 The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
               </p>
               <p>
-                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
+                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget. All projects are reviewed and validated by Nexus staff before the notification reaches you. You arrive at consultations informed and prepared to provide an estimate.
               </p>
               <p>
                 Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
@@ -508,7 +508,7 @@ export default function HomePage() {
               {[
                 { href: "/faq",                            label: "Frequently asked questions", sub: "Platform details, requirements, and policies" },
                 { href: "/auth/sign-up?role=contractor",   label: "Contractor network application", sub: "Free to join. Active license and insurance required." },
-                { href: "tel:+17854280244",                label: "(785) 428-0244", sub: "Monday – Friday, 8 am – 6 pm CT" },
+                { href: "tel:+17854280244",                label: "(785) 428-0244", sub: "Monday through Friday, 8 am to 6 pm CT" },
                 { href: "mailto:admin@nexusoperations.org",label: "admin@nexusoperations.org", sub: "General inquiries and support" },
               ].map(({ href, label, sub }) => (
                 <a
@@ -553,7 +553,7 @@ export default function HomePage() {
                   className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
                 >
                   <Phone className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  (785) 428-0244 — Monday through Friday, 8 am to 6 pm CT
+                  (785) 428-0244. Monday through Friday, 8 am to 6 pm CT.
                 </a>
                 <a
                   href="mailto:admin@nexusoperations.org"
@@ -563,7 +563,7 @@ export default function HomePage() {
                   admin@nexusoperations.org
                 </a>
                 <p className="text-[12px] text-muted-foreground pt-1 pl-[1.375rem]">
-                  Nexus Operations, LLC — Topeka, KS 66606
+                  Nexus Operations, LLC. Topeka, KS 66606
                 </p>
               </div>
             </div>
@@ -573,7 +573,7 @@ export default function HomePage() {
               {[
                 { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
                 { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
-                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network — no fees" },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
                 { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
               ].map(({ href, label, sub }) => (
                 <Link
