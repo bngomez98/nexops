@@ -1,13 +1,9 @@
 @import "tailwindcss";
 
-@theme inline {
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
 /*
   @theme (without `inline`) generates CSS custom properties on :root.
   Utility classes like bg-background reference var(--color-background) at
-  runtime, so overriding those variables in html.dark actually takes effect.
+  runtime, so overriding those variables in html.light actually takes effect.
 */
 @theme {
   /* Fonts — reference Next.js font-loader CSS vars */
