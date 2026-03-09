@@ -208,6 +208,10 @@ export default function HomePage() {
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-8">
+          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
+            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+            <span className="font-mono-label text-muted-foreground">
+              Topeka, Kansas. Serving Shawnee County and surrounding areas.
           {/* Location pill */}
           <div className="flex items-center gap-2 mb-10 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/6 px-3 py-1.5">
@@ -435,6 +439,7 @@ export default function HomePage() {
               },
               {
                 label: "Permanent service record",
+                body: "Every project detail is stored on the platform and retrievable indefinitely, including scope, cost, contractor, photos, and outcome. The record belongs to the property and remains accessible to the owner.",
                 body:  "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
               },
               {
@@ -750,7 +755,7 @@ export default function HomePage() {
                   className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
                 >
                   <Phone className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  (785) 428-0244 — Monday through Friday, 8 am to 6 pm CT
+                  (785) 428-0244. Monday through Friday, 8 am to 6 pm CT.
                 </a>
                 <a
                   href="mailto:admin@nexusoperations.org"
@@ -760,7 +765,7 @@ export default function HomePage() {
                   admin@nexusoperations.org
                 </a>
                 <p className="text-[12px] text-muted-foreground pt-1 pl-[1.375rem]">
-                  Nexus Operations, LLC — Topeka, KS 66606
+                  Nexus Operations, LLC. Topeka, KS 66606
                 </p>
               </div>
             </div>
@@ -768,10 +773,10 @@ export default function HomePage() {
             <div className="pt-2 lg:pt-16">
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-6">Quick links</p>
               {[
-                { href: "/auth/sign-up",                       label: "Homeowner account",        sub: "Submit and manage service requests" },
-                { href: "/auth/sign-up?role=property_manager", label: "Property manager account", sub: "Portfolio-level request management and reporting" },
-                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",   sub: "Join the verified contractor network — no fees" },
-                { href: "/faq",                                label: "FAQ",                      sub: "Platform details, requirements, and policies" },
+                { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
+                { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
+                { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
               ].map(({ href, label, sub }) => (
                 <Link
                   key={href}
@@ -786,6 +791,36 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+      {/* ── CTA / Contact ── */}
+      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
+          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
+            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
+              Start Your Project — Free
+            </button>
+            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
+              Apply as a Contractor
+            </button>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="mailto:admin@nexusoperations.org"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+            >
+              <Mail className="h-4 w-4" />
+              admin@nexusoperations.org
+            </a>
+            <a
+              href="tel:9139511711"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+            >
+              <Phone className="h-4 w-4" />
+              (913) 951-1711
+            </a>
           </div>
         </div>
       </section>

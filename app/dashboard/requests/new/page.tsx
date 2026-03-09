@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -18,21 +18,25 @@ import {
   Fence,
   Upload,
   Loader2,
+  X,
 } from "lucide-react"
 
 const categories = [
-  { id: "tree-removal", name: "Tree Removal", icon: TreePine },
-  { id: "hvac", name: "HVAC", icon: Thermometer },
-  { id: "electrical", name: "Electrical", icon: Zap },
-  { id: "roofing", name: "Roofing", icon: Home },
-  { id: "concrete", name: "Concrete", icon: Hammer },
-  { id: "fencing", name: "Fencing", icon: Fence },
+  { id: "tree-removal", name: "Tree Removal",  icon: TreePine },
+  { id: "hvac",         name: "HVAC",           icon: Thermometer },
+  { id: "electrical",   name: "Electrical",     icon: Zap },
+  { id: "roofing",      name: "Roofing",        icon: Home },
+  { id: "concrete",     name: "Concrete",       icon: Hammer },
+  { id: "fencing",      name: "Fencing",        icon: Fence },
 ]
 
 export default function NewRequestPage() {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [photos, setPhotos] = useState<File[]>([])
   const [formData, setFormData] = useState({
     category: "",
     description: "",
@@ -46,11 +50,34 @@ export default function NewRequestPage() {
     additionalNotes: "",
   })
 
+  function handleFiles(files: FileList | null) {
+    if (!files) return
+    const valid = Array.from(files).filter((f) => f.type.startsWith("image/"))
+    setPhotos((prev) => [...prev, ...valid].slice(0, 10))
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index))
+  }
+
   const handleSubmit = async () => {
     setLoading(true)
-    // TODO: replace with real API call to create the service request
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    router.push("/dashboard/requests")
+    setError(null)
+    try {
+      const res = await fetch("/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+      if (!res.ok) {
+        const body = await res.json()
+        throw new Error(body.error ?? "Failed to submit request")
+      }
+      router.push("/dashboard/requests")
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong")
+      setLoading(false)
+    }
   }
 
   return (
@@ -67,18 +94,11 @@ export default function NewRequestPage() {
         {/* Progress */}
         <div className="mb-8">
           <div className="flex items-center justify-between text-sm">
-            <span className={step >= 1 ? "text-primary" : "text-muted-foreground"}>
-              1. Category
-            </span>
-            <span className={step >= 2 ? "text-primary" : "text-muted-foreground"}>
-              2. Details
-            </span>
-            <span className={step >= 3 ? "text-primary" : "text-muted-foreground"}>
-              3. Location
-            </span>
-            <span className={step >= 4 ? "text-primary" : "text-muted-foreground"}>
-              4. Review
-            </span>
+            {["Category", "Details", "Location", "Review"].map((label, i) => (
+              <span key={label} className={step >= i + 1 ? "text-primary" : "text-muted-foreground"}>
+                {i + 1}. {label}
+              </span>
+            ))}
           </div>
           <div className="mt-2 h-2 rounded-full bg-muted">
             <div
@@ -112,11 +132,7 @@ export default function NewRequestPage() {
                   </button>
                 ))}
               </div>
-              <Button
-                className="mt-6 w-full"
-                onClick={() => setStep(2)}
-                disabled={!formData.category}
-              >
+              <Button className="mt-6 w-full" onClick={() => setStep(2)} disabled={!formData.category}>
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -166,20 +182,50 @@ export default function NewRequestPage() {
                 </div>
               </div>
 
-              {/* TODO: wire up a real <input type="file"> for photo uploads */}
-              <div className="rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center">
-                <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="mt-2 text-sm font-medium">Upload project photos</p>
-                <p className="text-xs text-muted-foreground">2-10 photos recommended</p>
-                <Button variant="outline" size="sm" className="mt-3">
-                  Choose Files
-                </Button>
+              {/* Photo upload */}
+              <div>
+                <Label className="mb-2 block">Project photos (optional, up to 10)</Label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => handleFiles(e.target.files)}
+                />
+                {photos.length > 0 ? (
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap gap-2">
+                      {photos.map((file, i) => (
+                        <div key={i} className="relative flex items-center gap-1.5 rounded border border-border bg-muted px-2 py-1 text-xs">
+                          <span className="max-w-[120px] truncate">{file.name}</span>
+                          <button onClick={() => removePhoto(i)} className="text-muted-foreground hover:text-foreground">
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    {photos.length < 10 && (
+                      <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                        Add more
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center hover:border-primary/40 transition"
+                  >
+                    <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+                    <p className="mt-2 text-sm font-medium">Upload project photos</p>
+                    <p className="text-xs text-muted-foreground">2–10 photos recommended</p>
+                  </button>
+                )}
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(1)}>
-                  Back
-                </Button>
+                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
                 <Button
                   className="flex-1"
                   onClick={() => setStep(3)}
@@ -251,9 +297,7 @@ export default function NewRequestPage() {
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(2)}>
-                  Back
-                </Button>
+                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
                 <Button
                   className="flex-1"
                   onClick={() => setStep(4)}
@@ -276,25 +320,37 @@ export default function NewRequestPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="rounded-lg border border-border bg-muted/50 p-4">
-                <h3 className="font-medium">
+                <h3 className="font-medium capitalize">
                   {categories.find((c) => c.id === formData.category)?.name}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">{formData.description}</p>
                 <div className="mt-4 grid gap-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Budget:</span>
-                    <span>${formData.budgetMin} - ${formData.budgetMax}</span>
-                  </div>
+                  {(formData.budgetMin || formData.budgetMax) && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Budget:</span>
+                      <span>
+                        {formData.budgetMin && formData.budgetMax
+                          ? `$${formData.budgetMin} – $${formData.budgetMax}`
+                          : formData.budgetMax
+                          ? `Up to $${formData.budgetMax}`
+                          : `From $${formData.budgetMin}`}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Location:</span>
-                    <span>
-                      {formData.address}, {formData.city}, {formData.state} {formData.zipCode}
-                    </span>
+                    <span>{formData.address}, {formData.city}, {formData.state} {formData.zipCode}</span>
                   </div>
                   {formData.preferredDates && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Availability:</span>
                       <span>{formData.preferredDates}</span>
+                    </div>
+                  )}
+                  {photos.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Photos:</span>
+                      <span>{photos.length} attached</span>
                     </div>
                   )}
                 </div>
@@ -309,10 +365,12 @@ export default function NewRequestPage() {
                 </ul>
               </div>
 
+              {error && (
+                <p className="text-sm text-destructive">{error}</p>
+              )}
+
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(3)}>
-                  Back
-                </Button>
+                <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
                 <Button className="flex-1" onClick={handleSubmit} disabled={loading}>
                   {loading ? (
                     <>
