@@ -2,7 +2,19 @@ import { LegalShell, Section } from "@/components/legal-shell"
 
 export const metadata = {
   title: "Terms of Service | Nexus Operations",
-  description: "Terms of Service for the Nexus Operations property service management platform.",
+  description:
+    "Terms of Service for Nexus Operations — platform rules, contractor and property owner responsibilities, payment terms, and governing law for use in Topeka, KS.",
+  robots: { index: true, follow: false },
+  alternates: {
+    canonical: "https://nexusoperations.org/terms",
+  },
+  openGraph: {
+    title: "Terms of Service | Nexus Operations",
+    description:
+      "Platform rules, responsibilities, fee structures, and governing law for Nexus Operations. Last updated March 5, 2026.",
+    url: "https://nexusoperations.org/terms",
+    type: "article",
+  },
 }
 
 export default function TermsPage() {
