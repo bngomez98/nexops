@@ -825,42 +825,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* ── CTA / Contact ── */}
-      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
-          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
-            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
-              Start Your Project — Free
-            </button>
-            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
-              Apply as a Contractor
-            </button>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="mailto:admin@nexusoperations.org"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Mail className="h-4 w-4" />
-              admin@nexusoperations.org
-            </a>
-            <a
-              href="tel:9139511711"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Phone className="h-4 w-4" />
-              (913) 951-1711
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* ── Footer ── */}
       <footer className="border-t border-border py-16">
         <div className="mx-auto max-w-6xl px-8">
