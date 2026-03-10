@@ -2,7 +2,19 @@ import { LegalShell, Section } from "@/components/legal-shell"
 
 export const metadata = {
   title: "Privacy Policy | Nexus Operations",
-  description: "Privacy Policy for the Nexus Operations property service management platform.",
+  description:
+    "Privacy Policy for Nexus Operations — how we collect, use, store, and protect your data on the property service management platform in Topeka, KS.",
+  robots: { index: true, follow: false },
+  alternates: {
+    canonical: "https://nexusoperations.org/privacy",
+  },
+  openGraph: {
+    title: "Privacy Policy | Nexus Operations",
+    description:
+      "How Nexus Operations collects, uses, stores, and protects your data. Last updated March 5, 2026.",
+    url: "https://nexusoperations.org/privacy",
+    type: "article",
+  },
 }
 
 export default function PrivacyPage() {

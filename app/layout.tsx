@@ -7,14 +7,82 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta-sans" })
 const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
 
+const BASE_URL = "https://nexusoperations.org"
+
 export const metadata: Metadata = {
-  title: "Nexus Operations | One contractor. Exclusively yours.",
-  description:
-    "Nexus Operations connects homeowners and property managers with licensed, insured contractors in Topeka, KS. Submit your project once — one verified contractor claims it exclusively.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "Nexus Operations | One contractor. Exclusively yours.",
+    template: "%s | Nexus Operations",
   },
+  description:
+    "Nexus Operations connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS. Submit your project once — one verified contractor claims it exclusively. No bidding wars. No spam calls.",
+  keywords: [
+    "contractor Topeka KS",
+    "home repair Topeka",
+    "licensed contractor Topeka Kansas",
+    "property management services Topeka",
+    "homeowner contractor platform",
+    "landlord contractor services",
+    "HVAC contractor Topeka",
+    "roofing contractor Topeka",
+    "electrical contractor Topeka",
+    "plumbing contractor Topeka",
+    "property service management",
+    "exclusive contractor matching",
+    "Shawnee County contractor",
+  ],
+  authors: [{ name: "Nexus Operations", url: BASE_URL }],
+  creator: "Nexus Operations",
+  publisher: "Nexus Operations",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: BASE_URL,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: BASE_URL,
+    siteName: "Nexus Operations",
+    title: "Nexus Operations | One contractor. Exclusively yours.",
+    description:
+      "Nexus Operations connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS. Submit your project once — one verified contractor claims it exclusively.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Nexus Operations — Property Service Management Platform for Topeka, KS",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nexus Operations | One contractor. Exclusively yours.",
+    description:
+      "Connect with licensed, insured contractors in Topeka, KS. Submit once — one verified contractor claims your project exclusively. No bidding wars.",
+    images: ["/og-image.png"],
+    creator: "@nexusoperations",
+    site: "@nexusoperations",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/nexus-favicon.png", type: "image/png" },
+    ],
+    apple: "/nexus-favicon.png",
+  },
+  category: "business",
 }
 
 export const viewport = {
@@ -36,6 +104,12 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='light'?'light':'dark')}catch(e){document.documentElement.classList.add('dark')}})()`,
+          }}
+        />
+        {/* Leadfeeder */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(ss,ex){ window.ldfdr=window.ldfdr||function(){(ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));}; (function(d,s){ fs=d.getElementsByTagName(s)[0]; function ce(src){ var cs=d.createElement(s); cs.src=src; cs.async=1; fs.parentNode.insertBefore(cs,fs); }; ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js'); })(document,'script'); })('kn9Eq4R3XmjaRlvP');`,
           }}
         />
         {/* Google Tag Manager */}
