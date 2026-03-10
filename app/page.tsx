@@ -88,8 +88,126 @@ export default function HomePage() {
     return () => io.disconnect()
   }, [])
 
+  const jsonLd = {
+    organization: {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Nexus Operations",
+      url: "https://nexusoperations.org",
+      logo: "https://nexusoperations.org/nexus-logo.png",
+      description:
+        "Nexus Operations connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS. One project, one contractor, exclusively.",
+      email: "admin@nexusoperations.org",
+      telephone: "+17854280244",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Topeka",
+        addressRegion: "KS",
+        addressCountry: "US",
+      },
+      areaServed: {
+        "@type": "AdministrativeArea",
+        name: "Shawnee County, Kansas",
+      },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: "+17854280244",
+          contactType: "customer support",
+          hoursAvailable: "Mo-Fr 08:00-18:00",
+          availableLanguage: "English",
+        },
+        {
+          "@type": "ContactPoint",
+          email: "admin@nexusoperations.org",
+          contactType: "customer support",
+        },
+      ],
+      sameAs: [],
+    },
+    localBusiness: {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      name: "Nexus Operations",
+      description:
+        "Property service management platform connecting homeowners, landlords, and property managers with licensed, insured contractors in Topeka, Kansas. Exclusive contractor assignment — one project, one contractor.",
+      url: "https://nexusoperations.org",
+      logo: "https://nexusoperations.org/nexus-logo.png",
+      image: "https://nexusoperations.org/og-image.png",
+      telephone: "+17854280244",
+      email: "admin@nexusoperations.org",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Topeka",
+        addressRegion: "KS",
+        postalCode: "66600",
+        addressCountry: "US",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 39.0558,
+        longitude: -95.6894,
+      },
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "08:00",
+          closes: "18:00",
+        },
+      ],
+      areaServed: [
+        { "@type": "City", name: "Topeka", containedIn: { "@type": "State", name: "Kansas" } },
+        { "@type": "AdministrativeArea", name: "Shawnee County" },
+      ],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Property Services",
+        itemListElement: services.map((s) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: s.name,
+            description: s.desc,
+          },
+        })),
+      },
+      priceRange: "$$",
+    },
+    website: {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Nexus Operations",
+      url: "https://nexusoperations.org",
+      description:
+        "Property service management platform for homeowners, landlords, and property managers in Topeka, KS.",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://nexusoperations.org/?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+  }
+
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
+
+      {/* ── Structured Data (JSON-LD) ── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.organization) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.localBusiness) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.website) }}
+      />
 
       {/* ── Scroll progress bar ── */}
       <div
