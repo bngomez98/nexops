@@ -323,21 +323,23 @@ export default function HomePage() {
 
           <div className="grid gap-12 lg:grid-cols-[1fr_480px] lg:items-center">
             <div>
-              {/* Specialized hero headline */}
+                {/* Hero headline */}
               <h1
-                className="font-heading text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance animate-fade-up"
+                className="font-heading text-[52px] font-bold tracking-[-0.02em] leading-[1.05] md:text-[68px] lg:text-[78px] text-balance animate-fade-up"
                 style={{ animationDelay: "0.12s" }}
               >
-                Build a permanent<br />maintenance record.<br />
-                <span className="text-primary inline-block">Monetize the data.</span>
+                Managed property services<br />
+                for Topeka, Kansas.<br />
+                <span className="text-primary inline-block">One verified contractor,</span><br />
+                <span className="text-primary inline-block">exclusively yours.</span>
               </h1>
 
               <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
-                <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Every maintenance and repair project at your property is documented, stored permanently on the Nexus platform, and used to generate financial insights, maintenance recommendations, and professional records for insurance claims, refinancing, and resale.
+                <p className="text-[15px] text-muted-foreground leading-[1.8]">
+                  Submit your service request once. Nexus assigns a licensed, insured contractor from our verified network — one contractor per project, held exclusively through completion. No bidding, no cold calls, no ambiguity.
                 </p>
-                <p className="text-[14px] text-muted-foreground/70 leading-[1.7]">
-                  Property managers access portfolio-level reporting across all managed addresses. Data aggregates by trade category, by address, and in total — replacing fragmented invoices and scattered records with a single, queryable source of truth.
+                <p className="text-[13.5px] text-muted-foreground/70 leading-[1.75]">
+                  Every project is documented and stored permanently on your account. Over time, your service history becomes a verified asset for insurance claims, refinancing, and resale — and a single source of truth for property managers tracking spend across an entire portfolio.
                 </p>
               </div>
 
@@ -346,14 +348,14 @@ export default function HomePage() {
                   href="/auth/sign-up"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
                 >
-                  Start building your record
+                  Create your account
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/auth/sign-up?role=contractor"
                   className="group inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition hover:text-foreground"
                 >
-                  Join the contractor network
+                  Apply to the contractor network
                   <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </Link>
               </div>
@@ -431,20 +433,20 @@ export default function HomePage() {
             {[
               {
                 title: "Homeowners",
-                body: "Submit your request once. Get matched with one verified contractor. Track everything from submission to completion.",
-                cta: "Create account",
+                body: "Submit your project once with photos and scope. Nexus assigns a verified contractor, schedules the consultation, and manages the job through completion. Your service history is stored permanently.",
+                cta: "Create an account",
                 href: "/auth/sign-up",
               },
               {
                 title: "Contractors",
-                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
-                cta: "Apply for access",
+                body: "Receive pre-documented project notifications in your trade and service area. Review scope, photos, and budget before you decide to claim. Get paid directly — no platform fees or referral cuts.",
+                cta: "Apply for network access",
                 href: "/auth/sign-up?role=contractor",
               },
               {
                 title: "Property Managers",
-                body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
-                cta: "Create account",
+                body: "One account covers your entire portfolio. Track maintenance spend by property and by trade category. Identify recurring issues and overdue service intervals across all managed addresses.",
+                cta: "Create an account",
                 href: "/auth/sign-up?role=property_manager",
               },
             ].map(({ title, body, cta, href }) => (
@@ -474,17 +476,17 @@ export default function HomePage() {
             {
               src:     "/photo-homeowner.jpg",
               label:   "For Homeowners",
-              caption: "One verified contractor. No bidding. No surprises.",
+              caption: "One verified, insured contractor. No bidding wars. No cold calls.",
             },
             {
               src:     "/photo-manager.jpg",
-              label:   "For Managers",
-              caption: "Portfolio-level tracking. Spend visibility across all properties.",
+              label:   "For Property Managers",
+              caption: "Portfolio-level spend tracking across every managed address.",
             },
             {
               src:     "/photo-contractor.jpg",
               label:   "For Contractors",
-              caption: "Pre-documented leads. No fees. Direct payment from owners.",
+              caption: "Pre-validated project leads. No platform fees. Direct payment.",
             },
           ].map(({ src, label, caption }) => (
             <div
@@ -520,20 +522,20 @@ export default function HomePage() {
             <div className="space-y-7" data-animate>
               <p className="font-mono-label text-primary">About Nexus Operations</p>
               <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
-                Nexus Operations is a property service management company headquartered in Topeka, Kansas.
+                Nexus Operations is a managed property service platform headquartered in Topeka, Kansas.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, project tracking, and permanent record storage.
+                  <strong className="text-foreground">We manage the full lifecycle of property maintenance, repair, and improvement projects.</strong> From initial intake and documentation review through contractor assignment, consultation scheduling, estimate approval, and final completion — every step is handled on the platform and recorded permanently.
                 </p>
                 <p>
-                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
+                  <strong className="text-foreground">Every contractor in the Nexus network is licensed, insured, and individually reviewed by Nexus staff.</strong> No account is activated automatically. Each project is assigned to one contractor, who holds it exclusively from claim through completion. Property owners receive documented estimates, real-time status updates, and a permanent service record for every project.
                 </p>
                 <p>
-                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
+                  <strong className="text-foreground">Your service history is stored indefinitely and used to generate actionable maintenance recommendations.</strong> The Nexus reporting system flags upcoming service intervals, identifies recurring issues by trade category, and surfaces deferred maintenance items based on your property's actual records. Property managers receive portfolio-level reporting across all managed addresses.
                 </p>
                 <p>
-                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
+                  <strong className="text-foreground">For licensed contractors, Nexus provides direct access to pre-documented, pre-validated project leads.</strong> Claimed projects include photographs, written scope, and the owner's budget ceiling — all reviewed by Nexus staff before the notification reaches you. There is no fee to join or participate in the contractor network.
                 </p>
               </div>
             </div>
@@ -770,13 +772,13 @@ export default function HomePage() {
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
+                The Nexus contractor network is free to join and free to use. There are no per-lead charges, no referral percentages, and no subscription fees for network participation. You review incoming project notifications, decide which ones to claim, and get paid directly by the property owner.
               </p>
               <p>
-                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
+                Every project arrives with photographs, a written scope description, and the owner's stated budget ceiling — reviewed and validated by Nexus staff before the notification reaches your account. You walk into consultations already informed and ready to provide a competitive estimate.
               </p>
               <p>
-                Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
+                Network approval requires a current trade license and active general liability insurance, verified by Nexus staff prior to activation. Once your account is active, it remains active as long as your credentials are current. There are no renewal fees or ongoing participation costs.
               </p>
               <div className="pt-2">
                 <Link
@@ -833,10 +835,10 @@ export default function HomePage() {
             <div data-animate>
               <p className="font-mono-label text-primary mb-5">Get started</p>
               <h2 className="font-heading text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-balance">
-                Create an account and submit your first service request.
+                Get started with your first managed service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property's permanent service record.
+                From your first request, Nexus assigns a verified contractor, coordinates the consultation, manages estimate approval, and documents the completed work. Every closed project adds a permanent, timestamped record to your property's service history.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
