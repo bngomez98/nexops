@@ -13,7 +13,7 @@ const sections = [
     links: [
       { href: "/",                 label: "Home",               desc: "Introduction to Nexus Operations, service categories, and account types" },
       { href: "/faq",              label: "FAQ",                desc: "Frequently asked questions — process, fees, verification, and policies" },
-      { href: "/sitemap",          label: "Sitemap",            desc: "This page — full index of all public pages" },
+      { href: "/site-index",       label: "Site Index",         desc: "This page — full index of all public pages" },
     ],
   },
   {
@@ -93,7 +93,7 @@ export default function SitemapPage() {
           Back to nexusoperations.org
         </Link>
 
-        <h1 className="text-2xl font-bold mt-4">Sitemap</h1>
+        <h1 className="text-2xl font-bold mt-4">Site Index</h1>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
           Complete index of all pages on the Nexus Operations platform.
         </p>
