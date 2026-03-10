@@ -53,7 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
     {
-      url: `${BASE_URL}/sitemap`,
+      url: `${BASE_URL}/sitemap-index`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.3,
