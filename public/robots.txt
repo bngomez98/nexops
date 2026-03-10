@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Disallow private dashboard and auth utility pages
+Disallow: /dashboard/
+Disallow: /auth/forgot-password
+Disallow: /auth/reset-password
+Disallow: /auth/sign-up-success
+Disallow: /auth/error
+Disallow: /api/
+
+Sitemap: https://nexusoperations.org/sitemap.xml
