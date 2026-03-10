@@ -35,7 +35,7 @@ export default function RootLayout({
         {/* Theme init — prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='dark'){document.documentElement.classList.add('dark')}else{document.documentElement.classList.add('light')}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='light'?'light':'dark')}catch(e){document.documentElement.classList.add('dark')}})()`,
           }}
         />
         {/* Google Tag Manager */}
