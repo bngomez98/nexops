@@ -13,19 +13,44 @@ const CATEGORY_LABELS: Record<string, string> = {
   plumbing:       "Plumbing",
 }
 
-export default async function ContractorRequestsPage() {
+// Map from filter label to category key
+const FILTER_TO_KEY: Record<string, string> = {
+  "HVAC":         "hvac",
+  "Roofing":      "roofing",
+  "Electrical":   "electrical",
+  "Concrete":     "concrete",
+  "Tree Removal": "tree-removal",
+  "Fencing":      "fencing",
+  "Plumbing":     "plumbing",
+}
+
+const FILTERS = ["All Categories", "HVAC", "Roofing", "Electrical", "Concrete", "Tree Removal", "Fencing", "Plumbing"]
+
+export default async function ContractorRequestsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/auth/login")
   if (user.user_metadata?.role !== "contractor") redirect("/dashboard")
 
-  const { data: requests } = await supabase
+  const { category } = await searchParams
+  const categoryKey = category && FILTER_TO_KEY[category] ? FILTER_TO_KEY[category] : null
+
+  let query = supabase
     .from("service_requests")
     .select("id, category, description, address, city, state, zip_code, budget_max, preferred_dates, created_at")
     .in("status", ["pending_review", "in_queue"])
     .is("assigned_contractor_id", null)
     .order("created_at", { ascending: false })
 
+  if (categoryKey) {
+    query = query.eq("category", categoryKey)
+  }
+
+  const { data: requests } = await query
   const openRequests = requests ?? []
 
   return (
@@ -40,14 +65,18 @@ export default async function ContractorRequestsPage() {
 
         {/* Filter row */}
         <div className="mb-6 flex flex-wrap gap-2">
-          {["All Categories", "HVAC", "Roofing", "Electrical", "Concrete", "Tree Removal", "Fencing", "Plumbing"].map((f) => (
-            <button
-              key={f}
-              className={`rounded border px-3 py-1.5 text-[12px] font-medium transition ${f === "All Categories" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
-            >
-              {f}
-            </button>
-          ))}
+          {FILTERS.map((f) => {
+            const isActive = f === "All Categories" ? !category : category === f
+            return (
+              <Link
+                key={f}
+                href={f === "All Categories" ? "/dashboard/contractor/requests" : `/dashboard/contractor/requests?category=${encodeURIComponent(f)}`}
+                className={`rounded border px-3 py-1.5 text-[12px] font-medium transition ${isActive ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
+              >
+                {f}
+              </Link>
+            )
+          })}
         </div>
 
         {openRequests.length === 0 ? (
