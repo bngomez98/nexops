@@ -41,9 +41,22 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
+  const { pathname } = request.nextUrl
+
+  // Redirect unauthenticated users away from protected routes
+  if (pathname.startsWith('/dashboard') && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users away from auth pages (login, sign-up, forgot-password)
+  // Allow /auth/callback, /auth/reset-password, /auth/error, /auth/sign-up-success through
+  const authOnlyPaths = ['/auth/login', '/auth/sign-up', '/auth/forgot-password']
+  if (user && authOnlyPaths.some((p) => pathname === p || pathname.startsWith(p + '?'))) {
+    const url = request.nextUrl.clone()
+    const role = user.user_metadata?.role
+    url.pathname = role === 'contractor' ? '/dashboard/contractor' : '/dashboard'
     return NextResponse.redirect(url)
   }
 

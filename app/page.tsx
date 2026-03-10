@@ -29,11 +29,11 @@ const navLinks = [
 ]
 
 export default function HomePage() {
-  const [mobileOpen, setMobileOpen]       = useState(false)
-  const [activeSection, setActiveSection] = useState("")
-  const [scrollPct, setScrollPct]         = useState(0)
-  const [heroIdx, setHeroIdx]             = useState(0)
-  const [heroVisible, setHeroVisible]     = useState(true)
+  const [mobileOpen, setMobileOpen]         = useState(false)
+  const [activeSection, setActiveSection]   = useState("")
+  const [scrollPct, setScrollPct]           = useState(0)
+  const [heroIdx, setHeroIdx]               = useState(0)
+  const [heroVisible, setHeroVisible]       = useState(true)
   const [statsTriggered, setStatsTriggered] = useState(false)
   const statsRef = useRef<HTMLDivElement>(null)
 
@@ -75,18 +75,6 @@ export default function HomePage() {
     )
     els.forEach(el => io.observe(el))
     return () => io.disconnect()
-  }, [])
-
-  /* ── Hero rotating text ── */
-  useEffect(() => {
-    const t = setInterval(() => {
-      setHeroVisible(false)
-      setTimeout(() => {
-        setHeroIdx(i => (i + 1) % heroTargets.length)
-        setHeroVisible(true)
-      }, 380)
-    }, 2700)
-    return () => clearInterval(t)
   }, [])
 
   /* ── Stats pop animation trigger ── */
@@ -134,7 +122,7 @@ export default function HomePage() {
                   href={href}
                   className={`px-3.5 py-1.5 text-[12.5px] rounded-full transition-all duration-200 ${
                     active
-                      ? "text-primary bg-primary/8 font-medium"
+                      ? "text-primary bg-primary/10 font-medium"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -204,43 +192,34 @@ export default function HomePage() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="relative pt-36 pb-28">
+      <section id="hero" className="relative pt-36 pb-28 overflow-hidden">
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-8">
-          {/* Location pill */}
-          <div className="flex items-center gap-2 mb-10 animate-fade-up" style={{ animationDelay: "0.05s" }}>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/6 px-3 py-1.5">
-              <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-              <span className="font-mono-label text-primary/80">
-                Topeka, Kansas — Shawnee County
-              </span>
+          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
+            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+            <span className="text-[12px] text-muted-foreground font-mono">
+              Topeka, Kansas — Shawnee County and surrounding areas
             </span>
           </div>
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_420px] lg:items-center">
+          <div className="grid gap-12 lg:grid-cols-[1fr_480px] lg:items-center">
             <div>
-              {/* Rotating hero headline */}
+              {/* Specialized hero headline */}
               <h1
                 className="font-heading text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance animate-fade-up"
                 style={{ animationDelay: "0.12s" }}
               >
-                Managed property<br />services for<br />
-                <span
-                  className="text-primary inline-block"
-                  style={{
-                    opacity:   heroVisible ? 1 : 0,
-                    transform: heroVisible ? "translateY(0)" : "translateY(14px)",
-                    transition: "opacity 0.38s cubic-bezier(0.22,1,0.36,1), transform 0.38s cubic-bezier(0.22,1,0.36,1)",
-                  }}
-                >
-                  {heroTargets[heroIdx]}
-                </span>
+                Build a permanent<br />maintenance record.<br />
+                <span className="text-primary inline-block">Monetize the data.</span>
               </h1>
 
-              <div className="mt-8 max-w-xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
+              <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations gives property owners and managers a single platform to request, assign, and track maintenance and repair work — backed by a network of licensed, insured contractors and full project history on every property.
+                  Every maintenance and repair project at your property is documented, stored permanently on the Nexus platform, and used to generate financial insights, maintenance recommendations, and professional records for insurance claims, refinancing, and resale.
+                </p>
+                <p className="text-[14px] text-muted-foreground/70 leading-[1.7]">
+                  Property managers access portfolio-level reporting across all managed addresses. Data aggregates by trade category, by address, and in total — replacing fragmented invoices and scattered records with a single, queryable source of truth.
                 </p>
               </div>
 
@@ -249,7 +228,7 @@ export default function HomePage() {
                   href="/auth/sign-up"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
                 >
-                  Get started
+                  Start building your record
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
@@ -262,78 +241,137 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero photo with stats overlay */}
+            {/* Hero visualization: live data dashboard preview */}
             <div
               ref={statsRef}
               className="hidden lg:block relative h-[560px] overflow-hidden rounded-2xl glow-primary animate-fade-up"
               style={{ animationDelay: "0.2s" }}
             >
-              <Image
-                src="/photo-home.jpg"
-                alt="Modern property managed by Nexus Operations"
-                fill
-                className="object-cover object-center"
-                priority
-              />
-              {/* gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+              {/* Dashboard mockup background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-muted/40 via-background to-background border border-border/30" />
+              
+              {/* Fake dashboard content */}
+              <div className="absolute inset-0 p-6 flex flex-col">
+                <div className="mb-6">
+                  <p className="text-[11px] font-mono text-muted-foreground/60">Portfolio Overview</p>
+                  <h2 className="text-lg font-heading font-bold mt-1">Maintenance Intelligence</h2>
+                </div>
 
-              {/* Stats bar overlaid at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-4 divide-x divide-border/30 bg-background/75 backdrop-blur-md">
-                {[
-                  { n: "8",    label: "Trade categories" },
-                  { n: "1",    label: "Per project" },
-                  { n: "100%", label: "Reviewed" },
-                  { n: "∞",    label: "Records" },
-                ].map(({ n, label }, i) => (
-                  <div key={label} className="py-4 px-4 text-center">
-                    <p
-                      className="font-heading text-xl font-bold tracking-tight text-foreground"
-                      style={statsTriggered ? {
-                        animation: `stat-pop 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.09}s both`,
-                      } : { opacity: 0 }}
-                    >
-                      {n}
-                    </p>
-                    <p className="font-mono-label text-muted-foreground mt-0.5 normal-case tracking-normal text-[10px]">{label}</p>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {[
+                    { label: "Total spend", value: "$12,847", change: "+$2,100 YTD" },
+                    { label: "Active projects", value: "3", change: "2 pending approval" },
+                    { label: "Overdue intervals", value: "2", change: "HVAC, Plumbing" },
+                    { label: "Cost efficiency", value: "94%", change: "vs. regional avg" },
+                  ].map(({ label, value, change }) => (
+                    <div key={label} className="border border-border/20 rounded-lg p-3 bg-background/40 backdrop-blur">
+                      <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-1">{label}</p>
+                      <p className="text-[18px] font-bold text-foreground">{value}</p>
+                      <p className="text-[10px] text-muted-foreground/50 mt-1">{change}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex-1 border border-border/20 rounded-lg p-4 bg-background/40 backdrop-blur overflow-hidden">
+                  <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-3">Recurring items</p>
+                  <div className="space-y-2">
+                    {["Plumbing: 3 calls in 8 mo.", "HVAC: No service in 16 mo.", "Roof inspection overdue"].map((item, i) => (
+                      <div key={item} className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
+                        <div className={`w-2 h-2 rounded-full ${i === 1 ? "bg-red-500/60" : "bg-yellow-500/60"}`} />
+                        {item}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
+
+              {/* Animated accent line */}
+              <div
+                className="absolute top-0 right-0 w-1 h-32 bg-gradient-to-b from-primary to-transparent opacity-60"
+                style={{
+                  animation: "pulse 3s ease-in-out infinite",
+                }}
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Photo Banner: Three user types ── */}
-      <section className="overflow-hidden border-t border-border">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
+      <div className="border-t border-border" />
+
+      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
+      <section id="who-we-serve" className="py-24">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="mb-16 text-center" data-animate>
+            <p className="font-mono-label text-primary mb-4">Solutions</p>
+            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
+              Built for homeowners, contractors, and property managers.
+            </h2>
+          </div>
+
+          <div className="grid gap-12 sm:grid-cols-3">
+            {[
+              {
+                title: "Homeowners",
+                body: "Submit your request once. Get matched with one verified contractor. Track everything from submission to completion.",
+                cta: "Create account",
+                href: "/auth/sign-up",
+              },
+              {
+                title: "Contractors",
+                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
+                cta: "Apply for access",
+                href: "/auth/sign-up?role=contractor",
+              },
+              {
+                title: "Property Managers",
+                body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
+                cta: "Create account",
+                href: "/auth/sign-up?role=property_manager",
+              },
+            ].map(({ title, body, cta, href }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
+                data-animate
+              >
+                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
+                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
+                  {cta} <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
+      {/* ── Photo Banner: Three user types (visual reference) ── */}
+      <section className="overflow-hidden border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
           {[
             {
               src:     "/photo-homeowner.jpg",
-              label:   "Homeowners",
-              caption: "Submit, track, and document every repair — from first request to permanent record.",
-              href:    "/auth/sign-up",
-              cta:     "Create account",
+              label:   "For Homeowners",
+              caption: "One verified contractor. No bidding. No surprises.",
             },
             {
               src:     "/photo-manager.jpg",
-              label:   "Property Managers",
-              caption: "Manage your entire portfolio from a single dashboard with full reporting.",
-              href:    "/auth/sign-up?role=property_manager",
-              cta:     "Create account",
+              label:   "For Managers",
+              caption: "Portfolio-level tracking. Spend visibility across all properties.",
             },
             {
               src:     "/photo-contractor.jpg",
-              label:   "Contractors",
-              caption: "Receive pre-documented project notifications. No fees, no cuts, no bidding wars.",
-              href:    "/auth/sign-up?role=contractor",
-              cta:     "Apply for access",
+              label:   "For Contractors",
+              caption: "Pre-documented leads. No fees. Direct payment from owners.",
             },
-          ].map(({ src, label, caption, href, cta }) => (
-            <Link
+          ].map(({ src, label, caption }) => (
+            <div
               key={label}
-              href={href}
-              className="photo-card group relative block h-72 md:h-80 overflow-hidden bg-muted"
+              className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
             >
               <div className="photo-card-inner absolute inset-0">
                 <Image
@@ -344,15 +382,12 @@ export default function HomePage() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/88 via-background/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="font-mono-label text-primary mb-1.5">{label}</p>
-                <p className="text-[13px] text-foreground/90 leading-relaxed mb-3">{caption}</p>
-                <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-primary transition-all group-hover:gap-2.5">
-                  {cta} <ArrowRight className="h-3 w-3" />
-                </span>
+                <p className="font-mono-label text-primary mb-2">{label}</p>
+                <p className="text-[13px] text-foreground/90">{caption}</p>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </section>
@@ -371,13 +406,13 @@ export default function HomePage() {
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, and project tracking.
+                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, project tracking, and permanent record storage.
                 </p>
                 <p>
-                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates and project updates for every request.
+                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
                 </p>
                 <p>
-                  <strong className="text-foreground">Your project history is used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's completed projects. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
+                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
                 </p>
                 <p>
                   <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
@@ -414,12 +449,12 @@ export default function HomePage() {
       <div className="border-t border-border" />
 
       {/* ── Mission & Values ── */}
-      <section id="mission" className="py-28 bg-muted/30">
+      <section id="mission" className="py-28 bg-surface">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">Mission &amp; Values</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every property owner deserves a clear, verified account of what has been maintained, when, and at what cost.
+              Every property owner deserves a complete, verified record of what has been maintained, when, and at what cost.
             </h2>
           </div>
 
@@ -435,7 +470,7 @@ export default function HomePage() {
               },
               {
                 label: "Permanent service record",
-                body:  "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
+                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
               },
               {
                 label: "Property-specific intelligence",
@@ -557,22 +592,22 @@ export default function HomePage() {
       <section id="reporting" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">Project reporting</p>
+            <p className="font-mono-label text-primary mb-5">Data-driven reporting</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every completed project generates a report. That data is used to surface useful insights about your property over time.
+              Every closed project generates a post-project report. Over time, that data builds a complete property service record.
             </h2>
           </div>
 
           <div className="grid gap-20 lg:grid-cols-[1fr_360px] items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                <strong className="text-foreground">Each post-project report covers three areas.</strong> Financial: what the project cost, how that breaks down between labor and materials, and how it compared to your budget ceiling. Timeline: how long it took from submission to completion, and how quickly the contractor responded at each step. Recommendations: any follow-up items the contractor noted, suggested next-service dates by trade, and related work worth considering.
+                <strong className="text-foreground">Post-project reports are generated after every completed project.</strong> Each report covers three categories: financial data (total cost, cost breakdown by labor and materials, comparison to budget ceiling), efficiency metrics (time from submission to completion, contractor response time, consultation-to-estimate interval), and recommendations (follow-up items identified during the project, suggested maintenance intervals, related services to consider).
               </p>
               <p>
-                <strong className="text-foreground">Reports become more useful as your project history grows.</strong> Your costs and timelines for a given trade category are compared against your own prior projects at the same address — not against external benchmarks you have no context for. Property managers see the same breakdown across every address in their portfolio, making it straightforward to spot which properties are costing more and in which categories.
+                <strong className="text-foreground">Reports draw on historical, current, and cross-property data.</strong> Historical data includes all prior projects at the same address and within the same trade category. Current data covers the project just completed. Cross-property data, available to property managers, benchmarks performance and spend against other properties in the same portfolio and service area.
               </p>
               <p>
-                <strong className="text-foreground">Your project data belongs to you.</strong> Every project you complete through Nexus — scope, photos, contractor, cost, outcome — is accessible from your account and downloadable at any time. For insurance claims, sale documentation, or your own reference, you have a clear record of what was done, when, and what it cost. Property managers get the same at the portfolio level: total spend by address, spend by trade category, and flags for any addresses with overdue service intervals.
+                <strong className="text-foreground">The accumulated service record is a verified ownership asset.</strong> For insurance claims, sale documentation, refinancing, or due diligence, the Nexus service record provides a complete, timestamped history of what has been maintained, when, by whom, and at what cost. Property managers receive portfolio-level aggregation: spend by address, spend by trade, outstanding intervals, and recurring issue flags across all managed properties.
               </p>
             </div>
 
@@ -674,7 +709,7 @@ export default function HomePage() {
       <div className="border-t border-border" />
 
       {/* ── CTA ── */}
-      <section className="py-28 bg-muted/30">
+      <section className="py-28 bg-surface">
         <div className="mx-auto max-w-6xl px-8">
           <div className="grid gap-16 lg:grid-cols-2 items-center">
             <div data-animate>
@@ -683,7 +718,7 @@ export default function HomePage() {
                 Create an account and submit your first service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Each completed project adds to your property's project history.
+                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property's permanent service record.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -703,10 +738,10 @@ export default function HomePage() {
             </div>
             <div className="divide-y divide-border border-t border-b border-border">
               {[
-                { href: "/faq",                            label: "Frequently asked questions",      sub: "Platform details, requirements, and policies" },
-                { href: "/auth/sign-up?role=contractor",   label: "Contractor network application",  sub: "Free to join. Active license and insurance required." },
-                { href: "tel:+17854280244",                label: "(785) 428-0244",                  sub: "Monday – Friday, 8 am – 6 pm CT" },
-                { href: "mailto:admin@nexusoperations.org",label: "admin@nexusoperations.org",       sub: "General inquiries and support" },
+                { href: "/faq",                             label: "Frequently asked questions",     sub: "Platform details, requirements, and policies" },
+                { href: "/auth/sign-up?role=contractor",    label: "Contractor network application", sub: "Free to join. Active license and insurance required." },
+                { href: "tel:+17854280244",                 label: "(785) 428-0244",                 sub: "Monday – Friday, 8 am – 6 pm CT" },
+                { href: "mailto:admin@nexusoperations.org", label: "admin@nexusoperations.org",      sub: "General inquiries and support" },
               ].map(({ href, label, sub }) => (
                 <a
                   key={href}
@@ -750,7 +785,7 @@ export default function HomePage() {
                   className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
                 >
                   <Phone className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  (785) 428-0244 — Monday through Friday, 8 am to 6 pm CT
+                  (785) 428-0244. Monday through Friday, 8 am to 6 pm CT.
                 </a>
                 <a
                   href="mailto:admin@nexusoperations.org"
@@ -760,7 +795,7 @@ export default function HomePage() {
                   admin@nexusoperations.org
                 </a>
                 <p className="text-[12px] text-muted-foreground pt-1 pl-[1.375rem]">
-                  Nexus Operations, LLC — Topeka, KS 66606
+                  Nexus Operations, LLC. Topeka, KS 66606
                 </p>
               </div>
             </div>
@@ -770,7 +805,7 @@ export default function HomePage() {
               {[
                 { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
                 { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
-                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network — no fees" },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
                 { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
               ].map(({ href, label, sub }) => (
                 <Link
@@ -813,11 +848,11 @@ export default function HomePage() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Platform</p>
               <ul className="space-y-2.5">
                 {[
-                  { href: "#about",      label: "About Nexus" },
-                  { href: "#platform",   label: "Platform" },
-                  { href: "#services",   label: "Services" },
-                  { href: "#reporting",  label: "Reporting & Advisory" },
-                  { href: "/faq",        label: "FAQ" },
+                  { href: "#about",     label: "About Nexus" },
+                  { href: "#platform",  label: "Platform" },
+                  { href: "#services",  label: "Services" },
+                  { href: "#reporting", label: "Reporting & Advisory" },
+                  { href: "/faq",       label: "FAQ" },
                 ].map(({ href, label }) => (
                   <li key={href}>
                     <a href={href} className="text-[11.5px] text-muted-foreground transition hover:text-foreground">

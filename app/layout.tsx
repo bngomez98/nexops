@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
-import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google"
+import { Inter, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { CookieConsent } from "@/components/cookie-consent"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" })
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta-sans" })
 const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default function RootLayout({
         {/* Theme init — prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='light'){document.documentElement.classList.add('light')}else{document.documentElement.classList.add('dark')}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='light'?'light':'dark')}catch(e){document.documentElement.classList.add('dark')}})()`,
           }}
         />
         {/* Google Tag Manager */}
@@ -49,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} ${ibmPlexMono.variable} font-sans`}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} font-sans`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
