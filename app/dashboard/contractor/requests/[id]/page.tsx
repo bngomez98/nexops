@@ -11,6 +11,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   roofing:        "Roofing",
   concrete:       "Concrete",
   fencing:        "Fencing",
+  plumbing:       "Plumbing",
 }
 
 export default async function ContractorRequestPage({ params }: { params: Promise<{ id: string }> }) {
@@ -38,11 +39,11 @@ export default async function ContractorRequestPage({ params }: { params: Promis
     <div className="flex-1 overflow-auto">
       <div className="mx-auto max-w-3xl px-6 py-8">
         <Link
-          href="/dashboard/contractor"
+          href="/dashboard/contractor/requests"
           className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to dashboard
+          Back to open requests
         </Link>
 
         <div className="mb-6 flex items-start justify-between">
