@@ -41,6 +41,7 @@ export function HeroTypewriter() {
         const t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 35)
         return () => clearTimeout(t)
       } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setServiceIndex((i) => (i + 1) % services.length)
         setPhase('typing')
       }
