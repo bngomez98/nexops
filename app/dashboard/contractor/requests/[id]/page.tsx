@@ -27,12 +27,17 @@ export default async function ContractorRequestPage({ params }: { params: Promis
     .from("service_requests")
     .select("*")
     .eq("id", id)
+    .or(
+      `and(status.in.(pending_review,in_queue),assigned_contractor_id.is.null),assigned_contractor_id.eq.${user.id}`,
+    )
     .single()
 
   if (!req) notFound()
 
   const isOpen = ["pending_review", "in_queue"].includes(req.status) && !req.assigned_contractor_id
   const isMine = req.assigned_contractor_id === user.id
+
+  if (!isOpen && !isMine) notFound()
 
   return (
     <div className="flex-1 overflow-auto">
@@ -133,11 +138,6 @@ export default async function ContractorRequestPage({ params }: { params: Promis
             </div>
           )}
 
-          {!isOpen && !isMine && (
-            <div className="rounded-lg border border-border bg-muted/50 p-4 text-center">
-              <p className="text-sm text-muted-foreground">This request has already been claimed by another contractor.</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
