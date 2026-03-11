@@ -1,5 +1,6 @@
 "use client"
 
+// Fixed: Removed orphaned stats bar code
 import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
@@ -88,126 +89,8 @@ export default function HomePage() {
     return () => io.disconnect()
   }, [])
 
-  const jsonLd = {
-    organization: {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Nexus Operations",
-      url: "https://nexusoperations.org",
-      logo: "https://nexusoperations.org/nexus-logo.png",
-      description:
-        "Nexus Operations connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS. One project, one contractor, exclusively.",
-      email: "admin@nexusoperations.org",
-      telephone: "+17854280244",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Topeka",
-        addressRegion: "KS",
-        addressCountry: "US",
-      },
-      areaServed: {
-        "@type": "AdministrativeArea",
-        name: "Shawnee County, Kansas",
-      },
-      contactPoint: [
-        {
-          "@type": "ContactPoint",
-          telephone: "+17854280244",
-          contactType: "customer support",
-          hoursAvailable: "Mo-Fr 08:00-18:00",
-          availableLanguage: "English",
-        },
-        {
-          "@type": "ContactPoint",
-          email: "admin@nexusoperations.org",
-          contactType: "customer support",
-        },
-      ],
-      sameAs: [],
-    },
-    localBusiness: {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      name: "Nexus Operations",
-      description:
-        "Property service management platform connecting homeowners, landlords, and property managers with licensed, insured contractors in Topeka, Kansas. Exclusive contractor assignment — one project, one contractor.",
-      url: "https://nexusoperations.org",
-      logo: "https://nexusoperations.org/nexus-logo.png",
-      image: "https://nexusoperations.org/og-image.png",
-      telephone: "+17854280244",
-      email: "admin@nexusoperations.org",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Topeka",
-        addressRegion: "KS",
-        postalCode: "66600",
-        addressCountry: "US",
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: 39.0558,
-        longitude: -95.6894,
-      },
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "08:00",
-          closes: "18:00",
-        },
-      ],
-      areaServed: [
-        { "@type": "City", name: "Topeka", containedIn: { "@type": "State", name: "Kansas" } },
-        { "@type": "AdministrativeArea", name: "Shawnee County" },
-      ],
-      hasOfferCatalog: {
-        "@type": "OfferCatalog",
-        name: "Property Services",
-        itemListElement: services.map((s) => ({
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: s.name,
-            description: s.desc,
-          },
-        })),
-      },
-      priceRange: "$$",
-    },
-    website: {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Nexus Operations",
-      url: "https://nexusoperations.org",
-      description:
-        "Property service management platform for homeowners, landlords, and property managers in Topeka, KS.",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: "https://nexusoperations.org/?q={search_term_string}",
-        },
-        "query-input": "required name=search_term_string",
-      },
-    },
-  }
-
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
-
-      {/* ── Structured Data (JSON-LD) ── */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.organization) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.localBusiness) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.website) }}
-      />
 
       {/* ── Scroll progress bar ── */}
       <div
@@ -415,81 +298,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
-      <section id="who-we-serve" className="py-24">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-16 text-center" data-animate>
-            <p className="font-mono-label text-primary mb-4">Solutions</p>
-            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
-              Built for homeowners, contractors, and property managers.
-            </h2>
-          </div>
-
-          <div className="grid gap-12 sm:grid-cols-3">
-            {[
-              {
-                title: "Homeowners",
-                body: "Submit your request once. Get matched with one verified contractor. Track everything from submission to completion.",
-                cta: "Create account",
-                href: "/auth/sign-up",
-              },
-              {
-                title: "Contractors",
-                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
-                cta: "Apply for access",
-                href: "/auth/sign-up?role=contractor",
-              },
-              {
-                title: "Property Managers",
-                body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
-                cta: "Create account",
-                href: "/auth/sign-up?role=property_manager",
-              },
-            ].map(({ title, body, cta, href }) => (
-              <Link
-                key={title}
-                href={href}
-                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
-                data-animate
-              >
-                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
-                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
-                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
-                  {cta} <ArrowRight className="h-3 w-3" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── Photo Banner: Three user types (visual reference) ── */}
-      <section className="overflow-hidden border-b border-border">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
+      {/* ── Photo Banner: Three user types ── */}
+      <section className="overflow-hidden border-t border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
           {[
             {
               src:     "/photo-homeowner.jpg",
-              label:   "For Homeowners",
-              caption: "One verified contractor. No bidding. No surprises.",
+              label:   "Homeowners",
+              caption: "Submit, track, and document every repair — from first request to permanent record.",
+              href:    "/auth/sign-up",
+              cta:     "Create account",
             },
             {
               src:     "/photo-manager.jpg",
-              label:   "For Managers",
-              caption: "Portfolio-level tracking. Spend visibility across all properties.",
+              label:   "Property Managers",
+              caption: "Manage your entire portfolio from a single dashboard with full reporting.",
+              href:    "/auth/sign-up?role=property_manager",
+              cta:     "Create account",
             },
             {
               src:     "/photo-contractor.jpg",
-              label:   "For Contractors",
-              caption: "Pre-documented leads. No fees. Direct payment from owners.",
+              label:   "Contractors",
+              caption: "Receive pre-documented project notifications. No fees, no cuts, no bidding wars.",
+              href:    "/auth/sign-up?role=contractor",
+              cta:     "Apply for access",
             },
-          ].map(({ src, label, caption }) => (
-            <div
+          ].map(({ src, label, caption, href, cta }) => (
+            <Link
               key={label}
-              className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
+              href={href}
+              className="photo-card group relative block h-72 md:h-80 overflow-hidden bg-muted"
             >
               <div className="photo-card-inner absolute inset-0">
                 <Image
@@ -500,12 +338,15 @@ export default function HomePage() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/88 via-background/25 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="font-mono-label text-primary mb-2">{label}</p>
-                <p className="text-[13px] text-foreground/90">{caption}</p>
+                <p className="font-mono-label text-primary mb-1.5">{label}</p>
+                <p className="text-[13px] text-foreground/90 leading-relaxed mb-3">{caption}</p>
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-primary transition-all group-hover:gap-2.5">
+                  {cta} <ArrowRight className="h-3 w-3" />
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -588,7 +429,8 @@ export default function HomePage() {
               },
               {
                 label: "Permanent service record",
-                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
+                body: "Every project detail is stored on the platform and retrievable indefinitely, including scope, cost, contractor, photos, and outcome. The record belongs to the property and remains accessible to the owner.",
+                body:  "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
               },
               {
                 label: "Property-specific intelligence",
@@ -939,6 +781,42 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
+      {/* ── CTA / Contact ── */}
+      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
+          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
+            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
+              Start Your Project — Free
+            </button>
+            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
+              Apply as a Contractor
+            </button>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="mailto:admin@nexusoperations.org"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+            >
+              <Mail className="h-4 w-4" />
+              admin@nexusoperations.org
+            </a>
+            <a
+              href="tel:9139511711"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+            >
+              <Phone className="h-4 w-4" />
+              (913) 951-1711
+            </a>
           </div>
         </div>
       </section>
