@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/*
+  @theme (without `inline`) generates CSS custom properties on :root.
+  Utility classes like bg-background reference var(--color-background) at
+  runtime, so overriding those variables in html.light actually takes effect.
+*/
 @theme {
   /* Fonts — reference Next.js font-loader CSS vars */
   --font-sans:    var(--font-inter),        "Inter",          ui-sans-serif, system-ui, sans-serif;
