@@ -197,27 +197,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-              {[
-                ["Founded",                  "2025"],
-                ["Headquarters",             "Topeka, KS 66606"],
-                ["Service area",             "Shawnee County + surrounding"],
-                ["Phone",                    "(785) 428-0244"],
-                ["Email",                    "admin@nexusoperations.org"],
-                ["Cost to property owner",   "No charge"],
-                ["Contractors per request",  "One, assigned exclusively"],
-                ["Contractor verification",  "License · Insurance · Background check"],
-                ["Post-project reporting",   "Included — service history, spend, maintenance advisory"],
-              ].map(([label, value], i) => (
-                <div key={label} className={`flex justify-between gap-6 px-5 py-3.5 ${i < 8 ? "border-b border-border" : ""}`}>
-                  <span className="text-muted-foreground shrink-0">{label}</span>
-                  <span className="text-right font-medium">{value}</span>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* ── Divider ── */}
       <div className="border-t border-border" />
