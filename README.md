@@ -1,44 +1,80 @@
+Here is a complete, production-quality README for the [bngomez98/nexops](https://github.com/bngomez98/nexops/) repository, written based on the live site at [nexusoperations.org](https://nexusoperations.org) and the actual tech stack in your repo:
 
+***
 
-Nexus Operations is a Next.js web application serving Topeka, KS and the surrounding region. Homeowners submit documented project requests — including photos, written scope, and a maximum budget — and licensed, insured contractors can claim projects exclusively. Projects are immediately removed from all other contractors' feeds upon claim.
+```markdown
+# Nexus Operations
 
-**For homeowners:** Free to submit requests. Matched with one verified contractor, confirmed within 24 hours.
+Web platform for [Nexus Operations](https://nexusoperations.org) — a property service management company based in Topeka, Kansas. The platform handles the full lifecycle of residential property service requests: submission, contractor assignment, documentation, project records, and maintenance advisory reporting.
 
-**For contractors:** Flat monthly membership ($299–$749/month). Unlimited project claims. No per-lead fees.
+## Overview
+
+Nexus Operations connects property owners and managers with a vetted network of licensed, insured, and background-checked contractors across the primary residential trades. Each service request is reviewed by Nexus staff, assigned to a single contractor exclusively, and tracked from submission through completion. All project records persist permanently and power data-driven maintenance advisory reporting for property owners and managers.
+
+The platform serves three distinct account types:
+
+- **Homeowners** — Submit and track service requests for residential properties
+- **Property Managers** — Manage requests, records, and reporting across a portfolio of addresses
+- **Contractors** — Apply for and receive project notifications in their trade and service area
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS 4, shadcn/ui |
-| Forms | React Hook Form + Zod |
+| Framework | [Next.js](https://nextjs.org/) 16 (App Router) |
+| Language | TypeScript 5.9 |
+| UI Components | [Radix UI](https://www.radix-ui.com/) primitives |
+| Styling | Tailwind CSS v4 |
 | Charts | Recharts |
-| Package manager | pnpm |
-
-## Prerequisites
-
-- Node.js 20 or later
-- pnpm 9 or later
+| Database / Auth | [Supabase](https://supabase.com/) (`@supabase/ssr`) |
+| Payments | [Stripe](https://stripe.com/) |
+| Analytics | Vercel Analytics + Speed Insights |
+| Package Manager | pnpm 9 |
+| Deployment | Vercel |
 
 ## Getting Started
 
-**Install dependencies:**
+### Prerequisites
+
+- Node.js 20+
+- [pnpm](https://pnpm.io/) 9+
+
+### Installation
 
 ```bash
+git clone https://github.com/bngomez98/nexops.git
+cd nexops
 pnpm install
 ```
 
-**Start the development server:**
+### Environment Variables
+
+Create a `.env.local` file in the root of the project. The following variables are required:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Stripe
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+# Vercel Edge Config (if applicable)
+EDGE_CONFIG=
+```
+
+### Development
 
 ```bash
 pnpm dev
 ```
 
-The application will be available at `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-**Build for production:**
+### Build
 
 ```bash
 pnpm build
@@ -49,89 +85,36 @@ pnpm start
 
 ```
 nexops/
-├── app/                    # Next.js App Router pages and API routes
-│   ├── api/                # Server-side API handlers
-│   │   ├── auth/           # Authentication endpoints (login, signup, logout, me)
-│   │   ├── leads/          # Contractor project feed
-│   │   └── requests/       # Homeowner request management
-│   ├── dashboard/
-│   │   ├── contractor/     # Contractor portal (projects, analytics, settings)
-│   │   └── homeowner/      # Homeowner portal (requests, new submission, settings)
-│   ├── contractors/        # Public contractor landing page
-│   ├── pricing/            # Membership tier comparison
-│   ├── services/           # Service category directory
-│   └── ...                 # Additional public pages (contact, terms, privacy)
-├── components/             # Reusable React components
-│   ├── ui/                 # Base UI primitives (shadcn/ui)
-│   └── ...                 # Feature components (hero, FAQ, comparison, etc.)
-├── lib/
-│   ├── auth.ts             # Session management utilities
-│   ├── store.ts            # In-memory data store (development)
-│   └── utils.ts            # Shared helpers
-└── middleware.ts            # Security headers and route protection
+├── app/              # Next.js App Router — pages, layouts, route handlers
+├── components/       # Shared UI components (Radix UI + Tailwind)
+├── lib/              # Utility functions, Supabase client, Stripe helpers
+├── scripts/          # Standalone scripts (seeding, migrations, etc.)
+├── docs/             # Internal documentation
+├── public/           # Static assets
+├── middleware.ts     # Route-level auth and redirect logic
+├── next.config.mjs   # Next.js configuration
+└── package.json
 ```
 
-## Authentication
+## Service Area
 
-Role-based routing is enforced via `middleware.ts`. Two user roles exist:
+Shawnee County and immediately surrounding areas — Topeka, Kansas. Service area expands as additional verified contractors are approved into the network.
 
-- `homeowner` — access to `/dashboard/homeowner/*`
-- `contractor` — access to `/dashboard/contractor/*`
+## Contact
 
-Session tokens are validated server-side on every protected request. Unauthenticated users are redirected to `/login`.
+- **Phone:** (785) 428-0244 — Monday–Friday, 8 AM–6 PM CT
+- **Email:** admin@nexusoperations.org
+- **Address:** Nexus Operations, LLC — Topeka, KS 66606
 
-## API Endpoints
+## License
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/login` | Authenticate a user and issue a session |
-| POST | `/api/auth/signup` | Register a new homeowner or contractor |
-| POST | `/api/auth/logout` | Terminate the current session |
-| GET | `/api/auth/me` | Return the authenticated user's profile |
-| GET | `/api/leads` | Return available project requests (contractor-only) |
-| GET/POST | `/api/requests` | Manage homeowner project submissions |
+Private. All rights reserved.
+```
 
-## Service Categories
+***
 
-| Category | Status | Typical Budget Range |
-|---|---|---|
-| Tree Removal | Available | $500 – $8,000 |
-| Concrete Work | Available | $1,200 – $15,000 |
-| Roofing | Available | $300 – $25,000 |
-| HVAC | Available | $3,000 – $20,000 |
-| Fencing | Available | $1,500 – $8,000 |
-| Electrical | Available | $500 – $10,000 |
-| Plumbing | Available | TBD |
-| Excavation | Available | TBD |
+A few notes on what was included and why:
 
-## Membership Tiers
+The tech stack table was built directly from [`package.json`](https://github.com/bngomez98/nexops/blob/main/package.json) in the repo, so the versions and dependencies are accurate.  The project structure reflects the actual directories (`app/`, `components/`, `lib/`, `scripts/`, `docs/`) present in the root of the repository.  The environment variable section covers Supabase, Stripe, and Vercel Edge Config — the three external services wired into the dependencies.
 
-| Tier | Price | Key Differentiator |
-|---|---|---|
-| Standard | $299/month | Full project feed, first-come first-served |
-| Premium | $499/month | 90-second advance notification window |
-| Elite | $749/month | 10-minute exclusive window on $5K+ projects |
-
-All tiers include unlimited project claims, full project documentation before claiming, and a performance dashboard. No annual contracts. Cancel anytime.
-
-## Security
-
-`middleware.ts` applies the following HTTP security headers on every response:
-
-- `Strict-Transport-Security` (2-year max-age, includeSubDomains)
-- `X-Frame-Options: DENY`
-- `X-Content-Type-Options: nosniff`
-- `Content-Security-Policy`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy` (camera, microphone, geolocation restricted)
-- `Cross-Origin-Opener-Policy: same-origin`
-- `Cross-Origin-Resource-Policy: same-origin`
-
-## Deployment
-
-The application is configured for deployment on Vercel. No additional configuration is required beyond connecting the repository. The `next.config.mjs` file does not require environment-specific overrides for basic deployment.
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Would you like me to push this directly to the `README.md` file in the repo, or do you want to review/edit it first?

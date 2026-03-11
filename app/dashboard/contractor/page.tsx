@@ -18,6 +18,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   roofing:        "Roofing",
   concrete:       "Concrete",
   fencing:        "Fencing",
+  plumbing:       "Plumbing",
 }
 
 export default async function ContractorDashboardPage() {
