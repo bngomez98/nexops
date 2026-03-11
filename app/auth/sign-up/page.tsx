@@ -39,6 +39,7 @@ function SignUpForm() {
   // Sync role if the URL role param changes (e.g., user navigates back/forward)
   useEffect(() => {
     if (roleParam && (ROLES as readonly string[]).includes(roleParam)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(prev => ({ ...prev, role: roleParam }))
     }
   }, [roleParam])

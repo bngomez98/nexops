@@ -18,8 +18,6 @@ const services: Array<{ name: string; desc: string }> = [
   { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 ]
 
-const heroTargets = ["homeowners.", "property managers.", "landlords."]
-
 const navLinks = [
   { href: "#about",       label: "About" },
   { href: "#platform",    label: "Platform" },
@@ -30,12 +28,9 @@ const navLinks = [
 ]
 
 export default function HomePage() {
-  const [mobileOpen, setMobileOpen]         = useState(false)
-  const [activeSection, setActiveSection]   = useState("")
-  const [scrollPct, setScrollPct]           = useState(0)
-  const [heroIdx, setHeroIdx]               = useState(0)
-  const [heroVisible, setHeroVisible]       = useState(true)
-  const [statsTriggered, setStatsTriggered] = useState(false)
+  const [mobileOpen, setMobileOpen]       = useState(false)
+  const [activeSection, setActiveSection] = useState("")
+  const [scrollPct, setScrollPct]         = useState(0)
   const statsRef = useRef<HTMLDivElement>(null)
 
   /* ── Scroll progress bar ── */
@@ -82,7 +77,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!statsRef.current) return
     const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setStatsTriggered(true); io.disconnect() } },
+      ([e]) => { if (e.isIntersecting) { io.disconnect() } },
       { threshold: 0.5 }
     )
     io.observe(statsRef.current)
@@ -371,7 +366,7 @@ export default function HomePage() {
                   <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
                 </p>
                 <p>
-                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
+                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property&apos;s actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
                 </p>
                 <p>
                   <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
@@ -615,7 +610,7 @@ export default function HomePage() {
                 The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
               </p>
               <p>
-                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
+                Every project you receive through Nexus comes with photographs, a written scope, and the owner&apos;s maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
               </p>
               <p>
                 Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
@@ -678,7 +673,7 @@ export default function HomePage() {
                 Create an account and submit your first service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property's permanent service record.
+                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property&apos;s permanent service record.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
