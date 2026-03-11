@@ -1,5 +1,6 @@
 "use client"
 
+// Fixed: Removed orphaned stats bar code
 import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
@@ -780,6 +781,12 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
       {/* ── CTA / Contact ── */}
       <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
         <div className="max-w-2xl mx-auto text-center">
