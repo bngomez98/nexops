@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -5,7 +7,10 @@ import {
   Mail,
   ArrowRight,
   MapPin,
+  Sun,
+  Moon,
 } from "lucide-react"
+import { useTheme } from "@/components/theme-provider"
 
 const services = [
   { name: "Roofing",         desc: "Full replacements, storm damage assessment, leak repairs, and insurance restoration work." },
@@ -19,6 +24,8 @@ const services = [
 ]
 
 export default function HomePage() {
+  const { resolvedTheme, setTheme } = useTheme()
+  
   return (
     <main className="min-h-screen bg-background font-sans">
 
@@ -43,7 +50,7 @@ export default function HomePage() {
               { href: "#services",    label: "Services" },
               { href: "#process",     label: "Process" },
               { href: "#reporting",   label: "Reporting" },
-              { href: "#contractors", label: "Contractors" },
+              { href: "#contractors", label: "For Contractors" },
               { href: "#contact",     label: "Contact" },
             ].map(({ href, label }) => (
               <a
@@ -57,6 +64,13 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded"
+              aria-label="Toggle theme"
+            >
+              {resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             <Link href="/auth/login" className="hidden text-[13px] text-muted-foreground transition-colors hover:text-foreground md:block">
               Sign In
             </Link>
@@ -71,43 +85,77 @@ export default function HomePage() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="pt-32 pb-24">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="flex items-center gap-2 mb-10">
-            <MapPin className="h-3 w-3 text-primary" />
-            <span className="text-xs text-muted-foreground tracking-wide">Topeka, Kansas — Shawnee County and surrounding areas</span>
+      <section className="pt-32 pb-32 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-transparent to-transparent"></div>
+        </div>
+        
+        <div className="mx-auto max-w-6xl px-8 relative z-10">
+          <div className="flex items-center gap-2 mb-12">
+            <MapPin className="h-4 w-4 text-primary" />
+            <span className="text-xs text-muted-foreground tracking-wide font-medium">Topeka, Kansas — Serving Shawnee County and surrounding areas</span>
           </div>
 
-          <h1 className="text-5xl font-bold tracking-tight leading-[1.05] md:text-6xl lg:text-7xl max-w-3xl text-balance">
-            Nexus Operations
-          </h1>
+          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h1 className="text-6xl lg:text-7xl font-bold tracking-[-0.02em] leading-[1.0] mb-6 text-balance">
+                Property maintenance done right.
+              </h1>
+              
+              <p className="text-xl text-muted-foreground leading-relaxed mb-4">
+                Nexus Operations is the property service management platform that handles every detail — from contractor selection through permanent documentation — so you don't have to.
+              </p>
+              
+              <p className="text-[15px] text-muted-foreground leading-relaxed mb-8 max-w-lg">
+                Get verified contractors, documented project history, and actionable maintenance intelligence for your properties. All in one place. All with zero hassle.
+              </p>
 
-          <div className="mt-8 max-w-2xl">
-            <p className="text-xl text-muted-foreground leading-relaxed font-normal">
-              A property service management company based in Topeka, Kansas.
-            </p>
-          </div>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href="/auth/sign-up"
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90 shadow-lg hover:shadow-xl"
+                >
+                  Start Your First Request
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <a 
+                  href="tel:+17854280244" 
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border text-[13px] font-medium text-foreground transition hover:bg-muted"
+                >
+                  <Phone className="h-4 w-4" />
+                  (785) 428-0244
+                </a>
+              </div>
 
-          <div className="mt-10 max-w-3xl space-y-5">
-            <p className="text-[15px] text-muted-foreground leading-[1.8]">
-              Nexus Operations manages property maintenance, repair, and improvement work for homeowners, landlords, and property managers in the Topeka metro area. We coordinate contractor engagement, document project activity, track service history across property categories, and use that data to report on the condition and maintenance performance of the properties we serve — and to advise owners on what to do next.
-            </p>
-            <p className="text-[15px] text-muted-foreground leading-[1.8]">
-              We maintain a vetted network of licensed, insured, and background-checked contractors across the primary residential trades. Each project is handled from submission through completion: one contractor is assigned exclusively per request, documentation is collected at every stage, and Nexus remains involved through the life of the project — not just at intake. When the work is done, the record stays in the platform permanently.
-            </p>
-          </div>
+              <div className="mt-12 grid grid-cols-2 gap-8">
+                <div>
+                  <p className="text-3xl font-bold text-primary mb-2">8</p>
+                  <p className="text-[13px] text-muted-foreground">Trade Categories</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-primary mb-2">Licensed</p>
+                  <p className="text-[13px] text-muted-foreground">Every contractor verified</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-primary mb-2">Permanent</p>
+                  <p className="text-[13px] text-muted-foreground">Service history forever</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-primary mb-2">Smart</p>
+                  <p className="text-[13px] text-muted-foreground">Maintenance recommendations</p>
+                </div>
+              </div>
+            </div>
 
-          <div className="mt-12 flex flex-wrap items-center gap-6">
-            <Link
-              href="/auth/sign-up"
-              className="inline-flex items-center gap-2 rounded bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
-            >
-              Submit a service request
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-            <a href="tel:+17854280244" className="text-[13px] text-muted-foreground transition hover:text-foreground">
-              (785) 428-0244
-            </a>
+            <div className="relative h-[400px] rounded-xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent"></div>
+              <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                <div className="text-center p-8">
+                  <p className="text-muted-foreground text-sm mb-4">Hero image will be placed here</p>
+                  <p className="text-xs text-muted-foreground">Property maintenance professional at work</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -116,33 +164,39 @@ export default function HomePage() {
       <div className="border-t border-border" />
 
       {/* ── About ── */}
-      <section id="about" className="py-24">
+      <section id="about" className="py-24 bg-muted/30">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="grid gap-16 lg:grid-cols-[1fr_400px] lg:items-start">
-
-            <div className="space-y-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">What we do</p>
-              <h2 className="text-3xl font-bold leading-snug">
-                Property service management, start to finish.
+          <div className="grid gap-16 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-widest text-primary mb-4">Why Nexus Exists</p>
+              <h2 className="text-4xl font-bold leading-tight mb-6">
+                Property maintenance should be documented, transparent, and managed — not left to chance.
               </h2>
-              <div className="space-y-4 text-[15px] text-muted-foreground leading-[1.8]">
-                <p>
-                  Nexus Operations handles the full operational lifecycle of a property service request — not just the introduction between owner and contractor. From the moment a request is submitted, Nexus is involved: reviewing the project documentation, coordinating the contractor assignment, confirming the consultation, and maintaining the project record through completion.
-                </p>
-                <p>
-                  Beyond individual projects, Nexus collects and organizes service data across trades, property addresses, timelines, and costs. Over time, that data produces a clear picture of a property's maintenance history: what work has been done, what categories of work recur, what has been deferred, and how spend is distributed across project types. Property managers with multiple addresses can see that picture at a portfolio level.
-                </p>
-                <p>
-                  That record isn't passive. Nexus uses it to surface maintenance recommendations and advisory guidance based on patterns in the data — upcoming service intervals, categories of deferred work that carry compounding risk, and contractor performance indicators. The goal is for property owners to stay ahead of their maintenance obligations with information rather than intuition.
-                </p>
-                <p>
-                  Every contractor in the network has passed a manual approval process: a current trade license, active general liability insurance, and a background check are required before any contractor receives a project notification. Requirements are maintained and reverified — not checked once at signup.
-                </p>
-              </div>
+              <p className="text-[15px] text-muted-foreground leading-relaxed mb-6">
+                Most property owners lack a complete record of what has been done to their properties. Contractors are sourced ad hoc. Estimates vary. Work is completed, documented poorly, and then forgotten. When it's time to refinance, insure, or sell, critical maintenance history is missing.
+              </p>
+              <p className="text-[15px] text-muted-foreground leading-relaxed">
+                Nexus changes that. We've built a managed service platform where every project is documented, tracked, and used to give you intelligence about what your property needs — now and in the future.
+              </p>
             </div>
 
-            {/* Sidebar facts */}
-            <div className="space-y-0 border border-border rounded-sm overflow-hidden text-[13px]">
+            <div className="space-y-6 border-l-4 border-primary pl-8">
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">For homeowners</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">Stop juggling contractors and losing invoices. Get a permanent, verified record that increases your property's value and insurance standing.</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">For property managers</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">Manage maintenance across your entire portfolio from one dashboard. See spend trends, identify patterns, and make data-driven decisions.</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">For contractors</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">Access pre-documented, pre-vetted projects. No cold calling. No competitive bidding. Just qualified leads delivered directly to you.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
               {[
                 ["Founded",                  "2025"],
                 ["Headquarters",             "Topeka, KS 66606"],
