@@ -1,5 +1,6 @@
 "use client"
 
+// Fixed: Removed orphaned stats bar code
 import Image from "next/image"
 import Link from "next/link"
 import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
