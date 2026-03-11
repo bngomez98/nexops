@@ -1,8 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { canSubmitServiceRequest } from "@/lib/auth/roles"
+import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -36,6 +38,8 @@ export default function NewRequestPage() {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [canSubmit, setCanSubmit] = useState(true)
+  const [roleChecked, setRoleChecked] = useState(false)
   const [photos, setPhotos] = useState<File[]>([])
   const [formData, setFormData] = useState({
     category: "",
@@ -61,6 +65,11 @@ export default function NewRequestPage() {
   }
 
   const handleSubmit = async () => {
+    if (!canSubmit) {
+      setError("Only homeowners can submit service requests.")
+      return
+    }
+
     setLoading(true)
     setError(null)
     try {
@@ -80,6 +89,23 @@ export default function NewRequestPage() {
     }
   }
 
+  useEffect(() => {
+    const supabase = createClient()
+
+    const loadRole = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      const allowed = canSubmitServiceRequest(user?.user_metadata?.role)
+      setCanSubmit(allowed)
+      setRoleChecked(true)
+
+      if (!allowed) {
+        setError("Only homeowners can submit service requests.")
+      }
+    }
+
+    void loadRole()
+  }, [])
+
   return (
     <div className="p-8">
       <div className="mx-auto max-w-2xl">
@@ -92,6 +118,11 @@ export default function NewRequestPage() {
         </Link>
 
         {/* Progress */}
+        {!canSubmit && roleChecked && (
+          <p className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm text-destructive">
+            Only homeowners can submit service requests.
+          </p>
+        )}
         <div className="mb-8">
           <div className="flex items-center justify-between text-sm">
             {["Category", "Details", "Location", "Review"].map((label, i) => (
@@ -371,7 +402,7 @@ export default function NewRequestPage() {
 
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
-                <Button className="flex-1" onClick={handleSubmit} disabled={loading}>
+                <Button className="flex-1" onClick={handleSubmit} disabled={loading || !canSubmit || !roleChecked}>
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

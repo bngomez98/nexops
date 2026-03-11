@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
+import { canSubmitServiceRequest } from "@/lib/auth/roles"
 
 export async function GET() {
   const supabase = await createClient()
@@ -28,6 +29,14 @@ export async function POST(req: Request) {
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const role = user.user_metadata?.role
+  if (!canSubmitServiceRequest(role)) {
+    return NextResponse.json(
+      { error: "Only homeowners can submit service requests." },
+      { status: 403 },
+    )
   }
 
   const body = await req.json()
