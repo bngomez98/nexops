@@ -88,126 +88,8 @@ export default function HomePage() {
     return () => io.disconnect()
   }, [])
 
-  const jsonLd = {
-    organization: {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Nexus Operations",
-      url: "https://nexusoperations.org",
-      logo: "https://nexusoperations.org/nexus-logo.png",
-      description:
-        "Nexus Operations connects homeowners, landlords, and property managers with licensed, insured contractors in Topeka, KS. One project, one contractor, exclusively.",
-      email: "admin@nexusoperations.org",
-      telephone: "+17854280244",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Topeka",
-        addressRegion: "KS",
-        addressCountry: "US",
-      },
-      areaServed: {
-        "@type": "AdministrativeArea",
-        name: "Shawnee County, Kansas",
-      },
-      contactPoint: [
-        {
-          "@type": "ContactPoint",
-          telephone: "+17854280244",
-          contactType: "customer support",
-          hoursAvailable: "Mo-Fr 08:00-18:00",
-          availableLanguage: "English",
-        },
-        {
-          "@type": "ContactPoint",
-          email: "admin@nexusoperations.org",
-          contactType: "customer support",
-        },
-      ],
-      sameAs: [],
-    },
-    localBusiness: {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      name: "Nexus Operations",
-      description:
-        "Property service management platform connecting homeowners, landlords, and property managers with licensed, insured contractors in Topeka, Kansas. Exclusive contractor assignment — one project, one contractor.",
-      url: "https://nexusoperations.org",
-      logo: "https://nexusoperations.org/nexus-logo.png",
-      image: "https://nexusoperations.org/og-image.png",
-      telephone: "+17854280244",
-      email: "admin@nexusoperations.org",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Topeka",
-        addressRegion: "KS",
-        postalCode: "66600",
-        addressCountry: "US",
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: 39.0558,
-        longitude: -95.6894,
-      },
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "08:00",
-          closes: "18:00",
-        },
-      ],
-      areaServed: [
-        { "@type": "City", name: "Topeka", containedIn: { "@type": "State", name: "Kansas" } },
-        { "@type": "AdministrativeArea", name: "Shawnee County" },
-      ],
-      hasOfferCatalog: {
-        "@type": "OfferCatalog",
-        name: "Property Services",
-        itemListElement: services.map((s) => ({
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: s.name,
-            description: s.desc,
-          },
-        })),
-      },
-      priceRange: "$$",
-    },
-    website: {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Nexus Operations",
-      url: "https://nexusoperations.org",
-      description:
-        "Property service management platform for homeowners, landlords, and property managers in Topeka, KS.",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: "https://nexusoperations.org/?q={search_term_string}",
-        },
-        "query-input": "required name=search_term_string",
-      },
-    },
-  }
-
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
-
-      {/* ── Structured Data (JSON-LD) ── */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.organization) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.localBusiness) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.website) }}
-      />
 
       {/* ── Scroll progress bar ── */}
       <div
@@ -939,6 +821,36 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+      {/* ── CTA / Contact ── */}
+      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
+          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
+            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
+              Start Your Project — Free
+            </button>
+            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
+              Apply as a Contractor
+            </button>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="mailto:admin@nexusoperations.org"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+            >
+              <Mail className="h-4 w-4" />
+              admin@nexusoperations.org
+            </a>
+            <a
+              href="tel:9139511711"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
+            >
+              <Phone className="h-4 w-4" />
+              (913) 951-1711
+            </a>
           </div>
         </div>
       </section>
