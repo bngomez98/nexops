@@ -296,19 +296,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-                        animation: `stat-pop 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.09}s both`,
-                      } : { opacity: 0 }}
-                    >
-                      {n}
-                    </p>
-                    <p className="font-mono-label text-muted-foreground mt-0.5 normal-case tracking-normal text-[10px]">{label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ── Photo Banner: Three user types ── */}
       <section className="overflow-hidden border-t border-border">
