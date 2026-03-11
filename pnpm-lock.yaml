@@ -79,6 +79,7 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1
       '@types/better-sqlite3':
+        specifier: ^7.6.12
         specifier: 7.6.13
         version: 7.6.13
       '@types/node':
