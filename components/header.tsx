@@ -3,10 +3,28 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Sun, Moon } from "lucide-react"
-import { useTheme } from "@/components/theme-provider"
+import { useState, useEffect } from "react"
 
 export function Header() {
-  const { resolvedTheme, setTheme } = useTheme()
+  const [theme, setTheme] = useState<"light" | "dark">("dark")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const stored = localStorage.getItem("nexus-theme") as "light" | "dark" | null
+    const initial = stored || "dark"
+    setTheme(initial)
+    document.documentElement.classList.toggle("light", initial === "light")
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark"
+    setTheme(newTheme)
+    localStorage.setItem("nexus-theme", newTheme)
+    document.documentElement.classList.toggle("light")
+  }
+
+  if (!mounted) return null
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/96 backdrop-blur-sm">
@@ -44,11 +62,11 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            onClick={toggleTheme}
             className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded"
             aria-label="Toggle theme"
           >
-            {resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           <Link href="/auth/login" className="hidden text-[13px] text-muted-foreground transition-colors hover:text-foreground md:block">
             Sign In
