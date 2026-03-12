@@ -314,7 +314,7 @@ export default function HomePage() {
             {
               src:     "/photo-contractor.jpg",
               label:   "Contractors",
-              caption: "Receive pre-documented project notifications. No fees, no cuts, no bidding wars.",
+              caption: "Receive fully documented project leads — photos, written scope, and budget ceiling reviewed before you see them.",
               href:    "/auth/sign-up?role=contractor",
               cta:     "Apply for access",
             },
@@ -369,7 +369,7 @@ export default function HomePage() {
                   <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property&apos;s actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
                 </p>
                 <p>
-                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
+                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to fully documented, reviewed projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
                 </p>
               </div>
             </div>
@@ -599,7 +599,7 @@ export default function HomePage() {
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">For contractors</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Join the Nexus contractor network. Receive pre-documented project notifications in your trade and service area.
+              Join the Nexus contractor network. Receive fully documented project leads in your trade and service area — reviewed and ready when you claim them.
             </h2>
           </div>
 
