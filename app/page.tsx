@@ -73,32 +73,34 @@ export default function HomePage() {
                 </a>
               </div>
 
-              <div className="mt-12 grid grid-cols-2 gap-8">
-                <div>
-                  <p className="text-3xl font-bold text-primary mb-2">8</p>
-                  <p className="text-[13px] text-muted-foreground">Trade Categories</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-primary mb-2">Licensed</p>
-                  <p className="text-[13px] text-muted-foreground">Every contractor verified</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-primary mb-2">Permanent</p>
-                  <p className="text-[13px] text-muted-foreground">Service history forever</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-primary mb-2">Smart</p>
-                  <p className="text-[13px] text-muted-foreground">Maintenance recommendations</p>
-                </div>
+              <div className="mt-14 grid grid-cols-4 gap-6 pt-8 border-t border-border">
+                {[
+                  { value: "8", label: "Trade Categories" },
+                  { value: "100%", label: "Licensed & Insured" },
+                  { value: "24hr", label: "Avg. Response Time" },
+                  { value: "Permanent", label: "Service Records" },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <p className="text-2xl font-bold text-primary mb-1">{stat.value}</p>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{stat.label}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="relative h-[400px] rounded-xl overflow-hidden shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent"></div>
-              <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-                <div className="text-center p-8">
-                  <p className="text-muted-foreground text-sm mb-4">Hero image will be placed here</p>
-                  <p className="text-xs text-muted-foreground">Property maintenance professional at work</p>
+            <div className="relative h-[480px] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+              <Image
+                src="/images/hero-property.jpg"
+                alt="Professional property maintenance"
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="flex items-center gap-3 bg-card/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-border/50">
+                  <div className="h-3 w-3 rounded-full bg-primary animate-pulse" />
+                  <p className="text-sm font-medium text-foreground">Licensed contractors ready to serve</p>
                 </div>
               </div>
             </div>
