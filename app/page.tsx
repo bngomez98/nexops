@@ -22,7 +22,7 @@ const navLinks = [
   { href: "#about",       label: "About" },
   { href: "#platform",    label: "Platform" },
   { href: "#services",    label: "Services" },
-  { href: "#reporting",   label: "Reporting" },
+  { href: "#process",     label: "Process" },
   { href: "#contractors", label: "Contractors" },
   { href: "#contact",     label: "Contact" },
 ]
@@ -201,21 +201,33 @@ export default function HomePage() {
 
           <div className="grid gap-12 lg:grid-cols-[1fr_480px] lg:items-center">
             <div>
-              {/* Specialized hero headline */}
+                {/* Hero headline */}
               <h1
-                className="font-heading text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance animate-fade-up"
+                className="font-heading text-[52px] font-bold tracking-[-0.02em] leading-[1.05] md:text-[68px] lg:text-[78px] text-balance animate-fade-up"
                 style={{ animationDelay: "0.12s" }}
               >
-                Build a permanent<br />maintenance record.<br />
-                <span className="text-primary inline-block">Monetize the data.</span>
+                Managed property services<br />
+                for Topeka, Kansas.<br />
+                <span className="text-primary inline-block">One verified contractor,</span><br />
+                <span className="text-primary inline-block">exclusively yours.</span>
+              </h1>
+
+              <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
+                <p className="text-[15px] text-muted-foreground leading-[1.8]">
+                  Submit your service request once. Nexus assigns a licensed, insured contractor from our verified network — one contractor per project, held exclusively through completion. No bidding, no cold calls, no ambiguity.
+                </p>
+                <p className="text-[13.5px] text-muted-foreground/70 leading-[1.75]">
+                  Every project is documented and stored permanently on your account. Over time, your service history becomes a verified asset for insurance claims, refinancing, and resale — and a single source of truth for property managers tracking spend across an entire portfolio.
+                One verified contractor.<br />
+                <span className="text-primary inline-block">Exclusively yours.</span>
               </h1>
 
               <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Every maintenance and repair project at your property is documented, stored permanently on the Nexus platform, and used to generate financial insights, maintenance recommendations, and professional records for insurance claims, refinancing, and resale.
+                  Nexus Operations connects homeowners and property managers in Topeka, Kansas with licensed, insured contractors — one per request, assigned exclusively. No bidding wars. No cold calls. Fully managed from submission through completion.
                 </p>
                 <p className="text-[14px] text-muted-foreground/70 leading-[1.7]">
-                  Property managers access portfolio-level reporting across all managed addresses. Data aggregates by trade category, by address, and in total — replacing fragmented invoices and scattered records with a single, queryable source of truth.
+                  Submit a request with photos and scope. Nexus reviews it, assigns one verified contractor, and confirms your consultation within 24 hours. Your contractor holds the project exclusively from start to finish.
                 </p>
               </div>
 
@@ -224,75 +236,154 @@ export default function HomePage() {
                   href="/auth/sign-up"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
                 >
-                  Start building your record
+                  Create your account
+                  Get started — it&apos;s free
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/auth/sign-up?role=contractor"
                   className="group inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition hover:text-foreground"
                 >
-                  Join the contractor network
+                  Apply to the contractor network
                   <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </Link>
               </div>
             </div>
 
-            {/* Hero visualization: live data dashboard preview */}
+            {/* Hero panel: How it works */}
             <div
               ref={statsRef}
-              className="hidden lg:block relative h-[560px] overflow-hidden rounded-2xl glow-primary animate-fade-up"
+              className="hidden lg:block relative overflow-hidden rounded-2xl border border-border/40 bg-card glow-primary animate-fade-up"
               style={{ animationDelay: "0.2s" }}
             >
-              {/* Dashboard mockup background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-muted/40 via-background to-background border border-border/30" />
-              
-              {/* Fake dashboard content */}
-              <div className="absolute inset-0 p-6 flex flex-col">
-                <div className="mb-6">
-                  <p className="text-[11px] font-mono text-muted-foreground/60">Portfolio Overview</p>
-                  <h2 className="text-lg font-heading font-bold mt-1">Maintenance Intelligence</h2>
-                </div>
+              <div className="p-8">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-8">
+                  How it works
+                </p>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="space-y-0">
                   {[
-                    { label: "Total spend", value: "$12,847", change: "+$2,100 YTD" },
-                    { label: "Active projects", value: "3", change: "2 pending approval" },
-                    { label: "Overdue intervals", value: "2", change: "HVAC, Plumbing" },
-                    { label: "Cost efficiency", value: "94%", change: "vs. regional avg" },
-                  ].map(({ label, value, change }) => (
-                    <div key={label} className="border border-border/20 rounded-lg p-3 bg-background/40 backdrop-blur">
-                      <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-1">{label}</p>
-                      <p className="text-[18px] font-bold text-foreground">{value}</p>
-                      <p className="text-[10px] text-muted-foreground/50 mt-1">{change}</p>
+                    {
+                      n: "01",
+                      title: "Submit your request",
+                      body: "Add photos, describe the work needed, and set a budget. Free for homeowners.",
+                    },
+                    {
+                      n: "02",
+                      title: "Nexus reviews and assigns",
+                      body: "Our team reviews your request and assigns one licensed, insured contractor from the verified network.",
+                    },
+                    {
+                      n: "03",
+                      title: "Consultation within 24 hours",
+                      body: "Your assigned contractor contacts you to schedule a site visit. No bidding. No competition.",
+                    },
+                    {
+                      n: "04",
+                      title: "One contractor, start to finish",
+                      body: "Your contractor holds the project exclusively through estimate approval and completion.",
+                    },
+                  ].map(({ n, title, body }, i, arr) => (
+                    <div
+                      key={n}
+                      className={`flex gap-5 py-6 ${i < arr.length - 1 ? "border-b border-border/40" : ""}`}
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-primary">{n}</span>
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground mb-1">{title}</p>
+                        <p className="text-[12.5px] text-muted-foreground leading-relaxed">{body}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex-1 border border-border/20 rounded-lg p-4 bg-background/40 backdrop-blur overflow-hidden">
-                  <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-3">Recurring items</p>
-                  <div className="space-y-2">
-                    {["Plumbing: 3 calls in 8 mo.", "HVAC: No service in 16 mo.", "Roof inspection overdue"].map((item, i) => (
-                      <div key={item} className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
-                        <div className={`w-2 h-2 rounded-full ${i === 1 ? "bg-red-500/60" : "bg-yellow-500/60"}`} />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
+                <div className="mt-6 pt-6 border-t border-border/40">
+                  <Link
+                    href="/auth/sign-up"
+                    className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-[12.5px] font-semibold text-primary-foreground transition-all hover:opacity-90"
+                  >
+                    Submit a request — it&apos;s free
+                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
                 </div>
               </div>
-
-              {/* Animated accent line */}
-              <div
-                className="absolute top-0 right-0 w-1 h-32 bg-gradient-to-b from-primary to-transparent opacity-60"
-                style={{
-                  animation: "pulse 3s ease-in-out infinite",
-                }}
-              />
             </div>
           </div>
         </div>
       </section>
 
+      <div className="border-t border-border" />
+
+      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
+      <section id="who-we-serve" className="py-24">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="mb-16 text-center" data-animate>
+            <p className="font-mono-label text-primary mb-4">Solutions</p>
+            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
+              Built for homeowners, contractors, and property managers.
+            </h2>
+          </div>
+
+          <div className="grid gap-12 sm:grid-cols-3">
+            {[
+              {
+                title: "Homeowners",
+                body: "Submit your project once with photos and scope. Nexus assigns a verified contractor, schedules the consultation, and manages the job through completion. Your service history is stored permanently.",
+                cta: "Create an account",
+                href: "/auth/sign-up",
+              },
+              {
+                title: "Contractors",
+                body: "Receive pre-documented project notifications in your trade and service area. Review scope, photos, and budget before you decide to claim. Get paid directly — no platform fees or referral cuts.",
+                cta: "Apply for network access",
+                href: "/auth/sign-up?role=contractor",
+              },
+              {
+                title: "Property Managers",
+                body: "One account covers your entire portfolio. Track maintenance spend by property and by trade category. Identify recurring issues and overdue service intervals across all managed addresses.",
+                cta: "Create an account",
+                href: "/auth/sign-up?role=property_manager",
+              },
+            ].map(({ title, body, cta, href }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
+                data-animate
+              >
+                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
+                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
+                  {cta} <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
+      {/* ── Photo Banner: Three user types (visual reference) ── */}
+      <section className="overflow-hidden border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
+          {[
+            {
+              src:     "/photo-homeowner.jpg",
+              label:   "For Homeowners",
+              caption: "One verified, insured contractor. No bidding wars. No cold calls.",
+            },
+            {
+              src:     "/photo-manager.jpg",
+              label:   "For Property Managers",
+              caption: "Portfolio-level spend tracking across every managed address.",
+            },
+            {
+              src:     "/photo-contractor.jpg",
+              label:   "For Contractors",
+              caption: "Pre-validated project leads. No platform fees. Direct payment.",
       {/* ── Photo Banner: Three user types ── */}
       <section className="overflow-hidden border-t border-border">
         <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
@@ -300,21 +391,21 @@ export default function HomePage() {
             {
               src:     "/photo-homeowner.jpg",
               label:   "Homeowners",
-              caption: "Submit, track, and document every repair — from first request to permanent record.",
+              caption: "Submit a request with photos and scope. Nexus assigns one verified contractor, exclusively.",
               href:    "/auth/sign-up",
               cta:     "Create account",
             },
             {
               src:     "/photo-manager.jpg",
               label:   "Property Managers",
-              caption: "Manage your entire portfolio from a single dashboard with full reporting.",
+              caption: "Submit and track service requests across all your properties from one dashboard.",
               href:    "/auth/sign-up?role=property_manager",
               cta:     "Create account",
             },
             {
               src:     "/photo-contractor.jpg",
               label:   "Contractors",
-              caption: "Receive pre-documented project notifications. No fees, no cuts, no bidding wars.",
+              caption: "Claim qualified project leads in your trade and service area. No fees, no bidding, no cuts.",
               href:    "/auth/sign-up?role=contractor",
               cta:     "Apply for access",
             },
@@ -356,20 +447,27 @@ export default function HomePage() {
             <div className="space-y-7" data-animate>
               <p className="font-mono-label text-primary">About Nexus Operations</p>
               <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
-                Nexus Operations is a property service management company headquartered in Topeka, Kansas.
+                Nexus Operations is a managed property service platform headquartered in Topeka, Kansas.
               </h2>
               <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
                 <p>
-                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, project tracking, and permanent record storage.
+                  <strong className="text-foreground">We manage the full lifecycle of property maintenance, repair, and improvement projects.</strong> From initial intake and documentation review through contractor assignment, consultation scheduling, estimate approval, and final completion — every step is handled on the platform and recorded permanently.
                 </p>
                 <p>
-                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
+                  <strong className="text-foreground">Every contractor in the Nexus network is licensed, insured, and individually reviewed by Nexus staff.</strong> No account is activated automatically. Each project is assigned to one contractor, who holds it exclusively from claim through completion. Property owners receive documented estimates, real-time status updates, and a permanent service record for every project.
                 </p>
                 <p>
-                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property&apos;s actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
+                  <strong className="text-foreground">Your service history is stored indefinitely and used to generate actionable maintenance recommendations.</strong> The Nexus reporting system flags upcoming service intervals, identifies recurring issues by trade category, and surfaces deferred maintenance items based on your property's actual records. Property managers receive portfolio-level reporting across all managed addresses.
                 </p>
                 <p>
-                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
+                  <strong className="text-foreground">For licensed contractors, Nexus provides direct access to pre-documented, pre-validated project leads.</strong> Claimed projects include photographs, written scope, and the owner's budget ceiling — all reviewed by Nexus staff before the notification reaches you. There is no fee to join or participate in the contractor network.
+                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers in Topeka, Kansas.</strong> Our platform handles the full lifecycle of a service request: intake review, contractor assignment from a verified network, consultation scheduling, estimate approval, and project tracking from start to close.
+                </p>
+                <p>
+                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff before network activation. Each project is assigned to a single contractor who holds it exclusively through completion — one point of contact, no competing bids, no cold calls.
+                </p>
+                <p>
+                  <strong className="text-foreground">For licensed contractors, the Nexus network provides direct access to reviewed, ready-to-claim projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Each claimed project includes photographs, a written scope, and the owner&apos;s budget ceiling. There is no fee to join or participate in the network.
                 </p>
               </div>
             </div>
@@ -384,7 +482,7 @@ export default function HomePage() {
                 ["Email",                   "admin@nexusoperations.org"],
                 ["Contractors per project", "One, assigned exclusively"],
                 ["Contractor verification", "License · Insurance · Manual review"],
-                ["Post-project reporting",  "Included with every account"],
+                ["Project tracking",        "Dashboard access for all active requests"],
               ].map(([label, value]) => (
                 <div
                   key={label}
@@ -408,7 +506,7 @@ export default function HomePage() {
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">Mission &amp; Values</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every property owner deserves a complete, verified record of what has been maintained, when, and at what cost.
+              Every homeowner deserves a single, accountable contractor — verified, assigned exclusively, and managed through completion.
             </h2>
           </div>
 
@@ -416,20 +514,19 @@ export default function HomePage() {
             {[
               {
                 label: "Fully managed service",
-                body:  "Nexus selects the contractor, confirms the appointment, and maintains the project record. Responsibility for the managed portion stays with Nexus throughout.",
+                body:  "Nexus selects the contractor, confirms the consultation, and oversees the project from submission through close. You don't chase anyone down.",
               },
               {
                 label: "Exclusive assignment",
-                body:  "One contractor per project, claimed first-come and held exclusively. The property owner works with a single contractor for each request, from consultation through completion.",
+                body:  "One contractor per project, claimed first-come and held exclusively. One point of contact, from the first site visit through the final invoice.",
               },
               {
-                label: "Permanent service record",
-                body: "Every project detail is stored on the platform and retrievable indefinitely, including scope, cost, contractor, photos, and outcome. The record belongs to the property and remains accessible to the owner.",
-                body:  "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
+                label: "Verified contractors only",
+                body:  "Every contractor in the network holds an active trade license and general liability insurance, confirmed by Nexus staff before their first project.",
               },
               {
-                label: "Property-specific intelligence",
-                body:  "Over time, your service history tells Nexus what your property needs and when. Recommendations are generated from your actual project records and maintenance intervals.",
+                label: "No bidding wars",
+                body:  "Submit once. Nexus assigns. Your contractor is not competing with three others — they are focused on your project.",
               },
             ].map(({ label, body }, i) => (
               <div
@@ -470,7 +567,7 @@ export default function HomePage() {
               {
                 role: "Property Managers",
                 sub:  "Multi-property operators",
-                body: "A single account covers your entire portfolio. Each property has its own request history, cost record, and service documentation. Portfolio-level reporting shows maintenance spend by address and by trade category, flags overdue service intervals, and identifies recurring issues — so you can manage a portfolio's maintenance obligations without reconstructing records from scattered sources.",
+                body: "A single account covers your entire portfolio. Submit and track requests across all managed properties from one dashboard. Each property has its own request history. Contractor selection, scheduling, and oversight are handled by Nexus — so you manage the outcome, not the logistics.",
                 href: "/auth/sign-up?role=property_manager",
                 cta:  "Create account",
               },
@@ -543,43 +640,42 @@ export default function HomePage() {
 
       <div className="border-t border-border" />
 
-      {/* ── Reporting ── */}
-      <section id="reporting" className="py-28">
+      {/* ── Process ── */}
+      <section id="process" className="py-28">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">Data-driven reporting</p>
+            <p className="font-mono-label text-primary mb-5">The process</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every closed project generates a post-project report. Over time, that data builds a complete property service record.
+              Submit once. Nexus handles the rest — contractor assignment, scheduling, and project management through close.
             </h2>
           </div>
 
           <div className="grid gap-20 lg:grid-cols-[1fr_360px] items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                <strong className="text-foreground">Post-project reports are generated after every completed project.</strong> Each report covers three categories: financial data (total cost, cost breakdown by labor and materials, comparison to budget ceiling), efficiency metrics (time from submission to completion, contractor response time, consultation-to-estimate interval), and recommendations (follow-up items identified during the project, suggested maintenance intervals, related services to consider).
+                <strong className="text-foreground">Your request enters the queue after a brief review by Nexus staff.</strong> Before it reaches any contractor, your submission is checked for completeness — photos, scope, and budget. If anything is unclear, we follow up. Once approved, it goes live to the contractor network.
               </p>
               <p>
-                <strong className="text-foreground">Reports draw on historical, current, and cross-property data.</strong> Historical data includes all prior projects at the same address and within the same trade category. Current data covers the project just completed. Cross-property data, available to property managers, benchmarks performance and spend against other properties in the same portfolio and service area.
+                <strong className="text-foreground">The first qualified contractor to claim your request holds it exclusively.</strong> Once claimed, your request is removed from all other contractor feeds. You are not competing for attention or waiting on multiple bids — one contractor, your project, exclusively theirs from consultation through close.
               </p>
               <p>
-                <strong className="text-foreground">The accumulated service record is a verified ownership asset.</strong> For insurance claims, sale documentation, refinancing, or due diligence, the Nexus service record provides a complete, timestamped history of what has been maintained, when, by whom, and at what cost. Property managers receive portfolio-level aggregation: spend by address, spend by trade, outstanding intervals, and recurring issue flags across all managed properties.
+                <strong className="text-foreground">Your assigned contractor contacts you to schedule a consultation within 24 hours.</strong> They arrive with the full project details already in hand — photos, your written scope, and your budget ceiling. From the consultation they provide a written estimate. You review, approve, and work begins.
               </p>
             </div>
 
-            {/* Report categories */}
+            {/* Process steps */}
             <div>
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-5">
-                Post-project report contents
+                What Nexus manages for you
               </p>
               <div className="border-t border-border text-[12.5px]">
                 {[
-                  ["Financial summary",       "Total cost, labor vs. materials breakdown, variance from budget ceiling."],
-                  ["Efficiency metrics",      "Time to completion, contractor response time, scheduling turnaround."],
-                  ["Historical comparison",   "Cost and timeline compared to prior projects in the same trade category."],
-                  ["Maintenance intervals",   "Recommended next service date based on trade standards and property history."],
-                  ["Follow-up items",         "Issues identified during the project that require separate attention."],
-                  ["Recurring issue flags",   "Patterns detected across multiple projects at the same address or trade."],
-                  ["Portfolio benchmarking",  "For property managers: performance comparison across managed addresses."],
+                  ["Request intake",           "Review of photos, scope, and budget before the request enters the contractor queue."],
+                  ["Contractor assignment",    "First qualified contractor to claim holds it exclusively — no bidding."],
+                  ["Consultation scheduling",  "Confirmed within 24 hours of assignment. Nexus follows up if not confirmed."],
+                  ["Estimate review",          "Written estimate from your contractor. You approve before work begins."],
+                  ["Project tracking",         "Status updates from submission through completion, accessible in your dashboard."],
+                  ["Contractor verification",  "License and insurance confirmed by Nexus staff before any contractor is activated."],
                 ].map(([item, detail]) => (
                   <div key={item} className="py-4 border-b border-border">
                     <p className="font-semibold mb-1 text-foreground">{item}</p>
@@ -600,20 +696,21 @@ export default function HomePage() {
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">For contractors</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Join the Nexus contractor network. Receive pre-documented project notifications in your trade and service area.
+              Join the Nexus contractor network. Claim qualified, pre-reviewed project leads in your trade and service area — at no cost.
             </h2>
           </div>
 
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
+                The Nexus contractor network is free to join and free to use. There are no per-lead charges, no referral percentages, and no subscription fees for network participation. You review incoming project notifications, decide which ones to claim, and get paid directly by the property owner.
               </p>
               <p>
+                Every project arrives with photographs, a written scope description, and the owner's stated budget ceiling — reviewed and validated by Nexus staff before the notification reaches your account. You walk into consultations already informed and ready to provide a competitive estimate.
                 Every project you receive through Nexus comes with photographs, a written scope, and the owner&apos;s maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
               </p>
               <p>
-                Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
+                Network approval requires a current trade license and active general liability insurance, verified by Nexus staff prior to activation. Once your account is active, it remains active as long as your credentials are current. There are no renewal fees or ongoing participation costs.
               </p>
               <div className="pt-2">
                 <Link
@@ -670,10 +767,11 @@ export default function HomePage() {
             <div data-animate>
               <p className="font-mono-label text-primary mb-5">Get started</p>
               <h2 className="font-heading text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-balance">
-                Create an account and submit your first service request.
+                Get started with your first managed service request.
               </h2>
               <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property&apos;s permanent service record.
+                From your first request, Nexus assigns a verified contractor, coordinates the consultation, manages estimate approval, and documents the completed work. Every closed project adds a permanent, timestamped record to your property's service history.
+                Submit a request with photos and a written scope. Nexus reviews it, assigns one verified contractor exclusively, and confirms your consultation within 24 hours. One contractor, fully managed, start to finish.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -780,42 +878,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* ── CTA / Contact ── */}
-      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
-          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
-            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
-              Start Your Project — Free
-            </button>
-            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
-              Apply as a Contractor
-            </button>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="mailto:admin@nexusoperations.org"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Mail className="h-4 w-4" />
-              admin@nexusoperations.org
-            </a>
-            <a
-              href="tel:9139511711"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Phone className="h-4 w-4" />
-              (913) 951-1711
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* ── Footer ── */}
       <footer className="border-t border-border py-16">
         <div className="mx-auto max-w-6xl px-8">
@@ -842,7 +904,7 @@ export default function HomePage() {
                   { href: "#about",     label: "About Nexus" },
                   { href: "#platform",  label: "Platform" },
                   { href: "#services",  label: "Services" },
-                  { href: "#reporting", label: "Reporting & Advisory" },
+                  { href: "#process",   label: "The Process" },
                   { href: "/faq",       label: "FAQ" },
                 ].map(({ href, label }) => (
                   <li key={href}>

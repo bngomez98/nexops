@@ -19,6 +19,7 @@ import {
   ListChecks,
   Menu,
   X,
+  CreditCard,
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
@@ -35,6 +36,7 @@ const contractorNavItems = [
   { href: "/dashboard/contractor/requests", label: "Open Requests",   icon: ListChecks },
   { href: "/dashboard/messages",            label: "Messages",        icon: MessageSquare },
   { href: "/dashboard/contractor/profile",  label: "Profile",         icon: User },
+  { href: "/dashboard/contractor/billing",  label: "Billing",         icon: CreditCard },
   { href: "/dashboard/contractor/settings", label: "Settings",        icon: Settings },
 ]
 
