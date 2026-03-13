@@ -374,9 +374,13 @@ export default function ContractorBillingPage() {
           <Shield className="h-4 w-4 flex-shrink-0 text-primary mt-0.5" />
           <p>
             Nexus Operations uses Stripe for all payment processing. Your card details are encrypted and stored securely by Stripe — never by Nexus.
-            Questions about billing? Contact{" "}
-            <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline underline-offset-4">
-              admin@nexusoperations.org
+            Questions about billing? Visit the{" "}
+            <a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">
+              Help Center
+            </a>
+            {" "}or call{" "}
+            <a href="tel:+17854280244" className="text-primary hover:underline underline-offset-4">
+              (785) 428-0244
             </a>
             .
           </p>
