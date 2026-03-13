@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
+import { canSubmitServiceRequest } from "@/lib/auth/roles"
 
 export async function GET() {
   const supabase = await createClient()
@@ -30,8 +31,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  const role = user.user_metadata?.role
+  if (!canSubmitServiceRequest(role)) {
+    return NextResponse.json(
+      { error: "Only homeowners can submit service requests." },
+      { status: 403 },
+    )
+  }
+
   const body = await req.json()
-  const { category, description, budgetMin, budgetMax, address, city, state, zipCode, preferredDates, additionalNotes } = body
+  const { category, description, budgetMin, budgetMax, address, city, state, zipCode, preferredDates, additionalNotes, photoUrls } = body
 
   if (!category || !description || !address || !city || !zipCode) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -51,6 +60,7 @@ export async function POST(req: Request) {
       zip_code: zipCode,
       preferred_dates: preferredDates || null,
       additional_notes: additionalNotes || null,
+      photo_urls: Array.isArray(photoUrls) && photoUrls.length > 0 ? photoUrls : null,
       status: "in_queue",
     })
     .select()

@@ -4,33 +4,7 @@ import { ArrowLeft, ChevronRight } from "lucide-react"
 
 export const metadata = {
   title: "FAQ | Nexus Operations",
-  description:
-    "Frequently asked questions about Nexus Operations — how to submit service requests, contractor verification, exclusive assignment, fees, and platform policies in Topeka, KS.",
-  keywords: [
-    "Nexus Operations FAQ",
-    "how to hire contractor Topeka",
-    "contractor verification Topeka KS",
-    "property service questions",
-    "home repair FAQ Topeka",
-    "contractor claims process",
-    "property manager FAQ",
-    "homeowner service request help",
-  ],
-  alternates: {
-    canonical: "https://nexusoperations.org/faq",
-  },
-  openGraph: {
-    title: "FAQ | Nexus Operations",
-    description:
-      "Everything you need to know about submitting requests, contractor verification, exclusive assignment, and platform policies.",
-    url: "https://nexusoperations.org/faq",
-    type: "article",
-  },
-  twitter: {
-    title: "FAQ | Nexus Operations",
-    description:
-      "Everything you need to know about submitting requests, contractor verification, exclusive assignment, and platform policies.",
-  },
+  description: "Frequently asked questions about Nexus Operations — property service coordination in Topeka, KS.",
 }
 
 const sections = [
@@ -119,28 +93,9 @@ const sections = [
   },
 ]
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: sections.flatMap((section) =>
-    section.questions.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: a,
-      },
-    }))
-  ),
-}
-
 export default function FAQPage() {
   return (
     <main className="min-h-screen bg-background">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
       <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 h-14">
           <Link href="/">

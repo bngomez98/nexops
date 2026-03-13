@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
@@ -12,24 +12,11 @@ import { AlertCircle, Loader2, CheckCircle } from "lucide-react"
 
 function ResetPasswordForm() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [sessionReady, setSessionReady] = useState(false)
-
-  // Supabase sends the token via hash fragment for password reset
-  // The client SDK picks it up automatically on mount
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setSessionReady(true)
-      }
-    })
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -11,7 +11,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   roofing:        "Roofing",
   concrete:       "Concrete",
   fencing:        "Fencing",
-  plumbing:       "Plumbing",
 }
 
 export default async function ContractorRequestPage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,6 +27,9 @@ export default async function ContractorRequestPage({ params }: { params: Promis
     .from("service_requests")
     .select("*")
     .eq("id", id)
+    .or(
+      `and(status.in.(pending_review,in_queue),assigned_contractor_id.is.null),assigned_contractor_id.eq.${user.id}`,
+    )
     .single()
 
   if (!req) notFound()
@@ -35,15 +37,17 @@ export default async function ContractorRequestPage({ params }: { params: Promis
   const isOpen = ["pending_review", "in_queue"].includes(req.status) && !req.assigned_contractor_id
   const isMine = req.assigned_contractor_id === user.id
 
+  if (!isOpen && !isMine) notFound()
+
   return (
     <div className="flex-1 overflow-auto">
       <div className="mx-auto max-w-3xl px-6 py-8">
         <Link
-          href="/dashboard/contractor/requests"
+          href="/dashboard/contractor"
           className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to open requests
+          Back to dashboard
         </Link>
 
         <div className="mb-6 flex items-start justify-between">
@@ -134,11 +138,6 @@ export default async function ContractorRequestPage({ params }: { params: Promis
             </div>
           )}
 
-          {!isOpen && !isMine && (
-            <div className="rounded-lg border border-border bg-muted/50 p-4 text-center">
-              <p className="text-sm text-muted-foreground">This request has already been claimed by another contractor.</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
