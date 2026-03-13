@@ -19,6 +19,10 @@ const serviceCategories = [
 ]
 
 export default function ContractorProfilePage() {
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading]   = useState(true)
   const [saving, setSaving]     = useState(false)
   const [saved, setSaved]       = useState(false)
@@ -33,6 +37,23 @@ export default function ContractorProfilePage() {
     selectedCategories:   [] as string[],
   })
 
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setForm({
+            businessName: data.business_name ?? "",
+            licenseNumber: data.license_number ?? "",
+            insuranceCarrier: data.insurance_carrier ?? "",
+            bio: data.bio ?? "",
+            serviceRadius: data.service_radius != null ? String(data.service_radius) : "25",
+            selectedCategories: Array.isArray(data.service_categories) ? data.service_categories : [],
+          })
+        }
+      })
+      .catch(() => {/* silently ignore load errors */})
+      .finally(() => setLoading(false))
   /* ── Load existing profile data ── */
   useEffect(() => {
     async function load() {
@@ -77,6 +98,23 @@ export default function ContractorProfilePage() {
     setSaving(true)
     setError(null)
 
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? "Failed to save profile")
+        return
+      }
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch {
+      setError("Something went wrong")
+    } finally {
+      setSaving(false)
     const supabase = createClient()
 
     const { error: dbError } = await supabase
@@ -103,6 +141,7 @@ export default function ContractorProfilePage() {
 
   if (loading) {
     return (
+      <div className="flex-1 overflow-auto flex items-center justify-center py-24">
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
@@ -250,6 +289,12 @@ export default function ContractorProfilePage() {
               </div>
             </div>
           </section>
+
+          {error && (
+            <div className="rounded border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
 
           {/* Error / success */}
           {error && (
