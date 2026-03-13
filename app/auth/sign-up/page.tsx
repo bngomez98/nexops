@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -23,7 +23,10 @@ function SignUpForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const initialRole = (searchParams.get("role") as Role | null) ?? "homeowner"
+  const roleParam = searchParams.get("role")
+  const initialRole: Role = roleParam && (ROLES as readonly string[]).includes(roleParam)
+    ? (roleParam as Role)
+    : "homeowner"
 
   const [formData, setFormData] = useState({
     email:           "",
@@ -38,13 +41,6 @@ function SignUpForm() {
   const [error, setError]                 = useState<string | null>(null)
   const [loading, setLoading]             = useState(false)
 
-  // Sync role if the URL param changes (e.g., user navigates back/forward)
-  useEffect(() => {
-    const roleParam = searchParams.get("role")
-    if (roleParam && (ROLES as readonly string[]).includes(roleParam)) {
-      setFormData(prev => ({ ...prev, role: roleParam as Role }))
-    }
-  }, [searchParams])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
