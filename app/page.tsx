@@ -315,14 +315,14 @@ export default function HomePage() {
             {
               src:     "/photo-manager.jpg",
               label:   "Property Managers",
-              caption: "Manage your entire portfolio from a single dashboard with full reporting.",
+              caption: "Submit and track service requests across all your properties from one dashboard.",
               href:    "/auth/sign-up?role=property_manager",
               cta:     "Create account",
             },
             {
               src:     "/photo-contractor.jpg",
               label:   "Contractors",
-              caption: "Receive fully documented project leads — photos, written scope, and budget ceiling reviewed before you see them.",
+              caption: "Claim qualified project leads in your trade and service area. No fees, no bidding, no cuts.",
               href:    "/auth/sign-up?role=contractor",
               cta:     "Apply for access",
             },
@@ -389,7 +389,7 @@ export default function HomePage() {
                 ["Email",                   "admin@nexusoperations.org"],
                 ["Contractors per project", "One, assigned exclusively"],
                 ["Contractor verification", "License · Insurance · Manual review"],
-                ["Post-project reporting",  "Included with every account"],
+                ["Project tracking",        "Dashboard access for all active requests"],
               ].map(([label, value]) => (
                 <div
                   key={label}
@@ -603,7 +603,7 @@ export default function HomePage() {
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">For contractors</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Join the Nexus contractor network. Receive fully documented project leads in your trade and service area — reviewed and ready when you claim them.
+              Join the Nexus contractor network. Claim qualified, pre-reviewed project leads in your trade and service area — at no cost.
             </h2>
           </div>
 
