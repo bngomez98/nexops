@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -12,8 +12,10 @@ const serviceCategories = [
 ]
 
 export default function ContractorProfilePage() {
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({
     businessName: "",
     licenseNumber: "",
@@ -22,6 +24,25 @@ export default function ContractorProfilePage() {
     serviceRadius: "25",
     selectedCategories: [] as string[],
   })
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setForm({
+            businessName: data.business_name ?? "",
+            licenseNumber: data.license_number ?? "",
+            insuranceCarrier: data.insurance_carrier ?? "",
+            bio: data.bio ?? "",
+            serviceRadius: data.service_radius != null ? String(data.service_radius) : "25",
+            selectedCategories: Array.isArray(data.service_categories) ? data.service_categories : [],
+          })
+        }
+      })
+      .catch(() => {/* silently ignore load errors */})
+      .finally(() => setLoading(false))
+  }, [])
 
   const toggleCategory = (cat: string) => {
     setForm((prev) => ({
@@ -35,10 +56,34 @@ export default function ContractorProfilePage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await new Promise((r) => setTimeout(r, 800))
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+    setError(null)
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? "Failed to save profile")
+        return
+      }
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch {
+      setError("Something went wrong")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex-1 overflow-auto flex items-center justify-center py-24">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
   return (
@@ -134,6 +179,12 @@ export default function ContractorProfilePage() {
               </div>
             </div>
           </section>
+
+          {error && (
+            <div className="rounded border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
 
           {saved && (
             <div className="flex items-center gap-2 rounded border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
