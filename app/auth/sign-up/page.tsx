@@ -8,15 +8,15 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AlertCircle, Loader2 } from "lucide-react"
+import { AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
 
 const ROLES = ["homeowner", "property_manager", "contractor"] as const
 type Role = (typeof ROLES)[number]
 
 const roleLabels: Record<Role, string> = {
-  homeowner: "Property Owner",
+  homeowner:        "Property Owner",
   property_manager: "Property Manager",
-  contractor: "Contractor",
+  contractor:       "Contractor",
 }
 
 function SignUpForm() {
@@ -33,10 +33,12 @@ function SignUpForm() {
     fullName: "",
     role: initialRole,
   })
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Sync role if the URL role param changes (e.g., user navigates back/forward)
   useEffect(() => {
     if (roleParam && (ROLES as readonly string[]).includes(roleParam)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -48,6 +50,12 @@ function SignUpForm() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
+    if (!termsAccepted) {
+      setError("You must agree to the Terms of Service and Privacy Policy to create an account.")
+      setLoading(false)
+      return
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.")
@@ -87,6 +95,7 @@ function SignUpForm() {
 
   return (
     <div className="flex min-h-screen bg-background">
+
       {/* Left panel — brand */}
       <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] flex-col justify-between border-r border-border bg-card px-12 py-16 flex-shrink-0">
         <Link href="/">
@@ -113,7 +122,7 @@ function SignUpForm() {
           <div className="space-y-5 text-[13.5px] text-muted-foreground leading-[1.7]">
             <p>
               One verified contractor per request. No competing bids. No cold calls.
-              Documentation maintained through job completion.
+              Every project documented through completion.
             </p>
             <p>
               Contractors join at no cost. Service requests receive a dedicated
@@ -143,6 +152,7 @@ function SignUpForm() {
 
       {/* Right panel — form */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
+
         {/* Mobile logo */}
         <div className="mb-8 lg:hidden">
           <Link href="/">
@@ -195,34 +205,57 @@ function SignUpForm() {
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 required
+                autoComplete="email"
                 className="h-10 text-[13px]"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="password" className="text-[13px]">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="At least 8 characters"
-                value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                required
-                className="h-10 text-[13px]"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="At least 8 characters"
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  required
+                  autoComplete="new-password"
+                  className="h-10 text-[13px] pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="confirmPassword" className="text-[13px]">Confirm password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Re-enter password"
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                required
-                className="h-10 text-[13px]"
-              />
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirm ? "text" : "password"}
+                  placeholder="Re-enter password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  required
+                  autoComplete="new-password"
+                  className="h-10 text-[13px] pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+                  aria-label={showConfirm ? "Hide password" : "Show password"}
+                >
+                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -245,24 +278,56 @@ function SignUpForm() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-10 text-[13px] font-semibold" disabled={loading}>
+            {/* Terms & Privacy checkbox */}
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <div className="relative flex-shrink-0 mt-0.5">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="sr-only"
+                />
+                <div
+                  className={`h-4 w-4 rounded border transition ${
+                    termsAccepted
+                      ? "bg-primary border-primary"
+                      : "border-border bg-background group-hover:border-primary/50"
+                  } flex items-center justify-center`}
+                >
+                  {termsAccepted && (
+                    <svg className="h-2.5 w-2.5 text-primary-foreground" fill="none" viewBox="0 0 12 12">
+                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+              <span className="text-[12.5px] text-muted-foreground leading-relaxed">
+                I have read and agree to the{" "}
+                <Link href="/terms" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                  Terms of Service
+                </Link>
+                {" "}and{" "}
+                <Link href="/privacy" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                  Privacy Policy
+                </Link>
+              </span>
+            </label>
+
+            <Button
+              type="submit"
+              className="w-full h-10 text-[13px] font-semibold"
+              disabled={loading || !termsAccepted}
+            >
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating account...
                 </>
               ) : (
-                "Create account"
+                "Create Account"
               )}
             </Button>
           </form>
-
-          <p className="mt-5 text-[11.5px] text-muted-foreground leading-relaxed">
-            By creating an account you agree to our{" "}
-            <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
-            {" "}and{" "}
-            <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
-          </p>
 
           <div className="mt-5 border-t border-border pt-5 text-[13px] text-muted-foreground text-center">
             Already have an account?{" "}
