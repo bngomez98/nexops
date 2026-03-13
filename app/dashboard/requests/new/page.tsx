@@ -81,6 +81,9 @@ export default function NewRequestPage() {
     }
 
     setLoading(true)
+    // Simulate submission
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    router.push("/dashboard/requests")
     setError(null)
 
     try {
@@ -308,6 +311,15 @@ export default function NewRequestPage() {
                     onChange={(e) => setFormData({ ...formData, budgetMax: e.target.value })}
                   />
                 </div>
+              </div>
+
+              <div className="rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center">
+                <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+                <p className="mt-2 text-sm font-medium">Upload project photos</p>
+                <p className="text-xs text-muted-foreground">2-10 photos recommended</p>
+                <Button variant="outline" size="sm" className="mt-3">
+                  Choose Files
+                </Button>
               </div>
 
               <div className="flex gap-3">

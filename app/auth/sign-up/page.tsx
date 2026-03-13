@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
 
+type Role = "homeowner" | "property_manager" | "contractor"
 const ROLES = ["homeowner", "property_manager", "contractor"] as const
 type Role = (typeof ROLES)[number]
 
@@ -23,8 +24,7 @@ function SignUpForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const roleParam = searchParams.get("role") as Role | null
-  const initialRole: Role = roleParam && (ROLES as readonly string[]).includes(roleParam) ? roleParam : "homeowner"
+  const initialRole = (searchParams.get("role") as Role | null) ?? "homeowner"
 
   const [formData, setFormData] = useState({
     email: "",
@@ -39,12 +39,17 @@ function SignUpForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  // Sync role if the URL param changes (e.g., user navigates back/forward)
+  useEffect(() => {
+    const role = searchParams.get("role") as Role | null
+    if (role && ["homeowner", "property_manager", "contractor"].includes(role)) {
+      setFormData(prev => ({ ...prev, role }))
   useEffect(() => {
     if (roleParam && (ROLES as readonly string[]).includes(roleParam)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(prev => ({ ...prev, role: roleParam }))
     }
-  }, [roleParam])
+  }, [searchParams])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -91,6 +96,12 @@ function SignUpForm() {
     }
 
     router.push("/auth/sign-up-success")
+  }
+
+  const roleLabels: Record<Role, string> = {
+    homeowner: "Property Owner",
+    property_manager: "Property Manager",
+    contractor: "Contractor",
   }
 
   return (
@@ -190,7 +201,7 @@ function SignUpForm() {
                 type="text"
                 placeholder="Jane Smith"
                 value={formData.fullName}
-                onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 required
                 className="h-10 text-[13px]"
               />
@@ -203,7 +214,7 @@ function SignUpForm() {
                 type="email"
                 placeholder="you@example.com"
                 value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
                 autoComplete="email"
                 className="h-10 text-[13px]"
@@ -212,6 +223,15 @@ function SignUpForm() {
 
             <div className="space-y-1.5">
               <Label htmlFor="password" className="text-[13px]">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="At least 8 characters"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                required
+                className="h-10 text-[13px]"
+              />
               <div className="relative">
                 <Input
                   id="password"
@@ -236,6 +256,15 @@ function SignUpForm() {
 
             <div className="space-y-1.5">
               <Label htmlFor="confirmPassword" className="text-[13px]">Confirm password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="Re-enter password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                required
+                className="h-10 text-[13px]"
+              />
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -261,11 +290,11 @@ function SignUpForm() {
             <div className="space-y-1.5">
               <Label className="text-[13px]">Account type</Label>
               <div className="grid grid-cols-3 gap-2">
-                {ROLES.map((r) => (
+                {(["homeowner", "property_manager", "contractor"] as Role[]).map((r) => (
                   <button
                     key={r}
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, role: r }))}
+                    onClick={() => setFormData({ ...formData, role: r })}
                     className={`rounded border px-2 py-2.5 text-[11.5px] font-medium transition ${
                       formData.role === r
                         ? "border-primary bg-primary/10 text-primary"

@@ -21,7 +21,6 @@ import {
   X,
   CreditCard,
 } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 const ownerNavItems = [
@@ -142,11 +141,7 @@ function NavContent({
       </div>
 
       {/* User */}
-      <div className="border-t border-border p-3 flex-shrink-0">
-        <div className="mb-1 flex items-center justify-between px-2 py-1">
-          <span className="text-[11px] text-muted-foreground">Theme</span>
-          <ThemeToggle />
-        </div>
+      <div className="border-t border-border p-3">
         <div className="mb-2 flex items-center gap-2.5 px-2 py-1">
           <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded-full border border-border bg-primary/10">
             {avatarUrl ? (
