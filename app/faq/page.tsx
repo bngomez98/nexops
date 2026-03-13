@@ -13,7 +13,7 @@ const sections = [
     questions: [
       {
         q: "What does it cost to submit a service request?",
-        a: "Nothing. Submitting a request is free for all property owners and property managers. There are no hidden fees, no lead charges, and no subscription costs.",
+        a: "Property owners and property managers submit requests through a Nexus account. There are no per-lead charges or hidden fees associated with submitting a request.",
       },
       {
         q: "What information is required to submit a request?",
@@ -37,7 +37,7 @@ const sections = [
       },
       {
         q: "I manage multiple properties. Can one account cover all of them?",
-        a: "Yes. Property manager accounts support multiple property addresses under a single login, with per-property request history and tracking. Register as a Property Manager during sign-up or contact admin@nexusoperations.org to upgrade an existing account.",
+        a: "Yes. Property manager accounts support multiple property addresses under a single login, with per-property request history and tracking. Register as a Property Manager during sign-up or contact our support team to upgrade an existing account.",
       },
     ],
   },
@@ -58,11 +58,11 @@ const sections = [
       },
       {
         q: "Is there a fee to claim requests?",
-        a: "Individual claims are not charged per-claim. Contractors pay a monthly membership fee that provides access to all open requests in their service area and categories. See your membership agreement for current pricing.",
+        a: "Individual claims are not charged per-claim. Contractors pay a monthly membership that provides access to all open requests in their service area and categories. Membership details are available after completing the contractor application.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",
-        a: "Contact admin@nexusoperations.org as soon as possible. The request may be released back to the open pool at Nexus Operations' discretion. Repeated failures to honor claimed consultations will result in account suspension.",
+        a: "Contact our support team as soon as possible via the Help Center or by calling (785) 428-0244. The request may be released back to the open pool at Nexus Operations' discretion. Repeated failures to honor claimed consultations will result in account suspension.",
       },
       {
         q: "Can I set which request types and geographic area I receive?",
@@ -87,7 +87,7 @@ const sections = [
       },
       {
         q: "How do I contact Nexus Operations for support?",
-        a: "Phone: (785) 428-0244, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org. Help Center: nexusoperations.zendesk.com/hc/en-us.",
+        a: "Phone: (785) 428-0244, Monday through Friday 8am–6pm CT. Help Center: nexusoperations.zendesk.com/hc/en-us. Our support team responds to all platform inquiries within one business day.",
       },
     ],
   },
@@ -151,12 +151,10 @@ export default function FAQPage() {
         <div className="mt-14 rounded-lg border border-border bg-card p-6">
           <h3 className="text-sm font-semibold mb-2">Still have a question?</h3>
           <p className="text-[13px] text-muted-foreground mb-4">
-            Contact us directly or visit the Zendesk help center for additional documentation.
+            Reach us directly by phone or visit the Help Center for platform documentation and additional support resources.
           </p>
           <div className="flex flex-wrap gap-3 text-[13px]">
             <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a>
-            <span className="text-border">·</span>
-            <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>
             <span className="text-border">·</span>
             <a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Help Center</a>
           </div>

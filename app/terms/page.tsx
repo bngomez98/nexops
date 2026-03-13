@@ -33,7 +33,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="7. Fees">
-        The Platform is free for property owners and property managers. Contractors pay a membership fee as described in their separate contractor membership agreement. All fees are non-refundable except as expressly stated in writing by Nexus Operations.
+        Property owners and property managers access the Platform pursuant to account registration. Contractors pay a membership fee as described in their separate contractor membership agreement. All fees are non-refundable except as expressly stated in writing by Nexus Operations.
       </Section>
 
       <Section title="8. No Guarantee of Outcome">
@@ -61,7 +61,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="14. Contact">
-        Questions about these Terms: <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a> — Nexus Operations, LLC, Topeka, KS 66606. Phone: <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a>.
+        Questions about these Terms: Phone <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a> (Monday–Friday, 8am–6pm CT) or visit our <a href="https://nexusoperations.zendesk.com/hc/en-us" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Help Center</a> — Nexus Operations, LLC, Topeka, KS 66606.
       </Section>
     </LegalShell>
   )

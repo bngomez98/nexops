@@ -7,10 +7,6 @@ import {
   CheckCircle,
   Plus,
   ArrowRight,
-  AlertCircle,
-  Calendar,
-  MapPin,
-  DollarSign,
   ChevronRight,
 } from "lucide-react"
 
@@ -28,7 +24,7 @@ export default async function DashboardPage() {
     redirect("/dashboard/contractor")
   }
 
-  const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "there"
+  const fullName        = user.user_metadata?.full_name || user.email?.split("@")[0] || "there"
   const isPropertyManager = role === "property_manager"
 
   const { data: requests } = await supabase
@@ -36,15 +32,15 @@ export default async function DashboardPage() {
     .select("status")
     .eq("owner_id", user.id)
 
-  const open = requests?.filter((r) => ["in_queue", "pending_review"].includes(r.status)).length ?? 0
+  const open       = requests?.filter((r) => ["in_queue", "pending_review"].includes(r.status)).length ?? 0
   const inProgress = requests?.filter((r) => ["assigned", "consultation_scheduled", "in_progress"].includes(r.status)).length ?? 0
-  const completed = requests?.filter((r) => r.status === "completed").length ?? 0
+  const completed  = requests?.filter((r) => r.status === "completed").length ?? 0
   const hasRequests = (requests?.length ?? 0) > 0
 
   const stats = [
-    { label: "Open Requests",  value: String(open),       sub: "Submitted and waiting for a contractor to claim",        icon: FileText,    color: "text-foreground" },
-    { label: "In Progress",    value: String(inProgress), sub: "A contractor has claimed the project and work is active", icon: Clock,       color: "text-primary" },
-    { label: "Completed",      value: String(completed),  sub: "Projects finished and closed on this account",            icon: CheckCircle, color: "text-foreground" },
+    { label: "Open Requests", value: String(open),       sub: "Submitted and waiting for a contractor to claim",        icon: FileText,    color: "text-foreground" },
+    { label: "In Progress",   value: String(inProgress), sub: "A contractor has claimed the project and work is active", icon: Clock,       color: "text-primary" },
+    { label: "Completed",     value: String(completed),  sub: "Projects finished and closed on this account",            icon: CheckCircle, color: "text-foreground" },
   ]
 
   return (
@@ -93,28 +89,17 @@ export default async function DashboardPage() {
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <h3 className="font-semibold text-sm mb-1">No service requests submitted</h3>
-            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Submit a request with photos, a written scope, and a budget cap. A verified contractor will be assigned exclusively.
+            <p className="text-xs text-muted-foreground mb-5 max-w-sm mx-auto">
+              Submit your project with photos, a written scope, and a budget cap. A verified contractor will be assigned exclusively.
             </p>
-            <Button asChild size="sm">
-              <Link href="/dashboard/requests/new">
-                Submit First Request
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </Button>
+            <Link
+              href="/dashboard/requests/new"
+              className="inline-flex items-center gap-2 rounded bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+            >
+              Submit your project now
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
-          <h3 className="font-semibold text-sm mb-1">No service requests submitted</h3>
-          <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-            Submit a request with photos, a written scope, and a budget cap. A verified contractor will be assigned exclusively.
-          </p>
-          <Link
-            href="/dashboard/requests/new"
-            className="inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
-          >
-            Submit First Request
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
         ) : (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -129,7 +114,7 @@ export default async function DashboardPage() {
 
         {/* Process reference */}
         <div className="mb-8">
-          <h2 className="text-sm font-semibold mb-4">Request process</h2>
+          <h2 className="text-sm font-semibold mb-4">How it works</h2>
           <div className="grid gap-3 sm:grid-cols-4">
             {[
               { step: "01", label: "Submit",       desc: "Photos, scope, and budget cap" },
@@ -151,10 +136,10 @@ export default async function DashboardPage() {
           <h2 className="text-sm font-semibold mb-4">Account</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { href: "/dashboard/requests/new", label: "New service request",  sub: "Submit photos, scope, and budget" },
-              { href: "/dashboard/requests",     label: "View all requests",     sub: "Track open and completed jobs" },
-              { href: "/dashboard/messages",     label: "Messages",              sub: "Communicate with assigned contractors" },
-              { href: "/dashboard/settings",     label: "Account settings",      sub: "Profile, properties, notifications" },
+              { href: "/dashboard/requests/new", label: "Submit a project request", sub: "Photos, scope, and budget" },
+              { href: "/dashboard/requests",     label: "View all requests",        sub: "Track open and completed jobs" },
+              { href: "/dashboard/messages",     label: "Messages",                 sub: "Communicate with assigned contractors" },
+              { href: "/dashboard/settings",     label: "Account settings",         sub: "Profile, properties, notifications" },
               { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform documentation and support", external: true },
             ].map(({ href, label, sub, external }) => (
               <Link

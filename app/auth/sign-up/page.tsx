@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
 
-type Role = "homeowner" | "property_manager" | "contractor"
 const ROLES = ["homeowner", "property_manager", "contractor"] as const
 type Role = (typeof ROLES)[number]
 
@@ -27,27 +26,23 @@ function SignUpForm() {
   const initialRole = (searchParams.get("role") as Role | null) ?? "homeowner"
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email:           "",
+    password:        "",
     confirmPassword: "",
-    fullName: "",
-    role: initialRole,
+    fullName:        "",
+    role:            initialRole,
   })
   const [termsAccepted, setTermsAccepted] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword]   = useState(false)
+  const [showConfirm, setShowConfirm]     = useState(false)
+  const [error, setError]                 = useState<string | null>(null)
+  const [loading, setLoading]             = useState(false)
 
   // Sync role if the URL param changes (e.g., user navigates back/forward)
   useEffect(() => {
-    const role = searchParams.get("role") as Role | null
-    if (role && ["homeowner", "property_manager", "contractor"].includes(role)) {
-      setFormData(prev => ({ ...prev, role }))
-  useEffect(() => {
+    const roleParam = searchParams.get("role")
     if (roleParam && (ROLES as readonly string[]).includes(roleParam)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setFormData(prev => ({ ...prev, role: roleParam }))
+      setFormData(prev => ({ ...prev, role: roleParam as Role }))
     }
   }, [searchParams])
 
@@ -76,7 +71,7 @@ function SignUpForm() {
 
     const supabase = createClient()
     const { error } = await supabase.auth.signUp({
-      email: formData.email,
+      email:    formData.email,
       password: formData.password,
       options: {
         emailRedirectTo:
@@ -84,7 +79,7 @@ function SignUpForm() {
           `${window.location.origin}/auth/callback?next=/dashboard`,
         data: {
           full_name: formData.fullName,
-          role: formData.role,
+          role:      formData.role,
         },
       },
     })
@@ -96,12 +91,6 @@ function SignUpForm() {
     }
 
     router.push("/auth/sign-up-success")
-  }
-
-  const roleLabels: Record<Role, string> = {
-    homeowner: "Property Owner",
-    property_manager: "Property Manager",
-    contractor: "Contractor",
   }
 
   return (
@@ -136,8 +125,8 @@ function SignUpForm() {
               Every project documented through completion.
             </p>
             <p>
-              Contractors join at no cost. Service requests receive a dedicated
-              contractor from our vetted network within the submission day.
+              Contractors receive pre-validated project leads in their trade and service area —
+              complete with photographs, written scope, and the owner&apos;s budget ceiling.
             </p>
           </div>
 
@@ -145,8 +134,8 @@ function SignUpForm() {
             {[
               { n: "8",    label: "Trade categories" },
               { n: "1",    label: "Contractor per request" },
-              { n: "$0",   label: "Contractor cost" },
               { n: "100%", label: "Manually reviewed" },
+              { n: "∞",    label: "Permanent records" },
             ].map(({ n, label }) => (
               <div key={label}>
                 <p className="text-lg font-bold text-foreground">{n}</p>
@@ -157,7 +146,7 @@ function SignUpForm() {
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (785) 428-0244 · admin@nexusoperations.org
+          Topeka, KS · (785) 428-0244 · nexusoperations.org
         </p>
       </div>
 
@@ -223,15 +212,6 @@ function SignUpForm() {
 
             <div className="space-y-1.5">
               <Label htmlFor="password" className="text-[13px]">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="At least 8 characters"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                required
-                className="h-10 text-[13px]"
-              />
               <div className="relative">
                 <Input
                   id="password"
@@ -256,15 +236,6 @@ function SignUpForm() {
 
             <div className="space-y-1.5">
               <Label htmlFor="confirmPassword" className="text-[13px]">Confirm password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Re-enter password"
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                required
-                className="h-10 text-[13px]"
-              />
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -280,7 +251,7 @@ function SignUpForm() {
                   type="button"
                   onClick={() => setShowConfirm((v) => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
-                  aria-label={showConfirm ? "Hide password" : "Show password"}
+                  aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
                 >
                   {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
