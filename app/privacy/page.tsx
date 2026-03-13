@@ -33,7 +33,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="7. Data Retention">
-        Account data is retained for the life of the account and for a minimum of 36 months following account closure to satisfy legal and dispute resolution obligations. Project records, photographs, and consultation documentation are retained for 5 years. You may request deletion of your account at any time by emailing <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>; legal retention requirements may override deletion requests for specific record types.
+        Account data is kept for the life of the account. Following account closure, we retain a limited subset of data for up to 36 months to satisfy legal and dispute resolution obligations. Project documentation and photographs are retained for up to 5 years after project completion. You may request deletion of your account and associated data at any time by emailing <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>. Legal obligations may require us to retain certain transaction-related data even after a deletion request — we will be clear about what we can and cannot remove.
       </Section>
 
       <Section title="8. Your Rights">

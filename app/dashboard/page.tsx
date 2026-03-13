@@ -31,10 +31,20 @@ export default async function DashboardPage() {
   const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "there"
   const isPropertyManager = role === "property_manager"
 
+  const { data: requests } = await supabase
+    .from("service_requests")
+    .select("status")
+    .eq("owner_id", user.id)
+
+  const open = requests?.filter((r) => ["in_queue", "pending_review"].includes(r.status)).length ?? 0
+  const inProgress = requests?.filter((r) => ["assigned", "consultation_scheduled", "in_progress"].includes(r.status)).length ?? 0
+  const completed = requests?.filter((r) => r.status === "completed").length ?? 0
+  const hasRequests = (requests?.length ?? 0) > 0
+
   const stats = [
-    { label: "Open Requests",  value: "0", sub: "Awaiting contractor assignment", icon: FileText,    color: "text-foreground" },
-    { label: "In Progress",    value: "0", sub: "Contractor assigned, work active", icon: Clock,      color: "text-primary" },
-    { label: "Completed",      value: "0", sub: "All time, this account",           icon: CheckCircle, color: "text-foreground" },
+    { label: "Open Requests",  value: String(open),       sub: "Submitted and waiting for a contractor to claim",        icon: FileText,    color: "text-foreground" },
+    { label: "In Progress",    value: String(inProgress), sub: "A contractor has claimed the project and work is active", icon: Clock,       color: "text-primary" },
+    { label: "Completed",      value: String(completed),  sub: "Projects finished and closed on this account",            icon: CheckCircle, color: "text-foreground" },
   ]
 
   return (
@@ -76,10 +86,22 @@ export default async function DashboardPage() {
           ))}
         </div>
 
-        {/* Empty state */}
-        <div className="mb-8 rounded-lg border border-dashed border-border bg-card p-10 text-center">
-          <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-            <FileText className="h-5 w-5 text-primary" />
+        {/* Empty state or recent requests */}
+        {!hasRequests ? (
+          <div className="mb-8 rounded-lg border border-dashed border-border bg-card p-10 text-center">
+            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+              <FileText className="h-5 w-5 text-primary" />
+            </div>
+            <h3 className="font-semibold text-sm mb-1">No service requests submitted</h3>
+            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
+              Submit a request with photos, a written scope, and a budget cap. A verified contractor will be assigned exclusively.
+            </p>
+            <Button asChild size="sm">
+              <Link href="/dashboard/requests/new">
+                Submit First Request
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
           </div>
           <h3 className="font-semibold text-sm mb-1">No service requests submitted</h3>
           <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
@@ -93,16 +115,27 @@ export default async function DashboardPage() {
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
+        ) : (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold">Recent Requests</h2>
+              <Link href="/dashboard/requests" className="text-xs text-primary hover:underline">View all</Link>
+            </div>
+            <div className="rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+              {open} open · {inProgress} in progress · {completed} completed
+            </div>
+          </div>
+        )}
 
         {/* Process reference */}
         <div className="mb-8">
           <h2 className="text-sm font-semibold mb-4">Request process</h2>
           <div className="grid gap-3 sm:grid-cols-4">
             {[
-              { step: "01", label: "Submit",      desc: "Photos, scope, and budget cap" },
-              { step: "02", label: "Assignment",  desc: "One contractor claims exclusively" },
+              { step: "01", label: "Submit",       desc: "Photos, scope, and budget cap" },
+              { step: "02", label: "Assignment",   desc: "One contractor claims exclusively" },
               { step: "03", label: "Consultation", desc: "Pre-confirmed within 24 hours" },
-              { step: "04", label: "Estimate",    desc: "Written, itemized — no obligation" },
+              { step: "04", label: "Estimate",     desc: "Written, itemized — no obligation" },
             ].map(({ step, label, desc }) => (
               <div key={step} className="rounded-lg border border-border bg-card p-4">
                 <p className="text-[11px] font-bold text-primary mb-2">{step}</p>
@@ -118,16 +151,11 @@ export default async function DashboardPage() {
           <h2 className="text-sm font-semibold mb-4">Account</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { href: "/dashboard/requests/new", label: "New service request",       sub: "Submit photos, scope, and budget" },
-              { href: "/dashboard/requests",     label: "View all requests",          sub: "Track open and completed jobs" },
-              { href: "/dashboard/messages",     label: "Messages",                   sub: "Communicate with assigned contractors" },
-              { href: "/dashboard/settings",     label: "Account settings",           sub: "Profile, properties, notifications" },
-              {
-                href: "https://nexusoperations.zendesk.com/hc/en-us",
-                label: "Help Center",
-                sub: "Platform documentation and support",
-                external: true,
-              },
+              { href: "/dashboard/requests/new", label: "New service request",  sub: "Submit photos, scope, and budget" },
+              { href: "/dashboard/requests",     label: "View all requests",     sub: "Track open and completed jobs" },
+              { href: "/dashboard/messages",     label: "Messages",              sub: "Communicate with assigned contractors" },
+              { href: "/dashboard/settings",     label: "Account settings",      sub: "Profile, properties, notifications" },
+              { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform documentation and support", external: true },
             ].map(({ href, label, sub, external }) => (
               <Link
                 key={href}

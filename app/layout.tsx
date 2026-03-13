@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { CookieConsent } from "@/components/cookie-consent"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta-sans" })
+const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
 
 export const metadata: Metadata = {
   title: "Nexus Operations | One contractor. Exclusively yours.",
@@ -29,11 +31,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Theme init — prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='light'){document.documentElement.classList.add('light')}else{document.documentElement.classList.add('dark')}})()`,
+            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='dark'){document.documentElement.classList.add('dark')}else{document.documentElement.classList.add('light')}})()`,
           }}
         />
         {/* Google Tag Manager */}
@@ -47,7 +50,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} font-sans`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

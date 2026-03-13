@@ -9,7 +9,7 @@ export default function TermsPage() {
   return (
     <LegalShell title="Terms of Service" updated="March 5, 2026">
       <Section title="1. Acceptance of Terms">
-        By accessing or using Nexus Operations ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform. These terms constitute a binding legal agreement between you and Nexus Operations, LLC.
+        By accessing or using Nexus Operations (&ldquo;the Platform&rdquo;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform. These terms constitute a binding legal agreement between you and Nexus Operations, LLC.
       </Section>
 
       <Section title="2. Platform Description">
@@ -29,7 +29,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="6. Exclusive Assignment Policy">
-        When a contractor claims a request, that request is immediately removed from all other contractors' feeds. The claiming contractor has exclusive rights to that project. Contractors who claim a request and fail to conduct the scheduled consultation without valid cause may have their account suspended.
+        When a contractor claims a request, that request is immediately removed from all other contractors&apos; feeds. The claiming contractor has exclusive rights to that project. Contractors who claim a request and fail to conduct the scheduled consultation without valid cause may have their account suspended.
       </Section>
 
       <Section title="7. Fees">
@@ -45,7 +45,7 @@ export default function TermsPage() {
       </Section>
 
       <Section title="10. Indemnification">
-        You agree to indemnify and hold harmless Nexus Operations, LLC, its officers, directors, employees, and agents from any claims, liabilities, damages, or expenses (including attorneys' fees) arising from your use of the Platform or your violation of these Terms.
+        You agree to indemnify and hold harmless Nexus Operations, LLC, its officers, directors, employees, and agents from any claims, liabilities, damages, or expenses (including attorneys&apos; fees) arising from your use of the Platform or your violation of these Terms.
       </Section>
 
       <Section title="11. Account Termination">
