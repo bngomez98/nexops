@@ -65,7 +65,6 @@ export default function ContractorBillingPage() {
   const [error, setError]                     = useState<string | null>(null)
   const [success, setSuccess]                 = useState<string | null>(null)
   const [subStatus, setSubStatus]             = useState<SubscriptionStatus>(null)
-  const [customerId, setCustomerId]           = useState<string | null>(null)
 
   const searchParams = useSearchParams()
 
@@ -77,12 +76,11 @@ export default function ContractorBillingPage() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("subscription_status, stripe_customer_id")
+        .select("subscription_status")
         .eq("id", user.id)
         .single()
 
       setSubStatus((profile?.subscription_status as SubscriptionStatus) ?? null)
-      setCustomerId(profile?.stripe_customer_id ?? null)
       setLoading(false)
     }
     load()
