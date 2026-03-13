@@ -48,8 +48,10 @@ export async function POST(req: Request) {
     customer: customerId,
     mode: "subscription",
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${siteUrl}/dashboard/contractor/settings?billing=success`,
-    cancel_url: `${siteUrl}/dashboard/contractor/settings`,
+    success_url: `${siteUrl}/dashboard/contractor/billing?billing=success`,
+    cancel_url:  `${siteUrl}/dashboard/contractor/billing?billing=canceled`,
+    allow_promotion_codes: true,
+    billing_address_collection: "auto",
   })
 
   return NextResponse.json({ url: session.url })
