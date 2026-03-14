@@ -19,6 +19,8 @@ import {
   Home,
   Hammer,
   Fence,
+  Droplets,
+  Wrench,
   Upload,
   Loader2,
   X,
@@ -26,12 +28,14 @@ import {
 } from "lucide-react"
 
 const categories = [
-  { id: "tree-removal", name: "Tree Removal",  icon: TreePine },
-  { id: "hvac",         name: "HVAC",           icon: Thermometer },
-  { id: "electrical",   name: "Electrical",     icon: Zap },
-  { id: "roofing",      name: "Roofing",        icon: Home },
-  { id: "concrete",     name: "Concrete",       icon: Hammer },
-  { id: "fencing",      name: "Fencing",        icon: Fence },
+  { id: "tree-removal",   name: "Tree Removal",   icon: TreePine },
+  { id: "hvac",           name: "HVAC",            icon: Thermometer },
+  { id: "electrical",     name: "Electrical",      icon: Zap },
+  { id: "roofing",        name: "Roofing",         icon: Home },
+  { id: "concrete",       name: "Concrete",        icon: Hammer },
+  { id: "fencing",        name: "Fencing",         icon: Fence },
+  { id: "plumbing",       name: "Plumbing",        icon: Droplets },
+  { id: "general-repair", name: "General Repair",  icon: Wrench },
 ]
 
 export default function NewRequestPage() {
