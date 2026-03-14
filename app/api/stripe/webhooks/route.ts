@@ -2,15 +2,19 @@ import { NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@/lib/supabase/server"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-})
+import { getStripeClient } from "@/lib/stripe/server"
+
+const stripe = getStripeClient()
 
 async function getSupabase() {
   return createClient()
 }
 
 export async function POST(req: Request) {
+  if (!stripe) {
+    return NextResponse.json({ error: "Stripe webhooks are not configured" }, { status: 500 })
+  }
+
   const body = await req.text()
   const sig = req.headers.get("stripe-signature")
 
