@@ -32,11 +32,21 @@ export async function POST(req: Request) {
   const supabase = await getSupabase()
 
   switch (event.type) {
-    // ── Payment completed (dispatch fee or final invoice) ──────────────────
+    // ── Payment completed (dispatch fee, final invoice, or subscription) ───
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session
       const requestId = session.metadata?.request_id
       const paymentType = session.metadata?.payment_type
+
+      // Subscription checkout: immediately activate the contractor membership
+      if (session.mode === "subscription" && session.subscription && session.customer) {
+        const customerId = session.customer as string
+        await supabase
+          .from("profiles")
+          .update({ subscription_status: "active", updated_at: new Date().toISOString() })
+          .eq("stripe_customer_id", customerId)
+        break
+      }
 
       if (!requestId || !paymentType) break
 
