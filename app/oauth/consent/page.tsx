@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, CheckCircle2, Loader2, Shield } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function OAuthConsentPage() {
   const searchParams = useSearchParams()
@@ -138,11 +137,13 @@ export default function OAuthConsentPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                <span className="font-medium">Error</span>
+              </div>
+              <p className="mt-1 text-sm">{error}</p>
+            </div>
           )}
 
           <div className="space-y-4">
