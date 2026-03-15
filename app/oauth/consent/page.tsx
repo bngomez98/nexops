@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, CheckCircle2, Loader2, Shield } from "lucide-react"
 
-export default function OAuthConsentPage() {
+function OAuthConsentContent() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -205,5 +205,26 @@ export default function OAuthConsentPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+function OAuthLoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <Card className="w-full max-w-md">
+        <CardContent className="flex flex-col items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+export default function OAuthConsentPage() {
+  return (
+    <Suspense fallback={<OAuthLoadingFallback />}>
+      <OAuthConsentContent />
+    </Suspense>
   )
 }
