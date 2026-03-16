@@ -72,6 +72,7 @@ create table if not exists public.service_requests (
   zip_code            text not null,
   preferred_dates     text,
   additional_notes    text,
+  photo_urls          text[],
   status              text not null default 'pending_review'
                         check (status in (
                           'pending_review',

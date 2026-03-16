@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { isTemplatedRequest } from "@/lib/requests"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -38,7 +39,7 @@ export default async function RequestsPage() {
     .eq("owner_id", user.id)
     .order("created_at", { ascending: false })
 
-  const list = requests ?? []
+  const list = (requests ?? []).filter((request) => !isTemplatedRequest(request))
 
   return (
     <div className="flex-1 overflow-auto">
