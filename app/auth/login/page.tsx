@@ -170,11 +170,19 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-5 border-t border-border pt-5 text-[13px] text-muted-foreground text-center">
-            Don&apos;t have an account?{" "}
-            <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
-              Create one
-            </Link>
+          <div className="mt-5 border-t border-border pt-5 space-y-2 text-center">
+            <p className="text-[13px] text-muted-foreground">
+              Don&apos;t have an account?{" "}
+              <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
+                Create one
+              </Link>
+            </p>
+            <p className="text-[12px] text-muted-foreground">
+              Forgot your password?{" "}
+              <Link href="/auth/forgot-password" className="text-primary hover:underline font-medium">
+                Reset it here
+              </Link>
+            </p>
           </div>
         </div>
       </div>

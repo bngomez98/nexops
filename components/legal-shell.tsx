@@ -51,7 +51,7 @@ export function LegalShell({ title, updated, children }: LegalShellProps) {
           <Link href="/terms"   className="hover:text-foreground transition">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
           <Link href="/faq"     className="hover:text-foreground transition">FAQ</Link>
-          <Link href="/sitemap" className="hover:text-foreground transition">Sitemap</Link>
+          <Link href="/site-map" className="hover:text-foreground transition">Sitemap</Link>
         </div>
       </div>
     </main>

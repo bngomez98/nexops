@@ -13,7 +13,7 @@ const sections = [
     links: [
       { href: "/",                 label: "Home",               desc: "Introduction to Nexus Operations, service categories, and account types" },
       { href: "/faq",              label: "FAQ",                desc: "Frequently asked questions — process, fees, verification, and policies" },
-      { href: "/sitemap",          label: "Sitemap",            desc: "This page — full index of all public pages" },
+      { href: "/site-map",          label: "Sitemap",            desc: "This page — full index of all public pages" },
     ],
   },
   {

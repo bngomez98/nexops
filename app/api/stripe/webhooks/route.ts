@@ -1,19 +1,15 @@
+import type Stripe from "stripe"
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
 import { createClient } from "@/lib/supabase/server"
+import { getStripeClient } from "@/lib/stripe/server"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-})
-
-// Disable Next.js body parsing so we can verify the raw Stripe signature
-export const config = { api: { bodyParser: false } }
 
 async function getSupabase() {
   return createClient()
 }
 
 export async function POST(req: Request) {
+  const stripe = getStripeClient()
   const body = await req.text()
   const sig = req.headers.get("stripe-signature")
 

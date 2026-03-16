@@ -165,7 +165,7 @@ export default function FAQPage() {
         <div className="mt-10 border-t border-border pt-8 flex flex-wrap gap-6 text-[12px] text-muted-foreground">
           <Link href="/terms"   className="hover:text-foreground transition">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
-          <Link href="/sitemap" className="hover:text-foreground transition">Sitemap</Link>
+          <Link href="/site-map" className="hover:text-foreground transition">Sitemap</Link>
         </div>
       </div>
     </main>

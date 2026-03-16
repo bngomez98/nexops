@@ -887,7 +887,7 @@ export default function HomePage() {
                 {[
                   { href: "/terms",   label: "Terms of Service" },
                   { href: "/privacy", label: "Privacy Policy" },
-                  { href: "/sitemap", label: "Sitemap" },
+                  { href: "/site-map", label: "Sitemap" },
                 ].map(({ href, label }) => (
                   <li key={href}>
                     <Link href={href} className="text-[11.5px] text-muted-foreground transition hover:text-foreground">
@@ -904,7 +904,7 @@ export default function HomePage() {
             <div className="flex items-center gap-5">
               <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>
               <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
-              <Link href="/sitemap" className="hover:text-foreground transition">Sitemap</Link>
+              <Link href="/site-map" className="hover:text-foreground transition">Sitemap</Link>
             </div>
           </div>
         </div>

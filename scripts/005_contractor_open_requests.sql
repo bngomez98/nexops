@@ -5,6 +5,7 @@
 -- and claim them by setting themselves as the assigned contractor.
 
 -- Contractors can view open/queued requests (not yet assigned)
+drop policy if exists "requests_contractor_view_open" on public.service_requests;
 create policy "requests_contractor_view_open" on public.service_requests for select
   using (
     status in ('pending_review', 'in_queue')
@@ -17,6 +18,7 @@ create policy "requests_contractor_view_open" on public.service_requests for sel
   );
 
 -- Contractors can claim an open request by updating assigned_contractor_id to themselves
+drop policy if exists "requests_contractor_claim" on public.service_requests;
 create policy "requests_contractor_claim" on public.service_requests for update
   using (
     status in ('pending_review', 'in_queue')
