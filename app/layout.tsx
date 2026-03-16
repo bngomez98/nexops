@@ -1,12 +1,7 @@
 import type { Metadata } from "next"
 import Script from "next/script"
-import { Inter, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { CookieConsent } from "@/components/cookie-consent"
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta-sans" })
-const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
 
 const GTM_ID = "GTM-PL3NBCWD"
 const GA_ID = "G-LDGVHFCMKT"
@@ -63,33 +58,20 @@ export default function RootLayout({
       <head>
         {/* Theme init — prevents flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='dark'){document.documentElement.classList.add('dark')}else{document.documentElement.classList.add('light')}})()`,
-          }}
-        />
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
-          }}
-        />
-        {/* Google Analytics (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDGVHFCMKT" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-LDGVHFCMKT');`,
-          }}
-        />
+        {/* Google Fonts — loaded as link tags so the build doesn't depend on network access */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root {
+            --font-inter: "Inter";
+            --font-plus-jakarta-sans: "Plus Jakarta Sans";
+            --font-ibm-plex-mono: "IBM Plex Mono";
+          }
+        `}} />
       </head>
-      <body className={`${inter.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} font-sans`}>
+      <body className="font-sans">
         {/* Google Tag Manager */}
         <Script id="gtm-loader" strategy="afterInteractive">
           {GTM_INIT_SCRIPT}
