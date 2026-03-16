@@ -43,11 +43,13 @@ const contractorNavItems = [
 function NavContent({
   user,
   avatarUrl,
+  threadCount,
   onSignOut,
   onClose,
 }: {
   user: SupabaseUser
   avatarUrl: string | null
+  threadCount: number
   onSignOut: () => void
   onClose?: () => void
 }) {
@@ -110,6 +112,7 @@ function NavContent({
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && item.href !== "/dashboard/contractor" && pathname.startsWith(item.href))
+          const isMessages = item.href === "/dashboard/messages"
           return (
             <Link
               key={item.href}
@@ -123,7 +126,12 @@ function NavContent({
               )}
             >
               <item.icon className="h-3.5 w-3.5 flex-shrink-0" />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {isMessages && threadCount > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                  {threadCount}
+                </span>
+              )}
             </Link>
           )
         })}
@@ -177,20 +185,29 @@ function NavContent({
 
 export function DashboardNav({ user }: { user: SupabaseUser }) {
   const router = useRouter()
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [avatarUrl,    setAvatarUrl]    = useState<string | null>(null)
+  const [threadCount,  setThreadCount]  = useState(0)
+  const [mobileOpen,   setMobileOpen]   = useState(false)
 
   useEffect(() => {
-    const supabase = createClient()
+    const supabase   = createClient()
+    const role       = (user.user_metadata?.role as string) || "homeowner"
+    const filterKey  = role === "contractor" ? "assigned_contractor_id" : "owner_id"
+
     supabase
       .from("profiles")
       .select("avatar_url")
       .eq("id", user.id)
       .single()
-      .then(({ data }) => {
-        if (data?.avatar_url) setAvatarUrl(data.avatar_url)
-      })
-  }, [user.id])
+      .then(({ data }) => { if (data?.avatar_url) setAvatarUrl(data.avatar_url) })
+
+    supabase
+      .from("service_requests")
+      .select("id", { count: "exact", head: true })
+      .eq(filterKey, user.id)
+      .not("assigned_contractor_id", "is", null)
+      .then(({ count }) => { if (count) setThreadCount(count) })
+  }, [user.id, user.user_metadata?.role])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -206,7 +223,7 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
         className="hidden md:flex w-60 flex-col border-r border-border bg-card flex-shrink-0"
         aria-label="Dashboard navigation"
       >
-        <NavContent user={user} avatarUrl={avatarUrl} onSignOut={handleSignOut} />
+        <NavContent user={user} avatarUrl={avatarUrl} threadCount={threadCount} onSignOut={handleSignOut} />
       </nav>
 
       {/* Mobile top bar */}
@@ -245,6 +262,7 @@ export function DashboardNav({ user }: { user: SupabaseUser }) {
             <NavContent
               user={user}
               avatarUrl={avatarUrl}
+              threadCount={threadCount}
               onSignOut={handleSignOut}
               onClose={() => setMobileOpen(false)}
             />
