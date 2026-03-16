@@ -139,6 +139,7 @@ export default async function DashboardPage() {
               { href: "/dashboard/requests/new", label: "Submit a project request", sub: "Photos, scope, and budget" },
               { href: "/dashboard/requests",     label: "View all requests",        sub: "Track open and completed jobs" },
               { href: "/dashboard/messages",     label: "Messages",                 sub: "Communicate with assigned contractors" },
+              { href: "/dashboard/billing",      label: "Billing & Payments",       sub: "Payment history and receipts" },
               { href: "/dashboard/settings",     label: "Account settings",         sub: "Profile, properties, notifications" },
               { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform documentation and support", external: true },
             ].map(({ href, label, sub, external }) => (
