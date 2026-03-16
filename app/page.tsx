@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Phone, ArrowRight, MapPin, Menu, X, Shield, FileCheck, Users } from "lucide-react"
+import { Phone, ArrowRight, MapPin, Menu, X, Shield, FileCheck, Users, CheckCircle, Zap, Clock, Star } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useEffect, useState, useRef } from "react"
 
@@ -179,40 +179,60 @@ export default function HomePage() {
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-8">
-          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
-            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span className="text-[12px] text-muted-foreground font-mono">
-              Topeka, Kansas — Shawnee County and surrounding areas
+          {/* Location + trust badges */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-10 animate-fade-up" style={{ animationDelay: "0.05s" }}>
+            <span className="flex items-center gap-1.5 text-[12px] text-muted-foreground font-mono">
+              <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+              Topeka, Kansas — Shawnee County
+            </span>
+            <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />
+              Licensed &amp; insured contractors only
+            </span>
+            <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <Clock className="h-3 w-3 text-primary flex-shrink-0" />
+              Consultation within 24 hours
             </span>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-[1fr_480px] lg:items-center">
             <div>
               <h1
-                className="font-heading text-[52px] font-bold tracking-[-0.02em] leading-[1.05] md:text-[68px] lg:text-[78px] text-balance animate-fade-up"
+                className="font-heading text-[52px] font-bold tracking-[-0.02em] leading-[1.05] md:text-[68px] lg:text-[76px] text-balance animate-fade-up"
                 style={{ animationDelay: "0.12s" }}
               >
-                Managed property services<br />
-                for Topeka, Kansas.<br />
-                <span className="text-primary inline-block">One verified contractor,</span><br />
-                <span className="text-primary inline-block">exclusively yours.</span>
+                Property services<br />
+                done right — <span className="text-primary">one verified</span><br />
+                <span className="text-primary">contractor, exclusively yours.</span>
               </h1>
 
-              <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
+              <div className="mt-8 max-w-xl animate-fade-up" style={{ animationDelay: "0.22s" }}>
                 <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations connects homeowners and property managers in Topeka with licensed, insured contractors — one per request, assigned exclusively. No bidding wars. No cold calls. Fully managed from submission through completion.
-                </p>
-                <p className="text-[14px] text-muted-foreground/70 leading-[1.7]">
-                  Submit your project with photos and scope. Nexus reviews it, assigns one verified contractor, and confirms your consultation within 24 hours. Your contractor holds the project exclusively from start to finish.
+                  Submit your project once. Nexus reviews it, assigns one licensed, insured contractor from our verified network, and confirms your consultation within 24 hours. No bidding wars. No cold calls. Fully managed from submission through completion.
                 </p>
               </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-6 animate-fade-up" style={{ animationDelay: "0.32s" }}>
+              {/* Platform stats strip */}
+              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 animate-fade-up" style={{ animationDelay: "0.28s" }}>
+                {[
+                  { n: "8",     label: "Trade categories" },
+                  { n: "1",     label: "Contractor per project" },
+                  { n: "24hr",  label: "Consultation target" },
+                  { n: "$0",    label: "Platform fee to owners" },
+                ].map(({ n, label }) => (
+                  <div key={label} className="rounded-xl border border-border/50 bg-card/60 px-3 py-3 text-center">
+                    <p className="font-heading text-[22px] font-bold text-primary leading-none">{n}</p>
+                    <p className="mt-1 text-[10.5px] text-muted-foreground leading-tight">{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 flex flex-wrap items-center gap-4 animate-fade-up" style={{ animationDelay: "0.34s" }}>
                 <Link
                   href="/auth/sign-up"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 shadow-sm"
                 >
-                  Submit your project now
+                  Submit your project
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <a
@@ -228,61 +248,66 @@ export default function HomePage() {
             {/* Hero panel: How it works */}
             <div
               ref={heroRef}
-              className="hidden lg:block relative overflow-hidden rounded-2xl border border-border/40 bg-card glow-primary animate-fade-up"
+              className="hidden lg:flex flex-col relative overflow-hidden rounded-2xl border border-border/40 bg-card glow-primary animate-fade-up"
               style={{ animationDelay: "0.2s" }}
             >
-              <div className="p-8">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-8">
+              {/* Card header */}
+              <div className="flex items-center justify-between border-b border-border/40 px-8 py-5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   How it works
                 </p>
+                <span className="flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+                  <Zap className="h-2.5 w-2.5" />
+                  Automated platform
+                </span>
+              </div>
 
-                <div className="space-y-0">
-                  {[
-                    {
-                      n:     "01",
-                      title: "Submit your project",
-                      body:  "Add photos, describe the work needed, and set a budget ceiling. Nexus reviews every submission before it enters the contractor queue.",
-                    },
-                    {
-                      n:     "02",
-                      title: "Nexus reviews and assigns",
-                      body:  "Our team reviews your submission and assigns one licensed, insured contractor from the verified network. No auction. No bidding.",
-                    },
-                    {
-                      n:     "03",
-                      title: "Consultation within 24 hours",
-                      body:  "Your assigned contractor contacts you to schedule a site visit. One point of contact — no competing calls.",
-                    },
-                    {
-                      n:     "04",
-                      title: "One contractor, start to finish",
-                      body:  "Your contractor holds the project exclusively through estimate approval and final completion.",
-                    },
-                  ].map(({ n, title, body }, i, arr) => (
-                    <div
-                      key={n}
-                      className={`flex gap-5 py-6 ${i < arr.length - 1 ? "border-b border-border/40" : ""}`}
-                    >
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-primary">{n}</span>
-                      </div>
-                      <div>
-                        <p className="text-[13px] font-semibold text-foreground mb-1">{title}</p>
-                        <p className="text-[12.5px] text-muted-foreground leading-relaxed">{body}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-border/40">
-                  <Link
-                    href="/auth/sign-up"
-                    className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-[12.5px] font-semibold text-primary-foreground transition-all hover:opacity-90"
+              <div className="flex-1 px-8 py-6 space-y-0">
+                {[
+                  {
+                    icon:  Star,
+                    title: "Submit your project",
+                    body:  "Add photos, scope, and a budget ceiling. Reviewed by Nexus staff before entering the contractor queue.",
+                  },
+                  {
+                    icon:  Shield,
+                    title: "Nexus reviews and assigns",
+                    body:  "One licensed, insured contractor is matched exclusively to your project. No auction. No bidding.",
+                  },
+                  {
+                    icon:  Clock,
+                    title: "Consultation within 24 hours",
+                    body:  "Your contractor reaches out to confirm a site visit. One professional, one project.",
+                  },
+                  {
+                    icon:  CheckCircle,
+                    title: "Work tracked through close",
+                    body:  "Every stage is tracked on your dashboard and archived permanently on your account.",
+                  },
+                ].map(({ icon: Icon, title, body }, i, arr) => (
+                  <div
+                    key={title}
+                    className={`flex gap-4 py-5 ${i < arr.length - 1 ? "border-b border-border/40" : ""}`}
                   >
-                    Submit your project now
-                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                </div>
+                    <div className="flex-shrink-0 mt-0.5 h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Icon className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-[12.5px] font-semibold text-foreground mb-1">{title}</p>
+                      <p className="text-[12px] text-muted-foreground leading-relaxed">{body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-border/40 px-8 py-5">
+                <Link
+                  href="/auth/sign-up"
+                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-[12.5px] font-semibold text-primary-foreground transition-all hover:opacity-90"
+                >
+                  Submit your project
+                  <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                </Link>
               </div>
             </div>
           </div>
@@ -301,35 +326,51 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-3">
             {[
               {
-                title: "Homeowners",
-                body:  "Submit your project once with photos and scope. Nexus assigns a verified contractor, schedules the consultation, and manages the job through completion. Your service history is stored permanently.",
-                cta:   "Submit your project",
-                href:  "/auth/sign-up",
+                icon:   Users,
+                title:  "Homeowners",
+                body:   "Submit your project once with photos and scope. Nexus assigns a verified contractor, schedules the consultation, and manages the job through completion.",
+                pills:  ["Full project tracking", "Permanent records", "No contractor search"],
+                cta:    "Submit your project",
+                href:   "/auth/sign-up",
               },
               {
-                title: "Property Managers",
-                body:  "One account covers your entire portfolio. Track maintenance spend by property and trade category. Identify recurring issues and overdue service intervals across all managed addresses.",
-                cta:   "Create an account",
-                href:  "/auth/sign-up?role=property_manager",
+                icon:   FileCheck,
+                title:  "Property Managers",
+                body:   "One account covers your entire portfolio. Track maintenance spend by property and trade category. Identify recurring issues across all managed addresses.",
+                pills:  ["Portfolio dashboard", "Spend by category", "Multi-property support"],
+                cta:    "Create an account",
+                href:   "/auth/sign-up?role=property_manager",
               },
               {
-                title: "Contractors",
-                body:  "Receive pre-documented project notifications in your trade and service area. Review scope, photos, and budget before you decide to claim. Paid directly by property owners — no referral cuts.",
-                cta:   "Apply for network access",
-                href:  "/auth/sign-up?role=contractor",
+                icon:   Shield,
+                title:  "Contractors",
+                body:   "Receive pre-documented project requests in your trade and service area. Review scope, photos, and budget before deciding to claim. Direct payment — no referral cuts.",
+                pills:  ["Flat membership", "Direct payment", "Exclusive claims"],
+                cta:    "Apply for network access",
+                href:   "/auth/sign-up?role=contractor",
               },
-            ].map(({ title, body, cta, href }) => (
+            ].map(({ icon: Icon, title, body, pills, cta, href }) => (
               <Link
                 key={title}
                 href={href}
-                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
+                className="group flex flex-col rounded-2xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40 hover:shadow-sm"
                 data-animate
               >
-                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
-                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
+                <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="text-[17px] font-bold text-foreground mb-3">{title}</h3>
+                <p className="text-[13.5px] text-muted-foreground leading-[1.75] mb-5 flex-1">{body}</p>
+                <div className="flex flex-wrap gap-1.5 mb-5">
+                  {pills.map((p) => (
+                    <span key={p} className="rounded-full border border-border/60 bg-muted/50 px-2.5 py-0.5 text-[11px] text-muted-foreground">
+                      {p}
+                    </span>
+                  ))}
+                </div>
                 <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
                   {cta} <ArrowRight className="h-3 w-3" />
                 </span>
@@ -457,32 +498,46 @@ export default function HomePage() {
       <div className="border-t border-border" />
 
       {/* ── Trust Pillars ── */}
-      <section className="py-20 bg-muted/20">
+      <section className="py-20">
         <div className="mx-auto max-w-6xl px-8">
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="mb-10 text-center" data-animate>
+            <p className="font-mono-label text-primary mb-3">Why Nexus</p>
+            <h2 className="font-heading text-[30px] font-bold leading-[1.2] tracking-[-0.01em] text-balance">
+              Built on verified contractors, complete documentation, and exclusive assignment.
+            </h2>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-3">
             {[
               {
                 icon:  Shield,
                 title: "Verified network only",
                 body:  "Every contractor holds a current trade license and active general liability insurance, confirmed by Nexus staff before network activation. No automated approvals.",
+                stat:  "100% manual review",
               },
               {
                 icon:  FileCheck,
                 title: "Every project documented",
-                body:  "Scope, photos, estimates, and completion records are stored permanently on your account. Your service history becomes a verified asset for insurance, refinancing, and resale.",
+                body:  "Scope, photos, estimates, and completion records are stored permanently on your account — a verified asset for insurance, refinancing, and resale.",
+                stat:  "Permanent records",
               },
               {
                 icon:  Users,
                 title: "Exclusive assignment",
-                body:  "When a contractor claims your project, it is immediately removed from all other feeds. One contractor. One consultation. No competing contact.",
+                body:  "When a contractor claims your project, it is removed from all other feeds instantly. One contractor. One consultation. No competing contact.",
+                stat:  "1 contractor per project",
               },
-            ].map(({ icon: Icon, title, body }) => (
-              <div key={title} className="rounded-xl border border-border bg-card p-7" data-animate>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 mb-5">
-                  <Icon className="h-5 w-5 text-primary" />
+            ].map(({ icon: Icon, title, body, stat }) => (
+              <div key={title} className="rounded-2xl border border-border bg-card p-7" data-animate>
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="rounded-full border border-primary/20 bg-primary/8 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
+                    {stat}
+                  </span>
                 </div>
                 <h3 className="text-[15px] font-semibold text-foreground mb-3">{title}</h3>
-                <p className="text-[13.5px] text-muted-foreground leading-[1.8]">{body}</p>
+                <p className="text-[13px] text-muted-foreground leading-[1.8]">{body}</p>
               </div>
             ))}
           </div>

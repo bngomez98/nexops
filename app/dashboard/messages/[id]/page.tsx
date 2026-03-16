@@ -1,6 +1,10 @@
-import { createClient } from "@/lib/supabase/server"
-import { redirect, notFound } from "next/navigation"
+"use client"
+
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Image from "next/image"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase/client"
 import {
   ArrowLeft,
   MapPin,
@@ -8,11 +12,39 @@ import {
   Calendar,
   Phone,
   Mail,
-  MessageSquare,
+  Send,
   User,
   Info,
+  Loader2,
+  CheckCircle,
 } from "lucide-react"
 
+/* ── Types ─────────────────────────────────────────────── */
+interface Message {
+  id: string
+  sender_id: string
+  body: string
+  created_at: string
+  profiles?: { full_name?: string; avatar_url?: string } | null
+}
+
+interface ServiceRequest {
+  id: string
+  category: string
+  description: string
+  address: string
+  city: string
+  state: string
+  zip_code: string
+  status: string
+  budget_min?: number | null
+  budget_max?: number | null
+  preferred_dates?: string | null
+  owner_id: string
+  assigned_contractor_id?: string | null
+}
+
+/* ── Constants ──────────────────────────────────────────── */
 const CATEGORY_LABELS: Record<string, string> = {
   "tree-removal":   "Tree Removal",
   hvac:             "HVAC",
@@ -35,185 +67,312 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled:              "Cancelled",
 }
 
-export default async function MessageThreadPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+const POLL_INTERVAL = 6_000
 
-  if (!user) redirect("/auth/login")
+function fmtTime(iso: string) {
+  const d     = new Date(iso)
+  const today = new Date()
+  const isToday =
+    d.getDate()     === today.getDate()  &&
+    d.getMonth()    === today.getMonth() &&
+    d.getFullYear() === today.getFullYear()
+  const time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  return isToday
+    ? time
+    : d.toLocaleDateString([], { month: "short", day: "numeric" }) + " · " + time
+}
 
-  const role = user.user_metadata?.role || "homeowner"
+function Avatar({ name, avatarUrl, size = 7 }: { name: string; avatarUrl?: string | null; size?: number }) {
+  const initials = name.trim().split(/\s+/).map((n) => n[0] ?? "").join("").toUpperCase().slice(0, 2)
+  const dim = `h-${size} w-${size}`
+  if (avatarUrl)
+    return (
+      <div className={`relative ${dim} flex-shrink-0 overflow-hidden rounded-full border border-border`}>
+        <Image src={avatarUrl} alt={name} fill sizes="32px" className="object-cover" unoptimized />
+      </div>
+    )
+  return (
+    <div className={`${dim} flex flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary`}>
+      {initials || "?"}
+    </div>
+  )
+}
 
-  // Fetch the service request — must be owned by or assigned to this user
-  const { data: req } = await supabase
-    .from("service_requests")
-    .select("*")
-    .eq("id", id)
-    .single()
+/* ── Page ───────────────────────────────────────────────── */
+export default function MessageThreadPage() {
+  const { id } = useParams<{ id: string }>()
+  const router  = useRouter()
 
-  if (!req) notFound()
+  const [userId,        setUserId]        = useState("")
+  const [userRole,      setUserRole]      = useState("homeowner")
+  const [userName,      setUserName]      = useState("")
+  const [userAvatar,    setUserAvatar]    = useState<string | null>(null)
+  const [req,           setReq]           = useState<ServiceRequest | null>(null)
+  const [counterpart,   setCounterpart]   = useState<{ full_name?: string; email?: string; phone?: string; avatar_url?: string } | null>(null)
+  const [messages,      setMessages]      = useState<Message[]>([])
+  const [loading,       setLoading]       = useState(true)
+  const [msgUnavailable, setMsgUnavailable] = useState(false)
+  const [draft,         setDraft]         = useState("")
+  const [sending,       setSending]       = useState(false)
+  const [sendError,     setSendError]     = useState<string | null>(null)
+  const [sent,          setSent]          = useState(false)
 
-  // Access control: homeowners see their own; contractors see requests assigned to them
-  const isOwner      = req.owner_id === user.id
-  const isContractor = role === "contractor" && req.assigned_contractor_id === user.id
+  const bottomRef   = useRef<HTMLDivElement>(null)
+  const pollRef     = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  if (!isOwner && !isContractor) redirect("/dashboard/messages")
+  /* ── Bootstrap ── */
+  useEffect(() => {
+    async function init() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push("/auth/login"); return }
 
-  // Fetch the contractor's profile if one is assigned and the viewer is the owner
-  let contractorProfile: { full_name?: string; email?: string; phone?: string } | null = null
-  if (isOwner && req.assigned_contractor_id) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("full_name, email, phone")
-      .eq("id", req.assigned_contractor_id)
-      .single()
-    contractorProfile = profile
+      const role = (user.user_metadata?.role as string) || "homeowner"
+      const name = (user.user_metadata?.full_name as string) || user.email?.split("@")[0] || "You"
+      setUserId(user.id)
+      setUserRole(role)
+      setUserName(name)
+
+      const { data: prof } = await supabase.from("profiles").select("avatar_url").eq("id", user.id).single()
+      if (prof?.avatar_url) setUserAvatar(prof.avatar_url)
+
+      const { data: reqData } = await supabase.from("service_requests").select("*").eq("id", id).single()
+      if (!reqData) { router.push("/dashboard/messages"); return }
+
+      const isOwner      = reqData.owner_id === user.id
+      const isContractor = role === "contractor" && reqData.assigned_contractor_id === user.id
+      if (!isOwner && !isContractor) { router.push("/dashboard/messages"); return }
+
+      setReq(reqData)
+
+      if (isOwner && reqData.assigned_contractor_id) {
+        const { data } = await supabase.from("profiles").select("full_name, email, phone, avatar_url").eq("id", reqData.assigned_contractor_id).single()
+        setCounterpart(data)
+      }
+      if (isContractor) {
+        const { data } = await supabase.from("profiles").select("full_name, email, phone").eq("id", reqData.owner_id).single()
+        setCounterpart(data)
+      }
+
+      setLoading(false)
+    }
+    init()
+  }, [id, router])
+
+  /* ── Fetch messages ── */
+  const fetchMessages = useCallback(async () => {
+    const res  = await fetch(`/api/messages?requestId=${id}`)
+    const json = await res.json() as { messages?: Message[]; unavailable?: boolean }
+    if (json.unavailable) { setMsgUnavailable(true); return }
+    if (json.messages)    setMessages(json.messages)
+  }, [id])
+
+  useEffect(() => {
+    if (loading) return
+    fetchMessages()
+    pollRef.current = setInterval(fetchMessages, POLL_INTERVAL)
+    return () => { if (pollRef.current) clearInterval(pollRef.current) }
+  }, [loading, fetchMessages])
+
+  /* ── Auto-scroll ── */
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
+
+  /* ── Send message ── */
+  async function handleSend() {
+    const body = draft.trim()
+    if (!body || sending) return
+    setSending(true)
+    setSendError(null)
+    try {
+      const res  = await fetch("/api/messages", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ requestId: id, body }),
+      })
+      const json = await res.json() as { error?: string }
+      if (!res.ok) throw new Error(json.error ?? "Failed to send")
+      setDraft("")
+      setSent(true)
+      setTimeout(() => setSent(false), 2000)
+      await fetchMessages()
+    } catch (err: unknown) {
+      setSendError(err instanceof Error ? err.message : "Failed to send")
+    } finally {
+      setSending(false)
+    }
   }
 
-  const consultationConfirmed = ["consultation_scheduled", "in_progress", "completed"].includes(req.status)
+  function handleKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend() }
+  }
+
+  /* ── Derived ── */
+  const isOwner             = !!req && req.owner_id === userId
+  const consultationVisible = req ? ["consultation_scheduled", "in_progress", "completed"].includes(req.status) : false
+  const counterName         = counterpart?.full_name ?? (isOwner ? "Assigned Contractor" : "Property Owner")
+
+  if (loading || !req) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-hidden px-4 py-6 sm:px-6">
 
-        {/* Back */}
-        <Link
-          href="/dashboard/messages"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-        >
+        {/* Back link */}
+        <Link href="/dashboard/messages" className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
           All messages
         </Link>
 
-        {/* Request header */}
-        <div className="mb-6 rounded-lg border border-border bg-card p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full capitalize">
+        {/* Request card */}
+        <div className="mb-4 overflow-hidden rounded-xl border border-border bg-card">
+          <div className="flex items-center gap-2 border-b border-border px-5 py-3">
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
               {CATEGORY_LABELS[req.category] ?? req.category.replace(/-/g, " ")}
             </span>
             <span className="text-[10px] text-muted-foreground capitalize">
               {STATUS_LABELS[req.status] ?? req.status.replace(/_/g, " ")}
             </span>
           </div>
-
-          <p className="text-sm font-semibold mb-3">{req.description}</p>
-
-          <div className="space-y-1.5 text-[12px] text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
-              {req.address}, {req.city}, {req.state} {req.zip_code}
-            </span>
+          <div className="space-y-2 px-5 py-4 text-[12px] text-muted-foreground">
+            <p className="text-sm font-semibold text-foreground">{req.description}</p>
+            <span className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary" />{req.address}, {req.city}, {req.state} {req.zip_code}</span>
             {(req.budget_min || req.budget_max) && (
               <span className="flex items-center gap-2">
-                <DollarSign className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
-                {req.budget_min && req.budget_max
-                  ? `$${Number(req.budget_min).toLocaleString()} – $${Number(req.budget_max).toLocaleString()}`
-                  : req.budget_max
-                  ? `Up to $${Number(req.budget_max).toLocaleString()}`
-                  : `From $${Number(req.budget_min).toLocaleString()}`}
+                <DollarSign className="h-3.5 w-3.5 text-primary" />
+                {req.budget_min && req.budget_max ? `$${Number(req.budget_min).toLocaleString()} – $${Number(req.budget_max).toLocaleString()}` : req.budget_max ? `Up to $${Number(req.budget_max).toLocaleString()}` : `From $${Number(req.budget_min).toLocaleString()}`}
               </span>
             )}
             {req.preferred_dates && (
-              <span className="flex items-center gap-2">
-                <Calendar className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
-                {req.preferred_dates}
-              </span>
+              <span className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5 text-primary" />{req.preferred_dates}</span>
             )}
           </div>
         </div>
 
-        {/* Contractor contact — shown to owner after consultation confirmed */}
-        {isOwner && req.assigned_contractor_id && (
-          <div className="mb-6 rounded-lg border border-border bg-card p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <User className="h-4 w-4 text-primary" />
-              <p className="text-sm font-semibold">Assigned Contractor</p>
+        {/* Contact card */}
+        <div className="mb-4 overflow-hidden rounded-xl border border-border bg-card">
+          <div className="flex items-center gap-2 border-b border-border px-5 py-3">
+            <User className="h-3.5 w-3.5 text-primary" />
+            <p className="text-sm font-semibold">{isOwner ? "Assigned Contractor" : "Property Owner"}</p>
+          </div>
+          <div className="px-5 py-4">
+            <div className="mb-3 flex items-center gap-3">
+              <Avatar name={counterName} avatarUrl={counterpart?.avatar_url} size={8} />
+              <p className="text-sm font-medium">{counterName}</p>
             </div>
-
-            {contractorProfile?.full_name && (
-              <p className="text-sm font-medium mb-3">{contractorProfile.full_name}</p>
-            )}
-
-            {consultationConfirmed ? (
+            {consultationVisible ? (
               <div className="space-y-2">
-                {contractorProfile?.phone && (
-                  <a
-                    href={`tel:${contractorProfile.phone.replace(/\D/g, "")}`}
-                    className="flex items-center gap-2.5 text-[13px] text-muted-foreground hover:text-foreground transition"
-                  >
-                    <Phone className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                    {contractorProfile.phone}
+                {counterpart?.phone && (
+                  <a href={`tel:${counterpart.phone.replace(/\D/g, "")}`} className="flex items-center gap-2.5 text-[13px] text-muted-foreground transition hover:text-foreground">
+                    <Phone className="h-3.5 w-3.5 text-primary" />{counterpart.phone}
                   </a>
                 )}
-                {contractorProfile?.email && (
-                  <a
-                    href={`mailto:${contractorProfile.email}`}
-                    className="flex items-center gap-2.5 text-[13px] text-muted-foreground hover:text-foreground transition"
-                  >
-                    <Mail className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                    {contractorProfile.email}
+                {counterpart?.email && (
+                  <a href={`mailto:${counterpart.email}`} className="flex items-center gap-2.5 text-[13px] text-muted-foreground transition hover:text-foreground">
+                    <Mail className="h-3.5 w-3.5 text-primary" />{counterpart.email}
                   </a>
                 )}
               </div>
             ) : (
-              <div className="flex items-start gap-2.5 rounded border border-border bg-muted/50 px-3 py-2.5">
-                <Info className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2.5">
+                <Info className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
                 <p className="text-[12px] text-muted-foreground leading-relaxed">
-                  Direct contact information becomes available once your consultation is confirmed.
+                  Direct contact details become available once a consultation is confirmed.
                 </p>
               </div>
             )}
           </div>
-        )}
+        </div>
 
-        {/* Contractor view — show owner contact after consultation confirmed */}
-        {isContractor && (
-          <div className="mb-6 rounded-lg border border-border bg-card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <User className="h-4 w-4 text-primary" />
-              <p className="text-sm font-semibold">Property Owner</p>
-            </div>
-            {consultationConfirmed ? (
-              <div className="space-y-2">
-                <p className="text-[12px] text-muted-foreground">
-                  Contact the property owner to confirm consultation details.
+        {/* ── Chat panel ── */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card">
+          <div className="flex items-center justify-between border-b border-border px-5 py-3">
+            <p className="text-sm font-semibold">Messages</p>
+            <span className="text-[11px] text-muted-foreground">{messages.length} message{messages.length !== 1 ? "s" : ""}</span>
+          </div>
+
+          {/* Scrollable messages */}
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+            {msgUnavailable ? (
+              <div className="flex flex-col items-center py-10 text-center">
+                <p className="text-sm font-medium text-muted-foreground">Messaging setup required</p>
+                <p className="mt-1 text-xs text-muted-foreground max-w-xs">
+                  Contact{" "}
+                  <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>
+                  {" "}to send a message via Nexus.
                 </p>
-                <a
-                  href="mailto:admin@nexusoperations.org"
-                  className="flex items-center gap-2.5 text-[13px] text-muted-foreground hover:text-foreground transition"
-                >
-                  <Mail className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  admin@nexusoperations.org
-                </a>
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="flex flex-col items-center py-10 text-center">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                  <Send className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium">No messages yet</p>
+                <p className="mt-1 text-xs text-muted-foreground">Start the conversation with {counterName}.</p>
               </div>
             ) : (
-              <div className="flex items-start gap-2.5 rounded border border-border bg-muted/50 px-3 py-2.5">
-                <Info className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                <p className="text-[12px] text-muted-foreground leading-relaxed">
-                  Owner contact details are released once the consultation is confirmed by Nexus.
-                </p>
-              </div>
+              messages.map((msg) => {
+                const mine        = msg.sender_id === userId
+                const senderName  = mine ? userName : (msg.profiles?.full_name ?? counterName)
+                const senderAvatar = mine ? userAvatar : (msg.profiles?.avatar_url ?? null)
+                return (
+                  <div key={msg.id} className={`flex gap-2.5 ${mine ? "flex-row-reverse" : ""}`}>
+                    <Avatar name={senderName} avatarUrl={senderAvatar} />
+                    <div className={`flex max-w-[72%] flex-col gap-1 ${mine ? "items-end" : "items-start"}`}>
+                      <div className={`rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${mine ? "rounded-tr-sm bg-primary text-primary-foreground" : "rounded-tl-sm bg-muted text-foreground"}`}>
+                        {msg.body}
+                      </div>
+                      <span className="px-1 text-[10px] text-muted-foreground">{fmtTime(msg.created_at)}</span>
+                    </div>
+                  </div>
+                )
+              })
             )}
+            <div ref={bottomRef} />
           </div>
-        )}
 
-        {/* Platform message channel note */}
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <MessageSquare className="h-4 w-4 text-primary" />
-            <p className="text-sm font-semibold">Platform messaging</p>
-          </div>
-          <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">
-            In-platform messaging for this request is managed by Nexus Operations. Send a message directly to our team and we will relay it to the{" "}
-            {isOwner ? "contractor" : "property owner"} for this request.
-          </p>
-          <a
-            href={`mailto:admin@nexusoperations.org?subject=Message re: Request ${id.slice(0, 8).toUpperCase()}`}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-[13px] font-semibold text-primary-foreground transition hover:opacity-90"
-          >
-            <Mail className="h-3.5 w-3.5" />
-            Send message via Nexus
-          </a>
+          {/* Compose bar */}
+          {!msgUnavailable && (
+            <div className="border-t border-border p-4">
+              {sendError && <p className="mb-2 text-[11px] text-destructive">{sendError}</p>}
+              <div className="flex items-end gap-2.5">
+                <Avatar name={userName} avatarUrl={userAvatar} />
+                <div className="relative flex-1">
+                  <textarea
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onKeyDown={handleKey}
+                    placeholder={`Message ${counterName}…`}
+                    rows={1}
+                    disabled={sending}
+                    className="w-full resize-none rounded-xl border border-border bg-muted/40 px-4 py-2.5 pr-12 text-[13px] placeholder:text-muted-foreground focus:border-primary/60 focus:outline-none focus:ring-1 focus:ring-primary/30 disabled:opacity-60"
+                    style={{ minHeight: "42px", maxHeight: "120px" }}
+                    onInput={(e) => {
+                      const t = e.currentTarget
+                      t.style.height = "auto"
+                      t.style.height = `${Math.min(t.scrollHeight, 120)}px`
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSend}
+                    disabled={!draft.trim() || sending}
+                    className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground transition hover:opacity-90 disabled:opacity-40"
+                  >
+                    {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : sent ? <CheckCircle className="h-3.5 w-3.5" /> : <Send className="h-3.5 w-3.5" />}
+                  </button>
+                </div>
+              </div>
+              <p className="mt-1.5 pl-9 text-[10px] text-muted-foreground">Enter to send · Shift+Enter for new line</p>
+            </div>
+          )}
         </div>
 
       </div>
