@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { isTemplatedRequest } from "@/lib/requests"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { MapPin, DollarSign, Calendar, ArrowRight, Camera } from "lucide-react"
@@ -13,6 +14,7 @@ type ServiceRequest = {
   zip_code: string
   budget_max: number | null
   photo_urls: string[] | null
+  additional_notes: string | null
   preferred_dates: string | null
   created_at: string
 }
@@ -44,12 +46,12 @@ export default async function ContractorRequestsPage() {
 
   const { data: requests, error } = await supabase
     .from("service_requests")
-    .select("id, category, description, address, city, state, zip_code, budget_max, photo_urls, preferred_dates, created_at")
+    .select("id, category, description, additional_notes, address, city, state, zip_code, budget_max, photo_urls, preferred_dates, created_at")
     .in("status", ["pending_review", "in_queue"])
     .is("assigned_contractor_id", null)
     .order("created_at", { ascending: false })
 
-  const allRequests: ServiceRequest[] = requests ?? []
+  const allRequests: ServiceRequest[] = (requests ?? []).filter((request) => !isTemplatedRequest(request))
 
   return (
     <div className="flex-1 overflow-auto">

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { isTemplatedRequest } from "@/lib/requests"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import {
@@ -29,13 +30,15 @@ export default async function DashboardPage() {
 
   const { data: requests } = await supabase
     .from("service_requests")
-    .select("status")
+    .select("status, description, additional_notes")
     .eq("owner_id", user.id)
 
-  const open       = requests?.filter((r) => ["in_queue", "pending_review"].includes(r.status)).length ?? 0
-  const inProgress = requests?.filter((r) => ["assigned", "consultation_scheduled", "in_progress"].includes(r.status)).length ?? 0
-  const completed  = requests?.filter((r) => r.status === "completed").length ?? 0
-  const hasRequests = (requests?.length ?? 0) > 0
+  const visibleRequests = (requests ?? []).filter((request) => !isTemplatedRequest(request))
+
+  const open       = visibleRequests.filter((r) => ["in_queue", "pending_review"].includes(r.status)).length
+  const inProgress = visibleRequests.filter((r) => ["assigned", "consultation_scheduled", "in_progress"].includes(r.status)).length
+  const completed  = visibleRequests.filter((r) => r.status === "completed").length
+  const hasRequests = visibleRequests.length > 0
 
   const stats = [
     { label: "Open Requests", value: String(open),       sub: "Submitted and waiting for a contractor to claim",        icon: FileText,    color: "text-foreground" },
