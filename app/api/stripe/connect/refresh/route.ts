@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
+import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
-
-// Lazy-initialize Stripe to avoid build-time errors
-function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2026-02-25.clover",
-  })
-}
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
 
 // Stripe redirects contractors here when an account link has expired.
 // We generate a fresh link and redirect the contractor back into the flow.
 export async function GET() {
-  const stripe = getStripe()
+  const stripe = getStripeClient()
+  if (!stripe) {
+    return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
