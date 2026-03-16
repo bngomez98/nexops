@@ -13,58 +13,23 @@ import {
   Shield,
   Zap,
   AlertTriangle,
-  ArrowRight,
   Check,
 } from "lucide-react"
+import { StripePricingTable } from "@/components/billing/stripe-pricing-table"
 
 type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled" | null
 
-// Replace with your actual Stripe price IDs from your Stripe dashboard
-const PRICE_ID_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY ?? "price_monthly_placeholder"
-const PRICE_ID_ANNUAL  = process.env.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL  ?? "price_annual_placeholder"
-
-const plans = [
-  {
-    id:          "monthly",
-    name:        "Monthly",
-    price:       "$79",
-    period:      "/month",
-    description: "Full access. Cancel anytime.",
-    priceId:     PRICE_ID_MONTHLY,
-    features: [
-      "Unlimited access to open requests in your area",
-      "Real-time notifications for new projects",
-      "Full project scope, photos, and budget before you claim",
-      "Direct payment from property owners — no platform cut",
-      "Stripe Connect payout account included",
-      "Cancel or pause anytime",
-    ],
-    highlight: false,
-  },
-  {
-    id:          "annual",
-    name:        "Annual",
-    price:       "$59",
-    period:      "/month, billed annually",
-    description: "Save 25% vs. monthly. Best value.",
-    priceId:     PRICE_ID_ANNUAL,
-    features: [
-      "Everything in Monthly",
-      "Save $240 per year vs. monthly billing",
-      "Priority support response",
-      "Locked rate for 12 months",
-    ],
-    highlight: true,
-  },
-]
+const PRICING_TABLE_ID   = "prctbl_1TBPE0EFsbUunf9StQYzYJqe"
+const STRIPE_PUBLISHABLE = "pk_live_51T6KiTEFsbUunf9SZCRohOy2iHhyoL7HgIign7xKmfzR9837SYXDDlSKdd60E5Ft5vRy7yffafvip2agiwYyxMkc000v1nxqFJ"
 
 export default function ContractorBillingPage() {
-  const [loading, setLoading]                 = useState(true)
-  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
-  const [portalLoading, setPortalLoading]     = useState(false)
-  const [error, setError]                     = useState<string | null>(null)
-  const [success, setSuccess]                 = useState<string | null>(null)
-  const [subStatus, setSubStatus]             = useState<SubscriptionStatus>(null)
+  const [loading, setLoading]             = useState(true)
+  const [portalLoading, setPortalLoading] = useState(false)
+  const [error, setError]                 = useState<string | null>(null)
+  const [success, setSuccess]             = useState<string | null>(null)
+  const [subStatus, setSubStatus]         = useState<SubscriptionStatus>(null)
+  const [userEmail, setUserEmail]         = useState<string | undefined>(undefined)
+  const [userId, setUserId]               = useState<string | undefined>(undefined)
 
   const searchParams = useSearchParams()
 
@@ -73,6 +38,9 @@ export default function ContractorBillingPage() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
+
+      setUserEmail(user.email ?? undefined)
+      setUserId(user.id)
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -93,28 +61,6 @@ export default function ContractorBillingPage() {
       setError("Checkout was canceled. Your subscription has not been changed.")
     }
   }, [searchParams])
-
-  const handleCheckout = async (priceId: string, planId: string) => {
-    setCheckoutLoading(planId)
-    setError(null)
-    try {
-      const res  = await fetch("/api/stripe/checkout", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ priceId }),
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error ?? "Could not start checkout. Please try again.")
-      }
-    } catch {
-      setError("Could not start checkout. Please try again.")
-    } finally {
-      setCheckoutLoading(null)
-    }
-  }
 
   const handleBillingPortal = async () => {
     setPortalLoading(true)
@@ -254,76 +200,22 @@ export default function ContractorBillingPage() {
 
         {/* ── Plan selection (shown when not subscribed or canceled) ── */}
         {!isActive && !isPastDue && (
-          <>
+          <section className="mb-8">
             <div className="mb-6">
-              <p className="font-mono-label text-primary mb-3">Choose a plan</p>
               <h2 className="text-[22px] font-bold leading-tight tracking-tight">
                 Get full access to the Nexus contractor network.
               </h2>
               <p className="mt-2 text-sm text-muted-foreground max-w-xl">
-                One flat monthly rate. No per-lead charges, no referral fees, no hidden costs. Cancel anytime from your billing dashboard.
+                One flat rate. No per-lead charges, no referral fees, no hidden costs. Cancel anytime.
               </p>
             </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 mb-8">
-              {plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className={`relative rounded-xl border overflow-hidden ${
-                    plan.highlight
-                      ? "border-primary/50 bg-primary/5"
-                      : "border-border bg-card"
-                  }`}
-                >
-                  {plan.highlight && (
-                    <div className="bg-primary px-4 py-1.5 text-center">
-                      <span className="text-[11px] font-bold text-primary-foreground uppercase tracking-wider">
-                        Best Value — Save 25%
-                      </span>
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <p className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                        {plan.name}
-                      </p>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-[36px] font-bold tracking-tight">{plan.price}</span>
-                        <span className="text-sm text-muted-foreground">{plan.period}</span>
-                      </div>
-                      <p className="mt-1 text-[12px] text-muted-foreground">{plan.description}</p>
-                    </div>
-
-                    <ul className="space-y-2 mb-6">
-                      {plan.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2 text-[12.5px] text-muted-foreground">
-                          <Check className={`h-3.5 w-3.5 flex-shrink-0 mt-0.5 ${plan.highlight ? "text-primary" : "text-primary"}`} />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Button
-                      type="button"
-                      onClick={() => handleCheckout(plan.priceId, plan.id)}
-                      disabled={checkoutLoading !== null}
-                      className={`w-full text-[13px] gap-2 ${
-                        plan.highlight ? "" : "bg-foreground text-background hover:bg-foreground/90"
-                      }`}
-                      variant={plan.highlight ? "default" : "outline"}
-                    >
-                      {checkoutLoading === plan.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <ArrowRight className="h-4 w-4" />
-                      )}
-                      Get started — {plan.name}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+            <StripePricingTable
+              pricingTableId={PRICING_TABLE_ID}
+              publishableKey={STRIPE_PUBLISHABLE}
+              clientReferenceId={userId}
+              customerEmail={userEmail}
+            />
+          </section>
         )}
 
         {/* ── How billing works ── */}
