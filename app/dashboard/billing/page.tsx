@@ -95,7 +95,7 @@ function BillingContent() {
         .eq("payer_id", user.id)
         .order("created_at", { ascending: false })
 
-      const list = (data ?? []) as Payment[]
+      const list = (data ?? []) as unknown as Payment[]
       setPayments(list)
       setTotalPaid(list.filter((p) => p.status === "paid").reduce((sum, p) => sum + p.amount_cents, 0))
       setLoading(false)
