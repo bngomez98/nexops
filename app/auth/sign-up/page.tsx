@@ -121,7 +121,7 @@ function SignUpForm() {
               Every project documented through completion.
             </p>
             <p>
-              Contractors receive pre-validated project leads in their trade and service area —
+              Contractors receive pre-validated project requests in their trade and service area —
               complete with photographs, written scope, and the owner&apos;s budget ceiling.
             </p>
           </div>

@@ -1,23 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "stripe-pricing-table": React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & {
-          "pricing-table-id": string
-          "publishable-key": string
-          "client-reference-id"?: string
-          "customer-email"?: string
-          "customer-session-client-secret"?: string
-        },
-        HTMLElement
-      >
-    }
-  }
-}
+import { useEffect, useRef } from "react"
 
 interface StripePricingTableProps {
   pricingTableId: string
@@ -32,22 +15,61 @@ export function StripePricingTable({
   clientReferenceId,
   customerEmail,
 }: StripePricingTableProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const scriptLoaded = useRef(false)
+
   useEffect(() => {
+    // Only load script once
+    if (scriptLoaded.current) return
+
     const script = document.createElement("script")
     script.src = "https://js.stripe.com/v3/pricing-table.js"
     script.async = true
+
+    script.onload = () => {
+      scriptLoaded.current = true
+      renderPricingTable()
+    }
+
     document.body.appendChild(script)
+
     return () => {
-      document.body.removeChild(script)
+      // Cleanup is handled by React unmount
     }
   }, [])
 
+  useEffect(() => {
+    // Re-render when props change
+    if (scriptLoaded.current) {
+      renderPricingTable()
+    }
+  }, [pricingTableId, publishableKey, clientReferenceId, customerEmail])
+
+  function renderPricingTable() {
+    if (!containerRef.current) return
+
+    // Clear existing content
+    containerRef.current.innerHTML = ""
+
+    // Create the custom element
+    const pricingTable = document.createElement("stripe-pricing-table")
+    pricingTable.setAttribute("pricing-table-id", pricingTableId)
+    pricingTable.setAttribute("publishable-key", publishableKey)
+
+    if (clientReferenceId) {
+      pricingTable.setAttribute("client-reference-id", clientReferenceId)
+    }
+    if (customerEmail) {
+      pricingTable.setAttribute("customer-email", customerEmail)
+    }
+
+    containerRef.current.appendChild(pricingTable)
+  }
+
   return (
-    <stripe-pricing-table
-      pricing-table-id={pricingTableId}
-      publishable-key={publishableKey}
-      {...(clientReferenceId ? { "client-reference-id": clientReferenceId } : {})}
-      {...(customerEmail ? { "customer-email": customerEmail } : {})}
+    <div
+      ref={containerRef}
+      className="stripe-pricing-table-container min-h-[400px]"
     />
   )
 }

@@ -184,7 +184,7 @@ export default function ContractorSettingsPage() {
             <div>
               <p className="text-sm font-semibold text-amber-500">Payment past due</p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Your membership payment failed. Update your payment method to keep access to contractor leads.{" "}
+                Your membership payment failed. Update your payment method to keep access to open requests.{" "}
                 <button onClick={handleBillingPortal} className="text-amber-500 underline-offset-4 hover:underline">
                   Update billing →
                 </button>
@@ -345,7 +345,7 @@ export default function ContractorSettingsPage() {
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {subStatus === "active" || subStatus === "trialing"
                       ? "Flat monthly rate — full access to all open requests"
-                      : "Flat monthly rate — no per-lead charges or referral fees"}
+                      : "Flat monthly rate — no per-request charges or referral fees"}
                   </p>
                 </div>
               </div>
