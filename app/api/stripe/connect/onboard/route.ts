@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
+import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
 
 // Lazy-initialize Stripe to avoid build-time errors

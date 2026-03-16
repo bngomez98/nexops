@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { MapPin, DollarSign, Calendar, ArrowRight, Camera } from "lucide-react"
+import { MapPin, DollarSign, Calendar, ArrowRight, Camera, ChevronLeft, ChevronRight } from "lucide-react"
+
+const PAGE_SIZE = 20
 
 type ServiceRequest = {
   id: string
@@ -36,20 +38,32 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
 
-export default async function ContractorRequestsPage() {
+export default async function ContractorRequestsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/auth/login")
   if (user.user_metadata?.role !== "contractor") redirect("/dashboard")
 
-  const { data: requests, error } = await supabase
+  const { page: pageParam } = await searchParams
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
+  const { data: requests, error, count } = await supabase
     .from("service_requests")
-    .select("id, category, description, address, city, state, zip_code, budget_max, photo_urls, preferred_dates, created_at")
+    .select("id, category, description, address, city, state, zip_code, budget_max, photo_urls, preferred_dates, created_at", { count: "exact" })
     .in("status", ["pending_review", "in_queue"])
     .is("assigned_contractor_id", null)
     .order("created_at", { ascending: false })
+    .range(from, to)
 
   const allRequests: ServiceRequest[] = requests ?? []
+  const totalCount = count ?? 0
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
   return (
     <div className="flex-1 overflow-auto">
@@ -70,50 +84,92 @@ export default async function ContractorRequestsPage() {
             <p className="text-xs text-muted-foreground">Check back soon — new requests appear here as soon as they are submitted.</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {allRequests.map((req) => (
-              <div key={req.id} className="rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/30">
-                <div className="flex items-start justify-between px-5 py-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        {formatCategory(req.category)}
-                      </span>
-                      {req.photo_urls && req.photo_urls.length > 0 && (
-                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <Camera className="h-3 w-3" />{req.photo_urls.length} photo{req.photo_urls.length !== 1 ? "s" : ""}
+          <>
+            <div className="space-y-3">
+              {allRequests.map((req) => (
+                <div key={req.id} className="rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/30">
+                  <div className="flex items-start justify-between px-5 py-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                          {formatCategory(req.category)}
                         </span>
-                      )}
-                      <span className="text-[10px] text-muted-foreground">Submitted {formatDate(req.created_at)}</span>
-                    </div>
-                    <h3 className="text-sm font-semibold mb-2 line-clamp-1">{req.description}</h3>
-                    <div className="flex flex-wrap gap-x-5 gap-y-1">
-                      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                        <MapPin className="h-3 w-3 flex-shrink-0" />
-                        {req.address}, {req.city}, {req.state} {req.zip_code}
-                      </span>
-                      {req.budget_max != null && (
+                        {req.photo_urls && req.photo_urls.length > 0 && (
+                          <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                            <Camera className="h-3 w-3" />{req.photo_urls.length} photo{req.photo_urls.length !== 1 ? "s" : ""}
+                          </span>
+                        )}
+                        <span className="text-[10px] text-muted-foreground">Submitted {formatDate(req.created_at)}</span>
+                      </div>
+                      <h3 className="text-sm font-semibold mb-2 line-clamp-1">{req.description}</h3>
+                      <div className="flex flex-wrap gap-x-5 gap-y-1">
                         <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <DollarSign className="h-3 w-3" />Budget ceiling: <strong className="text-foreground ml-0.5">${req.budget_max.toLocaleString()}</strong>
+                          <MapPin className="h-3 w-3 flex-shrink-0" />
+                          {req.address}, {req.city}, {req.state} {req.zip_code}
                         </span>
-                      )}
-                      {req.preferred_dates && (
-                        <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <Calendar className="h-3 w-3" />{req.preferred_dates}
-                        </span>
-                      )}
+                        {req.budget_max != null && (
+                          <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                            <DollarSign className="h-3 w-3" />Budget ceiling: <strong className="text-foreground ml-0.5">${req.budget_max.toLocaleString()}</strong>
+                          </span>
+                        )}
+                        {req.preferred_dates && (
+                          <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                            <Calendar className="h-3 w-3" />{req.preferred_dates}
+                          </span>
+                        )}
+                      </div>
                     </div>
+                    <Link
+                      href={`/dashboard/contractor/requests/${req.id}`}
+                      className="ml-6 flex-shrink-0 inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+                    >
+                      View & Claim <ArrowRight className="h-3 w-3" />
+                    </Link>
                   </div>
-                  <Link
-                    href={`/dashboard/contractor/requests/${req.id}`}
-                    className="ml-6 flex-shrink-0 inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary/90"
-                  >
-                    View & Claim <ArrowRight className="h-3 w-3" />
-                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-between">
+                <p className="text-xs text-muted-foreground">
+                  Showing {from + 1}–{Math.min(to + 1, totalCount)} of {totalCount} request{totalCount !== 1 ? "s" : ""}
+                </p>
+                <div className="flex items-center gap-2">
+                  {page > 1 ? (
+                    <Link
+                      href={`/dashboard/contractor/requests?page=${page - 1}`}
+                      className="inline-flex items-center gap-1 rounded border border-border bg-card px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+                    >
+                      <ChevronLeft className="h-3 w-3" /> Previous
+                    </Link>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded border border-border bg-muted px-3 py-1.5 text-[12px] font-medium text-muted-foreground/40 cursor-not-allowed">
+                      <ChevronLeft className="h-3 w-3" /> Previous
+                    </span>
+                  )}
+
+                  <span className="text-[12px] text-muted-foreground px-1">
+                    Page {page} of {totalPages}
+                  </span>
+
+                  {page < totalPages ? (
+                    <Link
+                      href={`/dashboard/contractor/requests?page=${page + 1}`}
+                      className="inline-flex items-center gap-1 rounded border border-border bg-card px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+                    >
+                      Next <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded border border-border bg-muted px-3 py-1.5 text-[12px] font-medium text-muted-foreground/40 cursor-not-allowed">
+                      Next <ChevronRight className="h-3 w-3" />
+                    </span>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
     </div>
