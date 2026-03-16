@@ -48,6 +48,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
           }}
         />
+        {/* Google Analytics (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDGVHFCMKT" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LDGVHFCMKT');`,
+          }}
+        />
       </head>
       <body className={`${inter.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} font-sans`}>
         {/* Google Tag Manager (noscript) */}
