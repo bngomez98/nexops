@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
+import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
 
-const stripe = stripeSecretKey
-  ? new Stripe(stripeSecretKey, { apiVersion: "2026-02-25.clover" })
-  : null
+const stripe = getStripeClient()
 
 export async function POST(req: Request) {
   if (!stripe) {
@@ -52,12 +49,17 @@ export async function POST(req: Request) {
         .eq("id", user.id)
     }
 
+    const role = user.user_metadata?.role || "homeowner"
+    const billingPath = role === "contractor"
+      ? "/dashboard/contractor/billing"
+      : "/dashboard/billing"
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${siteUrl}/dashboard/contractor/billing?billing=success`,
-      cancel_url: `${siteUrl}/dashboard/contractor/billing?billing=canceled`,
+      success_url: `${siteUrl}${billingPath}?billing=success`,
+      cancel_url: `${siteUrl}${billingPath}?billing=canceled`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
     })

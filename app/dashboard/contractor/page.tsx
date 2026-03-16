@@ -104,7 +104,7 @@ export default async function ContractorDashboardPage() {
           </div>
           <Link
             href="/dashboard/contractor/settings"
-            className="inline-flex items-center gap-2 rounded border border-border px-4 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
           >
             Account Settings
           </Link>
@@ -134,7 +134,7 @@ export default async function ContractorDashboardPage() {
             <div className="flex-1">
               <p className="text-sm font-semibold">Activate your contractor membership</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                A Nexus membership gives you full access to all open requests in Shawnee County. Flat monthly rate — no per-lead fees.
+                A Nexus membership gives you full access to all open requests in Shawnee County. Flat monthly rate — no per-request fees.
               </p>
             </div>
             <Link

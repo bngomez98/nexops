@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-type ConnectStatus     = "not_connected" | "pending" | "active" | "restricted"
+type ConnectStatus      = "not_connected" | "pending" | "active" | "restricted"
 type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled" | null
 
 export default function ContractorSettingsPage() {
@@ -36,11 +36,11 @@ export default function ContractorSettingsPage() {
   const [connectStatus, setConnectStatus]   = useState<ConnectStatus>("not_connected")
   const [subStatus, setSubStatus]           = useState<SubscriptionStatus>(null)
   const [form, setForm] = useState({
-    fullName:              "",
-    phone:                 "",
-    emailNotifications:    true,
-    smsNotifications:      true,
-    availableForRequests:  true,
+    fullName:             "",
+    phone:                "",
+    emailNotifications:   true,
+    smsNotifications:     true,
+    availableForRequests: true,
   })
 
   const searchParams = useSearchParams()
@@ -71,9 +71,8 @@ export default function ContractorSettingsPage() {
     }
     load()
 
-    // URL param feedback after returning from Stripe flows
-    const billingParam  = searchParams.get("billing")
-    const connectParam  = searchParams.get("connect")
+    const billingParam = searchParams.get("billing")
+    const connectParam = searchParams.get("connect")
 
     if (billingParam === "success") {
       setSubStatus("active")
@@ -116,7 +115,7 @@ export default function ContractorSettingsPage() {
   const handleBillingPortal = async () => {
     setBillingLoading(true)
     try {
-      const res = await fetch("/api/stripe/portal", { method: "POST" })
+      const res  = await fetch("/api/stripe/portal", { method: "POST" })
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
@@ -134,7 +133,7 @@ export default function ContractorSettingsPage() {
     setConnectLoading(true)
     setError(null)
     try {
-      const res = await fetch("/api/stripe/connect/onboard", { method: "POST" })
+      const res  = await fetch("/api/stripe/connect/onboard", { method: "POST" })
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
@@ -156,35 +155,37 @@ export default function ContractorSettingsPage() {
     )
   }
 
-  const subscriptionLabel: Record<NonNullable<SubscriptionStatus>, { label: string; color: string }> = {
-    active:    { label: "Active",     color: "text-green-500" },
-    trialing:  { label: "Trial",      color: "text-blue-500" },
-    past_due:  { label: "Past due",   color: "text-amber-500" },
-    canceled:  { label: "Canceled",   color: "text-red-500" },
+  const subBadge: Record<NonNullable<SubscriptionStatus>, { label: string; classes: string; dot: string }> = {
+    active:   { label: "Active",    classes: "border-primary/25 bg-primary/10 text-primary",         dot: "bg-primary" },
+    trialing: { label: "Trial",     classes: "border-blue-500/25 bg-blue-500/10 text-blue-500",       dot: "bg-blue-500" },
+    past_due: { label: "Past Due",  classes: "border-amber-500/25 bg-amber-500/10 text-amber-500",    dot: "bg-amber-500" },
+    canceled: { label: "Canceled",  classes: "border-destructive/25 bg-destructive/10 text-destructive", dot: "bg-destructive" },
   }
-  const subInfo = subStatus ? subscriptionLabel[subStatus] : null
+  const badge = subStatus ? subBadge[subStatus] : null
 
   return (
     <div className="flex-1 overflow-auto">
       <div className="mx-auto max-w-3xl px-6 py-8">
 
-        {/* Page header */}
+        {/* ── Page header ── */}
         <div className="mb-8">
-          <h1 className="text-xl font-bold">Account Settings</h1>
+          <h1 className="text-xl font-bold tracking-tight">Account Settings</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Contact information, notification preferences, subscription, and payout account.
           </p>
         </div>
 
-        {/* ── Subscription status alert ── */}
+        {/* ── Alerts ── */}
         {subStatus === "past_due" && (
-          <div className="mb-6 flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
-            <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-4 py-3.5">
+            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-amber-500/15">
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+            </div>
             <div>
               <p className="text-sm font-semibold text-amber-500">Payment past due</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Your membership payment failed. Update your payment method to keep access to contractor leads.{" "}
-                <button onClick={handleBillingPortal} className="text-amber-500 hover:underline underline-offset-4">
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Your membership payment failed. Update your payment method to keep access to open requests.{" "}
+                <button onClick={handleBillingPortal} className="text-amber-500 underline-offset-4 hover:underline">
                   Update billing →
                 </button>
               </p>
@@ -192,25 +193,43 @@ export default function ContractorSettingsPage() {
           </div>
         )}
         {subStatus === "canceled" && (
-          <div className="mb-6 flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3">
-            <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0 mt-0.5" />
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3.5">
+            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-destructive/15">
+              <AlertCircle className="h-3.5 w-3.5 text-destructive" />
+            </div>
             <div>
               <p className="text-sm font-semibold text-destructive">Subscription canceled</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Your contractor membership has been canceled. Reactivate to resume access to open requests.{" "}
-                <Link href="/dashboard/contractor/billing" className="text-primary hover:underline underline-offset-4">
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Your contractor membership has been canceled.{" "}
+                <Link href="/dashboard/contractor/billing" className="text-primary underline-offset-4 hover:underline">
                   Reactivate membership →
                 </Link>
               </p>
             </div>
           </div>
         )}
+        {error && (
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3.5">
+            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-destructive/15">
+              <AlertCircle className="h-3.5 w-3.5 text-destructive" />
+            </div>
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+        {saved && (
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/8 px-4 py-3.5">
+            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
+              <CheckCircle className="h-3.5 w-3.5 text-primary" />
+            </div>
+            <p className="text-sm text-primary">Changes saved successfully.</p>
+          </div>
+        )}
 
         <form onSubmit={handleSave} className="space-y-5">
 
-          {/* ── Profile photo + contact ── */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
+          {/* ── Contact info ── */}
+          <section className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="border-b border-border px-5 py-3.5">
               <h2 className="text-sm font-semibold">Contact Information</h2>
             </div>
             <div className="p-5 space-y-5">
@@ -222,7 +241,7 @@ export default function ContractorSettingsPage() {
               />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="fullName" className="text-xs">Full Name</Label>
+                  <Label htmlFor="fullName" className="text-xs font-medium">Full Name</Label>
                   <Input
                     id="fullName"
                     placeholder="John Smith"
@@ -232,7 +251,7 @@ export default function ContractorSettingsPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-xs">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-xs font-medium">Phone Number</Label>
                   <Input
                     id="phone"
                     placeholder="(785) 555-0100"
@@ -246,8 +265,8 @@ export default function ContractorSettingsPage() {
           </section>
 
           {/* ── Availability & Notifications ── */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
+          <section className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="border-b border-border px-5 py-3.5">
               <h2 className="text-sm font-semibold">Availability &amp; Notifications</h2>
             </div>
             <div className="divide-y divide-border">
@@ -271,17 +290,17 @@ export default function ContractorSettingsPage() {
                 <div key={key} className="flex items-center justify-between px-5 py-4">
                   <div>
                     <p className="text-sm font-medium">{label}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setForm({ ...form, [key]: !form[key] })}
-                    className={`relative h-5 w-9 rounded-full transition ${form[key] ? "bg-primary" : "bg-border"}`}
+                    className={`relative h-5 w-9 rounded-full transition-colors ${form[key] ? "bg-primary" : "bg-border"}`}
                     role="switch"
                     aria-checked={form[key]}
                   >
                     <span
-                      className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${form[key] ? "translate-x-4" : "translate-x-0.5"}`}
+                      className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${form[key] ? "translate-x-4" : "translate-x-0.5"}`}
                     />
                   </button>
                 </div>
@@ -289,65 +308,48 @@ export default function ContractorSettingsPage() {
             </div>
           </section>
 
-          {/* Error / success */}
-          {error && (
-            <div className="flex items-center gap-2 rounded border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />{error}
-            </div>
-          )}
-          {saved && (
-            <div className="flex items-center gap-2 rounded border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
-              <CheckCircle className="h-4 w-4 flex-shrink-0" />Changes saved successfully.
-            </div>
-          )}
-
           <div className="flex justify-end">
-            <Button type="submit" disabled={saving} className="text-[13px]">
+            <Button type="submit" disabled={saving} className="gap-2 font-semibold text-sm">
               {saving
-                ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</>
+                ? <><Loader2 className="h-4 w-4 animate-spin" />Saving…</>
                 : "Save Changes"}
             </Button>
           </div>
         </form>
 
         {/* ── Subscription & Billing ── */}
-        <section className="mt-5 rounded-lg border border-border bg-card overflow-hidden">
-          <div className="border-b border-border px-5 py-3 flex items-center justify-between">
+        <section className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+          <div className="flex items-start justify-between border-b border-border px-5 py-3.5">
             <div>
               <h2 className="text-sm font-semibold">Subscription &amp; Billing</h2>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 Manage your contractor membership, payment method, and invoices
               </p>
             </div>
-            {subInfo && (
-              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
-                subStatus === "active"   ? "text-green-600 bg-green-500/10 border-green-500/30" :
-                subStatus === "trialing" ? "text-blue-600 bg-blue-500/10 border-blue-500/30"   :
-                subStatus === "past_due" ? "text-amber-600 bg-amber-500/10 border-amber-500/30" :
-                                          "text-red-600 bg-red-500/10 border-red-500/30"
-              }`}>
-                {subInfo.label}
+            {badge && (
+              <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${badge.classes}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} />
+                {badge.label}
               </span>
             )}
           </div>
 
           <div className="p-5 space-y-4">
-            {/* Current plan display */}
             <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                  <CreditCard className="h-4 w-4 text-primary" />
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/15">
+                  <CreditCard className="h-4.5 w-4.5 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Contractor Membership</p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {subStatus === "active" || subStatus === "trialing"
-                      ? "Flat monthly rate — full access to all open requests in your area"
-                      : "Flat monthly rate — no per-lead charges or referral fees"}
+                      ? "Flat monthly rate — full access to all open requests"
+                      : "Flat monthly rate — no per-request charges or referral fees"}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex-shrink-0">
                 {(subStatus === "active" || subStatus === "trialing" || subStatus === "past_due") ? (
                   <Button
                     type="button"
@@ -355,7 +357,7 @@ export default function ContractorSettingsPage() {
                     size="sm"
                     onClick={handleBillingPortal}
                     disabled={billingLoading}
-                    className="text-[12px] gap-1.5"
+                    className="gap-1.5 text-xs"
                   >
                     {billingLoading
                       ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -365,7 +367,7 @@ export default function ContractorSettingsPage() {
                 ) : (
                   <Link
                     href="/dashboard/contractor/billing"
-                    className="inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90"
                   >
                     View Plans <ArrowRight className="h-3 w-3" />
                   </Link>
@@ -373,8 +375,7 @@ export default function ContractorSettingsPage() {
               </div>
             </div>
 
-            {/* Security note */}
-            <div className="flex items-center gap-2 rounded bg-muted/40 px-3 py-2.5 text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-2 rounded-xl bg-muted/40 px-3.5 py-2.5 text-xs text-muted-foreground">
               <Shield className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
               Payment processing is handled securely by Stripe. Nexus does not store your card details.
             </div>
@@ -382,23 +383,29 @@ export default function ContractorSettingsPage() {
         </section>
 
         {/* ── Payout Account (Stripe Connect) ── */}
-        <section className="mt-5 rounded-lg border border-border bg-card overflow-hidden">
-          <div className="border-b border-border px-5 py-3">
+        <section className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+          <div className="border-b border-border px-5 py-3.5">
             <h2 className="text-sm font-semibold">Payout Account</h2>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               Connect a bank account to receive direct payments after each completed job
             </p>
           </div>
           <div className="p-5">
             {connectStatus === "active" ? (
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-500/10">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/15">
+                    <CheckCircle className="h-4.5 w-4.5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">Stripe account connected</p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold">Stripe account connected</p>
+                      <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        Active
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       Payouts deposit automatically after each completed job
                     </p>
                   </div>
@@ -409,7 +416,7 @@ export default function ContractorSettingsPage() {
                   size="sm"
                   onClick={handleConnectStripe}
                   disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
+                  className="gap-1.5 flex-shrink-0 text-xs"
                 >
                   {connectLoading
                     ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -419,13 +426,13 @@ export default function ContractorSettingsPage() {
               </div>
             ) : connectStatus === "pending" ? (
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
-                    <Clock className="h-4 w-4 text-amber-500" />
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 ring-1 ring-amber-500/15">
+                    <Clock className="h-4.5 w-4.5 text-amber-500" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold">Verification in progress</p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       Stripe is reviewing your information — this usually takes a few minutes
                     </p>
                   </div>
@@ -436,7 +443,7 @@ export default function ContractorSettingsPage() {
                   size="sm"
                   onClick={handleConnectStripe}
                   disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
+                  className="gap-1.5 flex-shrink-0 text-xs"
                 >
                   {connectLoading
                     ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -446,13 +453,13 @@ export default function ContractorSettingsPage() {
               </div>
             ) : connectStatus === "restricted" ? (
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-destructive/10">
-                    <AlertCircle className="h-4 w-4 text-destructive" />
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-destructive/10 ring-1 ring-destructive/15">
+                    <AlertCircle className="h-4.5 w-4.5 text-destructive" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold">Action required</p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       Stripe needs additional information before payouts can be enabled
                     </p>
                   </div>
@@ -462,7 +469,7 @@ export default function ContractorSettingsPage() {
                   size="sm"
                   onClick={handleConnectStripe}
                   disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
+                  className="gap-1.5 flex-shrink-0 text-xs"
                 >
                   {connectLoading
                     ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -472,13 +479,13 @@ export default function ContractorSettingsPage() {
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                    <Banknote className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted ring-1 ring-border">
+                    <Banknote className="h-4.5 w-4.5 text-muted-foreground" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold">No payout account connected</p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       Connect a bank account through Stripe to receive payments for completed jobs
                     </p>
                   </div>
@@ -488,7 +495,7 @@ export default function ContractorSettingsPage() {
                   size="sm"
                   onClick={handleConnectStripe}
                   disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
+                  className="gap-1.5 flex-shrink-0 text-xs font-semibold"
                 >
                   {connectLoading
                     ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -500,11 +507,11 @@ export default function ContractorSettingsPage() {
           </div>
         </section>
 
-        {/* ── Danger zone / account actions ── */}
+        {/* ── Footer note ── */}
         <div className="mt-8 border-t border-border pt-6">
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             To update your license, insurance, or background check documentation, contact{" "}
-            <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline underline-offset-4">
+            <a href="mailto:admin@nexusoperations.org" className="text-primary underline-offset-4 hover:underline">
               admin@nexusoperations.org
             </a>
             .

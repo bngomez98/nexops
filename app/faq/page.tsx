@@ -13,7 +13,7 @@ const sections = [
     questions: [
       {
         q: "What does it cost to submit a service request?",
-        a: "Property owners and property managers submit requests through a Nexus account. There are no per-lead charges or hidden fees associated with submitting a request.",
+        a: "Property owners and property managers submit requests through a Nexus account. There are no per-request charges or hidden fees associated with submitting a request.",
       },
       {
         q: "What information is required to submit a request?",

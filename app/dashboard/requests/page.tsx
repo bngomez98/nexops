@@ -3,7 +3,7 @@ import { isTemplatedRequest } from "@/lib/requests"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Plus, FileText, MapPin, Calendar, DollarSign, ChevronRight } from "lucide-react"
+import { Plus, FileText, MapPin, Calendar, DollarSign, ArrowRight } from "lucide-react"
 
 const STATUS_LABELS: Record<string, string> = {
   pending_review:          "Pending Review",
@@ -19,10 +19,10 @@ const STATUS_LABELS: Record<string, string> = {
 const STATUS_COLORS: Record<string, string> = {
   pending_review:          "text-muted-foreground bg-muted",
   in_queue:                "text-primary bg-primary/10",
-  assigned:                "text-blue-600 bg-blue-50",
-  consultation_scheduled:  "text-blue-600 bg-blue-50",
-  in_progress:             "text-amber-600 bg-amber-50",
-  completed:               "text-green-700 bg-green-100",
+  assigned:                "text-blue-500 bg-blue-500/10",
+  consultation_scheduled:  "text-blue-500 bg-blue-500/10",
+  in_progress:             "text-amber-500 bg-amber-500/10",
+  completed:               "text-green-500 bg-green-500/10",
   declined:                "text-destructive bg-destructive/10",
   cancelled:               "text-muted-foreground bg-muted",
 }
@@ -75,12 +75,13 @@ export default async function RequestsPage() {
         ) : (
           <div className="space-y-3">
             {list.map((req) => (
-              <div
+              <Link
                 key={req.id}
-                className="rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/30"
+                href={`/dashboard/requests/${req.id}`}
+                className="group block rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/40"
               >
                 <div className="flex items-start justify-between px-5 py-4">
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full capitalize">
                         {req.category.replace(/-/g, " ")}
@@ -115,10 +116,10 @@ export default async function RequestsPage() {
                     <p className="text-[11px] text-muted-foreground">
                       {new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                     </p>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition" />
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

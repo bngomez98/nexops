@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
+import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const staticPortalUrl = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? null
 
-const stripe = stripeSecretKey
-  ? new Stripe(stripeSecretKey, { apiVersion: "2026-02-25.clover" })
-  : null
+const stripe = getStripeClient()
 
 export async function POST() {
   if (!stripe) {
@@ -36,19 +34,33 @@ export async function POST() {
     }
 
     if (!profile?.stripe_customer_id) {
+      // No Stripe customer yet — fall back to the static Customer Portal login URL
+      // so contractors can still access portal features (e.g. test mode).
+      if (staticPortalUrl) {
+        return NextResponse.json({ url: staticPortalUrl })
+      }
       return NextResponse.json(
         { error: "No Stripe billing account was found for your profile. Contact support to complete setup." },
         { status: 400 },
       )
     }
 
+    const role = user.user_metadata?.role || "homeowner"
+    const returnPath = role === "contractor"
+      ? "/dashboard/contractor/settings"
+      : "/dashboard/billing"
+
     const session = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${siteUrl}/dashboard/contractor/settings`,
+      return_url: `${siteUrl}${returnPath}`,
     })
 
     return NextResponse.json({ url: session.url })
   } catch {
+    // If session creation fails, fall back to the static portal URL if available.
+    if (staticPortalUrl) {
+      return NextResponse.json({ url: staticPortalUrl })
+    }
     return NextResponse.json({ error: "We could not open the Stripe billing portal. Please try again." }, { status: 500 })
   }
 }
