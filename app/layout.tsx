@@ -1,56 +1,42 @@
-import type { Metadata } from "next"
-import Script from "next/script"
-import { Inter, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
-import "./globals.css"
-import { CookieConsent } from "@/components/cookie-consent"
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta-sans" })
-const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" })
-
-const GTM_ID = "GTM-PL3NBCWD"
-const GA_ID = "G-LDGVHFCMKT"
-
-const THEME_INIT_SCRIPT = `(function () {
-  var theme = localStorage.getItem('nexus-theme')
-  if (theme === 'dark') {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.add('light')
-  }
-})()`
-
-const GTM_INIT_SCRIPT = `(function (w, d, s, l, i) {
-  w[l] = w[l] || []
-  w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
-  var firstScript = d.getElementsByTagName(s)[0]
-  var script = d.createElement(s)
-  var dataLayerParam = l !== 'dataLayer' ? '&l=' + l : ''
-  script.async = true
-  script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dataLayerParam
-  firstScript.parentNode.insertBefore(script, firstScript)
-})(window, document, 'script', 'dataLayer', '${GTM_ID}')`
-
-const GA_INIT_SCRIPT = `window.dataLayer = window.dataLayer || []
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nexus Operations | One contractor. Exclusively yours.",
-  description:
-    "Nexus Operations connects homeowners and property managers with licensed, insured contractors in Topeka, KS. Submit your project once — one verified contractor claims it exclusively.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+  title: {
+    default: "NexOps – Home Services in Topeka, KS",
+    template: "%s | NexOps",
   },
+  description:
+    "Nexus Operations connects Topeka homeowners with licensed, insured contractors. Submit a project request for free and get matched with one verified contractor within 24 hours.",
+  keywords: ["home services", "contractors", "Topeka KS", "home repair", "nexops"],
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+import type { Metadata, Viewport } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
+
+export const metadata: Metadata = {
+  title: "Nexus Operations | Connect with Trusted Contractors",
+  description:
+    "The modern platform connecting homeowners with vetted contractors. Get your home projects done right.",
 }
 
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  userScalable: true,
-  themeColor: "#0f0f0f",
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
+  ],
 }
 
 export default function RootLayout({
@@ -59,68 +45,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
-      <head>
-        {/* Theme init — prevents flash of wrong theme */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('nexus-theme');if(t==='dark'){document.documentElement.classList.add('dark')}else{document.documentElement.classList.add('light')}})()`,
-          }}
-        />
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PL3NBCWD');`,
-          }}
-        />
-        {/* Google Analytics (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDGVHFCMKT" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-LDGVHFCMKT');`,
-          }}
-        />
-      </head>
-      <body className={`${inter.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} font-sans`}>
-        {/* Google Tag Manager */}
-        <Script id="gtm-loader" strategy="afterInteractive">
-          {GTM_INIT_SCRIPT}
-        </Script>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-
-        {/* Google Analytics (gtag.js) */}
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        <Script id="ga-init" strategy="afterInteractive">
-          {GA_INIT_SCRIPT}
-        </Script>
-
-        {children}
-
-        <CookieConsent />
-
-        {/* Zendesk Widget */}
-        <script
-          id="ze-snippet"
-          src="https://static.zdassets.com/ekr/snippet.js?key=d8a1128c-008a-443c-894e-4a0fd463bb57"
-          async
-        />
-      </body>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} font-sans`}>{children}</body>
     </html>
   )
 }

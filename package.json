@@ -1,13 +1,12 @@
 {
-  "name": "my-v0-project",
+  "name": "nexops",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "next lint",
     "test": "vitest run"
   },
   "dependencies": {
@@ -30,13 +29,14 @@
     "next": "16.1.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-hook-form": "^7.56.4",
     "recharts": "^3.7.0",
     "stripe": "^20.4.1",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.1",
-    "@types/better-sqlite3": "7.6.13",
     "@types/node": "25.3.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -47,5 +47,34 @@
     "tailwindcss": "^4.2.1",
     "typescript": "5.9.3",
     "vitest": "^4.0.18"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp", "unrs-resolver"]
+  "name": "nexus-operations",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "lucide-react": "^0.468.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
+    "class-variance-authority": "^0.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
   }
 }
