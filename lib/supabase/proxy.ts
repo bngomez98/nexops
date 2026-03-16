@@ -55,7 +55,8 @@ export async function updateSession(request: NextRequest) {
   // Redirect authenticated users away from auth pages (login, sign-up, forgot-password)
   // Allow /auth/callback, /auth/reset-password, /auth/error, /auth/sign-up-success through
   const authOnlyPaths = ['/auth/login', '/auth/sign-up', '/auth/forgot-password']
-  if (user && authOnlyPaths.some((p) => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '?'))) {
+  const pathname = request.nextUrl.pathname
+  if (user && authOnlyPaths.some((p) => pathname === p || pathname.startsWith(p + '?'))) {
     const url = request.nextUrl.clone()
     const role = user.user_metadata?.role
     url.pathname = role === 'contractor' ? '/dashboard/contractor' : '/dashboard'

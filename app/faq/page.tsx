@@ -82,6 +82,10 @@ const sections = [
         a: "All contractors must submit a current contractor license, active insurance certificate, and consent to a background check before account approval. Documentation is reviewed manually by Nexus Operations staff. Accounts are not automatically approved.",
       },
       {
+        q: "Are there fake jobs or fake service requests on the platform?",
+        a: "No. Only real, user-submitted service requests appear on the portal — not templated or fabricated jobs. Requests are published only after required project details are provided and the account is verified. Suspected fraud is manually reviewed and removed.",
+      },
+      {
         q: "What happens to my submitted photos and project data?",
         a: "Project photos and details are used solely for matching you with a contractor and facilitating the consultation. Your data is never sold, shared with advertising networks, or distributed to multiple contractors. See the Privacy Policy for full data handling details.",
       },
