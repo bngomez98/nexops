@@ -97,8 +97,8 @@ function NavContent({
       <div className="px-4 py-3 border-b border-border flex-shrink-0">
         <div className="flex items-center gap-2">
           {isContractor
-            ? <Hammer className="h-3 w-3 text-primary flex-shrink-0" />
-            : <LayoutDashboard className="h-3 w-3 text-primary flex-shrink-0" />
+            ? <Hammer className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+            : <LayoutDashboard className="h-3.5 w-3.5 text-primary flex-shrink-0" />
           }
           <span className="text-[11px] font-medium text-muted-foreground">{roleLabel}</span>
         </div>

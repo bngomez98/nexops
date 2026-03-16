@@ -103,7 +103,7 @@ export default async function ContractorDashboardPage() {
           </div>
           <Link
             href="/dashboard/contractor/settings"
-            className="inline-flex items-center gap-2 rounded border border-border px-4 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-[13px] font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
           >
             Account Settings
           </Link>

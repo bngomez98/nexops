@@ -61,7 +61,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/dashboard/requests/new"
-            className="inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             <Plus className="h-3.5 w-3.5" />
             New Request
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
             </p>
             <Link
               href="/dashboard/requests/new"
-              className="inline-flex items-center gap-2 rounded bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               Submit your project now
               <ArrowRight className="h-3.5 w-3.5" />

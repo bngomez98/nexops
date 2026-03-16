@@ -144,7 +144,7 @@ export default function NewRequestPage() {
   }, [])
 
   return (
-    <div className="p-8">
+    <div className="px-6 py-8">
       <div className="mx-auto max-w-2xl">
         <Link
           href="/dashboard/requests"
@@ -284,7 +284,7 @@ export default function NewRequestPage() {
                     onClick={() => fileInputRef.current?.click()}
                     className="w-full rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center hover:border-primary/40 transition"
                   >
-                    <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+                    <Upload className="mx-auto h-6 w-6 text-muted-foreground" />
                     <p className="mt-2 text-sm font-medium">Upload project photos</p>
                     <p className="text-xs text-muted-foreground mt-0.5">Click to select · 2–10 photos recommended</p>
                   </button>
