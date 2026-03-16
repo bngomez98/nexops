@@ -2,10 +2,24 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Phone, ArrowRight, MapPin, Menu, X, Shield, FileCheck, Users, CheckCircle, Zap, Clock, Star } from "lucide-react"
-import { ArrowRight, BadgeCheck, Menu, Phone, ShieldCheck, Sparkles, Users, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import {
+  Phone,
+  ArrowRight,
+  MapPin,
+  Menu,
+  X,
+  Shield,
+  FileCheck,
+  Users,
+  CheckCircle,
+  Zap,
+  Clock,
+  Star,
+  BadgeCheck,
+  ShieldCheck,
+} from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { useEffect, useState } from "react"
 
 const navLinks = [
   { href: "#about", label: "About" },
@@ -42,6 +56,7 @@ const processSteps = [
 ]
 
 export default function HomePage() {
+  const heroRef = useRef<HTMLDivElement>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("")
   const [scrollPct, setScrollPct] = useState(0)
@@ -82,6 +97,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-background text-foreground">
       <div className="fixed left-0 top-0 z-[70] h-0.5 bg-primary transition-[width] duration-75" style={{ width: `${scrollPct}%` }} />
 
+      {/* ── Header ── */}
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 md:px-8">
           <Link href="/" aria-label="Nexus Operations home">
@@ -193,10 +209,10 @@ export default function HomePage() {
               {/* Platform stats strip */}
               <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 animate-fade-up" style={{ animationDelay: "0.28s" }}>
                 {[
-                  { n: "8",     label: "Trade categories" },
-                  { n: "1",     label: "Contractor per project" },
-                  { n: "24hr",  label: "Consultation target" },
-                  { n: "$0",    label: "Platform fee to owners" },
+                  { n: "8",    label: "Trade categories" },
+                  { n: "1",    label: "Contractor per project" },
+                  { n: "24hr", label: "Consultation target" },
+                  { n: "$0",   label: "Platform fee to owners" },
                 ].map(({ n, label }) => (
                   <div key={label} className="rounded-xl border border-border/50 bg-card/60 px-3 py-3 text-center">
                     <p className="font-heading text-[22px] font-bold text-primary leading-none">{n}</p>
@@ -236,7 +252,7 @@ export default function HomePage() {
                 </p>
                 <span className="flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
                   <Zap className="h-2.5 w-2.5" />
-                  Automated platform
+                  Verified platform
                 </span>
               </div>
 
@@ -295,7 +311,7 @@ export default function HomePage() {
       <div className="border-t border-border" />
 
       {/* ── Who We Serve ── */}
-      <section className="py-24">
+      <section id="about" className="py-24">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-16 text-center" data-animate>
             <p className="font-mono-label text-primary mb-4">Who We Serve</p>
@@ -307,28 +323,28 @@ export default function HomePage() {
           <div className="grid gap-6 sm:grid-cols-3">
             {[
               {
-                icon:   Users,
-                title:  "Homeowners",
-                body:   "Submit your project once with photos and scope. Nexus assigns a verified contractor, schedules the consultation, and manages the job through completion.",
-                pills:  ["Full project tracking", "Permanent records", "No contractor search"],
-                cta:    "Submit your project",
-                href:   "/auth/sign-up",
+                icon:  Users,
+                title: "Homeowners",
+                body:  "Submit your project once with photos and scope. Nexus assigns a verified contractor, schedules the consultation, and manages the job through completion.",
+                pills: ["Full project tracking", "Permanent records", "No contractor search"],
+                cta:   "Submit your project",
+                href:  "/auth/sign-up",
               },
               {
-                icon:   FileCheck,
-                title:  "Property Managers",
-                body:   "One account covers your entire portfolio. Track maintenance spend by property and trade category. Identify recurring issues across all managed addresses.",
-                pills:  ["Portfolio dashboard", "Spend by category", "Multi-property support"],
-                cta:    "Create an account",
-                href:   "/auth/sign-up?role=property_manager",
+                icon:  FileCheck,
+                title: "Property Managers",
+                body:  "One account covers your entire portfolio. Track maintenance spend by property and trade category. Identify recurring issues across all managed addresses.",
+                pills: ["Portfolio dashboard", "Spend by category", "Multi-property support"],
+                cta:   "Create an account",
+                href:  "/auth/sign-up?role=property_manager",
               },
               {
-                icon:   Shield,
-                title:  "Contractors",
-                body:   "Receive pre-documented project requests in your trade and service area. Review scope, photos, and budget before deciding to claim. Direct payment — no referral cuts.",
-                pills:  ["Flat membership", "Direct payment", "Exclusive claims"],
-                cta:    "Apply for network access",
-                href:   "/auth/sign-up?role=contractor",
+                icon:  Shield,
+                title: "Contractors",
+                body:  "Receive pre-documented project requests in your trade and service area. Review scope, photos, and budget before deciding to claim. Direct payment — no referral cuts.",
+                pills: ["Flat membership", "Direct payment", "Exclusive claims"],
+                cta:   "Apply for network access",
+                href:  "/auth/sign-up?role=contractor",
               },
             ].map(({ icon: Icon, title, body, pills, cta, href }) => (
               <Link
@@ -352,58 +368,15 @@ export default function HomePage() {
                 <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
                   {cta} <ArrowRight className="h-3 w-3" />
                 </span>
-      <section className="relative overflow-hidden border-b border-border py-20 md:py-24">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--primary)/0.17),transparent_45%)]" />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-[1.1fr_0.9fr] md:items-center md:px-8">
-          <div>
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-              <Sparkles className="h-3.5 w-3.5" />
-              Topeka-first property operations platform
-            </p>
-            <h1 className="font-heading text-balance text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-              A real operations layer for home and property service work.
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Stop chasing five bids and repeating scope over and over. Nexus routes every request through one verified contractor,
-              with full request history, status updates, and post-project records in one dashboard.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                href="/auth/sign-up"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
-              >
-                Submit your project
-                <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="tel:+17854280244" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                <Phone className="h-4 w-4 text-primary" />
-                (785) 428-0244
-              </a>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">What makes this different</h2>
-            <div className="mt-5 space-y-5">
-              {[
-                "One contractor per request — no bidding wars.",
-                "Manual contractor verification: license + insurance + review.",
-                "Timeline tracking, documents, and status updates in-app.",
-                "Permanent service records for insurance, resale, and maintenance planning.",
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
-                  <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       <div className="border-t border-border" />
 
-      {/* ── Trust Pillars ── */}
+      {/* ── Why Nexus ── */}
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-8">
           <div className="mb-10 text-center" data-animate>
@@ -415,7 +388,7 @@ export default function HomePage() {
           <div className="grid gap-5 sm:grid-cols-3">
             {[
               {
-                icon:  Shield,
+                icon:  ShieldCheck,
                 title: "Verified network only",
                 body:  "Every contractor holds a current trade license and active general liability insurance, confirmed by Nexus staff before network activation. No automated approvals.",
                 stat:  "100% manual review",
@@ -438,46 +411,20 @@ export default function HomePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="rounded-full border border-primary/20 bg-primary/8 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
+                  <span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
                     {stat}
                   </span>
                 </div>
                 <h3 className="text-[15px] font-semibold text-foreground mb-3">{title}</h3>
                 <p className="text-[13px] text-muted-foreground leading-[1.8]">{body}</p>
               </div>
-      <section id="about" className="border-b border-border py-20">
-        <div className="mx-auto max-w-6xl px-6 md:px-8">
-          <div className="grid gap-10 md:grid-cols-3">
-            {[
-              {
-                icon: ShieldCheck,
-                title: "Verified network",
-                body: "Every contractor is reviewed before activation. No instant approvals and no unverified listings.",
-              },
-              {
-                icon: Users,
-                title: "Exclusive assignment",
-                body: "Once assigned, your request leaves the public feed and stays with one contractor from start to finish.",
-              },
-              {
-                icon: BadgeCheck,
-                title: "Operational clarity",
-                body: "Scope, estimates, approvals, and final documentation are recorded in a single timeline.",
-              },
-            ].map(({ icon: Icon, title, body }) => (
-              <article key={title} className="rounded-xl border border-border/70 bg-card p-6">
-                <div className="mb-4 inline-flex rounded-lg bg-primary/10 p-2.5">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
-              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="process" className="border-b border-border py-20">
+      {/* ── Process ── */}
+      <section id="process" className="border-t border-b border-border py-20">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Process</p>
           <h2 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">How work moves through Nexus</h2>
@@ -493,6 +440,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Services ── */}
       <section id="services" className="border-b border-border py-20">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Services</p>
@@ -507,6 +455,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── For Contractors ── */}
       <section id="contractors" className="border-b border-border py-20">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <div className="rounded-2xl border border-border bg-card p-8 md:p-10">
@@ -518,14 +467,27 @@ export default function HomePage() {
               Receive complete request packets with photos and scope details, then claim work where your team has capacity. Direct
               owner payments. Clear records. Repeatable operations.
             </p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              {[
+                { icon: BadgeCheck, label: "License + insurance verified before activation" },
+                { icon: Shield,     label: "Exclusive claim — no competing contact" },
+                { icon: CheckCircle, label: "Flat monthly membership, zero per-job fees" },
+              ].map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-start gap-2.5 text-[13px] text-muted-foreground">
+                  <Icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                  <p>{label}</p>
+                </div>
+              ))}
+            </div>
             <div className="mt-7 flex flex-wrap gap-4">
               <Link
                 href="/auth/sign-up?role=contractor"
-                className="inline-flex items-center rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground"
               >
                 Apply for contractor access
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <Link href="/faq" className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-xs font-semibold">
+              <Link href="/faq" className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-xs font-semibold hover:border-primary/40 transition">
                 Read contractor FAQ
               </Link>
             </div>
@@ -533,18 +495,19 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Contact / CTA ── */}
       <section id="contact" className="py-20">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <div className="rounded-2xl bg-primary px-8 py-12 text-primary-foreground md:flex md:items-center md:justify-between md:px-10">
             <div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Ready for a serious redesign of how service work gets done?</h2>
-              <p className="mt-3 max-w-xl text-sm/relaxed text-primary-foreground/90">
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-primary-foreground/90">
                 Start with one request. We&apos;ll route it, assign it, and keep everything organized from first message to closeout.
               </p>
             </div>
             <Link
               href="/auth/sign-up"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 text-sm font-semibold text-foreground md:mt-0"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-background/90 md:mt-0"
             >
               Start now
               <ArrowRight className="h-4 w-4" />
@@ -552,6 +515,56 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-border bg-card">
+        <div className="mx-auto max-w-6xl px-6 py-10 md:px-8">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+            <div>
+              <Image src="/nexus-logo.png" alt="Nexus Operations" width={130} height={27} className="h-6 w-auto" />
+              <p className="mt-3 max-w-xs text-[12px] text-muted-foreground leading-relaxed">
+                One verified contractor. Exclusively yours. Property service management for Topeka and Shawnee County.
+              </p>
+              <a href="tel:+17854280244" className="mt-3 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
+                <Phone className="h-3 w-3 text-primary" />
+                (785) 428-0244
+              </a>
+            </div>
+            <div className="grid grid-cols-2 gap-8 text-[12px] sm:grid-cols-3">
+              <div>
+                <p className="mb-3 font-semibold text-foreground">Platform</p>
+                <div className="space-y-2 text-muted-foreground">
+                  <Link href="/auth/sign-up" className="block hover:text-foreground transition">Submit a project</Link>
+                  <Link href="/auth/sign-up?role=contractor" className="block hover:text-foreground transition">Contractor access</Link>
+                  <Link href="/faq" className="block hover:text-foreground transition">FAQ</Link>
+                </div>
+              </div>
+              <div>
+                <p className="mb-3 font-semibold text-foreground">Account</p>
+                <div className="space-y-2 text-muted-foreground">
+                  <Link href="/auth/login" className="block hover:text-foreground transition">Sign in</Link>
+                  <Link href="/auth/sign-up" className="block hover:text-foreground transition">Create account</Link>
+                </div>
+              </div>
+              <div>
+                <p className="mb-3 font-semibold text-foreground">Legal</p>
+                <div className="space-y-2 text-muted-foreground">
+                  <Link href="/terms" className="block hover:text-foreground transition">Terms of Service</Link>
+                  <Link href="/privacy" className="block hover:text-foreground transition">Privacy Policy</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 border-t border-border pt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[11px] text-muted-foreground">
+              &copy; {new Date().getFullYear()} Nexus Operations. Topeka, KS.
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              admin@nexusoperations.org
+            </p>
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }
