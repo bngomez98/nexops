@@ -133,7 +133,7 @@ export default async function ContractorDashboardPage() {
             <div className="flex-1">
               <p className="text-sm font-semibold">Activate your contractor membership</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                A Nexus membership gives you full access to all open requests in Shawnee County. Flat monthly rate — no per-lead fees.
+                A Nexus membership gives you full access to all open requests in Shawnee County. Flat monthly rate — no per-request fees.
               </p>
             </div>
             <Link

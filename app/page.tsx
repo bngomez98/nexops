@@ -362,7 +362,7 @@ export default function HomePage() {
             {
               src:     "/photo-contractor.jpg",
               label:   "Contractors",
-              caption: "Claim qualified project leads in your trade and service area. Direct payment, no platform fees.",
+              caption: "Claim qualified projects in your trade and service area. Direct payment, no platform fees.",
               href:    "/auth/sign-up?role=contractor",
               cta:     "Apply for access",
             },
@@ -598,7 +598,7 @@ export default function HomePage() {
           <div className="mb-14" data-animate>
             <p className="font-mono-label text-primary mb-5">For contractors</p>
             <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Pre-validated project leads, delivered directly to your dashboard.
+              Pre-validated project requests, delivered directly to your dashboard.
             </h2>
           </div>
 
