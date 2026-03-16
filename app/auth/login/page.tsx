@@ -70,8 +70,7 @@ export default function LoginPage() {
               Every project documented through completion.
             </p>
             <p>
-              Contractors join at no cost. Service requests receive a dedicated
-              contractor from our vetted network within the submission day.
+              Contractors access requests through a flat monthly membership — no per-project fees, no referral cuts.
             </p>
           </div>
 
@@ -79,7 +78,7 @@ export default function LoginPage() {
             {[
               { n: "8",    label: "Trade categories" },
               { n: "1",    label: "Contractor per request" },
-              { n: "$0",   label: "Contractor cost" },
+              { n: "$0",   label: "Platform fee to owners" },
               { n: "100%", label: "Manually reviewed" },
             ].map(({ n, label }) => (
               <div key={label}>

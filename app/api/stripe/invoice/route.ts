@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
+import type Stripe from "stripe"
+import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
-
-// Lazy-initialize Stripe to avoid build-time errors
-function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2026-02-25.clover",
-  })
-}
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
 
@@ -15,7 +9,14 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org
 const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
-  const stripe = getStripe()
+  const stripe = getStripeClient()
+  if (!stripe) {
+    return NextResponse.json(
+      { error: "Invoice checkout is temporarily unavailable. Stripe is not fully configured." },
+      { status: 500 },
+    )
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
