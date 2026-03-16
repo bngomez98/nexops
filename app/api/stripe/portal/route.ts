@@ -45,9 +45,14 @@ export async function POST() {
       )
     }
 
+    const role = user.user_metadata?.role || "homeowner"
+    const returnPath = role === "contractor"
+      ? "/dashboard/contractor/settings"
+      : "/dashboard/billing"
+
     const session = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${siteUrl}/dashboard/contractor/settings`,
+      return_url: `${siteUrl}${returnPath}`,
     })
 
     return NextResponse.json({ url: session.url })

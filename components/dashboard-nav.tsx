@@ -27,6 +27,7 @@ const ownerNavItems = [
   { href: "/dashboard",           label: "Overview",      icon: LayoutDashboard },
   { href: "/dashboard/requests",  label: "My Requests",   icon: FileText },
   { href: "/dashboard/messages",  label: "Messages",      icon: MessageSquare },
+  { href: "/dashboard/billing",   label: "Billing",       icon: CreditCard },
   { href: "/dashboard/settings",  label: "Settings",      icon: Settings },
 ]
 
