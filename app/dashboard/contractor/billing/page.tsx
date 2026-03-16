@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Check,
 } from "lucide-react"
+import { StripePricingTable } from "@/components/billing/stripe-pricing-table"
 
 // Tell TypeScript about the Stripe Buy Button web component
 declare global {
@@ -32,6 +33,17 @@ declare global {
   }
 }
 
+const PRICING_TABLE_ID   = "prctbl_1TBPE0EFsbUunf9StQYzYJqe"
+const STRIPE_PUBLISHABLE = "pk_live_51T6KiTEFsbUunf9SZCRohOy2iHhyoL7HgIign7xKmfzR9837SYXDDlSKdd60E5Ft5vRy7yffafvip2agiwYyxMkc000v1nxqFJ"
+
+export default function ContractorBillingPage() {
+  const [loading, setLoading]             = useState(true)
+  const [portalLoading, setPortalLoading] = useState(false)
+  const [error, setError]                 = useState<string | null>(null)
+  const [success, setSuccess]             = useState<string | null>(null)
+  const [subStatus, setSubStatus]         = useState<SubscriptionStatus>(null)
+  const [userEmail, setUserEmail]         = useState<string | undefined>(undefined)
+  const [userId, setUserId]               = useState<string | undefined>(undefined)
 const BUY_BUTTON_ID       = process.env.NEXT_PUBLIC_STRIPE_BUY_BUTTON_ID       ?? ""
 const PUBLISHABLE_KEY     = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY      ?? ""
 
@@ -51,6 +63,9 @@ export default function ContractorBillingPage() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
+
+      setUserEmail(user.email ?? undefined)
+      setUserId(user.id)
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -136,6 +151,28 @@ export default function ContractorBillingPage() {
               </div>
               <p className="text-sm text-destructive">{error}</p>
             </div>
+          </section>
+        )}
+
+        {/* ── Plan selection (shown when not subscribed or canceled) ── */}
+        {!isActive && !isPastDue && (
+          <section className="mb-8">
+            <div className="mb-6">
+              <h2 className="text-[22px] font-bold leading-tight tracking-tight">
+                Get full access to the Nexus contractor network.
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-xl">
+                One flat rate. No per-lead charges, no referral fees, no hidden costs. Cancel anytime.
+              </p>
+            </div>
+            <StripePricingTable
+              pricingTableId={PRICING_TABLE_ID}
+              publishableKey={STRIPE_PUBLISHABLE}
+              clientReferenceId={userId}
+              customerEmail={userEmail}
+            />
+          </section>
+        )}
           )}
           {isPastDue && (
             <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-4 py-3.5">
