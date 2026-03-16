@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { isTemplatedRequest } from "@/lib/requests"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { MapPin, DollarSign, Calendar, ArrowRight, Camera, ChevronLeft, ChevronRight } from "lucide-react"
@@ -15,6 +16,7 @@ type ServiceRequest = {
   zip_code: string
   budget_max: number | null
   photo_urls: string[] | null
+  additional_notes: string | null
   preferred_dates: string | null
   created_at: string
 }
@@ -55,12 +57,14 @@ export default async function ContractorRequestsPage({
 
   const { data: requests, error, count } = await supabase
     .from("service_requests")
+    .select("id, category, description, additional_notes, address, city, state, zip_code, budget_max, photo_urls, preferred_dates, created_at")
     .select("id, category, description, address, city, state, zip_code, budget_max, photo_urls, preferred_dates, created_at", { count: "exact" })
     .in("status", ["pending_review", "in_queue"])
     .is("assigned_contractor_id", null)
     .order("created_at", { ascending: false })
     .range(from, to)
 
+  const allRequests: ServiceRequest[] = (requests ?? []).filter((request) => !isTemplatedRequest(request))
   const allRequests: ServiceRequest[] = requests ?? []
   const totalCount = count ?? 0
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))

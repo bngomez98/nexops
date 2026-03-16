@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { isTemplatedRequest } from "@/lib/requests"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import {
