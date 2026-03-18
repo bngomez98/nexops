@@ -3,8 +3,11 @@ import type { NextRequest } from "next/server";
 
 const SESSION_COOKIE = "nexops_session";
 
-const PROTECTED_HOMEOWNER = /^\/dashboard\/homeowner/;
-const PROTECTED_CONTRACTOR = /^\/dashboard\/contractor/;
+// Protected route patterns for both homeowner and contractor portals
+const PROTECTED_ROUTES = [
+  /^\/dashboard(\/|$)/,
+  /^\/contractor(\/|$)/,
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -37,29 +40,25 @@ export async function middleware(request: NextRequest) {
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   response.headers.set("Cross-Origin-Resource-Policy", "same-origin");
 
-  const isProtectedHomeowner = PROTECTED_HOMEOWNER.test(pathname);
-  const isProtectedContractor = PROTECTED_CONTRACTOR.test(pathname);
+  const isProtected = PROTECTED_ROUTES.some((re) => re.test(pathname));
 
-  if (!isProtectedHomeowner && !isProtectedContractor) {
+  if (!isProtected) {
     return response;
   }
 
   const sessionToken = request.cookies.get(SESSION_COOKIE)?.value;
 
   if (!sessionToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // For role validation we rely on the API layer since middleware
-  // cannot import Node.js-only modules (like the in-memory store).
-  // A dedicated /api/auth/me call happens client-side after hydration.
-  // Basic protection: token present → allow through.
-  // Granular role enforcement happens in the dashboard pages themselves.
+  // Role validation happens at the API and page level since middleware
+  // cannot import Node.js-only modules (e.g. the in-memory store).
   return response;
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-  ],
+  matcher: ["/dashboard/:path*", "/contractor/:path*"],
 };

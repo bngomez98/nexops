@@ -1,53 +1,41 @@
-import Link from "next/link"
-import { Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, MessageSquare } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-
-const mockProjects = [
-  {
-    id: "1",
-    title: "Kitchen faucet replacement",
-    status: "in_progress",
-    contractor: "Mike's Plumbing",
-    lastUpdate: "Contractor scheduled for tomorrow at 2 PM",
-    updatedAt: "2 hours ago",
-  },
-  {
-    id: "2",
-    title: "Bathroom tile repair",
-    status: "pending",
-    contractor: null,
-    lastUpdate: "Waiting for contractor quotes",
-    updatedAt: "1 day ago",
-  },
-  {
-    id: "3",
-    title: "Deck staining",
-    status: "completed",
-    contractor: "Pro Exteriors LLC",
-    lastUpdate: "Project completed successfully",
-    updatedAt: "1 week ago",
-  },
-]
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { getSession } from "@/lib/auth";
+import { store } from "@/lib/store";
+import { Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/utils";
 
 const statusConfig = {
-  pending: { label: "Finding contractor", variant: "warning" as const, icon: Clock },
-  in_progress: { label: "In progress", variant: "default" as const, icon: AlertCircle },
+  open: { label: "Finding contractor", variant: "warning" as const, icon: Clock },
+  claimed: { label: "In progress", variant: "default" as const, icon: AlertCircle },
   completed: { label: "Completed", variant: "success" as const, icon: CheckCircle2 },
-}
+  cancelled: { label: "Cancelled", variant: "secondary" as const, icon: Clock },
+};
 
-export default function HomeownerDashboard() {
-  const activeProjects = mockProjects.filter(p => p.status !== "completed").length
-  const completedProjects = mockProjects.filter(p => p.status === "completed").length
+export default async function HomeownerDashboard() {
+  const user = await getSession();
+  if (!user) redirect("/login");
+  if (user.role !== "homeowner") redirect("/contractor");
+
+  const requests = store.getRequestsByHomeowner(user.id);
+  const activeProjects = requests.filter((r) => r.status === "open" || r.status === "claimed");
+  const completedProjects = requests.filter((r) => r.status === "completed");
+  const recent = requests.slice(0, 3);
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Welcome back, John</h1>
-          <p className="text-muted-foreground">Here's what's happening with your projects.</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Welcome back, {user.name.split(" ")[0]}
+          </h1>
+          <p className="text-muted-foreground">
+            {"Here's what's happening with your projects."}
+          </p>
         </div>
         <Button asChild>
           <Link href="/dashboard/projects/new">
@@ -62,19 +50,19 @@ export default function HomeownerDashboard() {
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Active projects</CardDescription>
-            <CardTitle className="text-3xl">{activeProjects}</CardTitle>
+            <CardTitle className="text-3xl">{activeProjects.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Completed this year</CardDescription>
-            <CardTitle className="text-3xl">{completedProjects}</CardTitle>
+            <CardDescription>Completed</CardDescription>
+            <CardTitle className="text-3xl">{completedProjects.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Unread messages</CardDescription>
-            <CardTitle className="text-3xl">2</CardTitle>
+            <CardDescription>Total requests</CardDescription>
+            <CardTitle className="text-3xl">{requests.length}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -96,35 +84,46 @@ export default function HomeownerDashboard() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {mockProjects.map((project) => {
-              const status = statusConfig[project.status as keyof typeof statusConfig]
-              return (
-                <Link
-                  key={project.id}
-                  href={`/dashboard/projects/${project.id}`}
-                  className="flex items-start gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-card"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                    <status.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <h3 className="font-medium">{project.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {project.contractor || "No contractor assigned"}
-                        </p>
-                      </div>
-                      <Badge variant={status.variant}>{status.label}</Badge>
+          {recent.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              No projects yet.{" "}
+              <Link href="/dashboard/projects/new" className="text-primary hover:underline">
+                Start your first one.
+              </Link>
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {recent.map((project) => {
+                const status =
+                  statusConfig[project.status as keyof typeof statusConfig] ??
+                  statusConfig.open;
+                return (
+                  <div
+                    key={project.id}
+                    className="flex items-start gap-4 rounded-lg border border-border p-4"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                      <status.icon className="h-5 w-5 text-primary" />
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground">{project.lastUpdate}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Updated {project.updatedAt}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h3 className="font-medium">{project.title}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {project.city}, {project.state}
+                          </p>
+                        </div>
+                        <Badge variant={status.variant}>{status.label}</Badge>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Posted {formatDate(project.createdAt)}
+                      </p>
+                    </div>
                   </div>
-                </Link>
-              )
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -154,7 +153,7 @@ export default function HomeownerDashboard() {
                 </div>
                 <div>
                   <CardTitle className="text-base">Check messages</CardTitle>
-                  <CardDescription>You have 2 unread messages</CardDescription>
+                  <CardDescription>View your conversations</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -162,5 +161,5 @@ export default function HomeownerDashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
