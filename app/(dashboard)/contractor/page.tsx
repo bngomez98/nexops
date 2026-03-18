@@ -1,57 +1,44 @@
-import Link from "next/link"
-import { Briefcase, DollarSign, Star, TrendingUp, ArrowRight, Clock } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { getSession } from "@/lib/auth";
+import { store, SERVICE_LABELS } from "@/lib/store";
+import { formatCurrency, formatDate } from "@/lib/utils";
+import {
+  Briefcase,
+  DollarSign,
+  Star,
+  TrendingUp,
+  ArrowRight,
+  MapPin,
+  Calendar,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ClaimButton } from "@/components/claim-button";
 
-const mockActiveJobs = [
-  {
-    id: "1",
-    title: "Kitchen faucet replacement",
-    homeowner: "John D.",
-    location: "Austin, TX",
-    scheduledFor: "Tomorrow at 2 PM",
-    amount: "$180",
-  },
-  {
-    id: "2",
-    title: "Water heater installation",
-    homeowner: "Sarah M.",
-    location: "Round Rock, TX",
-    scheduledFor: "Wednesday at 10 AM",
-    amount: "$850",
-  },
-]
+export default async function ContractorDashboard() {
+  const user = await getSession();
+  if (!user) redirect("/login");
+  if (user.role !== "contractor") redirect("/dashboard");
 
-const mockNewLeads = [
-  {
-    id: "3",
-    title: "Bathroom pipe leak",
-    homeowner: "Michael T.",
-    location: "Cedar Park, TX",
-    urgency: "emergency",
-    budget: "$200-400",
-    postedAt: "2 hours ago",
-  },
-  {
-    id: "4",
-    title: "Toilet replacement",
-    homeowner: "Lisa K.",
-    location: "Pflugerville, TX",
-    urgency: "soon",
-    budget: "$300-500",
-    postedAt: "5 hours ago",
-  },
-]
+  const leads = store.getOpenRequests();
+  const claimed = store.getClaimedByContractor(user.id);
+  const recentLeads = leads.slice(0, 3);
 
-export default function ContractorDashboard() {
+  const totalValue = claimed.reduce((s, r) => s + r.maxBudget, 0);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{"Welcome back, Mike's Plumbing"}</h1>
-          <p className="text-muted-foreground">{"Here's your business at a glance."}</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Welcome back, {user.company ?? user.name.split(" ")[0]}
+          </h1>
+          <p className="text-muted-foreground">
+            {"Here's your business at a glance."}
+          </p>
         </div>
         <Button asChild>
           <Link href="/contractor/jobs">
@@ -65,84 +52,103 @@ export default function ContractorDashboard() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription>Active jobs</CardDescription>
+            <CardDescription>Available leads</CardDescription>
             <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">4</div>
-            <p className="text-xs text-muted-foreground">2 scheduled this week</p>
+            <div className="text-3xl font-bold">{leads.length}</div>
+            <p className="text-xs text-muted-foreground">Open projects</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription>Earnings this month</CardDescription>
+            <CardDescription>Claimed projects</CardDescription>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">$4,280</div>
-            <p className="text-xs text-emerald-500">+12% from last month</p>
+            <div className="text-3xl font-bold">{claimed.length}</div>
+            <p className="text-xs text-muted-foreground">
+              {formatCurrency(totalValue)} pipeline
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription>Your rating</CardDescription>
+            <CardDescription>Membership</CardDescription>
             <Star className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">4.9</div>
-            <p className="text-xs text-muted-foreground">Based on 47 reviews</p>
+            <div className="text-3xl font-bold capitalize">
+              {user.membershipTier ?? "Standard"}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {user.membershipActive ? "Active" : "Inactive"}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription>Response rate</CardDescription>
+            <CardDescription>License</CardDescription>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">94%</div>
-            <p className="text-xs text-muted-foreground">Avg. 2hr response time</p>
+            <div className="text-lg font-bold truncate">
+              {user.licenseNumber ?? "—"}
+            </div>
+            <p className="text-xs text-muted-foreground">License number</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Active Jobs */}
+        {/* Claimed projects */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Upcoming jobs</CardTitle>
-                <CardDescription>Your scheduled work</CardDescription>
+                <CardTitle>My projects</CardTitle>
+                <CardDescription>Projects you have claimed</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {mockActiveJobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="flex items-start gap-4 rounded-lg border border-border p-4"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                    <Clock className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium">{job.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {job.homeowner} · {job.location}
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-sm text-muted-foreground">{job.scheduledFor}</span>
-                      <span className="font-semibold text-primary">{job.amount}</span>
+            {claimed.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-6">
+                {"You haven't claimed any projects yet."}
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {claimed.slice(0, 3).map((job) => (
+                  <div
+                    key={job.id}
+                    className="flex items-start gap-4 rounded-lg border border-border p-4"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                      <Briefcase className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium">{job.title}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {SERVICE_LABELS[job.category]}
+                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {job.city}, {job.state}
+                        </span>
+                        <span className="font-semibold text-primary text-sm">
+                          {formatCurrency(job.maxBudget)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* New Leads */}
+        {/* New leads */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -159,37 +165,53 @@ export default function ContractorDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {mockNewLeads.map((lead) => (
-                <Link
-                  key={lead.id}
-                  href={`/contractor/jobs/${lead.id}`}
-                  className="flex items-start gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-card"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 shrink-0">
-                    <Briefcase className="h-5 w-5 text-amber-500" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-medium">{lead.title}</h3>
-                      <Badge variant={lead.urgency === "emergency" ? "destructive" : "secondary"}>
-                        {lead.urgency === "emergency" ? "Urgent" : "Soon"}
-                      </Badge>
+            {recentLeads.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-6">
+                No open leads right now. Check back soon.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {recentLeads.map((lead) => (
+                  <div
+                    key={lead.id}
+                    className="flex items-start gap-4 rounded-lg border border-border p-4"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 shrink-0">
+                      <Briefcase className="h-5 w-5 text-amber-500" />
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      {lead.homeowner} · {lead.location}
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-muted-foreground">{lead.postedAt}</span>
-                      <span className="text-sm font-medium">{lead.budget}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-medium text-sm">{lead.title}</h3>
+                        <Badge variant="warning">Open</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {SERVICE_LABELS[lead.category]}
+                      </p>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {lead.city}, {lead.state}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <DollarSign className="h-3 w-3" />
+                          {formatCurrency(lead.maxBudget)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(lead.createdAt)}
+                        </span>
+                      </div>
+                      <div className="mt-2">
+                        <ClaimButton requestId={lead.id} />
+                      </div>
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

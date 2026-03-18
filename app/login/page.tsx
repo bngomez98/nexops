@@ -3,11 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Mail, Lock, ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Zap } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,7 +34,7 @@ export default function LoginPage() {
       }
 
       const role = data.user.role;
-      router.push(role === "contractor" ? "/dashboard/contractor" : "/dashboard/homeowner");
+      router.push(role === "contractor" ? "/contractor" : "/dashboard");
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
@@ -46,51 +44,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <Link href="/" className="inline-flex items-center gap-2 text-xl font-bold">
-            <Zap className="h-6 w-6 text-blue-600" />
-            NexOps
-          </Link>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Welcome back</CardTitle>
-            <CardDescription>Sign in to your account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <Label htmlFor="email">Email</Label>
-"use client"
-
-import Link from "next/link"
-import { useState } from "react"
-import { Mail, Lock, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle login - would connect to auth system
-  }
-
-  return (
     <div className="flex min-h-screen">
-      {/* Left panel - Form */}
+      {/* Left panel — Form */}
       <div className="flex w-full flex-col justify-center px-4 py-12 sm:px-6 lg:w-1/2 lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm">
           <Link href="/" className="inline-flex items-center gap-2 mb-8">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="text-sm font-bold text-primary-foreground">N</span>
+              <Zap className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="text-lg font-semibold">Nexus</span>
+            <span className="text-lg font-semibold">NexOps</span>
           </Link>
 
           <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
@@ -109,68 +71,11 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
-              </div>
-
-              {error && (
-                <p className="text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">{error}</p>
-              )}
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing in…" : "Sign in"}
-              </Button>
-            </form>
-
-            <div className="mt-4 text-center text-sm text-gray-500">
-              <p>
-                Demo accounts:{" "}
-                <button
-                  className="text-blue-600 hover:underline"
-                  onClick={() => { setEmail("homeowner@example.com"); setPassword("password123"); }}
-                >
-                  homeowner
-                </button>
-                {" / "}
-                <button
-                  className="text-blue-600 hover:underline"
-                  onClick={() => { setEmail("contractor@example.com"); setPassword("password123"); }}
-                >
-                  contractor
-                </button>
-              </p>
-            </div>
-
-            <div className="mt-6 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-blue-600 hover:underline font-medium">
-                Sign up
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
                   className="pl-10"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -180,29 +85,60 @@ export default function LoginPage() {
                 <label htmlFor="password" className="text-sm font-medium">
                   Password
                 </label>
-                <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-                  Forgot password?
-                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   className="pl-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  autoComplete="current-password"
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full" size="lg">
-              Sign in
-              <ArrowRight className="h-4 w-4" />
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
+                {error}
+              </p>
+            )}
+
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              {loading ? "Signing in…" : "Sign in"}
+              {!loading && <ArrowRight className="h-4 w-4" />}
             </Button>
           </form>
+
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            <p>
+              Demo:{" "}
+              <button
+                type="button"
+                className="text-primary hover:underline"
+                onClick={() => {
+                  setEmail("homeowner@example.com");
+                  setPassword("password123");
+                }}
+              >
+                homeowner
+              </button>
+              {" / "}
+              <button
+                type="button"
+                className="text-primary hover:underline"
+                onClick={() => {
+                  setEmail("contractor@example.com");
+                  setPassword("password123");
+                }}
+              >
+                contractor
+              </button>
+            </p>
+          </div>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
             {"Don't have an account? "}
@@ -213,13 +149,13 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right panel - Branding */}
+      {/* Right panel — Branding */}
       <div className="hidden lg:flex lg:w-1/2 lg:flex-col lg:justify-center lg:bg-card lg:p-12">
         <div className="mx-auto max-w-md">
           <blockquote className="space-y-4">
             <p className="text-xl font-medium leading-relaxed">
-              "Nexus made finding a reliable contractor so simple. Our bathroom renovation 
-              was completed on time and within budget."
+              &ldquo;NexOps made finding a reliable contractor so simple. Our bathroom
+              renovation was completed on time and within budget.&rdquo;
             </p>
             <footer className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -234,5 +170,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
