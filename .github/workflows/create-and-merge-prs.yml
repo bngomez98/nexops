@@ -19,6 +19,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: bngomez98/nexops
         run: |
+          set +e
           BRANCHES=(
             "codex/remove-templated-requests-from-dashboard"
             "codex/update-event-handler-for-payload-styles"
@@ -51,7 +52,7 @@ jobs:
 
             # Get branch SHA (URL-encode the branch name for the API)
             ENCODED_BRANCH=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1],safe=''))" "$BRANCH")
-            SHA=$(gh api "repos/$REPO/branches/$ENCODED_BRANCH" --jq '.commit.sha' 2>/dev/null || true)
+            SHA=$(gh api "repos/$REPO/branches/$ENCODED_BRANCH" --jq '.commit.sha' 2>/dev/null)
 
             if [ -z "$SHA" ]; then
               echo "Branch '$BRANCH' not found on remote, skipping."
@@ -67,24 +68,25 @@ jobs:
               --base main \
               --state open \
               --json number \
-              --jq '.[0].number' 2>/dev/null || true)
+              --jq '.[0].number' 2>/dev/null)
 
             if [ -n "$EXISTING_NUM" ] && [ "$EXISTING_NUM" != "null" ]; then
               EXISTING_URL=$(gh pr view "$EXISTING_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "")
               echo "PR #$EXISTING_NUM already exists: $EXISTING_URL"
             else
               # Create the PR
-              PR_URL=$(gh pr create \
+              PR_OUT=$(gh pr create \
                 --repo "$REPO" \
                 --title "Merge ${BRANCH} into main" \
                 --body "Merge branch \`${BRANCH}\` (commit \`${SHA}\`) into \`main\`." \
                 --base main \
-                --head "$BRANCH" 2>&1) && CREATE_EXIT=0 || CREATE_EXIT=$?
+                --head "$BRANCH" 2>&1)
+              CREATE_EXIT=$?
 
               if [ $CREATE_EXIT -eq 0 ]; then
-                echo "Created PR: $PR_URL"
+                echo "Created PR: $PR_OUT"
               else
-                echo "Could not create PR for $BRANCH: $PR_URL"
+                echo "Could not create PR for $BRANCH: $PR_OUT"
               fi
             fi
 
@@ -96,6 +98,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: bngomez98/nexops
         run: |
+          set +e
           BRANCHES=(
             "codex/remove-templated-requests-from-dashboard"
             "codex/update-event-handler-for-payload-styles"
@@ -135,7 +138,7 @@ jobs:
               --base main \
               --state open \
               --json number \
-              --jq '.[0].number' 2>/dev/null || true)
+              --jq '.[0].number' 2>/dev/null)
 
             if [ -z "$PR_NUM" ] || [ "$PR_NUM" = "null" ]; then
               echo "No open PR found for branch $BRANCH, skipping merge."
@@ -146,10 +149,16 @@ jobs:
             PR_URL=$(gh pr view "$PR_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "#$PR_NUM")
             echo "Found PR #$PR_NUM: $PR_URL"
 
-            # Get mergeability from REST API
-            MERGE_STATE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable_state' 2>/dev/null || echo "unknown")
-            IS_MERGEABLE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable' 2>/dev/null || echo "null")
-            echo "Mergeability: mergeable=$IS_MERGEABLE, state=$MERGE_STATE"
+            # Poll for mergeability (GitHub computes this asynchronously)
+            for i in 1 2 3; do
+              MERGE_STATE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable_state' 2>/dev/null || echo "unknown")
+              IS_MERGEABLE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable' 2>/dev/null || echo "null")
+              echo "Attempt $i – mergeability: mergeable=$IS_MERGEABLE, state=$MERGE_STATE"
+              if [ "$MERGE_STATE" != "unknown" ] && [ "$IS_MERGEABLE" != "null" ]; then
+                break
+              fi
+              sleep 5
+            done
 
             if [ "$MERGE_STATE" = "dirty" ]; then
               echo "PR #$PR_NUM has merge conflicts."
@@ -160,11 +169,21 @@ jobs:
               continue
             fi
 
+            if [ "$IS_MERGEABLE" = "false" ]; then
+              echo "PR #$PR_NUM is not mergeable (mergeable=false, state=$MERGE_STATE)."
+              gh pr comment "$PR_NUM" --repo "$REPO" \
+                --body "⚠️ Automated merge attempt for \`${BRANCH}\` → \`main\` could not proceed: **not mergeable** (state: \`${MERGE_STATE}\`). This may be due to branch protection rules, required checks, or merge conflicts." \
+                2>/dev/null || true
+              echo "::endgroup::"
+              continue
+            fi
+
             # Attempt direct merge with regular merge commit
             MERGE_OUT=$(gh pr merge "$PR_NUM" \
               --repo "$REPO" \
               --merge \
-              2>&1) && MERGE_EXIT=0 || MERGE_EXIT=$?
+              2>&1)
+            MERGE_EXIT=$?
 
             if [ $MERGE_EXIT -eq 0 ]; then
               echo "✅ Successfully merged PR #$PR_NUM for branch $BRANCH"
@@ -176,7 +195,8 @@ jobs:
                 --repo "$REPO" \
                 --merge \
                 --auto \
-                2>&1) && AUTO_EXIT=0 || AUTO_EXIT=$?
+                2>&1)
+              AUTO_EXIT=$?
 
               if [ $AUTO_EXIT -eq 0 ]; then
                 echo "✅ Enabled auto-merge for PR #$PR_NUM (will merge when all checks pass)"
@@ -199,6 +219,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: bngomez98/nexops
         run: |
+          set +e
           BRANCHES=(
             "codex/remove-templated-requests-from-dashboard"
             "codex/update-event-handler-for-payload-styles"
@@ -233,9 +254,9 @@ jobs:
 
           for BRANCH in "${BRANCHES[@]}"; do
             MERGED_NUM=$(gh pr list --repo "$REPO" --head "$BRANCH" --base main --state merged \
-              --json number --jq '.[0].number' 2>/dev/null || true)
+              --json number --jq '.[0].number' 2>/dev/null)
             OPEN_NUM=$(gh pr list --repo "$REPO" --head "$BRANCH" --base main --state open \
-              --json number --jq '.[0].number' 2>/dev/null || true)
+              --json number --jq '.[0].number' 2>/dev/null)
 
             if [ -n "$MERGED_NUM" ] && [ "$MERGED_NUM" != "null" ]; then
               MERGED_URL=$(gh pr view "$MERGED_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "")
