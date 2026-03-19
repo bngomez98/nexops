@@ -1,59 +1,68 @@
-import { getSession } from "@/lib/auth";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 
-export default async function TermsPage() {
-  const user = await getSession();
+export const metadata = {
+  title: "Terms of Service | Nexus Operations",
+  description: "Terms of service for Nexus Operations, LLC",
+}
 
+export default function TermsPage() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar user={user ? { name: user.name, role: user.role } : null} />
-      <main className="flex-1 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl prose prose-gray">
-          <h1>Terms of Service</h1>
-          <p className="text-gray-500">Last updated: January 1, 2025</p>
+    <div className="min-h-screen">
+      <Header />
+      <main className="py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <Button variant="ghost" asChild className="mb-8">
+            <Link href="/">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Link>
+          </Button>
 
-          <h2>1. Acceptance of Terms</h2>
-          <p>
-            By accessing or using NexOps (Nexus Operations LLC), you agree to be bound by
-            these Terms of Service. If you do not agree, do not use the platform.
-          </p>
+          <h1 className="font-serif text-5xl font-light mb-8">Terms of Service</h1>
+          <div className="prose prose-lg max-w-none">
+            <p className="text-muted-foreground">Last updated: January 2025</p>
 
-          <h2>2. Description of Service</h2>
-          <p>
-            NexOps is a marketplace that connects homeowners with licensed, insured contractors
-            in the Topeka, KS region. Homeowners submit project requests at no cost. Contractors
-            pay a monthly membership fee to access and claim projects.
-          </p>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Service Agreement</h2>
+            <p>
+              By engaging Nexus Operations, LLC for services, you agree to these terms. All services are provided with
+              transparent pricing and clear deliverables outlined in project agreements.
+            </p>
 
-          <h2>3. Homeowner Terms</h2>
-          <p>
-            Submitting a project request is free. By submitting, you represent that the
-            project description, photos, and budget are accurate. NexOps does not guarantee
-            that a contractor will claim your project.
-          </p>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Service Delivery</h2>
+            <p>
+              We commit to same-day response for all inquiries and will provide estimated timelines for each project.
+              Specific deliverables, pricing, and timelines are confirmed before work begins.
+            </p>
 
-          <h2>4. Contractor Terms</h2>
-          <p>
-            Contractors must maintain a valid license and insurance. Membership fees are
-            charged monthly. No refunds are issued for partial months. NexOps reserves the
-            right to suspend accounts that receive substantiated complaints.
-          </p>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Payment Terms</h2>
+            <p>
+              Payment terms are specified in each project agreement. Standard terms include 50% upfront for projects
+              over $500, with the remainder due upon completion. Hourly services are billed weekly.
+            </p>
 
-          <h2>5. Limitation of Liability</h2>
-          <p>
-            NexOps is not a party to any agreement between homeowners and contractors.
-            We are not responsible for the quality, safety, or completion of any work.
-          </p>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Cancellation Policy</h2>
+            <p>
+              Projects can be cancelled with 24 hours notice. Work completed up to the cancellation point will be billed
+              at the agreed rate. Deposits are non-refundable once work has commenced.
+            </p>
 
-          <h2>6. Governing Law</h2>
-          <p>
-            These Terms are governed by the laws of the State of Kansas. Disputes shall
-            be resolved in Shawnee County, Kansas.
-          </p>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Limitation of Liability</h2>
+            <p>
+              Nexus Operations, LLC acts as a coordination and sourcing service. We vet vendors and coordinate services
+              but are not liable for the performance of third-party vendors. We stand behind our coordination and will
+              work to resolve any issues.
+            </p>
+
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Contact</h2>
+            <p>For questions about these terms, contact us at admin@nexusoperations.org or call (913) 951-1711.</p>
+          </div>
         </div>
       </main>
       <Footer />
     </div>
-  );
+  )
 }
