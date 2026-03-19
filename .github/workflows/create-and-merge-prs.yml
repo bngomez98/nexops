@@ -1,0 +1,255 @@
+name: Create and Merge Branch PRs
+
+on:
+  push:
+    branches:
+      - "copilot/merge-codex-remove-templated-requests-from-dashboa"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-and-merge-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create PRs for all non-main branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: bngomez98/nexops
+        run: |
+          BRANCHES=(
+            "codex/remove-templated-requests-from-dashboard"
+            "codex/update-event-handler-for-payload-styles"
+            "edge-config-error"
+            "main1"
+            "v0/admin-6bf0e4a6"
+            "v0/admin-43882eed"
+            "v0/admin-302094ec"
+            "v0/admin-8469399a"
+            "v0/admin-ae0cabad"
+            "v0/admin-b58e9d15"
+            "v0/bn-gomez-0bad0c31"
+            "v0/bn-gomez-4a93cb6f"
+            "v0/bn-gomez-9676a4ba"
+            "v0/bn-gomez-68097696"
+            "v0/bn-gomez-b13b1b0d"
+            "v0/bn-gomez-d0269762"
+            "v0/bngomez-9862-7dbbab13"
+            "v0/bngomez-9862-38b5988a"
+            "v0/bngomez-9862-56b3366c"
+            "v0/bngomez-9862-68cf7d79"
+            "v0/bngomez-9862-88abcdc6"
+            "v0/bngomez-9862-1889b564"
+            "v0/briannagomez-1cd3e0a7"
+            "vercel/install-vercel-speed-insights-t5uh67"
+          )
+
+          for BRANCH in "${BRANCHES[@]}"; do
+            echo "::group::Processing branch: $BRANCH"
+
+            # Get branch SHA (URL-encode the branch name for the API)
+            ENCODED_BRANCH=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1],safe=''))" "$BRANCH")
+            SHA=$(gh api "repos/$REPO/branches/$ENCODED_BRANCH" --jq '.commit.sha' 2>/dev/null || true)
+
+            if [ -z "$SHA" ]; then
+              echo "Branch '$BRANCH' not found on remote, skipping."
+              echo "::endgroup::"
+              continue
+            fi
+            echo "Branch '$BRANCH' SHA: $SHA"
+
+            # Check for an existing open PR from this branch into main
+            EXISTING_NUM=$(gh pr list \
+              --repo "$REPO" \
+              --head "$BRANCH" \
+              --base main \
+              --state open \
+              --json number \
+              --jq '.[0].number' 2>/dev/null || true)
+
+            if [ -n "$EXISTING_NUM" ] && [ "$EXISTING_NUM" != "null" ]; then
+              EXISTING_URL=$(gh pr view "$EXISTING_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "")
+              echo "PR #$EXISTING_NUM already exists: $EXISTING_URL"
+            else
+              # Create the PR
+              PR_URL=$(gh pr create \
+                --repo "$REPO" \
+                --title "Merge ${BRANCH} into main" \
+                --body "Merge branch \`${BRANCH}\` (commit \`${SHA}\`) into \`main\`." \
+                --base main \
+                --head "$BRANCH" 2>&1) && CREATE_EXIT=0 || CREATE_EXIT=$?
+
+              if [ $CREATE_EXIT -eq 0 ]; then
+                echo "Created PR: $PR_URL"
+              else
+                echo "Could not create PR for $BRANCH: $PR_URL"
+              fi
+            fi
+
+            echo "::endgroup::"
+          done
+
+      - name: Attempt to merge PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: bngomez98/nexops
+        run: |
+          BRANCHES=(
+            "codex/remove-templated-requests-from-dashboard"
+            "codex/update-event-handler-for-payload-styles"
+            "edge-config-error"
+            "main1"
+            "v0/admin-6bf0e4a6"
+            "v0/admin-43882eed"
+            "v0/admin-302094ec"
+            "v0/admin-8469399a"
+            "v0/admin-ae0cabad"
+            "v0/admin-b58e9d15"
+            "v0/bn-gomez-0bad0c31"
+            "v0/bn-gomez-4a93cb6f"
+            "v0/bn-gomez-9676a4ba"
+            "v0/bn-gomez-68097696"
+            "v0/bn-gomez-b13b1b0d"
+            "v0/bn-gomez-d0269762"
+            "v0/bngomez-9862-7dbbab13"
+            "v0/bngomez-9862-38b5988a"
+            "v0/bngomez-9862-56b3366c"
+            "v0/bngomez-9862-68cf7d79"
+            "v0/bngomez-9862-88abcdc6"
+            "v0/bngomez-9862-1889b564"
+            "v0/briannagomez-1cd3e0a7"
+            "vercel/install-vercel-speed-insights-t5uh67"
+          )
+
+          echo "=== Attempting to merge PRs ==="
+
+          for BRANCH in "${BRANCHES[@]}"; do
+            echo "::group::Merging PR for branch: $BRANCH"
+
+            # Find open PR for this branch
+            PR_NUM=$(gh pr list \
+              --repo "$REPO" \
+              --head "$BRANCH" \
+              --base main \
+              --state open \
+              --json number \
+              --jq '.[0].number' 2>/dev/null || true)
+
+            if [ -z "$PR_NUM" ] || [ "$PR_NUM" = "null" ]; then
+              echo "No open PR found for branch $BRANCH, skipping merge."
+              echo "::endgroup::"
+              continue
+            fi
+
+            PR_URL=$(gh pr view "$PR_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "#$PR_NUM")
+            echo "Found PR #$PR_NUM: $PR_URL"
+
+            # Get mergeability from REST API
+            MERGE_STATE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable_state' 2>/dev/null || echo "unknown")
+            IS_MERGEABLE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable' 2>/dev/null || echo "null")
+            echo "Mergeability: mergeable=$IS_MERGEABLE, state=$MERGE_STATE"
+
+            if [ "$MERGE_STATE" = "dirty" ]; then
+              echo "PR #$PR_NUM has merge conflicts."
+              gh pr comment "$PR_NUM" --repo "$REPO" \
+                --body "⚠️ Automated merge attempt for \`${BRANCH}\` → \`main\` could not proceed: **merge conflicts detected** (mergeable_state: \`${MERGE_STATE}\`). Manual conflict resolution is required before this PR can be merged." \
+                2>/dev/null || true
+              echo "::endgroup::"
+              continue
+            fi
+
+            # Attempt direct merge with regular merge commit
+            MERGE_OUT=$(gh pr merge "$PR_NUM" \
+              --repo "$REPO" \
+              --merge \
+              2>&1) && MERGE_EXIT=0 || MERGE_EXIT=$?
+
+            if [ $MERGE_EXIT -eq 0 ]; then
+              echo "✅ Successfully merged PR #$PR_NUM for branch $BRANCH"
+            else
+              echo "Direct merge failed (exit $MERGE_EXIT): $MERGE_OUT"
+
+              # Try enabling auto-merge (will merge when all conditions are satisfied)
+              AUTO_OUT=$(gh pr merge "$PR_NUM" \
+                --repo "$REPO" \
+                --merge \
+                --auto \
+                2>&1) && AUTO_EXIT=0 || AUTO_EXIT=$?
+
+              if [ $AUTO_EXIT -eq 0 ]; then
+                echo "✅ Enabled auto-merge for PR #$PR_NUM (will merge when all checks pass)"
+              else
+                echo "Auto-merge also failed (exit $AUTO_EXIT): $AUTO_OUT"
+                REASON=$(echo "$MERGE_OUT" | tr '\n' ' ' | cut -c1-300)
+                gh pr comment "$PR_NUM" --repo "$REPO" \
+                  --body "⚠️ Automated merge attempt for \`${BRANCH}\` → \`main\` could not be completed.
+
+Reason: \`${REASON}\`
+
+This PR has been left open for manual review. Possible causes: required status checks have not passed, required reviews are pending, or branch protection rules prevented the merge." \
+                  2>/dev/null || true
+              fi
+            fi
+
+            echo "::endgroup::"
+          done
+
+          echo "=== Merge process complete ==="
+
+      - name: Generate final report
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: bngomez98/nexops
+        run: |
+          BRANCHES=(
+            "codex/remove-templated-requests-from-dashboard"
+            "codex/update-event-handler-for-payload-styles"
+            "edge-config-error"
+            "main1"
+            "v0/admin-6bf0e4a6"
+            "v0/admin-43882eed"
+            "v0/admin-302094ec"
+            "v0/admin-8469399a"
+            "v0/admin-ae0cabad"
+            "v0/admin-b58e9d15"
+            "v0/bn-gomez-0bad0c31"
+            "v0/bn-gomez-4a93cb6f"
+            "v0/bn-gomez-9676a4ba"
+            "v0/bn-gomez-68097696"
+            "v0/bn-gomez-b13b1b0d"
+            "v0/bn-gomez-d0269762"
+            "v0/bngomez-9862-7dbbab13"
+            "v0/bngomez-9862-38b5988a"
+            "v0/bngomez-9862-56b3366c"
+            "v0/bngomez-9862-68cf7d79"
+            "v0/bngomez-9862-88abcdc6"
+            "v0/bngomez-9862-1889b564"
+            "v0/briannagomez-1cd3e0a7"
+            "vercel/install-vercel-speed-insights-t5uh67"
+          )
+
+          echo "## Final PR Report"
+          echo ""
+          echo "| Branch | PR | Status |"
+          echo "|--------|-----|--------|"
+
+          for BRANCH in "${BRANCHES[@]}"; do
+            MERGED_NUM=$(gh pr list --repo "$REPO" --head "$BRANCH" --base main --state merged \
+              --json number --jq '.[0].number' 2>/dev/null || true)
+            OPEN_NUM=$(gh pr list --repo "$REPO" --head "$BRANCH" --base main --state open \
+              --json number --jq '.[0].number' 2>/dev/null || true)
+
+            if [ -n "$MERGED_NUM" ] && [ "$MERGED_NUM" != "null" ]; then
+              MERGED_URL=$(gh pr view "$MERGED_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "")
+              echo "| \`$BRANCH\` | [#$MERGED_NUM]($MERGED_URL) | ✅ Merged |"
+            elif [ -n "$OPEN_NUM" ] && [ "$OPEN_NUM" != "null" ]; then
+              OPEN_URL=$(gh pr view "$OPEN_NUM" --repo "$REPO" --json url --jq '.url' 2>/dev/null || echo "")
+              MERGE_STATE=$(gh api "repos/$REPO/pulls/$OPEN_NUM" --jq '.mergeable_state' 2>/dev/null || echo "unknown")
+              echo "| \`$BRANCH\` | [#$OPEN_NUM]($OPEN_URL) | 🔓 Open – $MERGE_STATE |"
+            else
+              echo "| \`$BRANCH\` | — | ❌ No PR |"
+            fi
+          done
