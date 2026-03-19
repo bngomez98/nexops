@@ -1,107 +1,158 @@
-import type { Metadata } from "next"
-import Script from "next/script"
+import type React from "react"
+import type { Metadata, Viewport } from "next"
+import { Inter, Instrument_Serif } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import { AuthProvider } from "./lib/auth-context"
+import { RequestsProvider } from "./lib/requests-context"
 import "./globals.css"
-import { CookieConsent } from "@/components/cookie-consent"
 
-const GTM_ID = "GTM-PL3NBCWD"
-const GA_ID = "G-LDGVHFCMKT"
-
-const THEME_INIT_SCRIPT = `(function () {
-  var theme = localStorage.getItem('nexus-theme')
-  if (theme === 'dark') {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.add('light')
-  }
-})()`
-
-const GTM_INIT_SCRIPT = `(function (w, d, s, l, i) {
-  w[l] = w[l] || []
-  w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
-  var firstScript = d.getElementsByTagName(s)[0]
-  var script = d.createElement(s)
-  var dataLayerParam = l !== 'dataLayer' ? '&l=' + l : ''
-  script.async = true
-  script.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dataLayerParam
-  firstScript.parentNode.insertBefore(script, firstScript)
-})(window, document, 'script', 'dataLayer', '${GTM_ID}')`
-
-const GA_INIT_SCRIPT = `window.dataLayer = window.dataLayer || []
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-serif",
+})
 
 export const metadata: Metadata = {
-  title: "Nexus Operations | One contractor. Exclusively yours.",
-  description:
-    "Nexus Operations connects homeowners and property managers with licensed, insured contractors in Topeka, KS. Submit your project once — one verified contractor claims it exclusively.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+  metadataBase: new URL("https://nexusoperations.org"),
+  title: {
+    default: "Nexus Operations | Maintenance Coordination for Property Management",
+    template: "%s | Nexus Operations",
   },
+  description:
+    "Nexus Operations coordinates maintenance and repair services for commercial property managers and residential property owners in Topeka, Kansas. Verified contractors, guaranteed response times, zero coordination burden.",
+  keywords: [
+    "property maintenance coordination",
+    "commercial property management",
+    "residential maintenance",
+    "contractor coordination",
+    "property management Topeka",
+    "maintenance services Kansas",
+    "B2B property services",
+    "verified contractors",
+    "multi-family maintenance",
+    "Nexus Operations",
+  ],
+  authors: [{ name: "Nexus Operations" }],
+  creator: "Nexus Operations",
+  publisher: "Nexus Operations",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://nexusoperations.org",
+    title: "Nexus Operations | Maintenance Coordination for Property Management",
+    description:
+      "We coordinate maintenance so property managers and homeowners don't have to. Verified contractors, guaranteed response times, one point of contact.",
+    siteName: "Nexus Operations",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nexus Operations | Maintenance Coordination",
+    description:
+      "One request. One coordinator. Verified contractors. Guaranteed response times.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  generator: "v0.app",
 }
 
-export const viewport = {
+export const viewport: Viewport = {
+  themeColor: "#c7935a",
   width: "device-width",
   initialScale: 1,
-  userScalable: true,
-  themeColor: "#0f0f0f",
 }
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" className="scroll-smooth">
       <head>
-        {/* Theme init — prevents flash of wrong theme */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        {/* Google Fonts — loaded as link tags so the build doesn't depend on network access */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-        <style dangerouslySetInnerHTML={{ __html: `
-          :root {
-            --font-inter: "Inter";
-            --font-plus-jakarta-sans: "Plus Jakarta Sans";
-            --font-ibm-plex-mono: "IBM Plex Mono";
-          }
-        `}} />
-      </head>
-      <body className="font-sans">
-        {/* Google Tag Manager */}
-        <Script id="gtm-loader" strategy="afterInteractive">
-          {GTM_INIT_SCRIPT}
-        </Script>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-
-        {/* Google Analytics (gtag.js) */}
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        <Script id="ga-init" strategy="afterInteractive">
-          {GA_INIT_SCRIPT}
-        </Script>
-
-        {children}
-
-        <CookieConsent />
-
-        {/* Zendesk Widget */}
         <script
-          id="ze-snippet"
-          src="https://static.zdassets.com/ekr/snippet.js?key=d8a1128c-008a-443c-894e-4a0fd463bb57"
-          async
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "@id": "https://nexusoperations.org/#organization",
+                name: "Nexus Operations",
+                description:
+                  "Outsourced maintenance coordination for commercial and residential property managers in Topeka, Kansas. Verified contractor networks, guaranteed response times, unified invoicing.",
+                url: "https://nexusoperations.org",
+                telephone: "+1-913-951-1711",
+                email: "admin@nexusoperations.org",
+                address: {
+                  "@type": "PostalAddress",
+                  streetAddress: "405 SW Fillmore St",
+                  addressLocality: "Topeka",
+                  addressRegion: "KS",
+                  postalCode: "66606",
+                  addressCountry: "US",
+                },
+                areaServed: [
+                  { "@type": "City", name: "Topeka" },
+                  { "@type": "AdministrativeArea", name: "Shawnee County" },
+                ],
+                serviceType: [
+                  "Maintenance Coordination",
+                  "Property Management Support",
+                  "Contractor Network Management",
+                  "Emergency Repair Coordination",
+                  "Vendor Management",
+                  "Lead Generation",
+                  "Project Management",
+                  "B2B Consulting",
+                ],
+                priceRange: "$$",
+                openingHoursSpecification: {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                  ],
+                  opens: "08:00",
+                  closes: "18:00",
+                },
+                founder: {
+                  "@type": "Person",
+                  name: "Brianna Gomez",
+                  jobTitle: "Chief Executive Member",
+                },
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Nexus Operations",
+                url: "https://nexusoperations.org",
+              },
+            ]),
+          }}
         />
+      </head>
+      <body
+        className={`${inter.variable} ${instrumentSerif.variable} font-sans antialiased`}
+      >
+        <AuthProvider>
+          <RequestsProvider>
+            {children}
+            <Analytics />
+          </RequestsProvider>
+        </AuthProvider>
       </body>
     </html>
   )
