@@ -21,21 +21,21 @@ export function Navbar({ user }: NavbarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-            <Zap className="h-5 w-5 text-blue-600" />
-            <span>NexOps</span>
+            <Zap className="h-5 w-5 text-primary" />
+            <span className="text-foreground">NexOps</span>
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6 text-sm">
-            <Link href="/services" className="text-gray-600 hover:text-gray-900">Services</Link>
-            <Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link>
-            <Link href="/contractors" className="text-gray-600 hover:text-gray-900">For Contractors</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
+            <Link href="/services" className="text-muted-foreground hover:text-foreground">Services</Link>
+            <Link href="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link>
+            <Link href="/contractors" className="text-muted-foreground hover:text-foreground">For Contractors</Link>
+            <Link href="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link>
           </nav>
 
           {/* Auth buttons */}
@@ -44,7 +44,7 @@ export function Navbar({ user }: NavbarProps) {
               <>
                 <Link
                   href={user.role === "contractor" ? "/dashboard/contractor" : "/dashboard/homeowner"}
-                  className="text-sm text-gray-700 hover:text-gray-900"
+                  className="text-sm text-muted-foreground hover:text-foreground"
                 >
                   Dashboard
                 </Link>
@@ -77,11 +77,11 @@ export function Navbar({ user }: NavbarProps) {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t bg-white px-4 py-4 space-y-3">
-          <Link href="/services" className="block text-sm text-gray-700" onClick={() => setMobileOpen(false)}>Services</Link>
-          <Link href="/pricing" className="block text-sm text-gray-700" onClick={() => setMobileOpen(false)}>Pricing</Link>
-          <Link href="/contractors" className="block text-sm text-gray-700" onClick={() => setMobileOpen(false)}>For Contractors</Link>
-          <Link href="/contact" className="block text-sm text-gray-700" onClick={() => setMobileOpen(false)}>Contact</Link>
+        <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
+          <Link href="/services" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Services</Link>
+          <Link href="/pricing" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Pricing</Link>
+          <Link href="/contractors" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>For Contractors</Link>
+          <Link href="/contact" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Contact</Link>
           <div className="flex gap-2 pt-2">
             {user ? (
               <Button variant="outline" size="sm" onClick={handleLogout} className="w-full">Log out</Button>

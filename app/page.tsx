@@ -67,27 +67,27 @@ export default async function HomePage() {
       <Navbar user={user ? { name: user.name, role: user.role } : null} />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 px-4 py-24 text-white sm:px-6 lg:px-8">
+      <section className="bg-gradient-to-br from-primary to-primary/80 px-4 py-24 text-primary-foreground sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <Badge className="mb-6 bg-blue-500/30 text-white border-blue-400">
+          <Badge className="mb-6 bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30">
             Serving Topeka, KS &amp; surrounding region
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
             One request. One contractor.<br />No bidding wars.
           </h1>
-          <p className="mt-6 text-xl text-blue-100 max-w-2xl mx-auto">
+          <p className="mt-6 text-xl text-primary-foreground/80 max-w-2xl mx-auto">
             Submit a documented project request and a single verified, licensed contractor
             claims it exclusively. Confirmed within 24 hours. Always free for homeowners.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup">
-              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 px-8">
+              <Button size="lg" className="bg-background text-foreground hover:bg-background/90 px-8">
                 Submit a project request
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link href="/contractors">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
+              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 px-8">
                 Join as a contractor
               </Button>
             </Link>
@@ -96,18 +96,18 @@ export default async function HomePage() {
       </section>
 
       {/* Trust bar */}
-      <section className="border-b bg-gray-50 py-8 px-4">
+      <section className="border-b border-border bg-muted py-8 px-4">
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-4">
             {[
-              { icon: <Shield className="h-5 w-5 text-blue-600" />, text: "Licensed & insured contractors" },
-              { icon: <CheckCircle className="h-5 w-5 text-green-600" />, text: "Free for homeowners" },
-              { icon: <Clock className="h-5 w-5 text-orange-500" />, text: "Confirmed within 24 hours" },
-              { icon: <Star className="h-5 w-5 text-yellow-500" />, text: "Exclusive project claims" },
+              { icon: <Shield className="h-5 w-5 text-primary" />, text: "Licensed & insured contractors" },
+              { icon: <CheckCircle className="h-5 w-5 text-primary" />, text: "Free for homeowners" },
+              { icon: <Clock className="h-5 w-5 text-primary" />, text: "Confirmed within 24 hours" },
+              { icon: <Star className="h-5 w-5 text-primary" />, text: "Exclusive project claims" },
             ].map(({ icon, text }) => (
               <div key={text} className="flex flex-col items-center gap-2">
                 {icon}
-                <span className="text-sm font-medium text-gray-700">{text}</span>
+                <span className="text-sm font-medium text-foreground">{text}</span>
               </div>
             ))}
           </div>
@@ -115,17 +115,17 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="mx-auto max-w-5xl">
-          <h2 className="text-center text-3xl font-bold text-gray-900">How it works for homeowners</h2>
+          <h2 className="text-center text-3xl font-bold text-foreground">How it works for homeowners</h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {howItWorksHomeowner.map((item) => (
               <div key={item.step} className="relative text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
                   {item.step}
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                <h3 className="mt-4 text-lg font-semibold text-foreground">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
               </div>
             ))}
           </div>
@@ -140,19 +140,19 @@ export default async function HomePage() {
       </section>
 
       {/* Services */}
-      <section className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
+      <section className="bg-muted py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <h2 className="text-center text-3xl font-bold text-gray-900">Service categories</h2>
-          <p className="mt-4 text-center text-gray-500">Available in Topeka, KS and the surrounding region</p>
+          <h2 className="text-center text-3xl font-bold text-foreground">Service categories</h2>
+          <p className="mt-4 text-center text-muted-foreground">Available in Topeka, KS and the surrounding region</p>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((svc) => (
               <Card key={svc.name} className="text-center hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
-                  <div className="mx-auto text-blue-600">{serviceIcons[svc.name]}</div>
+                  <div className="mx-auto text-primary">{serviceIcons[svc.name]}</div>
                   <CardTitle className="text-base">{svc.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-500">{svc.range}</p>
+                  <p className="text-sm text-muted-foreground">{svc.range}</p>
                 </CardContent>
               </Card>
             ))}
@@ -166,10 +166,10 @@ export default async function HomePage() {
       </section>
 
       {/* CTA for contractors */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Built for serious contractors</h2>
-          <p className="mt-4 text-lg text-gray-500">
+          <h2 className="text-3xl font-bold text-foreground">Built for serious contractors</h2>
+          <p className="mt-4 text-lg text-muted-foreground">
             Flat monthly membership. Unlimited project claims. No per-lead fees. Full project
             documentation before you commit.
           </p>
@@ -187,24 +187,4 @@ export default async function HomePage() {
       <Footer />
     </div>
   );
-import { Header } from "@/components/header"
-import { Hero } from "@/components/hero"
-import { HowItWorks } from "@/components/how-it-works"
-import { Features } from "@/components/features"
-import { ContractorCTA } from "@/components/contractor-cta"
-import { Footer } from "@/components/footer"
-
-export default function HomePage() {
-  return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <Hero />
-        <HowItWorks />
-        <Features />
-        <ContractorCTA />
-      </main>
-      <Footer />
-    </div>
-  )
 }
