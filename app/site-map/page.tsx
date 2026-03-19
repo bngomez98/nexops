@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 export const metadata = {
   title: "Sitemap | Nexus Operations",
   description: "Full index of all pages on the Nexus Operations platform.",
+  description: "Full index of the main public pages and dashboard entry points on the Nexus Operations platform.",
 }
 
 const sections = [
@@ -14,6 +15,13 @@ const sections = [
       { href: "/",                 label: "Home",               desc: "Introduction to Nexus Operations, service categories, and account types" },
       { href: "/faq",              label: "FAQ",                desc: "Frequently asked questions — process, fees, verification, and policies" },
       { href: "/site-map",          label: "Sitemap",            desc: "This page — full index of all public pages" },
+      { href: "/", label: "Home", desc: "Introduction to Nexus Operations, service categories, and account types" },
+      { href: "/services", label: "Services", desc: "Overview of commercial, residential, and B2B service offerings" },
+      { href: "/pricing", label: "Pricing", desc: "Pricing details for homeowners, property managers, and contractors" },
+      { href: "/contractors", label: "For Contractors", desc: "Contractor-focused overview and marketplace positioning" },
+      { href: "/contact", label: "Contact", desc: "Contact Nexus Operations for consultations and support" },
+      { href: "/faq", label: "FAQ", desc: "Frequently asked questions about the platform and policies" },
+      { href: "/site-map", label: "Sitemap", desc: "This page — a structured index of major routes" },
     ],
   },
   {
@@ -42,6 +50,20 @@ const sections = [
       { href: "/dashboard/contractor/requests", label: "Open Requests",            desc: "Browse and claim available service requests in your area and trade" },
       { href: "/dashboard/contractor/profile",  label: "Contractor Profile",       desc: "License, insurance, service area, and trade categories" },
       { href: "/dashboard/contractor/settings", label: "Contractor Settings",      desc: "Notification preferences and account management" },
+      { href: "/login", label: "Login", desc: "Primary sign-in page for platform users" },
+      { href: "/signup", label: "Sign Up", desc: "Create a homeowner or contractor account" },
+      { href: "/auth/login", label: "Alternate Auth Login", desc: "Supabase-backed sign-in flow introduced from merged branches" },
+    ],
+  },
+  {
+    label: "Dashboard Entry Points",
+    links: [
+      { href: "/dashboard", label: "Dashboard", desc: "Main authenticated dashboard overview" },
+      { href: "/dashboard/requests", label: "Requests", desc: "Review submitted homeowner requests" },
+      { href: "/dashboard/requests/new", label: "New Request", desc: "Create a new service request" },
+      { href: "/dashboard/contractor", label: "Contractor Dashboard", desc: "View open jobs, metrics, and contractor actions" },
+      { href: "/dashboard/contractor/analytics", label: "Contractor Analytics", desc: "Analytics and performance reporting for contractors" },
+      { href: "/dashboard/contractor/settings", label: "Contractor Settings", desc: "Manage contractor account and billing settings" },
     ],
   },
   {
@@ -57,6 +79,8 @@ const sections = [
       { href: "/faq", label: "FAQ", desc: "Frequently asked questions — process, verification, contractor network, and policies" },
       { href: "tel:+17854280244",          label: "(785) 428-0244",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
       { href: "mailto:admin@nexusoperations.org", label: "admin@nexusoperations.org", desc: "Email support for account, billing, and platform questions", external: true },
+      { href: "/privacy", label: "Privacy Policy", desc: "Privacy and data-handling details" },
+      { href: "/terms", label: "Terms of Service", desc: "Terms, responsibilities, and governing rules" },
     ],
   },
 ]
@@ -80,6 +104,9 @@ export default function SitemapPage() {
             <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>
             <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
             <Link href="/faq"     className="hover:text-foreground transition">FAQ</Link>
+            <Link href="/terms" className="hover:text-foreground transition">Terms</Link>
+            <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
+            <Link href="/faq" className="hover:text-foreground transition">FAQ</Link>
           </div>
         </div>
       </header>
@@ -96,6 +123,7 @@ export default function SitemapPage() {
         <h1 className="text-2xl font-bold mt-4">Sitemap</h1>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
           Complete index of all pages on the Nexus Operations platform.
+          Complete index of the main public pages and primary dashboard entry points.
         </p>
 
         <div className="mt-10 space-y-8">
@@ -133,6 +161,18 @@ export default function SitemapPage() {
                       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition flex-shrink-0" />
                     </Link>
                   )
+                {section.links.map(({ href, label, desc }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="flex items-center justify-between px-5 py-4 transition hover:bg-muted/50 group"
+                  >
+                    <div>
+                      <p className="text-[13px] font-medium text-foreground">{label}</p>
+                      <p className="text-[12px] text-muted-foreground mt-0.5">{desc}</p>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition flex-shrink-0" />
+                  </Link>
                 ))}
               </div>
             </div>
@@ -143,6 +183,9 @@ export default function SitemapPage() {
           <Link href="/terms"   className="hover:text-foreground transition">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
           <Link href="/faq"     className="hover:text-foreground transition">FAQ</Link>
+          <Link href="/terms" className="hover:text-foreground transition">Terms of Service</Link>
+          <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
+          <Link href="/faq" className="hover:text-foreground transition">FAQ</Link>
         </div>
       </div>
     </main>

@@ -1,163 +1,263 @@
-import { createClient } from "@/lib/supabase/server"
-import Link from "next/link"
-import { redirect } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import {
-  FileText,
-  Clock,
-  CheckCircle,
-  Plus,
-  ArrowRight,
-  ChevronRight,
-} from "lucide-react"
+'use client'
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+import { useAuth } from '@/app/lib/auth-context'
+import { useRequests } from '@/app/lib/requests-context'
+import { DashboardLayout } from '@/components/dashboard-layout'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { FileText, CheckCircle2, Clock, AlertCircle, Briefcase } from 'lucide-react'
+import Link from 'next/link'
 
-  if (!user) redirect("/auth/login")
+export default function DashboardPage() {
+  const { user, isLoggedIn } = useAuth()
+  const { clientRequests, contractorJobs } = useRequests()
+  const router = useRouter()
 
-  const role = user.user_metadata?.role || "homeowner"
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login')
+    }
+  }, [isLoggedIn, router])
 
-  if (role === "contractor") {
-    redirect("/dashboard/contractor")
+  if (!isLoggedIn) {
+    return null
   }
 
-  const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "there"
-  const isPropertyManager = role === "property_manager"
-
-  const { data: requests } = await supabase
-    .from("service_requests")
-    .select("status")
-    .eq("owner_id", user.id)
-
-  const open = requests?.filter((r) => ["in_queue", "pending_review"].includes(r.status)).length ?? 0
-  const inProgress = requests?.filter((r) => ["assigned", "consultation_scheduled", "in_progress"].includes(r.status)).length ?? 0
-  const completed = requests?.filter((r) => r.status === "completed").length ?? 0
-  const hasRequests = (requests?.length ?? 0) > 0
-
-  const stats = [
-    { label: "Open Requests",  value: String(open),       sub: "Submitted and waiting for a contractor to claim",        icon: FileText,    color: "text-foreground" },
-    { label: "In Progress",    value: String(inProgress), sub: "A contractor has claimed the project and work is active", icon: Clock,       color: "text-primary" },
-    { label: "Completed",      value: String(completed),  sub: "Projects finished and closed on this account",            icon: CheckCircle, color: "text-foreground" },
-  ]
-
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-6xl px-6 py-8">
-
-        {/* Page header */}
-        <div className="mb-8 flex items-start justify-between">
-          <div>
-            <h1 className="text-xl font-bold">
-              {isPropertyManager ? "Property Manager Dashboard" : "Owner Dashboard"}
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {isPropertyManager
-                ? `Managing requests across all properties — ${fullName}`
-                : `Service requests for ${fullName}`}
-            </p>
-          </div>
-          <Button asChild size="sm">
-            <Link href="/dashboard/requests/new">
-              <Plus className="h-3.5 w-3.5" />
-              New Request
-            </Link>
-          </Button>
+    <DashboardLayout>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground mb-1">Welcome back, {user?.name}</h1>
+          <p className="text-muted-foreground">Here&apos;s what&apos;s happening with your account.</p>
         </div>
 
-        {/* Stats row */}
-        <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          {stats.map(({ label, value, sub, icon: Icon, color }) => (
-            <div key={label} className="rounded-lg border border-border bg-card p-5">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs text-muted-foreground">{label}</p>
-                <Icon className={`h-4 w-4 ${color}`} />
+        {user?.role === 'client' && (
+          <>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      Active
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      {clientRequests.filter((r) => r.status !== 'completed' && r.status !== 'invoiced').length}
+                    </p>
+                  </div>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </div>
               </div>
-              <p className="text-2xl font-bold tabular-nums">{value}</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">{sub}</p>
-            </div>
-          ))}
-        </div>
 
-        {/* Empty state or recent requests */}
-        {!hasRequests ? (
-          <div className="mb-8 rounded-lg border border-dashed border-border bg-card p-10 text-center">
-            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-              <FileText className="h-5 w-5 text-primary" />
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      Completed
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      {clientRequests.filter((r) => r.status === 'completed' || r.status === 'invoiced').length}
+                    </p>
+                  </div>
+                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      Total Spend
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      $
+                      {clientRequests
+                        .filter((r) => r.invoiceAmount)
+                        .reduce((sum, r) => sum + (r.invoiceAmount || 0), 0)
+                        .toLocaleString()}
+                    </p>
+                  </div>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4">
+                <Link
+                  href="/dashboard/requests/new"
+                  className="flex items-start justify-between h-full group cursor-pointer hover:bg-secondary transition-colors rounded -m-4 p-4"
+                >
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide group-hover:text-foreground transition-colors">
+                      New Request
+                    </p>
+                    <p className="text-lg font-semibold text-foreground mt-2 group-hover:text-primary transition-colors">
+                      Submit →
+                    </p>
+                  </div>
+                  <Briefcase className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </Link>
+              </div>
             </div>
-            <h3 className="font-semibold text-sm mb-1">No service requests submitted</h3>
-            <p className="text-xs text-muted-foreground mb-4 max-w-sm mx-auto">
-              Submit a request with photos, a written scope, and a budget cap. A verified contractor will be assigned exclusively.
-            </p>
-            <Button asChild size="sm">
-              <Link href="/dashboard/requests/new">
-                Submit First Request
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          </div>
-        ) : (
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold">Recent Requests</h2>
-              <Link href="/dashboard/requests" className="text-xs text-primary hover:underline">View all</Link>
+
+            {/* Active Requests */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Active requests</h2>
+                <Link href="/dashboard/requests" className="text-sm text-primary hover:underline">
+                  View all
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {clientRequests
+                  .filter((r) => r.status !== 'completed' && r.status !== 'invoiced')
+                  .slice(0, 3)
+                  .map((request) => (
+                    <Link
+                      key={request.id}
+                      href={`/dashboard/requests/${request.id}`}
+                      className="block bg-card border border-border rounded-lg p-4 hover:border-primary transition-colors"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <p className="font-medium text-foreground">{request.type}</p>
+                          <p className="text-sm text-muted-foreground">{request.propertyName}</p>
+                        </div>
+                        <span
+                          className={`text-xs font-medium px-2 py-1 rounded ${
+                            request.status === 'in-progress'
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-amber-100 text-amber-700'
+                          }`}
+                        >
+                          {request.status === 'in-progress' ? 'In progress' : 'Assigned'}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">
+                          {request.assignedContractor?.name || 'Awaiting assignment'}
+                        </span>
+                        <span className="font-semibold text-foreground">${request.budget.toLocaleString()}</span>
+                      </div>
+                    </Link>
+                  ))}
+              </div>
             </div>
-            <div className="rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
-              {open} open · {inProgress} in progress · {completed} completed
-            </div>
-          </div>
+          </>
         )}
 
-        {/* Process reference */}
-        <div className="mb-8">
-          <h2 className="text-sm font-semibold mb-4">Request process</h2>
-          <div className="grid gap-3 sm:grid-cols-4">
-            {[
-              { step: "01", label: "Submit",       desc: "Photos, scope, and budget cap" },
-              { step: "02", label: "Assignment",   desc: "One contractor claims exclusively" },
-              { step: "03", label: "Consultation", desc: "Pre-confirmed within 24 hours" },
-              { step: "04", label: "Estimate",     desc: "Written, itemized — no obligation" },
-            ].map(({ step, label, desc }) => (
-              <div key={step} className="rounded-lg border border-border bg-card p-4">
-                <p className="text-[11px] font-bold text-primary mb-2">{step}</p>
-                <p className="text-xs font-semibold">{label}</p>
-                <p className="text-[11px] text-muted-foreground mt-1">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick links */}
-        <div>
-          <h2 className="text-sm font-semibold mb-4">Account</h2>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { href: "/dashboard/requests/new", label: "New service request",  sub: "Submit photos, scope, and budget" },
-              { href: "/dashboard/requests",     label: "View all requests",     sub: "Track open and completed jobs" },
-              { href: "/dashboard/messages",     label: "Messages",              sub: "Communicate with assigned contractors" },
-              { href: "/dashboard/settings",     label: "Account settings",      sub: "Profile, properties, notifications" },
-              { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform documentation and support", external: true },
-            ].map(({ href, label, sub, external }) => (
-              <Link
-                key={href}
-                href={href}
-                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3.5 transition hover:border-primary/40 group"
-              >
-                <div>
-                  <p className="text-[13px] font-medium">{label}</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
+        {user?.role === 'contractor' && (
+          <>
+            {/* Contractor Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      Available
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      {contractorJobs.filter((j) => j.status === 'available').length}
+                    </p>
+                  </div>
+                  <Briefcase className="h-4 w-4 text-muted-foreground" />
                 </div>
-                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition" />
-              </Link>
-            ))}
-          </div>
-        </div>
+              </div>
 
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      Active
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      {contractorJobs.filter((j) => j.status === 'claimed').length}
+                    </p>
+                  </div>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      Pending Payout
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      $
+                      {contractorJobs
+                        .filter((j) => j.status !== 'invoiced')
+                        .reduce((sum, j) => sum + (j.payout || 0), 0)
+                        .toLocaleString()}
+                    </p>
+                  </div>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+                      This Month
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">$245</p>
+                  </div>
+                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </div>
+            </div>
+
+            {/* Available Jobs */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Available jobs</h2>
+                <Link href="/dashboard/jobs" className="text-sm text-primary hover:underline">
+                  View all
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {contractorJobs
+                  .filter((j) => j.status === 'available')
+                  .map((job) => (
+                    <div
+                      key={job.id}
+                      className="bg-card border border-border rounded-lg p-4 hover:border-primary transition-colors"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <p className="font-medium text-foreground">{job.type}</p>
+                          <p className="text-sm text-muted-foreground">{job.propertyName}</p>
+                        </div>
+                        <span className="text-xs font-medium px-2 py-1 rounded bg-green-100 text-green-700">
+                          Available
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">{job.description}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="font-semibold text-foreground">${job.budget.toLocaleString()}</span>
+                          <button className="text-sm font-medium px-3 py-1.5 bg-primary text-primary-foreground rounded hover:opacity-90 transition-opacity">
+                            Claim
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {user?.role === 'admin' && (
+          <div className="bg-card border border-border rounded-lg p-6 text-center">
+            <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-muted-foreground">Admin panel dashboard - configure reports and team management</p>
+          </div>
+        )}
       </div>
-    </div>
+    </DashboardLayout>
   )
 }

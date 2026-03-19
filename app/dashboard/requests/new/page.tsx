@@ -1,391 +1,282 @@
-"use client"
+'use client'
 
-import { useRef, useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  ArrowLeft,
-  ArrowRight,
-  TreePine,
-  Thermometer,
-  Zap,
-  Home,
-  Hammer,
-  Fence,
-  Upload,
-  Loader2,
-  X,
-} from "lucide-react"
+import React, { useState, useEffect } from "react"
+import { useAuth } from '@/app/lib/auth-context'
+import { useRequests } from '@/app/lib/requests-context'
+import { DashboardLayout } from '@/components/dashboard-layout'
+import { useRouter } from 'next/navigation'
+import { ChevronLeft, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
 
-const categories = [
-  { id: "tree-removal", name: "Tree Removal",  icon: TreePine },
-  { id: "hvac",         name: "HVAC",           icon: Thermometer },
-  { id: "electrical",   name: "Electrical",     icon: Zap },
-  { id: "roofing",      name: "Roofing",        icon: Home },
-  { id: "concrete",     name: "Concrete",       icon: Hammer },
-  { id: "fencing",      name: "Fencing",        icon: Fence },
+const serviceTypes = [
+  'Roof repair',
+  'Gutter cleaning',
+  'HVAC inspection',
+  'Concrete repair',
+  'Fence repair',
+  'Plumbing',
+  'Electrical',
+  'Painting',
+  'Other',
 ]
 
 export default function NewRequestPage() {
+  const { user, isLoggedIn } = useAuth()
+  const { addRequest } = useRequests()
   const router = useRouter()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [photos, setPhotos] = useState<File[]>([])
+  const [step, setStep] = useState<'details' | 'dates' | 'review'>('details')
+  const [error, setError] = useState('')
+
   const [formData, setFormData] = useState({
-    category: "",
-    description: "",
-    budgetMin: "",
-    budgetMax: "",
-    address: "",
-    city: "",
-    state: "KS",
-    zipCode: "",
-    preferredDates: "",
-    additionalNotes: "",
+    type: '',
+    property: '',
+    description: '',
+    budget: '',
+    dueDate: '',
   })
 
-  function handleFiles(files: FileList | null) {
-    if (!files) return
-    const valid = Array.from(files).filter((f) => f.type.startsWith("image/"))
-    setPhotos((prev) => [...prev, ...valid].slice(0, 10))
+  useEffect(() => {
+    if (!isLoggedIn || user?.role !== 'client') {
+      router.push('/login')
+    }
+  }, [isLoggedIn, user, router])
+
+  if (!isLoggedIn || user?.role !== 'client') {
+    return null
   }
 
-  function removePhoto(index: number) {
-    setPhotos((prev) => prev.filter((_, i) => i !== index))
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await fetch("/api/requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
-      if (!res.ok) {
-        const body = await res.json()
-        throw new Error(body.error ?? "Failed to submit request")
+  const handleNext = () => {
+    setError('')
+    if (step === 'details') {
+      if (!formData.type || !formData.property || !formData.description || !formData.budget) {
+        setError('Please fill in all fields')
+        return
       }
-      router.push("/dashboard/requests")
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong")
-      setLoading(false)
+      setStep('dates')
+    } else if (step === 'dates') {
+      if (!formData.dueDate) {
+        setError('Please select a due date')
+        return
+      }
+      setStep('review')
     }
   }
 
+  const handleBack = () => {
+    if (step === 'dates') {
+      setStep('details')
+    } else if (step === 'review') {
+      setStep('dates')
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    addRequest({
+      propertyId: 'prop-1',
+      propertyName: formData.property,
+      type: formData.type,
+      status: 'pending',
+      budget: parseInt(formData.budget),
+      dueDate: formData.dueDate,
+      description: formData.description,
+    })
+    
+    router.push('/dashboard/requests')
+  }
+
   return (
-    <div className="p-8">
-      <div className="mx-auto max-w-2xl">
+    <DashboardLayout>
+      <div className="max-w-2xl">
         <Link
           href="/dashboard/requests"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4" />
           Back to requests
         </Link>
 
-        {/* Progress */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between text-sm">
-            {["Category", "Details", "Location", "Review"].map((label, i) => (
-              <span key={label} className={step >= i + 1 ? "text-primary" : "text-muted-foreground"}>
-                {i + 1}. {label}
-              </span>
-            ))}
-          </div>
-          <div className="mt-2 h-2 rounded-full bg-muted">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Progress */}
+          <div className="flex items-center gap-2">
             <div
-              className="h-2 rounded-full bg-primary transition-all"
-              style={{ width: `${(step / 4) * 100}%` }}
+              className={`flex-1 h-1 rounded-full ${
+                step === 'details' || step === 'dates' || step === 'review' ? 'bg-primary' : 'bg-border'
+              }`}
             />
+            <div
+              className={`flex-1 h-1 rounded-full ${step === 'dates' || step === 'review' ? 'bg-primary' : 'bg-border'}`}
+            />
+            <div className={`flex-1 h-1 rounded-full ${step === 'review' ? 'bg-primary' : 'bg-border'}`} />
           </div>
-        </div>
 
-        {/* Step 1: Category */}
-        {step === 1 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Select a service category</CardTitle>
-              <CardDescription>Choose the type of work you need</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setFormData({ ...formData, category: category.id })}
-                    className={`flex items-center gap-3 rounded-lg border p-4 text-left transition ${
-                      formData.category === category.id
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <category.icon className="h-5 w-5 text-primary" />
-                    <span className="font-medium">{category.name}</span>
-                  </button>
-                ))}
-              </div>
-              <Button className="mt-6 w-full" onClick={() => setStep(2)} disabled={!formData.category}>
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700 flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              {error}
+            </div>
+          )}
 
-        {/* Step 2: Details */}
-        {step === 2 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Project details</CardTitle>
-              <CardDescription>Describe your project and set your budget</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="description">Project description</Label>
-                <textarea
-                  id="description"
-                  placeholder="Describe the work you need done..."
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="budgetMin">Budget minimum ($)</Label>
-                  <Input
-                    id="budgetMin"
-                    type="number"
-                    placeholder="500"
-                    value={formData.budgetMin}
-                    onChange={(e) => setFormData({ ...formData, budgetMin: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="budgetMax">Budget maximum ($)</Label>
-                  <Input
-                    id="budgetMax"
-                    type="number"
-                    placeholder="5000"
-                    value={formData.budgetMax}
-                    onChange={(e) => setFormData({ ...formData, budgetMax: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              {/* Photo upload */}
+          {/* Step 1: Details */}
+          {step === 'details' && (
+            <div className="space-y-4">
               <div>
-                <Label className="mb-2 block">Project photos (optional, up to 10)</Label>
+                <h1 className="text-2xl font-semibold text-foreground mb-1">Describe your project</h1>
+                <p className="text-muted-foreground">Tell us what needs to be done</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Service type</label>
+                <select
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
+                >
+                  <option value="">Select a service</option>
+                  {serviceTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Property address</label>
                 <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => handleFiles(e.target.files)}
-                />
-                {photos.length > 0 ? (
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap gap-2">
-                      {photos.map((file, i) => (
-                        <div key={i} className="relative flex items-center gap-1.5 rounded border border-border bg-muted px-2 py-1 text-xs">
-                          <span className="max-w-[120px] truncate">{file.name}</span>
-                          <button onClick={() => removePhoto(i)} className="text-muted-foreground hover:text-foreground">
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    {photos.length < 10 && (
-                      <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                        Add more
-                      </Button>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center hover:border-primary/40 transition"
-                  >
-                    <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                    <p className="mt-2 text-sm font-medium">Upload project photos</p>
-                    <p className="text-xs text-muted-foreground">2–10 photos recommended</p>
-                  </button>
-                )}
-              </div>
-
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                <Button
-                  className="flex-1"
-                  onClick={() => setStep(3)}
-                  disabled={!formData.description}
-                >
-                  Continue
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 3: Location */}
-        {step === 3 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Project location</CardTitle>
-              <CardDescription>Where is the work needed?</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="address">Street address</Label>
-                <Input
-                  id="address"
-                  placeholder="123 Main St"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  type="text"
+                  name="property"
+                  value={formData.property}
+                  onChange={handleChange}
+                  placeholder="e.g., 1420 N Maple St"
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
                 />
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    placeholder="Topeka"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input
-                    id="state"
-                    value={formData.state}
-                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zipCode">ZIP Code</Label>
-                  <Input
-                    id="zipCode"
-                    placeholder="66601"
-                    value={formData.zipCode}
-                    onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="preferredDates">Preferred consultation dates</Label>
-                <Input
-                  id="preferredDates"
-                  placeholder="e.g., Weekdays after 5pm, Saturday mornings"
-                  value={formData.preferredDates}
-                  onChange={(e) => setFormData({ ...formData, preferredDates: e.target.value })}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the work that needs to be done..."
+                  rows={4}
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground resize-none"
                 />
               </div>
 
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-                <Button
-                  className="flex-1"
-                  onClick={() => setStep(4)}
-                  disabled={!formData.address || !formData.city || !formData.zipCode}
-                >
-                  Continue
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 4: Review */}
-        {step === 4 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Review your request</CardTitle>
-              <CardDescription>Confirm the details before submitting</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="rounded-lg border border-border bg-muted/50 p-4">
-                <h3 className="font-medium capitalize">
-                  {categories.find((c) => c.id === formData.category)?.name}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">{formData.description}</p>
-                <div className="mt-4 grid gap-2 text-sm">
-                  {(formData.budgetMin || formData.budgetMax) && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Budget:</span>
-                      <span>
-                        {formData.budgetMin && formData.budgetMax
-                          ? `$${formData.budgetMin} – $${formData.budgetMax}`
-                          : formData.budgetMax
-                          ? `Up to $${formData.budgetMax}`
-                          : `From $${formData.budgetMin}`}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Location:</span>
-                    <span>{formData.address}, {formData.city}, {formData.state} {formData.zipCode}</span>
-                  </div>
-                  {formData.preferredDates && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Availability:</span>
-                      <span>{formData.preferredDates}</span>
-                    </div>
-                  )}
-                  {photos.length > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Photos:</span>
-                      <span>{photos.length} attached</span>
-                    </div>
-                  )}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Budget cap</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                  <input
+                    type="number"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    placeholder="0"
+                    className="w-full pl-8 pr-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
+                  />
                 </div>
               </div>
+            </div>
+          )}
 
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-                <h4 className="font-medium text-primary">What happens next?</h4>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>1. Your request is shared with verified contractors in your area</li>
-                  <li>2. The first qualified contractor to claim it gets exclusive access</li>
-                  <li>3. You receive a confirmed consultation within 24 hours</li>
-                </ul>
+          {/* Step 2: Dates */}
+          {step === 'dates' && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-semibold text-foreground mb-1">When do you need this done?</h1>
+                <p className="text-muted-foreground">Select your preferred timeline</p>
               </div>
 
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
-
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
-                <Button className="flex-1" onClick={handleSubmit} disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    "Submit Request"
-                  )}
-                </Button>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Due date</label>
+                <input
+                  type="date"
+                  name="dueDate"
+                  value={formData.dueDate}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
+                />
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
+
+          {/* Step 3: Review */}
+          {step === 'review' && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-semibold text-foreground mb-1">Review your request</h1>
+                <p className="text-muted-foreground">Make sure everything looks correct</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Service type</p>
+                  <p className="text-sm font-medium text-foreground">{formData.type}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Property</p>
+                  <p className="text-sm font-medium text-foreground">{formData.property}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Description</p>
+                  <p className="text-sm text-muted-foreground">{formData.description}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Budget cap</p>
+                  <p className="text-sm font-medium text-foreground">${parseInt(formData.budget).toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Due date</p>
+                  <p className="text-sm font-medium text-foreground">{formData.dueDate}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex items-center justify-between pt-4 border-t border-border">
+            <button
+              type="button"
+              onClick={handleBack}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-opacity ${
+                step === 'details'
+                  ? 'text-muted-foreground cursor-not-allowed opacity-50'
+                  : 'text-foreground hover:bg-secondary'
+              }`}
+              disabled={step === 'details'}
+            >
+              Back
+            </button>
+
+            {step === 'review' ? (
+              <button
+                type="submit"
+                className="px-6 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Submit request
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="px-6 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Next
+              </button>
+            )}
+          </div>
+        </form>
       </div>
-    </div>
+    </DashboardLayout>
   )
 }

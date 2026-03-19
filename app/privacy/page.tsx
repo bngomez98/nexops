@@ -1,58 +1,65 @@
-import { LegalShell, Section } from "@/components/legal-shell"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 
 export const metadata = {
   title: "Privacy Policy | Nexus Operations",
-  description: "Privacy Policy for the Nexus Operations property service management platform.",
+  description: "Privacy policy for Nexus Operations, LLC",
 }
 
 export default function PrivacyPage() {
   return (
-    <LegalShell title="Privacy Policy" updated="March 5, 2026">
-      <Section title="1. Information We Collect">
-        We collect information you provide directly, including: full name, email address, phone number, property address, project descriptions, photographs, and stated budget ranges. For contractor accounts, we additionally collect: business name, contractor license number, and insurance carrier and policy details. We also collect usage data through cookies and similar technologies as described in Section 5.
-      </Section>
+    <div className="min-h-screen">
+      <Header />
+      <main className="py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <Button variant="ghost" asChild className="mb-8">
+            <Link href="/">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Link>
+          </Button>
 
-      <Section title="2. How We Use Your Information">
-        Your information is used to: operate and improve the Platform; match property owners with qualified contractors; coordinate and confirm consultation appointments; process service fees where applicable; send transactional communications (assignment notifications, confirmation emails, scheduling reminders); and respond to support inquiries. We do not sell your personal information to third parties under any circumstances.
-      </Section>
+          <h1 className="font-serif text-5xl font-light mb-8">Privacy Policy</h1>
+          <div className="prose prose-lg max-w-none">
+            <p className="text-muted-foreground">Last updated: January 2025</p>
 
-      <Section title="3. Information Sharing">
-        Project details submitted by property owners — including photographs, scope descriptions, address, and budget ceiling — are shared with one matched contractor after that contractor claims the request. This sharing is limited to the single claiming contractor. We do not distribute your project information to multiple contractors, lead brokers, marketing firms, or aggregation services.
-      </Section>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Information We Collect</h2>
+            <p>
+              When you use our services, we collect information necessary to fulfill your requests, including contact
+              details, project specifications, and payment information. We only collect what&apos;s needed to deliver
+              professional service.
+            </p>
 
-      <Section title="4. Data Security">
-        We use encryption in transit (TLS) and at rest for all stored data. Access to personal data is restricted to authorized personnel. We conduct regular security reviews. No method of electronic transmission is unconditionally secure; you assume the residual risks inherent to any internet-based communication.
-      </Section>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">How We Use Your Information</h2>
+            <p>
+              Your information is used exclusively to coordinate services, communicate about your projects, process
+              payments, and improve our offerings. We never sell or share your data with third parties for marketing
+              purposes.
+            </p>
 
-      <Section title="5. Cookies and Tracking">
-        We use session cookies for authentication and preference storage. We do not use third-party advertising cookies. Analytics data is collected in aggregate, not individually identifiable form. You may disable cookies in your browser, which may affect Platform functionality.
-      </Section>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Data Security</h2>
+            <p>
+              We implement industry-standard security measures to protect your information. All payment processing is
+              handled through secure, encrypted channels.
+            </p>
 
-      <Section title="6. Third-Party Services">
-        We use Supabase for database and authentication, Zendesk for customer support, and standard email providers for transactional messages. Each provider operates under their own data processing agreements. We do not use third-party advertising networks.
-      </Section>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Your Rights</h2>
+            <p>
+              You have the right to access, correct, or delete your personal information at any time. Contact us at
+              admin@nexusoperations.org for any privacy-related requests.
+            </p>
 
-      <Section title="7. Data Retention">
-        Account data is kept for the life of the account. Following account closure, we retain a limited subset of data for up to 36 months to satisfy legal and dispute resolution obligations. Project documentation and photographs are retained for up to 5 years after project completion. You may request deletion of your account and associated data at any time by emailing <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>. Legal obligations may require us to retain certain transaction-related data even after a deletion request — we will be clear about what we can and cannot remove.
-      </Section>
-
-      <Section title="8. Your Rights">
-        You have the right to: access a copy of the personal data we hold about you; correct inaccurate data; request deletion of your account and associated data subject to retention requirements; opt out of non-transactional email communications at any time via the unsubscribe link. To exercise any of these rights, contact us at the address below.
-      </Section>
-
-      <Section title="9. Children">
-        The Platform is not intended for persons under 18 years of age. We do not knowingly collect personal information from minors. If you become aware that a minor has submitted information to the Platform, contact us immediately.
-      </Section>
-
-      <Section title="10. Policy Updates">
-        We may update this Privacy Policy. Material changes will be communicated to registered users via email at least 14 days before taking effect. The effective date of the current version appears at the top of this document.
-      </Section>
-
-      <Section title="11. Contact">
-        Privacy inquiries: <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a><br />
-        Nexus Operations, LLC — Topeka, KS 66606<br />
-        Phone: <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a>
-      </Section>
-    </LegalShell>
+            <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Contact</h2>
+            <p>
+              For questions about this privacy policy, contact us at admin@nexusoperations.org or call (913) 951-1711.
+            </p>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
   )
 }

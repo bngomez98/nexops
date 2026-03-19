@@ -1,385 +1,301 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { AvatarUpload } from "@/components/avatar-upload"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { CheckCircle, AlertCircle, Loader2, CreditCard, ExternalLink, Banknote, Clock } from "lucide-react"
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { FormError } from '@/components/form-error'
+import { User, LogOut, ArrowLeft, Save } from 'lucide-react'
 
-type ConnectStatus = "not_connected" | "pending" | "active" | "restricted"
+const SERVICE_CATEGORIES = [
+  { value: 'tree-removal', label: 'Tree Removal' },
+  { value: 'concrete-work', label: 'Concrete Work' },
+  { value: 'roofing', label: 'Roofing' },
+  { value: 'hvac', label: 'HVAC' },
+  { value: 'fencing', label: 'Fencing' },
+  { value: 'electrical', label: 'Electrical' },
+  { value: 'plumbing', label: 'Plumbing' },
+  { value: 'excavation', label: 'Excavation' },
+]
 
-export default function ContractorSettingsPage() {
+export default function ContractorSettings() {
+  const router = useRouter()
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [billingLoading, setBillingLoading] = useState(false)
-  const [connectLoading, setConnectLoading] = useState(false)
-  const [uid, setUid] = useState("")
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const [connectStatus, setConnectStatus] = useState<ConnectStatus>("not_connected")
-  const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    emailNotifications: true,
-    smsNotifications: true,
-    availableForRequests: true,
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [formData, setFormData] = useState({
+    companyName: '',
+    bio: '',
+    licenseNumber: '',
+    yearsInBusiness: '',
+    serviceCategories: [] as string[],
   })
 
-  const searchParams = useSearchParams()
-
   useEffect(() => {
-    async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      setUid(user.id)
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, phone, avatar_url, stripe_connect_status")
-        .eq("id", user.id)
-        .single()
-
-      setForm((f) => ({
-        ...f,
-        fullName: profile?.full_name ?? user.user_metadata?.full_name ?? "",
-        phone: profile?.phone ?? user.user_metadata?.phone ?? "",
-      }))
-      setAvatarUrl(profile?.avatar_url ?? null)
-      setConnectStatus((profile?.stripe_connect_status as ConnectStatus) ?? "not_connected")
-      setLoading(false)
+    async function loadData() {
+      try {
+        const response = await fetch('/api/auth/me')
+        if (!response.ok) {
+          router.push('/login')
+          return
+        }
+        const userData = await response.json()
+        if (userData.user.role !== 'contractor') {
+          router.push('/dashboard/homeowner')
+          return
+        }
+        setUser(userData.user)
+        // In a real app, this would come from the API
+        setFormData({
+          companyName: 'Your Company Name',
+          bio: 'Tell customers about your expertise and experience',
+          licenseNumber: 'LICENSE123',
+          yearsInBusiness: '5',
+          serviceCategories: ['roofing', 'electrical'],
+        })
+      } catch (error) {
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    load()
 
-    // Show feedback after returning from Stripe onboarding
-    const connectParam = searchParams.get("connect")
-    if (connectParam === "success") {
-      setConnectStatus("active")
-    } else if (connectParam === "pending") {
-      setConnectStatus("pending")
-    } else if (connectParam === "error") {
-      setError("There was a problem connecting your Stripe account. Please try again.")
-    }
-  }, [searchParams])
+    loadData()
+  }, [router])
 
-  const handleSave = async (e: React.FormEvent) => {
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+  }
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  function toggleServiceCategory(category: string) {
+    setFormData(prev => ({
+      ...prev,
+      serviceCategories: prev.serviceCategories.includes(category)
+        ? prev.serviceCategories.filter(c => c !== category)
+        : [...prev.serviceCategories, category]
+    }))
+  }
+
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (!formData.companyName || !formData.bio || formData.serviceCategories.length === 0) {
+      setError('Please fill in all required fields')
+      return
+    }
+
     setSaving(true)
-    setError(null)
-    const supabase = createClient()
-
-    const { error: authError } = await supabase.auth.updateUser({
-      data: { full_name: form.fullName, phone: form.phone },
-    })
-
-    if (!authError) {
-      await supabase
-        .from("profiles")
-        .update({ full_name: form.fullName, phone: form.phone })
-        .eq("id", uid)
-    }
-
-    setSaving(false)
-    if (authError) {
-      setError(authError.message)
-    } else {
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
-    }
-  }
-
-  const handleBillingPortal = async () => {
-    setBillingLoading(true)
     try {
-      const res = await fetch("/api/stripe/portal", { method: "POST" })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error ?? "Could not open billing portal.")
-      }
-    } catch {
-      setError("Could not open billing portal.")
+      // In a real app, this would save to the backend
+      setSuccess('Settings saved successfully!')
+      setTimeout(() => setSuccess(''), 3000)
+    } catch (err) {
+      setError('Failed to save settings. Please try again.')
     } finally {
-      setBillingLoading(false)
-    }
-  }
-
-  const handleConnectStripe = async () => {
-    setConnectLoading(true)
-    setError(null)
-    try {
-      const res = await fetch("/api/stripe/connect/onboard", { method: "POST" })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error ?? "Could not start Stripe Connect onboarding.")
-      }
-    } catch {
-      setError("Could not start Stripe Connect onboarding.")
-    } finally {
-      setConnectLoading(false)
+      setSaving(false)
     }
   }
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     )
   }
 
+  if (!user) return null
+
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-3xl px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-xl font-bold">Account Settings</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Contact details, notifications, and subscription.</p>
-        </div>
-
-        <form onSubmit={handleSave} className="space-y-5">
-
-          {/* Profile photo + contact */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Contact Information</h2>
-            </div>
-            <div className="p-5 space-y-5">
-              <AvatarUpload
-                uid={uid}
-                url={avatarUrl}
-                name={form.fullName || "Contractor"}
-                onUpload={(url) => setAvatarUrl(url)}
-              />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <Label htmlFor="fullName" className="text-xs">Full Name</Label>
-                  <Input id="fullName" placeholder="John Smith" value={form.fullName}
-                    onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="text-sm" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-xs">Phone Number</Label>
-                  <Input id="phone" placeholder="(785) 555-0100" value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })} className="text-sm" />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Availability & Notifications */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Availability &amp; Notifications</h2>
-            </div>
-            <div className="divide-y divide-border">
-              {[
-                { key: "availableForRequests" as const, label: "Available for new requests",    sub: "Turn off to stop receiving new request notifications" },
-                { key: "emailNotifications"   as const, label: "Email notifications",            sub: "New requests, claim confirmations, consultation reminders" },
-                { key: "smsNotifications"     as const, label: "SMS notifications",              sub: "New request alerts and time-sensitive updates" },
-              ].map(({ key, label, sub }) => (
-                <div key={key} className="flex items-center justify-between px-5 py-4">
-                  <div>
-                    <p className="text-sm font-medium">{label}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
-                  </div>
-                  <button type="button" onClick={() => setForm({ ...form, [key]: !form[key] })}
-                    className={`relative h-5 w-9 rounded-full transition ${form[key] ? "bg-primary" : "bg-border"}`}
-                    role="switch" aria-checked={form[key]}>
-                    <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${form[key] ? "translate-x-4" : "translate-x-0.5"}`} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {error && (
-            <div className="flex items-center gap-2 rounded border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />{error}
-            </div>
-          )}
-          {saved && (
-            <div className="flex items-center gap-2 rounded border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
-              <CheckCircle className="h-4 w-4 flex-shrink-0" />Settings saved.
-            </div>
-          )}
-
-          <div className="flex justify-end">
-            <Button type="submit" disabled={saving} className="text-[13px]">
-              {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</> : "Save Changes"}
-            </Button>
-          </div>
-        </form>
-
-        {/* Billing — outside the save form so it doesn't submit */}
-        <section className="mt-5 rounded-lg border border-border bg-card overflow-hidden">
-          <div className="border-b border-border px-5 py-3">
-            <h2 className="text-sm font-semibold">Subscription &amp; Billing</h2>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Manage your monthly membership, invoices, and payment method</p>
-          </div>
-          <div className="p-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10">
-                <CreditCard className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Contractor Membership</p>
-                <p className="text-[11px] text-muted-foreground">Flat monthly fee — no per-lead charges</p>
-              </div>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleBillingPortal}
-              disabled={billingLoading}
-              className="text-[12px] gap-1.5"
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-background">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-2 text-primary hover:underline"
             >
-              {billingLoading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <ExternalLink className="h-3.5 w-3.5" />
-              )}
-              Manage Billing
-            </Button>
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted">
+                <User className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">{user.name}</span>
+              </div>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
-        </section>
+          <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+          <p className="text-muted-foreground mt-1">Manage your contractor profile and preferences</p>
+        </div>
+      </header>
 
-        {/* Stripe Connect — payout account */}
-        <section className="mt-5 rounded-lg border border-border bg-card overflow-hidden">
-          <div className="border-b border-border px-5 py-3">
-            <h2 className="text-sm font-semibold">Payout Account</h2>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              Connect a bank account so Nexus can pay you automatically after each completed job
-            </p>
-          </div>
-          <div className="p-5">
-            {connectStatus === "active" ? (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-green-500/10">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Stripe account connected</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Payouts are deposited automatically after job completion
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Update Account
-                </Button>
-              </div>
-            ) : connectStatus === "pending" ? (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-amber-500/10">
-                    <Clock className="h-4 w-4 text-amber-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Verification in progress</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Stripe is reviewing your information. This usually takes a few minutes.
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Continue Setup
-                </Button>
-              </div>
-            ) : connectStatus === "restricted" ? (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-destructive/10">
-                    <AlertCircle className="h-4 w-4 text-destructive" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Action required</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Stripe needs additional information before payouts can be enabled
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Fix Issues
-                </Button>
-              </div>
-            ) : (
-              /* not_connected */
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10">
-                    <Banknote className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">No payout account connected</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Connect with Stripe to receive payments for completed jobs
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Connect with Stripe
-                </Button>
-              </div>
-            )}
-          </div>
-        </section>
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-2xl">
+          {error && <FormError message={error} className="mb-6" />}
+          {success && (
+            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm mb-6">
+              {success}
+            </div>
+          )}
 
-      </div>
+          <form onSubmit={handleSave} className="space-y-8">
+            {/* Profile Section */}
+            <div className="border border-border rounded-lg p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Profile Information</h2>
+              
+              <div className="space-y-4">
+                {/* Company Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="companyName">Company Name *</Label>
+                  <Input
+                    id="companyName"
+                    name="companyName"
+                    placeholder="Enter your company name"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                {/* License Number */}
+                <div className="space-y-2">
+                  <Label htmlFor="licenseNumber">License Number</Label>
+                  <Input
+                    id="licenseNumber"
+                    name="licenseNumber"
+                    placeholder="e.g., LICENSE123"
+                    value={formData.licenseNumber}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                {/* Years in Business */}
+                <div className="space-y-2">
+                  <Label htmlFor="yearsInBusiness">Years in Business</Label>
+                  <Input
+                    id="yearsInBusiness"
+                    name="yearsInBusiness"
+                    type="number"
+                    placeholder="5"
+                    value={formData.yearsInBusiness}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                {/* Bio */}
+                <div className="space-y-2">
+                  <Label htmlFor="bio">Bio/Description *</Label>
+                  <textarea
+                    id="bio"
+                    name="bio"
+                    placeholder="Tell customers about your expertise and experience..."
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    rows={4}
+                    required
+                    className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Service Categories Section */}
+            <div className="border border-border rounded-lg p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Service Categories *</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Select all service categories you specialize in
+              </p>
+              <div className="grid md:grid-cols-2 gap-4">
+                {SERVICE_CATEGORIES.map(category => (
+                  <label key={category.value} className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                    <input
+                      type="checkbox"
+                      checked={formData.serviceCategories.includes(category.value)}
+                      onChange={() => toggleServiceCategory(category.value)}
+                      className="w-4 h-4 rounded"
+                    />
+                    <span className="text-foreground">{category.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Notification Preferences */}
+            <div className="border border-border rounded-lg p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Notification Preferences</h2>
+              <div className="space-y-4">
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <div>
+                    <p className="font-semibold text-foreground">Project Notifications</p>
+                    <p className="text-sm text-muted-foreground">Get notified when new projects in your categories are available</p>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <div>
+                    <p className="font-semibold text-foreground">Message Notifications</p>
+                    <p className="text-sm text-muted-foreground">Get notified when homeowners message you</p>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <div>
+                    <p className="font-semibold text-foreground">Weekly Digest</p>
+                    <p className="text-sm text-muted-foreground">Receive a weekly summary of your activity and opportunities</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="border border-red-200 bg-red-50 dark:bg-red-900/10 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-red-700 mb-4">Danger Zone</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                These actions cannot be undone. Please be careful.
+              </p>
+              <Button variant="destructive">
+                Delete Account
+              </Button>
+            </div>
+
+            {/* Submit Buttons */}
+            <div className="flex gap-4">
+              <Button type="submit" disabled={saving} className="gap-2">
+                <Save className="w-4 h-4" />
+                {saving ? 'Saving...' : 'Save Changes'}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
   )
 }

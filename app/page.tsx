@@ -1,93 +1,12 @@
-"use client"
-
-import Image from "next/image"
-import Link from "next/link"
-import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { useEffect, useState, useRef } from "react"
-
-const services: Array<{ name: string; desc: string }> = [
-  { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration." },
-  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual maintenance." },
-  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
-  { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture replacement." },
-  { name: "Concrete",       desc: "Driveways, patios, sidewalks, foundation repair, and structural flatwork." },
-  { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
-  { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
-  { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
-]
-
-const heroTargets = ["homeowners.", "property managers.", "landlords."]
-
-const navLinks = [
-  { href: "#about",       label: "About" },
-  { href: "#platform",    label: "Platform" },
-  { href: "#services",    label: "Services" },
-  { href: "#reporting",   label: "Reporting" },
-  { href: "#contractors", label: "Contractors" },
-  { href: "#contact",     label: "Contact" },
-]
+import { Header } from "@/components/header"
+import { Hero } from "@/components/hero"
+import { WhoWeServe } from "@/components/who-we-serve"
+import { HowItWorks } from "@/components/how-it-works"
+import { ValueProposition } from "@/components/value-proposition"
+import { ContactCTA } from "@/components/contact-cta"
+import { Footer } from "@/components/footer"
 
 export default function HomePage() {
-  const [mobileOpen, setMobileOpen]         = useState(false)
-  const [activeSection, setActiveSection]   = useState("")
-  const [scrollPct, setScrollPct]           = useState(0)
-  const [heroIdx, setHeroIdx]               = useState(0)
-  const [heroVisible, setHeroVisible]       = useState(true)
-  const [statsTriggered, setStatsTriggered] = useState(false)
-  const statsRef = useRef<HTMLDivElement>(null)
-
-  /* ── Scroll progress bar ── */
-  useEffect(() => {
-    const onScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
-      setScrollPct((scrollTop / (scrollHeight - clientHeight)) * 100)
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-
-  /* ── Active nav section ── */
-  useEffect(() => {
-    const ids = navLinks.map(l => l.href.replace("#", ""))
-    const observers: IntersectionObserver[] = []
-    ids.forEach(id => {
-      const el = document.getElementById(id)
-      if (!el) return
-      const io = new IntersectionObserver(
-        ([e]) => { if (e.isIntersecting) setActiveSection(id) },
-        { threshold: 0.3, rootMargin: "-80px 0px -40% 0px" }
-      )
-      io.observe(el)
-      observers.push(io)
-    })
-    return () => observers.forEach(io => io.disconnect())
-  }, [])
-
-  /* ── Scroll-triggered fade animations ── */
-  useEffect(() => {
-    const els = document.querySelectorAll("[data-animate]")
-    const io = new IntersectionObserver(
-      entries => entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target) }
-      }),
-      { threshold: 0.1 }
-    )
-    els.forEach(el => io.observe(el))
-    return () => io.disconnect()
-  }, [])
-
-  /* ── Stats pop animation trigger ── */
-  useEffect(() => {
-    if (!statsRef.current) return
-    const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setStatsTriggered(true); io.disconnect() } },
-      { threshold: 0.5 }
-    )
-    io.observe(statsRef.current)
-    return () => io.disconnect()
-  }, [])
-
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
 
@@ -911,5 +830,16 @@ export default function HomePage() {
       </footer>
 
     </main>
+    <div className="min-h-screen">
+      <Header />
+      <main>
+        <Hero />
+        <WhoWeServe />
+        <HowItWorks />
+        <ValueProposition />
+        <ContactCTA />
+      </main>
+      <Footer />
+    </div>
   )
 }
