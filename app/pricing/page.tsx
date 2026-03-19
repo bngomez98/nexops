@@ -161,9 +161,9 @@ export default function PricingPage() {
                   How your invoice works.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Every invoice shows the contractor's quoted cost and our
+                  Every invoice shows the contractor&apos;s quoted cost and our
                   coordination markup as separate line items. Full transparency
-                  -- you always see exactly what you're paying for.
+                  -- you always see exactly what you&apos;re paying for.
                 </p>
 
                 <div className="rounded-xl bg-card border border-border p-6">
@@ -301,7 +301,7 @@ export default function PricingPage() {
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-                Let's scope your specific needs.
+                Let&apos;s scope your specific needs.
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
                 Every property portfolio has different maintenance volume and

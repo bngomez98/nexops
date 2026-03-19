@@ -332,7 +332,7 @@ export default function ServicesPage() {
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-                Let's talk about what you need.
+                Let&apos;s talk about what you need.
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
                 Every client engagement starts with a conversation about your

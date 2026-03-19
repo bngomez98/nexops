@@ -98,7 +98,7 @@ export function Services() {
             Submit a Request
           </Link>
           <p className="text-sm text-muted-foreground">
-            Don't see your category? <Link href="/contact" className="text-primary hover:underline">Let us know</Link> and we'll prioritize it.
+            Don&apos;t see your category? <Link href="/contact" className="text-primary hover:underline">Let us know</Link> and we&apos;ll prioritize it.
           </p>
         </div>
       </div>
