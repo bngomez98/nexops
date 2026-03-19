@@ -6,9 +6,6 @@ on:
       - "copilot/merge-codex-remove-templated-requests-from-dashboa"
   workflow_dispatch:
 
-permissions:
-  pull-requests: write
-
 jobs:
   create-and-merge-prs:
     runs-on: ubuntu-latest
