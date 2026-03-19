@@ -16,9 +16,12 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
-create policy "profiles_select_own"  on public.profiles for select  using (auth.uid() = id);
-create policy "profiles_insert_own"  on public.profiles for insert  with check (auth.uid() = id);
-create policy "profiles_update_own"  on public.profiles for update  using (auth.uid() = id);
+drop policy if exists "profiles_select_own" on public.profiles;
+create policy "profiles_select_own" on public.profiles for select using (auth.uid() = id);
+drop policy if exists "profiles_insert_own" on public.profiles;
+create policy "profiles_insert_own" on public.profiles for insert with check (auth.uid() = id);
+drop policy if exists "profiles_update_own" on public.profiles;
+create policy "profiles_update_own" on public.profiles for update using (auth.uid() = id);
 
 -- auto-create profile on signup
 create or replace function public.handle_new_user()
@@ -55,7 +58,8 @@ create table if not exists public.properties (
 
 alter table public.properties enable row level security;
 
-create policy "properties_owner"  on public.properties for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists "properties_owner" on public.properties;
+create policy "properties_owner" on public.properties for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
 
 -- ── service_requests ─────────────────────────────────────────
 create table if not exists public.service_requests (
@@ -72,7 +76,6 @@ create table if not exists public.service_requests (
   zip_code            text not null,
   preferred_dates     text,
   additional_notes    text,
-  photo_urls          text[],
   status              text not null default 'pending_review'
                         check (status in (
                           'pending_review',
@@ -95,13 +98,18 @@ create table if not exists public.service_requests (
 alter table public.service_requests enable row level security;
 
 -- owners can CRUD their own requests
-create policy "requests_owner_select" on public.service_requests for select  using (auth.uid() = owner_id);
-create policy "requests_owner_insert" on public.service_requests for insert  with check (auth.uid() = owner_id);
-create policy "requests_owner_update" on public.service_requests for update  using (auth.uid() = owner_id);
+drop policy if exists "requests_owner_select" on public.service_requests;
+create policy "requests_owner_select" on public.service_requests for select using (auth.uid() = owner_id);
+drop policy if exists "requests_owner_insert" on public.service_requests;
+create policy "requests_owner_insert" on public.service_requests for insert with check (auth.uid() = owner_id);
+drop policy if exists "requests_owner_update" on public.service_requests;
+create policy "requests_owner_update" on public.service_requests for update using (auth.uid() = owner_id);
 
 -- assigned contractors can view and update requests assigned to them
+drop policy if exists "requests_contractor_select" on public.service_requests;
 create policy "requests_contractor_select" on public.service_requests for select
   using (auth.uid() = assigned_contractor_id);
+drop policy if exists "requests_contractor_update" on public.service_requests;
 create policy "requests_contractor_update" on public.service_requests for update
   using (auth.uid() = assigned_contractor_id);
 
@@ -117,6 +125,7 @@ create table if not exists public.messages (
 alter table public.messages enable row level security;
 
 -- participants in a request can send/read messages
+drop policy if exists "messages_select" on public.messages;
 create policy "messages_select" on public.messages for select
   using (
     exists (
@@ -126,6 +135,7 @@ create policy "messages_select" on public.messages for select
     )
   );
 
+drop policy if exists "messages_insert" on public.messages;
 create policy "messages_insert" on public.messages for insert
   with check (
     auth.uid() = sender_id and
@@ -135,3 +145,23 @@ create policy "messages_insert" on public.messages for insert
         and (auth.uid() = sr.owner_id or auth.uid() = sr.assigned_contractor_id)
     )
   );
+
+
+-- Keep updated_at timestamps in sync for mutable tables
+create or replace function public.set_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_profiles_updated_at on public.profiles;
+create trigger set_profiles_updated_at
+  before update on public.profiles
+  for each row execute function public.set_updated_at();
+
+drop trigger if exists set_service_requests_updated_at on public.service_requests;
+create trigger set_service_requests_updated_at
+  before update on public.service_requests
+  for each row execute function public.set_updated_at();

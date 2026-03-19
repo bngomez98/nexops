@@ -7,12 +7,11 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AlertCircle, Loader2, Eye, EyeOff } from "lucide-react"
+import { AlertCircle, Loader2 } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -25,22 +24,18 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError(
-        error.message === "Invalid login credentials"
-          ? "Incorrect email or password. Please try again."
-          : error.message
-      )
+      setError(error.message)
       setLoading(false)
       return
     }
 
+    // Role-aware redirect — hard navigation so server cookies are fresh
     const role = data.user?.user_metadata?.role
     window.location.href = role === "contractor" ? "/dashboard/contractor" : "/dashboard"
   }
 
   return (
     <div className="flex min-h-screen bg-background">
-
       {/* Left panel — brand */}
       <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] flex-col justify-between border-r border-border bg-card px-12 py-16 flex-shrink-0">
         <Link href="/">
@@ -67,10 +62,11 @@ export default function LoginPage() {
           <div className="space-y-5 text-[13.5px] text-muted-foreground leading-[1.7]">
             <p>
               One verified contractor per request. No competing bids. No cold calls.
-              Every project documented through completion.
+              Documentation maintained through job completion.
             </p>
             <p>
-              Contractors access requests through a flat monthly membership — no per-project fees, no referral cuts.
+              Contractors join at no cost. Service requests receive a dedicated
+              contractor from our vetted network within the submission day.
             </p>
           </div>
 
@@ -78,7 +74,7 @@ export default function LoginPage() {
             {[
               { n: "8",    label: "Trade categories" },
               { n: "1",    label: "Contractor per request" },
-              { n: "$0",   label: "Platform fee to owners" },
+              { n: "$0",   label: "Contractor cost" },
               { n: "100%", label: "Manually reviewed" },
             ].map(({ n, label }) => (
               <div key={label}>
@@ -96,7 +92,6 @@ export default function LoginPage() {
 
       {/* Right panel — form */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-
         {/* Mobile logo */}
         <div className="mb-8 lg:hidden">
           <Link href="/">
@@ -113,9 +108,9 @@ export default function LoginPage() {
 
         <div className="w-full max-w-[400px]">
           <div className="mb-8">
-            <h1 className="text-[22px] font-bold tracking-tight">Sign in to your account</h1>
+            <h1 className="text-[22px] font-bold tracking-tight">Welcome back</h1>
             <p className="mt-1.5 text-[13.5px] text-muted-foreground">
-              Nexus Operations · Topeka, Kansas
+              Sign in to your Nexus Operations account.
             </p>
           </div>
 
@@ -151,26 +146,16 @@ export default function LoginPage() {
                   Forgot password?
                 </Link>
               </div>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  className="h-10 text-[13px] pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                className="h-10 text-[13px]"
+              />
             </div>
 
             <Button type="submit" className="w-full h-10 text-[13px] font-semibold" disabled={loading}>
@@ -185,11 +170,19 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-5 border-t border-border pt-5 text-[13px] text-muted-foreground text-center">
-            Don&apos;t have an account?{" "}
-            <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
-              Create one
-            </Link>
+          <div className="mt-5 border-t border-border pt-5 space-y-2 text-center">
+            <p className="text-[13px] text-muted-foreground">
+              Don&apos;t have an account?{" "}
+              <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
+                Create one
+              </Link>
+            </p>
+            <p className="text-[12px] text-muted-foreground">
+              Forgot your password?{" "}
+              <Link href="/auth/forgot-password" className="text-primary hover:underline font-medium">
+                Reset it here
+              </Link>
+            </p>
           </div>
         </div>
       </div>

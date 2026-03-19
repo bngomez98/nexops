@@ -1,489 +1,282 @@
-"use client"
+'use client'
 
-import { useEffect, useRef, useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { canSubmitServiceRequest } from "@/lib/auth/roles"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  ArrowLeft,
-  ArrowRight,
-  TreePine,
-  Thermometer,
-  Zap,
-  Home,
-  Hammer,
-  Fence,
-  Droplets,
-  Wrench,
-  Upload,
-  Loader2,
-  X,
-  ImagePlus,
-} from "lucide-react"
+import React, { useState, useEffect } from "react"
+import { useAuth } from '@/app/lib/auth-context'
+import { useRequests } from '@/app/lib/requests-context'
+import { DashboardLayout } from '@/components/dashboard-layout'
+import { useRouter } from 'next/navigation'
+import { ChevronLeft, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
 
-const categories = [
-  { id: "tree-removal",   name: "Tree Removal",   icon: TreePine },
-  { id: "hvac",           name: "HVAC",            icon: Thermometer },
-  { id: "electrical",     name: "Electrical",      icon: Zap },
-  { id: "roofing",        name: "Roofing",         icon: Home },
-  { id: "concrete",       name: "Concrete",        icon: Hammer },
-  { id: "fencing",        name: "Fencing",         icon: Fence },
-  { id: "plumbing",       name: "Plumbing",        icon: Droplets },
-  { id: "general-repair", name: "General Repair",  icon: Wrench },
+const serviceTypes = [
+  'Roof repair',
+  'Gutter cleaning',
+  'HVAC inspection',
+  'Concrete repair',
+  'Fence repair',
+  'Plumbing',
+  'Electrical',
+  'Painting',
+  'Other',
 ]
 
 export default function NewRequestPage() {
+  const { user, isLoggedIn } = useAuth()
+  const { addRequest } = useRequests()
   const router = useRouter()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [canSubmit, setCanSubmit] = useState(true)
-  const [roleChecked, setRoleChecked] = useState(false)
-  const [photos, setPhotos] = useState<File[]>([])
-  const [previews, setPreviews] = useState<string[]>([])
+  const [step, setStep] = useState<'details' | 'dates' | 'review'>('details')
+  const [error, setError] = useState('')
+
   const [formData, setFormData] = useState({
-    category: "",
-    description: "",
-    budgetMin: "",
-    budgetMax: "",
-    address: "",
-    city: "",
-    state: "KS",
-    zipCode: "",
-    preferredDates: "",
-    additionalNotes: "",
+    type: '',
+    property: '',
+    description: '',
+    budget: '',
+    dueDate: '',
   })
 
-  // Generate object URLs for previews whenever photos change
   useEffect(() => {
-    const urls = photos.map((f) => URL.createObjectURL(f))
-    setPreviews(urls)
-    return () => urls.forEach((u) => URL.revokeObjectURL(u))
-  }, [photos])
-
-  function handleFiles(files: FileList | null) {
-    if (!files) return
-    const valid = Array.from(files).filter((f) => f.type.startsWith("image/"))
-    setPhotos((prev) => [...prev, ...valid].slice(0, 10))
-  }
-
-  function removePhoto(index: number) {
-    setPhotos((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const handleSubmit = async () => {
-    if (!canSubmit) {
-      setError("Only homeowners can submit service requests.")
-      return
+    if (!isLoggedIn || user?.role !== 'client') {
+      router.push('/login')
     }
+  }, [isLoggedIn, user, router])
 
-    setLoading(true)
-    setError(null)
+  if (!isLoggedIn || user?.role !== 'client') {
+    return null
+  }
 
-    try {
-      const supabase = createClient()
-      let photoUrls: string[] = []
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
-      // Upload photos to Supabase Storage if any were attached
-      if (photos.length > 0) {
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
-          const uploadResults = await Promise.all(
-            photos.map(async (file) => {
-              const ext = file.name.split(".").pop() ?? "jpg"
-              const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-              const { error: uploadErr } = await supabase.storage
-                .from("request-photos")
-                .upload(path, file, { cacheControl: "3600", upsert: false })
-              if (uploadErr) return null
-              const { data: urlData } = supabase.storage
-                .from("request-photos")
-                .getPublicUrl(path)
-              return urlData.publicUrl
-            })
-          )
-          photoUrls = uploadResults.filter((u): u is string => u !== null)
-        }
+  const handleNext = () => {
+    setError('')
+    if (step === 'details') {
+      if (!formData.type || !formData.property || !formData.description || !formData.budget) {
+        setError('Please fill in all fields')
+        return
       }
-
-      const res = await fetch("/api/requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, photoUrls }),
-      })
-
-      if (!res.ok) {
-        const body = await res.json()
-        throw new Error(body.error ?? "Failed to submit request")
+      setStep('dates')
+    } else if (step === 'dates') {
+      if (!formData.dueDate) {
+        setError('Please select a due date')
+        return
       }
-
-      router.push("/dashboard/requests")
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong")
-      setLoading(false)
+      setStep('review')
     }
   }
 
-  useEffect(() => {
-    const supabase = createClient()
-    const loadRole = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      const allowed = canSubmitServiceRequest(user?.user_metadata?.role)
-      setCanSubmit(allowed)
-      setRoleChecked(true)
-      if (!allowed) setError("Only homeowners can submit service requests.")
+  const handleBack = () => {
+    if (step === 'dates') {
+      setStep('details')
+    } else if (step === 'review') {
+      setStep('dates')
     }
-    void loadRole()
-  }, [])
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    addRequest({
+      propertyId: 'prop-1',
+      propertyName: formData.property,
+      type: formData.type,
+      status: 'pending',
+      budget: parseInt(formData.budget),
+      dueDate: formData.dueDate,
+      description: formData.description,
+    })
+    
+    router.push('/dashboard/requests')
+  }
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-2xl">
+    <DashboardLayout>
+      <div className="max-w-2xl">
         <Link
           href="/dashboard/requests"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4" />
           Back to requests
         </Link>
 
-        {!canSubmit && roleChecked && (
-          <p className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm text-destructive">
-            Only homeowners can submit service requests.
-          </p>
-        )}
-
-        {/* Progress */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between text-sm">
-            {["Category", "Details", "Location", "Review"].map((label, i) => (
-              <span key={label} className={step >= i + 1 ? "text-primary font-medium" : "text-muted-foreground"}>
-                {i + 1}. {label}
-              </span>
-            ))}
-          </div>
-          <div className="mt-2 h-1.5 rounded-full bg-muted">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Progress */}
+          <div className="flex items-center gap-2">
             <div
-              className="h-1.5 rounded-full bg-primary transition-all duration-300"
-              style={{ width: `${(step / 4) * 100}%` }}
+              className={`flex-1 h-1 rounded-full ${
+                step === 'details' || step === 'dates' || step === 'review' ? 'bg-primary' : 'bg-border'
+              }`}
             />
+            <div
+              className={`flex-1 h-1 rounded-full ${step === 'dates' || step === 'review' ? 'bg-primary' : 'bg-border'}`}
+            />
+            <div className={`flex-1 h-1 rounded-full ${step === 'review' ? 'bg-primary' : 'bg-border'}`} />
           </div>
-        </div>
 
-        {/* Step 1: Category */}
-        {step === 1 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Select a service category</CardTitle>
-              <CardDescription>Choose the type of work you need</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setFormData({ ...formData, category: category.id })}
-                    className={`flex items-center gap-3 rounded-lg border p-4 text-left transition ${
-                      formData.category === category.id
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <category.icon className="h-5 w-5 text-primary" />
-                    <span className="font-medium">{category.name}</span>
-                  </button>
-                ))}
-              </div>
-              <Button className="mt-6 w-full" onClick={() => setStep(2)} disabled={!formData.category}>
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700 flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              {error}
+            </div>
+          )}
 
-        {/* Step 2: Details + Photos */}
-        {step === 2 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Project details</CardTitle>
-              <CardDescription>Describe your project, attach photos, and set your budget</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="description">Project description</Label>
-                <textarea
-                  id="description"
-                  placeholder="Describe the work needed. Include current condition, materials if known, and any access notes."
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                />
-              </div>
-
-              {/* Photo upload */}
+          {/* Step 1: Details */}
+          {step === 'details' && (
+            <div className="space-y-4">
               <div>
-                <Label className="mb-2 block">
-                  Project photos
-                  <span className="ml-1.5 text-[11px] font-normal text-muted-foreground">(up to 10 — helps contractors prepare an accurate estimate)</span>
-                </Label>
+                <h1 className="text-2xl font-semibold text-foreground mb-1">Describe your project</h1>
+                <p className="text-muted-foreground">Tell us what needs to be done</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Service type</label>
+                <select
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
+                >
+                  <option value="">Select a service</option>
+                  {serviceTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Property address</label>
                 <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => handleFiles(e.target.files)}
+                  type="text"
+                  name="property"
+                  value={formData.property}
+                  onChange={handleChange}
+                  placeholder="e.g., 1420 N Maple St"
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
                 />
-
-                {photos.length > 0 ? (
-                  <div className="space-y-3">
-                    {/* Thumbnail grid */}
-                    <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
-                      {previews.map((src, i) => (
-                        <div key={i} className="relative aspect-square rounded-md overflow-hidden border border-border bg-muted group">
-                          <Image
-                            src={src}
-                            alt={`Photo ${i + 1}`}
-                            fill
-                            className="object-cover"
-                            sizes="100px"
-                          />
-                          <button
-                            onClick={() => removePhoto(i)}
-                            className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-background/80 text-muted-foreground opacity-0 group-hover:opacity-100 transition hover:text-foreground"
-                            aria-label={`Remove photo ${i + 1}`}
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                      {photos.length < 10 && (
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="aspect-square rounded-md border border-dashed border-border bg-muted/50 flex flex-col items-center justify-center gap-1 hover:border-primary/40 transition text-muted-foreground hover:text-foreground"
-                        >
-                          <ImagePlus className="h-4 w-4" />
-                          <span className="text-[10px]">Add</span>
-                        </button>
-                      )}
-                    </div>
-                    <p className="text-[11px] text-muted-foreground">{photos.length} photo{photos.length !== 1 ? "s" : ""} attached</p>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full rounded-lg border border-dashed border-border bg-muted/50 p-6 text-center hover:border-primary/40 transition"
-                  >
-                    <Upload className="mx-auto h-6 w-6 text-muted-foreground" />
-                    <p className="mt-2 text-sm font-medium">Upload project photos</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Click to select · 2–10 photos recommended</p>
-                  </button>
-                )}
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="budgetMin">Budget minimum ($)</Label>
-                  <Input
-                    id="budgetMin"
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the work that needs to be done..."
+                  rows={4}
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Budget cap</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                  <input
                     type="number"
-                    placeholder="500"
-                    value={formData.budgetMin}
-                    onChange={(e) => setFormData({ ...formData, budgetMin: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="budgetMax">Budget maximum ($)</Label>
-                  <Input
-                    id="budgetMax"
-                    type="number"
-                    placeholder="5000"
-                    value={formData.budgetMax}
-                    onChange={(e) => setFormData({ ...formData, budgetMax: e.target.value })}
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    placeholder="0"
+                    className="w-full pl-8 pr-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
+            </div>
+          )}
 
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                <Button
-                  className="flex-1"
-                  onClick={() => setStep(3)}
-                  disabled={!formData.description}
-                >
-                  Continue
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+          {/* Step 2: Dates */}
+          {step === 'dates' && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-semibold text-foreground mb-1">When do you need this done?</h1>
+                <p className="text-muted-foreground">Select your preferred timeline</p>
               </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Step 3: Location */}
-        {step === 3 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Project location</CardTitle>
-              <CardDescription>Where is the work needed?</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="address">Street address</Label>
-                <Input
-                  id="address"
-                  placeholder="123 Main St"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Due date</label>
+                <input
+                  type="date"
+                  name="dueDate"
+                  value={formData.dueDate}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
                 />
               </div>
+            </div>
+          )}
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    placeholder="Topeka"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  />
+          {/* Step 3: Review */}
+          {step === 'review' && (
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-2xl font-semibold text-foreground mb-1">Review your request</h1>
+                <p className="text-muted-foreground">Make sure everything looks correct</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Service type</p>
+                  <p className="text-sm font-medium text-foreground">{formData.type}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input
-                    id="state"
-                    value={formData.state}
-                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                  />
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Property</p>
+                  <p className="text-sm font-medium text-foreground">{formData.property}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zipCode">ZIP Code</Label>
-                  <Input
-                    id="zipCode"
-                    placeholder="66601"
-                    value={formData.zipCode}
-                    onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
-                  />
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Description</p>
+                  <p className="text-sm text-muted-foreground">{formData.description}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Budget cap</p>
+                  <p className="text-sm font-medium text-foreground">${parseInt(formData.budget).toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase text-muted-foreground">Due date</p>
+                  <p className="text-sm font-medium text-foreground">{formData.dueDate}</p>
                 </div>
               </div>
+            </div>
+          )}
 
-              <div className="space-y-2">
-                <Label htmlFor="preferredDates">Preferred consultation dates</Label>
-                <Input
-                  id="preferredDates"
-                  placeholder="e.g., Weekdays after 5pm, Saturday mornings"
-                  value={formData.preferredDates}
-                  onChange={(e) => setFormData({ ...formData, preferredDates: e.target.value })}
-                />
-              </div>
+          {/* Actions */}
+          <div className="flex items-center justify-between pt-4 border-t border-border">
+            <button
+              type="button"
+              onClick={handleBack}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-opacity ${
+                step === 'details'
+                  ? 'text-muted-foreground cursor-not-allowed opacity-50'
+                  : 'text-foreground hover:bg-secondary'
+              }`}
+              disabled={step === 'details'}
+            >
+              Back
+            </button>
 
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-                <Button
-                  className="flex-1"
-                  onClick={() => setStep(4)}
-                  disabled={!formData.address || !formData.city || !formData.zipCode}
-                >
-                  Continue
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 4: Review */}
-        {step === 4 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Review your request</CardTitle>
-              <CardDescription>Confirm the details before submitting</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="rounded-lg border border-border bg-muted/50 p-4 space-y-3">
-                <h3 className="font-semibold capitalize">
-                  {categories.find((c) => c.id === formData.category)?.name}
-                </h3>
-                <p className="text-sm text-muted-foreground">{formData.description}</p>
-                <div className="grid gap-2 text-sm">
-                  {(formData.budgetMin || formData.budgetMax) && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Budget:</span>
-                      <span>
-                        {formData.budgetMin && formData.budgetMax
-                          ? `$${formData.budgetMin} – $${formData.budgetMax}`
-                          : formData.budgetMax
-                          ? `Up to $${formData.budgetMax}`
-                          : `From $${formData.budgetMin}`}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Location:</span>
-                    <span>{formData.address}, {formData.city}, {formData.state} {formData.zipCode}</span>
-                  </div>
-                  {formData.preferredDates && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Availability:</span>
-                      <span>{formData.preferredDates}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Photo thumbnails in review */}
-                {previews.length > 0 && (
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-2">{previews.length} photo{previews.length !== 1 ? "s" : ""} attached:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {previews.map((src, i) => (
-                        <div key={i} className="relative h-14 w-14 rounded overflow-hidden border border-border bg-muted flex-shrink-0">
-                          <Image src={src} alt={`Photo ${i + 1}`} fill className="object-cover" sizes="56px" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-                <h4 className="font-medium text-primary">What happens next?</h4>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>1. Your request enters the contractor queue after a brief review</li>
-                  <li>2. The first qualified contractor to claim it gets exclusive access</li>
-                  <li>3. You receive a confirmed consultation within 24 hours</li>
-                </ul>
-              </div>
-
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
-
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
-                <Button className="flex-1" onClick={handleSubmit} disabled={loading || !canSubmit || !roleChecked}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    "Submit Request"
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+            {step === 'review' ? (
+              <button
+                type="submit"
+                className="px-6 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Submit request
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="px-6 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Next
+              </button>
+            )}
+          </div>
+        </form>
       </div>
-    </div>
+    </DashboardLayout>
   )
 }

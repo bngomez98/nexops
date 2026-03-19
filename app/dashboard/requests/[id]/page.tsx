@@ -1,216 +1,141 @@
-import type { ElementType } from "react"
-import { createClient } from "@/lib/supabase/server"
-import { redirect, notFound } from "next/navigation"
-import Link from "next/link"
-import {
-  ArrowLeft,
-  MapPin,
-  DollarSign,
-  Calendar,
-  Camera,
-  MessageSquare,
-  Clock,
-  CheckCircle2,
-  CircleDashed,
-  Loader2,
-  XCircle,
-} from "lucide-react"
+'use client'
 
-const CATEGORY_LABELS: Record<string, string> = {
-  "tree-removal":   "Tree Removal",
-  hvac:             "HVAC",
-  electrical:       "Electrical",
-  roofing:          "Roofing",
-  concrete:         "Concrete",
-  fencing:          "Fencing",
-  plumbing:         "Plumbing",
-  "general-repair": "General Repair",
-}
+import { useAuth } from '@/app/lib/auth-context'
+import { useRequests } from '@/app/lib/requests-context'
+import { DashboardLayout } from '@/components/dashboard-layout'
+import { useRouter } from 'next/navigation'
+import { useEffect, use } from 'react'
+import { ChevronLeft, Phone, Mail, Calendar, MapPin, DollarSign } from 'lucide-react'
+import Link from 'next/link'
 
-const STATUS_META: Record<string, { label: string; color: string; icon: ElementType }> = {
-  pending_review:         { label: "Pending Review",          color: "text-muted-foreground",  icon: CircleDashed },
-  in_queue:               { label: "Open — Awaiting Claim",   color: "text-primary",           icon: Clock },
-  assigned:               { label: "Assigned",                color: "text-blue-600",          icon: Clock },
-  consultation_scheduled: { label: "Consultation Scheduled",  color: "text-blue-600",          icon: Calendar },
-  in_progress:            { label: "In Progress",             color: "text-amber-600",         icon: Loader2 },
-  completed:              { label: "Completed",               color: "text-green-600",         icon: CheckCircle2 },
-  declined:               { label: "Declined",                color: "text-destructive",       icon: XCircle },
-  cancelled:              { label: "Cancelled",               color: "text-muted-foreground",  icon: XCircle },
-}
+export default function RequestDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
+  const { user, isLoggedIn } = useAuth()
+  const { clientRequests } = useRequests()
+  const router = useRouter()
 
-export default async function RequestDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  useEffect(() => {
+    if (!isLoggedIn || user?.role !== 'client') {
+      router.push('/login')
+    }
+  }, [isLoggedIn, user, router])
 
-  if (!user) redirect("/auth/login")
+  if (!isLoggedIn || user?.role !== 'client') {
+    return null
+  }
 
-  const { data: req } = await supabase
-    .from("service_requests")
-    .select("*")
-    .eq("id", id)
-    .eq("owner_id", user.id)
-    .single()
+  const request = clientRequests.find((r) => r.id === id)
 
-  if (!req) notFound()
+  if (!request) {
+    return (
+      <DashboardLayout>
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Request not found</p>
+        </div>
+      </DashboardLayout>
+    )
+  }
 
-  const status = STATUS_META[req.status] ?? { label: req.status, color: "text-muted-foreground", icon: CircleDashed }
-  const StatusIcon = status.icon
-
-  const hasContractor = !!req.assigned_contractor_id
-  const isActive = ["assigned", "consultation_scheduled", "in_progress"].includes(req.status)
+  const statusColors = {
+    pending: 'bg-amber-50 text-amber-700 border-amber-200',
+    assigned: 'bg-blue-50 text-blue-700 border-blue-200',
+    'in-progress': 'bg-blue-50 text-blue-700 border-blue-200',
+    completed: 'bg-green-50 text-green-700 border-green-200',
+    invoiced: 'bg-slate-50 text-slate-700 border-slate-200',
+  }
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-3xl px-6 py-8">
-
+    <DashboardLayout>
+      <div className="space-y-6">
         <Link
           href="/dashboard/requests"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          All requests
+          <ChevronLeft className="h-4 w-4" />
+          Back to requests
         </Link>
 
-        {/* Header */}
-        <div className="mb-6 rounded-lg border border-border bg-card p-6">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-              {CATEGORY_LABELS[req.category] ?? req.category.replace(/-/g, " ")}
-            </span>
-            <span className={`flex items-center gap-1 text-[10px] font-medium ${status.color}`}>
-              <StatusIcon className="h-3 w-3" />
-              {status.label}
-            </span>
-          </div>
-
-          <h1 className="text-base font-semibold mb-4">{req.description}</h1>
-
-          <div className="grid gap-2 text-[12px] text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-              {req.address}, {req.city}, {req.state} {req.zip_code}
-            </span>
-
-            {(req.budget_min || req.budget_max) && (
-              <span className="flex items-center gap-2">
-                <DollarSign className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                {req.budget_min && req.budget_max
-                  ? `$${Number(req.budget_min).toLocaleString()} – $${Number(req.budget_max).toLocaleString()}`
-                  : req.budget_max
-                  ? `Up to $${Number(req.budget_max).toLocaleString()}`
-                  : `From $${Number(req.budget_min).toLocaleString()}`}
-              </span>
-            )}
-
-            {req.preferred_dates && (
-              <span className="flex items-center gap-2">
-                <Calendar className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                {req.preferred_dates}
-              </span>
-            )}
-
-            {req.photo_urls && req.photo_urls.length > 0 && (
-              <span className="flex items-center gap-2">
-                <Camera className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                {req.photo_urls.length} photo{req.photo_urls.length !== 1 ? "s" : ""} attached
-              </span>
-            )}
-          </div>
-
-          <p className="mt-4 text-[11px] text-muted-foreground">
-            Submitted {new Date(req.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-          </p>
-        </div>
-
-        {/* Status timeline */}
-        <div className="mb-6 rounded-lg border border-border bg-card p-5">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-4">Status timeline</p>
-          <div className="space-y-3 text-[13px]">
-            {[
-              { key: "pending_review",         label: "Submitted for review" },
-              { key: "in_queue",               label: "Approved — open for contractor claims" },
-              { key: "assigned",               label: "Contractor assigned" },
-              { key: "consultation_scheduled", label: "Consultation scheduled" },
-              { key: "in_progress",            label: "Work in progress" },
-              { key: "completed",              label: "Completed" },
-            ].map(({ key, label }) => {
-              const statuses = ["pending_review", "in_queue", "assigned", "consultation_scheduled", "in_progress", "completed"]
-              const currentIdx = statuses.indexOf(req.status)
-              const stepIdx = statuses.indexOf(key)
-              const isDone = currentIdx > stepIdx
-              const isCurrent = currentIdx === stepIdx
-
-              return (
-                <div key={key} className="flex items-center gap-3">
-                  <div className={`h-2 w-2 rounded-full flex-shrink-0 ${
-                    isCurrent ? "bg-primary" : isDone ? "bg-green-500" : "bg-muted-foreground/30"
-                  }`} />
-                  <span className={isCurrent ? "text-foreground font-medium" : isDone ? "text-muted-foreground line-through" : "text-muted-foreground/60"}>
-                    {label}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Additional notes */}
-        {req.additional_notes && (
-          <div className="mb-6 rounded-lg border border-border bg-card p-5">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Additional notes</p>
-            <p className="text-sm text-muted-foreground leading-relaxed">{req.additional_notes}</p>
-          </div>
-        )}
-
-        {/* Photo gallery */}
-        {req.photo_urls && req.photo_urls.length > 0 && (
-          <div className="mb-6 rounded-lg border border-border bg-card p-5">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-              Project photos ({req.photo_urls.length})
-            </p>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {(req.photo_urls as string[]).map((url, i) => (
-                <a
-                  key={i}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted hover:opacity-90 transition"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
-                </a>
-              ))}
+        <div className="bg-card border border-border rounded-lg p-6">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">{request.type}</h1>
+              <p className="text-muted-foreground mt-1">{request.propertyName}</p>
             </div>
+            <span className={`text-sm font-medium px-3 py-1 rounded border ${statusColors[request.status]}`}>
+              {request.status.charAt(0).toUpperCase() + request.status.slice(1).replace('-', ' ')}
+            </span>
           </div>
-        )}
 
-        {/* Message thread CTA */}
-        {hasContractor && isActive && (
-          <Link
-            href={`/dashboard/messages/${req.id}`}
-            className="flex items-center justify-between rounded-lg border border-border bg-card px-5 py-4 transition hover:border-primary/40"
-          >
-            <div className="flex items-center gap-3">
-              <MessageSquare className="h-4 w-4 text-primary" />
-              <div>
-                <p className="text-sm font-medium">Message thread open</p>
-                <p className="text-[11px] text-muted-foreground">View your assigned contractor details</p>
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-4">Request details</h2>
+              <div className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Created</p>
+                    <p className="text-sm text-foreground">{request.createdAt}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Due date</p>
+                    <p className="text-sm text-foreground">{request.dueDate}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Property</p>
+                    <p className="text-sm text-foreground">{request.propertyName}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <DollarSign className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Budget</p>
+                    <p className="text-sm font-semibold text-foreground">${request.budget.toLocaleString()}</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <ArrowLeft className="h-4 w-4 rotate-180 text-muted-foreground" />
-          </Link>
-        )}
 
-        {/* Pending review notice */}
-        {req.status === "pending_review" && (
-          <div className="rounded-lg border border-border bg-muted/30 px-5 py-4 text-[13px] text-muted-foreground">
-            Your request is under review by Nexus Operations. Once approved, it will enter the contractor queue and a contractor will be assigned within 24 hours.
+            {request.assignedContractor && (
+              <div>
+                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-4">Assigned contractor</h2>
+                <div className="bg-secondary rounded-lg p-4">
+                  <p className="font-medium text-foreground">{request.assignedContractor.name}</p>
+                  <div className="space-y-2 mt-3 text-sm">
+                    <a
+                      href={`tel:${request.assignedContractor.phone}`}
+                      className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Phone className="h-4 w-4" />
+                      {request.assignedContractor.phone}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="border-t border-border pt-6">
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-3">Description</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">{request.description}</p>
+          </div>
+        </div>
+
+        {request.status === 'invoiced' && request.invoiceAmount && (
+          <div className="bg-card border border-border rounded-lg p-6">
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-4">Invoice</h2>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Total amount</span>
+              <span className="text-lg font-semibold text-foreground">${request.invoiceAmount.toLocaleString()}</span>
+            </div>
           </div>
         )}
-
       </div>
-    </div>
+    </DashboardLayout>
   )
 }

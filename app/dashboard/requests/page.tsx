@@ -1,129 +1,89 @@
-import { createClient } from "@/lib/supabase/server"
-import { isTemplatedRequest } from "@/lib/requests"
-import { redirect } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Plus, FileText, MapPin, Calendar, DollarSign, ArrowRight } from "lucide-react"
+'use client'
 
-const STATUS_LABELS: Record<string, string> = {
-  pending_review:          "Pending Review",
-  in_queue:                "Open",
-  assigned:                "Assigned",
-  consultation_scheduled:  "Consultation Scheduled",
-  in_progress:             "In Progress",
-  completed:               "Completed",
-  declined:                "Declined",
-  cancelled:               "Cancelled",
+import { useAuth } from '@/app/lib/auth-context'
+import { useRequests } from '@/app/lib/requests-context'
+import { DashboardLayout } from '@/components/dashboard-layout'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { CheckCircle2, Clock, AlertCircle, FileText } from 'lucide-react'
+import Link from 'next/link'
+
+const statusConfig = {
+  pending: { icon: AlertCircle, label: 'Pending', color: 'text-amber-700 bg-amber-50' },
+  assigned: { icon: Clock, label: 'Assigned', color: 'text-blue-700 bg-blue-50' },
+  'in-progress': { icon: Clock, label: 'In Progress', color: 'text-blue-700 bg-blue-50' },
+  completed: { icon: CheckCircle2, label: 'Completed', color: 'text-green-700 bg-green-50' },
+  invoiced: { icon: FileText, label: 'Invoiced', color: 'text-slate-700 bg-slate-50' },
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  pending_review:          "text-muted-foreground bg-muted",
-  in_queue:                "text-primary bg-primary/10",
-  assigned:                "text-blue-500 bg-blue-500/10",
-  consultation_scheduled:  "text-blue-500 bg-blue-500/10",
-  in_progress:             "text-amber-500 bg-amber-500/10",
-  completed:               "text-green-500 bg-green-500/10",
-  declined:                "text-destructive bg-destructive/10",
-  cancelled:               "text-muted-foreground bg-muted",
-}
+export default function RequestsPage() {
+  const { user, isLoggedIn } = useAuth()
+  const { clientRequests } = useRequests()
+  const router = useRouter()
 
-export default async function RequestsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  useEffect(() => {
+    if (!isLoggedIn || user?.role !== 'client') {
+      router.push('/login')
+    }
+  }, [isLoggedIn, user, router])
 
-  if (!user) redirect("/auth/login")
-
-  const { data: requests } = await supabase
-    .from("service_requests")
-    .select("*")
-    .eq("owner_id", user.id)
-    .order("created_at", { ascending: false })
-
-  const list = (requests ?? []).filter((request) => !isTemplatedRequest(request))
+  if (!isLoggedIn || user?.role !== 'client') {
+    return null
+  }
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-6xl px-6 py-8">
-        <div className="mb-8 flex items-center justify-between">
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold">My Requests</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {list.length === 0 ? "No requests submitted yet" : `${list.length} request${list.length === 1 ? "" : "s"}`}
-            </p>
+            <h1 className="text-2xl font-semibold text-foreground">Requests</h1>
+            <p className="text-muted-foreground text-sm mt-1">View and manage all your maintenance requests</p>
           </div>
-          <Button asChild size="sm">
-            <Link href="/dashboard/requests/new">
-              <Plus className="h-3.5 w-3.5" />
-              New Request
-            </Link>
-          </Button>
+          <Link
+            href="/dashboard/requests/new"
+            className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+          >
+            New request
+          </Link>
         </div>
 
-        {list.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-border bg-card p-14 text-center">
-            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-              <FileText className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <h3 className="text-sm font-semibold">No requests yet</h3>
-            <p className="mt-1.5 text-xs text-muted-foreground max-w-xs mx-auto">
-              Submit your first request to get matched with a verified contractor in your area.
-            </p>
-            <Button asChild size="sm" className="mt-4">
-              <Link href="/dashboard/requests/new">Submit Request</Link>
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {list.map((req) => (
+        <div className="space-y-2">
+          {clientRequests.map((request) => {
+            const StatusIcon = statusConfig[request.status].icon
+            return (
               <Link
-                key={req.id}
-                href={`/dashboard/requests/${req.id}`}
-                className="group block rounded-lg border border-border bg-card overflow-hidden transition hover:border-primary/40"
+                key={request.id}
+                href={`/dashboard/requests/${request.id}`}
+                className="block bg-card border border-border rounded-lg p-4 hover:border-primary transition-colors"
               >
-                <div className="flex items-start justify-between px-5 py-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full capitalize">
-                        {req.category.replace(/-/g, " ")}
-                      </span>
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${STATUS_COLORS[req.status] ?? "text-muted-foreground bg-muted"}`}>
-                        {STATUS_LABELS[req.status] ?? req.status}
-                      </span>
-                    </div>
-                    <p className="text-sm font-medium line-clamp-2">{req.description}</p>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-                      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                        <MapPin className="h-3 w-3" />{req.address}, {req.city}, {req.state} {req.zip_code}
-                      </span>
-                      {(req.budget_min || req.budget_max) && (
-                        <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <DollarSign className="h-3 w-3" />
-                          {req.budget_min && req.budget_max
-                            ? `$${Number(req.budget_min).toLocaleString()} – $${Number(req.budget_max).toLocaleString()}`
-                            : req.budget_max
-                            ? `Up to $${Number(req.budget_max).toLocaleString()}`
-                            : `From $${Number(req.budget_min).toLocaleString()}`}
-                        </span>
-                      )}
-                      {req.preferred_dates && (
-                        <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <Calendar className="h-3 w-3" />{req.preferred_dates}
-                        </span>
-                      )}
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="pt-1">
+                    <StatusIcon className={`h-5 w-5 ${statusConfig[request.status].color.split(' ')[0]}`} />
                   </div>
-                  <div className="flex flex-col items-end gap-2 ml-6 flex-shrink-0">
-                    <p className="text-[11px] text-muted-foreground">
-                      {new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                    </p>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between mb-1">
+                      <div>
+                        <p className="font-medium text-foreground">{request.type}</p>
+                        <p className="text-sm text-muted-foreground">{request.propertyName}</p>
+                      </div>
+                      <span className={`text-xs font-medium px-2 py-1 rounded whitespace-nowrap ${statusConfig[request.status].color}`}>
+                        {statusConfig[request.status].label}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-1">{request.description}</p>
+                    <div className="flex items-center justify-between mt-2 text-sm">
+                      <span className="text-muted-foreground">
+                        {request.assignedContractor?.name || 'Awaiting assignment'}
+                      </span>
+                      <span className="font-semibold text-foreground">${request.budget.toLocaleString()}</span>
+                    </div>
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
-        )}
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </DashboardLayout>
   )
 }
