@@ -1,8 +1,35 @@
 {
-  "name": "my-v0-project",
+  "name": "nexus-operations",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "echo 'no build script'"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "react": "^19.0.0-rc-66855b96-20250312",
+    "react-dom": "^19.0.0-rc-66855b96-20250312",
+    "next": "^16.0.0",
+    "typescript": "^5.7.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/node": "^20",
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.33",
+    "autoprefixer": "^10.4.17",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.2",
+    "lucide-react": "^0.344.0",
+    "date-fns": "^3.3.1",
+    "bcrypt": "^5.1.1",
+    "@radix-ui/react-label": "^2.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^16.0.0",
+    "@types/bcrypt": "^5.0.2"
   }
 }
