@@ -8,6 +8,68 @@ async function getSupabase() {
   return createClient()
 }
 
+// ── Thin-payload helpers ──────────────────────────────────────────────────────
+// Stripe sends either a "snapshot" payload (full object embedded in data.object)
+// or a "thin" payload (only id + object type). For thin payloads we must fetch
+// the full object before reading any fields beyond id.
+
+type StripeRef = { id: string; object?: string }
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+function hasStringId(value: unknown): value is StripeRef {
+  return isRecord(value) && typeof value.id === "string" && value.id.length > 0
+}
+
+function isSnapshot(value: unknown, ...requiredFields: string[]): boolean {
+  if (!isRecord(value)) return false
+  return requiredFields.every((field) => field in value)
+}
+
+async function resolveEventObject<T extends StripeRef>(
+  raw: unknown,
+  requiredFields: string[],
+  retrieve: (id: string) => Promise<T>,
+): Promise<T> {
+  if (isSnapshot(raw, ...requiredFields)) {
+    return raw as T
+  }
+
+  if (!hasStringId(raw)) {
+    throw new Error("Webhook event payload is missing an object id")
+  }
+
+  return retrieve(raw.id)
+}
+
+async function resolveCheckoutSession(raw: unknown): Promise<Stripe.Checkout.Session> {
+  return resolveEventObject(raw, ["mode", "metadata"], (id) => stripe!.checkout.sessions.retrieve(id))
+}
+
+async function resolveCharge(raw: unknown): Promise<Stripe.Charge> {
+  return resolveEventObject(raw, ["payment_intent", "amount"], (id) => stripe!.charges.retrieve(id))
+}
+
+async function resolveAccount(raw: unknown): Promise<Stripe.Account> {
+  return resolveEventObject(raw, ["charges_enabled", "details_submitted"], (id) => stripe!.accounts.retrieve(id))
+}
+
+async function resolveSubscription(raw: unknown): Promise<Stripe.Subscription> {
+  return resolveEventObject(raw, ["status", "customer"], (id) => stripe!.subscriptions.retrieve(id))
+}
+
+async function resolveInvoice(raw: unknown): Promise<Stripe.Invoice> {
+  return resolveEventObject(raw, ["status", "customer"], (id) => stripe!.invoices.retrieve(id))
+}
+
+async function resolveSetupIntent(raw: unknown): Promise<Stripe.SetupIntent> {
+  return resolveEventObject(raw, ["status", "usage"], (id) => stripe!.setupIntents.retrieve(id))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export async function POST(req: Request) {
   const stripe = getStripeClient()
   const body = await req.text()
