@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { isTemplatedRequest } from "@/lib/requests"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import {
@@ -58,7 +59,7 @@ export default async function ContractorDashboardPage() {
   // Open requests (not yet assigned)
   const { data: openRequests } = await supabase
     .from("service_requests")
-    .select("id, category, description, address, city, state, zip_code, budget_max, preferred_dates, created_at")
+    .select("id, category, description, additional_notes, address, city, state, zip_code, budget_max, preferred_dates, created_at")
     .in("status", ["pending_review", "in_queue"])
     .is("assigned_contractor_id", null)
     .order("created_at", { ascending: false })
@@ -66,13 +67,13 @@ export default async function ContractorDashboardPage() {
   // Claimed requests (assigned to this contractor)
   const { data: claimedRequests } = await supabase
     .from("service_requests")
-    .select("id, category, description, address, city, state, zip_code, budget_max, status, created_at")
+    .select("id, category, description, additional_notes, address, city, state, zip_code, budget_max, status, created_at")
     .eq("assigned_contractor_id", user.id)
     .not("status", "in", '("pending_review","in_queue")')
     .order("created_at", { ascending: false })
 
-  const open    = openRequests    ?? []
-  const claimed = claimedRequests ?? []
+  const open    = (openRequests ?? []).filter((request) => !isTemplatedRequest(request))
+  const claimed = (claimedRequests ?? []).filter((request) => !isTemplatedRequest(request))
 
   const claimedThisMonth = claimed.filter((r) => {
     const d = new Date(r.created_at)

@@ -317,7 +317,7 @@ export default function HomePage() {
               },
               {
                 title: "Contractors",
-                body:  "Receive pre-documented project notifications in your trade and service area. Review scope, photos, and budget before you decide to claim. Paid directly by property owners — no referral cuts.",
+                body:  "Receive notifications for real homeowner and property manager requests in your trade and service area. Review scope, photos, and budget before you decide to claim. Paid directly by property owners — no referral cuts.",
                 cta:   "Apply for network access",
                 href:  "/auth/sign-up?role=contractor",
               },
@@ -362,7 +362,7 @@ export default function HomePage() {
             {
               src:     "/photo-contractor.jpg",
               label:   "Contractors",
-              caption: "Claim qualified project leads in your trade and service area. Direct payment, no platform fees.",
+              caption: "Claim real project requests in your trade and service area. Direct payment, no platform fees.",
               href:    "/auth/sign-up?role=contractor",
               cta:     "Apply for access",
             },
