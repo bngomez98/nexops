@@ -1,30 +1,25 @@
-# Business website from agreement
+# Nexus Operations
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+This repository contains the Nexus Operations web platform and related marketplace/dashboard functionality. It has evolved from earlier v0-generated landing pages into a broader Next.js application that combines the public marketing site, authentication flows, dashboards, and project-management features.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/brianna1/nexusoperations)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/n86ESp8izq0)
+## Current direction
 
-## Overview
+The integrated codebase includes:
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+- The current Nexus Operations marketing site and SEO configuration
+- Authentication and dashboard flows introduced on feature branches
+- API routes for auth and project workflows
+- Shared UI components and utility libraries
 
-## Deployment
+## Development
 
-Your project is live at:
+```bash
+pnpm install
+pnpm dev
+```
 
-**[https://vercel.com/brianna1/nexusoperations](https://vercel.com/brianna1/nexusoperations)**
+## Build
 
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.app/chat/n86ESp8izq0](https://v0.app/chat/n86ESp8izq0)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+```bash
+pnpm build
+```
