@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { FormError } from '@/components/form-error'
+import { ImageUpload } from '@/components/image-upload'
 import { ArrowLeft } from 'lucide-react'
+import { projectRequestSchema } from '@/lib/validators'
+import { ZodError } from 'zod'
 
 const SERVICE_CATEGORIES = [
   { value: 'tree-removal', label: 'Tree Removal' },
@@ -31,6 +35,8 @@ export default function NewProjectRequest() {
     budget: '',
   })
   const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [uploadedImages, setUploadedImages] = useState<File[]>([])
 
   useEffect(() => {
     async function checkAuth() {
@@ -64,25 +70,37 @@ export default function NewProjectRequest() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
-
-    if (!formData.category || !formData.title || !formData.description || !formData.location) {
-      setError('Please fill in all required fields')
-      return
-    }
-
-    setSubmitting(true)
+    setFieldErrors({})
 
     try {
+      const validatedData = projectRequestSchema.parse({
+        category: formData.category,
+        title: formData.title,
+        description: formData.description,
+        location: formData.location,
+        budget: formData.budget,
+      })
+
+      setSubmitting(true)
+
+      // Prepare form data for file upload
+      const formData = new FormData()
+      formData.append('category', validatedData.category)
+      formData.append('title', validatedData.title)
+      formData.append('description', validatedData.description)
+      formData.append('location', validatedData.location)
+      if (validatedData.budget) {
+        formData.append('budget', String(parseFloat(validatedData.budget)))
+      }
+
+      // Add images
+      uploadedImages.forEach((image, index) => {
+        formData.append(`images`, image)
+      })
+
       const response = await fetch('/api/projects/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          category: formData.category,
-          title: formData.title,
-          description: formData.description,
-          location: formData.location,
-          budget: formData.budget ? parseFloat(formData.budget) : undefined,
-        }),
+        body: formData,
       })
 
       const data = await response.json()
@@ -94,7 +112,17 @@ export default function NewProjectRequest() {
 
       router.push('/dashboard/homeowner')
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      if (err instanceof ZodError) {
+        const errors: Record<string, string> = {}
+        err.errors.forEach(error => {
+          const path = error.path[0] as string
+          errors[path] = error.message
+        })
+        setFieldErrors(errors)
+        setError('Please correct the errors below')
+      } else {
+        setError('An error occurred. Please try again.')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -130,11 +158,7 @@ export default function NewProjectRequest() {
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="p-4 bg-destructive/10 text-destructive text-sm rounded-md">
-                {error}
-              </div>
-            )}
+            {error && <FormError message={error} />}
 
             {/* Service Category */}
             <div className="space-y-2">
@@ -145,7 +169,7 @@ export default function NewProjectRequest() {
                 value={formData.category}
                 onChange={handleInputChange}
                 required
-                className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={`w-full px-3 py-2 rounded-md border ${fieldErrors.category ? 'border-red-500' : 'border-input'} bg-input text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
               >
                 <option value="">Select a category</option>
                 {SERVICE_CATEGORIES.map(cat => (
@@ -154,6 +178,7 @@ export default function NewProjectRequest() {
                   </option>
                 ))}
               </select>
+              {fieldErrors.category && <p className="text-sm text-red-500">{fieldErrors.category}</p>}
             </div>
 
             {/* Project Title */}
@@ -166,7 +191,9 @@ export default function NewProjectRequest() {
                 value={formData.title}
                 onChange={handleInputChange}
                 required
+                className={fieldErrors.title ? 'border-red-500' : ''}
               />
+              {fieldErrors.title && <p className="text-sm text-red-500">{fieldErrors.title}</p>}
             </div>
 
             {/* Description */}
@@ -180,8 +207,9 @@ export default function NewProjectRequest() {
                 onChange={handleInputChange}
                 rows={6}
                 required
-                className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={`w-full px-3 py-2 rounded-md border ${fieldErrors.description ? 'border-red-500' : 'border-input'} bg-input text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
               />
+              {fieldErrors.description && <p className="text-sm text-red-500">{fieldErrors.description}</p>}
             </div>
 
             {/* Location */}
@@ -194,7 +222,9 @@ export default function NewProjectRequest() {
                 value={formData.location}
                 onChange={handleInputChange}
                 required
+                className={fieldErrors.location ? 'border-red-500' : ''}
               />
+              {fieldErrors.location && <p className="text-sm text-red-500">{fieldErrors.location}</p>}
             </div>
 
             {/* Budget */}
@@ -215,6 +245,19 @@ export default function NewProjectRequest() {
               </div>
               <p className="text-xs text-muted-foreground">
                 Leaving this blank helps you get more competitive bids
+              </p>
+            </div>
+
+            {/* Project Images */}
+            <div className="space-y-2">
+              <Label>Project Photos (Optional)</Label>
+              <ImageUpload
+                onImagesChange={setUploadedImages}
+                maxFiles={5}
+                maxSizeInMB={10}
+              />
+              <p className="text-xs text-muted-foreground">
+                Add up to 5 photos of your project to help contractors understand the scope better
               </p>
             </div>
 

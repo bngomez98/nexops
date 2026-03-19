@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { User, LogOut, TrendingUp, Briefcase, Award, MapPin, Loader } from 'lucide-react'
+import { ProjectFilters } from '@/components/project-filters'
+import { NotificationBell } from '@/components/notification-bell'
+import { User, LogOut, TrendingUp, Briefcase, Award, MapPin, Loader, BarChart3 } from 'lucide-react'
 
 interface ProjectRequest {
   id: string
@@ -32,12 +34,30 @@ interface ContractorData {
   } | null
 }
 
+interface FilterState {
+  search: string
+  category: string
+  budgetRange: string
+  status: string
+  location: string
+  sortBy: 'recent' | 'budget-high' | 'budget-low'
+}
+
 export default function ContractorDashboard() {
   const router = useRouter()
   const [data, setData] = useState<ContractorData | null>(null)
   const [projects, setProjects] = useState<ProjectRequest[]>([])
+  const [filteredProjects, setFilteredProjects] = useState<ProjectRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [claimingProjectId, setClaimingProjectId] = useState<string | null>(null)
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    category: '',
+    budgetRange: '',
+    status: '',
+    location: '',
+    sortBy: 'recent',
+  })
 
   useEffect(() => {
     async function loadData() {
@@ -69,6 +89,59 @@ export default function ContractorDashboard() {
 
     loadData()
   }, [router])
+
+  // Apply filters whenever projects or filters change
+  useEffect(() => {
+    let result = [...projects]
+
+    // Search filter
+    if (filters.search) {
+      const query = filters.search.toLowerCase()
+      result = result.filter(p =>
+        p.title.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query)
+      )
+    }
+
+    // Category filter
+    if (filters.category) {
+      result = result.filter(p => p.category === filters.category)
+    }
+
+    // Budget range filter
+    if (filters.budgetRange) {
+      result = result.filter(p => {
+        if (!p.budget) return true
+        const [min, max] = filters.budgetRange.split('-')
+        const budget = p.budget
+        if (max === '+') {
+          return budget >= parseInt(min)
+        }
+        return budget >= parseInt(min) && budget <= parseInt(max)
+      })
+    }
+
+    // Location filter
+    if (filters.location) {
+      result = result.filter(p =>
+        p.location.toLowerCase().includes(filters.location.toLowerCase())
+      )
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      if (filters.sortBy === 'recent') {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      } else if (filters.sortBy === 'budget-high') {
+        return (b.budget || 0) - (a.budget || 0)
+      } else if (filters.sortBy === 'budget-low') {
+        return (a.budget || 0) - (b.budget || 0)
+      }
+      return 0
+    })
+
+    setFilteredProjects(result)
+  }, [projects, filters])
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -115,6 +188,7 @@ export default function ContractorDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <NotificationBell />
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted">
               <User className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm text-foreground">{data.user.name}</span>
@@ -157,6 +231,16 @@ export default function ContractorDashboard() {
             </Button>
           </div>
 
+          {/* Analytics Link */}
+          <div className="flex gap-4">
+            <a href="/dashboard/contractor/analytics" className="flex-1">
+              <Button variant="outline" className="w-full gap-2">
+                <BarChart3 className="w-4 h-4" />
+                View Detailed Analytics
+              </Button>
+            </a>
+          </div>
+
           {/* Stats Section */}
           <div className="grid md:grid-cols-3 gap-4">
             <div className="border border-border rounded-lg p-6 bg-muted/30">
@@ -194,15 +278,34 @@ export default function ContractorDashboard() {
           </div>
 
           {/* Available Projects */}
-          <div className="border border-border rounded-lg p-6">
-            <h3 className="text-xl font-bold text-foreground mb-6">Available Projects</h3>
-            {projects.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                No projects available in your service categories at the moment. Check back soon!
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {projects.map((project) => (
+          <div className="grid lg:grid-cols-4 gap-6">
+            {/* Filters Sidebar */}
+            <div className="lg:col-span-1">
+              <ProjectFilters
+                onFiltersChange={setFilters}
+              />
+            </div>
+
+            {/* Projects List */}
+            <div className="lg:col-span-3">
+              <div className="border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-foreground">Available Projects</h3>
+                  <span className="text-sm text-muted-foreground">
+                    {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+                {projects.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    No projects available in your service categories at the moment. Check back soon!
+                  </div>
+                ) : filteredProjects.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    No projects match your filters. Try adjusting your search criteria.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredProjects.map((project) => (
                   <div key={project.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -239,9 +342,11 @@ export default function ContractorDashboard() {
                       </Button>
                     </div>
                   </div>
-                ))}
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Membership Info */}
