@@ -8,7 +8,9 @@ import {
   Plus,
   ArrowRight,
   ChevronRight,
+  CreditCard,
 } from "lucide-react"
+import { SERVICE_REQUEST_FEE_CENTS, formatUsd, hasActiveSubscription } from "@/lib/billing/config"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -26,6 +28,11 @@ export default async function DashboardPage() {
 
   const fullName        = user.user_metadata?.full_name || user.email?.split("@")[0] || "there"
   const isPropertyManager = role === "property_manager"
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("subscription_status")
+    .eq("id", user.id)
+    .single()
 
   const { data: requests } = await supabase
     .from("service_requests")
@@ -36,6 +43,7 @@ export default async function DashboardPage() {
   const inProgress = requests?.filter((r) => ["assigned", "consultation_scheduled", "in_progress"].includes(r.status)).length ?? 0
   const completed  = requests?.filter((r) => r.status === "completed").length ?? 0
   const hasRequests = (requests?.length ?? 0) > 0
+  const ownerSubscribed = hasActiveSubscription(profile?.subscription_status ?? null)
 
   const stats = [
     { label: "Open Requests", value: String(open),       sub: "Submitted and waiting for a contractor to claim",        icon: FileText,    color: "text-foreground" },
@@ -80,6 +88,26 @@ export default async function DashboardPage() {
               <p className="mt-1 text-[11px] text-muted-foreground">{sub}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mb-8 flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+          <CreditCard className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold">
+              {ownerSubscribed ? "Owner subscription active" : "Accepted-request fee applies when a contractor accepts"}
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {ownerSubscribed
+                ? "Your owner plan is active, so the accepted-request fee is waived while your subscription remains current."
+                : `Without a subscription, you only pay ${formatUsd(SERVICE_REQUEST_FEE_CENTS)} after a contractor accepts your request.`}
+            </p>
+          </div>
+          <Link
+            href="/dashboard/billing"
+            className="text-[12px] font-medium text-primary hover:underline underline-offset-4"
+          >
+            {ownerSubscribed ? "Manage billing →" : "View billing →"}
+          </Link>
         </div>
 
         {/* Empty state or recent requests */}
@@ -139,6 +167,7 @@ export default async function DashboardPage() {
               { href: "/dashboard/requests/new", label: "Submit a project request", sub: "Photos, scope, and budget" },
               { href: "/dashboard/requests",     label: "View all requests",        sub: "Track open and completed jobs" },
               { href: "/dashboard/messages",     label: "Messages",                 sub: "Communicate with assigned contractors" },
+              { href: "/dashboard/billing",      label: "Billing",                  sub: "Owner subscription and accepted-request fees" },
               { href: "/dashboard/settings",     label: "Account settings",         sub: "Profile, properties, notifications" },
               { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform documentation and support", external: true },
             ].map(({ href, label, sub, external }) => (

@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, MapPin, DollarSign, Calendar, FileText } from "lucide-react"
 import { ClaimButton } from "./claim-button"
+import { formatUsd, SERVICE_REQUEST_FEE_CENTS } from "@/lib/billing/config"
 
 const CATEGORY_LABELS: Record<string, string> = {
   "tree-removal": "Tree Removal",
@@ -13,8 +14,15 @@ const CATEGORY_LABELS: Record<string, string> = {
   fencing:        "Fencing",
 }
 
-export default async function ContractorRequestPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ContractorRequestPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams?: Promise<{ claim?: string }>
+}) {
   const { id } = await params
+  const query = searchParams ? await searchParams : undefined
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -71,6 +79,17 @@ export default async function ContractorRequestPage({ params }: { params: Promis
         </div>
 
         <div className="space-y-4">
+          {query?.claim === "canceled" && (
+            <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-600">
+              Claim checkout was canceled. You can subscribe or pay {formatUsd(SERVICE_REQUEST_FEE_CENTS)} to accept this request.
+            </div>
+          )}
+          {query?.claim === "success" && (
+            <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary">
+              Payment received. We are finalizing your claim now.
+            </div>
+          )}
+
           {/* Scope */}
           <div className="rounded-lg border border-border bg-card p-5">
             <div className="flex items-center gap-2 mb-3">
@@ -133,6 +152,7 @@ export default async function ContractorRequestPage({ params }: { params: Promis
               <ul className="space-y-1 text-xs text-muted-foreground">
                 <li>• Claiming removes this request from all other contractor feeds immediately.</li>
                 <li>• You are committing to contact the homeowner within 24 hours to schedule a consultation.</li>
+                <li>• No active subscription? You can still claim this request for a {formatUsd(SERVICE_REQUEST_FEE_CENTS)} one-time fee.</li>
                 <li>• A no-show without notice may result in account review.</li>
               </ul>
             </div>

@@ -26,6 +26,7 @@ import {
   X,
   ImagePlus,
 } from "lucide-react"
+import { formatUsd, SERVICE_REQUEST_FEE_CENTS } from "@/lib/billing/config"
 
 const categories = [
   { id: "tree-removal",   name: "Tree Removal",   icon: TreePine },
@@ -214,7 +215,9 @@ export default function NewRequestPage() {
           <Card>
             <CardHeader>
               <CardTitle>Project details</CardTitle>
-              <CardDescription>Describe your project, attach photos, and set your budget</CardDescription>
+              <CardDescription>
+                Describe your project, attach photos, and set your budget. Accepted requests incur a {formatUsd(SERVICE_REQUEST_FEE_CENTS)} fee unless you have an active owner subscription.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="space-y-2">

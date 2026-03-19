@@ -26,6 +26,7 @@ import type { User as SupabaseUser } from "@supabase/supabase-js"
 const ownerNavItems = [
   { href: "/dashboard",           label: "Overview",      icon: LayoutDashboard },
   { href: "/dashboard/requests",  label: "My Requests",   icon: FileText },
+  { href: "/dashboard/billing",   label: "Billing",       icon: CreditCard },
   { href: "/dashboard/messages",  label: "Messages",      icon: MessageSquare },
   { href: "/dashboard/settings",  label: "Settings",      icon: Settings },
 ]

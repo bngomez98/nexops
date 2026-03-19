@@ -66,7 +66,7 @@ describe("POST /api/stripe/portal", () => {
     process.env.STRIPE_SECRET_KEY = "sk_test_123"
     createClientMock.mockResolvedValue({
       auth: {
-        getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        getUser: async () => ({ data: { user: { id: "user-1", user_metadata: { role: "contractor" } } } }),
       },
       from: () => ({
         select: () => ({
@@ -88,6 +88,35 @@ describe("POST /api/stripe/portal", () => {
     expect(billingPortalCreateMock).toHaveBeenCalledWith({
       customer: "cus_123",
       return_url: "https://nexusoperations.org/dashboard/contractor/settings",
+    })
+  })
+
+  it("uses the owner settings return path for owner billing sessions", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_123"
+    createClientMock.mockResolvedValue({
+      auth: {
+        getUser: async () => ({ data: { user: { id: "user-2", user_metadata: { role: "homeowner" } } } }),
+      },
+      from: () => ({
+        select: () => ({
+          eq: () => ({
+            single: async () => ({ data: { stripe_customer_id: "cus_owner" }, error: null }),
+          }),
+        }),
+      }),
+    })
+
+    billingPortalCreateMock.mockResolvedValue({ url: "https://billing.stripe.test/owner-session" })
+
+    const { POST } = await import("./route")
+    const res = await POST()
+    const body = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(body).toEqual({ url: "https://billing.stripe.test/owner-session" })
+    expect(billingPortalCreateMock).toHaveBeenCalledWith({
+      customer: "cus_owner",
+      return_url: "https://nexusoperations.org/dashboard/settings",
     })
   })
 })

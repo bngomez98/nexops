@@ -23,6 +23,12 @@ export function ClaimButton({ requestId, contractorId }: { requestId: string; co
         const body = await res.json()
         throw new Error(body.error ?? "Failed to claim request")
       }
+      const body = await res.json()
+      if (body.url) {
+        window.location.href = body.url
+        return
+      }
+
       router.push("/dashboard/contractor")
       router.refresh()
     } catch (err: unknown) {

@@ -13,6 +13,7 @@ import {
   CreditCard,
   TrendingUp,
 } from "lucide-react"
+import { formatUsd, SERVICE_REQUEST_FEE_CENTS } from "@/lib/billing/config"
 
 const CATEGORY_LABELS: Record<string, string> = {
   "tree-removal": "Tree Removal",
@@ -133,7 +134,7 @@ export default async function ContractorDashboardPage() {
             <div className="flex-1">
               <p className="text-sm font-semibold">Activate your contractor membership</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                A Nexus membership gives you full access to all open requests in Shawnee County. Flat monthly rate — no per-lead fees.
+                A Nexus membership gives you full access to all open requests in Shawnee County. Without it, you can still claim jobs for {formatUsd(SERVICE_REQUEST_FEE_CENTS)} each.
               </p>
             </div>
             <Link

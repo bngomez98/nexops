@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { hasActiveSubscription, SERVICE_REQUEST_FEE_CENTS } from "@/lib/billing/config"
 
 import { getStripeClient } from "@/lib/stripe/server"
 
@@ -7,10 +8,8 @@ const stripe = getStripeClient()
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
 
-// Dispatch fee: $89.00 flat
-const DISPATCH_AMOUNT_CENTS = 8900
 // Nexus platform fee: 15% of the dispatch charge
-const PLATFORM_FEE_CENTS = Math.round(DISPATCH_AMOUNT_CENTS * 0.15)
+const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
   if (!stripe) {
@@ -82,7 +81,7 @@ export async function POST(req: Request) {
   // Ensure homeowner has a Stripe customer record
   const { data: ownerProfile } = await supabase
     .from("profiles")
-    .select("stripe_customer_id, full_name")
+    .select("stripe_customer_id, full_name, subscription_status")
     .eq("id", user.id)
     .single()
 
@@ -100,9 +99,38 @@ export async function POST(req: Request) {
       .eq("id", user.id)
   }
 
+  const dispatchAmountCents = hasActiveSubscription(ownerProfile?.subscription_status ?? null)
+    ? 0
+    : SERVICE_REQUEST_FEE_CENTS
+  const platformFeeCents = Math.round(dispatchAmountCents * PLATFORM_FEE_RATE)
+
+  if (dispatchAmountCents === 0) {
+    await supabase.from("payments").insert({
+      request_id: requestId,
+      payer_id: user.id,
+      contractor_id: request.assigned_contractor_id,
+      type: "dispatch",
+      amount_cents: 0,
+      application_fee_cents: 0,
+      status: "paid",
+      updated_at: new Date().toISOString(),
+    })
+
+    await supabase
+      .from("service_requests")
+      .update({ owner_fee_paid: true, updated_at: new Date().toISOString() })
+      .eq("id", requestId)
+
+    return NextResponse.json({
+      paid: true,
+      checkoutSkipped: true,
+      message: "Your active owner subscription waived the accepted-request fee.",
+    })
+  }
+
   // Create a Checkout Session with a destination charge:
   // - The full amount is charged to the homeowner
-  // - PLATFORM_FEE_CENTS stays with Nexus
+  // - platformFeeCents stays with Nexus
   // - The remainder is transferred to the contractor
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
@@ -111,10 +139,10 @@ export async function POST(req: Request) {
       {
         price_data: {
           currency: "usd",
-          unit_amount: DISPATCH_AMOUNT_CENTS,
+          unit_amount: dispatchAmountCents,
           product_data: {
-            name: "Dispatch Fee",
-            description: `Booking confirmation for your ${request.category} service request`,
+            name: "Accepted Request Fee",
+            description: `Accepted-request access fee for your ${request.category} service request`,
           },
         },
         quantity: 1,
@@ -124,7 +152,7 @@ export async function POST(req: Request) {
       transfer_data: {
         destination: contractor.stripe_connect_account_id,
       },
-      application_fee_amount: PLATFORM_FEE_CENTS,
+      application_fee_amount: platformFeeCents,
       metadata: {
         request_id: requestId,
         payment_type: "dispatch",
@@ -146,8 +174,8 @@ export async function POST(req: Request) {
     payer_id: user.id,
     contractor_id: request.assigned_contractor_id,
     type: "dispatch",
-    amount_cents: DISPATCH_AMOUNT_CENTS,
-    application_fee_cents: PLATFORM_FEE_CENTS,
+    amount_cents: dispatchAmountCents,
+    application_fee_cents: platformFeeCents,
     stripe_session_id: session.id,
     status: "pending",
   })

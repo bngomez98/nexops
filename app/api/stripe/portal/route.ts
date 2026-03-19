@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
+import { getBillingRole } from "@/lib/billing/config"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
 const staticPortalUrl = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? null
@@ -22,6 +23,10 @@ export async function POST() {
     if (!user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
     }
+
+    const billingRole = getBillingRole(user.user_metadata?.role)
+    const returnPath =
+      billingRole === "contractor" ? "/dashboard/contractor/settings" : "/dashboard/settings"
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
@@ -47,7 +52,7 @@ export async function POST() {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${siteUrl}/dashboard/contractor/settings`,
+      return_url: `${siteUrl}${returnPath}`,
     })
 
     return NextResponse.json({ url: session.url })
