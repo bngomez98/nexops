@@ -77,9 +77,6 @@ export default function LoginPage() {
                   required
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Try: client@example.com, contractor@example.com, or admin@nexusoperations.org
-              </p>
             </div>
 
             <div>

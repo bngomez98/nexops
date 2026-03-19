@@ -1,6 +1,8 @@
 'use client'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export type UserRole = 'client' | 'contractor' | 'admin'
 
@@ -21,43 +23,43 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+function mapSupabaseUser(supabaseUser: SupabaseUser): User {
+  const meta = supabaseUser.user_metadata ?? {}
+  return {
+    id: supabaseUser.id,
+    name: meta.full_name ?? meta.name ?? supabaseUser.email?.split('@')[0] ?? 'User',
+    email: supabaseUser.email ?? '',
+    role: (meta.role as UserRole) ?? 'client',
+    avatar: meta.avatar_url,
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const supabase = createClient()
+
+  useEffect(() => {
+    // Restore session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ? mapSupabaseUser(session.user) : null)
+    })
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ? mapSupabaseUser(session.user) : null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   const login = async (email: string, password: string) => {
-    // Mock auth - in production, verify against backend
-    const mockUsers: Record<string, User> = {
-      'client@example.com': {
-        id: '1',
-        name: 'Sarah Mitchell',
-        email: 'client@example.com',
-        role: 'client',
-      },
-      'contractor@example.com': {
-        id: '2',
-        name: 'John Garcia',
-        email: 'contractor@example.com',
-        role: 'contractor',
-      },
-      'admin@nexusoperations.org': {
-        id: '3',
-        name: 'Brianna Gomez',
-        email: 'admin@nexusoperations.org',
-        role: 'admin',
-      },
-    }
-
-    if (mockUsers[email]) {
-      setUser(mockUsers[email])
-      localStorage.setItem('nexus_user', JSON.stringify(mockUsers[email]))
-    } else {
-      throw new Error('Invalid credentials')
-    }
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw new Error(error.message)
   }
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut()
     setUser(null)
-    localStorage.removeItem('nexus_user')
   }
 
   return (
