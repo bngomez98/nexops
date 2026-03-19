@@ -1,174 +1,127 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Mail, Lock, ArrowRight, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React from "react"
+
+import Link from "next/link"
+import { Logo } from "@/components/logo"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/app/lib/auth-context"
+import { ArrowLeft, Mail, Lock } from "lucide-react"
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const { login } = useAuth()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setIsLoading(true)
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error ?? "Login failed");
-        return;
-      }
-
-      const role = data.user.role;
-      router.push(role === "contractor" ? "/contractor" : "/dashboard");
-      router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
+      await login(email, password)
+      router.push("/dashboard")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed")
     } finally {
-      setLoading(false);
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left panel — Form */}
-      <div className="flex w-full flex-col justify-center px-4 py-12 sm:px-6 lg:w-1/2 lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm">
-          <Link href="/" className="inline-flex items-center gap-2 mb-8">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Zap className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="text-lg font-semibold">NexOps</span>
-          </Link>
-
-          <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-          <p className="mt-2 text-muted-foreground">
-            Sign in to manage your projects and contractors.
-          </p>
-
-          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="pl-10"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </label>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className="pl-10"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
-              </div>
-            </div>
-
-            {error && (
-              <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
-                {error}
-              </p>
-            )}
-
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? "Signing in…" : "Sign in"}
-              {!loading && <ArrowRight className="h-4 w-4" />}
-            </Button>
-          </form>
-
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>
-              Demo:{" "}
-              <button
-                type="button"
-                className="text-primary hover:underline"
-                onClick={() => {
-                  setEmail("homeowner@example.com");
-                  setPassword("password123");
-                }}
-              >
-                homeowner
-              </button>
-              {" / "}
-              <button
-                type="button"
-                className="text-primary hover:underline"
-                onClick={() => {
-                  setEmail("contractor@example.com");
-                  setPassword("password123");
-                }}
-              >
-                contractor
-              </button>
-            </p>
-          </div>
-
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            {"Don't have an account? "}
-            <Link href="/signup" className="font-medium text-primary hover:underline">
-              Create one
-            </Link>
-          </div>
-        </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="p-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to site
+        </Link>
       </div>
 
-      {/* Right panel — Branding */}
-      <div className="hidden lg:flex lg:w-1/2 lg:flex-col lg:justify-center lg:bg-card lg:p-12">
-        <div className="mx-auto max-w-md">
-          <blockquote className="space-y-4">
-            <p className="text-xl font-medium leading-relaxed">
-              &ldquo;NexOps made finding a reliable contractor so simple. Our bathroom
-              renovation was completed on time and within budget.&rdquo;
-            </p>
-            <footer className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-sm font-semibold text-primary">JM</span>
+      <div className="flex-1 flex items-center justify-center px-6 pb-16">
+        <div className="w-full max-w-md">
+          <div className="flex justify-center mb-8">
+            <Logo />
+          </div>
+
+          <h1 className="text-xl font-semibold text-foreground text-center mb-6">
+            Access your account
+          </h1>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="flex flex-col gap-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
+                  required
+                />
               </div>
-              <div>
-                <p className="font-medium">Jennifer M.</p>
-                <p className="text-sm text-muted-foreground">Homeowner in Austin, TX</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Try: client@example.com, contractor@example.com, or admin@nexusoperations.org
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
+                  required
+                />
               </div>
-            </footer>
-          </blockquote>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-2.5 text-sm font-medium bg-foreground text-background rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 mt-2"
+            >
+              {isLoading ? "Logging in..." : "Log in"}
+            </button>
+          </form>
+
+          <p className="text-center text-xs text-muted-foreground mt-8">
+            By continuing, you agree to our{" "}
+            <Link href="/terms" className="underline hover:text-foreground">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="underline hover:text-foreground">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>
-  );
+  )
 }

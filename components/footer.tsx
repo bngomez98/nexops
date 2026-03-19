@@ -1,142 +1,147 @@
-import Link from "next/link";
-import { Zap } from "lucide-react";
-
-export function Footer() {
-  return (
-    <footer className="border-t bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-          <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-              <Zap className="h-5 w-5 text-blue-600" />
-              <span>NexOps</span>
-            </Link>
-            <p className="mt-3 text-sm text-gray-500">
-              Connecting Topeka homeowners with trusted, verified contractors.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Platform</h3>
-            <ul className="mt-4 space-y-2 text-sm text-gray-500">
-              <li><Link href="/services" className="hover:text-gray-900">Services</Link></li>
-              <li><Link href="/pricing" className="hover:text-gray-900">Pricing</Link></li>
-              <li><Link href="/contractors" className="hover:text-gray-900">For Contractors</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Company</h3>
-            <ul className="mt-4 space-y-2 text-sm text-gray-500">
-              <li><Link href="/contact" className="hover:text-gray-900">Contact</Link></li>
-              <li><Link href="/terms" className="hover:text-gray-900">Terms of Service</Link></li>
-              <li><Link href="/privacy" className="hover:text-gray-900">Privacy Policy</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Get started</h3>
-            <ul className="mt-4 space-y-2 text-sm text-gray-500">
-              <li><Link href="/signup" className="hover:text-gray-900">Submit a request</Link></li>
-              <li><Link href="/signup?role=contractor" className="hover:text-gray-900">Join as contractor</Link></li>
-              <li><Link href="/login" className="hover:text-gray-900">Log in</Link></li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-10 border-t pt-6 text-center text-sm text-gray-400">
-          &copy; {new Date().getFullYear()} Nexus Operations LLC. All rights reserved. Serving Topeka, KS and surrounding areas.
-        </div>
-      </div>
-    </footer>
-  );
 import Link from "next/link"
-
-const footerLinks = {
-  product: [
-    { name: "How it works", href: "#how-it-works" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "For contractors", href: "#for-contractors" },
-    { name: "Enterprise", href: "/enterprise" },
-  ],
-  company: [
-    { name: "About us", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Blog", href: "/blog" },
-    { name: "Press", href: "/press" },
-  ],
-  support: [
-    { name: "Help center", href: "/help" },
-    { name: "Contact us", href: "/contact" },
-    { name: "Status", href: "/status" },
-  ],
-  legal: [
-    { name: "Privacy policy", href: "/privacy" },
-    { name: "Terms of service", href: "/terms" },
-    { name: "Cookie policy", href: "/cookies" },
-  ],
-}
+import { Logo } from "@/components/logo"
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card/30">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 py-12 md:grid-cols-4 lg:py-16">
+    <footer className="border-t border-border bg-secondary/50">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+          <div className="col-span-2 md:col-span-1">
+            <div className="mb-5">
+              <Logo />
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+              Maintenance coordination for commercial and residential properties.
+              Topeka, Kansas.
+            </p>
+            <div className="mt-4 flex flex-col gap-1.5 text-sm text-muted-foreground">
+              <a
+                href="tel:+19139511711"
+                className="hover:text-foreground transition-colors"
+              >
+                (913) 951-1711
+              </a>
+              <a
+                href="mailto:admin@nexusoperations.org"
+                className="hover:text-foreground transition-colors"
+              >
+                admin@nexusoperations.org
+              </a>
+            </div>
+          </div>
+
           <div>
-            <h3 className="text-sm font-semibold">Product</h3>
-            <ul className="mt-4 space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+              Company
+            </h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li>
+                <Link
+                  href="/about"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#process"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  How It Works
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
+
           <div>
-            <h3 className="text-sm font-semibold">Company</h3>
-            <ul className="mt-4 space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+              For Clients
+            </h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li>
+                <Link
+                  href="/services#commercial"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Commercial Properties
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services#residential"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Residential Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Client Portal
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contractors"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Contractor Network
+                </Link>
+              </li>
             </ul>
           </div>
+
           <div>
-            <h3 className="text-sm font-semibold">Support</h3>
-            <ul className="mt-4 space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold">Legal</h3>
-            <ul className="mt-4 space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+              Legal
+            </h3>
+            <ul className="flex flex-col gap-3 text-sm">
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-border py-6 sm:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary">
-              <span className="text-xs font-bold text-primary-foreground">N</span>
-            </div>
-            <span className="text-sm font-medium">Nexus Operations</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            {new Date().getFullYear()} Nexus Operations. All rights reserved.
+        <div className="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-muted-foreground">
+            {"\u00A9"} {new Date().getFullYear()} Nexus Operations, LLC. All
+            rights reserved.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            405 SW Fillmore St, Topeka, KS 66606
           </p>
         </div>
       </div>
