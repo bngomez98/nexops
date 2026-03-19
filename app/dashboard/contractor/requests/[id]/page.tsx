@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowLeft, MapPin, DollarSign, Calendar, FileText } from "lucide-react"
 import { ClaimButton } from "./claim-button"
 import { formatUsd, SERVICE_REQUEST_FEE_CENTS } from "@/lib/billing/config"
+import { isMissingServiceRequestsTableError } from "@/lib/supabase/errors"
 
 const CATEGORY_LABELS: Record<string, string> = {
   "tree-removal": "Tree Removal",
@@ -31,7 +32,7 @@ export default async function ContractorRequestPage({
   const role = user.user_metadata?.role || "homeowner"
   if (role !== "contractor") redirect("/dashboard")
 
-  const { data: req } = await supabase
+  const { data: req, error } = await supabase
     .from("service_requests")
     .select("*")
     .eq("id", id)
@@ -39,6 +40,18 @@ export default async function ContractorRequestPage({
       `and(status.in.(pending_review,in_queue),assigned_contractor_id.is.null),assigned_contractor_id.eq.${user.id}`,
     )
     .single()
+
+  if (isMissingServiceRequestsTableError(error)) {
+    return (
+      <div className="flex-1 overflow-auto">
+        <div className="mx-auto max-w-3xl px-6 py-8">
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-4 text-sm text-amber-700">
+            The `public.service_requests` table is missing from the Supabase schema cache, so this request cannot be loaded yet.
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (!req) notFound()
 

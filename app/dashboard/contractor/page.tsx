@@ -14,6 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react"
 import { formatUsd, SERVICE_REQUEST_FEE_CENTS } from "@/lib/billing/config"
+import { isMissingServiceRequestsTableError } from "@/lib/supabase/errors"
 
 const CATEGORY_LABELS: Record<string, string> = {
   "tree-removal": "Tree Removal",
@@ -57,7 +58,7 @@ export default async function ContractorDashboardPage() {
   const connectStatus = profile?.stripe_connect_status   ?? "not_connected"
 
   // Open requests (not yet assigned)
-  const { data: openRequests } = await supabase
+  const { data: openRequests, error: openRequestsError } = await supabase
     .from("service_requests")
     .select("id, category, description, address, city, state, zip_code, budget_max, preferred_dates, created_at")
     .in("status", ["pending_review", "in_queue"])
@@ -65,7 +66,7 @@ export default async function ContractorDashboardPage() {
     .order("created_at", { ascending: false })
 
   // Claimed requests (assigned to this contractor)
-  const { data: claimedRequests } = await supabase
+  const { data: claimedRequests, error: claimedRequestsError } = await supabase
     .from("service_requests")
     .select("id, category, description, address, city, state, zip_code, budget_max, status, created_at")
     .eq("assigned_contractor_id", user.id)
@@ -74,6 +75,9 @@ export default async function ContractorDashboardPage() {
 
   const open    = openRequests    ?? []
   const claimed = claimedRequests ?? []
+  const requestsUnavailable =
+    isMissingServiceRequestsTableError(openRequestsError) ||
+    isMissingServiceRequestsTableError(claimedRequestsError)
 
   const claimedThisMonth = claimed.filter((r) => {
     const d = new Date(r.created_at)
@@ -228,6 +232,12 @@ export default async function ContractorDashboardPage() {
         <p className="text-[11px] text-muted-foreground mb-5">
           Claiming a request removes it from all other contractor feeds immediately. Review the full project scope before claiming.
         </p>
+
+        {requestsUnavailable && (
+          <div className="mb-5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-700">
+            The contractor request feed is temporarily unavailable because the `public.service_requests` table is missing from the Supabase schema cache.
+          </div>
+        )}
 
         {open.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border bg-card p-10 text-center">

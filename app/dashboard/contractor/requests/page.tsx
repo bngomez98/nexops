@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { MapPin, DollarSign, Calendar, ArrowRight, Camera, ChevronLeft, ChevronRight } from "lucide-react"
+import { isMissingServiceRequestsTableError } from "@/lib/supabase/errors"
 
 const PAGE_SIZE = 20
 
@@ -64,6 +65,7 @@ export default async function ContractorRequestsPage({
   const allRequests: ServiceRequest[] = requests ?? []
   const totalCount = count ?? 0
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+  const missingRequestsTable = isMissingServiceRequestsTableError(error)
 
   return (
     <div className="flex-1 overflow-auto">
@@ -73,12 +75,20 @@ export default async function ContractorRequestsPage({
           <p className="mt-1 text-sm text-muted-foreground">
             Requests available in your service area. Claiming a request removes it from all other contractor feeds instantly.
           </p>
-          {error && (
+          {error && !missingRequestsTable && (
             <p className="mt-2 text-sm text-destructive">Failed to load requests: {error.message}</p>
           )}
         </div>
 
-        {allRequests.length === 0 ? (
+        {missingRequestsTable ? (
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-8">
+            <h2 className="text-sm font-semibold text-amber-700">Service requests are not available yet</h2>
+            <p className="mt-2 text-sm text-amber-700/90">
+              The `public.service_requests` table was not found in Supabase&apos;s schema cache, so the contractor feed cannot be loaded yet.
+              Run the base SQL setup scripts and refresh the schema cache before returning to this page.
+            </p>
+          </div>
+        ) : allRequests.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border bg-card p-10 text-center">
             <p className="text-sm font-semibold mb-1">No open requests right now</p>
             <p className="text-xs text-muted-foreground">Check back soon — new requests appear here as soon as they are submitted.</p>
