@@ -6,6 +6,10 @@ on:
       - "copilot/merge-codex-remove-templated-requests-from-dashboa"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   create-and-merge-prs:
     runs-on: ubuntu-latest
@@ -147,8 +151,11 @@ jobs:
 
             # Poll for mergeability (GitHub computes this asynchronously)
             for i in 1 2 3; do
-              MERGE_STATE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable_state' 2>/dev/null || echo "unknown")
-              IS_MERGEABLE=$(gh api "repos/$REPO/pulls/$PR_NUM" --jq '.mergeable' 2>/dev/null || echo "null")
+              MERGE_INFO=$(gh api "repos/$REPO/pulls/$PR_NUM" \
+                --jq '{state: .mergeable_state, mergeable: (.mergeable | tostring)}' 2>/dev/null \
+                || echo '{"state":"unknown","mergeable":"null"}')
+              MERGE_STATE=$(echo "$MERGE_INFO" | python3 -c "import json,sys; print(json.load(sys.stdin)['state'])" 2>/dev/null || echo "unknown")
+              IS_MERGEABLE=$(echo "$MERGE_INFO" | python3 -c "import json,sys; print(json.load(sys.stdin)['mergeable'])" 2>/dev/null || echo "null")
               echo "Attempt $i – mergeability: mergeable=$IS_MERGEABLE, state=$MERGE_STATE"
               if [ "$MERGE_STATE" != "unknown" ] && [ "$IS_MERGEABLE" != "null" ]; then
                 break
