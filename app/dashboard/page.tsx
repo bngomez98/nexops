@@ -28,7 +28,7 @@ export default function DashboardPage() {
       <div className="space-y-8">
         <div>
           <h1 className="text-2xl font-semibold text-foreground mb-1">Welcome back, {user?.name}</h1>
-          <p className="text-muted-foreground">Here's what's happening with your account.</p>
+          <p className="text-muted-foreground">Here&apos;s what&apos;s happening with your account.</p>
         </div>
 
         {user?.role === 'client' && (

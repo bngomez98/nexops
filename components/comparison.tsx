@@ -17,7 +17,7 @@ export function Comparison() {
         <div className="max-w-2xl mb-16">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built to fix what's broken in home services
+            Built to fix what&apos;s broken in home services
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Traditional platforms sell your info to multiple contractors. You get bombarded with calls.
