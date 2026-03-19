@@ -183,13 +183,8 @@ jobs:
               else
                 echo "Auto-merge also failed (exit $AUTO_EXIT): $AUTO_OUT"
                 REASON=$(echo "$MERGE_OUT" | tr '\n' ' ' | cut -c1-300)
-                gh pr comment "$PR_NUM" --repo "$REPO" \
-                  --body "⚠️ Automated merge attempt for \`${BRANCH}\` → \`main\` could not be completed.
-
-Reason: \`${REASON}\`
-
-This PR has been left open for manual review. Possible causes: required status checks have not passed, required reviews are pending, or branch protection rules prevented the merge." \
-                  2>/dev/null || true
+                COMMENT="⚠️ Automated merge for \`${BRANCH}\` into \`main\` could not be completed. Reason: \`${REASON}\`. This PR is left open for manual review (possible causes: required checks not passed, reviews pending, or branch protection rules)."
+                gh pr comment "$PR_NUM" --repo "$REPO" --body "$COMMENT" 2>/dev/null || true
               fi
             fi
 
