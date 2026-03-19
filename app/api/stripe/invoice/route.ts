@@ -1,10 +1,7 @@
+import type Stripe from "stripe"
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
 import { createClient } from "@/lib/supabase/server"
-
 import { getStripeClient } from "@/lib/stripe/server"
-
-const stripe = getStripeClient()
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
 
@@ -12,13 +9,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org
 const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
-  if (!stripe) {
-    return NextResponse.json(
-      { error: "Invoice checkout is temporarily unavailable. Stripe is not fully configured." },
-      { status: 500 },
-    )
-  }
-
+  const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -83,6 +74,7 @@ export async function POST(req: Request) {
 
   // Convert dollars to cents
   const amountCents = Math.round(request.final_cost * 100)
+  const feeCents = Math.round(amountCents * PLATFORM_FEE_RATE)
 
   // Ensure homeowner has a Stripe customer record
   const { data: ownerProfile } = await supabase
@@ -105,7 +97,7 @@ export async function POST(req: Request) {
       .eq("id", user.id)
   }
 
-  // Retrieve any paid dispatch fee for this request and apply it before Checkout creation
+  // Retrieve any paid dispatch fee for this request to show it as a credit line item
   const { data: dispatchPayment } = await supabase
     .from("payments")
     .select("amount_cents")
@@ -114,57 +106,34 @@ export async function POST(req: Request) {
     .eq("status", "paid")
     .maybeSingle()
 
-  const dispatchCreditCents = dispatchPayment?.amount_cents ?? 0
-  const netAmountCents = Math.max(amountCents - dispatchCreditCents, 0)
-  const feeCents = Math.round(netAmountCents * PLATFORM_FEE_RATE)
-
-  // If dispatch credit fully covers the invoice, treat it as internally settled.
-  if (netAmountCents === 0) {
-    if (dispatchCreditCents > amountCents) {
-      console.warn(
-        `[stripe/invoice] Dispatch credit (${dispatchCreditCents}) exceeds invoice amount (${amountCents}) for request ${requestId}`
-      )
-    }
-
-    await supabase.from("payments").insert({
-      request_id: requestId,
-      payer_id: user.id,
-      contractor_id: request.assigned_contractor_id,
-      type: "invoice",
-      amount_cents: 0,
-      application_fee_cents: 0,
-      status: "paid",
-      updated_at: new Date().toISOString(),
-    })
-
-    await supabase
-      .from("service_requests")
-      .update({ status: "completed", completion_date: new Date().toISOString(), updated_at: new Date().toISOString() })
-      .eq("id", requestId)
-
-    return NextResponse.json({
-      paid: true,
-      checkoutSkipped: true,
-      message:
-        dispatchCreditCents > amountCents
-          ? "Dispatch credit exceeded the final invoice amount; invoice marked paid without creating Stripe Checkout."
-          : "Dispatch credit fully covered the final invoice; invoice marked paid without creating Stripe Checkout.",
-    })
-  }
-
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
     {
       price_data: {
         currency: "usd",
-        unit_amount: netAmountCents,
+        unit_amount: amountCents,
         product_data: {
           name: `Final Invoice — ${request.category} Service`,
-          description: `Net project cost for service request #${requestId.slice(0, 8)} after any dispatch credit`,
+          description: `Full project cost for service request #${requestId.slice(0, 8)}`,
         },
       },
       quantity: 1,
     },
   ]
+
+  // If a dispatch fee was already paid, credit it back on the invoice
+  if (dispatchPayment?.amount_cents) {
+    lineItems.push({
+      price_data: {
+        currency: "usd",
+        unit_amount: -dispatchPayment.amount_cents,
+        product_data: {
+          name: "Dispatch Fee Credit",
+          description: "Previously paid dispatch fee applied toward final invoice",
+        },
+      },
+      quantity: 1,
+    })
+  }
 
   // Create a Checkout Session with a destination charge
   const session = await stripe.checkout.sessions.create({
@@ -197,7 +166,7 @@ export async function POST(req: Request) {
     payer_id: user.id,
     contractor_id: request.assigned_contractor_id,
     type: "invoice",
-    amount_cents: netAmountCents,
+    amount_cents: amountCents,
     application_fee_cents: feeCents,
     stripe_session_id: session.id,
     status: "pending",
