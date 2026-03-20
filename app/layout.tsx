@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, Instrument_Serif } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { Toaster } from "sonner"
 import { AuthProvider } from "./lib/auth-context"
 import { RequestsProvider } from "./lib/requests-context"
 import "./globals.css"
@@ -151,6 +152,7 @@ export default function RootLayout({
           <RequestsProvider>
             {children}
             <Analytics />
+            <Toaster position="bottom-right" richColors closeButton />
           </RequestsProvider>
         </AuthProvider>
       </body>
