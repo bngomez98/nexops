@@ -7,6 +7,8 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
   ArrowRight, AlertCircle, Loader2, TrendingUp,
+  ChevronRight, Calendar, DollarSign, MapPin,
+  RefreshCw,
 } from 'lucide-react'
 
 interface ProjectRequest {
@@ -27,12 +29,19 @@ interface UserData {
   role: string
 }
 
-const STATUS: Record<string, { label: string; pill: string; dot: string }> = {
-  open:        { label: 'Open',        pill: 'status-open',      dot: 'bg-indigo-500' },
-  claimed:     { label: 'In Progress', pill: 'status-claimed',   dot: 'bg-sky-500' },
-  'in-progress':{ label: 'In Progress',pill: 'status-progress',  dot: 'bg-violet-500' },
-  completed:   { label: 'Completed',   pill: 'status-completed', dot: 'bg-emerald-500' },
-  cancelled:   { label: 'Cancelled',   pill: 'status-cancelled', dot: 'bg-slate-400' },
+const STATUS: Record<string, { label: string; pill: string; dot: string; step: number }> = {
+  open:         { label: 'Submitted',   pill: 'status-open',      dot: 'bg-indigo-500',   step: 1 },
+  claimed:      { label: 'Assigned',    pill: 'status-claimed',   dot: 'bg-sky-500',      step: 2 },
+  'in-progress':{ label: 'In Progress', pill: 'status-progress',  dot: 'bg-violet-500',   step: 3 },
+  completed:    { label: 'Completed',   pill: 'status-completed', dot: 'bg-emerald-500',  step: 4 },
+  cancelled:    { label: 'Cancelled',   pill: 'status-cancelled', dot: 'bg-slate-400',    step: 0 },
+}
+
+const STEPS = ['Submitted', 'Assigned', 'In Progress', 'Completed']
+
+const CATEGORY_ICONS: Record<string, string> = {
+  'tree-removal': '🌳', 'concrete-work': '🏗️', 'roofing': '🏠',
+  'hvac': '❄️', 'fencing': '🏡', 'electrical': '⚡', 'plumbing': '🔧', 'excavation': '🚜',
 }
 
 function formatCategory(cat: string) {
@@ -48,11 +57,51 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString()
 }
 
+function StatusProgress({ status }: { status: string }) {
+  const st = STATUS[status]
+  if (!st || st.step === 0) return null
+  return (
+    <div className="flex items-center gap-0 mt-3">
+      {STEPS.map((step, i) => {
+        const num = i + 1
+        const done = num < st.step
+        const active = num === st.step
+        return (
+          <div key={step} className="flex items-center flex-1 last:flex-none">
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all ${
+              done ? 'bg-primary text-primary-foreground' :
+              active ? 'bg-primary/20 text-primary ring-2 ring-primary/40' :
+              'bg-muted text-muted-foreground'
+            }`}>
+              {done ? '✓' : num}
+            </div>
+            <span className={`ml-1 text-[9.5px] font-medium hidden sm:block ${active ? 'text-primary' : done ? 'text-foreground/60' : 'text-muted-foreground'}`}>
+              {step}
+            </span>
+            {i < STEPS.length - 1 && (
+              <div className={`flex-1 h-px mx-2 ${num < st.step ? 'bg-primary/50' : 'bg-border'}`} />
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function HomeownerDashboard() {
   const router = useRouter()
   const [user, setUser] = useState<UserData | null>(null)
   const [projects, setProjects] = useState<ProjectRequest[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+
+  async function loadProjects() {
+    const projRes = await fetch('/api/projects/list?type=my-projects')
+    if (projRes.ok) {
+      const { projects: data } = await projRes.json()
+      setProjects(data ?? [])
+    }
+  }
 
   useEffect(() => {
     async function load() {
@@ -62,12 +111,7 @@ export default function HomeownerDashboard() {
         const { user: u } = await res.json()
         if (u.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(u)
-
-        const projRes = await fetch('/api/projects/list?type=my-projects')
-        if (projRes.ok) {
-          const { projects: data } = await projRes.json()
-          setProjects(data ?? [])
-        }
+        await loadProjects()
       } catch {
         router.push('/login')
       } finally {
@@ -76,6 +120,12 @@ export default function HomeownerDashboard() {
     }
     load()
   }, [router])
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await loadProjects()
+    setRefreshing(false)
+  }
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -97,10 +147,10 @@ export default function HomeownerDashboard() {
   const completed  = projects.filter(p => p.status === 'completed')
 
   const stats = [
-    { label: 'Open',        value: open.length,       icon: Clock,       color: 'stat-card-indigo',  iconClass: 'text-primary' },
-    { label: 'In Progress', value: inProgress.length, icon: Wrench,      color: 'stat-card-amber',   iconClass: 'text-amber-500' },
-    { label: 'Completed',   value: completed.length,  icon: CheckCircle2,color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
-    { label: 'Total',       value: projects.length,   icon: TrendingUp,  color: 'stat-card-violet',  iconClass: 'text-violet-500' },
+    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'stat-card-indigo',  iconClass: 'text-primary' },
+    { label: 'In Progress', value: inProgress.length, icon: Wrench,       color: 'stat-card-amber',   iconClass: 'text-amber-500' },
+    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
+    { label: 'Total',       value: projects.length,   icon: TrendingUp,   color: 'stat-card-violet',  iconClass: 'text-violet-500' },
   ]
 
   return (
@@ -122,16 +172,25 @@ export default function HomeownerDashboard() {
               <p className="text-primary-foreground/80 text-sm mt-1">
                 {projects.length === 0
                   ? 'Post your first request to get started.'
-                  : `You have ${open.length} open and ${inProgress.length} in-progress request${inProgress.length !== 1 ? 's' : ''}.`}
+                  : `${open.length} open · ${inProgress.length} in progress · ${completed.length} completed`}
               </p>
             </div>
-            <Link
-              href="/dashboard/homeowner/new-request"
-              className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 backdrop-blur"
-            >
-              <Plus className="w-4 h-4" />
-              New Request
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-4 py-2 rounded-xl border border-white/20"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+              <Link
+                href="/dashboard/homeowner/new-request"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 backdrop-blur"
+              >
+                <Plus className="w-4 h-4" />
+                New Request
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -170,18 +229,18 @@ export default function HomeownerDashboard() {
               className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
-              Add new
+              New request
             </Link>
           </div>
 
           {projects.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
-                <AlertCircle className="w-6 h-6 text-primary" />
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+                <AlertCircle className="w-7 h-7 text-primary" />
               </div>
               <p className="font-semibold text-foreground text-[15px] mb-2">No requests yet</p>
               <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-                Post your first project request and connect with verified contractors in your area.
+                Post your first project request and get matched with a verified contractor in your area.
               </p>
               <Link
                 href="/dashboard/homeowner/new-request"
@@ -194,51 +253,100 @@ export default function HomeownerDashboard() {
           ) : (
             <div className="divide-y divide-border">
               {projects.map(project => {
-                const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', dot: 'bg-slate-400' }
+                const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', dot: 'bg-slate-400', step: 0 }
+                const icon = CATEGORY_ICONS[project.category] ?? '🔨'
                 return (
-                  <div
+                  <Link
                     key={project.id}
-                    className="px-6 py-4 hover:bg-secondary/40 transition-colors group"
+                    href={`/dashboard/requests/${project.id}`}
+                    className="block px-6 py-5 hover:bg-secondary/30 transition-colors group"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${st.dot}`} />
+                        <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
+                          {icon}
+                        </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                            <p className="font-semibold text-foreground text-[13.5px] leading-snug">
+                            <p className="font-semibold text-foreground text-[14px] leading-snug">
                               {project.title || formatCategory(project.category)}
                             </p>
                             <span className={`text-[10.5px] font-semibold px-2 py-0.5 rounded-full ${st.pill}`}>
                               {st.label}
                             </span>
                           </div>
-                          <p className="text-[12px] text-muted-foreground">
-                            {formatCategory(project.category)} · {project.location}
-                          </p>
-                          <p className="text-[12.5px] text-muted-foreground mt-1 line-clamp-1">
+                          <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
+                            <span>{formatCategory(project.category)}</span>
+                            {project.location && (
+                              <>
+                                <span className="opacity-40">·</span>
+                                <span className="flex items-center gap-1">
+                                  <MapPin className="w-3 h-3" />
+                                  {project.location}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <p className="text-[12.5px] text-muted-foreground mt-1.5 line-clamp-1">
                             {project.description}
                           </p>
+                          <StatusProgress status={project.status} />
                         </div>
                       </div>
-                      <div className="flex-shrink-0 text-right">
+                      <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
                         {project.budget != null && (
-                          <p className="font-bold text-foreground text-[14px]">
-                            ${project.budget.toLocaleString()}
-                          </p>
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="w-3 h-3 text-muted-foreground" />
+                            <p className="font-bold text-foreground text-[14px]">
+                              {project.budget.toLocaleString()}
+                            </p>
+                          </div>
                         )}
-                        <p className="text-[11px] text-muted-foreground mt-0.5">
+                        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
                           {timeAgo(project.createdAt)}
-                        </p>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1">
-                          View <ArrowRight className="w-3 h-3" />
+                        </div>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+                          View details <ChevronRight className="w-3 h-3" />
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 )
               })}
             </div>
           )}
+        </div>
+
+        {/* Quick actions */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Link
+            href="/dashboard/homeowner/new-request"
+            className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+              <Plus className="w-5 h-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground text-[13.5px]">Submit New Request</p>
+              <p className="text-[12px] text-muted-foreground mt-0.5">Get matched with a verified contractor</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </Link>
+
+          <Link
+            href="/dashboard/homeowner/settings"
+            className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-border/80 hover:bg-secondary/30 transition-all"
+          >
+            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+              <FileText className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground text-[13.5px]">Account Settings</p>
+              <p className="text-[12px] text-muted-foreground mt-0.5">Update your profile and preferences</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </Link>
         </div>
       </main>
     </div>

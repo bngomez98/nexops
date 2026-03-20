@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'
 import {
   LogOut, Menu, X, LayoutDashboard, FileText,
-  Settings, TrendingUp, Wrench, ChevronRight,
+  Settings, TrendingUp, Wrench, ChevronRight, Briefcase,
 } from 'lucide-react'
 
 interface NavItem {
@@ -24,9 +24,10 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { label: 'Settings',    href: '/dashboard/homeowner/settings',    icon: Settings, exact: true },
   ],
   contractor: [
-    { label: 'Dashboard',  href: '/dashboard/contractor',           icon: LayoutDashboard, exact: true },
-    { label: 'Analytics',  href: '/dashboard/contractor/analytics', icon: TrendingUp, exact: true },
-    { label: 'Settings',   href: '/dashboard/contractor/settings',  icon: Settings, exact: true },
+    { label: 'Dashboard',   href: '/dashboard/contractor',              icon: LayoutDashboard, exact: true },
+    { label: 'My Projects', href: '/dashboard/contractor/my-projects',  icon: Briefcase, exact: true },
+    { label: 'Analytics',   href: '/dashboard/contractor/analytics',    icon: TrendingUp, exact: true },
+    { label: 'Settings',    href: '/dashboard/contractor/settings',     icon: Settings, exact: true },
   ],
 }
 

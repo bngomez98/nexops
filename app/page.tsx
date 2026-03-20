@@ -3,7 +3,18 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X, MapPin, ArrowRight } from 'lucide-react'
+import { Menu, X, MapPin, ArrowRight, Phone, Mail } from 'lucide-react'
+
+const services = [
+  { name: 'Tree Removal',  desc: 'Professional removal of trees, stumps, and debris for residential and commercial properties.' },
+  { name: 'Concrete Work', desc: 'Driveways, sidewalks, foundations, patios, and structural concrete for all property types.' },
+  { name: 'Roofing',       desc: 'Inspection, repair, and full replacement for residential and commercial roofing systems.' },
+  { name: 'HVAC',          desc: 'Heating, cooling, ventilation installation, maintenance, and system replacement.' },
+  { name: 'Fencing',       desc: 'Installation and repair of wood, vinyl, chain-link, and ornamental fence systems.' },
+  { name: 'Electrical',    desc: 'Panel upgrades, wiring, outlets, lighting, and code-compliant electrical work.' },
+  { name: 'Plumbing',      desc: 'Repairs, replacements, drain cleaning, and new installations for all plumbing systems.' },
+  { name: 'Excavation',    desc: 'Site grading, trenching, land clearing, and earth-moving for construction and utility projects.' },
+]
 
 export default function HomePage() {
   const [scrollPct, setScrollPct] = useState(0)
@@ -840,16 +851,5 @@ export default function HomePage() {
       </footer>
 
     </main>
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <Hero />
-        <WhoWeServe />
-        <HowItWorks />
-        <ValueProposition />
-        <ContactCTA />
-      </main>
-      <Footer />
-    </div>
   )
 }
