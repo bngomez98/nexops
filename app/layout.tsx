@@ -2,6 +2,10 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, Instrument_Serif } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { ChatAgent } from "@/components/chat-agent"
+import { CookieConsent } from "@/components/cookie-consent"
+import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "sonner"
 import { AuthProvider } from "./lib/auth-context"
 import { RequestsProvider } from "./lib/requests-context"
@@ -145,6 +149,14 @@ export default function RootLayout({
           }}
         />
       </head>
+      <body className="font-sans antialiased">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+        <ChatAgent />
+        <CookieConsent />
+        <Analytics />
+        <SpeedInsights />
       <body
         className={`${inter.variable} ${instrumentSerif.variable} font-sans antialiased`}
       >
