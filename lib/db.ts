@@ -1,4 +1,5 @@
 import { User, ProjectRequest, Session, ContractorProfile, UserRole } from './types'
+import crypto from 'crypto'
 
 // In-memory database for development
 // In production, this would be replaced with a real database (PostgreSQL, MongoDB, etc.)
@@ -11,7 +12,8 @@ export const database = {
 
 // Helper function to generate IDs
 export function generateId(): string {
-  return Math.random().toString(36).substring(2, 11)
+  // Use cryptographically secure random bytes for ID generation
+  return crypto.randomBytes(16).toString('hex')
 }
 
 // User operations
