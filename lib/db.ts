@@ -162,6 +162,41 @@ export async function createContractorProfile(
   return profile
 }
 
+export async function updateUser(
+  userId: string,
+  updates: Partial<Pick<User, 'name' | 'email' | 'phone' | 'address' | 'city' | 'state' | 'zipCode'>>
+): Promise<User | null> {
+  const user = database.users.get(userId)
+  if (user) {
+    Object.assign(user, updates, { updatedAt: new Date() })
+    database.users.set(userId, user)
+  }
+  return user || null
+}
+
+export async function deleteUser(userId: string): Promise<void> {
+  database.users.delete(userId)
+  database.contractorProfiles.delete(userId)
+  // Remove sessions for this user
+  for (const [sessionId, session] of database.sessions.entries()) {
+    if (session.userId === userId) {
+      database.sessions.delete(sessionId)
+    }
+  }
+}
+
+export async function updateContractorProfile(
+  userId: string,
+  updates: Partial<Pick<ContractorProfile, 'companyName' | 'licenseNumber' | 'yearsInBusiness' | 'serviceCategories' | 'bio'>>
+): Promise<ContractorProfile | null> {
+  const profile = database.contractorProfiles.get(userId)
+  if (profile) {
+    Object.assign(profile, updates, { updatedAt: new Date() })
+    database.contractorProfiles.set(userId, profile)
+  }
+  return profile || null
+}
+
 export async function updateContractorMembership(
   userId: string,
   tier: string,

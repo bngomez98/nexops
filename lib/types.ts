@@ -21,6 +21,9 @@ export interface User {
   updatedAt: Date
   // Homeowner specific
   address?: string
+  city?: string
+  state?: string
+  zipCode?: string
   phone?: string
   // Contractor specific
   contractorProfile?: ContractorProfile
