@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+/*
+  @theme (without `inline`) generates CSS custom properties on :root.
+  Utility classes like bg-background reference var(--color-background) at
+  runtime, so overriding those variables in html.light actually takes effect.
+*/
+@theme {
+  /* Fonts — reference Next.js font-loader CSS vars */
+  --font-sans:    var(--font-inter),        "Inter",          ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-ibm-plex-mono), "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
+
+  /* ── Dark mode defaults — deep slate, not pure black ── */
+  --color-background:         #0c0e14;
+  --color-foreground:         #e8eaf0;
+  --color-card:               #12151f;
+  --color-card-foreground:    #e8eaf0;
+  --color-muted:              #181c28;
+  --color-muted-foreground:   #8a90a4;
+  --color-primary:            #22c55e;
+  --color-primary-foreground: #021409;
+  --color-accent:             #1a2540;
+  --color-accent-foreground:  #7eb8f7;
+  --color-secondary:          #f59e0b;
+  --color-secondary-foreground: #1a0e00;
+  --color-destructive:        #ef4444;
+  --color-destructive-foreground: #fff;
+  --color-input:              #1c2030;
+  --color-ring:               #22c55e;
+  --color-border:             #1e2436;
+  --color-surface:            #101320;
+  --color-surface-raised:     #161928;
+  --radius: 0.375rem;
+}
+
+/* ── Light mode overrides ─────────────────── */
+html.light {
+  --color-background:         #f8f9fc;
+  --color-foreground:         #0d1117;
+  --color-card:               #ffffff;
+  --color-card-foreground:    #0d1117;
+  --color-muted:              #eef0f5;
+  --color-muted-foreground:   #5a6075;
+  --color-border:             #dde0eb;
+  --color-input:              #eef0f5;
+  --color-primary:            #16a34a;
+  --color-primary-foreground: #ffffff;
+  --color-accent:             #eff6ff;
+  --color-accent-foreground:  #1d4ed8;
+  --color-secondary:          #d97706;
+  --color-secondary-foreground: #ffffff;
+  --color-ring:               #16a34a;
+  --color-surface:            #f0f2f8;
+  --color-surface-raised:     #e8eaf2;
+}
+
+* {
+  border-color: var(--color-border);
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Smooth theme transitions — only on the properties that change */
+html, body, main {
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Surface utility ──────────────────────── */
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+/* ── Typography utilities ─────────────────── */
+.font-heading {
+  font-family: var(--font-heading);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  font-weight: 500;
+}
+
+/* ── Animations ───────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stat-pop {
+  0%   { opacity: 0; transform: scale(0.75) translateY(6px); }
+  65%  { transform: scale(1.08) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease both;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-animate] {
+  opacity: 0;
+}
+
+[data-animate].in-view {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* stagger delays for children */
+[data-delay="1"] { animation-delay: 0.08s; }
+[data-delay="2"] { animation-delay: 0.16s; }
+[data-delay="3"] { animation-delay: 0.24s; }
+[data-delay="4"] { animation-delay: 0.32s; }
+
+/* ── Gradient helpers ─────────────────────── */
+.hero-radial {
+  background:
+    radial-gradient(ellipse 70% 55% at 70% 0%, rgba(29, 78, 216, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 20% 10%, rgba(34, 197, 94, 0.07) 0%, transparent 55%);
+}
+
+.glow-primary {
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.15),
+    0 4px 40px rgba(34, 197, 94, 0.08),
+    0 16px 48px rgba(13, 17, 32, 0.5);
+}
+
+/* ── Service card hover ───────────────────── */
+.service-card {
+  transition: padding-left 0.2s ease;
+  position: relative;
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(to bottom, #22c55e, #3b82f6);
+  border-radius: 1px;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  opacity: 0;
+}
+
+.service-card:hover::before {
+  transform: translateY(-50%) scaleY(1);
+  opacity: 1;
+}
+
+.service-card:hover {
+  padding-left: 12px;
+}
+
+/* For right-column cards that have border-left, adjust */
+.service-card.pl-offset:hover {
+  padding-left: 60px;
+}
+
+/* ── Value card hover ─────────────────────── */
+.value-card {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.value-card:hover {
+  border-color: rgba(34, 197, 94, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(59, 130, 246, 0.06);
+  transform: translateY(-2px);
+}
+
+/* ── Photo card hover ─────────────────────── */
+.photo-card-inner {
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-card:hover .photo-card-inner {
+  transform: scale(1.04);
+}
+
+/* ── Scrollbar ────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3650;
+}

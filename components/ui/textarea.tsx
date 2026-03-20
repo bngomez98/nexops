@@ -1,7 +1,8 @@
-import { cn } from '@/lib/utils'
-import type { TextareaHTMLAttributes } from 'react'
+import * as React from 'react'
 
-function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+import { cn } from '@/lib/utils'
+
+function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
   return (
     <textarea
       data-slot="textarea"

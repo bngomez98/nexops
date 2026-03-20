@@ -1,648 +1,492 @@
-"use client"
+'use client'
 
-import { Fragment, useCallback, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { ProjectFilters } from '@/components/project-filters'
 import {
-  ComposedChart,
-  Bar,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { getStoredUser, type AuthUser } from "@/lib/auth"
-import {
-  TrendingUp,
-  DollarSign,
-  Target,
-  Clock,
-  MapPin,
-  ArrowUpRight,
-  Briefcase,
-  TrendingDown,
-  AlertCircle,
-  Star,
-  Crown,
-  Shield,
-  Phone,
-  ChevronDown,
-  CheckCircle2,
-  CalendarCheck,
-  XCircle,
-  Loader2,
-} from "lucide-react"
+  Briefcase, Star, Layers, MapPin, Loader2,
+  BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
+  RefreshCw, Clock, DollarSign, CheckCircle2, Zap,
+} from 'lucide-react'
 
-interface Lead {
+interface ProjectRequest {
   id: string
-  homeownerName: string
-  service: string
+  title: string
   description: string
-  budget: string
-  address: string
-  photos: number
-  status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "standard" | "premium" | "elite"
-  value: number
+  category: string
+  location: string
+  budget?: number
   createdAt: string
-  consultationWindow?: string
 }
 
-const weeklyData = [
-  { week: "Nov W1", projects: 2, revenue: 2800 },
-  { week: "Nov W2", projects: 3, revenue: 4200 },
-  { week: "Nov W3", projects: 1, revenue: 950 },
-  { week: "Nov W4", projects: 4, revenue: 7100 },
-  { week: "Dec W1", projects: 3, revenue: 5600 },
-  { week: "Dec W2", projects: 4, revenue: 6900 },
-]
-
-const tierConfig = {
-  standard: {
-    label: "Standard",
-    icon: Shield,
-    colors: "text-muted-foreground border-border/50 bg-secondary/60",
-    accent: "text-muted-foreground",
-    headerBg: "from-secondary/40 to-background",
-    advance: "Real-time",
-  },
-  premium: {
-    label: "Premium",
-    icon: Star,
-    colors: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-    accent: "text-amber-400",
-    headerBg: "from-amber-500/8 to-background",
-    advance: "90 sec early",
-  },
-  elite: {
-    label: "Elite",
-    icon: Crown,
-    colors: "text-violet-400 border-violet-500/30 bg-violet-500/10",
-    accent: "text-violet-400",
-    headerBg: "from-violet-500/8 to-background",
-    advance: "5 min exclusive",
-  },
+interface ContractorProfile {
+  companyName: string
+  membershipTier: string
+  currentActiveProjects: number
+  maxActiveProjects: number
+  averageRating: number
+  totalReviews: number
 }
 
-// Status transitions available for each status
-const nextStatuses: Record<Lead["status"], { value: Lead["status"]; label: string; icon: typeof Phone }[]> = {
-  new: [
-    { value: "contacted", label: "Mark contacted", icon: Phone },
-    { value: "lost", label: "Mark lost", icon: XCircle },
-  ],
-  contacted: [
-    { value: "scheduled", label: "Mark scheduled", icon: CalendarCheck },
-    { value: "lost", label: "Mark lost", icon: XCircle },
-  ],
-  scheduled: [
-    { value: "won", label: "Mark won", icon: CheckCircle2 },
-    { value: "lost", label: "Mark lost", icon: XCircle },
-  ],
-  won: [],
-  lost: [],
+interface FilterState {
+  search: string
+  category: string
+  budgetRange: string
+  status: string
+  location: string
+  sortBy: 'recent' | 'budget-high' | 'budget-low'
 }
 
-function statusBadge(status: Lead["status"]) {
-  const map: Record<Lead["status"], { label: string; variant: "success" | "info" | "warning" | "muted" | "destructive" }> = {
-    new: { label: "New", variant: "info" },
-    contacted: { label: "Contacted", variant: "warning" },
-    scheduled: { label: "Scheduled", variant: "success" },
-    won: { label: "Won", variant: "success" },
-    lost: { label: "Lost", variant: "destructive" },
-  }
-  const { label, variant } = map[status]
+const CATEGORY_ICONS: Record<string, string> = {
+  'tree-removal': '🌳', 'concrete-work': '🏗️', 'roofing': '🏠',
+  'hvac': '❄️', 'fencing': '🏡', 'electrical': '⚡', 'plumbing': '🔧', 'excavation': '🚜',
+}
+
+function formatCategory(cat: string) {
+  return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 60) return `${mins}m ago`
+  const hours = Math.floor(diff / 3600000)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(diff / 86400000)
+  if (days < 30) return `${days}d ago`
+  return new Date(dateStr).toLocaleDateString()
+}
+
+function isNew(dateStr: string) {
+  return Date.now() - new Date(dateStr).getTime() < 2 * 60 * 60 * 1000 // < 2 hours
+}
+
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onClose, 3000)
+    return () => clearTimeout(t)
+  }, [onClose])
+
   return (
-    <div className="flex items-center gap-1.5">
-      {status === "new" && (
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
-        </span>
-      )}
-      <Badge variant={variant as Parameters<typeof Badge>[0]["variant"]}>{label}</Badge>
-    </div>
-  )
-}
-
-function tierBadge(tier: Lead["tier"]) {
-  const config = tierConfig[tier] ?? tierConfig.standard
-  const TierIcon = config.icon
-  return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-semibold ${config.colors}`}>
-      <TierIcon className="h-2.5 w-2.5" />
-      {config.label}
-    </span>
-  )
-}
-
-function timeAgo(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime()
-  const h = Math.floor(diff / 3600000)
-  if (h < 24) return h === 0 ? "Just now" : `${h}h ago`
-  const d = Math.floor(h / 24)
-  return `${d}d ago`
-}
-
-function Trend({ value, positive }: { value: string; positive: boolean }) {
-  return (
-    <div className={`flex items-center gap-1 text-xs font-semibold px-1.5 py-0.5 rounded-md ${positive ? "text-emerald-400 bg-emerald-400/10" : "text-red-400 bg-red-400/10"}`}>
-      {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-      {value}
-    </div>
-  )
-}
-
-function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="glass-card rounded-xl px-4 py-3 shadow-xl text-xs">
-      <p className="font-semibold text-foreground mb-2">{label}</p>
-      {payload.map((p) => (
-        <div key={p.name} className="flex items-center gap-2 mb-1">
-          <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-muted-foreground">{p.name}:</span>
-          <span className="font-medium text-foreground">
-            {p.name === "Revenue" ? `$${p.value.toLocaleString()}` : p.value}
-          </span>
-        </div>
-      ))}
+    <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl border animate-fade-up text-sm font-medium ${
+      type === 'success'
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-red-50 border-red-200 text-red-800'
+    }`}>
+      {type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <AlertTriangle className="w-4 h-4 text-red-600" />}
+      {message}
     </div>
   )
 }
 
 export default function ContractorDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [leads, setLeads] = useState<Lead[]>([])
-  const [loading, setLoading] = useState(true)
-  const [expandedLead, setExpandedLead] = useState<string | null>(null)
-  const [updating, setUpdating] = useState<string | null>(null)
+  const [user, setUser]       = useState<any>(null)
+  const [profile, setProfile] = useState<ContractorProfile | null>(null)
+  const [projects, setProjects]         = useState<ProjectRequest[]>([])
+  const [filteredProjects, setFiltered] = useState<ProjectRequest[]>([])
+  const [loading, setLoading]   = useState(true)
+  const [claimingId, setClaiming] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+  const [filters, setFilters] = useState<FilterState>({
+    search: '', category: '', budgetRange: '', status: '', location: '', sortBy: 'recent',
+  })
+  const pollingRef = useRef<NodeJS.Timeout | null>(null)
+
+  const fetchProjects = useCallback(async () => {
+    const projRes = await fetch('/api/projects/list?type=available')
+    if (projRes.ok) {
+      const { projects: list } = await projRes.json()
+      setProjects(prev => {
+        const newList = list ?? []
+        // Check for new projects compared to current list
+        const prevIds = new Set(prev.map((p: ProjectRequest) => p.id))
+        const hasNew = newList.some((p: ProjectRequest) => !prevIds.has(p.id))
+        if (hasNew && prev.length > 0) {
+          setToast({ message: 'New project available!', type: 'success' })
+        }
+        return newList
+      })
+      setLastRefresh(new Date())
+    }
+  }, [])
 
   useEffect(() => {
-    const stored = getStoredUser()
-    if (!stored || stored.role !== "contractor") {
-      router.replace("/login")
+    async function load() {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
+        setUser(data.user)
+        setProfile(data.contractorProfile)
+        await fetchProjects()
+      } catch {
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [router, fetchProjects])
+
+  // Auto-poll every 30 seconds
+  useEffect(() => {
+    pollingRef.current = setInterval(fetchProjects, 30000)
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [fetchProjects])
+
+  useEffect(() => {
+    let result = [...projects]
+    if (filters.search) {
+      const q = filters.search.toLowerCase()
+      result = result.filter(p =>
+        p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
+      )
+    }
+    if (filters.category) result = result.filter(p => p.category === filters.category)
+    if (filters.budgetRange) {
+      result = result.filter(p => {
+        if (!p.budget) return true
+        const [min, max] = filters.budgetRange.split('-')
+        return max === '+' ? p.budget >= parseInt(min) : p.budget >= parseInt(min) && p.budget <= parseInt(max)
+      })
+    }
+    if (filters.location) {
+      result = result.filter(p => p.location.toLowerCase().includes(filters.location.toLowerCase()))
+    }
+    result.sort((a, b) => {
+      if (filters.sortBy === 'budget-high') return (b.budget || 0) - (a.budget || 0)
+      if (filters.sortBy === 'budget-low')  return (a.budget || 0) - (b.budget || 0)
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
+    setFiltered(result)
+  }, [projects, filters])
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await fetchProjects()
+    setRefreshing(false)
+  }
+
+  async function handleClaim(projectId: string) {
+    if (!profile) return
+    if (profile.currentActiveProjects >= profile.maxActiveProjects) {
+      setToast({ message: 'Project capacity reached. Upgrade to claim more.', type: 'error' })
       return
     }
-    setUser(stored)
-
-    const controller = new AbortController()
-    fetch("/api/leads", { signal: controller.signal })
-      .then((r) => {
-        if (r.status === 401) { router.replace("/login"); return null }
-        if (!r.ok) return null
-        return r.json()
-      })
-      .then((d) => { if (d) setLeads(d.leads ?? []) })
-      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to fetch leads:", err) })
-      .finally(() => setLoading(false))
-
-    return () => controller.abort()
-  }, [router])
-
-  const updateStatus = useCallback(
-    async (leadId: string, status: Lead["status"]) => {
-      setUpdating(leadId)
-      try {
-        const res = await fetch("/api/leads", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ leadId, status }),
-        })
-        if (!res.ok) return
-        const { lead } = await res.json() as { lead: Lead }
-        setLeads((prev) => prev.map((l) => (l.id === lead.id ? lead : l)))
-        // Collapse the row if it's now in a terminal state
-        if (status === "won" || status === "lost") {
-          setExpandedLead(null)
-        }
-      } finally {
-        setUpdating(null)
+    setClaiming(projectId)
+    try {
+      const res = await fetch(`/api/projects/claim/${projectId}`, { method: 'POST' })
+      if (res.ok) {
+        setProjects(prev => prev.filter(p => p.id !== projectId))
+        setProfile(prev => prev ? { ...prev, currentActiveProjects: prev.currentActiveProjects + 1 } : prev)
+        setToast({ message: 'Project claimed successfully!', type: 'success' })
+      } else {
+        const data = await res.json()
+        setToast({ message: data.error || 'Failed to claim project', type: 'error' })
       }
-    },
-    [],
-  )
+    } catch {
+      setToast({ message: 'Network error. Please try again.', type: 'error' })
+    } finally {
+      setClaiming(null)
+    }
+  }
 
-  if (!user) {
+  if (loading) {
     return (
-      <div className="max-w-7xl mx-auto flex items-center justify-center py-24 gap-3">
-        <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-        <span className="text-sm text-muted-foreground">Loading dashboard…</span>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     )
   }
 
-  const totalValue = leads.filter((l) => l.status === "won").reduce((s, l) => s + l.value, 0)
-  const wonLeads = leads.filter((l) => l.status === "won").length
-  const closeRate = leads.length > 0 ? Math.round((wonLeads / leads.length) * 100) : 0
-  const newLeads = leads.filter((l) => l.status === "new").length
+  if (!user) return null
 
-  const sub = (user.subscription ?? "standard") as keyof typeof tierConfig
-  const tier = tierConfig[sub] ?? tierConfig.standard
-  const TierIcon = tier.icon
-
-  const stats = [
-    {
-      title: "Total Projects",
-      value: leads.length.toString(),
-      sub: `${newLeads} new`,
-      icon: TrendingUp,
-      accent: "text-primary",
-      accentBg: "bg-primary/10",
-      border: "border-primary/20",
-      trend: { value: "+12%", positive: true },
-    },
-    {
-      title: "Revenue Won",
-      value: `$${totalValue.toLocaleString()}`,
-      sub: `${wonLeads} jobs closed`,
-      icon: DollarSign,
-      accent: "text-emerald-400",
-      accentBg: "bg-emerald-400/10",
-      border: "border-emerald-400/20",
-      trend: { value: "+8%", positive: true },
-    },
-    {
-      title: "Close Rate",
-      value: `${closeRate}%`,
-      sub: "Last 30 days",
-      icon: Target,
-      accent: "text-amber-400",
-      accentBg: "bg-amber-400/10",
-      border: "border-amber-400/20",
-      trend: { value: "-3%", positive: false },
-    },
-    {
-      title: "Plan",
-      value: user.subscription ? user.subscription.charAt(0).toUpperCase() + user.subscription.slice(1) : "—",
-      sub: "Active subscription",
-      icon: TierIcon,
-      accent: tier.accent,
-      accentBg: tierConfig[sub]?.colors ?? "",
-      border: "border-border/30",
-      trend: null,
-    },
-  ]
+  const atCapacity = (profile?.currentActiveProjects ?? 0) >= (profile?.maxActiveProjects ?? 1)
+  const capacityPct = profile ? Math.round((profile.currentActiveProjects / profile.maxActiveProjects) * 100) : 0
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* Welcome banner */}
-      <div className="relative rounded-2xl overflow-hidden border border-border/40">
-        <div className={`absolute inset-0 bg-gradient-to-br ${tier.headerBg} pointer-events-none`} />
-        <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-primary/4 blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-background">
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
 
-        <div className="relative px-6 py-5 flex items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <TierIcon className={`h-3.5 w-3.5 ${tier.accent}`} />
-              <p className={`text-xs font-semibold uppercase tracking-wider ${tier.accent}`}>Contractor Portal</p>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-bold capitalize ${tier.colors}`}>
-                {tier.label}
-              </span>
-            </div>
-            <h1 className="text-xl font-bold">
-              Welcome back, <span className="gradient-text">{user.name.split(" ")[0]}</span>
-            </h1>
-            {user.businessName && (
-              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">
-                <Briefcase className="h-3.5 w-3.5 text-primary/60" />
-                {user.businessName}
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
+
+      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+        {/* Welcome banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-primary-foreground/70 text-[12px] font-semibold uppercase tracking-wide mb-1">
+                Contractor Dashboard
               </p>
-            )}
+              <h1 className="text-2xl font-bold">{profile?.companyName || user.name}</h1>
+              <p className="text-primary-foreground/80 text-sm mt-1 flex items-center gap-2">
+                <span className="capitalize">{profile?.membershipTier || 'Free'} plan</span>
+                <span className="opacity-40">·</span>
+                <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active</span>
+                <span className="opacity-40">·</span>
+                <span className="flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  {projects.length} available
+                </span>
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-3 py-2 rounded-xl border border-white/20"
+                title={`Last updated ${lastRefresh.toLocaleTimeString()}`}
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+              <Link
+                href="/dashboard/contractor/analytics"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
+              >
+                <BarChart3 className="w-4 h-4" />
+                Analytics
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
-          {newLeads > 0 && (
-            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-blue-500/30 bg-blue-500/10">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400" />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-blue-400">{newLeads} new project{newLeads > 1 ? "s" : ""}</p>
-                <p className="text-[10px] text-blue-300/60">Awaiting your response</p>
+
+          {/* Capacity bar */}
+          {profile && (
+            <div className="relative mt-5">
+              <div className="flex items-center justify-between text-[11px] text-primary-foreground/70 mb-1.5">
+                <span>Project capacity</span>
+                <span>{profile.currentActiveProjects} / {profile.maxActiveProjects} ({capacityPct}%)</span>
+              </div>
+              <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-500 ${atCapacity ? 'bg-red-300/80' : 'bg-white/70'}`}
+                  style={{ width: `${Math.min(capacityPct, 100)}%` }}
+                />
               </div>
             </div>
           )}
         </div>
-      </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {stats.map(({ title, value, sub: subLabel, icon: Icon, accent, accentBg, border, trend }) => (
-          <div key={title} className={`rounded-xl border ${border} bg-card p-4 hover-glow transition-all duration-200 hover:translate-y-[-1px]`}>
-            <div className="flex items-start justify-between mb-3">
-              <p className="text-xs text-muted-foreground font-medium">{title}</p>
-              <div className={`${accentBg} p-1.5 rounded-lg`}>
-                <Icon className={`h-4 w-4 ${accent}`} />
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, color: 'stat-card-indigo', iconClass: 'text-primary' },
+            { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, color: 'stat-card-amber', iconClass: 'text-amber-500' },
+            { label: 'Available', value: projects.length, sub: 'matching projects', icon: Layers, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
+          ].map(s => {
+            const Icon = s.icon
+            return (
+              <div key={s.label} className={`bg-card border border-border rounded-xl p-5 ${s.color}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
+                  <Icon className={`w-4 h-4 ${s.iconClass}`} />
+                </div>
+                <p className="text-3xl font-bold text-foreground">{s.value}</p>
+                <p className="text-[11px] text-muted-foreground mt-1">{s.sub}</p>
               </div>
-            </div>
-            <p className="text-2xl font-bold tracking-tight">{value}</p>
-            <div className="flex items-center justify-between mt-1.5">
-              <p className="text-[10px] text-muted-foreground">{subLabel}</p>
-              {trend && <Trend value={trend.value} positive={trend.positive} />}
-            </div>
-          </div>
-        ))}
-      </div>
+            )
+          })}
+        </div>
 
-      <div className="grid lg:grid-cols-5 gap-6">
-        {/* Chart */}
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Project Activity</CardTitle>
-                <CardDescription>Weekly project volume and revenue over the last 6 weeks</CardDescription>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold px-2 py-1 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
-                <TrendingUp className="h-3.5 w-3.5" />
-                +23% MoM
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={240}>
-              <ComposedChart data={weeklyData} barCategoryGap="35%">
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" vertical={false} />
-                <XAxis
-                  dataKey="week"
-                  tick={{ fill: "oklch(0.60 0.01 240)", fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  yAxisId="left"
-                  tick={{ fill: "oklch(0.60 0.01 240)", fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={25}
-                />
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  tick={{ fill: "oklch(0.60 0.01 240)", fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={45}
-                  tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend
-                  wrapperStyle={{ fontSize: "11px", paddingTop: "12px" }}
-                  formatter={(value) => <span style={{ color: "oklch(0.70 0.01 240)" }}>{value}</span>}
-                />
-                <Bar
-                  yAxisId="left"
-                  dataKey="projects"
-                  name="Projects"
-                  fill="oklch(0.75 0.18 155)"
-                  radius={[4, 4, 0, 0]}
-                  maxBarSize={40}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="revenue"
-                  name="Revenue"
-                  stroke="oklch(0.70 0.15 85)"
-                  strokeWidth={2}
-                  dot={{ fill: "oklch(0.70 0.15 85)", r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Subscription card */}
-        <Card className={`lg:col-span-2 border-2 ${sub === "elite" ? "border-violet-500/30" : sub === "premium" ? "border-amber-500/30" : "border-border/40"}`}>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Your Plan</CardTitle>
-                <CardDescription>Subscription & service categories</CardDescription>
-              </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-bold capitalize ${tier.colors}`}>
-                <TierIcon className="h-4 w-4" />
-                {tier.label}
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <div className="space-y-2 p-3 rounded-xl bg-secondary/40 border border-border/30">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground text-xs">Project advance notice</span>
-                <span className={`text-xs font-bold ${tier.accent}`}>{tier.advance}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground text-xs">Service categories</span>
-                <span className="text-xs font-semibold">{(user.serviceCategories ?? []).length} active</span>
-              </div>
-            </div>
-
-            {/* Close rate bar */}
+        {/* Capacity warning */}
+        {atCapacity && (
+          <div className="rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 px-5 py-4 flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
             <div>
-              <div className="flex justify-between text-xs mb-1.5">
-                <span className="text-muted-foreground font-medium">Close rate</span>
-                <span className="font-bold text-foreground">{closeRate}%</span>
-              </div>
-              <div className="h-2 rounded-full bg-secondary overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-1000"
-                  style={{ width: `${closeRate}%` }}
-                />
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                {closeRate >= 50 ? "Strong performance" : closeRate >= 25 ? "Room to improve" : "Focus on follow-ups"}
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Project capacity reached</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                You've reached your limit of {profile?.maxActiveProjects} active projects.{' '}
+                <Link href="/dashboard/contractor/settings" className="underline font-medium">Upgrade your plan</Link> to take on more work.
               </p>
             </div>
-
-            {(user.serviceCategories ?? []).length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/30">
-                {(user.serviceCategories ?? []).map((cat) => (
-                  <span key={cat} className="px-2 py-0.5 rounded-md bg-secondary text-xs text-muted-foreground border border-border/30">{cat}</span>
-                ))}
-              </div>
-            )}
-
-            <a
-              href="/pricing"
-              className={`inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-3 rounded-xl border transition-colors mt-1 ${tier.colors} hover:opacity-80`}
-            >
-              {sub === "elite" ? "Manage plan" : "Upgrade plan"}
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Leads table */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Recent Projects</CardTitle>
-              <CardDescription>All projects assigned to your account — click a row to expand and update status</CardDescription>
-            </div>
-            {newLeads > 0 && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/25 text-xs text-blue-400 font-semibold">
-                <AlertCircle className="h-3.5 w-3.5" />
-                {newLeads} need attention
-              </div>
-            )}
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="flex items-center justify-center py-14 gap-3">
-              <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-              <span className="text-sm text-muted-foreground">Loading projects…</span>
-            </div>
-          ) : leads.length === 0 ? (
-            <div className="text-center py-14">
-              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                <Briefcase className="h-5 w-5 text-muted-foreground/40" />
+        )}
+
+        {/* Auto-refresh notice */}
+        <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+          <RefreshCw className="w-3 h-3" />
+          Auto-refreshes every 30 seconds · Last updated {lastRefresh.toLocaleTimeString()}
+        </p>
+
+        {/* Projects */}
+        <div className="grid lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <ProjectFilters onFiltersChange={setFilters} />
+          </div>
+
+          <div className="lg:col-span-3">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                <div className="flex items-center gap-2.5">
+                  <Layers className="w-4 h-4 text-primary" />
+                  <h2 className="font-semibold text-foreground text-[15px]">Available Projects</h2>
+                </div>
+                <span className="text-[11px] font-medium text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
+                  {filteredProjects.length} result{filteredProjects.length !== 1 ? 's' : ''}
+                </span>
               </div>
-              <p className="text-sm font-semibold mb-1">No projects yet</p>
-              <p className="text-xs text-muted-foreground">Projects will appear here when homeowners in your service area submit requests.</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border/40 bg-secondary/20">
-                    <th className="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Homeowner</th>
-                    <th className="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Service</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Budget</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tier</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Window</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Age</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leads.map((lead, i) => (
-                    <Fragment key={lead.id}>
-                      <tr
-                        className={`${i < leads.length - 1 ? "border-b border-border/20" : ""} hover:bg-secondary/30 transition-colors cursor-pointer ${
-                          lead.status === "new" ? "bg-blue-500/[0.03]" : ""
-                        }`}
-                        onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
-                      >
-                        <td className="px-6 py-4">
-                          <div>
-                            <p className="font-semibold">{lead.homeownerName}</p>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                              <MapPin className="h-3 w-3" /> {lead.address.split(",")[0]}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div>
-                            <p className="font-semibold">{lead.service}</p>
-                            <p className="text-xs text-muted-foreground line-clamp-1 max-w-[160px]">{lead.description}</p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 text-sm font-bold text-foreground">{lead.budget}</td>
-                        <td className="px-4 py-4">{tierBadge(lead.tier)}</td>
-                        <td className="px-4 py-4">{statusBadge(lead.status)}</td>
-                        <td className="px-4 py-4">
-                          {lead.consultationWindow ? (
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3 flex-shrink-0" />
-                              {lead.consultationWindow}
-                            </span>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-muted-foreground">{timeAgo(lead.createdAt)}</span>
-                            <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform duration-200 ${expandedLead === lead.id ? "rotate-180" : ""}`} />
-                          </div>
-                        </td>
-                      </tr>
 
-                      {/* Expanded detail row */}
-                      {expandedLead === lead.id && (
-                        <tr key={`${lead.id}-expanded`} className="border-b border-border/20 bg-secondary/10">
-                          <td colSpan={7} className="px-6 py-5">
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
-                              <div>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Description</p>
-                                <p className="text-foreground text-xs leading-relaxed">{lead.description}</p>
-                              </div>
-                              <div>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Full Address</p>
-                                <p className="text-foreground text-xs">{lead.address}</p>
-                              </div>
-                              <div>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Photos</p>
-                                <p className="text-foreground text-xs">{lead.photos} uploaded</p>
-                              </div>
-                              <div>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1">Project Value</p>
-                                <p className="text-emerald-400 font-bold text-base">${lead.value.toLocaleString()}</p>
-                              </div>
+              {projects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+                    <Briefcase className="w-6 h-6 text-primary" />
+                  </div>
+                  <p className="font-semibold text-foreground text-[15px] mb-2">No projects available</p>
+                  <p className="text-sm text-muted-foreground max-w-xs">
+                    New projects in your service categories will appear here automatically.
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-3 flex items-center gap-1">
+                    <RefreshCw className="w-3 h-3" /> Auto-checking every 30 seconds
+                  </p>
+                </div>
+              ) : filteredProjects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
+                  <p className="font-medium text-foreground mb-1">No matches</p>
+                  <p className="text-sm text-muted-foreground">Try adjusting your filters.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-border">
+                  {filteredProjects.map(project => {
+                    const icon = CATEGORY_ICONS[project.category] ?? '🔨'
+                    const fresh = isNew(project.createdAt)
+                    return (
+                      <div key={project.id} className="px-6 py-5 hover:bg-secondary/30 transition-colors">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-3 flex-1 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
+                              {icon}
                             </div>
-
-                            {/* Status actions */}
-                            {nextStatuses[lead.status].length > 0 && (
-                              <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border/30">
-                                {nextStatuses[lead.status].map(({ value: nextStatus, label, icon: Icon }) => {
-                                  const isWon = nextStatus === "won"
-                                  const isLost = nextStatus === "lost"
-                                  const isLoading = updating === lead.id
-                                  return (
-                                    <button
-                                      key={nextStatus}
-                                      type="button"
-                                      disabled={isLoading}
-                                      onClick={(e) => { e.stopPropagation(); updateStatus(lead.id, nextStatus) }}
-                                      className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                        isWon
-                                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
-                                          : isLost
-                                          ? "bg-red-500/10 text-red-400 border border-red-500/25 hover:bg-red-500/20"
-                                          : "btn-shimmer bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:opacity-90"
-                                      }`}
-                                    >
-                                      {isLoading ? (
-                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                      ) : (
-                                        <Icon className="h-3.5 w-3.5" />
-                                      )}
-                                      {label}
-                                    </button>
-                                  )
-                                })}
-                                {lead.status === "new" && (
-                                  <span className="text-xs text-muted-foreground ml-1">Respond quickly to improve close rate</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                                <Link
+                                  href={`/dashboard/contractor/projects/${project.id}`}
+                                  className="font-semibold text-foreground hover:text-primary transition-colors text-[14px] leading-snug"
+                                >
+                                  {project.title || formatCategory(project.category)}
+                                </Link>
+                                {fresh && (
+                                  <span className="text-[9.5px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-full uppercase tracking-wide animate-pulse">
+                                    NEW
+                                  </span>
                                 )}
                               </div>
-                            )}
-
-                            {(lead.status === "won" || lead.status === "lost") && (
-                              <div className={`flex items-center gap-2 pt-4 border-t border-border/30 text-xs font-medium ${lead.status === "won" ? "text-emerald-400" : "text-muted-foreground"}`}>
-                                {lead.status === "won" ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />}
-                                {lead.status === "won" ? "Job closed — counted in your revenue" : "Marked as lost"}
+                              <span className="inline-block text-[11px] font-semibold bg-secondary text-secondary-foreground px-2 py-0.5 rounded-md mb-2">
+                                {formatCategory(project.category)}
+                              </span>
+                              <p className="text-[13px] text-muted-foreground line-clamp-2 mb-3">
+                                {project.description}
+                              </p>
+                              <div className="flex items-center gap-4 text-[11.5px] text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <MapPin className="w-3 h-3" />
+                                  {project.location}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3 h-3" />
+                                  {timeAgo(project.createdAt)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex-shrink-0 flex flex-col items-end gap-3 pt-0.5">
+                            {project.budget != null && (
+                              <div className="flex items-center gap-1">
+                                <DollarSign className="w-3.5 h-3.5 text-primary" />
+                                <span className="font-bold text-primary text-lg">
+                                  {project.budget.toLocaleString()}
+                                </span>
                               </div>
                             )}
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  ))}
-                </tbody>
-              </table>
+                            <div className="flex items-center gap-2">
+                              <Link href={`/dashboard/contractor/projects/${project.id}`}>
+                                <button className="px-3 py-1.5 text-[12px] font-medium border border-border rounded-lg hover:bg-secondary transition-colors">
+                                  View
+                                </button>
+                              </Link>
+                              <button
+                                onClick={() => handleClaim(project.id)}
+                                disabled={claimingId === project.id || atCapacity}
+                                className="px-4 py-1.5 text-[12px] font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1.5"
+                              >
+                                {claimingId === project.id ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <>
+                                    <Sparkles className="w-3 h-3" />
+                                    Claim
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+
+        {/* Upgrade section */}
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="font-semibold text-foreground text-[15px]">Upgrade your plan</h3>
+              <p className="text-[12.5px] text-muted-foreground mt-0.5">
+                Take on more projects and grow your business.
+              </p>
+            </div>
+            <span className="text-[11px] bg-secondary text-secondary-foreground font-semibold px-2.5 py-1 rounded-full capitalize">
+              Current: {profile?.membershipTier || 'free'}
+            </span>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[
+              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'free' },
+              { name: 'Enterprise',   price: '$749/mo', projects: 15, highlight: profile?.membershipTier === 'professional' },
+            ].map(plan => (
+              <div
+                key={plan.name}
+                className={`rounded-xl border p-5 ${plan.highlight ? 'border-primary/40 bg-primary/5' : 'border-border'}`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-semibold text-foreground">{plan.name}</span>
+                  {plan.highlight && (
+                    <span className="text-[10.5px] bg-primary/15 text-primary font-semibold px-2 py-0.5 rounded-full">
+                      Recommended
+                    </span>
+                  )}
+                </div>
+                <p className="text-2xl font-bold text-foreground mb-1">{plan.price}</p>
+                <p className="text-[12.5px] text-muted-foreground mb-4">Up to {plan.projects} active projects</p>
+                <Link href="/dashboard/contractor/settings">
+                  <button className={`w-full py-2 text-[12.5px] font-semibold rounded-lg transition-opacity hover:opacity-90 ${plan.highlight ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                    Upgrade to {plan.name}
+                  </button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

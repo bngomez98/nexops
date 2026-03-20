@@ -1,91 +1,63 @@
-"use client"
-
+import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
-import { ArrowRight, Check, HelpCircle } from "lucide-react"
+import { ArrowRight, Check } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Pricing",
+  description:
+    "Nexus Operations pricing: cost-plus markup on completed maintenance work. No retainers, no subscriptions. Transparent pricing aligned with service delivery volume.",
+}
 
 const tiers = [
   {
-    name: "Standard",
-    price: "$299",
-    period: "/month",
+    name: "Routine",
+    markup: "25%",
+    sla: "Assigned within 24 hrs, on-site within 3-5 days",
     description:
-      "Full access to every pre-qualified project in your service category and coverage area. First-come, first-served.",
+      "Standard maintenance requests that are not time-sensitive. Scheduled repairs, cosmetic fixes, planned replacements.",
     features: [
-      "All projects in your approved categories",
-      "Real-time push, email, and SMS notifications",
-      "Unlimited claim attempts per month",
-      "Full project documentation before you claim",
-      "Performance dashboard — close rate, response time",
-      "Cancel anytime, no commitment",
+      "Contractor assigned within 24 hours",
+      "On-site within 3-5 business days",
+      "Photo documentation on every job",
+      "Monthly unified invoicing",
+      "Quality assurance review",
+      "Full request tracking in client portal",
     ],
-    cta: "Apply for Standard",
     highlighted: false,
-    badge: null,
   },
   {
-    name: "Premium",
-    price: "$499",
-    period: "/month",
+    name: "Urgent",
+    markup: "30%",
+    sla: "Assigned within 4 hrs, on-site next business day",
     description:
-      "A 90-second advance notification window before the general pool opens, plus deep analytics to sharpen your close rate.",
+      "Issues requiring prompt attention. Non-emergency plumbing, electrical issues affecting livability, HVAC in moderate weather.",
     features: [
-      "Everything in Standard",
-      "90-second head-start on every new project",
-      "Priority placement on high-value requests",
-      "Advanced analytics — benchmarks, trends, pipeline",
-      "Custom budget-floor filter (see only jobs above your minimum)",
-      "Coverage area fine-tuning by ZIP code",
+      "Everything in Routine",
+      "Contractor assigned within 4 hours",
+      "On-site next business day",
+      "Escalation if primary contractor declines",
+      "Priority assignment from network",
+      "Direct status updates to property manager",
     ],
-    cta: "Apply for Premium",
     highlighted: true,
-    badge: "Most Popular",
   },
   {
-    name: "Elite",
-    price: "$749",
-    period: "/month",
+    name: "Emergency",
+    markup: "35%",
+    sla: "Assigned within 1 hr, on-site within 4 hrs",
     description:
-      "A 10-minute exclusive claim window on every premium-tier request ($5K+), plus a dedicated account manager.",
+      "Critical failures requiring immediate response. Burst pipes, gas leaks, electrical hazards, HVAC failure in extreme weather.",
     features: [
-      "Everything in Premium",
-      "10-minute exclusive window on $5K+ projects",
-      "Dedicated account manager (direct line)",
-      "Custom coverage configuration across counties",
-      "Early access to new service categories",
-      "Priority support with same-business-day response",
+      "Everything in Urgent",
+      "Contractor assigned within 1 hour",
+      "On-site within 4 hours",
+      "Automatic backup contractor assignment",
+      "24/7 coordination availability",
+      "Real-time updates until resolution",
     ],
-    cta: "Apply for Elite",
     highlighted: false,
-    badge: "Best ROI",
-  },
-]
-
-const faqs = [
-  {
-    q: "Why fixed prices instead of price ranges?",
-    a: "Ranges introduce ambiguity — you deserve to know exactly what you will pay before you sign up. Our pricing is standardized across all service categories. No negotiation, no surprises.",
-  },
-  {
-    q: "Is pricing the same regardless of my service category?",
-    a: "Yes. Whether you do tree removal, roofing, concrete work, or electrical, the membership tier price is identical. You pay for platform access, not for a particular trade category.",
-  },
-  {
-    q: "How does the ROI math work?",
-    a: "The median residential project on our platform is $4,200. A single closed job at that value covers your Standard membership for 14 months. Most active members close 2–5 projects per month.",
-  },
-  {
-    q: "Can I upgrade or downgrade my tier?",
-    a: "Yes, at any time. Changes take effect at the start of your next billing cycle. Upgrades can also take effect immediately upon request.",
-  },
-  {
-    q: "What does 'first-come, first-served' mean in practice?",
-    a: "When a homeowner submits a request, every qualified contractor in that category and area is notified simultaneously. The first contractor to click 'Claim' locks the project exclusively — it is immediately removed from all other feeds. Premium and Elite members receive their advance notification window before this opens.",
-  },
-  {
-    q: "Are there any per-project fees on top of my subscription?",
-    a: "No. Your monthly membership is the only charge. You can claim as many projects as you can handle with no additional cost per claim.",
   },
 ]
 
@@ -95,157 +67,255 @@ export default function PricingPage() {
       <Header />
       <main>
         {/* Hero */}
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-20">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">Membership plans</p>
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                One price. Unlimited projects.
+        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-3xl">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-6">
+                Pricing
+              </p>
+              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+                Pay for work completed,{" "}
+                <span className="font-serif italic font-normal text-primary">
+                  not retainers.
+                </span>
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Every tier includes unlimited project claims with no per-project fees, no annual contracts,
-                and no cancellation penalties. Higher tiers add advance notification windows and priority
-                access to high-value projects.
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                Our cost-plus model means you only pay when maintenance work is
+                actually performed. No monthly subscriptions, no setup fees, no
+                minimum commitments. The markup covers coordination, quality
+                assurance, and contractor management.
               </p>
             </div>
           </div>
         </section>
 
         {/* Tier Cards */}
-        <section className="pb-24 lg:pb-32">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid md:grid-cols-3 gap-6">
+        <section className="pb-16 lg:pb-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid md:grid-cols-3 gap-4">
               {tiers.map((tier) => (
                 <div
                   key={tier.name}
-                  className={`relative p-8 rounded-2xl border flex flex-col ${
+                  className={`p-6 lg:p-8 rounded-xl border flex flex-col ${
                     tier.highlighted
-                      ? "bg-primary/5 border-primary/30 shadow-xl shadow-primary/5"
-                      : "bg-card border-border/40"
+                      ? "bg-primary/5 border-primary/20"
+                      : "bg-card border-border"
                   }`}
                 >
-                  {tier.badge && (
-                    <span className="absolute -top-3 left-8 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground bg-primary px-3 py-1 rounded-full">
-                      {tier.badge}
+                  {tier.highlighted && (
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded self-start mb-4">
+                      Most Common
                     </span>
                   )}
-
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2">{tier.name}</h3>
-                    <div className="flex items-baseline gap-1 mb-3">
-                      <span className="text-4xl font-bold tracking-tight" style={{ color: "var(--primary)" }}>
-                        {tier.price}
-                      </span>
-                      <span className="text-sm text-muted-foreground">{tier.period}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{tier.description}</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">
+                    {tier.name}
+                  </h3>
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-3xl font-semibold text-primary">
+                      {tier.markup}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      markup
+                    </span>
                   </div>
-
+                  <p className="text-xs text-muted-foreground mb-1">
+                    {tier.sla}
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6 mt-3">
+                    {tier.description}
+                  </p>
                   <ul className="flex flex-col gap-3 mb-8 flex-grow">
                     {tier.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-sm">
+                      <li
+                        key={f}
+                        className="flex items-start gap-2.5 text-sm"
+                      >
                         <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span className="text-foreground/80">{f}</span>
+                        <span className="text-foreground/70">{f}</span>
                       </li>
                     ))}
                   </ul>
-
                   <Link
                     href="/contact"
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg transition-opacity ${
                       tier.highlighted
-                        ? "bg-primary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        ? "bg-foreground text-background hover:opacity-90"
+                        : "bg-secondary text-foreground hover:opacity-80"
                     }`}
                   >
-                    {tier.cta}
+                    Get Started
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               ))}
             </div>
-
-            {/* Guarantee strip */}
-            <div className="mt-8 p-5 rounded-xl border border-border/40 bg-card/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Check className="h-5 w-5 text-primary shrink-0" />
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">No lock-in.</span> Cancel anytime from your
-                dashboard. Your account remains active through the end of the current billing period.
-                No cancellation fees.
-              </p>
-            </div>
           </div>
         </section>
 
-        {/* ROI callout */}
-        <section className="py-24 lg:py-32 bg-card/30">
-          <div className="max-w-4xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center mb-10">
-              <h2 className="text-2xl font-semibold tracking-tight mb-3">How the membership pays for itself</h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Active members close an average of 2–5 projects per month. The math is simple.
-              </p>
-            </div>
-            <div className="p-8 rounded-2xl bg-primary/5 border border-primary/20">
-              <ul className="flex flex-col gap-4 text-sm text-foreground">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary shrink-0 mt-0.5">✓</span>
-                  <span>One flat monthly fee — claim as many projects as you can handle, with no additional cost per claim</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary shrink-0 mt-0.5">✓</span>
-                  <span>Every project you claim is exclusively yours — permanently removed from all other contractor feeds the moment you claim it</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary shrink-0 mt-0.5">✓</span>
-                  <span>Full documentation before you commit: photos, written scope, and a defined budget cap</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary shrink-0 mt-0.5">✓</span>
-                  <span>Consultations pre-scheduled by the homeowner — no callbacks, no voicemail chains</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary shrink-0 mt-0.5">✓</span>
-                  <span>Median project value of <span className="font-semibold">$4,200</span> — a single closed job covers 14 months of Standard membership</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
+        {/* How it's calculated */}
+        <section className="py-16 lg:py-24 bg-secondary/50">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
+                  How your invoice works.
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  Every invoice shows the contractor&apos;s quoted cost and our
+                  coordination markup as separate line items. Full transparency
+                  -- you always see exactly what you&apos;re paying for.
+                </p>
 
-        {/* FAQ */}
-        <section className="py-24 lg:py-32">
-          <div className="max-w-3xl mx-auto px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-10">
-              <HelpCircle className="h-5 w-5 text-primary" />
-              <h2 className="text-2xl font-semibold tracking-tight">Pricing questions</h2>
-            </div>
-            <div className="flex flex-col gap-6">
-              {faqs.map((faq) => (
-                <div key={faq.q} className="border-b border-border/40 pb-6">
-                  <h3 className="text-sm font-semibold mb-2 text-foreground">{faq.q}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                <div className="rounded-xl bg-card border border-border p-6">
+                  <h3 className="text-sm font-semibold text-foreground mb-4">
+                    Example: Routine plumbing repair
+                  </h3>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between py-2 border-b border-border">
+                      <span className="text-sm text-muted-foreground">
+                        Contractor cost
+                      </span>
+                      <span className="text-sm font-medium text-foreground">
+                        $400.00
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-border">
+                      <span className="text-sm text-muted-foreground">
+                        Coordination markup (25%)
+                      </span>
+                      <span className="text-sm font-medium text-foreground">
+                        $100.00
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-sm font-semibold text-foreground">
+                        Total invoiced
+                      </span>
+                      <span className="text-sm font-semibold text-primary">
+                        $500.00
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
+                  What the markup covers.
+                </h2>
+                <div className="flex flex-col gap-4">
+                  {[
+                    {
+                      title: "Request intake and classification",
+                      desc: "We triage every request by urgency, assign the right trade, and match to the best-available contractor.",
+                    },
+                    {
+                      title: "SLA enforcement and escalation",
+                      desc: "Automated monitoring ensures contractors respond and arrive within committed windows. Backup assignment triggers automatically.",
+                    },
+                    {
+                      title: "Quality assurance and documentation",
+                      desc: "Every job includes photo documentation and completion verification before the invoice is generated.",
+                    },
+                    {
+                      title: "Unified invoicing and reporting",
+                      desc: "Monthly consolidated invoices with full request detail, replacing dozens of separate contractor bills.",
+                    },
+                    {
+                      title: "Contractor management",
+                      desc: "Ongoing verification, performance tracking, network expansion, and relationship management across all trades.",
+                    },
+                  ].map((item) => (
+                    <div key={item.title}>
+                      <h3 className="text-sm font-semibold text-foreground mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Free for homeowners */}
-        <section className="py-24 lg:py-32 bg-card/30">
-          <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight mb-4">Homeowners never pay to use Nexus Operations</h2>
-            <p className="text-muted-foreground leading-relaxed mb-8 max-w-xl mx-auto">
-              Submitting a project request and receiving a contractor match is free for homeowners.
-              Nexus Operations is funded entirely by contractor memberships.
-            </p>
-            <Link
-              href="/login?tab=signup"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
-            >
-              Submit a Request — It's Free
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+        {/* B2B pricing note */}
+        <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                  B2B services pricing.
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  For lead generation, vendor management, consulting, and
+                  project support, pricing is scoped per engagement based on
+                  the specific deliverables, timeline, and complexity.
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  We provide a fixed quote before any work begins. No hourly
+                  billing surprises, no scope creep charges. If the scope
+                  changes, we re-quote before proceeding.
+                </p>
+              </div>
+              <div className="flex flex-col gap-4">
+                {[
+                  {
+                    service: "Lead Generation",
+                    model: "Per-campaign pricing based on target volume and qualification criteria",
+                  },
+                  {
+                    service: "Vendor Management",
+                    model: "Monthly retainer based on number of vendors and complexity of operations",
+                  },
+                  {
+                    service: "Consulting",
+                    model: "Fixed project fee scoped to specific deliverables and timeline",
+                  },
+                  {
+                    service: "Project Support",
+                    model: "Fixed fee per project with clearly defined scope and milestones",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.service}
+                    className="p-4 rounded-xl bg-card border border-border"
+                  >
+                    <h3 className="text-sm font-semibold text-foreground mb-1">
+                      {item.service}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {item.model}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-16 lg:py-24 bg-secondary/50">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
+                Let&apos;s scope your specific needs.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-8">
+                Every property portfolio has different maintenance volume and
+                urgency patterns. Contact us for a customized cost projection
+                based on your specific situation.
+              </p>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+              >
+                Contact Us
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </section>
       </main>

@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/dashboard/",
+      disallow: "/private/",
     },
     sitemap: "https://nexusoperations.org/sitemap.xml",
   }

@@ -1,223 +1,377 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { getStoredUser, type AuthUser } from "@/lib/auth"
-import {
-  CheckCircle2,
-  AlertCircle,
-  User,
-  Mail,
-  Phone,
-  Briefcase,
-  Shield,
-  Zap,
-  ArrowUpRight,
-} from "lucide-react"
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { FormError } from '@/components/form-error'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { Save } from 'lucide-react'
 
 const SERVICE_CATEGORIES = [
-  "Tree Removal",
-  "Concrete Work",
-  "Roofing",
-  "HVAC",
-  "Fencing",
-  "Electrical",
-  "Plumbing",
-  "Excavation",
+  { value: 'tree-removal', label: 'Tree Removal' },
+  { value: 'concrete-work', label: 'Concrete Work' },
+  { value: 'roofing', label: 'Roofing' },
+  { value: 'hvac', label: 'HVAC' },
+  { value: 'fencing', label: 'Fencing' },
+  { value: 'electrical', label: 'Electrical' },
+  { value: 'plumbing', label: 'Plumbing' },
+  { value: 'excavation', label: 'Excavation' },
 ]
 
-export default function ContractorSettingsPage() {
+export default function ContractorSettings() {
   const router = useRouter()
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [name, setName] = useState("")
-  const [phone, setPhone] = useState("")
-  const [businessName, setBusinessName] = useState("")
-  const [licenseNumber, setLicenseNumber] = useState("")
-  const [serviceCategories, setServiceCategories] = useState<string[]>([])
+  const searchParams = useSearchParams()
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState("")
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [formData, setFormData] = useState({
+    companyName: '',
+    bio: '',
+    licenseNumber: '',
+    yearsInBusiness: '',
+    serviceCategories: [] as string[],
+  })
+  const [notifications, setNotifications] = useState({
+    projectNotifications: true,
+    messageNotifications: true,
+    weeklyDigest: true,
+  })
 
   useEffect(() => {
-    const stored = getStoredUser()
-    if (!stored || stored.role !== "contractor") {
-      router.replace("/login")
-      return
+    async function loadData() {
+      try {
+        const response = await fetch('/api/auth/me')
+        if (!response.ok) {
+          router.push('/login')
+          return
+        }
+        const userData = await response.json()
+        if (userData.user.role !== 'contractor') {
+          router.push('/dashboard/homeowner')
+          return
+        }
+        setUser(userData.user)
+        const profile = userData.contractorProfile
+        if (profile) {
+          setFormData({
+            companyName: profile.companyName ?? '',
+            bio: profile.bio ?? '',
+            licenseNumber: profile.licenseNumber ?? '',
+            yearsInBusiness: profile.yearsInBusiness != null ? String(profile.yearsInBusiness) : '',
+            serviceCategories: profile.serviceCategories ?? [],
+          })
+        }
+      } catch (error) {
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    setUser(stored)
-    setName(stored.name ?? "")
-    setPhone(stored.phone ?? "")
-    setBusinessName(stored.businessName ?? "")
-    setLicenseNumber(stored.licenseNumber ?? "")
-    setServiceCategories(stored.serviceCategories ?? [])
+
+    loadData()
   }, [router])
 
-  function toggleCategory(cat: string) {
-    setServiceCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
-    )
+  // Handle billing success query param
+  useEffect(() => {
+    if (searchParams.get('billing') === 'success') {
+      setSuccess('Billing updated successfully!')
+      setTimeout(() => setSuccess(''), 5000)
+    }
+  }, [searchParams])
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+  }
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  function toggleServiceCategory(category: string) {
+    setFormData(prev => ({
+      ...prev,
+      serviceCategories: prev.serviceCategories.includes(category)
+        ? prev.serviceCategories.filter(c => c !== category)
+        : [...prev.serviceCategories, category]
+    }))
+  }
+
+  function handleNotificationChange(key: keyof typeof notifications) {
+    setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (!formData.companyName || !formData.bio || formData.serviceCategories.length === 0) {
+      setError('Please fill in all required fields')
+      return
+    }
+
     setSaving(true)
-    setError("")
-    // Simulate save (no DB persistence in demo)
-    await new Promise((r) => setTimeout(r, 600))
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+    try {
+      const response = await fetch('/api/settings/contractor', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to save settings. Please try again.')
+        return
+      }
+
+      setSuccess('Settings saved successfully!')
+      setTimeout(() => setSuccess(''), 3000)
+    } catch (err) {
+      setError('Failed to save settings. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setDeleting(true)
+    setError('')
+    try {
+      const response = await fetch('/api/settings/contractor', { method: 'DELETE' })
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to delete account. Please try again.')
+        setShowDeleteConfirm(false)
+        return
+      }
+      router.push('/login')
+    } catch (err) {
+      setError('Failed to delete account. Please try again.')
+      setShowDeleteConfirm(false)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    )
   }
 
   if (!user) return null
 
-  const planDetails: Record<string, { projects: string; notice: string; price: string }> = {
-    standard: { projects: "Unlimited", notice: "Real-time (FCFS pool)", price: "$299/mo" },
-    premium: { projects: "Unlimited", notice: "90-second advance window", price: "$499/mo" },
-    elite: { projects: "Unlimited", notice: "10-min exclusive on $5K+ projects", price: "$749/mo" },
-  }
-  const plan = planDetails[user.subscription ?? "standard"]
-
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-6">
-        <p className="text-primary text-sm font-medium mb-1">Contractor Portal</p>
-        <h1 className="text-2xl font-semibold">Account Settings</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Manage your business profile and subscription.</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      <div className="flex flex-col gap-5">
-        {/* Profile */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-4 w-4" /> Profile
-            </CardTitle>
-            <CardDescription>Personal and business information.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSave} className="flex flex-col gap-4">
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="name" className="text-sm font-medium">Full name</label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage your contractor profile and preferences</p>
+        </div>
+        <div className="max-w-2xl">
+          {error && <FormError message={error} className="mb-6" />}
+          {success && (
+            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm mb-6">
+              {success}
+            </div>
+          )}
+
+          <form onSubmit={handleSave} className="space-y-8">
+            {/* Profile Section */}
+            <div className="border border-border rounded-lg p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Profile Information</h2>
+
+              <div className="space-y-4">
+                {/* Company Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="companyName">Company Name *</Label>
+                  <Input
+                    id="companyName"
+                    name="companyName"
+                    placeholder="Enter your company name"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="phone" className="text-sm font-medium flex items-center gap-1.5">
-                    <Phone className="h-3.5 w-3.5" /> Phone
-                  </label>
-                  <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(555) 000-0000" />
+
+                {/* License Number */}
+                <div className="space-y-2">
+                  <Label htmlFor="licenseNumber">License Number</Label>
+                  <Input
+                    id="licenseNumber"
+                    name="licenseNumber"
+                    placeholder="e.g., LICENSE123"
+                    value={formData.licenseNumber}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                {/* Years in Business */}
+                <div className="space-y-2">
+                  <Label htmlFor="yearsInBusiness">Years in Business</Label>
+                  <Input
+                    id="yearsInBusiness"
+                    name="yearsInBusiness"
+                    type="number"
+                    placeholder="5"
+                    value={formData.yearsInBusiness}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                {/* Bio */}
+                <div className="space-y-2">
+                  <Label htmlFor="bio">Bio/Description *</Label>
+                  <textarea
+                    id="bio"
+                    name="bio"
+                    placeholder="Tell customers about your expertise and experience..."
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    rows={4}
+                    required
+                    className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  />
                 </div>
               </div>
+            </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium flex items-center gap-1.5">
-                  <Mail className="h-3.5 w-3.5" /> Email
+            {/* Service Categories Section */}
+            <div className="border border-border rounded-lg p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Service Categories *</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Select all service categories you specialize in
+              </p>
+              <div className="grid md:grid-cols-2 gap-4">
+                {SERVICE_CATEGORIES.map(category => (
+                  <label key={category.value} className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                    <input
+                      type="checkbox"
+                      checked={formData.serviceCategories.includes(category.value)}
+                      onChange={() => toggleServiceCategory(category.value)}
+                      className="w-4 h-4 rounded"
+                    />
+                    <span className="text-foreground">{category.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Notification Preferences */}
+            <div className="border border-border rounded-lg p-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">Notification Preferences</h2>
+              <div className="space-y-4">
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                  <input
+                    type="checkbox"
+                    checked={notifications.projectNotifications}
+                    onChange={() => handleNotificationChange('projectNotifications')}
+                    className="w-4 h-4 rounded"
+                  />
+                  <div>
+                    <p className="font-semibold text-foreground">Project Notifications</p>
+                    <p className="text-sm text-muted-foreground">Get notified when new projects in your categories are available</p>
+                  </div>
                 </label>
-                <Input value={user.email} disabled className="opacity-60 cursor-not-allowed" />
-                <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
-              </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="business" className="text-sm font-medium flex items-center gap-1.5">
-                    <Briefcase className="h-3.5 w-3.5" /> Business name
-                  </label>
-                  <Input id="business" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="license" className="text-sm font-medium flex items-center gap-1.5">
-                    <Shield className="h-3.5 w-3.5" /> License number
-                  </label>
-                  <Input id="license" value={licenseNumber} onChange={(e) => setLicenseNumber(e.target.value)} />
-                </div>
-              </div>
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                  <input
+                    type="checkbox"
+                    checked={notifications.messageNotifications}
+                    onChange={() => handleNotificationChange('messageNotifications')}
+                    className="w-4 h-4 rounded"
+                  />
+                  <div>
+                    <p className="font-semibold text-foreground">Message Notifications</p>
+                    <p className="text-sm text-muted-foreground">Get notified when homeowners message you</p>
+                  </div>
+                </label>
 
-              {/* Service categories */}
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium">Service categories</label>
-                <p className="text-xs text-muted-foreground">Select all categories you actively work in.</p>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {SERVICE_CATEGORIES.map((cat) => (
-                    <button
-                      key={cat}
+                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
+                  <input
+                    type="checkbox"
+                    checked={notifications.weeklyDigest}
+                    onChange={() => handleNotificationChange('weeklyDigest')}
+                    className="w-4 h-4 rounded"
+                  />
+                  <div>
+                    <p className="font-semibold text-foreground">Weekly Digest</p>
+                    <p className="text-sm text-muted-foreground">Receive a weekly summary of your activity and opportunities</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="border border-red-200 bg-red-50 dark:bg-red-900/10 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-red-700 mb-4">Danger Zone</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                These actions cannot be undone. Please be careful.
+              </p>
+              {showDeleteConfirm ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-red-700">
+                    Are you sure you want to delete your account? This cannot be undone.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button
                       type="button"
-                      onClick={() => toggleCategory(cat)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                        serviceCategories.includes(cat)
-                          ? "bg-primary/20 border-primary text-primary"
-                          : "border-border/40 text-muted-foreground hover:border-border hover:text-foreground"
-                      }`}
+                      variant="destructive"
+                      disabled={deleting}
+                      onClick={handleDeleteAccount}
                     >
-                      {cat}
-                    </button>
-                  ))}
+                      {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowDeleteConfirm(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
-              </div>
-
-              {error && (
-                <p className="text-sm text-destructive flex items-center gap-1.5">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0" /> {error}
-                </p>
-              )}
-              {saved && (
-                <div className="flex items-center gap-2 text-sm text-emerald-400">
-                  <CheckCircle2 className="h-4 w-4" />
-                  Changes saved.
-                </div>
-              )}
-
-              <div className="pt-1">
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+              ) : (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => setShowDeleteConfirm(true)}
                 >
-                  {saving ? "Saving…" : "Save Changes"}
-                </button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+                  Delete Account
+                </Button>
+              )}
+            </div>
 
-        {/* Subscription */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="h-4 w-4" /> Subscription
-            </CardTitle>
-            <CardDescription>Current plan and billing details.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Current plan</span>
-              <span className="text-sm font-semibold capitalize text-primary">{user.subscription ?? "standard"}</span>
-            </div>
-            <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Monthly price</span>
-              <span className="text-sm font-medium">{plan.price}</span>
-            </div>
-            <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Advance notice</span>
-              <span className="text-sm font-medium">{plan.notice}</span>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm text-muted-foreground">Project access</span>
-              <span className="text-sm font-medium">{plan.projects}</span>
-            </div>
-            <div className="pt-2">
-              <a
-                href="/pricing"
-                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+            {/* Submit Buttons */}
+            <div className="flex gap-4">
+              <Button type="submit" disabled={saving} className="gap-2">
+                <Save className="w-4 h-4" />
+                {saving ? 'Saving...' : 'Save Changes'}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
               >
-                Compare membership plans <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+                Cancel
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </form>
+        </div>
+      </main>
     </div>
   )
 }

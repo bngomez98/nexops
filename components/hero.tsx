@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 import { ArrowRight, Shield, Clock3, Clock, CheckCircle2, ClipboardCheck, Phone, FileText } from "lucide-react"
 import { useEffect, useRef } from "react"
@@ -17,19 +15,9 @@ const steps = [
   { label: "Consult", done: false, active: true },
   { label: "Complete", done: false },
 ]
+import { ArrowRight } from "lucide-react"
 
 export function Hero() {
-  const ref = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const nodes = el.querySelectorAll(".reveal")
-    nodes.forEach((node, i) => {
-      setTimeout(() => node.classList.add("in-view"), 120 + i * 110)
-    })
-  }, [])
-
   return (
     <section ref={ref} className="relative min-h-screen flex flex-col justify-center overflow-hidden border-b border-border/40">
       {/* Fine grid overlay */}
@@ -133,136 +121,68 @@ export function Hero() {
                 ))}
               </div>
             </div>
+    <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-6">
+            Maintenance Coordination &middot; Topeka, KS
+          </p>
 
-            {/* Contact line */}
-            <p className="reveal mt-8 flex items-center gap-2 text-sm text-muted-foreground" style={{ transitionDelay: "550ms" }}>
-              <Phone className="h-3.5 w-3.5 shrink-0" />
-              <a href="tel:+17854280244" className="font-mono tracking-wide hover:text-primary transition-colors">785-428-0244</a>
-              <span className="text-border/70 select-none">&middot;</span>
-              <a href="mailto:contact@nexusoperations.org" className="hover:text-primary transition-colors">contact@nexusoperations.org</a>
+          <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+            Maintenance coordination
+            <br className="hidden sm:block" />
+            <span className="font-serif italic font-normal text-primary">
+              that actually works.
+            </span>
+          </h1>
+
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
+            One point of contact for all property maintenance. We connect you with verified contractors and handle the coordination.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-start gap-3">
+            <Link
+              href="/dashboard/requests/new"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+            >
+              Submit a Request
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+            >
+              Log in
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-16 grid grid-cols-3 gap-px bg-border rounded-xl overflow-hidden">
+          <div className="bg-card p-6 lg:p-8">
+            <p className="text-2xl lg:text-3xl font-semibold text-foreground mb-1">
+              {"<"} 1hr
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Emergency contractor assignment
             </p>
           </div>
-
-          {/* ── Right column: project card mockup ── */}
-          <div className="hidden lg:flex flex-col items-center justify-center reveal" style={{ transitionDelay: "200ms" }}>
-            <div className="relative w-full animate-float-slow">
-              {/* Main card */}
-              <div className="rounded-2xl border border-border/60 bg-card shadow-2xl shadow-black/10 dark:shadow-black/40 overflow-hidden">
-
-                {/* Card header */}
-                <div className="px-5 py-4 border-b border-border/40 flex items-center justify-between bg-secondary/40">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Nexus Project</p>
-                    <p className="text-sm font-bold text-foreground">#NX-2847</p>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-primary/10 text-primary border border-primary/20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                    Contractor Assigned
-                  </span>
-                </div>
-
-                {/* Card body */}
-                <div className="p-5 space-y-4">
-                  {/* Project info */}
-                  <div>
-                    <p className="text-base font-bold text-foreground mb-1">Roof Repair — 3,200 sqft</p>
-                    <p className="text-xs text-muted-foreground">1847 SW Gage Blvd, Topeka KS</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-secondary/60 border border-border/30">
-                      <span className="text-[10px] text-muted-foreground">Budget ceiling:</span>
-                      <span className="text-[10px] font-semibold text-foreground">$12,500</span>
-                    </div>
-                  </div>
-
-                  {/* Contractor info */}
-                  <div className="p-3 rounded-xl bg-secondary/40 border border-border/30">
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-primary/15 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm shrink-0">
-                        MT
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground">Marcus T.</p>
-                        <p className="text-[11px] text-muted-foreground">MT Roofing Solutions</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 text-[10px] text-primary">
-                            <CheckCircle2 className="h-3 w-3" /> License verified
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[10px] text-primary">
-                            <Shield className="h-3 w-3" /> Insured
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Consultation time */}
-                  <div className="flex items-center gap-2.5 p-2.5 rounded-lg border border-border/30 bg-card">
-                    <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                    <div>
-                      <p className="text-[10px] text-muted-foreground">Consultation confirmed</p>
-                      <p className="text-xs font-semibold text-foreground">Tomorrow &middot; 2:00 PM</p>
-                    </div>
-                  </div>
-
-                  {/* PIR note */}
-                  <div className="flex items-center gap-2.5 p-2.5 rounded-lg border border-border/30 bg-card">
-                    <FileText className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                    <p className="text-[10px] text-muted-foreground">Post Implementation Review included on completion</p>
-                  </div>
-                </div>
-
-                {/* Progress strip */}
-                <div className="px-5 pb-5">
-                  <div className="flex items-start">
-                    {steps.map((step, i) => (
-                      <div key={step.label} className="flex items-center flex-1">
-                        <div className="flex flex-col items-center">
-                          <div
-                            className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold border-2 shrink-0 transition-colors ${
-                              step.done
-                                ? "bg-primary border-primary text-primary-foreground"
-                                : step.active
-                                ? "bg-background border-primary text-primary"
-                                : "bg-background border-border/50 text-muted-foreground"
-                            }`}
-                          >
-                            {step.done ? "✓" : i + 1}
-                          </div>
-                          <p
-                            className={`text-[9px] mt-1 font-medium whitespace-nowrap ${
-                              step.done || step.active ? "text-foreground" : "text-muted-foreground"
-                            }`}
-                          >
-                            {step.label}
-                          </p>
-                        </div>
-                        {i < steps.length - 1 && (
-                          <div
-                            className={`h-px flex-1 mb-3.5 mx-1 ${step.done ? "bg-primary/40" : "bg-border/40"}`}
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating badge: 1 contractor */}
-              <div className="absolute -top-5 -right-5 glass-card rounded-xl px-3 py-2.5 shadow-xl shadow-black/10 dark:shadow-black/30 border border-border/60">
-                <p className="text-[10px] font-bold text-foreground">1 Contractor Only</p>
-                <p className="text-[9px] text-muted-foreground">Exclusively assigned</p>
-              </div>
-
-              <a href="#how-it-works" className="inline-flex items-center gap-2 mt-5 text-xs text-primary hover:underline">
-                Explore workflow details <ArrowRight className="h-3.5 w-3.5" />
-              </a>
-              {/* Floating badge: free */}
-              <div className="absolute -bottom-5 -left-5 glass-card rounded-xl px-3 py-2.5 shadow-xl shadow-black/10 dark:shadow-black/30 border border-border/60">
-                <p className="text-[10px] font-bold text-primary">Free for Owners</p>
-                <p className="text-[9px] text-muted-foreground">No cost, ever</p>
-              </div>
-            </div>
+          <div className="bg-card p-6 lg:p-8">
+            <p className="text-2xl lg:text-3xl font-semibold text-foreground mb-1">
+              100%
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Verified, licensed, and insured
+            </p>
           </div>
-
+          <div className="bg-card p-6 lg:p-8">
+            <p className="text-2xl lg:text-3xl font-semibold text-foreground mb-1">
+              1
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Point of contact for all trades
+            </p>
+          </div>
         </div>
       </div>
     </section>

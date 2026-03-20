@@ -1,436 +1,354 @@
-"use client"
+'use client'
 
-import React, { Fragment, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { getStoredUser, type AuthUser } from "@/lib/auth"
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { DashboardNav } from '@/components/dashboard-nav'
 import {
-  PlusCircle,
-  Clock,
-  CheckCircle2,
-  Wrench,
-  User,
-  Calendar,
-  ArrowRight,
-  AlertCircle,
-  Home,
-  FileText,
-  Zap,
-  TrendingUp,
-  MapPin,
-  Sparkles,
-} from "lucide-react"
+  Plus, Clock, CheckCircle2, Wrench, FileText,
+  ArrowRight, AlertCircle, Loader2, TrendingUp,
+  ChevronRight, Calendar, DollarSign, MapPin,
+  RefreshCw,
+} from 'lucide-react'
 
-interface ServiceRequest {
+interface ProjectRequest {
   id: string
-  service: string
+  title: string
   description: string
-  budget: string
-  address: string
-  photos: number
-  status: "pending" | "matched" | "in_progress" | "completed" | "cancelled"
-  contractorName?: string
-  consultationWindow?: string
+  category: string
+  location: string
+  status: string
+  budget?: number
   createdAt: string
-  updatedAt?: string
 }
 
-function statusBadge(status: ServiceRequest["status"]) {
-  const map = {
-    pending: { label: "Pending match", variant: "warning" as const },
-    matched: { label: "Contractor matched", variant: "success" as const },
-    in_progress: { label: "In progress", variant: "info" as const },
-    completed: { label: "Completed", variant: "success" as const },
-    cancelled: { label: "Cancelled", variant: "muted" as const },
-  }
-  const { label, variant } = map[status]
-  return <Badge variant={variant}>{label}</Badge>
+interface UserData {
+  id: string
+  email: string
+  name: string
+  role: string
 }
 
-function statusIcon(status: ServiceRequest["status"]) {
-  switch (status) {
-    case "pending":
-      return <Clock className="h-4 w-4 text-amber-400" />
-    case "matched":
-      return <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-    case "in_progress":
-      return <Wrench className="h-4 w-4 text-blue-400" />
-    case "completed":
-      return <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-    default:
-      return <AlertCircle className="h-4 w-4 text-muted-foreground" />
-  }
+const STATUS: Record<string, { label: string; pill: string; dot: string; step: number }> = {
+  open:         { label: 'Submitted',   pill: 'status-open',      dot: 'bg-indigo-500',   step: 1 },
+  claimed:      { label: 'Assigned',    pill: 'status-claimed',   dot: 'bg-sky-500',      step: 2 },
+  'in-progress':{ label: 'In Progress', pill: 'status-progress',  dot: 'bg-violet-500',   step: 3 },
+  completed:    { label: 'Completed',   pill: 'status-completed', dot: 'bg-emerald-500',  step: 4 },
+  cancelled:    { label: 'Cancelled',   pill: 'status-cancelled', dot: 'bg-slate-400',    step: 0 },
 }
 
-function timeAgo(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime()
-  const h = Math.floor(diff / 3600000)
-  if (h < 24) return h === 0 ? "Just now" : `${h}h ago`
-  const d = Math.floor(h / 24)
-  return `${d}d ago`
+const STEPS = ['Submitted', 'Assigned', 'In Progress', 'Completed']
+
+const CATEGORY_ICONS: Record<string, string> = {
+  'tree-removal': '🌳', 'concrete-work': '🏗️', 'roofing': '🏠',
+  'hvac': '❄️', 'fencing': '🏡', 'electrical': '⚡', 'plumbing': '🔧', 'excavation': '🚜',
 }
 
-// Pipeline step component
-function PipelineStep({
-  label,
-  description,
-  active,
-  done,
-  icon: Icon,
-}: {
-  label: string
-  description: string
-  active: boolean
-  done: boolean
-  icon: React.ElementType
-}) {
+function formatCategory(cat: string) {
+  return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const days = Math.floor(diff / 86400000)
+  if (days === 0) return 'Today'
+  if (days === 1) return 'Yesterday'
+  if (days < 30) return `${days}d ago`
+  return new Date(dateStr).toLocaleDateString()
+}
+
+function StatusProgress({ status }: { status: string }) {
+  const st = STATUS[status]
+  if (!st || st.step === 0) return null
   return (
-    <div className={`flex flex-col items-center gap-1.5 flex-1 min-w-0 ${done || active ? "opacity-100" : "opacity-40"}`}>
-      <div
-        className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors ${
-          done
-            ? "bg-emerald-500/20 border-emerald-500/60"
-            : active
-            ? "bg-primary/20 border-primary animate-pulse-glow"
-            : "bg-secondary border-border/40"
-        }`}
-      >
-        <Icon className={`h-3.5 w-3.5 ${done ? "text-emerald-400" : active ? "text-primary" : "text-muted-foreground"}`} />
-      </div>
-      <p className={`text-[10px] font-semibold text-center ${done ? "text-emerald-400" : active ? "text-primary" : "text-muted-foreground"}`}>
-        {label}
-      </p>
-      <p className="text-[9px] text-muted-foreground/60 text-center leading-tight hidden sm:block">{description}</p>
-    </div>
-  )
-}
-
-// Connector line between pipeline steps
-function PipelineConnector({ done }: { done: boolean }) {
-  return (
-    <div className={`flex-1 h-px mt-4 ${done ? "bg-emerald-500/40" : "bg-border/30"}`} />
-  )
-}
-
-function RequestPipeline({ status }: { status: ServiceRequest["status"] }) {
-  const steps = [
-    { key: "pending", label: "Submitted", description: "Request received", icon: FileText },
-    { key: "matched", label: "Matched", description: "Contractor assigned", icon: Zap },
-    { key: "in_progress", label: "In Progress", description: "Work underway", icon: Wrench },
-    { key: "completed", label: "Complete", description: "Job finished", icon: CheckCircle2 },
-  ]
-  const order = ["pending", "matched", "in_progress", "completed"]
-  const currentIdx = order.indexOf(status)
-
-  return (
-    <div className="flex items-start gap-0 w-full">
-      {steps.map((step, i) => (
-        <Fragment key={step.key}>
-          <PipelineStep
-            label={step.label}
-            description={step.description}
-            active={order[currentIdx] === step.key}
-            done={i < currentIdx}
-            icon={step.icon}
-          />
-          {i < steps.length - 1 && <PipelineConnector done={i < currentIdx} />}
-        </Fragment>
-      ))}
+    <div className="flex items-center gap-0 mt-3">
+      {STEPS.map((step, i) => {
+        const num = i + 1
+        const done = num < st.step
+        const active = num === st.step
+        return (
+          <div key={step} className="flex items-center flex-1 last:flex-none">
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all ${
+              done ? 'bg-primary text-primary-foreground' :
+              active ? 'bg-primary/20 text-primary ring-2 ring-primary/40' :
+              'bg-muted text-muted-foreground'
+            }`}>
+              {done ? '✓' : num}
+            </div>
+            <span className={`ml-1 text-[9.5px] font-medium hidden sm:block ${active ? 'text-primary' : done ? 'text-foreground/60' : 'text-muted-foreground'}`}>
+              {step}
+            </span>
+            {i < STEPS.length - 1 && (
+              <div className={`flex-1 h-px mx-2 ${num < st.step ? 'bg-primary/50' : 'bg-border'}`} />
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
 
 export default function HomeownerDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [requests, setRequests] = useState<ServiceRequest[]>([])
+  const [user, setUser] = useState<UserData | null>(null)
+  const [projects, setProjects] = useState<ProjectRequest[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+
+  async function loadProjects() {
+    const projRes = await fetch('/api/projects/list?type=my-projects')
+    if (projRes.ok) {
+      const { projects: data } = await projRes.json()
+      setProjects(data ?? [])
+    }
+  }
 
   useEffect(() => {
-    const stored = getStoredUser()
-    if (!stored || stored.role !== "homeowner") {
-      router.replace("/login")
-      return
+    async function load() {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const { user: u } = await res.json()
+        if (u.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
+        setUser(u)
+        await loadProjects()
+      } catch {
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    setUser(stored)
-
-    fetch("/api/requests")
-      .then((r) => r.json())
-      .then((d) => setRequests(d.requests ?? []))
-      .finally(() => setLoading(false))
+    load()
   }, [router])
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await loadProjects()
+    setRefreshing(false)
+  }
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   if (!user) return null
 
-  const activeRequests = requests.filter((r) => r.status === "pending" || r.status === "matched" || r.status === "in_progress")
-  const completedRequests = requests.filter((r) => r.status === "completed")
-  const pendingMatch = requests.filter((r) => r.status === "pending")
-  const recentRequests = requests.slice(0, 3)
+  const open       = projects.filter(p => p.status === 'open')
+  const inProgress = projects.filter(p => p.status === 'claimed' || p.status === 'in-progress')
+  const completed  = projects.filter(p => p.status === 'completed')
 
   const stats = [
-    {
-      label: "Total Requests",
-      value: requests.length,
-      sub: "All time",
-      icon: FileText,
-      accent: "text-primary",
-      bg: "bg-primary/10",
-      border: "border-primary/20",
-    },
-    {
-      label: "Active",
-      value: activeRequests.length,
-      sub: "In flight",
-      icon: TrendingUp,
-      accent: "text-blue-400",
-      bg: "bg-blue-500/10",
-      border: "border-blue-500/20",
-    },
-    {
-      label: "Awaiting Match",
-      value: pendingMatch.length,
-      sub: "Auto-routing",
-      icon: Zap,
-      accent: "text-amber-400",
-      bg: "bg-amber-500/10",
-      border: "border-amber-500/20",
-    },
-    {
-      label: "Completed",
-      value: completedRequests.length,
-      sub: "Jobs done",
-      icon: CheckCircle2,
-      accent: "text-emerald-400",
-      bg: "bg-emerald-500/10",
-      border: "border-emerald-500/20",
-    },
+    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'stat-card-indigo',  iconClass: 'text-primary' },
+    { label: 'In Progress', value: inProgress.length, icon: Wrench,       color: 'stat-card-amber',   iconClass: 'text-amber-500' },
+    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
+    { label: 'Total',       value: projects.length,   icon: TrendingUp,   color: 'stat-card-violet',  iconClass: 'text-violet-500' },
   ]
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      {/* Welcome banner */}
-      <div className="relative rounded-2xl overflow-hidden border border-border/40">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-background pointer-events-none" />
-        <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-background">
+      <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
 
-        <div className="relative px-6 py-5 flex items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <p className="text-xs font-semibold text-primary uppercase tracking-wider">Homeowner Portal</p>
-            </div>
-            <h1 className="text-xl font-bold">
-              Welcome back, <span className="gradient-text">{user.name.split(" ")[0]}</span>
-            </h1>
-            {user.address && (
-              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5 text-primary/60" />
-                {user.address}
+      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+        {/* Welcome banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMC0zNnY2aDZ2LTZoLTZ6TTYgNHY2aDZWNEg2em0wIDMwdjZoNnYtNkg2eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-primary-foreground/70 text-[12px] font-semibold uppercase tracking-wide mb-1">
+                Homeowner Dashboard
               </p>
-            )}
-          </div>
-          <Link
-            href="/dashboard/homeowner/new"
-            className="btn-shimmer inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 hover:scale-[1.02] flex-shrink-0 shadow-lg shadow-primary/20"
-          >
-            <PlusCircle className="h-4 w-4" />
-            New Request
-          </Link>
-        </div>
-      </div>
-
-      {/* Auto-matching alert */}
-      {!loading && pendingMatch.length > 0 && (
-        <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/8 border border-amber-500/25">
-          <div className="flex-shrink-0 mt-0.5">
-            <span className="relative flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60" />
-              <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-amber-500/20 border border-amber-500/40">
-                <Zap className="h-2.5 w-2.5 text-amber-400" />
-              </span>
-            </span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-400">
-              {pendingMatch.length} request{pendingMatch.length > 1 ? "s" : ""} in auto-matching queue
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              We're routing your request to verified, licensed contractors in your area. This typically takes under 24 hours.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {stats.map(({ label, value, sub, icon: Icon, accent, bg, border }) => (
-          <div key={label} className={`rounded-xl border ${border} ${bg} p-4 hover-glow transition-all duration-200`}>
-            <div className="flex items-start justify-between mb-3">
-              <p className="text-xs text-muted-foreground font-medium">{label}</p>
-              <div className={`p-1.5 rounded-lg bg-background/40`}>
-                <Icon className={`h-3.5 w-3.5 ${accent}`} />
-              </div>
+              <h1 className="text-2xl font-bold">
+                Welcome back, {user.name.split(' ')[0]}
+              </h1>
+              <p className="text-primary-foreground/80 text-sm mt-1">
+                {projects.length === 0
+                  ? 'Post your first request to get started.'
+                  : `${open.length} open · ${inProgress.length} in progress · ${completed.length} completed`}
+              </p>
             </div>
-            <p className={`text-2xl font-bold ${accent}`}>{loading ? "—" : value}</p>
-            <p className="text-[10px] text-muted-foreground mt-1 font-medium">{sub}</p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-4 py-2 rounded-xl border border-white/20"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+              <Link
+                href="/dashboard/homeowner/new-request"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 backdrop-blur"
+              >
+                <Plus className="w-4 h-4" />
+                New Request
+              </Link>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Active request spotlight */}
-        <div className="lg:col-span-2 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold">Active Requests</h2>
-            <Link href="/dashboard/homeowner/requests" className="text-xs text-primary hover:underline flex items-center gap-1">
-              View all <ArrowRight className="h-3 w-3" />
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map(s => {
+            const Icon = s.icon
+            return (
+              <div key={s.label} className={`bg-card border border-border rounded-xl p-5 ${s.color}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {s.label}
+                  </span>
+                  <Icon className={`w-4 h-4 ${s.iconClass}`} />
+                </div>
+                <p className="text-3xl font-bold text-foreground">{s.value}</p>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Requests list */}
+        <div className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <div className="flex items-center gap-2.5">
+              <FileText className="w-4 h-4 text-primary" />
+              <h2 className="font-semibold text-foreground text-[15px]">Your Requests</h2>
+              {projects.length > 0 && (
+                <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
+                  {projects.length}
+                </span>
+              )}
+            </div>
+            <Link
+              href="/dashboard/homeowner/new-request"
+              className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              New request
             </Link>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center py-10">
-              <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-            </div>
-          ) : activeRequests.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border/50 bg-secondary/20 py-12 text-center">
-              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                <Home className="h-5 w-5 text-muted-foreground/40" />
+          {projects.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+                <AlertCircle className="w-7 h-7 text-primary" />
               </div>
-              <p className="text-sm font-semibold mb-1">No active requests</p>
-              <p className="text-xs text-muted-foreground mb-4 max-w-xs mx-auto">
-                Submit a service request to get matched with a verified, licensed contractor in your area.
+              <p className="font-semibold text-foreground text-[15px] mb-2">No requests yet</p>
+              <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+                Post your first project request and get matched with a verified contractor in your area.
               </p>
               <Link
-                href="/dashboard/homeowner/new"
-                className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
+                href="/dashboard/homeowner/new-request"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity"
               >
-                <PlusCircle className="h-4 w-4" />
-                Submit Your First Request
+                <Plus className="w-4 h-4" />
+                Post First Request
               </Link>
             </div>
           ) : (
-            activeRequests.map((req) => (
-              <Card key={req.id} className="hover-glow transition-all duration-200 hover:translate-y-[-1px]">
-                <CardContent className="pt-5 pb-4">
-                  {/* Header */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div className="flex items-center gap-2">
-                      {statusIcon(req.status)}
-                      <h3 className="font-semibold text-sm">{req.service}</h3>
-                    </div>
-                    {statusBadge(req.status)}
-                  </div>
-
-                  <p className="text-xs text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{req.description}</p>
-
-                  {/* Pipeline tracker */}
-                  <div className="mb-4 p-3 rounded-lg bg-secondary/30 border border-border/30">
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Request Progress</p>
-                    {req.status !== "cancelled" && <RequestPipeline status={req.status} />}
-                  </div>
-
-                  {/* Details grid */}
-                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/30">
-                    <div>
-                      <p className="text-[10px] text-muted-foreground font-medium mb-0.5 uppercase tracking-wide">Budget</p>
-                      <p className="text-sm font-semibold">{req.budget}</p>
-                    </div>
-                    {req.contractorName && (
-                      <div>
-                        <p className="text-[10px] text-muted-foreground font-medium mb-0.5 uppercase tracking-wide flex items-center gap-1">
-                          <User className="h-3 w-3" /> Contractor
-                        </p>
-                        <p className="text-sm font-semibold truncate">{req.contractorName}</p>
+            <div className="divide-y divide-border">
+              {projects.map(project => {
+                const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', dot: 'bg-slate-400', step: 0 }
+                const icon = CATEGORY_ICONS[project.category] ?? '🔨'
+                return (
+                  <Link
+                    key={project.id}
+                    href={`/dashboard/requests/${project.id}`}
+                    className="block px-6 py-5 hover:bg-secondary/30 transition-colors group"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
+                          {icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                            <p className="font-semibold text-foreground text-[14px] leading-snug">
+                              {project.title || formatCategory(project.category)}
+                            </p>
+                            <span className={`text-[10.5px] font-semibold px-2 py-0.5 rounded-full ${st.pill}`}>
+                              {st.label}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
+                            <span>{formatCategory(project.category)}</span>
+                            {project.location && (
+                              <>
+                                <span className="opacity-40">·</span>
+                                <span className="flex items-center gap-1">
+                                  <MapPin className="w-3 h-3" />
+                                  {project.location}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <p className="text-[12.5px] text-muted-foreground mt-1.5 line-clamp-1">
+                            {project.description}
+                          </p>
+                          <StatusProgress status={project.status} />
+                        </div>
                       </div>
-                    )}
-                    {req.consultationWindow && (
-                      <div className="col-span-2">
-                        <p className="text-[10px] text-muted-foreground font-medium mb-0.5 uppercase tracking-wide flex items-center gap-1">
-                          <Calendar className="h-3 w-3" /> Consultation
-                        </p>
-                        <p className="text-sm font-semibold">{req.consultationWindow}</p>
+                      <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
+                        {project.budget != null && (
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="w-3 h-3 text-muted-foreground" />
+                            <p className="font-bold text-foreground text-[14px]">
+                              {project.budget.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          {timeAgo(project.createdAt)}
+                        </div>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+                          View details <ChevronRight className="w-3 h-3" />
+                        </span>
                       </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           )}
         </div>
 
-        {/* Sidebar: quick actions + recent + how it works */}
-        <div className="flex flex-col gap-4">
-          {/* Quick actions */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2 pt-0">
-              <Link
-                href="/dashboard/homeowner/new"
-                className="btn-shimmer flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-all duration-200 shadow-sm shadow-primary/20"
-              >
-                <PlusCircle className="h-4 w-4" />
-                Submit New Request
-              </Link>
-              <Link
-                href="/dashboard/homeowner/requests"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors border border-border/40"
-              >
-                <FileText className="h-4 w-4" />
-                Track All Requests
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Recent requests */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              {loading ? (
-                <div className="py-6 flex justify-center">
-                  <div className="h-4 w-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                </div>
-              ) : recentRequests.length === 0 ? (
-                <p className="text-xs text-muted-foreground px-6 pb-4">No requests yet.</p>
-              ) : (
-                <div className="divide-y divide-border/30">
-                  {recentRequests.map((req) => (
-                    <div key={req.id} className="px-5 py-3 hover:bg-secondary/30 transition-colors group">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          {statusIcon(req.status)}
-                          <p className="text-sm font-medium truncate">{req.service}</p>
-                        </div>
-                        <span className="text-[10px] text-muted-foreground flex-shrink-0">{timeAgo(req.createdAt)}</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-0.5 ml-6 truncate">{req.description}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Auto-matching info */}
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-              </div>
-              <p className="text-sm font-semibold text-primary">Smart Auto-Matching</p>
+        {/* Quick actions */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Link
+            href="/dashboard/homeowner/new-request"
+            className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+              <Plus className="w-5 h-5 text-primary" />
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Each request is routed to a single verified, licensed, and insured contractor — no bidding wars, no spam.
-            </p>
-          </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground text-[13.5px]">Submit New Request</p>
+              <p className="text-[12px] text-muted-foreground mt-0.5">Get matched with a verified contractor</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </Link>
+
+          <Link
+            href="/dashboard/homeowner/settings"
+            className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-border/80 hover:bg-secondary/30 transition-all"
+          >
+            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+              <FileText className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground text-[13.5px]">Account Settings</p>
+              <p className="text-[12px] text-muted-foreground mt-0.5">Update your profile and preferences</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </Link>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

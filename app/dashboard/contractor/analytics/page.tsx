@@ -1,321 +1,228 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { getStoredUser, type AuthUser } from "@/lib/auth"
-import { TrendingUp, DollarSign, Target, Users, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { BarChart3, Award, TrendingUp, Target, Briefcase, Star } from 'lucide-react'
 
-interface Lead {
-  id: string
-  service: string
-  status: "new" | "contacted" | "scheduled" | "won" | "lost"
-  tier: "standard" | "premium" | "elite"
-  value: number
-  createdAt: string
+interface ContractorProfile {
+  companyName: string
+  membershipTier: string
+  currentActiveProjects: number
+  maxActiveProjects: number
+  averageRating: number
+  totalReviews: number
+  yearsInBusiness: number
+  serviceCategories: string[]
 }
 
-const weeklyData = [
-  { week: "Nov W1", projects: 2, revenue: 2800, closeRate: 50 },
-  { week: "Nov W2", projects: 3, revenue: 4200, closeRate: 67 },
-  { week: "Nov W3", projects: 1, revenue: 950, closeRate: 100 },
-  { week: "Nov W4", projects: 4, revenue: 7100, closeRate: 75 },
-  { week: "Dec W1", projects: 3, revenue: 5600, closeRate: 67 },
-  { week: "Dec W2", projects: 4, revenue: 6900, closeRate: 50 },
-]
-
-const COLORS = {
-  won: "oklch(0.65 0.18 155)",
-  lost: "oklch(0.55 0.22 20)",
-  new: "oklch(0.65 0.18 230)",
-  contacted: "oklch(0.72 0.18 80)",
-  scheduled: "oklch(0.70 0.18 155)",
-}
-
-export default function ContractorAnalyticsPage() {
+export default function AnalyticsDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [leads, setLeads] = useState<Lead[]>([])
+  const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<ContractorProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = getStoredUser()
-    if (!stored || stored.role !== "contractor") {
-      router.replace("/login")
-      return
+    async function loadData() {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
+        setUser(data.user)
+        setProfile(data.contractorProfile)
+      } catch {
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    setUser(stored)
-
-    const controller = new AbortController()
-    fetch("/api/leads", { signal: controller.signal })
-      .then((r) => {
-        if (r.status === 401) { router.replace("/login"); return null }
-        if (!r.ok) return null
-        return r.json()
-      })
-      .then((d) => { if (d) setLeads(d.leads ?? []) })
-      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to fetch leads:", err) })
-      .finally(() => setLoading(false))
-
-    return () => controller.abort()
+    loadData()
   }, [router])
 
-  if (!user) {
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+  }
+
+  if (loading) {
     return (
-      <div className="max-w-6xl mx-auto flex items-center justify-center py-24 gap-3">
-        <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-        <span className="text-sm text-muted-foreground">Loading analytics…</span>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground text-sm">Loading…</div>
       </div>
     )
   }
 
-  const totalRevenue = leads.filter((l) => l.status === "won").reduce((s, l) => s + l.value, 0)
-  const wonLeads = leads.filter((l) => l.status === "won").length
-  const closeRate = leads.length > 0 ? Math.round((wonLeads / leads.length) * 100) : 0
-  const avgDeal = wonLeads > 0 ? Math.round(totalRevenue / wonLeads) : 0
+  if (!user) return null
 
-  const statusBreakdown = (["new", "contacted", "scheduled", "won", "lost"] as Lead["status"][]).map((status) => ({
-    name: status.charAt(0).toUpperCase() + status.slice(1),
-    value: leads.filter((l) => l.status === status).length,
-    fill: COLORS[status],
-  })).filter((d) => d.value > 0)
-
-  const serviceBreakdown = leads.reduce<Record<string, { won: number; lost: number; total: number }>>((acc, l) => {
-    if (!acc[l.service]) acc[l.service] = { won: 0, lost: 0, total: 0 }
-    acc[l.service].total++
-    if (l.status === "won") acc[l.service].won++
-    if (l.status === "lost") acc[l.service].lost++
-    return acc
-  }, {})
-  const serviceData = Object.entries(serviceBreakdown).map(([service, d]) => ({
-    service,
-    won: d.won,
-    lost: d.lost,
-    total: d.total,
-  }))
-
-  const kpis = [
-    {
-      label: "Revenue Won",
-      value: `$${totalRevenue.toLocaleString()}`,
-      sub: "Total closed",
-      icon: DollarSign,
-      accent: "text-emerald-400",
-      bg: "bg-emerald-500/10",
-      trend: "+12%",
-      up: true,
-    },
-    {
-      label: "Total Projects",
-      value: leads.length.toString(),
-      sub: `${leads.filter((l) => l.status === "new").length} new`,
-      icon: Users,
-      accent: "text-primary",
-      bg: "bg-primary/10",
-      trend: "+3",
-      up: true,
-    },
-    {
-      label: "Close Rate",
-      value: `${closeRate}%`,
-      sub: "Last 30 days",
-      icon: Target,
-      accent: "text-amber-400",
-      bg: "bg-amber-500/10",
-      trend: "+5%",
-      up: true,
-    },
-    {
-      label: "Avg. Deal Size",
-      value: avgDeal > 0 ? `$${avgDeal.toLocaleString()}` : "—",
-      sub: "Won jobs",
-      icon: TrendingUp,
-      accent: "text-violet-400",
-      bg: "bg-violet-500/10",
-      trend: "+$200",
-      up: true,
-    },
-  ]
-
-  const chartStyle = {
-    contentStyle: {
-      background: "oklch(0.12 0.012 240)",
-      border: "1px solid oklch(0.20 0.015 240)",
-      borderRadius: "8px",
-      fontSize: "12px",
-    },
-    labelStyle: { color: "oklch(0.95 0.005 90)" },
-    tick: { fill: "oklch(0.60 0.01 240)", fontSize: 11 },
-  }
+  const capacityPct = profile
+    ? Math.min(100, Math.round((profile.currentActiveProjects / Math.max(profile.maxActiveProjects, 1)) * 100))
+    : 0
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-6">
-        <p className="text-primary text-sm font-medium mb-1">Contractor Portal</p>
-        <h1 className="text-2xl font-semibold">Analytics</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Performance overview — last 30 days.</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      {/* KPI cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {kpis.map(({ label, value, sub, icon: Icon, accent, bg, trend, up }) => (
-          <Card key={label}>
-            <CardContent className="pt-5">
-              <div className="flex items-start justify-between mb-3">
-                <p className="text-xs text-muted-foreground font-medium">{label}</p>
-                <div className={`${bg} p-1.5 rounded-lg`}>
-                  <Icon className={`h-3.5 w-3.5 ${accent}`} />
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground">Performance Analytics</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            {profile?.companyName || user.name} — your live account metrics
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {/* Key metrics */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Active Projects</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">
+                    {profile?.currentActiveProjects ?? 0}
+                  </p>
                 </div>
+                <Briefcase className="w-7 h-7 text-primary opacity-60" />
               </div>
-              <p className="text-2xl font-bold">{loading ? "—" : value}</p>
-              <div className="flex items-center gap-1.5 mt-1">
-                <p className="text-xs text-muted-foreground">{sub}</p>
-                <span className={`text-xs font-medium flex items-center gap-0.5 ${up ? "text-emerald-400" : "text-destructive"}`}>
-                  {up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                  {trend}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              <p className="text-xs text-muted-foreground">of {profile?.maxActiveProjects ?? 0} capacity</p>
+            </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mb-6">
-        {/* Weekly revenue trend */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
-            <CardDescription>Weekly revenue over the last 6 weeks</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={weeklyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" />
-                <XAxis dataKey="week" tick={chartStyle.tick} axisLine={false} tickLine={false} />
-                <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={45} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
-                <Tooltip
-                  contentStyle={chartStyle.contentStyle}
-                  labelStyle={chartStyle.labelStyle}
-                  formatter={(v: unknown) => [`$${Number(v).toLocaleString()}`, "Revenue"]}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="oklch(0.75 0.18 155)"
-                  strokeWidth={2.5}
-                  dot={{ fill: "oklch(0.75 0.18 155)", r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Project status pie */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Project Status</CardTitle>
-            <CardDescription>Breakdown by current status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {loading || statusBreakdown.length === 0 ? (
-              <div className="flex items-center justify-center h-[180px]">
-                <p className="text-sm text-muted-foreground">No data</p>
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Rating</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">
+                    {profile?.averageRating ? `${profile.averageRating.toFixed(1)}/5` : '—'}
+                  </p>
+                </div>
+                <Star className="w-7 h-7 text-amber-500 opacity-60" />
               </div>
-            ) : (
-              <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                  <Pie
-                    data={statusBreakdown}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={75}
-                    paddingAngle={3}
-                    dataKey="value"
+              <p className="text-xs text-muted-foreground">
+                {profile?.totalReviews ?? 0} review{profile?.totalReviews !== 1 ? 's' : ''}
+              </p>
+            </div>
+
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Membership</p>
+                  <p className="text-3xl font-bold text-foreground mt-1 capitalize">
+                    {profile?.membershipTier || 'Free'}
+                  </p>
+                </div>
+                <Award className="w-7 h-7 text-primary opacity-60" />
+              </div>
+              <p className="text-xs text-muted-foreground">Current plan</p>
+            </div>
+
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Categories</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">
+                    {profile?.serviceCategories?.length ?? 0}
+                  </p>
+                </div>
+                <Target className="w-7 h-7 text-primary opacity-60" />
+              </div>
+              <p className="text-xs text-muted-foreground">Service areas</p>
+            </div>
+          </div>
+
+          {/* Capacity bar */}
+          <div className="border border-border rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <BarChart3 className="w-4 h-4 text-muted-foreground" />
+              <h2 className="font-semibold text-foreground">Project Capacity</h2>
+            </div>
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-muted-foreground">
+                {profile?.currentActiveProjects ?? 0} of {profile?.maxActiveProjects ?? 0} slots used
+              </span>
+              <span className="font-semibold text-foreground">{capacityPct}%</span>
+            </div>
+            <div className="h-3 rounded-full bg-muted overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  capacityPct >= 100
+                    ? 'bg-red-500'
+                    : capacityPct >= 75
+                    ? 'bg-amber-500'
+                    : 'bg-primary'
+                }`}
+                style={{ width: `${capacityPct}%` }}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              {capacityPct >= 100
+                ? 'At full capacity — upgrade your plan to take on more projects.'
+                : `${(profile?.maxActiveProjects ?? 0) - (profile?.currentActiveProjects ?? 0)} slot${
+                    (profile?.maxActiveProjects ?? 0) - (profile?.currentActiveProjects ?? 0) !== 1 ? 's' : ''
+                  } available.`}
+            </p>
+          </div>
+
+          {/* Service categories */}
+          {profile?.serviceCategories && profile.serviceCategories.length > 0 && (
+            <div className="border border-border rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Target className="w-4 h-4 text-muted-foreground" />
+                <h2 className="font-semibold text-foreground">Service Categories</h2>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {profile.serviceCategories.map(cat => (
+                  <span
+                    key={cat}
+                    className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-medium capitalize"
                   >
-                    {statusBreakdown.map((entry, i) => (
-                      <Cell key={i} fill={entry.fill} />
-                    ))}
-                  </Pie>
-                  <Legend
-                    iconType="circle"
-                    iconSize={8}
-                    wrapperStyle={{ fontSize: "11px", color: "oklch(0.60 0.01 240)" }}
-                  />
-                  <Tooltip
-                    contentStyle={chartStyle.contentStyle}
-                    labelStyle={chartStyle.labelStyle}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Projects per week bar */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Weekly Project Volume</CardTitle>
-            <CardDescription>Projects received each week</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={weeklyData} barCategoryGap="35%">
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" />
-                <XAxis dataKey="week" tick={chartStyle.tick} axisLine={false} tickLine={false} />
-                <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={25} />
-                <Tooltip contentStyle={chartStyle.contentStyle} labelStyle={chartStyle.labelStyle} />
-                <Bar dataKey="projects" name="Projects" fill="oklch(0.75 0.18 155)" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Service breakdown */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Projects by Service</CardTitle>
-            <CardDescription>Won vs. lost per service category</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {loading || serviceData.length === 0 ? (
-              <div className="flex items-center justify-center h-[200px]">
-                <p className="text-sm text-muted-foreground">No data</p>
+                    {cat.replace(/-/g, ' ')}
+                  </span>
+                ))}
               </div>
-            ) : (
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={serviceData} barCategoryGap="30%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.20 0.015 240)" />
-                  <XAxis dataKey="service" tick={chartStyle.tick} axisLine={false} tickLine={false} />
-                  <YAxis tick={chartStyle.tick} axisLine={false} tickLine={false} width={25} />
-                  <Tooltip contentStyle={chartStyle.contentStyle} labelStyle={chartStyle.labelStyle} />
-                  <Bar dataKey="won" name="Won" fill="oklch(0.65 0.18 155)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="lost" name="Lost" fill="oklch(0.55 0.22 20)" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            </div>
+          )}
+
+          {/* Rating breakdown */}
+          <div className="border border-border rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="w-4 h-4 text-muted-foreground" />
+              <h2 className="font-semibold text-foreground">Profile Overview</h2>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-6">
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Average Rating</p>
+                <div className="flex items-end gap-2">
+                  <p className="text-4xl font-bold text-foreground">
+                    {profile?.averageRating ? profile.averageRating.toFixed(1) : '—'}
+                  </p>
+                  {profile?.averageRating ? (
+                    <p className="text-sm text-muted-foreground mb-1">/5.0</p>
+                  ) : null}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {profile?.totalReviews ?? 0} total review{profile?.totalReviews !== 1 ? 's' : ''}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Experience</p>
+                <p className="text-4xl font-bold text-foreground">
+                  {profile?.yearsInBusiness ?? '—'}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {profile?.yearsInBusiness ? 'year' + (profile.yearsInBusiness !== 1 ? 's' : '') + ' in business' : ''}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Plan Capacity</p>
+                <p className="text-4xl font-bold text-foreground">
+                  {profile?.maxActiveProjects ?? 0}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">max active projects</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

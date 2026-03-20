@@ -6,9 +6,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Contact | Get in Touch with Nexus Operations",
+  title: "Contact | Submit a Request or Apply as a Contractor",
   description:
-    "Reach out to Nexus Operations — whether you are a homeowner with a project, a contractor interested in joining our network, or a potential partner. Email contact@nexusoperations.org or call 785-428-0244.",
+    "Submit a home service request or apply as a contractor. Free for homeowners. Licensed and insured contractors welcome. Email admin@nexusoperations.org or call (913) 951-1711.",
 }
 
 export default function ContactPage() {
@@ -21,12 +21,11 @@ export default function ContactPage() {
             <div className="max-w-2xl mb-16">
               <p className="text-primary text-sm font-medium tracking-wide mb-4">Contact</p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Let's talk
+                Get in touch
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Whether you are a homeowner with a project, a property manager looking for coordination
-                support, a contractor ready to join our network, or a potential partner — we respond to
-                every message within one business day.
+                Whether you are a homeowner looking to submit a project request or a contractor
+                interested in joining our network, we would like to hear from you.
               </p>
             </div>
 
@@ -42,8 +41,8 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Email</p>
-                        <a href="mailto:contact@nexusoperations.org" className="text-sm font-medium hover:text-primary transition-colors">
-                          contact@nexusoperations.org
+                        <a href="mailto:admin@nexusoperations.org" className="text-sm font-medium hover:text-primary transition-colors">
+                          admin@nexusoperations.org
                         </a>
                       </div>
                     </div>
@@ -53,8 +52,8 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Phone</p>
-                        <a href="tel:+17854280244" className="text-sm font-medium hover:text-primary transition-colors">
-                          785-428-0244
+                        <a href="tel:+19139511711" className="text-sm font-medium hover:text-primary transition-colors">
+                          (913) 951-1711
                         </a>
                       </div>
                     </div>
@@ -71,26 +70,25 @@ export default function ContactPage() {
                 </div>
 
                 <div className="p-6 rounded-xl bg-card border border-border/40">
-                  <h3 className="text-sm font-semibold mb-2">Current service area</h3>
+                  <h3 className="text-sm font-semibold mb-2">Service area</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Topeka, KS and the immediately surrounding region. We are actively expanding to
-                    Lawrence, Manhattan, Salina, and Wichita based on contractor network growth.
+                    Currently serving Topeka, KS and surrounding areas. Expanding to Lawrence,
+                    Manhattan, Salina, and Wichita within the next 18 months.
                   </p>
                 </div>
 
                 <div className="p-6 rounded-xl bg-card border border-border/40">
-                  <h3 className="text-sm font-semibold mb-2">What to expect</h3>
+                  <h3 className="text-sm font-semibold mb-2">Response time</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    All inquiries receive a response within one business day. Contractor applications
-                    enter our verification queue immediately. Homeowner requests submitted via the
-                    platform are routed to contractors in real time.
+                    All inquiries receive a response within 24 hours during business days.
+                    Homeowner requests are sent to contractors immediately upon submission.
                   </p>
                 </div>
               </div>
 
               {/* Form */}
               <div className="lg:col-span-3 p-8 rounded-xl bg-card border border-border/40">
-                <h2 className="text-lg font-semibold mb-6">Send a message</h2>
+                <h2 className="text-lg font-semibold mb-6">Send us a message</h2>
                 <form className="flex flex-col gap-5">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">

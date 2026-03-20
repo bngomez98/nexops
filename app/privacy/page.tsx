@@ -29,7 +29,7 @@ export default function PrivacyPage() {
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Information We Collect</h2>
             <p>
               When you use our services, we collect information necessary to fulfill your requests, including contact
-              details, project specifications, and payment information. We only collect what's needed to deliver
+              details, project specifications, and payment information. We only collect what&apos;s needed to deliver
               professional service.
             </p>
 

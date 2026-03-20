@@ -1,132 +1,106 @@
-"use client"
-
-import { useEffect, useRef } from "react"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-
 const steps = [
   {
     number: "01",
-    title: "You submit once — and only once.",
-    body: "Upload 2–10 photographs of the work area. Write a description of what needs to be done. Set the maximum you're willing to spend. Pick 3–4 available windows for a consultation. That's it. Your submission is complete. Every contractor who sees it sees the full picture from the beginning.",
-    detail: "Photos, scope, budget ceiling, and availability — all captured in a single structured submission.",
+    title: "You submit a request",
+    description:
+      "Submit via phone, text, email, or portal with the property address, unit, issue, and urgency. We acknowledge within 15 minutes during business hours.",
   },
   {
     number: "02",
-    title: "A single verified contractor claims your project.",
-    body: "Verified contractors in the Nexus network review your complete submission. One contractor — whose license, insurance, and background check are already confirmed — decides the project fits their business and claims it exclusively. The moment that happens, it is closed to everyone else. Permanently.",
-    detail: "License verified. Insurance confirmed. Background checked. Every contractor, before they access the platform.",
+    title: "We assign a verified contractor",
+    description:
+      "We match the request with a verified contractor based on trade, location, and availability. Backup assignment is automatic if the first contractor declines.",
   },
   {
     number: "03",
-    title: "Consultation confirmed within 24 hours.",
-    body: "Nexus confirms the appointment with both parties. You receive the contractor's name, license number, insurance verification, and the confirmed time window. The contractor arrives having already reviewed your photographs and read your scope description in full.",
-    detail: "Emergency projects: contractor assigned within 1 hour, on-site within 4 hours of submission.",
+    title: "Work is completed and documented",
+    description:
+      "The contractor completes the work and submits photos plus a description to us. We confirm completion with you before processing any payment. You have 48 business hours to raise concerns.",
   },
   {
     number: "04",
-    title: "A documented estimate. Your decision.",
-    body: "The contractor delivers a written estimate — scope of work, materials, labor breakdown, timeline, and total cost. You review it at your own pace. If it meets your expectations, you proceed. If it doesn't, you decline without obligation, fees, or follow-up pressure. Every exchange is timestamped in the platform.",
-    detail: "No obligation to proceed. No penalty for walking away. Your decision is final.",
-  },
-  {
-    number: "05",
-    title: "Post Implementation Review delivered.",
-    body: "After the work is complete, Nexus delivers a Post Implementation Review evaluating project outcomes, contractor performance, materials cost, labor cost, and operational insights. It lives in your account permanently — useful for property owners, boards, and insurance documentation.",
-    detail: "Every project receives a PIR. No exceptions. No additional cost.",
+    title: "You receive one invoice",
+    description:
+      "Monthly invoice with every request, property, work performed, and costs. Transparent contractor cost plus our markup.",
   },
 ]
 
 export function HowItWorks() {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.querySelectorAll(".reveal").forEach((node, i) => {
-            setTimeout(() => node.classList.add("in-view"), i * 100)
-          })
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.05 },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} id="how-it-works" className="py-28 lg:py-40 border-b border-border/40">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-
-        {/* Section header */}
-        <div className="reveal flex items-start gap-8 mb-20 lg:mb-28">
-          <div className="hidden lg:block pt-1">
-            <span className="h-px w-16 bg-primary inline-block" />
-          </div>
-          <div className="max-w-3xl">
-            <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase mb-5">The Process</p>
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] mb-6 text-balance">
-              Understand exactly what happens after you submit a project.
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Here is exactly what happens after you submit a project — step by step, with no ambiguity.
-              The process is identical for every project, every property type, every budget.
-            </p>
-          </div>
+    <section id="process" className="py-24 lg:py-32 bg-secondary/50">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        <div className="max-w-2xl mb-16">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+            Our process
+          </p>
+          <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4 text-balance">
+            From request to resolution.
+            <br className="hidden sm:block" />
+            <span className="font-serif italic font-normal text-primary">
+              Every time.
+            </span>
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Emergency plumbing at 2 AM or routine HVAC inspection—same process every time.
+          </p>
         </div>
 
-        {/* Steps — editorial vertical flow */}
-        <div className="space-y-0">
+        <div className="flex flex-col gap-0">
           {steps.map((step, i) => (
             <div
               key={step.number}
-              className={`reveal group border-t border-border/40 py-14 lg:py-18 ${i === steps.length - 1 ? "border-b" : ""}`}
-              style={{ transitionDelay: `${i * 80}ms` }}
+              className={`flex gap-6 lg:gap-10 py-8 ${
+                i < steps.length - 1 ? "border-b border-border" : ""
+              }`}
             >
-              <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16">
-                {/* Step number */}
-                <div className="lg:w-20 shrink-0">
-                  <span className="text-5xl font-bold font-mono text-muted-foreground/20 group-hover:text-primary/30 transition-colors duration-300 leading-none">
-                    {step.number}
-                  </span>
-                </div>
-
-                {/* Main content */}
-                <div className="flex-1 max-w-2xl">
-                  <h3 className="text-xl lg:text-2xl font-bold tracking-tight mb-4 leading-snug">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed text-[15px]">{step.body}</p>
-                </div>
-
-                {/* Detail note */}
-                <div className="lg:w-72 shrink-0">
-                  <div className="border-l-2 border-primary/40 pl-5 group-hover:border-primary/70 transition-colors duration-300">
-                    <p className="text-sm text-muted-foreground leading-relaxed">{step.detail}</p>
-                  </div>
-                </div>
+              <div className="shrink-0 w-12">
+                <span className="text-sm font-mono font-medium text-primary">
+                  {step.number}
+                </span>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                  {step.description}
+                </p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Closing CTA */}
-        <div className="reveal mt-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <p className="text-base text-muted-foreground max-w-lg leading-relaxed">
-            The process is the same for every project — emergency, routine, or anything in between.
-            It doesn't change based on budget or property type. That's the point.
-          </p>
-          <Link
-            href="/dashboard/homeowner/new"
-            className="btn-shimmer inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 shrink-0 shadow-lg shadow-primary/20"
-          >
-            Start Your Project
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+        <div className="mt-12 p-6 lg:p-8 rounded-xl bg-card border border-border">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
+            <div className="flex-1">
+              <h3 className="text-base font-semibold text-foreground mb-1">
+                Response Time Guarantees
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Every request is categorized by urgency with guaranteed response times.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-4 lg:gap-6">
+              <div className="text-center">
+                <p className="text-lg font-semibold text-foreground">1 hr</p>
+                <p className="text-xs text-muted-foreground">
+                  Emergency assignment
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-semibold text-foreground">4 hr</p>
+                <p className="text-xs text-muted-foreground">
+                  Urgent assignment
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-semibold text-foreground">24 hr</p>
+                <p className="text-xs text-muted-foreground">
+                  Routine assignment
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

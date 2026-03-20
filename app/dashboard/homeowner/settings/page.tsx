@@ -1,147 +1,280 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { getStoredUser, type AuthUser } from "@/lib/auth"
-import { CheckCircle2, AlertCircle, User, Mail, Phone, MapPin, Shield } from "lucide-react"
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react'
 
-export default function HomeownerSettingsPage() {
-  const router = useRouter()
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [name, setName] = useState("")
-  const [phone, setPhone] = useState("")
-  const [address, setAddress] = useState("")
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState("")
+export default function HomeownerSettings() {
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+  const [user, setUser]   = useState<any>(null)
+  const [loading, setLoading]   = useState(true)
+  const [saving, setSaving]     = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [showDelete, setShowDelete] = useState(false)
+  const [error, setError]     = useState('')
+  const [success, setSuccess] = useState('')
+  const [formData, setFormData] = useState({ email: '', phone: '' })
+  const [notifications, setNotifications] = useState({
+    bidNotifications: true, messageNotifications: true, projectUpdates: true, newsletter: false,
+  })
 
   useEffect(() => {
-    const stored = getStoredUser()
-    if (!stored || stored.role !== "homeowner") {
-      router.replace("/login")
-      return
+    async function load() {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
+        setUser(data.user)
+        setFormData({ email: data.user.email, phone: data.user.phone ?? '' })
+      } catch {
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    setUser(stored)
-    setName(stored.name ?? "")
-    setPhone(stored.phone ?? "")
-    setAddress(stored.address ?? "")
+    load()
   }, [router])
+
+  useEffect(() => {
+    if (searchParams.get('billing') === 'success') {
+      setSuccess('Billing updated successfully!')
+      setTimeout(() => setSuccess(''), 5000)
+    }
+  }, [searchParams])
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
+    setSuccess('')
+    if (!formData.email) { setError('Email is required'); return }
     setSaving(true)
-    setError("")
-    // Simulate save (no DB persistence in demo)
-    await new Promise((r) => setTimeout(r, 600))
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+    try {
+      const res = await fetch('/api/settings/homeowner', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Failed to save. Please try again.')
+        return
+      }
+      setSuccess('Settings saved successfully!')
+      setTimeout(() => setSuccess(''), 4000)
+    } catch {
+      setError('Failed to save. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDelete() {
+    setDeleting(true)
+    setError('')
+    try {
+      const res = await fetch('/api/settings/homeowner', { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Failed to delete account.')
+        setShowDelete(false)
+        return
+      }
+      router.push('/login')
+    } catch {
+      setError('Failed to delete account.')
+      setShowDelete(false)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+      </div>
+    )
   }
 
   if (!user) return null
 
+  const initials = user.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-6">
-        <p className="text-primary text-sm font-medium mb-1">Homeowner Portal</p>
-        <h1 className="text-2xl font-semibold">Account Settings</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Manage your profile and preferences.</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <DashboardNav userName={user.name} role="homeowner" onLogout={async () => {
+        await fetch('/api/auth/logout', { method: 'POST' })
+        router.push('/login')
+      }} />
 
-      <div className="flex flex-col gap-5">
-        {/* Profile info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-4 w-4" /> Profile Information
-            </CardTitle>
-            <CardDescription>Update your personal details.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSave} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="name" className="text-sm font-medium">Full name</label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name" />
+      <main className="md:ml-[220px] p-6 animate-fade-up">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Account Settings</h1>
+            <p className="text-muted-foreground text-sm mt-1">Manage your profile and preferences</p>
+          </div>
+
+          {/* Status banners */}
+          {error && (
+            <div className="flex items-start gap-2.5 p-4 rounded-xl border border-destructive/30 bg-destructive/8 text-destructive text-sm">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="flex items-start gap-2.5 p-4 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-700 text-sm">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              {success}
+            </div>
+          )}
+
+          {/* Profile card */}
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
+            <div className="flex items-center gap-4 px-6 py-5 border-b border-border bg-primary/5">
+              <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold">
+                {initials}
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">{user.name}</p>
+                <p className="text-[12.5px] text-muted-foreground">{user.email}</p>
+                <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full mt-1 inline-block capitalize">
+                  {user.role}
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleSave} className="p-6 space-y-5">
+              <div className="flex items-center gap-2 mb-1">
+                <User className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground text-[14px]">Contact Information</h2>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5" /> Email
-                  </label>
-                  <Input value={user.email} disabled className="opacity-60 cursor-not-allowed" />
-                  <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="phone" className="text-sm font-medium flex items-center gap-1.5">
-                    <Phone className="h-3.5 w-3.5" /> Phone
-                  </label>
-                  <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(555) 000-0000" />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="address" className="text-sm font-medium flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5" /> Primary address
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Email Address <span className="text-destructive">*</span>
                 </label>
-                <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="123 Main St, City, ST ZIP" />
-                <p className="text-xs text-muted-foreground">Used to pre-fill service request forms.</p>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                />
               </div>
 
-              {error && (
-                <p className="text-sm text-destructive flex items-center gap-1.5">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0" /> {error}
-                </p>
-              )}
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+1 (785) 555-0100"
+                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                />
+              </div>
 
-              {saved && (
-                <div className="flex items-center gap-2 text-sm text-emerald-400">
-                  <CheckCircle2 className="h-4 w-4" />
-                  Changes saved successfully.
-                </div>
-              )}
-
-              <div className="pt-1">
+              <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
                 >
-                  {saving ? "Saving…" : "Save Changes"}
+                  {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                  {saving ? 'Saving…' : 'Save Changes'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="px-5 py-2.5 rounded-xl border border-border text-[13px] font-semibold text-foreground hover:bg-secondary transition-colors"
+                >
+                  Cancel
                 </button>
               </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Account info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-4 w-4" /> Account
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Account type</span>
-              <span className="text-sm font-medium capitalize">{user.role}</span>
+          {/* Notifications */}
+          <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Bell className="w-4 h-4 text-primary" />
+              <h2 className="font-semibold text-foreground text-[14px]">Notification Preferences</h2>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-border/40">
-              <span className="text-sm text-muted-foreground">Member since</span>
-              <span className="text-sm font-medium">
-                {user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "—"}
-              </span>
+            {[
+              { key: 'bidNotifications',     label: 'Bid Notifications',    desc: 'When contractors submit bids on your requests' },
+              { key: 'messageNotifications', label: 'Messages',              desc: 'When contractors send you a message' },
+              { key: 'projectUpdates',       label: 'Project Updates',       desc: 'Status changes on your ongoing requests' },
+              { key: 'newsletter',           label: 'Newsletter',            desc: 'Tips and home improvement trends' },
+            ].map(n => (
+              <label
+                key={n.key}
+                className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-secondary/30 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  checked={notifications[n.key as keyof typeof notifications]}
+                  onChange={() => setNotifications(prev => ({ ...prev, [n.key]: !prev[n.key as keyof typeof notifications] }))}
+                  className="w-4 h-4 rounded mt-0.5 accent-primary"
+                />
+                <div>
+                  <p className="text-[13px] font-semibold text-foreground">{n.label}</p>
+                  <p className="text-[12px] text-muted-foreground">{n.desc}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          {/* Danger zone */}
+          <div className="bg-card border border-red-200 dark:border-red-900 rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Shield className="w-4 h-4 text-destructive" />
+              <h2 className="font-semibold text-destructive text-[14px]">Danger Zone</h2>
             </div>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm text-muted-foreground">Request submissions</span>
-              <span className="text-sm font-medium text-primary">Unlimited · Free</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            <p className="text-[12.5px] text-muted-foreground mb-4">
+              Deleting your account is permanent and cannot be undone. All your requests and data will be removed.
+            </p>
+            {showDelete ? (
+              <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 space-y-3">
+                <p className="text-[13px] font-semibold text-red-700 dark:text-red-400">
+                  Are you absolutely sure? This action cannot be reversed.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="inline-flex items-center gap-2 bg-destructive text-destructive-foreground font-semibold text-[12.5px] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60"
+                  >
+                    {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                    {deleting ? 'Deleting…' : 'Yes, delete my account'}
+                  </button>
+                  <button
+                    onClick={() => setShowDelete(false)}
+                    className="px-4 py-2 rounded-lg border border-border text-[12.5px] font-semibold hover:bg-secondary transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowDelete(true)}
+                className="px-4 py-2 rounded-lg border border-red-300 text-red-600 text-[12.5px] font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              >
+                Delete Account
+              </button>
+            )}
+          </div>
+        </div>
+      </main>
     </div>
   )
 }
