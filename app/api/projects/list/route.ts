@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, service_categories')
       .eq('id', user.id)
       .single()
 
@@ -58,12 +58,21 @@ export async function GET(request: NextRequest) {
     }
 
     if (role === 'contractor' && type === 'available') {
-      const { data: rows, error } = await supabase
+      // Build query for unclaimed projects
+      let query = supabase
         .from('service_requests')
         .select('id, category, description, additional_notes, address, budget_max, status, created_at')
         .in('status', ['pending_review', 'in_queue'])
         .is('assigned_contractor_id', null)
         .order('created_at', { ascending: false })
+
+      // Filter by contractor's service categories if they have them set
+      const serviceCategories = profile?.service_categories
+      if (serviceCategories && Array.isArray(serviceCategories) && serviceCategories.length > 0) {
+        query = query.in('category', serviceCategories)
+      }
+
+      const { data: rows, error } = await query
 
       if (error) throw error
 
@@ -75,6 +84,29 @@ export async function GET(request: NextRequest) {
         location: r.address,
         budget: r.budget_max ?? null,
         status: 'open',
+        createdAt: r.created_at,
+      }))
+
+      return NextResponse.json({ projects })
+    }
+
+    if (role === 'contractor' && type === 'my-projects') {
+      const { data: rows, error } = await supabase
+        .from('service_requests')
+        .select('id, category, description, additional_notes, address, budget_max, status, created_at')
+        .eq('assigned_contractor_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+
+      const projects = (rows ?? []).map(r => ({
+        id: r.id,
+        title: r.additional_notes || r.category,
+        description: r.description,
+        category: r.category,
+        location: r.address,
+        budget: r.budget_max ?? null,
+        status: mapStatus(r.status),
         createdAt: r.created_at,
       }))
 
