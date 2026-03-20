@@ -2,8 +2,6 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, Instrument_Serif } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { AuthProvider } from "./lib/auth-context"
-import { RequestsProvider } from "./lib/requests-context"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
@@ -66,7 +64,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#c7935a",
+  themeColor: "#1a1a1a",
   width: "device-width",
   initialScale: 1,
 }
@@ -144,15 +142,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${inter.variable} ${instrumentSerif.variable} font-sans antialiased`}
-      >
-        <AuthProvider>
-          <RequestsProvider>
-            {children}
-            <Analytics />
-          </RequestsProvider>
-        </AuthProvider>
+      <body className={`${inter.variable} ${instrumentSerif.variable} font-sans antialiased`}>
+        {children}
+        <Analytics />
       </body>
     </html>
   )

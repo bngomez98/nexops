@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -32,14 +32,14 @@ export async function middleware(request: NextRequest) {
   // Redirect unauthenticated users away from /dashboard
   if (pathname.startsWith('/dashboard') && !user) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/login'
+    redirectUrl.pathname = '/auth/login'
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Redirect authenticated users away from /login
-  if (pathname === '/login' && user) {
+  // Redirect authenticated users away from auth pages
+  if (user && (pathname === '/auth/login' || pathname === '/auth/sign-up')) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/dashboard'
+    redirectUrl.pathname = '/dashboard/homeowner'
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -61,3 +61,5 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
+
+
