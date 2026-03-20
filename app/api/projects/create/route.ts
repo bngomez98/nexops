@@ -1,55 +1,71 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
-import { createProjectRequest } from '@/lib/db'
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser()
-    
-    if (!user || user.role !== 'homeowner') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
-    const { category, title, description, location, budget } = body
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
 
-    // Validation
-    if (!category || !title || !description || !location) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+    const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
+    if (role !== 'homeowner') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    // Create project request
-    const project = await createProjectRequest(
-      user.id,
-      category,
-      title,
-      description,
-      location,
-      budget
-    )
+    // Accept both JSON and FormData
+    const contentType = request.headers.get('content-type') ?? ''
+    let category = '', title = '', description = '', location = '', budget = ''
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData()
+      category    = String(formData.get('category') ?? '')
+      title       = String(formData.get('title') ?? '')
+      description = String(formData.get('description') ?? '')
+      location    = String(formData.get('location') ?? '')
+      budget      = String(formData.get('budget') ?? '')
+    } else {
+      const body = await request.json()
+      ;({ category, title, description, location, budget } = body)
+    }
+
+    if (!category || !description || !location) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+
+    const { data: sr, error: insertError } = await supabase
+      .from('service_requests')
+      .insert({
+        owner_id:         user.id,
+        category,
+        description,
+        additional_notes: title || null,
+        address:          location,
+        city:             'Topeka',
+        state:            'KS',
+        zip_code:         '66603',
+        budget_max:       budget ? parseFloat(budget) : null,
+        status:           'pending_review',
+      })
+      .select('id, category, status')
+      .single()
+
+    if (insertError) throw insertError
 
     return NextResponse.json(
-      {
-        project: {
-          id: project.id,
-          title: project.title,
-          category: project.category,
-          status: project.status,
-        },
-      },
+      { project: { id: sr.id, title: title || category, category: sr.category, status: sr.status } },
       { status: 201 }
     )
-  } catch (error) {
-    console.error('Create project error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+  } catch (err) {
+    console.error('[POST /api/projects/create]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

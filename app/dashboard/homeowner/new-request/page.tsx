@@ -2,124 +2,83 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { FormError } from '@/components/form-error'
-import { ImageUpload } from '@/components/image-upload'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { ImageUpload } from '@/components/image-upload'
 import { projectRequestSchema } from '@/lib/validators'
 import { ZodError } from 'zod'
+import { Loader2, ChevronLeft, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 const SERVICE_CATEGORIES = [
-  { value: 'tree-removal', label: 'Tree Removal' },
+  { value: 'tree-removal',  label: 'Tree Removal' },
   { value: 'concrete-work', label: 'Concrete Work' },
-  { value: 'roofing', label: 'Roofing' },
-  { value: 'hvac', label: 'HVAC' },
-  { value: 'fencing', label: 'Fencing' },
-  { value: 'electrical', label: 'Electrical' },
-  { value: 'plumbing', label: 'Plumbing' },
-  { value: 'excavation', label: 'Excavation' },
+  { value: 'roofing',       label: 'Roofing' },
+  { value: 'hvac',          label: 'HVAC' },
+  { value: 'fencing',       label: 'Fencing' },
+  { value: 'electrical',    label: 'Electrical' },
+  { value: 'plumbing',      label: 'Plumbing' },
+  { value: 'excavation',    label: 'Excavation' },
 ]
 
 export default function NewProjectRequest() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser]           = useState<any>(null)
+  const [loading, setLoading]     = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [formData, setFormData] = useState({
-    category: '',
-    title: '',
-    description: '',
-    location: '',
-    budget: '',
-  })
-  const [error, setError] = useState('')
+  const [error, setError]         = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [uploadedImages, setUploadedImages] = useState<File[]>([])
+  const [formData, setFormData]   = useState({
+    category: '', title: '', description: '', location: '', budget: '',
+  })
 
   useEffect(() => {
-    async function checkAuth() {
+    async function check() {
       try {
-        const response = await fetch('/api/auth/me')
-        if (!response.ok) {
-          router.push('/login')
-          return
-        }
-        const data = await response.json()
-        if (data.user.role !== 'homeowner') {
-          router.push('/dashboard/contractor')
-          return
-        }
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
-      } catch (error) {
+      } catch {
         router.push('/login')
       } finally {
         setLoading(false)
       }
     }
-
-    checkAuth()
+    check()
   }, [router])
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+    if (fieldErrors[name]) setFieldErrors(prev => { const n = {...prev}; delete n[name]; return n })
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setFieldErrors({})
-
     try {
-      const validatedData = projectRequestSchema.parse({
-        category: formData.category,
-        title: formData.title,
-        description: formData.description,
-        location: formData.location,
-        budget: formData.budget,
-      })
-
+      const validated = projectRequestSchema.parse(formData)
       setSubmitting(true)
-
-      // Prepare form data for file upload
       const payload = new FormData()
-      payload.append('category', validatedData.category)
-      payload.append('title', validatedData.title)
-      payload.append('description', validatedData.description)
-      payload.append('location', validatedData.location)
-      if (validatedData.budget) {
-        payload.append('budget', String(parseFloat(validatedData.budget)))
-      }
+      payload.append('category',    validated.category)
+      payload.append('title',       validated.title)
+      payload.append('description', validated.description)
+      payload.append('location',    validated.location)
+      if (validated.budget) payload.append('budget', String(parseFloat(validated.budget)))
+      uploadedImages.forEach(img => payload.append('images', img))
 
-      // Add images
-      uploadedImages.forEach((image) => {
-        payload.append('images', image)
-      })
-
-      const response = await fetch('/api/projects/create', {
-        method: 'POST',
-        body: payload,
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to create project request')
-        return
-      }
-
+      const res  = await fetch('/api/projects/create', { method: 'POST', body: payload })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Failed to create request'); return }
       router.push('/dashboard/homeowner')
     } catch (err) {
       if (err instanceof ZodError) {
         const errors: Record<string, string> = {}
-        err.errors.forEach(error => {
-          const path = error.path[0] as string
-          errors[path] = error.message
-        })
+        err.errors.forEach(e => { errors[e.path[0] as string] = e.message })
         setFieldErrors(errors)
-        setError('Please correct the errors below')
+        setError('Please fix the errors below')
       } else {
         setError('An error occurred. Please try again.')
       }
@@ -131,7 +90,7 @@ export default function NewProjectRequest() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     )
   }
@@ -145,134 +104,171 @@ export default function NewProjectRequest() {
         router.push('/login')
       }} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground">Post a New Project Request</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Describe your project and licensed contractors will reach out with bids.
-          </p>
-        </div>
-        <div className="max-w-2xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && <FormError message={error} />}
+      <main className="md:ml-[220px] p-6 animate-fade-up">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-1.5 text-[12.5px] text-muted-foreground hover:text-foreground transition-colors mb-6"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back to dashboard
+          </button>
 
-            {/* Service Category */}
-            <div className="space-y-2">
-              <Label htmlFor="category">Service Category *</Label>
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                required
-                className={`w-full px-3 py-2 rounded-md border ${fieldErrors.category ? 'border-red-500' : 'border-input'} bg-input text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
-              >
-                <option value="">Select a category</option>
-                {SERVICE_CATEGORIES.map(cat => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-              {fieldErrors.category && <p className="text-sm text-red-500">{fieldErrors.category}</p>}
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-foreground">Post a New Request</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Describe your project and get matched with a verified contractor.
+            </p>
+          </div>
+
+          {/* Error banner */}
+          {error && (
+            <div className="flex items-start gap-2.5 p-4 rounded-xl border border-destructive/30 bg-destructive/8 text-destructive text-sm mb-6">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              {error}
             </div>
+          )}
 
-            {/* Project Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Project Title *</Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="e.g., Roof Repair - Leaking Shingles"
-                value={formData.title}
-                onChange={handleInputChange}
-                required
-                className={fieldErrors.title ? 'border-red-500' : ''}
-              />
-              {fieldErrors.title && <p className="text-sm text-red-500">{fieldErrors.title}</p>}
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Project Description *</Label>
-              <textarea
-                id="description"
-                name="description"
-                placeholder="Describe your project in detail. What needs to be done? Any specific requirements or preferences?"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={6}
-                required
-                className={`w-full px-3 py-2 rounded-md border ${fieldErrors.description ? 'border-red-500' : 'border-input'} bg-input text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
-              />
-              {fieldErrors.description && <p className="text-sm text-red-500">{fieldErrors.description}</p>}
-            </div>
-
-            {/* Location */}
-            <div className="space-y-2">
-              <Label htmlFor="location">Project Location *</Label>
-              <Input
-                id="location"
-                name="location"
-                placeholder="City, State"
-                value={formData.location}
-                onChange={handleInputChange}
-                required
-                className={fieldErrors.location ? 'border-red-500' : ''}
-              />
-              {fieldErrors.location && <p className="text-sm text-red-500">{fieldErrors.location}</p>}
-            </div>
-
-            {/* Budget */}
-            <div className="space-y-2">
-              <Label htmlFor="budget">Budget (Optional)</Label>
-              <div className="flex items-center">
-                <span className="text-muted-foreground mr-2">$</span>
-                <Input
-                  id="budget"
-                  name="budget"
-                  type="number"
-                  placeholder="5000"
-                  step="0.01"
-                  value={formData.budget}
-                  onChange={handleInputChange}
-                  className="flex-1"
-                />
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Category */}
+            <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+              <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
+                Service Details
+              </h2>
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Category <span className="text-destructive">*</span>
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    fieldErrors.category ? 'border-destructive' : 'border-input'
+                  }`}
+                >
+                  <option value="">Select a category</option>
+                  {SERVICE_CATEGORIES.map(c => (
+                    <option key={c.value} value={c.value}>{c.label}</option>
+                  ))}
+                </select>
+                {fieldErrors.category && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.category}</p>}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Leaving this blank helps you get more competitive bids
+
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Project Title <span className="text-destructive">*</span>
+                </label>
+                <input
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="e.g., Leaking roof on south-facing slope"
+                  required
+                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    fieldErrors.title ? 'border-destructive' : 'border-input'
+                  }`}
+                />
+                {fieldErrors.title && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.title}</p>}
+              </div>
+
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Description <span className="text-destructive">*</span>
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the work needed in detail — scope, access, any existing damage, and your preferred timeline…"
+                  rows={5}
+                  required
+                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition resize-none ${
+                    fieldErrors.description ? 'border-destructive' : 'border-input'
+                  }`}
+                />
+                {fieldErrors.description && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.description}</p>}
+              </div>
+            </div>
+
+            {/* Location + Budget */}
+            <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+              <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
+                Location &amp; Budget
+              </h2>
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Project Location <span className="text-destructive">*</span>
+                </label>
+                <input
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="Street address or City, State"
+                  required
+                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    fieldErrors.location ? 'border-destructive' : 'border-input'
+                  }`}
+                />
+                {fieldErrors.location && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.location}</p>}
+              </div>
+
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Budget Cap <span className="text-muted-foreground font-normal">(optional)</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[13px]">$</span>
+                  <input
+                    name="budget"
+                    type="number"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    placeholder="5000"
+                    min="0"
+                    step="1"
+                    className="w-full pl-7 pr-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  Leaving this blank may result in more competitive bids.
+                </p>
+              </div>
+            </div>
+
+            {/* Photos */}
+            <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+              <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
+                Project Photos <span className="text-muted-foreground font-normal normal-case">(optional)</span>
+              </h2>
+              <ImageUpload onImagesChange={setUploadedImages} maxFiles={5} maxSizeInMB={10} />
+              <p className="text-[11px] text-muted-foreground">
+                Upload up to 5 photos. Contractors use them to understand the scope before bidding.
               </p>
             </div>
 
-            {/* Project Images */}
-            <div className="space-y-2">
-              <Label>Project Photos (Optional)</Label>
-              <ImageUpload
-                onImagesChange={setUploadedImages}
-                maxFiles={5}
-                maxSizeInMB={10}
-              />
-              <p className="text-xs text-muted-foreground">
-                Add up to 5 photos of your project to help contractors understand the scope better
-              </p>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex gap-4">
-              <Button
+            {/* Submit */}
+            <div className="flex gap-3 pt-1">
+              <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1"
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13.5px] py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
               >
-                {submitting ? 'Posting...' : 'Post Project Request'}
-              </Button>
-              <Button
+                {submitting ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Posting…</>
+                ) : (
+                  <><CheckCircle2 className="w-4 h-4" /> Post Request</>
+                )}
+              </button>
+              <button
                 type="button"
-                variant="outline"
                 onClick={() => router.back()}
+                className="px-5 py-3 rounded-xl border border-border text-[13.5px] font-semibold text-foreground hover:bg-secondary transition-colors"
               >
                 Cancel
-              </Button>
+              </button>
             </div>
           </form>
         </div>
