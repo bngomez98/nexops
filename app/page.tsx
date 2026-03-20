@@ -1,12 +1,35 @@
-import { Header } from "@/components/header"
-import { Hero } from "@/components/hero"
-import { WhoWeServe } from "@/components/who-we-serve"
-import { HowItWorks } from "@/components/how-it-works"
-import { ValueProposition } from "@/components/value-proposition"
-import { ContactCTA } from "@/components/contact-cta"
-import { Footer } from "@/components/footer"
+'use client'
+
+import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Menu, X, MapPin, ArrowRight } from 'lucide-react'
 
 export default function HomePage() {
+  const [scrollPct, setScrollPct] = useState(0)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
+  const statsRef = useRef<HTMLDivElement>(null)
+
+  const navLinks = [
+    { href: '#hero', label: 'Home' },
+    { href: '#who-we-serve', label: 'Services' },
+    { href: '#about', label: 'About' },
+    { href: '#mission', label: 'Mission' },
+    { href: '#pricing', label: 'Pricing' },
+  ]
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
+      const scrolled = (window.scrollY / scrollHeight) * 100
+      setScrollPct(Math.min(scrolled, 100))
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
 
@@ -21,29 +44,17 @@ export default function HomePage() {
       <header className="fixed top-[2px] left-0 right-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-8 h-14">
           <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={150}
-              height={50}
-              style={{ height: "28px", width: "auto" }}
-              priority
-            />
+            <div className="text-lg font-bold text-foreground">Nexus</div>
           </Link>
 
           <nav className="hidden items-center gap-0.5 md:flex" aria-label="Main">
             {navLinks.map(({ href, label }) => {
               const id = href.replace("#", "")
-              const active = activeSection === id
               return (
                 <a
                   key={href}
                   href={href}
-                  className={`px-3.5 py-1.5 text-[12.5px] rounded-full transition-all duration-200 ${
-                    active
-                      ? "text-primary bg-primary/10 font-medium"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className="px-3.5 py-1.5 text-[12.5px] rounded-full transition-all duration-200 text-muted-foreground hover:text-foreground"
                 >
                   {label}
                 </a>
@@ -52,7 +63,6 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <ThemeToggle />
             <Link
               href="/auth/login"
               className="hidden text-[12.5px] text-muted-foreground transition-colors hover:text-foreground md:block"
@@ -77,7 +87,7 @@ export default function HomePage() {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-slide-down">
+          <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl">
             <div className="px-8 py-5 space-y-1">
               {navLinks.map(({ href, label }) => (
                 <a
