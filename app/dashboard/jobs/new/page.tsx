@@ -81,10 +81,11 @@ export default async function NewJobPage() {
             <select
               id="priority"
               name="priority"
+              defaultValue="normal"
               className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition bg-white"
             >
               <option value="low">Low</option>
-              <option value="normal" selected>Normal</option>
+              <option value="normal">Normal</option>
               <option value="high">High</option>
               <option value="urgent">Urgent</option>
             </select>
