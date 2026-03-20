@@ -13,13 +13,13 @@ The integrated codebase includes:
 
 ## Development
 
-```bash
+\`\`\`bash
 pnpm install
 pnpm dev
-```
+\`\`\`
 
 ## Build
 
-```bash
+\`\`\`bash
 pnpm build
-```
+\`\`\`
