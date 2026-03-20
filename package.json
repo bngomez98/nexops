@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "db:push": "supabase db push"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -24,6 +27,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "prettier": "^3.4.2",
     "tailwindcss": "^4.0.14",
     "typescript": "^5"
   }
