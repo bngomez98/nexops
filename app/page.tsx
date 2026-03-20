@@ -19,6 +19,17 @@ export default function HomePage() {
     { href: '#contact', label: 'Contact' },
   ]
 
+  const services = [
+    { name: 'Tree Removal', desc: 'Removal, trimming, stump grinding. Storm damage and hazardous tree assessment.' },
+    { name: 'Concrete Work', desc: 'Driveways, patios, sidewalks, foundation repair, decorative and stamped concrete.' },
+    { name: 'Roofing', desc: 'Shingle replacement, metal roofing, leak repair, storm damage restoration.' },
+    { name: 'HVAC', desc: 'Installation, repair, and maintenance for heating and cooling systems.' },
+    { name: 'Fencing', desc: 'Wood, vinyl, chain link, and iron fencing installation and repair.' },
+    { name: 'Electrical', desc: 'Panel upgrades, wiring, outlet installation, lighting, and code compliance.' },
+    { name: 'Plumbing', desc: 'Water lines, drain services, fixture installation, and emergency repairs.' },
+    { name: 'General Repairs', desc: 'Handyman services, minor repairs, and home maintenance projects.' },
+  ]
+
   // Handle scroll progress bar
   useEffect(() => {
     const handleScroll = () => {
