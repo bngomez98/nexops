@@ -2,70 +2,42 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { FormError } from '@/components/form-error'
-import { User, LogOut, ArrowLeft, Save } from 'lucide-react'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react'
 
 export default function HomeownerSettings() {
-  const router = useRouter()
+  const router       = useRouter()
   const searchParams = useSearchParams()
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const [user, setUser]   = useState<any>(null)
+  const [loading, setLoading]   = useState(true)
+  const [saving, setSaving]     = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [error, setError] = useState('')
+  const [showDelete, setShowDelete] = useState(false)
+  const [error, setError]     = useState('')
   const [success, setSuccess] = useState('')
-  const [formData, setFormData] = useState({
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-  })
+  const [formData, setFormData] = useState({ email: '', phone: '' })
   const [notifications, setNotifications] = useState({
-    bidNotifications: true,
-    messageNotifications: true,
-    projectUpdates: true,
-    newsletter: true,
+    bidNotifications: true, messageNotifications: true, projectUpdates: true, newsletter: false,
   })
 
   useEffect(() => {
-    async function loadData() {
+    async function load() {
       try {
-        const response = await fetch('/api/auth/me')
-        if (!response.ok) {
-          router.push('/login')
-          return
-        }
-        const userData = await response.json()
-        if (userData.user.role !== 'homeowner') {
-          router.push('/dashboard/contractor')
-          return
-        }
-        setUser(userData.user)
-        setFormData({
-          email: userData.user.email,
-          phone: userData.user.phone,
-          address: userData.user.address,
-          city: userData.user.city,
-          state: userData.user.state,
-          zipCode: userData.user.zipCode,
-        })
-      } catch (error) {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
+        setUser(data.user)
+        setFormData({ email: data.user.email, phone: data.user.phone ?? '' })
+      } catch {
         router.push('/login')
       } finally {
         setLoading(false)
       }
     }
-
-    loadData()
+    load()
   }, [router])
 
-  // Handle billing success query param
   useEffect(() => {
     if (searchParams.get('billing') === 'success') {
       setSuccess('Billing updated successfully!')
@@ -73,68 +45,52 @@ export default function HomeownerSettings() {
     }
   }, [searchParams])
 
-  async function handleLogout() {
-    await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
-  }
-
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  function handleNotificationChange(key: keyof typeof notifications) {
-    setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setSuccess('')
-
-    if (!formData.email || !formData.address) {
-      setError('Please fill in all required fields')
-      return
-    }
-
+    if (!formData.email) { setError('Email is required'); return }
     setSaving(true)
     try {
-      const response = await fetch('/api/settings/homeowner', {
+      const res = await fetch('/api/settings/homeowner', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-
-      if (!response.ok) {
-        const data = await response.json()
-        setError(data.error || 'Failed to save settings. Please try again.')
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Failed to save. Please try again.')
         return
       }
-
       setSuccess('Settings saved successfully!')
-      setTimeout(() => setSuccess(''), 3000)
-    } catch (err) {
-      setError('Failed to save settings. Please try again.')
+      setTimeout(() => setSuccess(''), 4000)
+    } catch {
+      setError('Failed to save. Please try again.')
     } finally {
       setSaving(false)
     }
   }
 
-  async function handleDeleteAccount() {
+  async function handleDelete() {
     setDeleting(true)
     setError('')
     try {
-      const response = await fetch('/api/settings/homeowner', { method: 'DELETE' })
-      if (!response.ok) {
-        const data = await response.json()
-        setError(data.error || 'Failed to delete account. Please try again.')
-        setShowDeleteConfirm(false)
+      const res = await fetch('/api/settings/homeowner', { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Failed to delete account.')
+        setShowDelete(false)
         return
       }
       router.push('/login')
-    } catch (err) {
-      setError('Failed to delete account. Please try again.')
-      setShowDeleteConfirm(false)
+    } catch {
+      setError('Failed to delete account.')
+      setShowDelete(false)
     } finally {
       setDeleting(false)
     }
@@ -143,257 +99,180 @@ export default function HomeownerSettings() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     )
   }
 
   if (!user) return null
 
+  const initials = user.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center gap-2 text-primary hover:underline"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted">
-                <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">{user.name}</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-          <p className="text-muted-foreground mt-1">Manage your profile and preferences</p>
-        </div>
-      </header>
+      <DashboardNav userName={user.name} role="homeowner" onLogout={async () => {
+        await fetch('/api/auth/logout', { method: 'POST' })
+        router.push('/login')
+      }} />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-2xl">
-          {error && <FormError message={error} className="mb-6" />}
+      <main className="md:ml-[220px] p-6 animate-fade-up">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Account Settings</h1>
+            <p className="text-muted-foreground text-sm mt-1">Manage your profile and preferences</p>
+          </div>
+
+          {/* Status banners */}
+          {error && (
+            <div className="flex items-start gap-2.5 p-4 rounded-xl border border-destructive/30 bg-destructive/8 text-destructive text-sm">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              {error}
+            </div>
+          )}
           {success && (
-            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm mb-6">
+            <div className="flex items-start gap-2.5 p-4 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-700 text-sm">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
               {success}
             </div>
           )}
 
-          <form onSubmit={handleSave} className="space-y-8">
-            {/* Contact Information */}
-            <div className="border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold text-foreground mb-6">Contact Information</h2>
-
-              <div className="space-y-4">
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    name="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                {/* Phone */}
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    name="phone"
-                    placeholder="+1 (555) 123-4567"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                  />
-                </div>
+          {/* Profile card */}
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
+            <div className="flex items-center gap-4 px-6 py-5 border-b border-border bg-primary/5">
+              <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold">
+                {initials}
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">{user.name}</p>
+                <p className="text-[12.5px] text-muted-foreground">{user.email}</p>
+                <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full mt-1 inline-block capitalize">
+                  {user.role}
+                </span>
               </div>
             </div>
 
-            {/* Address Information */}
-            <div className="border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold text-foreground mb-6">Address</h2>
-
-              <div className="space-y-4">
-                {/* Street Address */}
-                <div className="space-y-2">
-                  <Label htmlFor="address">Street Address *</Label>
-                  <Input
-                    id="address"
-                    name="address"
-                    placeholder="123 Main St"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                {/* City, State, Zip */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      placeholder="Topeka"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="state">State</Label>
-                    <Input
-                      id="state"
-                      name="state"
-                      placeholder="KS"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      maxLength={2}
-                    />
-                  </div>
-                </div>
-
-                {/* Zip Code */}
-                <div className="space-y-2">
-                  <Label htmlFor="zipCode">Zip Code</Label>
-                  <Input
-                    id="zipCode"
-                    name="zipCode"
-                    placeholder="66603"
-                    value={formData.zipCode}
-                    onChange={handleInputChange}
-                  />
-                </div>
+            <form onSubmit={handleSave} className="p-6 space-y-5">
+              <div className="flex items-center gap-2 mb-1">
+                <User className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground text-[14px]">Contact Information</h2>
               </div>
-            </div>
 
-            {/* Notification Preferences */}
-            <div className="border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold text-foreground mb-6">Notification Preferences</h2>
-              <div className="space-y-4">
-                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input
-                    type="checkbox"
-                    checked={notifications.bidNotifications}
-                    onChange={() => handleNotificationChange('bidNotifications')}
-                    className="w-4 h-4 rounded"
-                  />
-                  <div>
-                    <p className="font-semibold text-foreground">Bid Notifications</p>
-                    <p className="text-sm text-muted-foreground">Get notified when contractors submit bids on your projects</p>
-                  </div>
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                  Email Address <span className="text-destructive">*</span>
                 </label>
-
-                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input
-                    type="checkbox"
-                    checked={notifications.messageNotifications}
-                    onChange={() => handleNotificationChange('messageNotifications')}
-                    className="w-4 h-4 rounded"
-                  />
-                  <div>
-                    <p className="font-semibold text-foreground">Message Notifications</p>
-                    <p className="text-sm text-muted-foreground">Get notified when contractors message you</p>
-                  </div>
-                </label>
-
-                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input
-                    type="checkbox"
-                    checked={notifications.projectUpdates}
-                    onChange={() => handleNotificationChange('projectUpdates')}
-                    className="w-4 h-4 rounded"
-                  />
-                  <div>
-                    <p className="font-semibold text-foreground">Project Updates</p>
-                    <p className="text-sm text-muted-foreground">Get notified about updates on your ongoing projects</p>
-                  </div>
-                </label>
-
-                <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input
-                    type="checkbox"
-                    checked={notifications.newsletter}
-                    onChange={() => handleNotificationChange('newsletter')}
-                    className="w-4 h-4 rounded"
-                  />
-                  <div>
-                    <p className="font-semibold text-foreground">Newsletter</p>
-                    <p className="text-sm text-muted-foreground">Receive tips and updates about home improvement trends</p>
-                  </div>
-                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                />
               </div>
-            </div>
 
-            {/* Danger Zone */}
-            <div className="border border-red-200 bg-red-50 dark:bg-red-900/10 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-red-700 mb-4">Danger Zone</h2>
-              <p className="text-sm text-muted-foreground mb-4">
-                These actions cannot be undone. Please be careful.
-              </p>
-              {showDeleteConfirm ? (
-                <div className="space-y-3">
-                  <p className="text-sm font-semibold text-red-700">
-                    Are you sure you want to delete your account? This cannot be undone.
-                  </p>
-                  <div className="flex gap-3">
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      disabled={deleting}
-                      onClick={handleDeleteAccount}
-                    >
-                      {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setShowDeleteConfirm(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => setShowDeleteConfirm(true)}
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+1 (785) 555-0100"
+                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
                 >
-                  Delete Account
-                </Button>
-              )}
-            </div>
+                  {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                  {saving ? 'Saving…' : 'Save Changes'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="px-5 py-2.5 rounded-xl border border-border text-[13px] font-semibold text-foreground hover:bg-secondary transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
 
-            {/* Submit Buttons */}
-            <div className="flex gap-4">
-              <Button type="submit" disabled={saving} className="gap-2">
-                <Save className="w-4 h-4" />
-                {saving ? 'Saving...' : 'Save Changes'}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-              >
-                Cancel
-              </Button>
+          {/* Notifications */}
+          <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Bell className="w-4 h-4 text-primary" />
+              <h2 className="font-semibold text-foreground text-[14px]">Notification Preferences</h2>
             </div>
-          </form>
+            {[
+              { key: 'bidNotifications',     label: 'Bid Notifications',    desc: 'When contractors submit bids on your requests' },
+              { key: 'messageNotifications', label: 'Messages',              desc: 'When contractors send you a message' },
+              { key: 'projectUpdates',       label: 'Project Updates',       desc: 'Status changes on your ongoing requests' },
+              { key: 'newsletter',           label: 'Newsletter',            desc: 'Tips and home improvement trends' },
+            ].map(n => (
+              <label
+                key={n.key}
+                className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-secondary/30 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  checked={notifications[n.key as keyof typeof notifications]}
+                  onChange={() => setNotifications(prev => ({ ...prev, [n.key]: !prev[n.key as keyof typeof notifications] }))}
+                  className="w-4 h-4 rounded mt-0.5 accent-primary"
+                />
+                <div>
+                  <p className="text-[13px] font-semibold text-foreground">{n.label}</p>
+                  <p className="text-[12px] text-muted-foreground">{n.desc}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          {/* Danger zone */}
+          <div className="bg-card border border-red-200 dark:border-red-900 rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Shield className="w-4 h-4 text-destructive" />
+              <h2 className="font-semibold text-destructive text-[14px]">Danger Zone</h2>
+            </div>
+            <p className="text-[12.5px] text-muted-foreground mb-4">
+              Deleting your account is permanent and cannot be undone. All your requests and data will be removed.
+            </p>
+            {showDelete ? (
+              <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 space-y-3">
+                <p className="text-[13px] font-semibold text-red-700 dark:text-red-400">
+                  Are you absolutely sure? This action cannot be reversed.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="inline-flex items-center gap-2 bg-destructive text-destructive-foreground font-semibold text-[12.5px] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60"
+                  >
+                    {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                    {deleting ? 'Deleting…' : 'Yes, delete my account'}
+                  </button>
+                  <button
+                    onClick={() => setShowDelete(false)}
+                    className="px-4 py-2 rounded-lg border border-border text-[12.5px] font-semibold hover:bg-secondary transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowDelete(true)}
+                className="px-4 py-2 rounded-lg border border-red-300 text-red-600 text-[12.5px] font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              >
+                Delete Account
+              </button>
+            )}
+          </div>
         </div>
       </main>
     </div>

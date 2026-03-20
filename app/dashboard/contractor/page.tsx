@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
-import { NotificationBell } from '@/components/notification-bell'
-import { User, LogOut, TrendingUp, Briefcase, Award, MapPin, Loader, BarChart3 } from 'lucide-react'
+import {
+  Briefcase, Star, Layers, MapPin, Loader2,
+  BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
+} from 'lucide-react'
 
 interface ProjectRequest {
   id: string
@@ -17,21 +20,13 @@ interface ProjectRequest {
   createdAt: string
 }
 
-interface ContractorData {
-  user: {
-    id: string
-    email: string
-    name: string
-    role: string
-  }
-  contractorProfile: {
-    companyName: string
-    membershipTier: string
-    currentActiveProjects: number
-    maxActiveProjects: number
-    averageRating: number
-    totalReviews: number
-  } | null
+interface ContractorProfile {
+  companyName: string
+  membershipTier: string
+  currentActiveProjects: number
+  maxActiveProjects: number
+  averageRating: number
+  totalReviews: number
 }
 
 interface FilterState {
@@ -43,104 +38,80 @@ interface FilterState {
   sortBy: 'recent' | 'budget-high' | 'budget-low'
 }
 
+function formatCategory(cat: string) {
+  return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const days = Math.floor(diff / 86400000)
+  if (days === 0) return 'Today'
+  if (days === 1) return 'Yesterday'
+  if (days < 30) return `${days}d ago`
+  return new Date(dateStr).toLocaleDateString()
+}
+
 export default function ContractorDashboard() {
   const router = useRouter()
-  const [data, setData] = useState<ContractorData | null>(null)
-  const [projects, setProjects] = useState<ProjectRequest[]>([])
-  const [filteredProjects, setFilteredProjects] = useState<ProjectRequest[]>([])
-  const [loading, setLoading] = useState(true)
-  const [claimingProjectId, setClaimingProjectId] = useState<string | null>(null)
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    category: '',
-    budgetRange: '',
-    status: '',
-    location: '',
-    sortBy: 'recent',
+  const [user, setUser]     = useState<any>(null)
+  const [profile, setProfile] = useState<ContractorProfile | null>(null)
+  const [projects, setProjects]         = useState<ProjectRequest[]>([])
+  const [filteredProjects, setFiltered] = useState<ProjectRequest[]>([])
+  const [loading, setLoading]   = useState(true)
+  const [claimingId, setClaiming] = useState<string | null>(null)
+  const [filters, setFilters]   = useState<FilterState>({
+    search: '', category: '', budgetRange: '', status: '', location: '', sortBy: 'recent',
   })
 
   useEffect(() => {
-    async function loadData() {
+    async function load() {
       try {
-        const response = await fetch('/api/auth/me')
-        if (!response.ok) {
-          router.push('/login')
-          return
-        }
-        const userData = await response.json()
-        if (userData.user.role !== 'contractor') {
-          router.push('/dashboard/homeowner')
-          return
-        }
-        setData(userData)
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
+        setUser(data.user)
+        setProfile(data.contractorProfile)
 
-        // Get available projects
-        const projectsResponse = await fetch('/api/projects/list?type=available')
-        if (projectsResponse.ok) {
-          const projectsData = await projectsResponse.json()
-          setProjects(projectsData.projects)
+        const projRes = await fetch('/api/projects/list?type=available')
+        if (projRes.ok) {
+          const { projects: list } = await projRes.json()
+          setProjects(list ?? [])
         }
-      } catch (error) {
+      } catch {
         router.push('/login')
       } finally {
         setLoading(false)
       }
     }
-
-    loadData()
+    load()
   }, [router])
 
-  // Apply filters whenever projects or filters change
   useEffect(() => {
     let result = [...projects]
-
-    // Search filter
     if (filters.search) {
-      const query = filters.search.toLowerCase()
+      const q = filters.search.toLowerCase()
       result = result.filter(p =>
-        p.title.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
+        p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
       )
     }
-
-    // Category filter
-    if (filters.category) {
-      result = result.filter(p => p.category === filters.category)
-    }
-
-    // Budget range filter
+    if (filters.category) result = result.filter(p => p.category === filters.category)
     if (filters.budgetRange) {
       result = result.filter(p => {
         if (!p.budget) return true
         const [min, max] = filters.budgetRange.split('-')
-        const budget = p.budget
-        if (max === '+') {
-          return budget >= parseInt(min)
-        }
-        return budget >= parseInt(min) && budget <= parseInt(max)
+        return max === '+' ? p.budget >= parseInt(min) : p.budget >= parseInt(min) && p.budget <= parseInt(max)
       })
     }
-
-    // Location filter
     if (filters.location) {
-      result = result.filter(p =>
-        p.location.toLowerCase().includes(filters.location.toLowerCase())
-      )
+      result = result.filter(p => p.location.toLowerCase().includes(filters.location.toLowerCase()))
     }
-
-    // Sort
     result.sort((a, b) => {
-      if (filters.sortBy === 'recent') {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      } else if (filters.sortBy === 'budget-high') {
-        return (b.budget || 0) - (a.budget || 0)
-      } else if (filters.sortBy === 'budget-low') {
-        return (a.budget || 0) - (b.budget || 0)
-      }
-      return 0
+      if (filters.sortBy === 'budget-high') return (b.budget || 0) - (a.budget || 0)
+      if (filters.sortBy === 'budget-low')  return (a.budget || 0) - (b.budget || 0)
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     })
-
-    setFilteredProjects(result)
+    setFiltered(result)
   }, [projects, filters])
 
   async function handleLogout() {
@@ -148,230 +119,251 @@ export default function ContractorDashboard() {
     router.push('/login')
   }
 
-  async function handleClaimProject(projectId: string) {
-    setClaimingProjectId(projectId)
+  async function handleClaim(projectId: string) {
+    if (!profile) return
+    if (profile.currentActiveProjects >= profile.maxActiveProjects) return
+    setClaiming(projectId)
     try {
-      const response = await fetch(`/api/projects/claim/${projectId}`, {
-        method: 'POST',
-      })
-      if (response.ok) {
-        setProjects(projects.filter(p => p.id !== projectId))
+      const res = await fetch(`/api/projects/claim/${projectId}`, { method: 'POST' })
+      if (res.ok) {
+        setProjects(prev => prev.filter(p => p.id !== projectId))
+        setProfile(prev => prev ? { ...prev, currentActiveProjects: prev.currentActiveProjects + 1 } : prev)
       }
-    } catch (error) {
-      console.error('Error claiming project:', error)
     } finally {
-      setClaimingProjectId(null)
+      setClaiming(null)
     }
   }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     )
   }
 
-  if (!data) return null
+  if (!user) return null
 
-  const profile = data.contractorProfile
+  const atCapacity = (profile?.currentActiveProjects ?? 0) >= (profile?.maxActiveProjects ?? 1)
+  const capacityPct = profile ? Math.round((profile.currentActiveProjects / profile.maxActiveProjects) * 100) : 0
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Nexus Operations</h1>
-            <p className="text-sm text-muted-foreground">
-              {profile?.companyName || 'Contractor'} Dashboard
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <NotificationBell />
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted">
-              <User className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm text-foreground">{data.user.name}</span>
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
+
+      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+        {/* Welcome banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-primary-foreground/70 text-[12px] font-semibold uppercase tracking-wide mb-1">
+                Contractor Dashboard
+              </p>
+              <h1 className="text-2xl font-bold">{profile?.companyName || user.name}</h1>
+              <p className="text-primary-foreground/80 text-sm mt-1 flex items-center gap-2">
+                <span className="capitalize">{profile?.membershipTier || 'Free'} plan</span>
+                <span className="opacity-40">·</span>
+                <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active</span>
+              </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
+            <Link
+              href="/dashboard/contractor/analytics"
+              className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* Capacity bar */}
+          {profile && (
+            <div className="relative mt-5">
+              <div className="flex items-center justify-between text-[11px] text-primary-foreground/70 mb-1.5">
+                <span>Project capacity</span>
+                <span>{capacityPct}%</span>
+              </div>
+              <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white/70 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(capacityPct, 100)}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, color: 'stat-card-indigo', iconClass: 'text-primary' },
+            { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, color: 'stat-card-amber', iconClass: 'text-amber-500' },
+            { label: 'Available', value: projects.length, sub: 'open projects', icon: Layers, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
+          ].map(s => {
+            const Icon = s.icon
+            return (
+              <div key={s.label} className={`bg-card border border-border rounded-xl p-5 ${s.color}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
+                  <Icon className={`w-4 h-4 ${s.iconClass}`} />
+                </div>
+                <p className="text-3xl font-bold text-foreground">{s.value}</p>
+                <p className="text-[11px] text-muted-foreground mt-1">{s.sub}</p>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Capacity warning */}
+        {atCapacity && (
+          <div className="rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 px-5 py-4 flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Project capacity reached</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                You've reached your limit of {profile?.maxActiveProjects} active projects.{' '}
+                <Link href="/dashboard/contractor/settings" className="underline font-medium">Upgrade your plan</Link> to take on more work.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Projects */}
+        <div className="grid lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <ProjectFilters onFiltersChange={setFilters} />
+          </div>
+
+          <div className="lg:col-span-3">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                <div className="flex items-center gap-2.5">
+                  <Layers className="w-4 h-4 text-primary" />
+                  <h2 className="font-semibold text-foreground text-[15px]">Available Projects</h2>
+                </div>
+                <span className="text-[11px] font-medium text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
+                  {filteredProjects.length} result{filteredProjects.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+
+              {projects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+                    <Briefcase className="w-6 h-6 text-primary" />
+                  </div>
+                  <p className="font-semibold text-foreground text-[15px] mb-2">No projects available</p>
+                  <p className="text-sm text-muted-foreground max-w-xs">
+                    New projects in your service categories will appear here.
+                  </p>
+                </div>
+              ) : filteredProjects.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
+                  <p className="font-medium text-foreground mb-1">No matches</p>
+                  <p className="text-sm text-muted-foreground">Try adjusting your filters.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-border">
+                  {filteredProjects.map(project => (
+                    <div key={project.id} className="px-6 py-5 hover:bg-secondary/30 transition-colors">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <Link
+                            href={`/dashboard/contractor/projects/${project.id}`}
+                            className="font-semibold text-foreground hover:text-primary transition-colors text-[14px] leading-snug"
+                          >
+                            {project.title || formatCategory(project.category)}
+                          </Link>
+                          <p className="text-[11.5px] text-muted-foreground mt-0.5 mb-2">
+                            {formatCategory(project.category)}
+                          </p>
+                          <p className="text-[13px] text-muted-foreground line-clamp-2 mb-3">
+                            {project.description}
+                          </p>
+                          <div className="flex items-center gap-4 text-[11.5px] text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3" />
+                              {project.location}
+                            </span>
+                            <span>{timeAgo(project.createdAt)}</span>
+                          </div>
+                        </div>
+                        <div className="flex-shrink-0 flex flex-col items-end gap-3 pt-0.5">
+                          {project.budget != null && (
+                            <span className="font-bold text-primary text-lg">
+                              ${project.budget.toLocaleString()}
+                            </span>
+                          )}
+                          <div className="flex items-center gap-2">
+                            <Link href={`/dashboard/contractor/projects/${project.id}`}>
+                              <button className="px-3 py-1.5 text-[12px] font-medium border border-border rounded-lg hover:bg-secondary transition-colors">
+                                View
+                              </button>
+                            </Link>
+                            <button
+                              onClick={() => handleClaim(project.id)}
+                              disabled={claimingId === project.id || atCapacity}
+                              className="px-3 py-1.5 text-[12px] font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1.5"
+                            >
+                              {claimingId === project.id ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3 h-3" />
+                                  Claim
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
-        <div className="grid gap-6">
-          {/* Welcome Section */}
-          <div className="bg-accent/5 border border-accent/20 rounded-lg p-8">
-            <h2 className="text-3xl font-bold text-foreground mb-2">
-              Welcome, {data.user.name}!
-            </h2>
-            <p className="text-muted-foreground mb-4">
-              Browse available projects in your service categories and grow your business.
-            </p>
-            {profile && (
-              <div className="flex gap-4 mb-6 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Membership:</span>
-                  <span className="ml-2 font-semibold text-foreground capitalize">{profile.membershipTier}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Active Projects:</span>
-                  <span className="ml-2 font-semibold text-foreground">
-                    {profile.currentActiveProjects}/{profile.maxActiveProjects}
-                  </span>
-                </div>
-              </div>
-            )}
-            <Button className="gap-2" variant="accent">
-              Browse Available Projects
-            </Button>
+        {/* Upgrade section */}
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="font-semibold text-foreground text-[15px]">Upgrade your plan</h3>
+              <p className="text-[12.5px] text-muted-foreground mt-0.5">
+                Take on more projects and grow your business.
+              </p>
+            </div>
+            <span className="text-[11px] bg-secondary text-secondary-foreground font-semibold px-2.5 py-1 rounded-full capitalize">
+              Current: {profile?.membershipTier || 'free'}
+            </span>
           </div>
-
-          {/* Analytics Link */}
-          <div className="flex gap-4">
-            <a href="/dashboard/contractor/analytics" className="flex-1">
-              <Button variant="outline" className="w-full gap-2">
-                <BarChart3 className="w-4 h-4" />
-                View Detailed Analytics
-              </Button>
-            </a>
-          </div>
-
-          {/* Stats Section */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="border border-border rounded-lg p-6 bg-muted/30">
-              <div className="flex items-center gap-3 mb-2">
-                <Briefcase className="w-5 h-5 text-accent" />
-                <span className="text-sm text-muted-foreground">Active Projects</span>
-              </div>
-              <div className="text-3xl font-bold text-foreground">
-                {profile?.currentActiveProjects || 0}
-              </div>
-            </div>
-
-            <div className="border border-border rounded-lg p-6 bg-muted/30">
-              <div className="flex items-center gap-3 mb-2">
-                <TrendingUp className="w-5 h-5 text-accent" />
-                <span className="text-sm text-muted-foreground">Average Rating</span>
-              </div>
-              <div className="text-3xl font-bold text-foreground">
-                {profile?.averageRating.toFixed(1) || 'N/A'}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {profile?.totalReviews || 0} reviews
-              </div>
-            </div>
-
-            <div className="border border-border rounded-lg p-6 bg-muted/30">
-              <div className="flex items-center gap-3 mb-2">
-                <Award className="w-5 h-5 text-accent" />
-                <span className="text-sm text-muted-foreground">Max Capacity</span>
-              </div>
-              <div className="text-3xl font-bold text-foreground">
-                {profile?.maxActiveProjects || 0}
-              </div>
-            </div>
-          </div>
-
-          {/* Available Projects */}
-          <div className="grid lg:grid-cols-4 gap-6">
-            {/* Filters Sidebar */}
-            <div className="lg:col-span-1">
-              <ProjectFilters
-                onFiltersChange={setFilters}
-              />
-            </div>
-
-            {/* Projects List */}
-            <div className="lg:col-span-3">
-              <div className="border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-foreground">Available Projects</h3>
-                  <span className="text-sm text-muted-foreground">
-                    {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
-                  </span>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[
+              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'free' },
+              { name: 'Enterprise',   price: '$749/mo', projects: 15, highlight: profile?.membershipTier === 'professional' },
+            ].map(plan => (
+              <div
+                key={plan.name}
+                className={`rounded-xl border p-5 ${plan.highlight ? 'border-primary/40 bg-primary/5' : 'border-border'}`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-semibold text-foreground">{plan.name}</span>
+                  {plan.highlight && (
+                    <span className="text-[10.5px] bg-primary/15 text-primary font-semibold px-2 py-0.5 rounded-full">
+                      Recommended
+                    </span>
+                  )}
                 </div>
-                {projects.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    No projects available in your service categories at the moment. Check back soon!
-                  </div>
-                ) : filteredProjects.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    No projects match your filters. Try adjusting your search criteria.
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredProjects.map((project) => (
-                  <div key={project.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-all">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-foreground">{project.title}</h4>
-                        <p className="text-sm text-muted-foreground capitalize">{project.category.replace('-', ' ')}</p>
-                      </div>
-                      {project.budget && (
-                        <span className="font-bold text-accent text-lg">${project.budget.toLocaleString()}</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="w-4 h-4" />
-                        {project.location}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() => handleClaimProject(project.id)}
-                        disabled={
-                          claimingProjectId === project.id ||
-                          (data?.contractorProfile?.currentActiveProjects ?? 0) >=
-                            (data?.contractorProfile?.maxActiveProjects ?? 0)
-                        }
-                      >
-                        {claimingProjectId === project.id ? (
-                          <>
-                            <Loader className="w-4 h-4 mr-2 animate-spin" />
-                            Claiming...
-                          </>
-                        ) : (
-                          'Claim Project'
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                    ))}
-                  </div>
-                )}
+                <p className="text-2xl font-bold text-foreground mb-1">{plan.price}</p>
+                <p className="text-[12.5px] text-muted-foreground mb-4">Up to {plan.projects} active projects</p>
+                <Link href="/dashboard/contractor/settings">
+                  <button className={`w-full py-2 text-[12.5px] font-semibold rounded-lg transition-opacity hover:opacity-90 ${plan.highlight ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                    Upgrade to {plan.name}
+                  </button>
+                </Link>
               </div>
-            </div>
-          </div>
-
-          {/* Membership Info */}
-          <div className="border border-border rounded-lg p-6 bg-primary/5">
-            <h3 className="text-lg font-bold text-foreground mb-4">Membership Plans</h3>
-            <p className="text-muted-foreground mb-6">
-              Upgrade your membership to access more projects and increase your active project capacity.
-            </p>
-            <div className="grid md:grid-cols-3 gap-4">
-              {[
-                { name: 'Professional', price: '$299/mo', projects: 5 },
-                { name: 'Enterprise', price: '$749/mo', projects: 15 },
-              ].map((plan, i) => (
-                <div key={i} className="border border-border rounded-lg p-4">
-                  <div className="font-semibold text-foreground mb-2">{plan.name}</div>
-                  <div className="text-2xl font-bold text-accent mb-4">{plan.price}</div>
-                  <div className="text-sm text-muted-foreground mb-4">
-                    Up to {plan.projects} active projects
-                  </div>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Upgrade
-                  </Button>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </main>

@@ -1,57 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
-import { updateUser, deleteUser } from '@/lib/db'
-import { logout } from '@/lib/auth'
+import { createClient } from '@/lib/supabase/server'
 
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser()
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    if (!user) {
+    if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    if (user.role !== 'homeowner') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
     const body = await request.json()
-    const { email, phone, address, city, state, zipCode } = body
+    const { email, phone } = body
 
-    if (!email || !address) {
-      return NextResponse.json({ error: 'Email and address are required' }, { status: 400 })
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
     }
 
-    const updated = await updateUser(user.id, { email, phone, address, city, state, zipCode })
-    if (!updated) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    // Update profile table
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ phone: phone ?? null })
+      .eq('id', user.id)
+
+    if (profileError) throw profileError
+
+    // Update Supabase Auth email if changed
+    if (email !== user.email) {
+      const { error: emailError } = await supabase.auth.updateUser({ email })
+      if (emailError) throw emailError
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Save homeowner settings error:', error)
+  } catch (err) {
+    console.error('[PUT /api/settings/homeowner]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
-    const user = await getCurrentUser()
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    if (!user) {
+    if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    if (user.role !== 'homeowner') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    await logout()
-    await deleteUser(user.id)
+    // Sign out first
+    await supabase.auth.signOut()
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Delete homeowner account error:', error)
+  } catch (err) {
+    console.error('[DELETE /api/settings/homeowner]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
