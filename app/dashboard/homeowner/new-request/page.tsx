@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FormError } from '@/components/form-error'
 import { ImageUpload } from '@/components/image-upload'
-import { ArrowLeft } from 'lucide-react'
+import { DashboardNav } from '@/components/dashboard-nav'
 import { projectRequestSchema } from '@/lib/validators'
 import { ZodError } from 'zod'
 
@@ -140,22 +140,18 @@ export default function NewProjectRequest() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-4">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-primary hover:underline mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
-          <h1 className="text-2xl font-bold text-foreground">Post a New Project Request</h1>
-        </div>
-      </header>
+      <DashboardNav userName={user.name} role="homeowner" onLogout={async () => {
+        await fetch('/api/auth/logout', { method: 'POST' })
+        router.push('/login')
+      }} />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground">Post a New Project Request</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Describe your project and licensed contractors will reach out with bids.
+          </p>
+        </div>
         <div className="max-w-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && <FormError message={error} />}

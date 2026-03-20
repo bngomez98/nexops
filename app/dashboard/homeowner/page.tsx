@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { User, LogOut, Plus, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { Plus, Clock, CheckCircle, Wrench, FileText } from 'lucide-react'
 
 interface ProjectRequest {
   id: string
@@ -18,45 +19,59 @@ interface ProjectRequest {
 }
 
 interface UserData {
-  user: {
-    id: string
-    email: string
-    name: string
-    role: string
-  }
+  id: string
+  email: string
+  name: string
+  role: string
+}
+
+const STATUS_CONFIG: Record<string, { label: string; classes: string }> = {
+  open: { label: 'Open', classes: 'bg-primary/10 text-primary' },
+  claimed: { label: 'In Progress', classes: 'bg-amber-500/10 text-amber-500' },
+  'in-progress': { label: 'In Progress', classes: 'bg-amber-500/10 text-amber-500' },
+  completed: { label: 'Completed', classes: 'bg-emerald-500/10 text-emerald-600' },
+  cancelled: { label: 'Cancelled', classes: 'bg-muted text-muted-foreground' },
+}
+
+function formatCategory(cat: string) {
+  return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const days = Math.floor(diff / 86400000)
+  if (days === 0) return 'Today'
+  if (days === 1) return 'Yesterday'
+  if (days < 30) return `${days}d ago`
+  return new Date(dateStr).toLocaleDateString()
 }
 
 export default function HomeownerDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<UserData['user'] | null>(null)
+  const [user, setUser] = useState<UserData | null>(null)
   const [projects, setProjects] = useState<ProjectRequest[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadData() {
       try {
-        // Get user
-        const authResponse = await fetch('/api/auth/me')
-        if (!authResponse.ok) {
-          router.push('/login')
-          return
-        }
-        const userData = await authResponse.json()
-        setUser(userData.user)
+        const authRes = await fetch('/api/auth/me')
+        if (!authRes.ok) { router.push('/login'); return }
+        const { user: userData } = await authRes.json()
+        if (userData.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
+        setUser(userData)
 
-        // Get projects
-        const projectsResponse = await fetch('/api/projects/list?type=my-projects')
-        if (projectsResponse.ok) {
-          const projectsData = await projectsResponse.json()
-          setProjects(projectsData.projects)
+        const projRes = await fetch('/api/projects/list?type=my-projects')
+        if (projRes.ok) {
+          const { projects: data } = await projRes.json()
+          setProjects(data)
         }
-      } catch (error) {
+      } catch {
         router.push('/login')
       } finally {
         setLoading(false)
       }
     }
-
     loadData()
   }, [router])
 
@@ -68,119 +83,132 @@ export default function HomeownerDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground text-sm">Loading…</div>
       </div>
     )
   }
 
   if (!user) return null
 
-  const activeProjects = projects.filter(p => p.status === 'open')
-  const claimedProjects = projects.filter(p => p.status === 'claimed')
-  const completedProjects = projects.filter(p => p.status === 'completed')
+  const open = projects.filter(p => p.status === 'open')
+  const inProgress = projects.filter(p => p.status === 'claimed' || p.status === 'in-progress')
+  const completed = projects.filter(p => p.status === 'completed')
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Nexus Operations</h1>
-            <p className="text-sm text-muted-foreground">Homeowner Dashboard</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted">
-              <User className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm text-foreground">{user.name}</span>
-            </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
-          </div>
-        </div>
-      </header>
+      <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8">
         <div className="grid gap-6">
-          {/* Welcome Section */}
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-8">
-            <h2 className="text-3xl font-bold text-foreground mb-2">Welcome, {user.name}!</h2>
-            <p className="text-muted-foreground mb-6">
-              Post a project request and get bids from licensed contractors in your area.
-            </p>
-            <Link href="/dashboard/homeowner/new-request">
-              <Button className="gap-2">
+          {/* Welcome banner */}
+          <div className="rounded-xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Welcome back, {user.name.split(' ')[0]}</h2>
+              <p className="text-muted-foreground mt-1 text-sm">
+                Post a request and get bids from licensed contractors in your area.
+              </p>
+            </div>
+            <Link href="/dashboard/homeowner/new-request" className="flex-shrink-0">
+              <Button className="gap-2 w-full sm:w-auto">
                 <Plus className="w-4 h-4" />
-                Post New Project Request
+                Post New Request
               </Button>
             </Link>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="border border-border rounded-lg p-6 bg-muted/30">
-              <div className="flex items-center gap-3 mb-2">
-                <Clock className="w-5 h-5 text-primary" />
-                <span className="text-sm text-muted-foreground">Active Requests</span>
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center gap-2 mb-3">
+                <Clock className="w-4 h-4 text-primary" />
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Open</span>
               </div>
-              <div className="text-3xl font-bold text-foreground">{activeProjects.length}</div>
+              <div className="text-3xl font-bold text-foreground">{open.length}</div>
             </div>
-            <div className="border border-border rounded-lg p-6 bg-muted/30">
-              <div className="flex items-center gap-3 mb-2">
-                <AlertCircle className="w-5 h-5 text-accent" />
-                <span className="text-sm text-muted-foreground">Claimed Projects</span>
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center gap-2 mb-3">
+                <Wrench className="w-4 h-4 text-amber-500" />
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">In Progress</span>
               </div>
-              <div className="text-3xl font-bold text-foreground">{claimedProjects.length}</div>
+              <div className="text-3xl font-bold text-foreground">{inProgress.length}</div>
             </div>
-            <div className="border border-border rounded-lg p-6 bg-muted/30">
-              <div className="flex items-center gap-3 mb-2">
-                <CheckCircle className="w-5 h-5 text-accent" />
-                <span className="text-sm text-muted-foreground">Completed Projects</span>
+            <div className="border border-border rounded-xl p-5 bg-muted/20">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle className="w-4 h-4 text-emerald-500" />
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Done</span>
               </div>
-              <div className="text-3xl font-bold text-foreground">{completedProjects.length}</div>
+              <div className="text-3xl font-bold text-foreground">{completed.length}</div>
             </div>
           </div>
 
-          {/* Projects Section */}
-          <div className="border border-border rounded-lg p-6">
-            <h3 className="text-xl font-bold text-foreground mb-6">Your Project Requests</h3>
+          {/* Project list */}
+          <div className="border border-border rounded-xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <h3 className="font-semibold text-foreground">Your Requests</h3>
+                {projects.length > 0 && (
+                  <span className="ml-1 text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
+                    {projects.length}
+                  </span>
+                )}
+              </div>
+              <Link href="/dashboard/homeowner/new-request">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Plus className="w-3 h-3" />
+                  New
+                </Button>
+              </Link>
+            </div>
+
             {projects.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <p className="mb-4">No project requests yet. Get started by posting your first request!</p>
+              <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <FileText className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <p className="font-medium text-foreground mb-1">No requests yet</p>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Post your first project request to connect with contractors.
+                </p>
                 <Link href="/dashboard/homeowner/new-request">
-                  <Button variant="outline" className="gap-2">
+                  <Button className="gap-2">
                     <Plus className="w-4 h-4" />
-                    Post Your First Project
+                    Post First Request
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className="space-y-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-all">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-foreground">{project.title}</h4>
-                        <p className="text-sm text-muted-foreground capitalize">{project.category.replace('-', ' ')}</p>
+              <div className="divide-y divide-border">
+                {projects.map(project => {
+                  const status = STATUS_CONFIG[project.status] ?? {
+                    label: project.status,
+                    classes: 'bg-muted text-muted-foreground',
+                  }
+                  return (
+                    <div key={project.id} className="px-6 py-4 hover:bg-muted/20 transition-colors">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-1">
+                            <h4 className="font-medium text-foreground truncate">{project.title}</h4>
+                            <span className={`flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold ${status.classes}`}>
+                              {status.label}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-2">
+                            {formatCategory(project.category)} · {project.location}
+                          </p>
+                          <p className="text-sm text-muted-foreground line-clamp-1">{project.description}</p>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          {project.budget && (
+                            <div className="font-semibold text-foreground">${project.budget.toLocaleString()}</div>
+                          )}
+                          <div className="text-xs text-muted-foreground mt-1">{timeAgo(project.createdAt)}</div>
+                        </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        project.status === 'open' ? 'bg-primary/10 text-primary' :
-                        project.status === 'claimed' ? 'bg-accent/10 text-accent' :
-                        project.status === 'completed' ? 'bg-secondary/10 text-secondary' :
-                        'bg-muted text-muted-foreground'
-                      }`}>
-                        {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                      </span>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{project.description}</p>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{project.location}</span>
-                      {project.budget && <span className="font-semibold text-foreground">${project.budget.toLocaleString()}</span>}
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>

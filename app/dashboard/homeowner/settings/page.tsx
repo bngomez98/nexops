@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FormError } from '@/components/form-error'
-import { User, LogOut, ArrowLeft, Save } from 'lucide-react'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { Save } from 'lucide-react'
 
 export default function HomeownerSettings() {
   const router = useRouter()
@@ -152,35 +153,13 @@ export default function HomeownerSettings() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center gap-2 text-primary hover:underline"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted">
-                <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">{user.name}</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-          <p className="text-muted-foreground mt-1">Manage your profile and preferences</p>
-        </div>
-      </header>
+      <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage your profile and preferences</p>
+        </div>
         <div className="max-w-2xl">
           {error && <FormError message={error} className="mb-6" />}
           {success && (
