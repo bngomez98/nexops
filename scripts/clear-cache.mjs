@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { rmSync } from 'fs'
 import { rmSync } from 'fs'
 
 try {
