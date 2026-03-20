@@ -830,16 +830,5 @@ export default function HomePage() {
       </footer>
 
     </main>
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <Hero />
-        <WhoWeServe />
-        <HowItWorks />
-        <ValueProposition />
-        <ContactCTA />
-      </main>
-      <Footer />
-    </div>
   )
 }
