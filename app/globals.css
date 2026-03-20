@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f8f9fb;
+  --color-foreground: #0f1623;
+  --color-card: #ffffff;
+  --color-card-foreground: #0f1623;
+  --color-sidebar: #0f1e36;
+  --color-sidebar-foreground: #e2e8f0;
+  --color-sidebar-muted: #94a3b8;
+  --color-sidebar-active: #1e40af;
+  --color-primary: #1e3a8a;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #3b82f6;
+  --color-accent-foreground: #ffffff;
+  --color-muted: #e2e8f0;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-input: #ffffff;
+  --color-ring: #3b82f6;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Inter', system-ui, sans-serif;
+
+  --radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .sidebar-bg { background-color: var(--color-sidebar); }
+  .sidebar-text { color: var(--color-sidebar-foreground); }
+  .sidebar-muted { color: var(--color-sidebar-muted); }
+}
