@@ -23,6 +23,11 @@ export async function GET(request: NextRequest) {
         email: user.email,
         name: user.name,
         role: user.role,
+        phone: user.phone ?? '',
+        address: user.address ?? '',
+        city: user.city ?? '',
+        state: user.state ?? '',
+        zipCode: user.zipCode ?? '',
       },
       contractorProfile,
     })

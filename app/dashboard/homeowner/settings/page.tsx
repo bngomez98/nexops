@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,9 +10,12 @@ import { User, LogOut, ArrowLeft, Save } from 'lucide-react'
 
 export default function HomeownerSettings() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
@@ -22,6 +25,12 @@ export default function HomeownerSettings() {
     city: '',
     state: '',
     zipCode: '',
+  })
+  const [notifications, setNotifications] = useState({
+    bidNotifications: true,
+    messageNotifications: true,
+    projectUpdates: true,
+    newsletter: true,
   })
 
   useEffect(() => {
@@ -38,14 +47,13 @@ export default function HomeownerSettings() {
           return
         }
         setUser(userData.user)
-        // In a real app, this would come from the API
         setFormData({
           email: userData.user.email,
-          phone: '+1 (555) 123-4567',
-          address: '123 Main St',
-          city: 'Topeka',
-          state: 'KS',
-          zipCode: '66603',
+          phone: userData.user.phone,
+          address: userData.user.address,
+          city: userData.user.city,
+          state: userData.user.state,
+          zipCode: userData.user.zipCode,
         })
       } catch (error) {
         router.push('/login')
@@ -57,6 +65,14 @@ export default function HomeownerSettings() {
     loadData()
   }, [router])
 
+  // Handle billing success query param
+  useEffect(() => {
+    if (searchParams.get('billing') === 'success') {
+      setSuccess('Billing updated successfully!')
+      setTimeout(() => setSuccess(''), 5000)
+    }
+  }, [searchParams])
+
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/login')
@@ -65,6 +81,10 @@ export default function HomeownerSettings() {
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  function handleNotificationChange(key: keyof typeof notifications) {
+    setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -79,13 +99,44 @@ export default function HomeownerSettings() {
 
     setSaving(true)
     try {
-      // In a real app, this would save to the backend
+      const response = await fetch('/api/settings/homeowner', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to save settings. Please try again.')
+        return
+      }
+
       setSuccess('Settings saved successfully!')
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
       setError('Failed to save settings. Please try again.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setDeleting(true)
+    setError('')
+    try {
+      const response = await fetch('/api/settings/homeowner', { method: 'DELETE' })
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to delete account. Please try again.')
+        setShowDeleteConfirm(false)
+        return
+      }
+      router.push('/login')
+    } catch (err) {
+      setError('Failed to delete account. Please try again.')
+      setShowDeleteConfirm(false)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -142,7 +193,7 @@ export default function HomeownerSettings() {
             {/* Contact Information */}
             <div className="border border-border rounded-lg p-6">
               <h2 className="text-xl font-bold text-foreground mb-6">Contact Information</h2>
-              
+
               <div className="space-y-4">
                 {/* Email */}
                 <div className="space-y-2">
@@ -176,7 +227,7 @@ export default function HomeownerSettings() {
             {/* Address Information */}
             <div className="border border-border rounded-lg p-6">
               <h2 className="text-xl font-bold text-foreground mb-6">Address</h2>
-              
+
               <div className="space-y-4">
                 {/* Street Address */}
                 <div className="space-y-2">
@@ -235,7 +286,12 @@ export default function HomeownerSettings() {
               <h2 className="text-xl font-bold text-foreground mb-6">Notification Preferences</h2>
               <div className="space-y-4">
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.bidNotifications}
+                    onChange={() => handleNotificationChange('bidNotifications')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Bid Notifications</p>
                     <p className="text-sm text-muted-foreground">Get notified when contractors submit bids on your projects</p>
@@ -243,7 +299,12 @@ export default function HomeownerSettings() {
                 </label>
 
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.messageNotifications}
+                    onChange={() => handleNotificationChange('messageNotifications')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Message Notifications</p>
                     <p className="text-sm text-muted-foreground">Get notified when contractors message you</p>
@@ -251,7 +312,12 @@ export default function HomeownerSettings() {
                 </label>
 
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.projectUpdates}
+                    onChange={() => handleNotificationChange('projectUpdates')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Project Updates</p>
                     <p className="text-sm text-muted-foreground">Get notified about updates on your ongoing projects</p>
@@ -259,25 +325,17 @@ export default function HomeownerSettings() {
                 </label>
 
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.newsletter}
+                    onChange={() => handleNotificationChange('newsletter')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Newsletter</p>
                     <p className="text-sm text-muted-foreground">Receive tips and updates about home improvement trends</p>
                   </div>
                 </label>
-              </div>
-            </div>
-
-            {/* Privacy & Security */}
-            <div className="border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold text-foreground mb-6">Privacy & Security</h2>
-              <div className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  Change Password
-                </Button>
-                <Button variant="outline" className="w-full">
-                  View Privacy Settings
-                </Button>
               </div>
             </div>
 
@@ -287,9 +345,38 @@ export default function HomeownerSettings() {
               <p className="text-sm text-muted-foreground mb-4">
                 These actions cannot be undone. Please be careful.
               </p>
-              <Button variant="destructive">
-                Delete Account
-              </Button>
+              {showDeleteConfirm ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-red-700">
+                    Are you sure you want to delete your account? This cannot be undone.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={deleting}
+                      onClick={handleDeleteAccount}
+                    >
+                      {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowDeleteConfirm(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  Delete Account
+                </Button>
+              )}
             </div>
 
             {/* Submit Buttons */}

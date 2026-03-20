@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -21,9 +21,12 @@ const SERVICE_CATEGORIES = [
 
 export default function ContractorSettings() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
@@ -32,6 +35,11 @@ export default function ContractorSettings() {
     licenseNumber: '',
     yearsInBusiness: '',
     serviceCategories: [] as string[],
+  })
+  const [notifications, setNotifications] = useState({
+    projectNotifications: true,
+    messageNotifications: true,
+    weeklyDigest: true,
   })
 
   useEffect(() => {
@@ -48,14 +56,16 @@ export default function ContractorSettings() {
           return
         }
         setUser(userData.user)
-        // In a real app, this would come from the API
-        setFormData({
-          companyName: 'Your Company Name',
-          bio: 'Tell customers about your expertise and experience',
-          licenseNumber: 'LICENSE123',
-          yearsInBusiness: '5',
-          serviceCategories: ['roofing', 'electrical'],
-        })
+        const profile = userData.contractorProfile
+        if (profile) {
+          setFormData({
+            companyName: profile.companyName ?? '',
+            bio: profile.bio ?? '',
+            licenseNumber: profile.licenseNumber ?? '',
+            yearsInBusiness: profile.yearsInBusiness != null ? String(profile.yearsInBusiness) : '',
+            serviceCategories: profile.serviceCategories ?? [],
+          })
+        }
       } catch (error) {
         router.push('/login')
       } finally {
@@ -65,6 +75,14 @@ export default function ContractorSettings() {
 
     loadData()
   }, [router])
+
+  // Handle billing success query param
+  useEffect(() => {
+    if (searchParams.get('billing') === 'success') {
+      setSuccess('Billing updated successfully!')
+      setTimeout(() => setSuccess(''), 5000)
+    }
+  }, [searchParams])
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -85,6 +103,10 @@ export default function ContractorSettings() {
     }))
   }
 
+  function handleNotificationChange(key: keyof typeof notifications) {
+    setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
+  }
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -97,13 +119,44 @@ export default function ContractorSettings() {
 
     setSaving(true)
     try {
-      // In a real app, this would save to the backend
+      const response = await fetch('/api/settings/contractor', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to save settings. Please try again.')
+        return
+      }
+
       setSuccess('Settings saved successfully!')
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
       setError('Failed to save settings. Please try again.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setDeleting(true)
+    setError('')
+    try {
+      const response = await fetch('/api/settings/contractor', { method: 'DELETE' })
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to delete account. Please try again.')
+        setShowDeleteConfirm(false)
+        return
+      }
+      router.push('/login')
+    } catch (err) {
+      setError('Failed to delete account. Please try again.')
+      setShowDeleteConfirm(false)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -160,7 +213,7 @@ export default function ContractorSettings() {
             {/* Profile Section */}
             <div className="border border-border rounded-lg p-6">
               <h2 className="text-xl font-bold text-foreground mb-6">Profile Information</h2>
-              
+
               <div className="space-y-4">
                 {/* Company Name */}
                 <div className="space-y-2">
@@ -243,7 +296,12 @@ export default function ContractorSettings() {
               <h2 className="text-xl font-bold text-foreground mb-6">Notification Preferences</h2>
               <div className="space-y-4">
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.projectNotifications}
+                    onChange={() => handleNotificationChange('projectNotifications')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Project Notifications</p>
                     <p className="text-sm text-muted-foreground">Get notified when new projects in your categories are available</p>
@@ -251,7 +309,12 @@ export default function ContractorSettings() {
                 </label>
 
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.messageNotifications}
+                    onChange={() => handleNotificationChange('messageNotifications')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Message Notifications</p>
                     <p className="text-sm text-muted-foreground">Get notified when homeowners message you</p>
@@ -259,7 +322,12 @@ export default function ContractorSettings() {
                 </label>
 
                 <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition">
-                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <input
+                    type="checkbox"
+                    checked={notifications.weeklyDigest}
+                    onChange={() => handleNotificationChange('weeklyDigest')}
+                    className="w-4 h-4 rounded"
+                  />
                   <div>
                     <p className="font-semibold text-foreground">Weekly Digest</p>
                     <p className="text-sm text-muted-foreground">Receive a weekly summary of your activity and opportunities</p>
@@ -274,9 +342,38 @@ export default function ContractorSettings() {
               <p className="text-sm text-muted-foreground mb-4">
                 These actions cannot be undone. Please be careful.
               </p>
-              <Button variant="destructive">
-                Delete Account
-              </Button>
+              {showDeleteConfirm ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-red-700">
+                    Are you sure you want to delete your account? This cannot be undone.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={deleting}
+                      onClick={handleDeleteAccount}
+                    >
+                      {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowDeleteConfirm(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  Delete Account
+                </Button>
+              )}
             </div>
 
             {/* Submit Buttons */}
