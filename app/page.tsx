@@ -1,12 +1,58 @@
-import { Header } from "@/components/header"
-import { Hero } from "@/components/hero"
-import { WhoWeServe } from "@/components/who-we-serve"
-import { HowItWorks } from "@/components/how-it-works"
-import { ValueProposition } from "@/components/value-proposition"
-import { ContactCTA } from "@/components/contact-cta"
-import { Footer } from "@/components/footer"
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Menu, X, MapPin, ArrowRight, Zap, Users, TrendingUp, Shield, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 
 export default function HomePage() {
+  const [scrollPct, setScrollPct] = useState(0)
+  const [activeSection, setActiveSection] = useState('hero')
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const statsRef = useRef<HTMLDivElement>(null)
+
+  const navLinks = [
+    { href: '#hero', label: 'Overview' },
+    { href: '#features', label: 'Features' },
+    { href: '#how-it-works', label: 'How it works' },
+    { href: '#pricing', label: 'Pricing' },
+    { href: '#contact', label: 'Contact' },
+  ]
+
+  // Handle scroll progress bar
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+      setScrollPct(scrolled)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Handle active section tracking
+  useEffect(() => {
+    const handleSectionIntersection = () => {
+      const sections = ['hero', 'features', 'how-it-works', 'pricing', 'contact']
+      
+      for (const section of sections) {
+        const element = document.getElementById(section)
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          if (rect.top <= 200 && rect.bottom >= 200) {
+            setActiveSection(section)
+            break
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleSectionIntersection)
+    return () => window.removeEventListener('scroll', handleSectionIntersection)
+  }, [])
+
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
 
@@ -52,7 +98,6 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <ThemeToggle />
             <Link
               href="/auth/login"
               className="hidden text-[12.5px] text-muted-foreground transition-colors hover:text-foreground md:block"
