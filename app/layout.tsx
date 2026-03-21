@@ -3,12 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, Instrument_Serif } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { ChatAgent } from "@/components/chat-agent"
-import { CookieConsent } from "@/components/cookie-consent"
-import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "sonner"
-import { AuthProvider } from "./lib/auth-context"
-import { RequestsProvider } from "./lib/requests-context"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
@@ -21,21 +16,19 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexusoperations.org"),
   title: {
-    default: "Nexus Operations | Maintenance Coordination for Property Management",
+    default: "Nexus Operations | Property Service Management Platform",
     template: "%s | Nexus Operations",
   },
   description:
-    "Nexus Operations coordinates maintenance and repair services for commercial property managers and residential property owners in Topeka, Kansas. Verified contractors, guaranteed response times, zero coordination burden.",
+    "Nexus Operations is the all-in-one property service management platform for homeowners, contractors, and property managers in Topeka, Kansas. Submit requests, track projects, and manage billing in one place.",
   keywords: [
-    "property maintenance coordination",
-    "commercial property management",
-    "residential maintenance",
-    "contractor coordination",
+    "property maintenance",
+    "service requests",
+    "contractor management",
     "property management Topeka",
-    "maintenance services Kansas",
-    "B2B property services",
+    "maintenance coordination",
+    "Kansas property services",
     "verified contractors",
-    "multi-family maintenance",
     "Nexus Operations",
   ],
   authors: [{ name: "Nexus Operations" }],
@@ -45,33 +38,26 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://nexusoperations.org",
-    title: "Nexus Operations | Maintenance Coordination for Property Management",
+    title: "Nexus Operations | Property Service Management Platform",
     description:
-      "We coordinate maintenance so property managers and homeowners don't have to. Verified contractors, guaranteed response times, one point of contact.",
+      "Submit one request. Get one verified contractor. Track every project from start to finish.",
     siteName: "Nexus Operations",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexus Operations | Maintenance Coordination",
+    title: "Nexus Operations | Property Services",
     description:
-      "One request. One coordinator. Verified contractors. Guaranteed response times.",
+      "One request. One verified contractor. Complete project history.",
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
-  generator: "v0.app",
+    generator: 'v0.app'
 }
 
 export const viewport: Viewport = {
-  themeColor: "#c7935a",
+  themeColor: "#3d7a4f",
   width: "device-width",
   initialScale: 1,
 }
@@ -82,91 +68,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "LocalBusiness",
-                "@id": "https://nexusoperations.org/#organization",
-                name: "Nexus Operations",
-                description:
-                  "Outsourced maintenance coordination for commercial and residential property managers in Topeka, Kansas. Verified contractor networks, guaranteed response times, unified invoicing.",
-                url: "https://nexusoperations.org",
-                telephone: "+1-913-951-1711",
-                email: "admin@nexusoperations.org",
-                address: {
-                  "@type": "PostalAddress",
-                  streetAddress: "405 SW Fillmore St",
-                  addressLocality: "Topeka",
-                  addressRegion: "KS",
-                  postalCode: "66606",
-                  addressCountry: "US",
-                },
-                areaServed: [
-                  { "@type": "City", name: "Topeka" },
-                  { "@type": "AdministrativeArea", name: "Shawnee County" },
-                ],
-                serviceType: [
-                  "Maintenance Coordination",
-                  "Property Management Support",
-                  "Contractor Network Management",
-                  "Emergency Repair Coordination",
-                  "Vendor Management",
-                  "Lead Generation",
-                  "Project Management",
-                  "B2B Consulting",
-                ],
-                priceRange: "$$",
-                openingHoursSpecification: {
-                  "@type": "OpeningHoursSpecification",
-                  dayOfWeek: [
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                  ],
-                  opens: "08:00",
-                  closes: "18:00",
-                },
-                founder: {
-                  "@type": "Person",
-                  name: "Brianna Gomez",
-                  jobTitle: "Chief Executive Member",
-                },
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                name: "Nexus Operations",
-                url: "https://nexusoperations.org",
-              },
-            ]),
-          }}
-        />
-      </head>
-      <body className="font-sans antialiased">
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
-        <ChatAgent />
-        <CookieConsent />
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable} scroll-smooth`}>
+      <body className="font-sans antialiased bg-background text-foreground">
+        {children}
+        <Toaster position="bottom-right" richColors closeButton />
         <Analytics />
         <SpeedInsights />
-      <body
-        className={`${inter.variable} ${instrumentSerif.variable} font-sans antialiased`}
-      >
-        <AuthProvider>
-          <RequestsProvider>
-            {children}
-            <Analytics />
-            <Toaster position="bottom-right" richColors closeButton />
-          </RequestsProvider>
-        </AuthProvider>
       </body>
     </html>
   )
