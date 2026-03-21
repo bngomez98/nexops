@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -21,7 +21,15 @@ const SERVICE_CATEGORIES = [
   { value: 'excavation',    label: 'Excavation' },
 ]
 
-export default function SignUpPage() {
+export default function SignUpPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="text-muted-foreground">Loading...</div></div>}>
+      <SignUpPage />
+    </Suspense>
+  )
+}
+
+function SignUpPage() {
   const searchParams = useSearchParams()
   const roleParam = searchParams.get("role") ?? "homeowner"
 

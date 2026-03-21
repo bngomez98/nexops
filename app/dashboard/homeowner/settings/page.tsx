@@ -1,11 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react'
 
-export default function HomeownerSettings() {
+export default function HomeownerSettingsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="text-muted-foreground">Loading...</div></div>}>
+      <HomeownerSettings />
+    </Suspense>
+  )
+}
+
+function HomeownerSettings() {
   const router       = useRouter()
   const searchParams = useSearchParams()
   const [user, setUser]   = useState<any>(null)
