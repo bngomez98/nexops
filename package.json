@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ai-sdk/react": "3.0.136",
     "@anthropic-ai/sdk": "^0.78.0",
     "@edge-runtime/vm": "latest",
     "@opentelemetry/api": "latest",
@@ -35,6 +36,7 @@
     "@vitest/browser-webdriverio": "latest",
     "@vitest/ui": "latest",
     "@vue/compiler-sfc": "latest",
+    "ai": "6.0.134",
     "bcryptjs": "3.0.3",
     "better-sqlite3": "^12.6.2",
     "canvas": "latest",

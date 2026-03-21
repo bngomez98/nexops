@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { AIAssistant } from '@/components/ai-assistant'
+import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
   ArrowRight, AlertCircle, Loader2, TrendingUp,
@@ -355,6 +357,12 @@ export default function HomeownerDashboard() {
           )}
         </div>
 
+        {/* AI Insights */}
+        <AIInsightsCard
+          role="homeowner"
+          requests={requests}
+        />
+
         {/* Quick actions */}
         <div className="grid sm:grid-cols-3 gap-4">
           {[
@@ -400,6 +408,11 @@ export default function HomeownerDashboard() {
           ))}
         </div>
       </main>
+
+      <AIAssistant
+        role="homeowner"
+        context={`Homeowner with ${requests.length} total requests, ${completed.length} completed, $${totalSpend.toLocaleString()} tracked spend.`}
+      />
     </div>
   )
 }

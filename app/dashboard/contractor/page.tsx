@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
+import { AIAssistant } from '@/components/ai-assistant'
+import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
@@ -318,6 +320,15 @@ export default function ContractorDashboard() {
           </div>
         )}
 
+        {/* AI Intelligence */}
+        {projects.length > 0 && (
+          <AIInsightsCard
+            role="contractor"
+            requests={projects.slice(0, 5)}
+            profile={profile}
+          />
+        )}
+
         {/* Auto-refresh notice */}
         <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
           <RefreshCw className="w-3 h-3" />
@@ -487,6 +498,11 @@ export default function ContractorDashboard() {
           </div>
         </div>
       </main>
+
+      <AIAssistant
+        role="contractor"
+        context={profile ? `Contractor: ${profile.companyName ?? user.name}, ${profile.currentActiveProjects ?? 0}/${profile.maxActiveProjects ?? 3} active projects, rating ${profile.averageRating ?? 'N/A'}.` : undefined}
+      />
     </div>
   )
 }
