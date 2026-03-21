@@ -22,6 +22,17 @@ export default function HomePage() {
   const [activeSection, setActiveSection] = useState('hero')
   const statsRef = useRef<HTMLDivElement>(null)
 
+  const services = [
+    { name: "Plumbing",           desc: "Leaks, drain blockages, fixture replacement, water heater service, pipe repair." },
+    { name: "HVAC",               desc: "Heating and cooling maintenance, filter replacement, unit repair, seasonal inspections." },
+    { name: "Electrical",         desc: "Outlet and switch repair, panel work, fixture installation, safety inspections." },
+    { name: "Carpentry & Drywall",desc: "Framing, drywall repair, door and window installation, trim and finish work." },
+    { name: "Roofing",            desc: "Shingle repair, leak investigation, gutter cleaning and replacement, flat roof patching." },
+    { name: "Painting",           desc: "Interior and exterior painting, surface prep, caulking, staining." },
+    { name: "Landscaping",        desc: "Lawn maintenance, tree trimming, irrigation repair, seasonal cleanup." },
+    { name: "General Repair",     desc: "Handyman tasks, appliance installation, weatherproofing, and miscellaneous repairs." },
+  ]
+
   const navLinks = [
     { href: '#hero', label: 'Home' },
     { href: '#who-we-serve', label: 'Services' },
