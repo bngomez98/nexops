@@ -8,19 +8,18 @@ import { projectRequestSchema } from '@/lib/validators'
 import { ZodError } from 'zod'
 import {
   Loader2, ChevronLeft, AlertCircle, CheckCircle2,
-  ArrowRight, MapPin, DollarSign,
+  ArrowRight, MapPin, DollarSign, Zap,
 } from 'lucide-react'
-import { Loader2, ChevronLeft, AlertCircle, CheckCircle2, Lightbulb, Zap } from 'lucide-react'
 
 const SERVICE_CATEGORIES = [
   { value: 'tree-removal',  label: 'Tree Removal',  icon: '🌳', desc: 'Tree & stump removal, debris clearing' },
-  { value: 'concrete-work', label: 'Concrete Work',  icon: '🏗️', desc: 'Driveways, sidewalks, foundations' },
-  { value: 'roofing',       label: 'Roofing',        icon: '🏠', desc: 'Repair, replacement, inspection' },
-  { value: 'hvac',          label: 'HVAC',           icon: '❄️', desc: 'Heating, cooling, ventilation' },
-  { value: 'fencing',       label: 'Fencing',        icon: '🏡', desc: 'Wood, vinyl, chain-link, ornamental' },
-  { value: 'electrical',    label: 'Electrical',     icon: '⚡', desc: 'Panel, wiring, outlets, lighting' },
-  { value: 'plumbing',      label: 'Plumbing',       icon: '🔧', desc: 'Repairs, drains, installations' },
-  { value: 'excavation',    label: 'Excavation',     icon: '🚜', desc: 'Grading, trenching, land clearing' },
+  { value: 'concrete-work', label: 'Concrete Work', icon: '🏗️', desc: 'Driveways, sidewalks, foundations' },
+  { value: 'roofing',       label: 'Roofing',       icon: '🏠', desc: 'Repair, replacement, inspection' },
+  { value: 'hvac',          label: 'HVAC',          icon: '❄️', desc: 'Heating, cooling, ventilation' },
+  { value: 'fencing',       label: 'Fencing',       icon: '🏡', desc: 'Wood, vinyl, chain-link, ornamental' },
+  { value: 'electrical',    label: 'Electrical',    icon: '⚡', desc: 'Panel, wiring, outlets, lighting' },
+  { value: 'plumbing',      label: 'Plumbing',      icon: '🔧', desc: 'Repairs, drains, installations' },
+  { value: 'excavation',    label: 'Excavation',    icon: '🚜', desc: 'Grading, trenching, land clearing' },
 ]
 
 const STEPS = [
@@ -29,11 +28,11 @@ const STEPS = [
   { label: 'Location', desc: 'Where & budget' },
 ]
 
-function StepIndicator({ current, total }: { current: number; total: number }) {
+function StepIndicator({ current }: { current: number }) {
   return (
     <div className="flex items-center gap-0 mb-8">
       {STEPS.map((step, i) => {
-        const done = i < current
+        const done   = i < current
         const active = i === current
         return (
           <div key={step.label} className="flex items-center flex-1 last:flex-none">
@@ -41,11 +40,13 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold transition-all duration-200 ${
                 done   ? 'bg-primary text-primary-foreground' :
                 active ? 'bg-primary/15 text-primary ring-2 ring-primary/30' :
-                'bg-muted text-muted-foreground'
+                         'bg-muted text-muted-foreground'
               }`}>
                 {done ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
               </div>
-              <p className={`text-[10.5px] font-medium mt-1.5 hidden sm:block ${active ? 'text-primary' : done ? 'text-foreground/60' : 'text-muted-foreground'}`}>
+              <p className={`text-[10.5px] font-medium mt-1.5 hidden sm:block ${
+                active ? 'text-primary' : done ? 'text-foreground/60' : 'text-muted-foreground'
+              }`}>
                 {step.label}
               </p>
             </div>
@@ -61,18 +62,17 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
 
 export default function NewProjectRequest() {
   const router = useRouter()
-  const [user, setUser]           = useState<any>(null)
-  const [loading, setLoading]     = useState(true)
+  const [user, setUser]             = useState<any>(null)
+  const [loading, setLoading]       = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep]           = useState(0)
-  const [error, setError]         = useState('')
+  const [step, setStep]             = useState(0)
+  const [error, setError]           = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [uploadedImages, setUploadedImages] = useState<File[]>([])
   const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null)
-  const [suggestedBudget, setSuggestedBudget] = useState<{min: number; max: number} | null>(null)
-  const [urgency, setUrgency] = useState<'low' | 'normal' | 'high' | 'urgent'>('normal')
+  const [suggestedBudget, setSuggestedBudget]     = useState<{ min: number; max: number } | null>(null)
   const [analyzingText, setAnalyzingText] = useState(false)
-  const [formData, setFormData]   = useState({
+  const [formData, setFormData] = useState({
     category: '', title: '', description: '', location: '', budget: '',
   })
 
@@ -80,12 +80,12 @@ export default function NewProjectRequest() {
     async function check() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const data = await res.json()
         if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
@@ -95,39 +95,33 @@ export default function NewProjectRequest() {
 
   // Debounced AI analysis
   useEffect(() => {
+    if (!formData.title || !formData.description || formData.category) return
     const timer = setTimeout(async () => {
-      if (formData.title && formData.description && !formData.category) {
-        setAnalyzingText(true)
-        try {
-          const res = await fetch('/api/automation/categorize-request', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: formData.title,
-              description: formData.description,
-            }),
-          })
-          if (res.ok) {
-            const data = await res.json()
-            setSuggestedCategory(data.suggestedCategory)
-            setSuggestedBudget({
-              min: data.estimatedBudgetRange.min,
-              max: data.estimatedBudgetRange.max,
-            })
-            setUrgency(data.urgency)
+      setAnalyzingText(true)
+      try {
+        const res = await fetch('/api/automation/categorize-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: formData.title, description: formData.description }),
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setSuggestedCategory(data.suggestedCategory ?? null)
+          if (data.estimatedBudgetRange) {
+            setSuggestedBudget({ min: data.estimatedBudgetRange.min, max: data.estimatedBudgetRange.max })
           }
-        } finally {
-          setAnalyzingText(false)
         }
+      } finally {
+        setAnalyzingText(false)
       }
     }, 800)
     return () => clearTimeout(timer)
   }, [formData.title, formData.description, formData.category])
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    if (fieldErrors[name]) setFieldErrors(prev => { const n = {...prev}; delete n[name]; return n })
+    if (fieldErrors[name]) setFieldErrors(prev => { const n = { ...prev }; delete n[name]; return n })
   }
 
   function validateStep(s: number): boolean {
@@ -148,12 +142,6 @@ export default function NewProjectRequest() {
 
   function nextStep() {
     if (validateStep(step)) setStep(s => s + 1)
-  function applySuggestion(field: 'category' | 'budget') {
-    if (field === 'category' && suggestedCategory) {
-      setFormData(prev => ({ ...prev, category: suggestedCategory }))
-    } else if (field === 'budget' && suggestedBudget && !formData.budget) {
-      setFormData(prev => ({ ...prev, budget: String(suggestedBudget.max) }))
-    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -178,23 +166,18 @@ export default function NewProjectRequest() {
 
       const res  = await fetch('/api/projects/create', { method: 'POST', body: payload })
       const data = await res.json()
-      if (!res.ok) { setError(data.error || 'Failed to create request'); return }
-      router.push('/dashboard/homeowner?submitted=1')
-      
+      if (!res.ok) { setError(data.error || 'Failed to create request'); setSubmitting(false); return }
+
       // Trigger smart contractor matching
       if (data.projectId) {
-        try {
-          await fetch('/api/automation/match-contractor', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ projectId: data.projectId }),
-          })
-        } catch (e) {
-          console.error('[AutoMatch] Error:', e)
-        }
+        fetch('/api/automation/match-contractor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ projectId: data.projectId }),
+        }).catch(() => {})
       }
-      
-      router.push('/dashboard/homeowner')
+
+      router.push('/dashboard/homeowner?submitted=1')
     } catch (err) {
       if (err instanceof ZodError) {
         const errors: Record<string, string> = {}
@@ -204,7 +187,6 @@ export default function NewProjectRequest() {
       } else {
         setError('An error occurred. Please try again.')
       }
-    } finally {
       setSubmitting(false)
     }
   }
@@ -216,7 +198,6 @@ export default function NewProjectRequest() {
       </div>
     )
   }
-
   if (!user) return null
 
   const selectedCat = SERVICE_CATEGORIES.find(c => c.value === formData.category)
@@ -225,10 +206,10 @@ export default function NewProjectRequest() {
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="homeowner" onLogout={async () => {
         await fetch('/api/auth/logout', { method: 'POST' })
-        router.push('/login')
+        router.push('/auth/login')
       }} />
 
-      <main className="md:ml-[220px] p-6 animate-fade-up">
+      <main className="md:ml-[240px] p-5 md:p-7">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
@@ -247,8 +228,7 @@ export default function NewProjectRequest() {
             </div>
           </div>
 
-          {/* Step indicator */}
-          <StepIndicator current={step} total={STEPS.length} />
+          <StepIndicator current={step} />
 
           {/* Error banner */}
           {error && (
@@ -261,8 +241,8 @@ export default function NewProjectRequest() {
           {/* ── Step 0: Category ── */}
           {step === 0 && (
             <div className="space-y-5">
-              <div className="bg-card border border-border rounded-xl p-5">
-                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-4">
+              <div className="bg-card border border-border rounded-2xl p-6">
+                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-5">
                   Select Service Category
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -290,51 +270,7 @@ export default function NewProjectRequest() {
                     </button>
                   ))}
                 </div>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Category */}
-            <div className="bg-card border border-border rounded-xl p-5 space-y-4">
-              <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
-                Service Details
-              </h2>
-              <div>
-                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                  Category <span className="text-destructive">*</span>
-                </label>
-                <div className="flex gap-2">
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    required
-                    className={`flex-1 px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
-                      fieldErrors.category ? 'border-destructive' : 'border-input'
-                    }`}
-                  >
-                    <option value="">Select a category</option>
-                    {SERVICE_CATEGORIES.map(c => (
-                      <option key={c.value} value={c.value}>{c.label}</option>
-                    ))}
-                  </select>
-                  {suggestedCategory && !formData.category && (
-                    <button
-                      type="button"
-                      onClick={() => applySuggestion('category')}
-                      className="px-3 py-2.5 rounded-lg border border-primary/40 bg-primary/5 text-primary hover:bg-primary/10 transition-colors text-[13px] font-medium flex items-center gap-1.5 whitespace-nowrap"
-                    >
-                      <Zap className="w-3.5 h-3.5" />
-                      {suggestedCategory}
-                    </button>
-                  )}
-                </div>
-                {fieldErrors.category && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.category}</p>}
               </div>
-
-              {formData.category && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-primary/5 border border-primary/20 text-[13px] text-primary font-medium animate-fade-up">
-                  <CheckCircle2 className="w-4 h-4" />
-                  Selected: {selectedCat?.label}
-                </div>
-              )}
 
               <button
                 type="button"
@@ -351,8 +287,8 @@ export default function NewProjectRequest() {
           {/* ── Step 1: Details ── */}
           {step === 1 && (
             <form onSubmit={e => { e.preventDefault(); nextStep() }} className="space-y-5">
-              <div className="bg-card border border-border rounded-xl p-5 space-y-4">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl">{selectedCat?.icon}</span>
                   <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
                     {selectedCat?.label} — Project Details
@@ -369,7 +305,7 @@ export default function NewProjectRequest() {
                     onChange={handleChange}
                     placeholder={`e.g., ${selectedCat?.desc ?? 'Describe your project briefly'}`}
                     required
-                    className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
                       fieldErrors.title ? 'border-destructive' : 'border-input'
                     }`}
                   />
@@ -387,53 +323,50 @@ export default function NewProjectRequest() {
                     placeholder="Describe the work needed — scope, access, existing damage, preferred timeline…"
                     rows={5}
                     required
-                    className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition resize-none ${
+                    className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition resize-none ${
                       fieldErrors.description ? 'border-destructive' : 'border-input'
                     }`}
                   />
                   {fieldErrors.description && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.description}</p>}
-                  <p className="text-[11px] text-muted-foreground mt-1">
-                    More detail helps contractors prepare accurate estimates.
-                  </p>
+                  {analyzingText && (
+                    <p className="text-[11px] text-primary mt-1 flex items-center gap-1">
+                      <Loader2 className="w-3 h-3 animate-spin" /> Analyzing your request…
+                    </p>
+                  )}
+                  {suggestedCategory && !formData.category && (
+                    <div className="mt-2 flex items-center gap-2 text-[12px]">
+                      <Zap className="w-3.5 h-3.5 text-primary" />
+                      <span className="text-muted-foreground">Suggested category:</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (suggestedCategory) setFormData(p => ({ ...p, category: suggestedCategory }))
+                        }}
+                        className="font-semibold text-primary hover:underline"
+                      >
+                        {suggestedCategory}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
                 <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
-                  Project Photos <span className="text-muted-foreground font-normal normal-case">(optional but recommended)</span>
+                  Project Photos{' '}
+                  <span className="text-muted-foreground font-normal normal-case">(optional but recommended)</span>
                 </h2>
                 <ImageUpload onImagesChange={setUploadedImages} maxFiles={5} maxSizeInMB={10} />
                 <p className="text-[11px] text-muted-foreground">
-                  Up to 5 photos. Contractors use them to understand scope before arriving.
+                  Up to 5 photos help contractors understand scope before arriving.
                 </p>
-              <div>
-                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                  Description <span className="text-destructive">*</span>
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Describe the work needed in detail — scope, access, any existing damage, and your preferred timeline…"
-                  rows={5}
-                  required
-                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition resize-none ${
-                    fieldErrors.description ? 'border-destructive' : 'border-input'
-                  }`}
-                />
-                {fieldErrors.description && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.description}</p>}
-                {analyzingText && (
-                  <p className="text-[11px] text-primary mt-1 flex items-center gap-1">
-                    <Loader2 className="w-3 h-3 animate-spin" /> AI analyzing your request…
-                  </p>
-                )}
               </div>
 
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => setStep(0)}
-                  className="px-5 py-3 rounded-xl border border-border text-[13.5px] font-semibold text-foreground hover:bg-secondary transition-colors"
+                  className="px-5 py-3 rounded-xl border border-border font-semibold text-[13px] hover:bg-secondary transition-colors"
                 >
                   Back
                 </button>
@@ -441,7 +374,7 @@ export default function NewProjectRequest() {
                   type="submit"
                   className="flex-1 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13.5px] py-3 rounded-xl hover:opacity-90 transition-opacity"
                 >
-                  Continue to Location & Budget
+                  Continue to Location
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -451,23 +384,23 @@ export default function NewProjectRequest() {
           {/* ── Step 2: Location & Budget ── */}
           {step === 2 && (
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="bg-card border border-border rounded-xl p-5 space-y-4">
-                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-1">
                   Location &amp; Budget
                 </h2>
 
                 <div>
-                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                    <MapPin className="inline w-3.5 h-3.5 mr-1 text-primary" />
-                    Project Location <span className="text-destructive">*</span>
+                  <label className="flex items-center gap-1.5 text-[12.5px] font-semibold text-foreground mb-1.5">
+                    <MapPin className="w-3.5 h-3.5" />
+                    Service Address <span className="text-destructive">*</span>
                   </label>
                   <input
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    placeholder="Street address or City, State"
+                    placeholder="123 Main St, Topeka, KS 66612"
                     required
-                    className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
                       fieldErrors.location ? 'border-destructive' : 'border-input'
                     }`}
                   />
@@ -475,78 +408,56 @@ export default function NewProjectRequest() {
                 </div>
 
                 <div>
-                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                    <DollarSign className="inline w-3.5 h-3.5 mr-1 text-primary" />
-                    Maximum Budget <span className="text-muted-foreground font-normal">(optional)</span>
+                  <label className="flex items-center gap-1.5 text-[12.5px] font-semibold text-foreground mb-1.5">
+                    <DollarSign className="w-3.5 h-3.5" />
+                    Budget Estimate{' '}
+                    <span className="text-muted-foreground font-normal">(optional)</span>
                   </label>
-              <div>
-                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                  Budget Cap <span className="text-muted-foreground font-normal">(optional)</span>
-                </label>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[13px]">$</span>
-                    <input
-                      name="budget"
-                      type="number"
-                      value={formData.budget}
-                      onChange={handleChange}
-                      placeholder="5000"
-                      min="0"
-                      step="1"
-                      className="w-full pl-7 pr-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
-                    />
-                  </div>
-                  <p className="text-[11px] text-muted-foreground mt-1">
-                    Contractors will not exceed this amount without your approval.
-                  </p>
+                  <input
+                    name="budget"
+                    type="number"
+                    min="0"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    placeholder="e.g., 2500"
+                    className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+                  />
                   {suggestedBudget && !formData.budget && (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/20">
-                      <Lightbulb className="w-4 h-4 text-primary flex-shrink-0" />
-                      <div className="flex-1 text-[12px]">
-                        <span className="text-primary font-semibold">Estimated budget: </span>
-                        <span className="text-foreground">${suggestedBudget.min.toLocaleString()} – ${suggestedBudget.max.toLocaleString()}</span>
-                      </div>
+                    <div className="mt-2 flex items-center gap-2 text-[12px]">
+                      <Zap className="w-3.5 h-3.5 text-primary" />
+                      <span className="text-muted-foreground">Estimated range:</span>
                       <button
                         type="button"
-                        onClick={() => applySuggestion('budget')}
-                        className="px-2 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10 rounded transition-colors whitespace-nowrap"
+                        onClick={() => suggestedBudget && setFormData(p => ({ ...p, budget: String(suggestedBudget.max) }))}
+                        className="font-semibold text-primary hover:underline"
                       >
-                        Use max
+                        ${suggestedBudget.min.toLocaleString()} – ${suggestedBudget.max.toLocaleString()}
                       </button>
                     </div>
                   )}
+                  <p className="text-[11px] text-muted-foreground mt-1.5">
+                    A rough estimate helps contractors determine fit. Final pricing will be confirmed during consultation.
+                  </p>
                 </div>
               </div>
 
               {/* Review summary */}
-              <div className="bg-secondary/40 border border-border rounded-xl p-5 space-y-3">
-                <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-wide">Request Summary</h3>
-                <div className="space-y-2 text-[13px]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{selectedCat?.icon}</span>
-                    <span className="font-medium text-foreground">{selectedCat?.label}</span>
-                  </div>
-                  <p className="text-muted-foreground"><strong className="text-foreground">Title:</strong> {formData.title}</p>
-                  <p className="text-muted-foreground line-clamp-2"><strong className="text-foreground">Description:</strong> {formData.description}</p>
-                  {uploadedImages.length > 0 && (
-                    <p className="text-muted-foreground"><strong className="text-foreground">Photos:</strong> {uploadedImages.length} attached</p>
+              <div className="bg-primary/5 border border-primary/20 rounded-2xl p-5 space-y-3">
+                <h3 className="text-[12px] font-bold uppercase tracking-wide text-primary">Request Summary</h3>
+                <div className="space-y-1.5 text-[13px]">
+                  <p><span className="text-muted-foreground">Category:</span> <span className="font-semibold text-foreground">{selectedCat?.label}</span></p>
+                  <p><span className="text-muted-foreground">Title:</span> <span className="font-semibold text-foreground">{formData.title}</span></p>
+                  {formData.description && (
+                    <p><span className="text-muted-foreground">Description:</span> <span className="text-foreground line-clamp-2">{formData.description}</span></p>
                   )}
                 </div>
               </div>
-
-              {error && (
-                <div className="flex items-start gap-2.5 p-4 rounded-xl border border-destructive/30 bg-destructive/8 text-destructive text-sm">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                  {error}
-                </div>
-              )}
 
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-5 py-3 rounded-xl border border-border text-[13.5px] font-semibold text-foreground hover:bg-secondary transition-colors"
+                  className="px-5 py-3 rounded-xl border border-border font-semibold text-[13px] hover:bg-secondary transition-colors"
                 >
                   Back
                 </button>

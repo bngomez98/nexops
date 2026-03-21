@@ -1,17 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
   ArrowRight, AlertCircle, Loader2, TrendingUp,
   ChevronRight, Calendar, DollarSign, MapPin,
-  RefreshCw,
+  RefreshCw, CreditCard, Bell, Activity, ReceiptText,
 } from 'lucide-react'
+import { toast } from 'sonner'
 
-interface ProjectRequest {
+interface ServiceRequest {
   id: string
   title: string
   description: string
@@ -20,6 +21,7 @@ interface ProjectRequest {
   status: string
   budget?: number
   createdAt: string
+  urgency?: string
 }
 
 interface UserData {
@@ -27,38 +29,52 @@ interface UserData {
   email: string
   name: string
   role: string
+  subscriptionTier?: string
+  subscriptionStatus?: string
 }
 
-const STATUS: Record<string, { label: string; pill: string; dot: string; step: number }> = {
-  open:         { label: 'Submitted',   pill: 'status-open',      dot: 'bg-indigo-500',   step: 1 },
-  claimed:      { label: 'Assigned',    pill: 'status-claimed',   dot: 'bg-sky-500',      step: 2 },
-  'in-progress':{ label: 'In Progress', pill: 'status-progress',  dot: 'bg-violet-500',   step: 3 },
-  completed:    { label: 'Completed',   pill: 'status-completed', dot: 'bg-emerald-500',  step: 4 },
-  cancelled:    { label: 'Cancelled',   pill: 'status-cancelled', dot: 'bg-slate-400',    step: 0 },
+const STATUS_MAP: Record<string, { label: string; color: string; bg: string; dot: string; step: number }> = {
+  open:              { label: 'Submitted',   color: 'text-sky-700',     bg: 'bg-sky-100',     dot: 'bg-sky-500',     step: 1 },
+  pending_review:    { label: 'In Review',   color: 'text-amber-700',   bg: 'bg-amber-100',   dot: 'bg-amber-500',   step: 1 },
+  claimed:           { label: 'Assigned',    color: 'text-violet-700',  bg: 'bg-violet-100',  dot: 'bg-violet-500',  step: 2 },
+  'in-progress':     { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10',  dot: 'bg-primary',     step: 3 },
+  in_progress:       { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10',  dot: 'bg-primary',     step: 3 },
+  completed:         { label: 'Completed',   color: 'text-emerald-700', bg: 'bg-emerald-100', dot: 'bg-emerald-500', step: 4 },
+  cancelled:         { label: 'Cancelled',   color: 'text-slate-600',   bg: 'bg-slate-100',   dot: 'bg-slate-400',   step: 0 },
 }
 
 const STEPS = ['Submitted', 'Assigned', 'In Progress', 'Completed']
 
 const CATEGORY_ICONS: Record<string, string> = {
-  'tree-removal': '🌳', 'concrete-work': '🏗️', 'roofing': '🏠',
-  'hvac': '❄️', 'fencing': '🏡', 'electrical': '⚡', 'plumbing': '🔧', 'excavation': '🚜',
+  'tree-removal': '🌳', 'concrete-work': '🏗️', roofing: '🏠',
+  hvac: '❄️', fencing: '🏡', electrical: '⚡', plumbing: '🔧', excavation: '🚜',
 }
 
-function formatCategory(cat: string) {
+function fmt(cat: string) {
   return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
 
-function timeAgo(dateStr: string) {
-  const diff = Date.now() - new Date(dateStr).getTime()
+function timeAgo(d: string) {
+  const diff = Date.now() - new Date(d).getTime()
   const days = Math.floor(diff / 86400000)
   if (days === 0) return 'Today'
   if (days === 1) return 'Yesterday'
   if (days < 30) return `${days}d ago`
-  return new Date(dateStr).toLocaleDateString()
+  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-function StatusProgress({ status }: { status: string }) {
-  const st = STATUS[status]
+function StatusBadge({ status }: { status: string }) {
+  const st = STATUS_MAP[status] ?? { label: status, color: 'text-muted-foreground', bg: 'bg-muted', dot: 'bg-slate-400', step: 0 }
+  return (
+    <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${st.dot} flex-shrink-0`} />
+      {st.label}
+    </span>
+  )
+}
+
+function ProgressTrack({ status }: { status: string }) {
+  const st = STATUS_MAP[status]
   if (!st || st.step === 0) return null
   return (
     <div className="flex items-center gap-0 mt-3">
@@ -69,15 +85,15 @@ function StatusProgress({ status }: { status: string }) {
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all ${
-              done ? 'bg-primary text-primary-foreground' :
-              active ? 'bg-primary/20 text-primary ring-2 ring-primary/40' :
+              done   ? 'bg-primary text-primary-foreground' :
+              active ? 'ring-2 ring-primary/40 bg-primary/15 text-primary' :
               'bg-muted text-muted-foreground'
             }`}>
               {done ? '✓' : num}
             </div>
-            <span className={`ml-1 text-[9.5px] font-medium hidden sm:block ${active ? 'text-primary' : done ? 'text-foreground/60' : 'text-muted-foreground'}`}>
-              {step}
-            </span>
+            <span className={`ml-1 text-[9.5px] font-medium hidden sm:block truncate ${
+              active ? 'text-primary' : done ? 'text-foreground/50' : 'text-muted-foreground'
+            }`}>{step}</span>
             {i < STEPS.length - 1 && (
               <div className={`flex-1 h-px mx-2 ${num < st.step ? 'bg-primary/50' : 'bg-border'}`} />
             )}
@@ -90,46 +106,52 @@ function StatusProgress({ status }: { status: string }) {
 
 export default function HomeownerDashboard() {
   const router = useRouter()
+  const params = useSearchParams()
   const [user, setUser] = useState<UserData | null>(null)
-  const [projects, setProjects] = useState<ProjectRequest[]>([])
+  const [requests, setRequests] = useState<ServiceRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [tab, setTab] = useState<'all' | 'active' | 'completed'>('all')
 
-  async function loadProjects() {
-    const projRes = await fetch('/api/projects/list?type=my-projects')
-    if (projRes.ok) {
-      const { projects: data } = await projRes.json()
-      setProjects(data ?? [])
+  const loadRequests = useCallback(async () => {
+    const res = await fetch('/api/projects/list?type=my-projects')
+    if (res.ok) {
+      const { projects } = await res.json()
+      setRequests(projects ?? [])
     }
-  }
+  }, [])
 
   useEffect(() => {
-    async function load() {
+    async function init() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const { user: u } = await res.json()
-        if (u.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
+        if (u.role === 'contractor') { router.push('/dashboard/contractor'); return }
         setUser(u)
-        await loadProjects()
+        await loadRequests()
+        if (params.get('submitted') === '1') {
+          toast.success('Request submitted! A contractor will be assigned shortly.')
+        }
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
     }
-    load()
-  }, [router])
-
-  async function handleRefresh() {
-    setRefreshing(true)
-    await loadProjects()
-    setRefreshing(false)
-  }
+    init()
+  }, [router, loadRequests, params])
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await loadRequests()
+    setRefreshing(false)
+    toast.success('Refreshed')
   }
 
   if (loading) {
@@ -139,53 +161,66 @@ export default function HomeownerDashboard() {
       </div>
     )
   }
-
   if (!user) return null
 
-  const open       = projects.filter(p => p.status === 'open')
-  const inProgress = projects.filter(p => p.status === 'claimed' || p.status === 'in-progress')
-  const completed  = projects.filter(p => p.status === 'completed')
+  const open      = requests.filter(r => ['open', 'pending_review'].includes(r.status))
+  const active    = requests.filter(r => ['claimed', 'in-progress', 'in_progress'].includes(r.status))
+  const completed = requests.filter(r => r.status === 'completed')
+
+  const displayed = tab === 'all' ? requests : tab === 'active' ? [...open, ...active] : completed
+
+  const totalSpend = completed.reduce((s, r) => s + (r.budget ?? 0), 0)
 
   const stats = [
-    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'stat-card-indigo',  iconClass: 'text-primary' },
-    { label: 'In Progress', value: inProgress.length, icon: Wrench,       color: 'stat-card-amber',   iconClass: 'text-amber-500' },
-    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
-    { label: 'Total',       value: projects.length,   icon: TrendingUp,   color: 'stat-card-violet',  iconClass: 'text-violet-500' },
+    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'text-sky-500',     bg: 'bg-sky-500/10' },
+    { label: 'In Progress', value: active.length,     icon: Wrench,       color: 'text-amber-500',   bg: 'bg-amber-500/10' },
+    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Total Spend', value: `$${totalSpend.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
   ]
 
   return (
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
 
-      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+      <main className="md:ml-[240px] p-5 md:p-7 space-y-6">
         {/* Welcome banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNCI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMC0zNnY2aDZ2LTZoLTZ6TTYgNHY2aDZWNEg2em0wIDMwdjZoNnYtNkg2eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
-          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="relative overflow-hidden rounded-2xl bg-primary p-6 md:p-8 text-primary-foreground">
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <pattern id="g" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M0 40L40 0M-10 10L10-10M30 50L50 30" stroke="white" strokeWidth="1" fill="none"/>
+              </pattern>
+              <rect width="100%" height="100%" fill="url(#g)"/>
+            </svg>
+          </div>
+          <div className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-5">
             <div>
-              <p className="text-primary-foreground/70 text-[12px] font-semibold uppercase tracking-wide mb-1">
-                Homeowner Dashboard
+              <p className="text-primary-foreground/60 text-[11px] font-bold uppercase tracking-widest mb-1.5">
+                Homeowner Portal
               </p>
-              <h1 className="text-2xl font-bold">
-                Welcome back, {user.name.split(' ')[0]}
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                {requests.length === 0
+                  ? `Welcome, ${user.name.split(' ')[0]}`
+                  : `${open.length + active.length > 0 ? `${open.length + active.length} active` : 'No active'} requests`}
               </h1>
-              <p className="text-primary-foreground/80 text-sm mt-1">
-                {projects.length === 0
-                  ? 'Post your first request to get started.'
-                  : `${open.length} open · ${inProgress.length} in progress · ${completed.length} completed`}
+              <p className="text-primary-foreground/70 text-sm mt-1.5">
+                {requests.length === 0
+                  ? 'Submit your first service request to get started.'
+                  : `${completed.length} completed · $${totalSpend.toLocaleString()} total tracked`}
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 flex-shrink-0">
               <button
                 onClick={handleRefresh}
                 disabled={refreshing}
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-4 py-2 rounded-xl border border-white/20"
+                className="p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+                title="Refresh"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
               </button>
               <Link
                 href="/dashboard/homeowner/new-request"
-                className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 backdrop-blur"
+                className="inline-flex items-center gap-2 bg-white text-primary font-bold text-[13px] px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors shadow-sm"
               >
                 <Plus className="w-4 h-4" />
                 New Request
@@ -194,19 +229,19 @@ export default function HomeownerDashboard() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map(s => {
             const Icon = s.icon
             return (
-              <div key={s.label} className={`bg-card border border-border rounded-xl p-5 ${s.color}`}>
+              <div key={s.label} className="bg-card border border-border rounded-xl p-4 md:p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                    {s.label}
-                  </span>
-                  <Icon className={`w-4 h-4 ${s.iconClass}`} />
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
+                  <div className={`w-8 h-8 rounded-lg ${s.bg} flex items-center justify-center`}>
+                    <Icon className={`w-4 h-4 ${s.color}`} />
+                  </div>
                 </div>
-                <p className="text-3xl font-bold text-foreground">{s.value}</p>
+                <p className="text-2xl font-bold text-foreground">{s.value}</p>
               </div>
             )
           })}
@@ -214,15 +249,19 @@ export default function HomeownerDashboard() {
 
         {/* Requests list */}
         <div className="bg-card border border-border rounded-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-            <div className="flex items-center gap-2.5">
-              <FileText className="w-4 h-4 text-primary" />
-              <h2 className="font-semibold text-foreground text-[15px]">Your Requests</h2>
-              {projects.length > 0 && (
-                <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
-                  {projects.length}
-                </span>
-              )}
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border gap-3 flex-wrap">
+            <div className="flex items-center gap-1 bg-secondary rounded-lg p-0.5">
+              {(['all', 'active', 'completed'] as const).map(t => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`px-3.5 py-1.5 text-[12px] font-semibold rounded-md transition-all capitalize ${
+                    tab === t ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
             <Link
               href="/dashboard/homeowner/new-request"
@@ -233,82 +272,80 @@ export default function HomeownerDashboard() {
             </Link>
           </div>
 
-          {projects.length === 0 ? (
+          {displayed.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
-                <AlertCircle className="w-7 h-7 text-primary" />
+              <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-muted-foreground" />
               </div>
-              <p className="font-semibold text-foreground text-[15px] mb-2">No requests yet</p>
-              <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-                Post your first project request and get matched with a verified contractor in your area.
+              <p className="font-semibold text-foreground mb-1">
+                {tab === 'all' ? 'No requests yet' : `No ${tab} requests`}
               </p>
-              <Link
-                href="/dashboard/homeowner/new-request"
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity"
-              >
-                <Plus className="w-4 h-4" />
-                Post First Request
-              </Link>
+              <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+                {tab === 'all'
+                  ? 'Post your first service request and get matched with a verified contractor.'
+                  : `You have no ${tab} requests at this time.`}
+              </p>
+              {tab === 'all' && (
+                <Link
+                  href="/dashboard/homeowner/new-request"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  <Plus className="w-4 h-4" />
+                  Post First Request
+                </Link>
+              )}
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {projects.map(project => {
-                const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', dot: 'bg-slate-400', step: 0 }
-                const icon = CATEGORY_ICONS[project.category] ?? '🔨'
+              {displayed.map(req => {
+                const icon = CATEGORY_ICONS[req.category] ?? '🔨'
                 return (
                   <Link
-                    key={project.id}
-                    href={`/dashboard/requests/${project.id}`}
-                    className="block px-6 py-5 hover:bg-secondary/30 transition-colors group"
+                    key={req.id}
+                    href={`/dashboard/requests/${req.id}`}
+                    className="flex items-start gap-4 px-5 py-4 hover:bg-muted/30 transition-colors group"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
-                          {icon}
-                        </div>
+                    <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
+                      {icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                            <p className="font-semibold text-foreground text-[14px] leading-snug">
-                              {project.title || formatCategory(project.category)}
+                            <p className="font-semibold text-foreground text-[13.5px] truncate">
+                              {req.title || fmt(req.category)}
                             </p>
-                            <span className={`text-[10.5px] font-semibold px-2 py-0.5 rounded-full ${st.pill}`}>
-                              {st.label}
-                            </span>
+                            <StatusBadge status={req.status} />
                           </div>
-                          <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
-                            <span>{formatCategory(project.category)}</span>
-                            {project.location && (
+                          <div className="flex items-center gap-3 text-[12px] text-muted-foreground mb-1">
+                            <span>{fmt(req.category)}</span>
+                            {req.location && (
                               <>
-                                <span className="opacity-40">·</span>
+                                <span className="opacity-30">·</span>
                                 <span className="flex items-center gap-1">
                                   <MapPin className="w-3 h-3" />
-                                  {project.location}
+                                  {req.location}
                                 </span>
                               </>
                             )}
+                            <span className="opacity-30">·</span>
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {timeAgo(req.createdAt)}
+                            </span>
                           </div>
-                          <p className="text-[12.5px] text-muted-foreground mt-1.5 line-clamp-1">
-                            {project.description}
-                          </p>
-                          <StatusProgress status={project.status} />
+                          <p className="text-[12px] text-muted-foreground line-clamp-1">{req.description}</p>
+                          <ProgressTrack status={req.status} />
                         </div>
-                      </div>
-                      <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
-                        {project.budget != null && (
-                          <div className="flex items-center gap-1">
-                            <DollarSign className="w-3 h-3 text-muted-foreground" />
-                            <p className="font-bold text-foreground text-[14px]">
-                              {project.budget.toLocaleString()}
-                            </p>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                          <Calendar className="w-3 h-3" />
-                          {timeAgo(project.createdAt)}
+                        <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
+                          {req.budget != null && (
+                            <span className="font-bold text-foreground text-[14px] flex items-center gap-0.5">
+                              <DollarSign className="w-3 h-3 text-muted-foreground" />
+                              {req.budget.toLocaleString()}
+                            </span>
+                          )}
+                          <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity mt-1" />
                         </div>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-1">
-                          View details <ChevronRight className="w-3 h-3" />
-                        </span>
                       </div>
                     </div>
                   </Link>
@@ -319,34 +356,48 @@ export default function HomeownerDashboard() {
         </div>
 
         {/* Quick actions */}
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Link
-            href="/dashboard/homeowner/new-request"
-            className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all"
-          >
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
-              <Plus className="w-5 h-5 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground text-[13.5px]">Submit New Request</p>
-              <p className="text-[12px] text-muted-foreground mt-0.5">Get matched with a verified contractor</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" />
-          </Link>
-
-          <Link
-            href="/dashboard/homeowner/settings"
-            className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-border/80 hover:bg-secondary/30 transition-all"
-          >
-            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
-              <FileText className="w-5 h-5 text-muted-foreground" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground text-[13.5px]">Account Settings</p>
-              <p className="text-[12px] text-muted-foreground mt-0.5">Update your profile and preferences</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-0.5 transition-all flex-shrink-0" />
-          </Link>
+        <div className="grid sm:grid-cols-3 gap-4">
+          {[
+            {
+              href: '/dashboard/homeowner/new-request',
+              icon: Plus,
+              iconBg: 'bg-primary/10',
+              iconColor: 'text-primary',
+              title: 'Submit New Request',
+              sub: 'Get matched with a verified contractor',
+            },
+            {
+              href: '/dashboard/homeowner/billing',
+              icon: CreditCard,
+              iconBg: 'bg-violet-500/10',
+              iconColor: 'text-violet-500',
+              title: 'Billing & Subscription',
+              sub: `Current plan: ${user.subscriptionTier ?? 'Free'}`,
+            },
+            {
+              href: '/dashboard/homeowner/settings',
+              icon: Activity,
+              iconBg: 'bg-amber-500/10',
+              iconColor: 'text-amber-500',
+              title: 'Account Settings',
+              sub: 'Update profile, notifications & preferences',
+            },
+          ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+            >
+              <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
+                <Icon className={`w-5 h-5 ${iconColor}`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-foreground text-[13px]">{title}</p>
+                <p className="text-[11.5px] text-muted-foreground mt-0.5 truncate">{sub}</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+            </Link>
+          ))}
         </div>
       </main>
     </div>
