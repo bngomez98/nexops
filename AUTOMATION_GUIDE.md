@@ -35,7 +35,7 @@
 
 **Trigger When**: Project is created by homeowner
 
-```typescript
+\`\`\`typescript
 // Example: Called automatically after project creation
 const response = await fetch('/api/automation/match-contractor', {
   method: 'POST',
@@ -47,10 +47,10 @@ const { matches, autoAssigned, message } = await response.json()
 // matches: [{ contractor_id, email, full_name, match_score, active_projects, average_rating }]
 // autoAssigned: boolean (true if score > 85%)
 // message: string describing the result
-```
+\`\`\`
 
 **Response**:
-```json
+\`\`\`json
 {
   "matches": [
     {
@@ -67,7 +67,7 @@ const { matches, autoAssigned, message } = await response.json()
   "autoAssigned": true,
   "message": "Project automatically assigned to John Smith (92% match)"
 }
-```
+\`\`\`
 
 ---
 
@@ -75,7 +75,7 @@ const { matches, autoAssigned, message } = await response.json()
 
 **Trigger When**: User clicks "Mark as In Progress" or "Mark Complete"
 
-```typescript
+\`\`\`typescript
 // Example: Update project status
 const response = await fetch('/api/automation/update-status', {
   method: 'POST',
@@ -95,25 +95,25 @@ const result = await response.json()
 //   newStatus: 'in_progress',
 //   timestamp: '2024-03-20T...'
 // }
-```
+\`\`\`
 
 **Valid State Transitions**:
-```
+\`\`\`
 pending_review → [in_queue, declined]
 in_queue → [assigned, declined]
 assigned → [consultation_scheduled, declined]
 consultation_scheduled → [in_progress, declined]
 in_progress → [completed, declined]
 completed → [] (terminal)
-```
+\`\`\`
 
 **Error Example**:
-```json
+\`\`\`json
 {
   "error": "Invalid transition: completed → in_progress",
   "validTransitions": []
 }
-```
+\`\`\`
 
 ---
 
@@ -121,7 +121,7 @@ completed → [] (terminal)
 
 **Trigger When**: User types description (debounced 800ms)
 
-```typescript
+\`\`\`typescript
 // Example: Get category suggestions
 const response = await fetch('/api/automation/categorize-request', {
   method: 'POST',
@@ -150,7 +150,7 @@ const suggestions = await response.json()
 //     ...
 //   }
 // }
-```
+\`\`\`
 
 **Urgency Levels**:
 - `urgent` (1): Emergency keywords (leak, flood, critical, emergency)
@@ -164,7 +164,7 @@ const suggestions = await response.json()
 
 ### Show Category Suggestion Button
 
-```tsx
+\`\`\`tsx
 {suggestedCategory && !formData.category && (
   <button
     onClick={() => setFormData(prev => ({ 
@@ -177,11 +177,11 @@ const suggestions = await response.json()
     {suggestedCategory}
   </button>
 )}
-```
+\`\`\`
 
 ### Display Budget Recommendation
 
-```tsx
+\`\`\`tsx
 {suggestedBudget && !formData.budget && (
   <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
     <span className="font-semibold">Estimated: </span>
@@ -189,11 +189,11 @@ const suggestions = await response.json()
     <button onClick={() => applySuggestion('budget')}>Use max</button>
   </div>
 )}
-```
+\`\`\`
 
 ### Match Score Display (for contractors)
 
-```tsx
+\`\`\`tsx
 {match.match_score >= 85 && (
   <div className="text-green-600 font-bold">
     Highly Recommended {match.match_score}%
@@ -204,7 +204,7 @@ const suggestions = await response.json()
     Good Match {match.match_score}%
   </div>
 )}
-```
+\`\`\`
 
 ---
 
@@ -212,11 +212,11 @@ const suggestions = await response.json()
 
 *Future Enhancement*: Consider implementing webhooks for:
 
-```
+\`\`\`
 project.created → trigger matching
 project.status_changed → notify stakeholders
 contractor.available → notify matching
-```
+\`\`\`
 
 ---
 
@@ -245,27 +245,27 @@ contractor.available → notify matching
 ### Common Errors
 
 **Project Not Found**
-```json
+\`\`\`json
 { "error": "Project not found", "status": 404 }
-```
+\`\`\`
 
 **Invalid State Transition**
-```json
+\`\`\`json
 { 
   "error": "Invalid transition: completed → in_progress",
   "validTransitions": []
 }
-```
+\`\`\`
 
 **Unauthorized Access**
-```json
+\`\`\`json
 { "error": "Not authorized", "status": 403 }
-```
+\`\`\`
 
 **Missing Parameters**
-```json
+\`\`\`json
 { "error": "projectId and newStatus are required", "status": 400 }
-```
+\`\`\`
 
 ---
 
@@ -273,7 +273,7 @@ contractor.available → notify matching
 
 ### Using cURL
 
-```bash
+\`\`\`bash
 # Test categorization
 curl -X POST http://localhost:3000/api/automation/categorize-request \
   -H "Content-Type: application/json" \
@@ -290,7 +290,7 @@ curl -X POST http://localhost:3000/api/automation/update-status \
     "newStatus": "in_progress",
     "reason": "Work started"
   }'
-```
+\`\`\`
 
 ### Using Postman
 
@@ -305,7 +305,7 @@ curl -X POST http://localhost:3000/api/automation/update-status \
 
 ### Track Success Metrics
 
-```sql
+\`\`\`sql
 -- Success rate of auto-assignments
 SELECT 
   COUNT(*) FILTER (WHERE match_score > 85) as auto_assigned,
@@ -328,7 +328,7 @@ FROM (
   FROM project_matches
 ) grouped
 GROUP BY match_score_bracket;
-```
+\`\`\`
 
 ---
 

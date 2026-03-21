@@ -77,7 +77,7 @@ You now have a **modern, intelligent property maintenance portal** with:
 
 ## Technical Architecture
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────┐
 │                  Frontend (React)                       │
 │  ┌──────────────────────────────────────────────────┐   │
@@ -122,7 +122,7 @@ You now have a **modern, intelligent property maintenance portal** with:
 │  - Service Requests (projects)                          │
 │  - Notifications                                        │
 └─────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -140,7 +140,7 @@ You now have a **modern, intelligent property maintenance portal** with:
 
 ## File Structure
 
-```
+\`\`\`
 project/
 ├── middleware.ts                          # Auth + security (merged)
 ├── app/
@@ -163,7 +163,7 @@ project/
 ├── IMPLEMENTATION_SUMMARY.md              # Detailed technical summary
 ├── AUTOMATION_GUIDE.md                    # API usage guide
 └── DEPLOYMENT_CHECKLIST.md                # Pre-launch checklist
-```
+\`\`\`
 
 ---
 
@@ -171,7 +171,7 @@ project/
 
 ### 1. Try the New Request Form
 
-```
+\`\`\`
 1. Go to Dashboard → New Request
 2. Start typing description (e.g., "Water leaking from kitchen faucet")
 3. Watch as AI suggests:
@@ -181,27 +181,27 @@ project/
 4. Click "Zap" button to accept suggestions
 5. Submit request
 6. Contractors automatically matched!
-```
+\`\`\`
 
 ### 2. Test Smart Matching
 
-```
+\`\`\`
 1. Create a plumbing request
 2. Wait 2 seconds for auto-match
 3. Check console logs: "Auto-assigned to contractor X (95% match)"
 4. Contractor receives notification
 5. Project status updated to "assigned"
-```
+\`\`\`
 
 ### 3. Explore Status Management
 
-```
+\`\`\`
 1. Go to existing project
 2. Try changing status (open → in-progress)
 3. See validation: invalid transitions rejected
 4. All stakeholders get notified
 5. Audit trail logged
-```
+\`\`\`
 
 ---
 
@@ -210,12 +210,12 @@ project/
 ### Enable/Disable Auto-Assignment
 
 In `/api/automation/match-contractor/route.ts`:
-```typescript
+\`\`\`typescript
 // Set score threshold (currently 85)
 if (matches.length > 0 && matches[0].match_score > 85) {
   // Auto-assign this project
 }
-```
+\`\`\`
 
 Lower threshold = more auto-assignments
 Higher threshold = more manual review
@@ -223,20 +223,20 @@ Higher threshold = more manual review
 ### Adjust Contractor Capacity
 
 In `/api/auth/me/route.ts`:
-```typescript
+\`\`\`typescript
 maxActiveProjects: 3, // Change to 5 for professional tier
-```
+\`\`\`
 
 ### Customize Budget Ranges
 
 In `/api/automation/categorize-request/route.ts`:
-```typescript
+\`\`\`typescript
 const estimatedBudgetRange: Record<string, [number, number]> = {
   plumbing: [300, 1500],    // Adjust here
   electrical: [400, 2000],
   // ...
 }
-```
+\`\`\`
 
 ---
 
@@ -244,7 +244,7 @@ const estimatedBudgetRange: Record<string, [number, number]> = {
 
 ### Key Metrics to Track
 
-```sql
+\`\`\`sql
 -- Match success rate
 SELECT 
   COUNT(*) FILTER (WHERE match_score > 85) as auto_assigned,
@@ -260,7 +260,7 @@ SELECT status FROM service_requests WHERE status NOT IN (
   'pending_review', 'in_queue', 'assigned', 'consultation_scheduled', 
   'in_progress', 'completed', 'declined'
 );
-```
+\`\`\`
 
 ### Dashboard Integration
 

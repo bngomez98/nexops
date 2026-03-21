@@ -68,10 +68,10 @@ Successfully completed comprehensive redesign of Nexus Operations portal address
 **Endpoint**: `POST /api/automation/update-status`
 
 **State Machine**:
-```
+\`\`\`
 pending_review → in_queue → assigned → consultation_scheduled → in_progress → completed
               ↘ declined ↙ (from any state)
-```
+\`\`\`
 
 **Features**:
 - Validates state transitions (prevents invalid workflows)
