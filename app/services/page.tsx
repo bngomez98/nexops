@@ -349,7 +349,7 @@ export default function ServicesPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/login?tab=signup"
+                  href="/auth/sign-up"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
                 >
                   Create an account

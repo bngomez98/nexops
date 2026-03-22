@@ -24,13 +24,13 @@ export default function HomeownerSettings() {
     async function load() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const data = await res.json()
         if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
         setFormData({ email: data.user.email, phone: data.user.phone ?? '' })
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
@@ -87,7 +87,7 @@ export default function HomeownerSettings() {
         setShowDelete(false)
         return
       }
-      router.push('/login')
+      router.push('/auth/login')
     } catch {
       setError('Failed to delete account.')
       setShowDelete(false)
@@ -112,7 +112,7 @@ export default function HomeownerSettings() {
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="homeowner" onLogout={async () => {
         await fetch('/api/auth/logout', { method: 'POST' })
-        router.push('/login')
+        router.push('/auth/login')
       }} />
 
       <main className="md:ml-[220px] p-6 animate-fade-up">

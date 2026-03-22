@@ -10,7 +10,7 @@ export default function AllRequestsPage() {
   const { user, isLoggedIn } = useAuth()
 
   if (!isLoggedIn || user?.role !== 'admin') {
-    redirect('/login')
+    redirect('/auth/login')
   }
 
   const totalRequests = mockClientRequests.length

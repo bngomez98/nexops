@@ -23,7 +23,7 @@ export default function RequestsPage() {
 
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'client') {
-      router.push('/login')
+      router.push('/auth/login')
     }
   }, [isLoggedIn, user, router])
 
