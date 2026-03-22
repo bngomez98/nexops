@@ -31,7 +31,7 @@ const steps = [
   { step: '01', title: 'Submit your request',    desc: 'Describe the work needed, upload photos, and set a budget ceiling. Takes under three minutes.' },
   { step: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor from our network, matched by trade and location.' },
   { step: '03', title: 'Work gets done',          desc: 'Your contractor contacts you directly, schedules the visit, and completes the project on your timeline.' },
-  { step: '04', title: 'Record kept forever',     desc: 'Every completed project generates a permanent, documented record including cost, timeline, photos, and follow-up items.' },
+  { step: '04', title: 'Keep a complete record',  desc: 'Every completed project is saved in a permanent record with costs, timelines, photos, and follow-up details.' },
 ]
 
 export default function HomePage() {
@@ -199,7 +199,7 @@ export default function HomePage() {
                   href="/auth/sign-up"
                   className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg shadow-md"
                 >
-                  Create your account
+                  Create an account
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
@@ -214,8 +214,8 @@ export default function HomePage() {
               <div className="mt-10 flex flex-wrap items-center gap-5 animate-fade-up" style={{ animationDelay: '0.42s' }}>
                 {[
                   { icon: Shield, text: 'Verified contractors only' },
-                  { icon: Zap,    text: 'Assigned same day' },
-                  { icon: Star,   text: 'No contractor fees' },
+                  { icon: Zap,    text: 'Same-day contractor assignment' },
+                  { icon: Star,   text: 'No fees for contractors to join' },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
                     <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
@@ -630,14 +630,14 @@ export default function HomePage() {
                 Ready to simplify your property maintenance?
               </h2>
               <p className="text-[15px] text-muted-foreground max-w-xl mx-auto mb-9 leading-relaxed">
-                Create your account in minutes. Submit your first request the same day. Nexus handles the rest.
+                Create an account in minutes. Submit your first request the same day. Nexus handles the rest.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/auth/sign-up"
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-[14px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md hover:shadow-lg"
                 >
-                  Create your account <ArrowRight className="h-4 w-4" />
+                  Create an account <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/contact"

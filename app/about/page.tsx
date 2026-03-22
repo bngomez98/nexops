@@ -22,13 +22,13 @@ const timeline = [
     date: "Q1 2026",
     title: "Contractor Network Development",
     description:
-      "Recruitment and verification of 15-20 contractors across essential maintenance trades in Shawnee County.",
+      "Recruit and verify 15-20 contractors across core maintenance trades in Shawnee County.",
   },
   {
     date: "Q2 2026",
     title: "First Commercial Clients",
     description:
-      "Onboarding property management companies managing 100-800+ units with full coordination services.",
+      "Begin serving property management companies overseeing 100-800+ units with full coordination support.",
   },
   {
     date: "2026-2027",
@@ -58,11 +58,11 @@ export default function AboutPage() {
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Nexus Operations does not swing hammers or run wire. We
-                coordinate the people who do. Our role is to ensure that when a
+                Nexus Operations does not perform the work itself. We
+                coordinate the professionals who do. Our role is to ensure that when a
                 property manager submits a maintenance request, a verified
                 contractor is assigned, arrives on time, completes documented
-                work, and gets paid -- all through a single point of contact.
+                work, and gets paid -- all through one reliable point of contact.
               </p>
             </div>
           </div>
@@ -214,7 +214,6 @@ export default function AboutPage() {
                 >
                   <Phone className="h-4 w-4" />
                   {CONTACT_INFO.phoneDisplay}
-                  785-727-1106
                 </a>
                 <a
                   href={`mailto:${CONTACT_INFO.email}`}
