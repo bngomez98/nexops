@@ -113,7 +113,7 @@ const sections = [
       },
       {
         q: "How do I contact Nexus Operations for support?",
-        a: "Phone: (785) 428-0244, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org.",
+        a: "Phone: (785) 727-1106, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org.",
       },
     ],
   },
@@ -199,7 +199,7 @@ export default function FAQPage() {
             Contact us directly or visit the Zendesk help center for additional documentation.
           </p>
           <div className="flex flex-wrap gap-3 text-[13px]">
-            <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a>
+            <a href="tel:+17857271106" className="text-primary hover:underline">(785) 727-1106</a>
             <span className="text-border">·</span>
             <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline">admin@nexusoperations.org</a>
             <span className="text-border">·</span>

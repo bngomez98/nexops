@@ -179,7 +179,7 @@ export default function SignUpPage() {
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (913) 951-1711 · admin@nexusoperations.org
+          Topeka, KS · (785) 727-1106 · admin@nexusoperations.org
         </p>
       </div>
 

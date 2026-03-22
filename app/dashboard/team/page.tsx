@@ -11,7 +11,7 @@ const teamMembers = [
     name: 'Brianna Gomez',
     role: 'Founder & Operations Lead',
     email: 'brianna@nexusoperations.org',
-    phone: '(913) 951-1711',
+    phone: '(785) 727-1106',
     status: 'active',
   },
   {
@@ -19,7 +19,7 @@ const teamMembers = [
     name: 'John Garcia',
     role: 'Lead Contractor',
     email: 'john@nexusoperations.org',
-    phone: '(913) 555-0101',
+    phone: '(785) 727-1106',
     status: 'active',
   },
   {

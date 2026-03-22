@@ -55,7 +55,7 @@ export const mockClientRequests: MaintenanceRequest[] = [
     updatedAt: '2025-02-05',
     dueDate: '2025-02-07',
     description: 'Replace damaged shingles on south side',
-    assignedContractor: { id: 'c1', name: 'John Garcia', phone: '(913) 555-0101' },
+    assignedContractor: { id: 'c1', name: 'John Garcia', phone: '(785) 727-1106' },
     estimatedCost: 4200,
     invoiceAmount: 4200,
   },

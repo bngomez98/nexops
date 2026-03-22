@@ -77,7 +77,7 @@ const sections = [
     label: "Support",
     links: [
       { href: "/faq", label: "FAQ", desc: "Frequently asked questions — process, verification, contractor network, and policies" },
-      { href: "tel:+17854280244",          label: "(785) 428-0244",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
+      { href: "tel:+17857271106",          label: "(785) 727-1106",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
       { href: "mailto:admin@nexusoperations.org", label: "admin@nexusoperations.org", desc: "Email support for account, billing, and platform questions", external: true },
       { href: "/privacy", label: "Privacy Policy", desc: "Privacy and data-handling details" },
       { href: "/terms", label: "Terms of Service", desc: "Terms, responsibilities, and governing rules" },

@@ -15,7 +15,7 @@ const timeline = [
     date: "January 2026",
     title: "Company Formation",
     description:
-      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 405 SW Fillmore St, Topeka.",
+      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 2611 SW 17th St #5002, Topeka.",
   },
   {
     date: "Q1 2026",
@@ -208,11 +208,11 @@ export default function AboutPage() {
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
                 <a
-                  href="tel:+19139511711"
+                  href="tel:+17857271106"
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Phone className="h-4 w-4" />
-                  (913) 951-1711
+                  (785) 727-1106
                 </a>
                 <a
                   href="mailto:admin@nexusoperations.org"
@@ -223,7 +223,7 @@ export default function AboutPage() {
                 </a>
                 <span className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  Topeka, KS 66606
+                  Topeka, KS 66604
                 </span>
               </div>
               <Link

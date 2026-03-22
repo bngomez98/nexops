@@ -689,8 +689,8 @@ export default function HomePage() {
                 Managed property services for homeowners, landlords, and property managers in Topeka, Kansas.
               </p>
               <div className="flex flex-col gap-1.5">
-                <a href="tel:+19139511711" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Phone className="h-3 w-3" /> (913) 951-1711
+                <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
+                  <Phone className="h-3 w-3" /> (785) 727-1106
                 </a>
                 <a href="mailto:admin@nexusoperations.org" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
                   <Mail className="h-3 w-3" /> admin@nexusoperations.org
