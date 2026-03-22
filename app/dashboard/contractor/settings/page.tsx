@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
@@ -23,7 +23,7 @@ const SERVICE_CATEGORIES = [
 
 type Tab = 'profile' | 'notifications' | 'danger'
 
-export default function ContractorSettings() {
+function ContractorSettingsInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [user, setUser] = useState<any>(null)
@@ -418,5 +418,13 @@ export default function ContractorSettings() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function ContractorSettings() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>}>
+      <ContractorSettingsInner />
+    </Suspense>
   )
 }

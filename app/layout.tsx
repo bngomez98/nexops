@@ -1,11 +1,10 @@
-import type React from 'react'
-import type { Metadata, Viewport } from 'next'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Toaster } from 'sonner'
-import { AuthProvider } from '@/app/lib/auth-context'
-import { RequestsProvider } from '@/app/lib/requests-context'
-import './globals.css'
+import type React from "react"
+import type { Metadata, Viewport } from "next"
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Toaster } from "sonner"
+import { AuthProvider } from "@/app/lib/auth-context"
+import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
@@ -66,9 +65,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap"
           rel="stylesheet"
         />
       </head>
