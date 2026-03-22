@@ -59,7 +59,7 @@ export default function HomePage() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-background font-sans overflow-x-hidden">
+    <main id="main-content" className="min-h-screen bg-background font-sans overflow-x-hidden">
 
       {/* Scroll progress bar */}
       <div

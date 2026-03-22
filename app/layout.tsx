@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/app/lib/auth-context"
+import { RequestsProvider } from "@/app/lib/requests-context"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  generator: 'v0.app',
+  generator: 'GPT-5.2-Codex',
 }
 
 export const viewport: Viewport = {
@@ -71,6 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-background text-foreground">
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <AuthProvider>
           <RequestsProvider>{children}</RequestsProvider>
         </AuthProvider>
