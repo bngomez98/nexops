@@ -227,7 +227,7 @@ export default function ContractorDashboard() {
 
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+      <main id="main-content" className="md:ml-[240px] p-6 space-y-6 animate-fade-up">
         {/* Welcome banner */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />

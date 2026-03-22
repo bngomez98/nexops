@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 max-w-5xl">
+      <div id="main-content" className="space-y-8 max-w-5xl">
 
         {/* Page header */}
         <div className="flex items-start justify-between gap-4">
