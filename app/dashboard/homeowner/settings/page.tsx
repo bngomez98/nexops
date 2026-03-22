@@ -3,7 +3,8 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
-import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound } from 'lucide-react'
 
 function HomeownerSettingsInner() {
   const router       = useRouter()
@@ -20,6 +21,14 @@ function HomeownerSettingsInner() {
     bidNotifications: true, messageNotifications: true, projectUpdates: true, newsletter: false,
   })
 
+  // 2FA state
+  const [mfaFactors, setMfaFactors]   = useState<any[]>([])
+  const [enrollData, setEnrollData]   = useState<{ qr: string; secret: string; factorId: string } | null>(null)
+  const [verifyCode, setVerifyCode]   = useState('')
+  const [mfaLoading, setMfaLoading]   = useState(false)
+  const [mfaError, setMfaError]       = useState('')
+  const [mfaSuccess, setMfaSuccess]   = useState('')
+
   useEffect(() => {
     async function load() {
       try {
@@ -29,6 +38,11 @@ function HomeownerSettingsInner() {
         if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
         setFormData({ email: data.user.email, phone: data.user.phone ?? '' })
+
+        // Load MFA factors
+        const supabase = createClient()
+        const { data: mfaData } = await supabase.auth.mfa.listFactors()
+        setMfaFactors(mfaData?.all ?? [])
       } catch {
         router.push('/auth/login')
       } finally {
@@ -96,6 +110,65 @@ function HomeownerSettingsInner() {
     }
   }
 
+  async function handleEnroll2FA() {
+    setMfaLoading(true)
+    setMfaError('')
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Nexus Operations Authenticator' })
+      if (error) { setMfaError(error.message); return }
+      const qr = data.totp.qr_code
+      const secret = data.totp.secret
+      setEnrollData({ qr, secret, factorId: data.id })
+    } catch {
+      setMfaError('Failed to start 2FA setup. Please try again.')
+    } finally {
+      setMfaLoading(false)
+    }
+  }
+
+  async function handleVerify2FA() {
+    if (!enrollData || !verifyCode.trim()) return
+    setMfaLoading(true)
+    setMfaError('')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.mfa.challengeAndVerify({
+        factorId: enrollData.factorId,
+        code: verifyCode.trim(),
+      })
+      if (error) { setMfaError(error.message); return }
+      const { data: mfaData } = await supabase.auth.mfa.listFactors()
+      setMfaFactors(mfaData?.all ?? [])
+      setEnrollData(null)
+      setVerifyCode('')
+      setMfaSuccess('Two-factor authentication enabled successfully!')
+      setTimeout(() => setMfaSuccess(''), 5000)
+    } catch {
+      setMfaError('Invalid code. Please try again.')
+    } finally {
+      setMfaLoading(false)
+    }
+  }
+
+  async function handleDisable2FA(factorId: string) {
+    setMfaLoading(true)
+    setMfaError('')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.mfa.unenroll({ factorId })
+      if (error) { setMfaError(error.message); return }
+      const { data: mfaData } = await supabase.auth.mfa.listFactors()
+      setMfaFactors(mfaData?.all ?? [])
+      setMfaSuccess('Two-factor authentication disabled.')
+      setTimeout(() => setMfaSuccess(''), 5000)
+    } catch {
+      setMfaError('Failed to disable 2FA. Please try again.')
+    } finally {
+      setMfaLoading(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -107,6 +180,8 @@ function HomeownerSettingsInner() {
   if (!user) return null
 
   const initials = user.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+  const totpFactors = mfaFactors.filter(f => f.factor_type === 'totp' && f.status === 'verified')
+  const has2FA = totpFactors.length > 0
 
   return (
     <div className="min-h-screen bg-background">
@@ -231,6 +306,112 @@ function HomeownerSettingsInner() {
                 </div>
               </label>
             ))}
+          </div>
+
+          {/* Two-Factor Authentication */}
+          <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Lock className="w-4 h-4 text-primary" />
+              <h2 className="font-semibold text-foreground text-[14px]">Two-Factor Authentication (2FA)</h2>
+            </div>
+
+            {mfaError && (
+              <div className="flex items-start gap-2 p-3 rounded-lg border border-destructive/30 bg-destructive/8 text-destructive text-[12.5px]">
+                <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                {mfaError}
+              </div>
+            )}
+            {mfaSuccess && (
+              <div className="flex items-start gap-2 p-3 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 text-[12.5px]">
+                <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                {mfaSuccess}
+              </div>
+            )}
+
+            {has2FA ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2.5 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700">
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                  <p className="text-[12.5px] font-semibold">Two-factor authentication is enabled on your account.</p>
+                </div>
+                {totpFactors.map(f => (
+                  <div key={f.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                    <div className="flex items-center gap-2.5">
+                      <KeyRound className="w-4 h-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground">{f.friendly_name || 'Authenticator App'}</p>
+                        <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDisable2FA(f.id)}
+                      disabled={mfaLoading}
+                      className="text-[12px] text-destructive border border-destructive/30 px-3 py-1.5 rounded-lg hover:bg-destructive/10 transition-colors font-medium"
+                    >
+                      {mfaLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Disable'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : enrollData ? (
+              <div className="space-y-4">
+                <p className="text-[13px] text-muted-foreground">
+                  Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code below.
+                </p>
+                <div className="flex flex-col items-center gap-4 p-5 rounded-xl bg-secondary/30 border border-border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={enrollData.qr} alt="2FA QR Code" className="w-44 h-44 rounded-lg" />
+                  <div className="text-center">
+                    <p className="text-[11px] text-muted-foreground mb-1">Or enter this code manually:</p>
+                    <code className="text-[12px] font-mono bg-background border border-border px-3 py-1.5 rounded-lg select-all break-all">
+                      {enrollData.secret}
+                    </code>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Verification Code</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={verifyCode}
+                      onChange={e => setVerifyCode(e.target.value.replace(/\D/g, ''))}
+                      placeholder="000000"
+                      className="flex-1 px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition font-mono tracking-widest text-center"
+                    />
+                    <button
+                      onClick={handleVerify2FA}
+                      disabled={mfaLoading || verifyCode.length < 6}
+                      className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
+                    >
+                      {mfaLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                      Verify
+                    </button>
+                    <button
+                      onClick={() => { setEnrollData(null); setVerifyCode(''); setMfaError('') }}
+                      className="px-4 py-2.5 rounded-xl border border-border text-[13px] font-semibold hover:bg-secondary transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-[13px] text-muted-foreground">
+                  Add an extra layer of security to your account by requiring a one-time code from your phone on login.
+                </p>
+                <button
+                  onClick={handleEnroll2FA}
+                  disabled={mfaLoading}
+                  className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:bg-primary/15 transition-colors"
+                >
+                  {mfaLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <QrCode className="w-3.5 h-3.5" />}
+                  Enable Two-Factor Authentication
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Danger zone */}

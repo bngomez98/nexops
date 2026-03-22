@@ -44,13 +44,11 @@ export async function POST(req: NextRequest) {
       : '/dashboard/homeowner/billing'
 
     const siteUrl = getSiteUrl()
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: 'subscription',
-      success_url: `${siteUrl}${billingPath}?checkout=success`,
-      cancel_url: `${siteUrl}${billingPath}?checkout=cancelled`,
-      line_items: [
-        {
+
+    // Use pre-configured Stripe Price ID when available; fall back to price_data
+    const lineItem = plan.stripePriceId
+      ? { price: plan.stripePriceId, quantity: 1 }
+      : {
           price_data: {
             currency: 'usd',
             product_data: { name: plan.name, description: plan.description },
@@ -58,8 +56,14 @@ export async function POST(req: NextRequest) {
             recurring: { interval: plan.interval },
           },
           quantity: 1,
-        },
-      ],
+        }
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'subscription',
+      success_url: `${siteUrl}${billingPath}?checkout=success`,
+      cancel_url: `${siteUrl}${billingPath}?checkout=cancelled`,
+      line_items: [lineItem],
       metadata: { userId: user.id, planId },
       subscription_data: {
         metadata: { userId: user.id, planId },
