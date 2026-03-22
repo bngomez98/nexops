@@ -18,48 +18,51 @@ const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.star
 const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexusoperations.org"),
+  metadataBase: new URL('https://nexusoperations.org'),
   title: {
-    default: "Nexus Operations | Property Service Management Platform",
-    template: "%s | Nexus Operations",
+    default: 'Nexus Operations | Property Service Management Platform',
+    template: '%s | Nexus Operations',
   },
   description:
-    "Nexus Operations is the all-in-one property service management platform for homeowners, contractors, and property managers in Topeka, Kansas. Submit requests, track projects, and manage billing in one place.",
+    'Nexus Operations is the all-in-one property service management platform for homeowners, contractors, and property managers in Topeka, Kansas. Submit requests, track projects, and manage billing in one place.',
   keywords: [
-    "property maintenance",
-    "service requests",
-    "contractor management",
-    "property management Topeka",
-    "maintenance coordination",
-    "Kansas property services",
-    "verified contractors",
-    "Nexus Operations",
+    'property maintenance',
+    'service requests',
+    'contractor management',
+    'property management Topeka',
+    'maintenance coordination',
+    'Kansas property services',
+    'verified contractors',
+    'Nexus Operations',
   ],
-  authors: [{ name: "Nexus Operations" }],
-  creator: "Nexus Operations",
-  publisher: "Nexus Operations",
-  icons: { icon: "/favicon.ico", apple: "/favicon.ico" },
+  authors: [{ name: 'Nexus Operations' }],
+  creator: 'Nexus Operations',
+  publisher: 'Nexus Operations',
+  icons: { icon: '/favicon.ico', apple: '/favicon.ico' },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://nexusoperations.org",
-    title: "Nexus Operations | Property Service Management Platform",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://nexusoperations.org',
+    title: 'Nexus Operations | Property Service Management Platform',
     description:
-      "Submit one request. Get one verified contractor. Track every project from start to finish.",
-    siteName: "Nexus Operations",
+      'Submit one request. Get one verified contractor. Track every project from start to finish.',
+    siteName: 'Nexus Operations',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Nexus Operations | Property Services",
+    card: 'summary_large_image',
+    title: 'Nexus Operations | Property Services',
     description:
-      "One request. One verified contractor. Complete project history.",
+      'One request. One verified contractor. Complete project history.',
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export const viewport: Viewport = {
-  themeColor: "#3d7a4f",
-  width: "device-width",
+  themeColor: '#3d7a4f',
+  width: 'device-width',
   initialScale: 1,
 }
 

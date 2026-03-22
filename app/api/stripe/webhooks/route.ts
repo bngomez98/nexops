@@ -1,6 +1,6 @@
 import type Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
 
 export async function POST(req: NextRequest) {
@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
   if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json({ error: 'Missing signature or secret' }, { status: 400 })
   }
+
+  const stripe = getStripeClient()
 
   let event: Stripe.Event
   try {
