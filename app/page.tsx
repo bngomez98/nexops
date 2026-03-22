@@ -692,8 +692,6 @@ export default function HomePage() {
               <div className="flex flex-col gap-1.5">
                 <a href={CONTACT_INFO.phoneHref} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
                   <Phone className="h-3 w-3" /> {CONTACT_INFO.phoneDisplay}
-                <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Phone className="h-3 w-3" /> 785-727-1106
                 </a>
                 <a href={`mailto:${CONTACT_INFO.email}`} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
                   <Mail className="h-3 w-3" /> {CONTACT_INFO.email}
