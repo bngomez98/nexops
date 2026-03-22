@@ -106,7 +106,7 @@ function ProgressTrack({ status }: { status: string }) {
   )
 }
 
-function HomeownerDashboard() {
+function HomeownerDashboardInner() {
   const router = useRouter()
   const params = useSearchParams()
   const [user, setUser] = useState<UserData | null>(null)
@@ -417,10 +417,10 @@ function HomeownerDashboard() {
   )
 }
 
-export default function HomeownerDashboardPage() {
+export default function HomeownerDashboard() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>}>
-      <HomeownerDashboard />
+      <HomeownerDashboardInner />
     </Suspense>
   )
 }
