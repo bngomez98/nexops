@@ -26,7 +26,7 @@ export default function ContactPage() {
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Whether you are a homeowner looking to submit a project request or a contractor
-                interested in joining our network, we would like to hear from you.
+                interested in joining our network, we'd love to hear from you.
               </p>
             </div>
 
@@ -73,22 +73,22 @@ export default function ContactPage() {
                 <div className="p-6 rounded-xl bg-card border border-border/40">
                   <h3 className="text-sm font-semibold mb-2">Service area</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Currently serving {CONTACT_INFO.serviceArea}.
+                    We currently serve {CONTACT_INFO.serviceArea}.
                   </p>
                 </div>
 
                 <div className="p-6 rounded-xl bg-card border border-border/40">
                   <h3 className="text-sm font-semibold mb-2">Response time</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    All inquiries receive a response within 24 hours during business days.
-                    Homeowner requests are sent to contractors immediately upon submission.
+                    We respond to all inquiries within 24 business hours.
+                    Homeowner project requests are reviewed and routed as quickly as possible.
                   </p>
                 </div>
               </div>
 
               {/* Form */}
               <div className="lg:col-span-3 p-8 rounded-xl bg-card border border-border/40">
-                <h2 className="text-lg font-semibold mb-6">Send us a message</h2>
+                <h2 className="text-lg font-semibold mb-6">Send a message</h2>
                 <form className="flex flex-col gap-5">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
@@ -118,7 +118,7 @@ export default function ContactPage() {
                       className="flex h-10 w-full rounded-lg border border-input bg-input px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       required
                     >
-                      <option value="">Select one...</option>
+                      <option value="">Select one</option>
                       <option value="homeowner">Homeowner with a project</option>
                       <option value="commercial">Commercial property owner/manager</option>
                       <option value="contractor">Contractor interested in joining</option>
@@ -131,7 +131,7 @@ export default function ContactPage() {
                     <label htmlFor="message" className="text-sm font-medium">Message <span className="text-primary">*</span></label>
                     <Textarea
                       id="message"
-                      placeholder="Tell us about your project, or what service categories you cover..."
+                      placeholder="Tell us about your project or the services you provide."
                       rows={5}
                       required
                     />
@@ -144,7 +144,7 @@ export default function ContactPage() {
                     Send Message
                   </button>
                   <p className="text-xs text-muted-foreground">
-                    By submitting, you agree to receive communications from Nexus Operations. We respect your privacy.
+                    By submitting this form, you agree to receive communications from Nexus Operations. We respect your privacy.
                   </p>
                 </form>
               </div>
