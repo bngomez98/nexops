@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSiteUrl } from '@/lib/env'
 import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
+import { ensureStripeCustomer } from '@/lib/stripe/customer'
 
 export async function POST() {
   try {
@@ -13,13 +14,21 @@ export async function POST() {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('stripe_customer_id, role')
+      .select('stripe_customer_id, stripe_subscription_id, role, full_name, subscription_status')
       .eq('id', user.id)
       .single()
 
-    if (!profile?.stripe_customer_id) {
-      return NextResponse.json({ error: 'No billing account found' }, { status: 400 })
+    if (!profile) {
+      return NextResponse.json({ error: 'Billing profile not found' }, { status: 404 })
     }
+
+    const customerId = await ensureStripeCustomer({
+      supabase,
+      userId: user.id,
+      email: user.email,
+      fullName: profile.full_name,
+      stripeCustomerId: profile.stripe_customer_id,
+    })
 
     const stripe = getStripeClient()
     const returnPath = profile.role === 'contractor'
@@ -29,8 +38,13 @@ export async function POST() {
     const returnUrl = `${getSiteUrl()}${returnPath}`
 
     const session = await stripe.billingPortal.sessions.create({
-      customer: profile.stripe_customer_id,
+      customer: customerId,
       return_url: returnUrl,
+      flow_data: profile.subscription_status === 'past_due' || profile.stripe_subscription_id
+        ? {
+            type: 'payment_method_update',
+          }
+        : undefined,
     })
 
     return NextResponse.json({ url: session.url })
