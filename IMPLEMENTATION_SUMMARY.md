@@ -23,7 +23,7 @@ Successfully completed comprehensive redesign of Nexus Operations portal address
 - **Accent**: Cyan/teal (oklch 0.65 0.22 195) for CTAs and highlights
 - **Status Colors**: Green (success), Red (error), Orange (warning), Blue (info)
 - **Result**: Modern, accessible design without heavy shadows or boxed elements
-- **Files Modified**: app/globals.css, styles/globals.css
+- **Files Modified**: app/globals.css
 
 ### Typography & Spacing
 - Font system: Geist (body) + Geist Mono (headings)
@@ -223,7 +223,6 @@ All new automation endpoints are additive - no breaking changes to existing APIs
 - `middleware.ts` - Merged with proxy.ts security headers
 - `app/globals.css` - Updated color palette to vibrant indigo
 - `app/dashboard/homeowner/new-request/page.tsx` - Added AI categorization
-- `styles/globals.css` - Modern design tokens already implemented
 
 ### New Files Created
 - `app/api/automation/match-contractor/route.ts` - Smart matching engine

@@ -14,7 +14,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'contractor') {
-      router.push('/login')
+      router.push('/auth/login')
     }
   }, [isLoggedIn, user, router])
 
