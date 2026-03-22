@@ -20,7 +20,7 @@
   - Secondary: Clean neutral grays
   - Accent: Cyan/teal for CTAs
   - Status colors: Green, Red, Orange, Blue
-  - Files: app/globals.css, styles/globals.css
+  - Files: app/globals.css
 
 - [x] **Typography Refined**
   - Geist for body text

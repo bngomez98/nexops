@@ -5,18 +5,20 @@ import Image from 'next/image'
 import {
   Menu, X, MapPin, ArrowRight, Phone, Mail,
   CheckCircle2, Clock, Shield, Zap, BarChart3,
-  Users, Wrench, ChevronRight, Star,
+  Users, Wrench, ChevronRight, Star, TreePine, Hammer,
+  Home, Bolt, Droplets, Wind, Fence,
 } from 'lucide-react'
+import { CONTACT_INFO } from '@/lib/contact-info'
 
 const services = [
-  { name: 'Tree Removal',   desc: 'Removal, trimming, stump grinding, and storm damage assessment.' },
-  { name: 'Concrete Work',  desc: 'Driveways, patios, sidewalks, foundation repair, and decorative concrete.' },
-  { name: 'Roofing',        desc: 'Shingle replacement, metal roofing, leak repair, and storm restoration.' },
-  { name: 'HVAC',           desc: 'Installation, repair, and maintenance for all heating and cooling systems.' },
-  { name: 'Fencing',        desc: 'Wood, vinyl, chain link, and iron fencing installation and repair.' },
-  { name: 'Electrical',     desc: 'Panel upgrades, wiring, outlet installation, lighting, and code compliance.' },
-  { name: 'Plumbing',       desc: 'Water lines, drain services, fixture installation, and emergency repairs.' },
-  { name: 'General Repair', desc: 'Handyman services, minor repairs, and ongoing home maintenance.' },
+  { name: 'Tree Removal',   desc: 'Removal, trimming, stump grinding, and storm damage assessment.',      icon: TreePine },
+  { name: 'Concrete Work',  desc: 'Driveways, patios, sidewalks, foundation repair, and decorative concrete.', icon: Hammer },
+  { name: 'Roofing',        desc: 'Shingle replacement, metal roofing, leak repair, and storm restoration.', icon: Home },
+  { name: 'HVAC',           desc: 'Installation, repair, and maintenance for all heating and cooling systems.', icon: Wind },
+  { name: 'Fencing',        desc: 'Wood, vinyl, chain link, and iron fencing installation and repair.',    icon: Fence },
+  { name: 'Electrical',     desc: 'Panel upgrades, wiring, outlet installation, lighting, and code compliance.', icon: Bolt },
+  { name: 'Plumbing',       desc: 'Water lines, drain services, fixture installation, and emergency repairs.', icon: Droplets },
+  { name: 'General Repair', desc: 'Handyman services, minor repairs, and ongoing home maintenance.',       icon: Wrench },
 ]
 
 const stats = [
@@ -30,7 +32,7 @@ const steps = [
   { step: '01', title: 'Submit your request',    desc: 'Describe the work needed, upload photos, and set a budget ceiling. Takes under three minutes.' },
   { step: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor from our network, matched by trade and location.' },
   { step: '03', title: 'Work gets done',          desc: 'Your contractor contacts you directly, schedules the visit, and completes the project on your timeline.' },
-  { step: '04', title: 'Record kept forever',     desc: 'Every completed project generates a permanent, documented record including cost, timeline, photos, and follow-up items.' },
+  { step: '04', title: 'Keep a complete record',  desc: 'Every completed project is saved in a permanent record with costs, timelines, photos, and follow-up details.' },
 ]
 
 export default function HomePage() {
@@ -158,22 +160,23 @@ export default function HomePage() {
       {/* Hero */}
       <section id="hero" className="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden">
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
+        {/* Subtle dot grid pattern */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.025]"
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: 'linear-gradient(oklch(0.10 0.015 264) 1px, transparent 1px), linear-gradient(90deg, oklch(0.10 0.015 264) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
+            backgroundImage: 'radial-gradient(circle, oklch(0.10 0.015 264) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
           }}
           aria-hidden
         />
 
         <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
           <div
-            className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full border border-border bg-card text-[11.5px] text-muted-foreground animate-fade-up"
+            className="inline-flex items-center gap-2 mb-8 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-[11.5px] text-primary font-medium animate-fade-up"
             style={{ animationDelay: '0.05s' }}
           >
-            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span>Topeka, Kansas — Shawnee County and surrounding areas</span>
+            <MapPin className="h-3 w-3 flex-shrink-0" />
+            <span>{CONTACT_INFO.serviceArea}</span>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-[1fr_440px] lg:items-center">
@@ -183,7 +186,7 @@ export default function HomePage() {
                 style={{ animationDelay: '0.12s' }}
               >
                 Property maintenance,{' '}
-                <span className="text-primary">handled</span>{' '}
+                <span className="text-gradient">handled</span>{' '}
                 from start to finish.
               </h1>
 
@@ -196,9 +199,9 @@ export default function HomePage() {
               <div className="mt-9 flex flex-wrap items-center gap-4 animate-fade-up" style={{ animationDelay: '0.32s' }}>
                 <Link
                   href="/auth/sign-up"
-                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg shadow-md"
+                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-xl shadow-lg shadow-primary/20"
                 >
-                  Create your account
+                  Create an account
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
@@ -210,14 +213,16 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-5 animate-fade-up" style={{ animationDelay: '0.42s' }}>
+              <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 animate-fade-up" style={{ animationDelay: '0.42s' }}>
                 {[
                   { icon: Shield, text: 'Verified contractors only' },
-                  { icon: Zap,    text: 'Assigned same day' },
-                  { icon: Star,   text: 'No contractor fees' },
+                  { icon: Zap,    text: 'Same-day contractor assignment' },
+                  { icon: Star,   text: 'No fees for contractors to join' },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-                    <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 flex-shrink-0">
+                      <Icon className="h-3 w-3 text-primary" />
+                    </div>
                     <span>{text}</span>
                   </div>
                 ))}
@@ -226,10 +231,10 @@ export default function HomePage() {
 
             {/* Dashboard preview card */}
             <div
-              className="hidden lg:block relative rounded-2xl glow-primary overflow-hidden animate-fade-up"
+              className="hidden lg:block relative rounded-2xl glow-primary shimmer-border overflow-hidden animate-fade-up"
               style={{ animationDelay: '0.2s' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-muted/30 border border-border/40" />
+              <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-primary/5 border border-border/40" />
               <div className="relative p-6">
                 <div className="flex items-center justify-between mb-5">
                   <div>
@@ -285,9 +290,9 @@ export default function HomePage() {
             style={{ animationDelay: '0.5s' }}
           >
             {stats.map(({ value, label }) => (
-              <div key={label} className="bg-card px-6 py-5 text-center">
-                <p className="text-[28px] font-bold text-foreground tracking-tight">{value}</p>
-                <p className="text-[12px] text-muted-foreground mt-1">{label}</p>
+              <div key={label} className="bg-card px-6 py-6 text-center">
+                <p className="text-[32px] font-bold text-gradient tracking-tight">{value}</p>
+                <p className="text-[12px] text-muted-foreground mt-1 font-medium">{label}</p>
               </div>
             ))}
           </div>
@@ -310,15 +315,17 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {services.map(({ name, desc }) => (
+            {services.map(({ name, desc, icon: Icon }) => (
               <div
                 key={name}
-                className="group rounded-xl border border-border/60 bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 glow-card"
+                className="group rounded-xl border border-border/60 bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 glow-card glow-card-hover"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-[14px] font-semibold text-foreground">{name}</h3>
-                  <Wrench className="h-3.5 w-3.5 text-primary/40 group-hover:text-primary/70 transition-colors flex-shrink-0 mt-0.5" />
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/8 group-hover:bg-primary/12 transition-colors">
+                    <Icon className="h-4 w-4 text-primary" />
+                  </div>
                 </div>
+                <h3 className="text-[14px] font-semibold text-foreground mb-1.5">{name}</h3>
                 <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
               </div>
             ))}
@@ -348,10 +355,16 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map(({ step, title, desc }) => (
-              <div key={step} className="bg-card rounded-xl border border-border/60 p-5 glow-card">
-                <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 mb-4">
-                  <span className="text-[11px] font-bold text-primary">{step}</span>
+            {steps.map(({ step, title, desc }, i) => (
+              <div key={step} className="relative bg-card rounded-xl border border-border/60 p-5 glow-card glow-card-hover hover:border-primary/25">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-primary-foreground shrink-0">
+                    <span className="text-[12px] font-bold">{step}</span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    /* top aligns to center of the 36px (2.25rem) circle at 20px (1.25rem) card padding */
+                    <div className="hidden lg:block absolute top-[calc(1.25rem+1.125rem)] left-[calc(100%-8px)] w-6 h-px bg-primary/20 z-10" />
+                  )}
                 </div>
                 <h3 className="text-[14px] font-semibold text-foreground mb-2">{title}</h3>
                 <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
@@ -381,8 +394,9 @@ export default function HomePage() {
                 body: "Submit a request, approve an estimate, and watch it close. Nexus handles contractor selection, scheduling, and documentation so you don't have to.",
                 cta: 'Create account',
                 href: '/auth/sign-up',
-                color: 'text-sky-600',
-                bg: 'bg-sky-50 border-sky-100',
+                accentColor: 'text-sky-600',
+                iconBg: 'bg-sky-50 border-sky-200',
+                accent: 'hover:border-sky-200/60',
               },
               {
                 icon: Wrench,
@@ -390,8 +404,9 @@ export default function HomePage() {
                 body: 'Receive project notifications in your trade with scope, photos, and a budget ceiling already attached. Claim what works for you. No fees, no percentages.',
                 cta: 'Apply for access',
                 href: '/auth/sign-up?role=contractor',
-                color: 'text-primary',
-                bg: 'bg-primary/5 border-primary/15',
+                accentColor: 'text-primary',
+                iconBg: 'bg-primary/8 border-primary/20',
+                accent: 'hover:border-primary/30',
               },
               {
                 icon: BarChart3,
@@ -399,21 +414,22 @@ export default function HomePage() {
                 body: 'Every property you manage lives in one place. Track maintenance spend by address, by trade, and across the whole portfolio with nothing to reconcile manually.',
                 cta: 'Create account',
                 href: '/auth/sign-up?role=property_manager',
-                color: 'text-violet-600',
-                bg: 'bg-violet-50 border-violet-100',
+                accentColor: 'text-violet-600',
+                iconBg: 'bg-violet-50 border-violet-200',
+                accent: 'hover:border-violet-200/60',
               },
-            ].map(({ icon: Icon, title, body, cta, href, color, bg }) => (
+            ].map(({ icon: Icon, title, body, cta, href, accentColor, iconBg, accent }) => (
               <Link
                 key={title}
                 href={href}
-                className="group rounded-2xl border border-border/60 bg-card p-7 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 glow-card"
+                className={`group rounded-2xl border border-border/60 bg-card p-7 transition-all duration-200 ${accent} hover:shadow-lg hover:-translate-y-1 glow-card`}
               >
-                <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl border ${bg} mb-5`}>
-                  <Icon className={`h-5 w-5 ${color}`} />
+                <div className={`inline-flex items-center justify-center w-11 h-11 rounded-xl border ${iconBg} mb-5`}>
+                  <Icon className={`h-5 w-5 ${accentColor}`} />
                 </div>
                 <h3 className="text-[17px] font-bold text-foreground mb-3">{title}</h3>
                 <p className="text-[13.5px] text-muted-foreground leading-[1.75] mb-5">{body}</p>
-                <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-primary group-hover:gap-2.5 transition-all">
+                <span className={`inline-flex items-center gap-1.5 text-[12.5px] font-semibold ${accentColor} group-hover:gap-2.5 transition-all`}>
                   {cta} <ArrowRight className="h-3 w-3" />
                 </span>
               </Link>
@@ -457,6 +473,17 @@ export default function HomePage() {
               </div>
             </div>
 
+            <div className="space-y-4">
+              <div className="rounded-2xl overflow-hidden">
+                <Image
+                  src="/business-analytics-data-visualization.jpg"
+                  alt="Business analytics and data visualization"
+                  width={600}
+                  height={280}
+                  className="w-full object-cover rounded-2xl"
+                  style={{ maxHeight: '220px' }}
+                />
+              </div>
             <div className="rounded-2xl border border-border/60 bg-card overflow-hidden glow-card">
               <div className="px-5 py-4 border-b border-border/60 bg-muted/30">
                 <p className="text-[11px] font-mono-label text-muted-foreground">Post-project report contents</p>
@@ -480,6 +507,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -526,9 +554,9 @@ export default function HomePage() {
             ].map(({ name, markup, sla, desc, highlighted }) => (
               <div
                 key={name}
-                className={`rounded-2xl border p-6 transition-all ${
+                className={`rounded-2xl border p-7 transition-all ${
                   highlighted
-                    ? 'border-primary/40 bg-primary/5 shadow-lg ring-1 ring-primary/20'
+                    ? 'border-primary/40 bg-gradient-to-b from-primary/8 to-primary/3 shadow-xl shadow-primary/10 ring-1 ring-primary/20 scale-[1.02]'
                     : 'border-border/60 bg-card glow-card'
                 }`}
               >
@@ -538,7 +566,7 @@ export default function HomePage() {
                   </div>
                 )}
                 <h3 className="text-[16px] font-bold text-foreground mb-1">{name}</h3>
-                <p className="text-[32px] font-bold text-primary tracking-tight mb-1">
+                <p className={`text-[34px] font-bold tracking-tight mb-1 ${highlighted ? 'text-gradient' : 'text-primary'}`}>
                   {markup} <span className="text-[14px] font-normal text-muted-foreground">markup</span>
                 </p>
                 <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed">{sla}</p>
@@ -594,6 +622,14 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-3">
+              <Image
+                src="/business-handshake-professional-meeting.jpg"
+                alt="Professional contractor and client meeting"
+                width={600}
+                height={240}
+                className="w-full object-cover rounded-2xl mb-2"
+                style={{ maxHeight: '200px' }}
+              />
               {[
                 { icon: CheckCircle2, title: 'No joining fee',            desc: 'Free to join, free to stay active. No monthly costs.' },
                 { icon: Shield,       title: 'Pre-screened projects',     desc: 'Every request is reviewed before it reaches you.' },
@@ -616,31 +652,124 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Quick Request Section */}
+      <section id="submit-request" className="py-16 lg:py-24">
+        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">Submit a Request</p>
+              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-5 text-balance">
+                Submit once.{" "}
+                <span className="font-serif italic font-normal text-primary">We handle the rest.</span>
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Describe what needs to be done, tell us the urgency, and Nexus assigns one verified contractor from our local network. No bidding wars, no chasing quotes.
+              </p>
+              <ul className="flex flex-col gap-3 mb-8">
+                {[
+                  "Takes less than 3 minutes to submit",
+                  "One contractor — exclusively assigned to your job",
+                  "Real-time updates from assignment to completion",
+                  "Full photo documentation included",
+                ].map(f => (
+                  <li key={f} className="flex items-center gap-2.5 text-[13.5px] text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/auth/sign-up"
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-[13.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md shadow-primary/20"
+                >
+                  Create Account & Submit <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-[13.5px] font-medium text-foreground hover:border-primary/30 transition"
+                >
+                  Sign In to Submit
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-7 space-y-5 shadow-sm">
+              <div className="flex items-center gap-3 pb-4 border-b border-border">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-[13.5px] font-bold text-foreground">New Service Request</p>
+                  <p className="text-[11.5px] text-muted-foreground">Sign in to get started</p>
+                </div>
+              </div>
+              {[
+                { label: "Service Type", placeholder: "e.g. Plumbing repair, HVAC inspection…", type: "text" },
+                { label: "Property Address", placeholder: "123 Main St, Topeka, KS", type: "text" },
+                { label: "Brief Description", placeholder: "Describe the issue…", type: "textarea" },
+              ].map(field => (
+                <div key={field.label}>
+                  <label className="block text-[12px] font-semibold text-foreground mb-1.5">{field.label}</label>
+                  {field.type === "textarea" ? (
+                    <textarea
+                      disabled
+                      placeholder={field.placeholder}
+                      rows={3}
+                      className="w-full px-3 py-2.5 rounded-lg border border-input text-[12.5px] bg-secondary/40 text-muted-foreground placeholder:text-muted-foreground/60 resize-none cursor-not-allowed"
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      disabled
+                      placeholder={field.placeholder}
+                      className="w-full px-3 py-2.5 rounded-lg border border-input text-[12.5px] bg-secondary/40 text-muted-foreground placeholder:text-muted-foreground/60 cursor-not-allowed"
+                    />
+                  )}
+                </div>
+              ))}
+              <Link
+                href="/auth/sign-up"
+                className="block w-full text-center bg-primary text-primary-foreground font-semibold text-[13px] py-3 rounded-xl hover:opacity-90 transition"
+              >
+                Sign Up to Submit Request
+              </Link>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Already have an account?{" "}
+                <Link href="/auth/login" className="text-primary hover:underline">Sign in</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="border-t border-border" />
 
       {/* CTA */}
       <section className="py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card p-10 lg:p-14 text-center relative overflow-hidden">
-            <div className="hero-radial absolute inset-0 opacity-50" aria-hidden />
+          <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/8 via-card to-primary/3 p-10 lg:p-16 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,oklch(0.48_0.155_142_/_0.12),transparent)]" aria-hidden />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_30%_at_80%_80%,oklch(0.62_0.18_200_/_0.06),transparent)]" aria-hidden />
             <div className="relative">
               <p className="font-mono-label text-primary mb-4">Get started today</p>
               <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl mx-auto text-balance mb-5">
                 Ready to simplify your property maintenance?
               </h2>
               <p className="text-[15px] text-muted-foreground max-w-xl mx-auto mb-9 leading-relaxed">
-                Create your account in minutes. Submit your first request the same day. Nexus handles the rest.
+                Create an account in minutes. Submit your first request the same day. Nexus handles the rest.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/auth/sign-up"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-[14px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md hover:shadow-lg"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-[14px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-lg shadow-primary/20 hover:shadow-xl"
                 >
-                  Create your account <ArrowRight className="h-4 w-4" />
+                  Create an account <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-[14px] font-medium text-foreground hover:border-primary/30 hover:bg-muted/50 transition"
+                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 backdrop-blur-sm px-7 py-3.5 text-[14px] font-medium text-foreground hover:border-primary/30 hover:bg-card transition"
                 >
                   Contact us
                 </Link>
@@ -686,14 +815,14 @@ export default function HomePage() {
                 />
               </Link>
               <p className="text-[12px] text-muted-foreground leading-relaxed mb-4">
-                Managed property services for homeowners, landlords, and property managers in Topeka, Kansas.
+                Managed property services for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.
               </p>
               <div className="flex flex-col gap-1.5">
-                <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Phone className="h-3 w-3" /> (785) 727-1106
+                <a href={CONTACT_INFO.phoneHref} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
+                  <Phone className="h-3 w-3" /> {CONTACT_INFO.phoneDisplay}
                 </a>
-                <a href="mailto:admin@nexusoperations.org" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Mail className="h-3 w-3" /> admin@nexusoperations.org
+                <a href={`mailto:${CONTACT_INFO.email}`} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
+                  <Mail className="h-3 w-3" /> {CONTACT_INFO.email}
                 </a>
               </div>
             </div>
@@ -750,7 +879,7 @@ export default function HomePage() {
           </div>
 
           <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[11.5px] text-muted-foreground">
-            <p>&copy; 2026 Nexus Operations, LLC. Topeka, Kansas. All rights reserved.</p>
+            <p>&copy; 2026 {CONTACT_INFO.companyName}. {CONTACT_INFO.cityState}. All rights reserved.</p>
             <div className="flex items-center gap-5">
               <Link href="/terms"    className="hover:text-foreground transition">Terms</Link>
               <Link href="/privacy"  className="hover:text-foreground transition">Privacy</Link>

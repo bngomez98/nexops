@@ -26,13 +26,13 @@ export default function AnalyticsDashboard() {
     async function loadData() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const data = await res.json()
         if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(data.user)
         setProfile(data.contractorProfile)
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
@@ -42,7 +42,7 @@ export default function AnalyticsDashboard() {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   if (loading) {

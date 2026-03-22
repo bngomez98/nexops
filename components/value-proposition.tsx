@@ -6,24 +6,32 @@ const values = [
     title: "Verified Contractor Network",
     description:
       "Every contractor in our network holds a current Kansas business license, carries minimum $500K/$1M liability coverage, and passes background screening. We reverify annually.",
+    accent: "text-emerald-600",
+    bg: "bg-emerald-50 border-emerald-100",
   },
   {
     icon: Clock,
     title: "Guaranteed Response Times",
     description:
       "Contractual response commitments by urgency: emergency assignments within 1 hour, urgent within 4, routine within 24. If a contractor declines, backup assignment is automatic.",
+    accent: "text-amber-600",
+    bg: "bg-amber-50 border-amber-100",
   },
   {
     icon: Receipt,
     title: "Transparent Cost-Plus Pricing",
     description:
       "No retainers, no subscription fees. You pay the contractor's quoted rate plus a transparent 25-35% coordination markup based on urgency. One invoice per billing cycle.",
+    accent: "text-primary",
+    bg: "bg-primary/8 border-primary/15",
   },
   {
     icon: Users,
     title: "One Point of Contact",
     description:
       "Stop managing 15 vendor relationships. Submit a request, we handle trade matching, scheduling, quality assurance, and payment coordination with a single monthly invoice.",
+    accent: "text-violet-600",
+    bg: "bg-violet-50 border-violet-100",
   },
 ]
 
@@ -51,10 +59,10 @@ export function ValueProposition() {
           {values.map((v) => (
             <div
               key={v.title}
-              className="p-6 lg:p-8 rounded-xl bg-card border border-border"
+              className="group p-6 lg:p-8 rounded-xl bg-card border border-border hover:border-primary/20 transition-all duration-200 hover:shadow-md"
             >
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-secondary mb-5">
-                <v.icon className="h-5 w-5 text-foreground/70" />
+              <div className={`flex items-center justify-center w-11 h-11 rounded-xl border ${v.bg} mb-5`}>
+                <v.icon className={`h-5 w-5 ${v.accent}`} />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-2">
                 {v.title}

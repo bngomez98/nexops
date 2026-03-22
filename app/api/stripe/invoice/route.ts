@@ -2,8 +2,9 @@ import type Stripe from "stripe"
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 // Nexus platform fee: 15% of the invoice total
 const PLATFORM_FEE_RATE = 0.15

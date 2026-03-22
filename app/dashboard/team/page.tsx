@@ -44,7 +44,7 @@ export default function TeamPage() {
   const { user, isLoggedIn } = useAuth()
 
   if (!isLoggedIn || user?.role !== 'admin') {
-    redirect('/login')
+    redirect('/auth/login')
   }
 
   return (

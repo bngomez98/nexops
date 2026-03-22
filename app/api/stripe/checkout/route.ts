@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
 import { getPlanById } from '@/lib/plans'
 import { createClient } from '@/lib/supabase/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
+import { getSiteUrl } from '@/lib/env'
+import { getStripeClient } from '@/lib/stripe/server'
 
 export async function POST(req: NextRequest) {
   try {
+    const stripe = getStripeClient()
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
@@ -23,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('stripe_customer_id, full_name')
+      .select('stripe_customer_id, full_name, role')
       .eq('id', user.id)
       .single()
 
@@ -35,13 +37,16 @@ export async function POST(req: NextRequest) {
       stripeCustomerId: profile?.stripe_customer_id,
     })
 
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      ui_mode: 'embedded',
-      redirect_on_completion: 'never',
-      mode: 'subscription',
-      line_items: [
-        {
+    const billingPath = profile?.role === 'contractor'
+      ? '/dashboard/contractor/billing'
+      : '/dashboard/homeowner/billing'
+
+    const siteUrl = getSiteUrl()
+
+    // Use pre-configured Stripe Price ID when available; fall back to price_data
+    const lineItem = plan.stripePriceId
+      ? { price: plan.stripePriceId, quantity: 1 }
+      : {
           price_data: {
             currency: 'usd',
             product_data: { name: plan.name, description: plan.description },
@@ -49,12 +54,25 @@ export async function POST(req: NextRequest) {
             recurring: { interval: plan.interval },
           },
           quantity: 1,
-        },
-      ],
+        }
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'subscription',
+      success_url: `${siteUrl}${billingPath}?checkout=success`,
+      cancel_url: `${siteUrl}${billingPath}?checkout=cancelled`,
+      line_items: [lineItem],
       metadata: { userId: user.id, planId },
+      subscription_data: {
+        metadata: { userId: user.id, planId },
+      },
     })
 
-    return NextResponse.json({ clientSecret: session.client_secret })
+    if (!session.url) {
+      return NextResponse.json({ error: 'Stripe did not return a checkout URL' }, { status: 500 })
+    }
+
+    return NextResponse.json({ url: session.url })
   } catch (err) {
     console.error('[POST /api/stripe/checkout]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

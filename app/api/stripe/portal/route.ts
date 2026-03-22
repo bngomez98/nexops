@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getSiteUrl } from '@/lib/env'
+import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 
@@ -29,11 +30,12 @@ export async function POST() {
       stripeCustomerId: profile.stripe_customer_id,
     })
 
+    const stripe = getStripeClient()
     const returnPath = profile.role === 'contractor'
-      ? '/dashboard/contractor/settings'
-      : '/dashboard/homeowner/settings'
+      ? '/dashboard/contractor/billing'
+      : '/dashboard/homeowner/billing'
 
-    const returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusoperations.org'}${returnPath}`
+    const returnUrl = `${getSiteUrl()}${returnPath}`
 
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,

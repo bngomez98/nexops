@@ -1,8 +1,8 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { User as SupabaseUser } from '@supabase/supabase-js'
+import type { SupabaseClient, User as SupabaseUser } from '@supabase/supabase-js'
 
 export type UserRole = 'client' | 'contractor' | 'admin'
 
@@ -36,9 +36,18 @@ function mapSupabaseUser(supabaseUser: SupabaseUser): User {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const supabase = createClient()
+  const supabaseRef = useRef<SupabaseClient | null>(null)
+
+  function getSupabase(): SupabaseClient {
+    if (!supabaseRef.current) {
+      supabaseRef.current = createClient()
+    }
+    return supabaseRef.current
+  }
 
   useEffect(() => {
+    const supabase = getSupabase()
+
     // Restore session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ? mapSupabaseUser(session.user) : null)
@@ -53,12 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await getSupabase().auth.signInWithPassword({ email, password })
     if (error) throw new Error(error.message)
   }
 
   const logout = async () => {
-    await supabase.auth.signOut()
+    await getSupabase().auth.signOut()
     setUser(null)
   }
 

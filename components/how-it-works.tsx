@@ -53,10 +53,10 @@ export function HowItWorks() {
                 i < steps.length - 1 ? "border-b border-border" : ""
               }`}
             >
-              <div className="shrink-0 w-12">
-                <span className="text-sm font-mono font-medium text-primary">
-                  {step.number}
-                </span>
+              <div className="shrink-0 w-12 flex flex-col items-start">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground">
+                  <span className="text-[11px] font-bold">{step.number}</span>
+                </div>
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -70,7 +70,7 @@ export function HowItWorks() {
           ))}
         </div>
 
-        <div className="mt-12 p-6 lg:p-8 rounded-xl bg-card border border-border">
+        <div className="mt-12 p-6 lg:p-8 rounded-2xl bg-gradient-to-br from-primary/6 to-primary/2 border border-primary/20">
           <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
             <div className="flex-1">
               <h3 className="text-base font-semibold text-foreground mb-1">
@@ -80,22 +80,22 @@ export function HowItWorks() {
                 Every request is categorized by urgency with guaranteed response times.
               </p>
             </div>
-            <div className="flex flex-wrap gap-4 lg:gap-6">
+            <div className="flex flex-wrap gap-4 lg:gap-8">
               <div className="text-center">
-                <p className="text-lg font-semibold text-foreground">1 hr</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xl font-bold text-primary">1 hr</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Emergency assignment
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-semibold text-foreground">4 hr</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xl font-bold text-primary">4 hr</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Urgent assignment
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg font-semibold text-foreground">24 hr</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xl font-bold text-primary">24 hr</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Routine assignment
                 </p>
               </div>

@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, MapPin, Phone, Mail } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -15,19 +17,19 @@ const timeline = [
     date: "January 2026",
     title: "Company Formation",
     description:
-      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 2611 SW 17th St #5002, Topeka.",
+      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 2611 SW 17th St, Topeka.",
   },
   {
     date: "Q1 2026",
     title: "Contractor Network Development",
     description:
-      "Recruitment and verification of 15-20 contractors across essential maintenance trades in Shawnee County.",
+      "Recruit and verify 15-20 contractors across core maintenance trades in Shawnee County.",
   },
   {
     date: "Q2 2026",
     title: "First Commercial Clients",
     description:
-      "Onboarding property management companies managing 100-800+ units with full coordination services.",
+      "Begin serving property management companies overseeing 100-800+ units with full coordination support.",
   },
   {
     date: "2026-2027",
@@ -45,6 +47,7 @@ export default function AboutPage() {
         {/* Hero */}
         <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:items-center">
             <div className="max-w-3xl">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-6">
                 About Nexus Operations
@@ -57,12 +60,22 @@ export default function AboutPage() {
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Nexus Operations does not swing hammers or run wire. We
-                coordinate the people who do. Our role is to ensure that when a
+                Nexus Operations does not perform the work itself. We
+                coordinate the professionals who do. Our role is to ensure that when a
                 property manager submits a maintenance request, a verified
                 contractor is assigned, arrives on time, completes documented
-                work, and gets paid -- all through a single point of contact.
+                work, and gets paid -- all through one reliable point of contact.
               </p>
+            </div>
+            <div className="hidden lg:block">
+              <Image
+                src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                alt="Modern office workspace"
+                width={560}
+                height={420}
+                className="w-full object-cover rounded-2xl shadow-lg"
+              />
+            </div>
             </div>
           </div>
         </section>
@@ -208,22 +221,22 @@ export default function AboutPage() {
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
                 <a
-                  href="tel:+17857271106"
+                  href={CONTACT_INFO.phoneHref}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Phone className="h-4 w-4" />
-                  (785) 727-1106
+                  {CONTACT_INFO.phoneDisplay}
                 </a>
                 <a
-                  href="mailto:admin@nexusoperations.org"
+                  href={`mailto:${CONTACT_INFO.email}`}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Mail className="h-4 w-4" />
-                  admin@nexusoperations.org
+                  {CONTACT_INFO.email}
                 </a>
                 <span className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  Topeka, KS 66604
+                  {CONTACT_INFO.cityStateZip}
                 </span>
               </div>
               <Link
