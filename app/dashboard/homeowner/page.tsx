@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Suspense, useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
@@ -106,7 +106,7 @@ function ProgressTrack({ status }: { status: string }) {
   )
 }
 
-export default function HomeownerDashboard() {
+function HomeownerDashboardInner() {
   const router = useRouter()
   const params = useSearchParams()
   const [user, setUser] = useState<UserData | null>(null)
@@ -414,5 +414,13 @@ export default function HomeownerDashboard() {
         context={`Homeowner with ${requests.length} total requests, ${completed.length} completed, $${totalSpend.toLocaleString()} tracked spend.`}
       />
     </div>
+  )
+}
+
+export default function HomeownerDashboard() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>}>
+      <HomeownerDashboardInner />
+    </Suspense>
   )
 }

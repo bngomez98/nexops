@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
+import Image from "next/image"
 import {
   ArrowRight,
   Building2,
@@ -59,9 +60,8 @@ export default function ServicesPage() {
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                From multi-family commercial complexes to individual residential
-                properties to B2B operational support -- we adapt our
-                coordination model to the scale and needs of your operation.
+                From multifamily properties to individual homes to broader B2B operational support, we adapt our
+                coordination model to fit your scale and needs.
               </p>
             </div>
           </div>
@@ -84,8 +84,8 @@ export default function ServicesPage() {
                   Multi-family and commercial property maintenance.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Our primary service: outsourced maintenance coordination for
-                  property management companies managing 100-800+ residential
+                  Our primary service is outsourced maintenance coordination for
+                  property management companies overseeing 100-800+ residential
                   units in Shawnee County. We replace the fragmented vendor
                   relationships consuming your operations team with a single
                   coordination layer backed by guaranteed response times.
@@ -120,6 +120,14 @@ export default function ServicesPage() {
               </div>
 
               <div>
+                <Image
+                  src="/business-growth-success-strategy.jpg"
+                  alt="Business growth and success strategy"
+                  width={560}
+                  height={280}
+                  className="w-full object-cover rounded-xl mb-6"
+                  style={{ maxHeight: '220px' }}
+                />
                 <h3 className="text-sm font-semibold text-foreground mb-4">
                   Pricing model
                 </h3>
@@ -184,10 +192,9 @@ export default function ServicesPage() {
                   Individual property owners and small portfolios.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Self-managing 50-200 units without a dedicated property
-                  management firm? You face the same coordination challenges as
-                  larger operations, often with greater intensity due to limited
-                  staff. We provide the coordination infrastructure without the
+                  Managing 50-200 units without a dedicated property
+                  management firm? You face many of the same coordination challenges as
+                  larger operations, often with fewer resources. We provide the coordination infrastructure without the
                   overhead.
                 </p>
 
@@ -219,6 +226,14 @@ export default function ServicesPage() {
               </div>
 
               <div>
+                <Image
+                  src="/business-handshake-professional-meeting.jpg"
+                  alt="Professional property maintenance coordination"
+                  width={560}
+                  height={240}
+                  className="w-full object-cover rounded-xl mb-6"
+                  style={{ maxHeight: '200px' }}
+                />
                 <h3 className="text-sm font-semibold text-foreground mb-4">
                   Maintenance trades we coordinate
                 </h3>
@@ -293,7 +308,7 @@ export default function ServicesPage() {
                 },
                 {
                   icon: FileText,
-                  title: "Project Support",
+                  title: "Project Execution Support",
                   description:
                     "Execute specific defined projects -- from operational audits to process documentation to marketing initiatives.",
                 },
@@ -336,9 +351,8 @@ export default function ServicesPage() {
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
                 Every client engagement starts with a conversation about your
-                specific operational challenges. No obligation, no sales pitch
-                -- just an honest assessment of whether our coordination model
-                fits your needs.
+                specific operational challenges. No pressure and no hard sell -- just an honest assessment of whether our coordination model
+                is the right fit for your needs.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
@@ -349,7 +363,7 @@ export default function ServicesPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/login?tab=signup"
+                  href="/auth/sign-up"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
                 >
                   Create an account

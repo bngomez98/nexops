@@ -62,7 +62,7 @@ export default function RequestDetailPage({ params }: { params: Promise<{ id: st
     async function load() {
       try {
         const meRes = await fetch('/api/auth/me')
-        if (!meRes.ok) { router.push('/login'); return }
+        if (!meRes.ok) { router.push('/auth/login'); return }
         const { user: u } = await meRes.json()
         setUser(u)
 
@@ -85,7 +85,7 @@ export default function RequestDetailPage({ params }: { params: Promise<{ id: st
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   if (loading) {

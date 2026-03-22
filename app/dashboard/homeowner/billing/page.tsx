@@ -70,6 +70,9 @@ export default function HomeownerBillingPage() {
       const data = await res.json()
       if (!res.ok) { toast.error(data.error || 'Failed to start checkout.'); return }
       window.location.href = `https://checkout.stripe.com/pay/${data.clientSecret}`
+      if (!res.ok) { toast.error(data.error || 'Failed to start checkout'); return }
+      if (!data.url) { toast.error('Stripe checkout URL was not returned'); return }
+      window.location.href = data.url
     } catch {
       toast.error('Something went wrong while opening checkout. Please try again.')
     } finally {
@@ -105,6 +108,8 @@ export default function HomeownerBillingPage() {
   const isPro = currentPlan === 'homeowner_pro' && isActive
   const hasPortalAccess = Boolean(user.stripeCustomerId) || isPro || user.subscriptionStatus === 'past_due'
   const statusMessage = STATUS_COPY[user.subscriptionStatus ?? 'inactive'] ?? STATUS_COPY.inactive
+  const isPro = (currentPlan === 'homeowner_pro_monthly' || currentPlan === 'homeowner_pro_annual' || currentPlan === 'homeowner_pro') && isActive
+  const isAnnual = currentPlan === 'homeowner_pro_annual'
 
   return (
     <div className="min-h-screen bg-background">
@@ -157,6 +162,13 @@ export default function HomeownerBillingPage() {
                   <Receipt className="h-4 w-4" />
                   Create a new request
                 </Link>
+              <div>
+                <p className="font-bold text-foreground text-[15px]">
+                  {isPro ? 'Homeowner Pro' : 'Homeowner Basic (Free)'}
+                </p>
+                <p className="text-[12px] text-muted-foreground mt-0.5">
+                  {isPro ? 'Active subscription · ' + (isAnnual ? '$59/mo (annual)' : '$79/mo (monthly)') : 'No active subscription'}
+                </p>
               </div>
             </div>
           </div>

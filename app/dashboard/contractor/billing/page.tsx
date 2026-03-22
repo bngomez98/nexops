@@ -75,6 +75,9 @@ export default function ContractorBillingPage() {
       const data = await res.json()
       if (!res.ok) { toast.error(data.error || 'Failed to start checkout.'); return }
       window.location.href = `https://checkout.stripe.com/pay/${data.clientSecret}`
+      if (!res.ok) { toast.error(data.error || 'Failed to start checkout'); return }
+      if (!data.url) { toast.error('Stripe checkout URL was not returned'); return }
+      window.location.href = data.url
     } catch {
       toast.error('Something went wrong while opening checkout. Please try again.')
     } finally {

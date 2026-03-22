@@ -15,7 +15,7 @@ export default function EarningsPage() {
 
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'contractor') {
-      router.push('/login')
+      router.push('/auth/login')
     }
   }, [isLoggedIn, user, router])
 
