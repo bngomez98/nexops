@@ -8,7 +8,7 @@ import { Mail, Phone, Clock } from "lucide-react"
 export const metadata: Metadata = {
   title: "Contact | Submit a Request or Apply as a Contractor",
   description:
-    "Submit a home service request or apply as a contractor. Free for homeowners. Licensed and insured contractors welcome. Email admin@nexusoperations.org or call (785) 727-1106.",
+    "Submit a home service request or apply as a contractor. Free for homeowners. Licensed and insured contractors welcome. Email admin@nexusoperations.org or call 785-727-1106.",
 }
 
 export default function ContactPage() {
@@ -53,7 +53,7 @@ export default function ContactPage() {
                       <div>
                         <p className="text-xs text-muted-foreground">Phone</p>
                         <a href="tel:+17857271106" className="text-sm font-medium hover:text-primary transition-colors">
-                          (785) 727-1106
+                          785-727-1106
                         </a>
                       </div>
                     </div>
