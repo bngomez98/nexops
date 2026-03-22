@@ -4,10 +4,12 @@ import { Footer } from "@/components/footer"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, Clock } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 export const metadata: Metadata = {
   title: "Contact | Submit a Request or Apply as a Contractor",
   description:
+    `Submit a home service request or apply as a contractor. Free for homeowners. Licensed and insured contractors welcome. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
     "Submit a home service request or apply as a contractor. Free for homeowners. Licensed and insured contractors welcome. Email admin@nexusoperations.org or call 785-727-1106.",
 }
 
@@ -41,8 +43,8 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Email</p>
-                        <a href="mailto:admin@nexusoperations.org" className="text-sm font-medium hover:text-primary transition-colors">
-                          admin@nexusoperations.org
+                        <a href={`mailto:${CONTACT_INFO.email}`} className="text-sm font-medium hover:text-primary transition-colors">
+                          {CONTACT_INFO.email}
                         </a>
                       </div>
                     </div>
@@ -52,6 +54,8 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Phone</p>
+                        <a href={CONTACT_INFO.phoneHref} className="text-sm font-medium hover:text-primary transition-colors">
+                          {CONTACT_INFO.phoneDisplay}
                         <a href="tel:+17857271106" className="text-sm font-medium hover:text-primary transition-colors">
                           785-727-1106
                         </a>
@@ -63,7 +67,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Business hours</p>
-                        <p className="text-sm font-medium">Mon-Fri, 8:00 AM - 5:00 PM CT</p>
+                        <p className="text-sm font-medium">{CONTACT_INFO.businessHours}</p>
                       </div>
                     </div>
                   </div>
@@ -72,8 +76,7 @@ export default function ContactPage() {
                 <div className="p-6 rounded-xl bg-card border border-border/40">
                   <h3 className="text-sm font-semibold mb-2">Service area</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Currently serving Topeka, KS and surrounding areas. Expanding to Lawrence,
-                    Manhattan, Salina, and Wichita within the next 18 months.
+                    Currently serving {CONTACT_INFO.serviceArea}.
                   </p>
                 </div>
 

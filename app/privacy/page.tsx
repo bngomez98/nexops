@@ -1,6 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
@@ -49,11 +50,12 @@ export default function PrivacyPage() {
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Your Rights</h2>
             <p>
               You have the right to access, correct, or delete your personal information at any time. Contact us at
-              admin@nexusoperations.org for any privacy-related requests.
+              {CONTACT_INFO.email} for any privacy-related requests.
             </p>
 
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Contact</h2>
             <p>
+              For questions about this privacy policy, contact us at {CONTACT_INFO.email} or call {CONTACT_INFO.phoneDisplay}.
               For questions about this privacy policy, contact us at admin@nexusoperations.org or call 785-727-1106.
             </p>
           </div>

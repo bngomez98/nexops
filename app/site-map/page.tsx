@@ -1,13 +1,21 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ArrowRight } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 export const metadata = {
   title: "Sitemap | Nexus Operations",
   description: "Full index of the main public pages and primary dashboard entry points on the Nexus Operations platform.",
 }
 
-const sections = [
+type SiteMapLink = {
+  href: string
+  label: string
+  desc: string
+  external?: boolean
+}
+
+const sections: { label: string; links: SiteMapLink[] }[] = [
   {
     label: "Main Site",
     links: [
@@ -49,6 +57,8 @@ const sections = [
   {
     label: "Contact",
     links: [
+      { href: CONTACT_INFO.phoneHref,                    label: CONTACT_INFO.phoneDisplay,     desc: `Phone support — ${CONTACT_INFO.supportHoursShort}`, external: true },
+      { href: `mailto:${CONTACT_INFO.email}`,           label: CONTACT_INFO.email,            desc: "Email support — responses within one business day", external: true },
       { href: "tel:+17857271106",                    label: "785-727-1106",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
       { href: "mailto:admin@nexusoperations.org",    label: "admin@nexusoperations.org",   desc: "Email support — responses within one business day", external: true },
     ],
@@ -84,7 +94,7 @@ export default function SiteMapPage() {
           className="mb-8 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back to nexusoperations.org
+          Back to {CONTACT_INFO.website}
         </Link>
 
         <h1 className="text-2xl font-bold mt-4">Sitemap</h1>

@@ -369,4 +369,4 @@ Refer to:
 2. `IMPLEMENTATION_SUMMARY.md` - Technical details
 3. `DEPLOYMENT_CHECKLIST.md` - Launch readiness
 
-**Questions not answered?** Contact: support@nexusops.com
+**Questions not answered?** Contact: admin@nexusoperations.org
