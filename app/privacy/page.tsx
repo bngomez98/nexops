@@ -56,6 +56,7 @@ export default function PrivacyPage() {
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Contact</h2>
             <p>
               For questions about this privacy policy, contact us at {CONTACT_INFO.email} or call {CONTACT_INFO.phoneDisplay}.
+              For questions about this privacy policy, contact us at admin@nexusoperations.org or call 785-727-1106.
             </p>
           </div>
         </div>

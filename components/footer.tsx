@@ -18,12 +18,15 @@ export function Footer() {
             <div className="flex flex-col gap-2">
               <a href={CONTACT_INFO.phoneHref} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
                 <Phone className="h-3 w-3 flex-shrink-0" /> {CONTACT_INFO.phoneDisplay}
+              <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                <Phone className="h-3 w-3 flex-shrink-0" /> 785-727-1106
               </a>
               <a href={`mailto:${CONTACT_INFO.email}`} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
                 <Mail className="h-3 w-3 flex-shrink-0" /> {CONTACT_INFO.email}
               </a>
               <span className="inline-flex items-start gap-1.5 text-[12px] text-muted-foreground">
                 <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" /> {CONTACT_INFO.addressLine1}, {CONTACT_INFO.cityStateZip}
+                <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" /> 2611 SW 17th St, Topeka, KS 66604
               </span>
             </div>
           </div>

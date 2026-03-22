@@ -59,6 +59,8 @@ const sections: { label: string; links: SiteMapLink[] }[] = [
     links: [
       { href: CONTACT_INFO.phoneHref,                    label: CONTACT_INFO.phoneDisplay,     desc: `Phone support — ${CONTACT_INFO.supportHoursShort}`, external: true },
       { href: `mailto:${CONTACT_INFO.email}`,           label: CONTACT_INFO.email,            desc: "Email support — responses within one business day", external: true },
+      { href: "tel:+17857271106",                    label: "785-727-1106",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
+      { href: "mailto:admin@nexusoperations.org",    label: "admin@nexusoperations.org",   desc: "Email support — responses within one business day", external: true },
     ],
   },
 ]

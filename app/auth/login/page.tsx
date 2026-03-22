@@ -89,6 +89,7 @@ export default function LoginPage() {
 
         <p className="text-[11px] text-muted-foreground">
           {CONTACT_INFO.cityStateZip.replace(/ 66604$/, "")} · {CONTACT_INFO.phoneDisplay} · {CONTACT_INFO.email}
+          Topeka, KS · 785-727-1106 · admin@nexusoperations.org
         </p>
       </div>
 

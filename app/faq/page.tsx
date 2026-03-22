@@ -115,6 +115,7 @@ const sections = [
       {
         q: "How do I contact Nexus Operations for support?",
         a: `Phone: ${CONTACT_INFO.phoneDisplay}, ${CONTACT_INFO.supportHoursShort}. Email: ${CONTACT_INFO.email}.`,
+        a: "Phone: 785-727-1106, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org.",
       },
     ],
   },
@@ -201,6 +202,7 @@ export default function FAQPage() {
           </p>
           <div className="flex flex-wrap gap-3 text-[13px]">
             <a href={CONTACT_INFO.phoneHref} className="text-primary hover:underline">{CONTACT_INFO.phoneDisplay}</a>
+            <a href="tel:+17857271106" className="text-primary hover:underline">785-727-1106</a>
             <span className="text-border">·</span>
             <a href={`mailto:${CONTACT_INFO.email}`} className="text-primary hover:underline">{CONTACT_INFO.email}</a>
             <span className="text-border">·</span>
