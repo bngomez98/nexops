@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/app/lib/auth-context"
+import { ZendeskWidget } from "@/components/zendesk-widget"
 import "./globals.css"
 
 const GTM_ID = "GTM-PL3NBCWD"
@@ -114,6 +115,7 @@ export default function RootLayout({
         <Toaster position="bottom-right" richColors closeButton />
         <Analytics />
         <SpeedInsights />
+        <ZendeskWidget />
       </body>
     </html>
   )

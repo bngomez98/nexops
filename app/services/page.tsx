@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
+import Image from "next/image"
 import {
   ArrowRight,
   Building2,
@@ -119,6 +120,14 @@ export default function ServicesPage() {
               </div>
 
               <div>
+                <Image
+                  src="/business-growth-success-strategy.jpg"
+                  alt="Business growth and success strategy"
+                  width={560}
+                  height={280}
+                  className="w-full object-cover rounded-xl mb-6"
+                  style={{ maxHeight: '220px' }}
+                />
                 <h3 className="text-sm font-semibold text-foreground mb-4">
                   Pricing model
                 </h3>
@@ -217,6 +226,14 @@ export default function ServicesPage() {
               </div>
 
               <div>
+                <Image
+                  src="/business-handshake-professional-meeting.jpg"
+                  alt="Professional property maintenance coordination"
+                  width={560}
+                  height={240}
+                  className="w-full object-cover rounded-xl mb-6"
+                  style={{ maxHeight: '200px' }}
+                />
                 <h3 className="text-sm font-semibold text-foreground mb-4">
                   Maintenance trades we coordinate
                 </h3>
