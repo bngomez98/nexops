@@ -94,7 +94,8 @@ export default function HomeownerBillingPage() {
 
   const currentPlan = user.subscriptionTier ?? 'homeowner_basic'
   const isActive = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
-  const isPro = currentPlan === 'homeowner_pro' && isActive
+  const isPro = (currentPlan === 'homeowner_pro_monthly' || currentPlan === 'homeowner_pro_annual' || currentPlan === 'homeowner_pro') && isActive
+  const isAnnual = currentPlan === 'homeowner_pro_annual'
 
   return (
     <div className="min-h-screen bg-background">
@@ -129,7 +130,7 @@ export default function HomeownerBillingPage() {
                   {isPro ? 'Homeowner Pro' : 'Homeowner Basic (Free)'}
                 </p>
                 <p className="text-[12px] text-muted-foreground mt-0.5">
-                  {isPro ? 'Active subscription · $29/mo' : 'No active subscription'}
+                  {isPro ? 'Active subscription · ' + (isAnnual ? '$59/mo (annual)' : '$79/mo (monthly)') : 'No active subscription'}
                 </p>
               </div>
             </div>

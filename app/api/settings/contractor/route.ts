@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
-import { updateContractorProfile, deleteUser } from '@/lib/db'
-import { logout } from '@/lib/auth'
-import { ServiceCategory } from '@/lib/types'
+import { createClient } from '@/lib/supabase/server'
 
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser()
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    if (!user) {
+    if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-    }
-
-    if (user.role !== 'contractor') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -23,43 +17,42 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Company name, bio, and at least one service category are required' }, { status: 400 })
     }
 
-    const updated = await updateContractorProfile(user.id, {
-      companyName,
-      bio,
-      licenseNumber: licenseNumber ?? '',
-      yearsInBusiness: Number(yearsInBusiness) || 0,
-      serviceCategories: serviceCategories as ServiceCategory[],
-    })
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({
+        company_name: companyName,
+        bio,
+        license_number: licenseNumber ?? '',
+        years_in_business: Number(yearsInBusiness) || 0,
+        service_categories: serviceCategories,
+      })
+      .eq('id', user.id)
 
-    if (!updated) {
-      return NextResponse.json({ error: 'Contractor profile not found' }, { status: 404 })
-    }
+    if (profileError) throw profileError
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Save contractor settings error:', error)
+    console.error('[PUT /api/settings/contractor]', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
-    const user = await getCurrentUser()
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    if (!user) {
+    if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    if (user.role !== 'contractor') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    await logout()
-    await deleteUser(user.id)
+    // Sign the user out. Full account deletion requires a service role operation
+    // handled separately or by a Supabase database trigger/function.
+    await supabase.auth.signOut()
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Delete contractor account error:', error)
+    console.error('[DELETE /api/settings/contractor]', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

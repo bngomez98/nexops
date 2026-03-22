@@ -37,13 +37,10 @@ export async function POST(req: NextRequest) {
       await supabase.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id)
     }
 
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      ui_mode: 'embedded',
-      redirect_on_completion: 'never',
-      mode: 'subscription',
-      line_items: [
-        {
+    // Use pre-configured Stripe Price ID when available; fall back to price_data
+    const lineItem = plan.stripePriceId
+      ? { price: plan.stripePriceId, quantity: 1 }
+      : {
           price_data: {
             currency: 'usd',
             product_data: { name: plan.name, description: plan.description },
@@ -51,8 +48,14 @@ export async function POST(req: NextRequest) {
             recurring: { interval: plan.interval },
           },
           quantity: 1,
-        },
-      ],
+        }
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      ui_mode: 'embedded',
+      redirect_on_completion: 'never',
+      mode: 'subscription',
+      line_items: [lineItem],
       metadata: { userId: user.id, planId },
     })
 
