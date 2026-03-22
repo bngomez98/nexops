@@ -5,19 +5,20 @@ import Image from 'next/image'
 import {
   Menu, X, MapPin, ArrowRight, Phone, Mail,
   CheckCircle2, Clock, Shield, Zap, BarChart3,
-  Users, Wrench, ChevronRight, Star,
+  Users, Wrench, ChevronRight, Star, TreePine, Hammer,
+  Home, Bolt, Droplets, Wind, Fence,
 } from 'lucide-react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 const services = [
-  { name: 'Tree Removal',   desc: 'Removal, trimming, stump grinding, and storm damage assessment.' },
-  { name: 'Concrete Work',  desc: 'Driveways, patios, sidewalks, foundation repair, and decorative concrete.' },
-  { name: 'Roofing',        desc: 'Shingle replacement, metal roofing, leak repair, and storm restoration.' },
-  { name: 'HVAC',           desc: 'Installation, repair, and maintenance for all heating and cooling systems.' },
-  { name: 'Fencing',        desc: 'Wood, vinyl, chain link, and iron fencing installation and repair.' },
-  { name: 'Electrical',     desc: 'Panel upgrades, wiring, outlet installation, lighting, and code compliance.' },
-  { name: 'Plumbing',       desc: 'Water lines, drain services, fixture installation, and emergency repairs.' },
-  { name: 'General Repair', desc: 'Handyman services, minor repairs, and ongoing home maintenance.' },
+  { name: 'Tree Removal',   desc: 'Removal, trimming, stump grinding, and storm damage assessment.',      icon: TreePine },
+  { name: 'Concrete Work',  desc: 'Driveways, patios, sidewalks, foundation repair, and decorative concrete.', icon: Hammer },
+  { name: 'Roofing',        desc: 'Shingle replacement, metal roofing, leak repair, and storm restoration.', icon: Home },
+  { name: 'HVAC',           desc: 'Installation, repair, and maintenance for all heating and cooling systems.', icon: Wind },
+  { name: 'Fencing',        desc: 'Wood, vinyl, chain link, and iron fencing installation and repair.',    icon: Fence },
+  { name: 'Electrical',     desc: 'Panel upgrades, wiring, outlet installation, lighting, and code compliance.', icon: Bolt },
+  { name: 'Plumbing',       desc: 'Water lines, drain services, fixture installation, and emergency repairs.', icon: Droplets },
+  { name: 'General Repair', desc: 'Handyman services, minor repairs, and ongoing home maintenance.',       icon: Wrench },
 ]
 
 const stats = [
@@ -159,21 +160,22 @@ export default function HomePage() {
       {/* Hero */}
       <section id="hero" className="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden">
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
+        {/* Subtle dot grid pattern */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.025]"
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: 'linear-gradient(oklch(0.10 0.015 264) 1px, transparent 1px), linear-gradient(90deg, oklch(0.10 0.015 264) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
+            backgroundImage: 'radial-gradient(circle, oklch(0.10 0.015 264) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
           }}
           aria-hidden
         />
 
         <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
           <div
-            className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full border border-border bg-card text-[11.5px] text-muted-foreground animate-fade-up"
+            className="inline-flex items-center gap-2 mb-8 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-[11.5px] text-primary font-medium animate-fade-up"
             style={{ animationDelay: '0.05s' }}
           >
-            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+            <MapPin className="h-3 w-3 flex-shrink-0" />
             <span>{CONTACT_INFO.serviceArea}</span>
           </div>
 
@@ -184,7 +186,7 @@ export default function HomePage() {
                 style={{ animationDelay: '0.12s' }}
               >
                 Property maintenance,{' '}
-                <span className="text-primary">handled</span>{' '}
+                <span className="text-gradient">handled</span>{' '}
                 from start to finish.
               </h1>
 
@@ -197,7 +199,7 @@ export default function HomePage() {
               <div className="mt-9 flex flex-wrap items-center gap-4 animate-fade-up" style={{ animationDelay: '0.32s' }}>
                 <Link
                   href="/auth/sign-up"
-                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg shadow-md"
+                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-xl shadow-lg shadow-primary/20"
                 >
                   Create an account
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -211,14 +213,16 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-5 animate-fade-up" style={{ animationDelay: '0.42s' }}>
+              <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 animate-fade-up" style={{ animationDelay: '0.42s' }}>
                 {[
                   { icon: Shield, text: 'Verified contractors only' },
                   { icon: Zap,    text: 'Same-day contractor assignment' },
                   { icon: Star,   text: 'No fees for contractors to join' },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-                    <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 flex-shrink-0">
+                      <Icon className="h-3 w-3 text-primary" />
+                    </div>
                     <span>{text}</span>
                   </div>
                 ))}
@@ -227,10 +231,10 @@ export default function HomePage() {
 
             {/* Dashboard preview card */}
             <div
-              className="hidden lg:block relative rounded-2xl glow-primary overflow-hidden animate-fade-up"
+              className="hidden lg:block relative rounded-2xl glow-primary shimmer-border overflow-hidden animate-fade-up"
               style={{ animationDelay: '0.2s' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-muted/30 border border-border/40" />
+              <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-primary/5 border border-border/40" />
               <div className="relative p-6">
                 <div className="flex items-center justify-between mb-5">
                   <div>
@@ -286,9 +290,9 @@ export default function HomePage() {
             style={{ animationDelay: '0.5s' }}
           >
             {stats.map(({ value, label }) => (
-              <div key={label} className="bg-card px-6 py-5 text-center">
-                <p className="text-[28px] font-bold text-foreground tracking-tight">{value}</p>
-                <p className="text-[12px] text-muted-foreground mt-1">{label}</p>
+              <div key={label} className="bg-card px-6 py-6 text-center">
+                <p className="text-[32px] font-bold text-gradient tracking-tight">{value}</p>
+                <p className="text-[12px] text-muted-foreground mt-1 font-medium">{label}</p>
               </div>
             ))}
           </div>
@@ -311,15 +315,17 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {services.map(({ name, desc }) => (
+            {services.map(({ name, desc, icon: Icon }) => (
               <div
                 key={name}
-                className="group rounded-xl border border-border/60 bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 glow-card"
+                className="group rounded-xl border border-border/60 bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 glow-card glow-card-hover"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-[14px] font-semibold text-foreground">{name}</h3>
-                  <Wrench className="h-3.5 w-3.5 text-primary/40 group-hover:text-primary/70 transition-colors flex-shrink-0 mt-0.5" />
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/8 group-hover:bg-primary/12 transition-colors">
+                    <Icon className="h-4 w-4 text-primary" />
+                  </div>
                 </div>
+                <h3 className="text-[14px] font-semibold text-foreground mb-1.5">{name}</h3>
                 <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
               </div>
             ))}
@@ -349,10 +355,16 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map(({ step, title, desc }) => (
-              <div key={step} className="bg-card rounded-xl border border-border/60 p-5 glow-card">
-                <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 mb-4">
-                  <span className="text-[11px] font-bold text-primary">{step}</span>
+            {steps.map(({ step, title, desc }, i) => (
+              <div key={step} className="relative bg-card rounded-xl border border-border/60 p-5 glow-card glow-card-hover hover:border-primary/25">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-primary-foreground shrink-0">
+                    <span className="text-[12px] font-bold">{step}</span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    /* top aligns to center of the 36px (2.25rem) circle at 20px (1.25rem) card padding */
+                    <div className="hidden lg:block absolute top-[calc(1.25rem+1.125rem)] left-[calc(100%-8px)] w-6 h-px bg-primary/20 z-10" />
+                  )}
                 </div>
                 <h3 className="text-[14px] font-semibold text-foreground mb-2">{title}</h3>
                 <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
@@ -382,8 +394,9 @@ export default function HomePage() {
                 body: "Submit a request, approve an estimate, and watch it close. Nexus handles contractor selection, scheduling, and documentation so you don't have to.",
                 cta: 'Create account',
                 href: '/auth/sign-up',
-                color: 'text-sky-600',
-                bg: 'bg-sky-50 border-sky-100',
+                accentColor: 'text-sky-600',
+                iconBg: 'bg-sky-50 border-sky-200',
+                accent: 'hover:border-sky-200/60',
               },
               {
                 icon: Wrench,
@@ -391,8 +404,9 @@ export default function HomePage() {
                 body: 'Receive project notifications in your trade with scope, photos, and a budget ceiling already attached. Claim what works for you. No fees, no percentages.',
                 cta: 'Apply for access',
                 href: '/auth/sign-up?role=contractor',
-                color: 'text-primary',
-                bg: 'bg-primary/5 border-primary/15',
+                accentColor: 'text-primary',
+                iconBg: 'bg-primary/8 border-primary/20',
+                accent: 'hover:border-primary/30',
               },
               {
                 icon: BarChart3,
@@ -400,21 +414,22 @@ export default function HomePage() {
                 body: 'Every property you manage lives in one place. Track maintenance spend by address, by trade, and across the whole portfolio with nothing to reconcile manually.',
                 cta: 'Create account',
                 href: '/auth/sign-up?role=property_manager',
-                color: 'text-violet-600',
-                bg: 'bg-violet-50 border-violet-100',
+                accentColor: 'text-violet-600',
+                iconBg: 'bg-violet-50 border-violet-200',
+                accent: 'hover:border-violet-200/60',
               },
-            ].map(({ icon: Icon, title, body, cta, href, color, bg }) => (
+            ].map(({ icon: Icon, title, body, cta, href, accentColor, iconBg, accent }) => (
               <Link
                 key={title}
                 href={href}
-                className="group rounded-2xl border border-border/60 bg-card p-7 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 glow-card"
+                className={`group rounded-2xl border border-border/60 bg-card p-7 transition-all duration-200 ${accent} hover:shadow-lg hover:-translate-y-1 glow-card`}
               >
-                <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl border ${bg} mb-5`}>
-                  <Icon className={`h-5 w-5 ${color}`} />
+                <div className={`inline-flex items-center justify-center w-11 h-11 rounded-xl border ${iconBg} mb-5`}>
+                  <Icon className={`h-5 w-5 ${accentColor}`} />
                 </div>
                 <h3 className="text-[17px] font-bold text-foreground mb-3">{title}</h3>
                 <p className="text-[13.5px] text-muted-foreground leading-[1.75] mb-5">{body}</p>
-                <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-primary group-hover:gap-2.5 transition-all">
+                <span className={`inline-flex items-center gap-1.5 text-[12.5px] font-semibold ${accentColor} group-hover:gap-2.5 transition-all`}>
                   {cta} <ArrowRight className="h-3 w-3" />
                 </span>
               </Link>
@@ -527,9 +542,9 @@ export default function HomePage() {
             ].map(({ name, markup, sla, desc, highlighted }) => (
               <div
                 key={name}
-                className={`rounded-2xl border p-6 transition-all ${
+                className={`rounded-2xl border p-7 transition-all ${
                   highlighted
-                    ? 'border-primary/40 bg-primary/5 shadow-lg ring-1 ring-primary/20'
+                    ? 'border-primary/40 bg-gradient-to-b from-primary/8 to-primary/3 shadow-xl shadow-primary/10 ring-1 ring-primary/20 scale-[1.02]'
                     : 'border-border/60 bg-card glow-card'
                 }`}
               >
@@ -539,7 +554,7 @@ export default function HomePage() {
                   </div>
                 )}
                 <h3 className="text-[16px] font-bold text-foreground mb-1">{name}</h3>
-                <p className="text-[32px] font-bold text-primary tracking-tight mb-1">
+                <p className={`text-[34px] font-bold tracking-tight mb-1 ${highlighted ? 'text-gradient' : 'text-primary'}`}>
                   {markup} <span className="text-[14px] font-normal text-muted-foreground">markup</span>
                 </p>
                 <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed">{sla}</p>
@@ -622,8 +637,9 @@ export default function HomePage() {
       {/* CTA */}
       <section className="py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card p-10 lg:p-14 text-center relative overflow-hidden">
-            <div className="hero-radial absolute inset-0 opacity-50" aria-hidden />
+          <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/8 via-card to-primary/3 p-10 lg:p-16 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,oklch(0.48_0.155_142_/_0.12),transparent)]" aria-hidden />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_30%_at_80%_80%,oklch(0.62_0.18_200_/_0.06),transparent)]" aria-hidden />
             <div className="relative">
               <p className="font-mono-label text-primary mb-4">Get started today</p>
               <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl mx-auto text-balance mb-5">
@@ -635,13 +651,13 @@ export default function HomePage() {
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/auth/sign-up"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-[14px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md hover:shadow-lg"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-[14px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-lg shadow-primary/20 hover:shadow-xl"
                 >
                   Create an account <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-[14px] font-medium text-foreground hover:border-primary/30 hover:bg-muted/50 transition"
+                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 backdrop-blur-sm px-7 py-3.5 text-[14px] font-medium text-foreground hover:border-primary/30 hover:bg-card transition"
                 >
                   Contact us
                 </Link>
