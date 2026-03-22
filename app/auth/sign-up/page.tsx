@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -21,7 +21,7 @@ const SERVICE_CATEGORIES = [
   { value: 'excavation',    label: 'Excavation' },
 ]
 
-export default function SignUpPage() {
+function SignUpInner() {
   const searchParams = useSearchParams()
   const roleParam = searchParams.get("role") ?? "homeowner"
 
@@ -347,5 +347,13 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+      <SignUpInner />
+    </Suspense>
   )
 }
