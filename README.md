@@ -105,10 +105,7 @@ Session tokens are validated server-side on every protected request. Unauthentic
 ## Membership Tiers
 
 | Tier | Price | Key Differentiator |
-|---|---|---|
-| Standard | $299/month | Full project feed, first-come first-served |
-| Premium | $499/month | 90-second advance notification window |
-| Elite | $749/month | 10-minute exclusive window on $5K+ projects |
+
 
 All tiers include unlimited project claims, full project documentation before claiming, and a performance dashboard. No annual contracts. Cancel anytime.
 
