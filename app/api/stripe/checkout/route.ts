@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPlanById } from '@/lib/plans'
 import { createClient } from '@/lib/supabase/server'
+import { ensureStripeCustomer } from '@/lib/stripe/customer'
 import { getSiteUrl } from '@/lib/env'
 import { getStripeClient } from '@/lib/stripe/server'
 
@@ -28,29 +29,24 @@ export async function POST(req: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    let customerId = profile?.stripe_customer_id as string | undefined
-    if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: user.email,
-        name: profile?.full_name ?? user.email,
-        metadata: { userId: user.id },
-      })
-      customerId = customer.id
-      await supabase.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id)
-    }
+    const customerId = await ensureStripeCustomer({
+      supabase,
+      userId: user.id,
+      email: user.email,
+      fullName: profile?.full_name,
+      stripeCustomerId: profile?.stripe_customer_id,
+    })
 
     const billingPath = profile?.role === 'contractor'
       ? '/dashboard/contractor/billing'
       : '/dashboard/homeowner/billing'
 
     const siteUrl = getSiteUrl()
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: 'subscription',
-      success_url: `${siteUrl}${billingPath}?checkout=success`,
-      cancel_url: `${siteUrl}${billingPath}?checkout=cancelled`,
-      line_items: [
-        {
+
+    // Use pre-configured Stripe Price ID when available; fall back to price_data
+    const lineItem = plan.stripePriceId
+      ? { price: plan.stripePriceId, quantity: 1 }
+      : {
           price_data: {
             currency: 'usd',
             product_data: { name: plan.name, description: plan.description },
@@ -58,8 +54,14 @@ export async function POST(req: NextRequest) {
             recurring: { interval: plan.interval },
           },
           quantity: 1,
-        },
-      ],
+        }
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'subscription',
+      success_url: `${siteUrl}${billingPath}?checkout=success`,
+      cancel_url: `${siteUrl}${billingPath}?checkout=cancelled`,
+      line_items: [lineItem],
       metadata: { userId: user.id, planId },
       subscription_data: {
         metadata: { userId: user.id, planId },

@@ -473,6 +473,17 @@ export default function HomePage() {
               </div>
             </div>
 
+            <div className="space-y-4">
+              <div className="rounded-2xl overflow-hidden">
+                <Image
+                  src="/business-analytics-data-visualization.jpg"
+                  alt="Business analytics and data visualization"
+                  width={600}
+                  height={280}
+                  className="w-full object-cover rounded-2xl"
+                  style={{ maxHeight: '220px' }}
+                />
+              </div>
             <div className="rounded-2xl border border-border/60 bg-card overflow-hidden glow-card">
               <div className="px-5 py-4 border-b border-border/60 bg-muted/30">
                 <p className="text-[11px] font-mono-label text-muted-foreground">Post-project report contents</p>
@@ -496,6 +507,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -610,6 +622,14 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-3">
+              <Image
+                src="/business-handshake-professional-meeting.jpg"
+                alt="Professional contractor and client meeting"
+                width={600}
+                height={240}
+                className="w-full object-cover rounded-2xl mb-2"
+                style={{ maxHeight: '200px' }}
+              />
               {[
                 { icon: CheckCircle2, title: 'No joining fee',            desc: 'Free to join, free to stay active. No monthly costs.' },
                 { icon: Shield,       title: 'Pre-screened projects',     desc: 'Every request is reviewed before it reaches you.' },
@@ -627,6 +647,98 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Request Section */}
+      <section id="submit-request" className="py-16 lg:py-24">
+        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">Submit a Request</p>
+              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-5 text-balance">
+                Submit once.{" "}
+                <span className="font-serif italic font-normal text-primary">We handle the rest.</span>
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Describe what needs to be done, tell us the urgency, and Nexus assigns one verified contractor from our local network. No bidding wars, no chasing quotes.
+              </p>
+              <ul className="flex flex-col gap-3 mb-8">
+                {[
+                  "Takes less than 3 minutes to submit",
+                  "One contractor — exclusively assigned to your job",
+                  "Real-time updates from assignment to completion",
+                  "Full photo documentation included",
+                ].map(f => (
+                  <li key={f} className="flex items-center gap-2.5 text-[13.5px] text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/auth/sign-up"
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-[13.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md shadow-primary/20"
+                >
+                  Create Account & Submit <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-[13.5px] font-medium text-foreground hover:border-primary/30 transition"
+                >
+                  Sign In to Submit
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-7 space-y-5 shadow-sm">
+              <div className="flex items-center gap-3 pb-4 border-b border-border">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-[13.5px] font-bold text-foreground">New Service Request</p>
+                  <p className="text-[11.5px] text-muted-foreground">Sign in to get started</p>
+                </div>
+              </div>
+              {[
+                { label: "Service Type", placeholder: "e.g. Plumbing repair, HVAC inspection…", type: "text" },
+                { label: "Property Address", placeholder: "123 Main St, Topeka, KS", type: "text" },
+                { label: "Brief Description", placeholder: "Describe the issue…", type: "textarea" },
+              ].map(field => (
+                <div key={field.label}>
+                  <label className="block text-[12px] font-semibold text-foreground mb-1.5">{field.label}</label>
+                  {field.type === "textarea" ? (
+                    <textarea
+                      disabled
+                      placeholder={field.placeholder}
+                      rows={3}
+                      className="w-full px-3 py-2.5 rounded-lg border border-input text-[12.5px] bg-secondary/40 text-muted-foreground placeholder:text-muted-foreground/60 resize-none cursor-not-allowed"
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      disabled
+                      placeholder={field.placeholder}
+                      className="w-full px-3 py-2.5 rounded-lg border border-input text-[12.5px] bg-secondary/40 text-muted-foreground placeholder:text-muted-foreground/60 cursor-not-allowed"
+                    />
+                  )}
+                </div>
+              ))}
+              <Link
+                href="/auth/sign-up"
+                className="block w-full text-center bg-primary text-primary-foreground font-semibold text-[13px] py-3 rounded-xl hover:opacity-90 transition"
+              >
+                Sign Up to Submit Request
+              </Link>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Already have an account?{" "}
+                <Link href="/auth/login" className="text-primary hover:underline">Sign in</Link>
+              </p>
             </div>
           </div>
         </div>

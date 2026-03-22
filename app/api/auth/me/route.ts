@@ -50,6 +50,10 @@ export async function GET() {
         state: '',
         zipCode: '',
         avatarUrl: profile?.avatar_url ?? null,
+        stripeCustomerId: profile?.stripe_customer_id ?? null,
+        stripeSubscriptionId: profile?.stripe_subscription_id ?? null,
+        subscriptionTier: profile?.subscription_tier ?? (role === 'contractor' ? 'contractor_free' : 'homeowner_basic'),
+        subscriptionStatus: profile?.subscription_status ?? 'inactive',
       },
       contractorProfile,
     })
