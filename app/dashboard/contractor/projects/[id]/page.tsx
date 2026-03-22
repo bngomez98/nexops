@@ -52,7 +52,7 @@ export default function ProjectDetailsPage() {
     async function loadData() {
       try {
         const authRes = await fetch('/api/auth/me')
-        if (!authRes.ok) { router.push('/login'); return }
+        if (!authRes.ok) { router.push('/auth/login'); return }
         const authData = await authRes.json()
         if (authData.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(authData.user)
@@ -63,7 +63,7 @@ export default function ProjectDetailsPage() {
         const { project: proj } = await projRes.json()
         setProject(proj)
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
@@ -73,7 +73,7 @@ export default function ProjectDetailsPage() {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   async function handleClaim() {

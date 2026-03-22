@@ -29,7 +29,7 @@ export function ContactCTA() {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/login"
+              href="/auth/login"
               className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
             >
               Log in to your account

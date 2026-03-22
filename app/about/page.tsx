@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
 import { ArrowRight, MapPin, Phone, Mail } from "lucide-react"
 
@@ -208,22 +209,22 @@ export default function AboutPage() {
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
                 <a
-                  href="tel:+17857271106"
+                  href={CONTACT_INFO.phoneHref}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Phone className="h-4 w-4" />
-                  (785) 727-1106
+                  {CONTACT_INFO.phoneDisplay}
                 </a>
                 <a
-                  href="mailto:admin@nexusoperations.org"
+                  href={`mailto:${CONTACT_INFO.email}`}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Mail className="h-4 w-4" />
-                  admin@nexusoperations.org
+                  {CONTACT_INFO.email}
                 </a>
                 <span className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  Topeka, KS 66604
+                  {CONTACT_INFO.cityStateZip}
                 </span>
               </div>
               <Link

@@ -7,6 +7,7 @@ import {
   CheckCircle2, Clock, Shield, Zap, BarChart3,
   Users, Wrench, ChevronRight, Star,
 } from 'lucide-react'
+import { CONTACT_INFO } from '@/lib/contact-info'
 
 const services = [
   { name: 'Tree Removal',   desc: 'Removal, trimming, stump grinding, and storm damage assessment.' },
@@ -173,7 +174,7 @@ export default function HomePage() {
             style={{ animationDelay: '0.05s' }}
           >
             <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span>Topeka, Kansas — Shawnee County and surrounding areas</span>
+            <span>{CONTACT_INFO.serviceArea}</span>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-[1fr_440px] lg:items-center">
@@ -686,14 +687,14 @@ export default function HomePage() {
                 />
               </Link>
               <p className="text-[12px] text-muted-foreground leading-relaxed mb-4">
-                Managed property services for homeowners, landlords, and property managers in Topeka, Kansas.
+                Managed property services for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.
               </p>
               <div className="flex flex-col gap-1.5">
-                <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Phone className="h-3 w-3" /> (785) 727-1106
+                <a href={CONTACT_INFO.phoneHref} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
+                  <Phone className="h-3 w-3" /> {CONTACT_INFO.phoneDisplay}
                 </a>
-                <a href="mailto:admin@nexusoperations.org" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Mail className="h-3 w-3" /> admin@nexusoperations.org
+                <a href={`mailto:${CONTACT_INFO.email}`} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
+                  <Mail className="h-3 w-3" /> {CONTACT_INFO.email}
                 </a>
               </div>
             </div>
@@ -750,7 +751,7 @@ export default function HomePage() {
           </div>
 
           <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[11.5px] text-muted-foreground">
-            <p>&copy; 2026 Nexus Operations, LLC. Topeka, Kansas. All rights reserved.</p>
+            <p>&copy; 2026 {CONTACT_INFO.companyName}. {CONTACT_INFO.cityState}. All rights reserved.</p>
             <div className="flex items-center gap-5">
               <Link href="/terms"    className="hover:text-foreground transition">Terms</Link>
               <Link href="/privacy"  className="hover:text-foreground transition">Privacy</Link>

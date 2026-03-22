@@ -76,7 +76,7 @@ Role-based routing is enforced via `middleware.ts`. Two user roles exist:
 - `homeowner` — access to `/dashboard/homeowner/*`
 - `contractor` — access to `/dashboard/contractor/*`
 
-Session tokens are validated server-side on every protected request. Unauthenticated users are redirected to `/login`.
+Session tokens are validated server-side on every protected request. Unauthenticated users are redirected to `/auth/login`.
 
 ## API Endpoints
 

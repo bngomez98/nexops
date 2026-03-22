@@ -41,7 +41,7 @@ export default function DashboardPage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoggedIn) router.push('/login')
+    if (!isLoggedIn) router.push('/auth/login')
   }, [isLoggedIn, router])
 
   if (!isLoggedIn) return null

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { AlertCircle, Loader2, CheckCircle2, ChevronRight } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 const SERVICE_CATEGORIES = [
   { value: 'tree-removal',  label: 'Tree Removal' },
@@ -179,7 +180,7 @@ function SignUpInner() {
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (785) 727-1106 · admin@nexusoperations.org
+          {CONTACT_INFO.cityStateZip.replace(/ 66604$/, "")} · {CONTACT_INFO.phoneDisplay} · {CONTACT_INFO.email}
         </p>
       </div>
 
