@@ -4,11 +4,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Logo } from '@/components/logo'
 import { NotificationBell } from '@/components/notification-bell'
 import {
-  LogOut, Menu, LayoutDashboard, FileText,
-  Settings, TrendingUp, ChevronRight, Briefcase,
+  LogOut, Menu, X, LayoutDashboard, FileText,
+  Settings, TrendingUp, Wrench, ChevronRight, Briefcase,
 } from 'lucide-react'
 
 interface NavItem {
@@ -63,13 +62,11 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         }`}
       >
         {/* Logo */}
-        <div className="px-5 py-4 border-b border-sidebar-border flex-shrink-0">
-          <Logo className="text-sidebar-foreground" compact />
-          <p className="mt-2 text-[11px] leading-relaxed text-sidebar-muted">
-            {role === 'homeowner'
-              ? 'Homeowner portal for requests, billing, and project updates.'
-              : 'Contractor portal for projects, analytics, and billing.'}
-          </p>
+        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border flex-shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <Wrench className="w-3.5 h-3.5 text-primary-foreground" />
+          </div>
+          <span className="text-[13px] font-bold text-sidebar-foreground">Nexus Ops</span>
         </div>
 
         {/* Nav items */}
@@ -130,15 +127,8 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex-1">
-          <p className="text-[12.5px] font-medium text-foreground">
-            {navItems.find(i => active(i))?.label ?? 'Dashboard'}
-          </p>
-          <p className="hidden sm:block text-[11px] text-muted-foreground">
-            {role === 'homeowner'
-              ? 'Manage your service requests, billing, and account details in one place.'
-              : 'Manage projects, earnings, billing, and account settings in one place.'}
-          </p>
+        <div className="flex-1 text-[12.5px] text-muted-foreground font-medium">
+          {navItems.find(i => active(i))?.label ?? 'Dashboard'}
         </div>
 
         <div className="flex items-center gap-2">
