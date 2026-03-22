@@ -141,7 +141,7 @@ export default function SignUpPage() {
 
         <div className="space-y-7">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-3">
+            <p className="font-mono-label text-primary mb-3">
               Join Nexus Operations
             </p>
             <h2 className="text-2xl font-bold leading-snug tracking-tight">
@@ -179,7 +179,7 @@ export default function SignUpPage() {
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (785) 428-0244 · admin@nexusoperations.org
+          Topeka, KS · (913) 951-1711 · admin@nexusoperations.org
         </p>
       </div>
 
@@ -207,7 +207,7 @@ export default function SignUpPage() {
           </div>
 
           {/* Role toggle */}
-          <div className="flex rounded-xl border border-border overflow-hidden mb-6">
+          <div className="flex rounded-xl border border-border overflow-hidden mb-6 bg-muted/30 p-1 gap-1">
             {[
               { key: "homeowner", label: "Homeowner" },
               { key: "contractor", label: "Contractor" },
@@ -216,8 +216,8 @@ export default function SignUpPage() {
                 key={r.key}
                 type="button"
                 onClick={() => setRole(r.key)}
-                className={`flex-1 py-2.5 text-[13px] font-semibold transition-all ${
-                  role === r.key ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:text-foreground"
+                className={`flex-1 py-2 text-[13px] font-semibold transition-all rounded-lg ${
+                  role === r.key ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {r.label}
@@ -227,9 +227,9 @@ export default function SignUpPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="flex items-start gap-2.5 rounded border border-destructive/40 bg-destructive/8 p-3 text-[13px] text-destructive">
+              <div className="flex items-start gap-2.5 rounded-xl border border-destructive/30 bg-destructive/5 p-3.5 text-[13px] text-destructive">
                 <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                {error}
+                <span>{error}</span>
               </div>
             )}
 
@@ -321,7 +321,7 @@ export default function SignUpPage() {
               </div>
             )}
 
-            <Button type="submit" className="w-full h-10 text-[13px] font-semibold mt-2" disabled={loading}>
+            <Button type="submit" className="w-full h-10 text-[13.5px] font-semibold mt-2 rounded-lg" disabled={loading}>
               {loading ? (
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating account...</>
               ) : (
