@@ -57,7 +57,7 @@ export default function ContractorMyProjects() {
     async function load() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const data = await res.json()
         if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(data.user)
@@ -68,7 +68,7 @@ export default function ContractorMyProjects() {
           setProjects(list ?? [])
         }
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
@@ -78,7 +78,7 @@ export default function ContractorMyProjects() {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   if (loading) {
