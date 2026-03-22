@@ -8,6 +8,6 @@ export function getStripeClient() {
   }
 
   return new Stripe(secretKey, {
-    apiVersion: "2026-02-25.clover",
+    apiVersion: '2025-02-24.acacia',
   })
 }
