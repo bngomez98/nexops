@@ -40,7 +40,7 @@ export async function POST() {
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: returnUrl,
-      flow_data: profile.subscription_status === 'past_due'
+      flow_data: profile.subscription_status === 'past_due' || profile.stripe_subscription_id
         ? {
             type: 'payment_method_update',
           }

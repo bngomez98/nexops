@@ -89,6 +89,14 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+  ::selection {
+    background: oklch(0.48 0.155 142 / 0.18);
+    color: var(--foreground);
+  }
+  :focus-visible {
+    outline: 2px solid oklch(0.48 0.155 142 / 0.9);
+    outline-offset: 2px;
+  }
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
   }
@@ -274,4 +282,29 @@
 /* ── text-balance utility ── */
 .text-balance {
   text-wrap: balance;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: 9999px;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus { transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

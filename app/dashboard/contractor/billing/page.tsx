@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
-import { Logo } from '@/components/logo'
-import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
+import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
-  CreditCard, Shield, AlertCircle, Zap, Star, TrendingUp, BriefcaseBusiness, BarChart3,
+  CreditCard, Shield, AlertCircle, Zap, Star, TrendingUp,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -16,21 +15,8 @@ interface UserData {
   id: string
   name: string
   role: string
-  stripeCustomerId?: string | null
   subscriptionTier?: string
   subscriptionStatus?: string
-}
-
-const PLAN_CAPACITY: Record<string, string> = {
-  contractor_free: 'Up to 3 active projects',
-  contractor_pro: 'Up to 10 active projects',
-  contractor_elite: 'Unlimited active projects',
-}
-
-const PLAN_LABELS: Record<string, string> = {
-  contractor_free: 'Contractor Free',
-  contractor_pro: 'Contractor Pro',
-  contractor_elite: 'Contractor Elite',
 }
 
 export default function ContractorBillingPage() {
@@ -73,13 +59,11 @@ export default function ContractorBillingPage() {
         body: JSON.stringify({ planId }),
       })
       const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Failed to start checkout.'); return }
-      window.location.href = `https://checkout.stripe.com/pay/${data.clientSecret}`
       if (!res.ok) { toast.error(data.error || 'Failed to start checkout'); return }
       if (!data.url) { toast.error('Stripe checkout URL was not returned'); return }
       window.location.href = data.url
     } catch {
-      toast.error('Something went wrong while opening checkout. Please try again.')
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setCheckoutLoading(null)
     }
@@ -90,10 +74,10 @@ export default function ContractorBillingPage() {
     try {
       const res = await fetch('/api/stripe/portal', { method: 'POST' })
       const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Failed to open the billing portal.'); return }
+      if (!res.ok) { toast.error(data.error || 'Failed to open billing portal'); return }
       window.location.href = data.url
     } catch {
-      toast.error('Something went wrong while opening the billing portal. Please try again.')
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setPortalLoading(false)
     }
@@ -109,206 +93,184 @@ export default function ContractorBillingPage() {
   if (!user) return null
 
   const currentPlan = user.subscriptionTier ?? 'contractor_free'
-  const currentPlanPrice = plans.find(plan => plan.id === currentPlan)?.priceInCents ?? 0
   const isActive = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
-  const hasPortalAccess = Boolean(user.stripeCustomerId) || isActive || user.subscriptionStatus === 'past_due'
+  const isPaid = currentPlan !== 'contractor_free' && isActive
+
+  const planLabels: Record<string, string> = {
+    contractor_free: 'Contractor Free',
+    contractor_pro: 'Contractor Pro · $79/mo',
+    contractor_elite: 'Contractor Elite · $199/mo',
+  }
+
+  const maxProjects: Record<string, string> = {
+    contractor_free: '3 active projects',
+    contractor_pro: '10 active projects',
+    contractor_elite: 'Unlimited projects',
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
-      <main className="md:ml-[220px] p-5 md:p-8 space-y-8">
-        <section className="max-w-6xl rounded-[28px] border border-border bg-card p-6 md:p-8">
-          <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-            <div className="max-w-3xl space-y-4">
-              <Link href="/dashboard/contractor" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
-                <ArrowLeft className="w-3.5 h-3.5" />
-                Return to your dashboard
-              </Link>
-              <Logo />
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight">Billing built to match the contractor portal.</h1>
-                <p className="text-sm leading-7 text-muted-foreground">
-                  Review membership capacity, open the Stripe billing portal, and upgrade with a layout that feels like the rest of your dashboard instead of a disconnected payment screen.
-                </p>
-              </div>
-            </div>
+      <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-8">
 
-            <div className="w-full max-w-md rounded-2xl border border-primary/20 bg-primary/5 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Membership summary</p>
-              <div className="mt-3 flex items-start gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-                  {isActive && currentPlan !== 'contractor_free' ? <Crown className="h-5 w-5" /> : <CreditCard className="h-5 w-5" />}
-                </div>
-                <div className="space-y-1">
-                  <p className="text-base font-semibold text-foreground">{PLAN_LABELS[currentPlan] ?? currentPlan}</p>
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    {PLAN_CAPACITY[currentPlan] ?? 'Project capacity depends on your current plan configuration.'}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-5 flex flex-wrap gap-3">
-                {hasPortalAccess && (
-                  <button
-                    onClick={handleManageBilling}
-                    disabled={portalLoading}
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {portalLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ExternalLink className="h-4 w-4" />}
-                    Open billing portal
-                  </button>
-                )}
-                <Link
-                  href="/dashboard/contractor/settings"
-                  className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground hover:border-primary hover:text-primary"
-                >
-                  <Shield className="h-4 w-4" />
-                  Update contractor profile
-                </Link>
-              </div>
-            </div>
-          </div>
+        {/* Header */}
+        <div>
+          <Link href="/dashboard/contractor" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors mb-5">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to dashboard
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight">Billing & Subscription</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Manage your membership and unlock more project capacity.
+          </p>
+        </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                title: 'Capacity by plan',
-                body: 'Each membership level clearly shows how many concurrent projects your team can manage.',
-                icon: BriefcaseBusiness,
-              },
-              {
-                title: 'Billing portal continuity',
-                body: 'The Stripe portal now returns you to contractor billing so plan management feels consistent.',
-                icon: ExternalLink,
-              },
-              {
-                title: 'Growth visibility',
-                body: 'Plan copy and pricing now explain how each upgrade supports more volume and better reporting.',
-                icon: BarChart3,
-              },
-            ].map(({ title, body, icon: Icon }) => (
-              <div key={title} className="rounded-2xl border border-border bg-background p-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Icon className="h-4 w-4" />
-                </div>
-                <h2 className="mt-4 text-sm font-semibold text-foreground">{title}</h2>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">{body}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {user.subscriptionStatus === 'past_due' && (
-          <section className="max-w-6xl rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
-              <p className="text-sm leading-6">
-                Your last payment did not complete. Please open the billing portal and update your payment method so your project capacity and contractor access remain uninterrupted.
-              </p>
-            </div>
-          </section>
-        )}
-
-        {!isActive && (
-          <section className="max-w-6xl rounded-2xl border border-primary/20 bg-primary/5 p-5">
-            <div className="flex items-start gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <TrendingUp className="h-4 w-4" />
+        {/* Current plan */}
+        <div className={`rounded-2xl border p-6 ${
+          isPaid ? 'border-primary/30 bg-primary/5' : 'border-border bg-card'
+        }`}>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                isPaid ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
+              }`}>
+                {isPaid ? <Crown className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
               </div>
               <div>
-                <h2 className="text-sm font-semibold text-foreground">Upgrade when you are ready to take on more work.</h2>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  Paid plans increase project capacity, improve visibility in the network, and unlock the reporting tools most growing contractors rely on every week.
+                <p className="font-bold text-foreground text-[15px]">
+                  {planLabels[currentPlan] ?? currentPlan}
+                </p>
+                <p className="text-[12px] text-muted-foreground mt-0.5">
+                  {maxProjects[currentPlan] ?? '—'}
                 </p>
               </div>
             </div>
-          </section>
-        )}
-
-        <section className="max-w-6xl">
-          <div className="mb-5">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">Choose the contractor plan that fits your operation.</h2>
-            <p className="mt-1 text-sm leading-7 text-muted-foreground">
-              Every plan includes access to the Nexus contractor network. Higher tiers expand project capacity and add the tools that support faster growth.
-            </p>
+            {isPaid && (
+              <button
+                onClick={handleManageBilling}
+                disabled={portalLoading}
+                className="inline-flex items-center gap-2 text-[12.5px] font-semibold text-primary border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors px-4 py-2 rounded-xl"
+              >
+                {portalLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ExternalLink className="w-3.5 h-3.5" />}
+                Manage billing
+              </button>
+            )}
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          {user.subscriptionStatus === 'past_due' && (
+            <div className="mt-4 flex items-center gap-2.5 text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3 text-[12px]">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>Your payment is past due. Please update your payment method to avoid losing access.</span>
+            </div>
+          )}
+        </div>
+
+        {/* Why upgrade callout */}
+        {!isPaid && (
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 flex items-start gap-4">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-semibold text-foreground text-[13.5px] mb-1">Grow your business with a paid plan</p>
+              <p className="text-[12.5px] text-muted-foreground leading-relaxed">
+                Contractors on paid plans earn significantly more — more project slots means more revenue. Upgrade today to take on more work without limits.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Plans grid */}
+        <div>
+          <h2 className="font-bold text-foreground text-[17px] mb-1">Plans</h2>
+          <p className="text-[13px] text-muted-foreground mb-5">
+            All plans include access to the verified Nexus contractor network.
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
             {plans.map((plan: Plan) => {
               const isCurrent = currentPlan === plan.id
               const isHighlighted = plan.highlighted
-              const isDowngrade = plan.priceInCents < currentPlanPrice
 
               return (
-                <article
+                <div
                   key={plan.id}
-                  className={`relative rounded-3xl border p-6 transition-all ${
+                  className={`relative rounded-2xl border p-5 flex flex-col transition-all ${
                     isHighlighted
                       ? 'border-primary/40 bg-primary/5 shadow-lg shadow-primary/10'
                       : 'border-border bg-card'
                   }`}
                 >
                   {plan.badge && (
-                    <div className="absolute -top-3 left-6">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold tracking-wide text-primary-foreground">
-                        <Star className="h-2.5 w-2.5" />
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[10px] font-bold px-3 py-1 rounded-full tracking-wide">
+                        <Star className="w-2.5 h-2.5" />
                         {plan.badge}
                       </span>
                     </div>
                   )}
 
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{plan.description}</p>
-                    <p className="mt-4 text-2xl font-bold text-foreground">{formatPrice(plan.priceInCents, plan.interval)}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{PLAN_CAPACITY[plan.id] ?? 'Custom capacity available.'}</p>
+                  <div className="mb-4">
+                    <h3 className="font-bold text-foreground text-[14px]">{plan.name}</h3>
+                    <p className="text-[11.5px] text-muted-foreground mt-1 leading-relaxed">{plan.description}</p>
+                    <p className="text-2xl font-bold text-foreground mt-3">
+                      {plan.priceInCents === 0 ? 'Free' : `$${plan.priceInCents / 100}`}
+                      {plan.priceInCents > 0 && (
+                        <span className="text-[12px] font-normal text-muted-foreground">/mo</span>
+                      )}
+                    </p>
                   </div>
 
-                  <ul className="mt-5 space-y-3">
-                    {plan.features.map(feature => (
-                      <li key={feature} className="flex items-start gap-2.5 text-sm leading-6 text-muted-foreground">
-                        <Check className="mt-1 h-4 w-4 flex-shrink-0 text-emerald-500" />
-                        <span>{feature}</span>
+                  <ul className="space-y-2 mb-5 flex-1">
+                    {plan.features.map(f => (
+                      <li key={f} className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                        <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        {f}
                       </li>
                     ))}
                   </ul>
 
-                  <div className="mt-6">
-                    {isCurrent ? (
-                      <div className="flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground">
-                        <Check className="h-4 w-4" />
-                        This is your current plan.
-                      </div>
-                    ) : isDowngrade ? (
-                      <button
-                        disabled
-                        className="w-full cursor-not-allowed rounded-xl bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground opacity-50"
-                      >
-                        Open the billing portal to request a downgrade.
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleUpgrade(plan.id)}
-                        disabled={checkoutLoading === plan.id}
-                        className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                          isHighlighted
-                            ? 'bg-primary text-primary-foreground hover:opacity-90'
-                            : 'border border-border bg-background hover:border-primary hover:text-primary'
-                        }`}
-                      >
-                        {checkoutLoading === plan.id ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Zap className="h-4 w-4" />
-                        )}
-                        Upgrade to {plan.name}
-                      </button>
-                    )}
-                  </div>
-                </article>
+                  {isCurrent ? (
+                    <div className="flex items-center justify-center gap-2 py-2 rounded-xl bg-secondary text-secondary-foreground text-[12px] font-semibold">
+                      <Check className="w-3.5 h-3.5" />
+                      Current Plan
+                    </div>
+                  ) : plan.priceInCents < (plans.find(p => p.id === currentPlan)?.priceInCents ?? 0) ? (
+                    <button disabled className="py-2 rounded-xl bg-secondary text-secondary-foreground text-[12px] font-semibold opacity-40 cursor-not-allowed">
+                      Downgrade
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleUpgrade(plan.id)}
+                      disabled={checkoutLoading === plan.id}
+                      className={`flex items-center justify-center gap-1.5 py-2 rounded-xl text-[12px] font-semibold transition-all ${
+                        isHighlighted
+                          ? 'bg-primary text-primary-foreground hover:opacity-90'
+                          : 'border border-border hover:border-primary hover:text-primary bg-background'
+                      }`}
+                    >
+                      {checkoutLoading === plan.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Zap className="w-3.5 h-3.5" />
+                      )}
+                      Upgrade
+                    </button>
+                  )}
+                </div>
               )
             })}
           </div>
-        </section>
+        </div>
+
+        {/* Security */}
+        <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground border border-border rounded-xl p-4">
+          <Shield className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+          <span>
+            All payments are processed securely by{' '}
+            <span className="font-semibold text-foreground">Stripe</span>.
+            Your card details are never stored on our servers.
+          </span>
+        </div>
       </main>
     </div>
   )
