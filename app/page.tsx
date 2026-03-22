@@ -473,6 +473,17 @@ export default function HomePage() {
               </div>
             </div>
 
+            <div className="space-y-4">
+              <div className="rounded-2xl overflow-hidden">
+                <Image
+                  src="/business-analytics-data-visualization.jpg"
+                  alt="Business analytics and data visualization"
+                  width={600}
+                  height={280}
+                  className="w-full object-cover rounded-2xl"
+                  style={{ maxHeight: '220px' }}
+                />
+              </div>
             <div className="rounded-2xl border border-border/60 bg-card overflow-hidden glow-card">
               <div className="px-5 py-4 border-b border-border/60 bg-muted/30">
                 <p className="text-[11px] font-mono-label text-muted-foreground">Post-project report contents</p>
@@ -496,6 +507,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -610,6 +622,14 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-3">
+              <Image
+                src="/business-handshake-professional-meeting.jpg"
+                alt="Professional contractor and client meeting"
+                width={600}
+                height={240}
+                className="w-full object-cover rounded-2xl mb-2"
+                style={{ maxHeight: '200px' }}
+              />
               {[
                 { icon: CheckCircle2, title: 'No joining fee',            desc: 'Free to join, free to stay active. No monthly costs.' },
                 { icon: Shield,       title: 'Pre-screened projects',     desc: 'Every request is reviewed before it reaches you.' },
