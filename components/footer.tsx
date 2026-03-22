@@ -16,13 +16,13 @@ export function Footer() {
             </p>
             <div className="flex flex-col gap-2">
               <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
-                <Phone className="h-3 w-3 flex-shrink-0" /> (785) 727-1106
+                <Phone className="h-3 w-3 flex-shrink-0" /> 785-727-1106
               </a>
               <a href="mailto:admin@nexusoperations.org" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
                 <Mail className="h-3 w-3 flex-shrink-0" /> admin@nexusoperations.org
               </a>
               <span className="inline-flex items-start gap-1.5 text-[12px] text-muted-foreground">
-                <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" /> 2611 SW 17th St #5002, Topeka, KS 66604
+                <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" /> 2611 SW 17th St, Topeka, KS 66604
               </span>
             </div>
           </div>

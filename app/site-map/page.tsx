@@ -49,7 +49,7 @@ const sections = [
   {
     label: "Contact",
     links: [
-      { href: "tel:+17857271106",                    label: "(785) 727-1106",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
+      { href: "tel:+17857271106",                    label: "785-727-1106",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
       { href: "mailto:admin@nexusoperations.org",    label: "admin@nexusoperations.org",   desc: "Email support — responses within one business day", external: true },
     ],
   },
