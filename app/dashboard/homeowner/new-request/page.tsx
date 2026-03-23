@@ -223,7 +223,7 @@ export default function NewProjectRequest() {
         router.push('/auth/login')
       }} />
 
-      <main className="md:ml-[240px] p-5 md:p-7">
+      <main className="md:ml-[220px] p-5 md:p-7">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">

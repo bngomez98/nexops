@@ -100,7 +100,7 @@ export default function HomeownerBillingPage() {
   return (
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
-      <main className="md:ml-[240px] p-5 md:p-8 max-w-4xl space-y-8">
+      <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-8">
 
         {/* Header */}
         <div>
