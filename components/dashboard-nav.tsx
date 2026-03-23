@@ -1,15 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'
 import {
-  LogOut, Menu, LayoutDashboard, FileText,
+  LogOut, Menu, LayoutDashboard,
   Settings, TrendingUp, ChevronRight, Briefcase,
-  PlusCircle, CreditCard, ShieldCheck,
+  PlusCircle, CreditCard, ShieldCheck, User, Building2,
+  ClipboardList, Receipt, Wallet, Home, FolderOpen,
+  Users, ShieldAlert, BarChart3, HelpCircle,
 } from 'lucide-react'
 
 interface NavItem {
@@ -21,21 +22,50 @@ interface NavItem {
 
 const NAV_ITEMS: Record<string, NavItem[]> = {
   homeowner: [
-    { label: 'Dashboard', href: '/dashboard/homeowner', icon: LayoutDashboard, exact: true },
-    { label: 'New Request', href: '/dashboard/homeowner/new-request', icon: FileText, exact: true },
-    { label: 'Settings', href: '/dashboard/homeowner/settings', icon: Settings, exact: true },
+    { label: 'Dashboard',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
+    { label: 'Requests',    href: '/dashboard/homeowner/requests',   icon: ClipboardList },
+    { label: 'New Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
+    { label: 'Properties',  href: '/dashboard/homeowner/properties', icon: Home },
+    { label: 'Documents',   href: '/dashboard/homeowner/documents',  icon: FolderOpen },
+    { label: 'Invoices',    href: '/dashboard/homeowner/invoices',   icon: Receipt },
+    { label: 'Payments',    href: '/dashboard/homeowner/payments',   icon: Wallet },
+    { label: 'Profile',     href: '/dashboard/homeowner/profile',    icon: User },
+    { label: 'Settings',    href: '/dashboard/homeowner/settings',   icon: Settings, exact: true },
   ],
   contractor: [
-    { label: 'Dashboard', href: '/dashboard/contractor', icon: LayoutDashboard, exact: true },
-    { label: 'My Projects', href: '/dashboard/contractor/my-projects', icon: Briefcase, exact: true },
-    { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp, exact: true },
-    { label: 'Settings', href: '/dashboard/contractor/settings', icon: Settings, exact: true },
+    { label: 'Dashboard',   href: '/dashboard/contractor',              icon: LayoutDashboard, exact: true },
+    { label: 'Jobs',        href: '/dashboard/contractor/jobs',         icon: Briefcase },
+    { label: 'My Projects', href: '/dashboard/contractor/my-projects',  icon: ClipboardList, exact: true },
+    { label: 'Invoices',    href: '/dashboard/contractor/invoices',     icon: Receipt },
+    { label: 'Payments',    href: '/dashboard/contractor/payments',     icon: Wallet },
+    { label: 'Documents',   href: '/dashboard/contractor/documents',    icon: FolderOpen },
+    { label: 'Analytics',   href: '/dashboard/contractor/analytics',    icon: TrendingUp, exact: true },
+    { label: 'Profile',     href: '/dashboard/contractor/profile',      icon: User },
+    { label: 'Settings',    href: '/dashboard/contractor/settings',     icon: Settings, exact: true },
+  ],
+  'property-manager': [
+    { label: 'Dashboard',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
+    { label: 'Properties',  href: '/dashboard/property-manager/properties',       icon: Building2 },
+    { label: 'Requests',    href: '/dashboard/property-manager/requests',         icon: ClipboardList },
+    { label: 'Invoices',    href: '/dashboard/property-manager/invoices',         icon: Receipt },
+    { label: 'Payments',    href: '/dashboard/property-manager/payments',         icon: Wallet },
+    { label: 'Documents',   href: '/dashboard/property-manager/documents',        icon: FolderOpen },
+    { label: 'Settings',    href: '/dashboard/property-manager/settings',        icon: Settings, exact: true },
+  ],
+  admin: [
+    { label: 'Overview',     href: '/dashboard/admin',             icon: LayoutDashboard, exact: true },
+    { label: 'Contractors',  href: '/dashboard/admin/contractors', icon: ShieldAlert },
+    { label: 'Jobs',         href: '/dashboard/admin/jobs',        icon: Briefcase },
+    { label: 'Matches',      href: '/dashboard/admin/matches',     icon: BarChart3 },
+    { label: 'Users',        href: '/dashboard/admin/users',       icon: Users },
+    { label: 'Invoices',     href: '/dashboard/admin/invoices',    icon: Receipt },
+    { label: 'Documents',    href: '/dashboard/admin/documents',   icon: FolderOpen },
   ],
 }
 
 interface DashboardNavProps {
   userName: string
-  role: 'homeowner' | 'contractor'
+  role: 'homeowner' | 'contractor' | 'property-manager' | 'admin'
   onLogout: () => void
 }
 
@@ -46,17 +76,27 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
 
   const initials = userName.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
 
-  const quickActions = useMemo(() => (
-    role === 'homeowner'
-      ? [
-          { label: 'Submit request', href: '/dashboard/homeowner/new-request', icon: PlusCircle },
-          { label: 'Billing', href: '/dashboard/homeowner/billing', icon: CreditCard },
-        ]
-      : [
-          { label: 'Browse leads', href: '/dashboard/contractor', icon: PlusCircle },
-          { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp },
-        ]
-  ), [role])
+  const quickActions = useMemo(() => {
+    if (role === 'homeowner') {
+      return [
+        { label: 'Submit request', href: '/dashboard/homeowner/new-request', icon: PlusCircle },
+        { label: 'Billing', href: '/dashboard/homeowner/billing', icon: CreditCard },
+      ]
+    }
+    if (role === 'contractor') {
+      return [
+        { label: 'Browse leads', href: '/dashboard/contractor', icon: PlusCircle },
+        { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp },
+      ]
+    }
+    if (role === 'property-manager') {
+      return [
+        { label: 'New request', href: '/dashboard/property-manager/requests/new', icon: PlusCircle },
+        { label: 'Properties', href: '/dashboard/property-manager/properties', icon: Building2 },
+      ]
+    }
+    return []
+  }, [role])
 
   function active(item: NavItem) {
     return item.exact ? pathname === item.href : pathname.startsWith(item.href)
@@ -76,15 +116,19 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         }`}
       >
         <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border flex-shrink-0">
-          <Link href="/" aria-label="Nexus Operations home">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={120}
-              height={40}
-              className="h-6 w-auto brightness-0 invert"
-              priority
-            />
+          <Link href="/" aria-label="Nexus Operations home" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+            <svg width="26" height="26" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+              <line x1="60" y1="47" x2="60" y2="73" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
+              <line x1="47" y1="60" x2="73" y2="60" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
+            </svg>
+            <div style={{ lineHeight: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>NEXUS</div>
+              <div style={{ fontSize: 7.5, fontWeight: 700, color: '#3aad58', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
+            </div>
           </Link>
         </div>
 
@@ -110,7 +154,7 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5 scrollbar-thin">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-sidebar-muted px-2 mb-3">
-              {role === 'homeowner' ? 'Homeowner' : 'Contractor'}
+              {role === 'homeowner' ? 'Homeowner' : role === 'contractor' ? 'Contractor' : role === 'property-manager' ? 'Prop. Manager' : 'Admin'}
             </p>
             <div className="space-y-0.5">
               {navItems.map(item => {
@@ -198,6 +242,7 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
 
         <div className="flex items-center gap-2">
           {role === 'contractor' && <NotificationBell />}
+          {role === 'property-manager' && <NotificationBell />}
           <div className="h-5 w-px bg-border" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">

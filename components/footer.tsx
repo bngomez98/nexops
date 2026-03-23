@@ -26,7 +26,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="mb-4">
-              <Logo />
+              <Logo adaptive />
             </div>
             <p className="text-[12px] text-muted-foreground leading-relaxed max-w-xs mb-4">
               Managed property maintenance for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.

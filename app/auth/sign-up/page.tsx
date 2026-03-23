@@ -36,7 +36,8 @@ function SignUpInner() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  const isContractor = role === "contractor"
+  const isContractor      = role === "contractor"
+  const isPropertyManager = role === "property-manager"
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
@@ -97,7 +98,10 @@ function SignUpInner() {
         return
       }
 
-      window.location.href = isContractor ? "/dashboard/contractor" : "/dashboard/homeowner"
+      const dest = isContractor ? "/onboarding/contractor"
+        : role === "property-manager" ? "/onboarding/property-manager"
+        : "/onboarding/homeowner"
+      window.location.href = dest
     } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
@@ -210,8 +214,9 @@ function SignUpInner() {
           {/* Role toggle */}
           <div className="flex rounded-xl border border-border overflow-hidden mb-6 bg-muted/30 p-1 gap-1">
             {[
-              { key: "homeowner", label: "Homeowner" },
-              { key: "contractor", label: "Contractor" },
+              { key: "homeowner",        label: "Homeowner" },
+              { key: "contractor",       label: "Contractor" },
+              { key: "property-manager", label: "Prop. Manager" },
             ].map(r => (
               <button
                 key={r.key}
@@ -327,7 +332,7 @@ function SignUpInner() {
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating account...</>
               ) : (
                 <span className="flex items-center gap-1.5">
-                  Create {isContractor ? "Contractor" : "Homeowner"} Account
+                  Create {isContractor ? "Contractor" : isPropertyManager ? "Property Manager" : "Homeowner"} Account
                   <ChevronRight className="w-4 h-4" />
                 </span>
               )}
