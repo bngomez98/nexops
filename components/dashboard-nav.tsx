@@ -11,7 +11,6 @@ import {
   PlusCircle, CreditCard, ShieldCheck, User, Building2,
   ClipboardList, Receipt, Wallet, Home, FolderOpen,
   Users, ShieldAlert, BarChart3, HelpCircle,
-  PlusCircle, CreditCard, ShieldCheck, HelpCircle,
 } from 'lucide-react'
 
 interface NavItem {
