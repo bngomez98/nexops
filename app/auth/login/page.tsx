@@ -27,7 +27,15 @@ export default function LoginPage() {
       return
     }
     const role = data.user?.user_metadata?.role
-    window.location.href = role === "contractor" ? "/dashboard/contractor" : "/dashboard"
+    if (role === "contractor") {
+      window.location.href = "/dashboard/contractor"
+    } else if (role === "property-manager") {
+      window.location.href = "/dashboard/property-manager"
+    } else if (role === "admin") {
+      window.location.href = "/dashboard/admin"
+    } else {
+      window.location.href = "/dashboard/homeowner"
+    }
   }
 
   return (
