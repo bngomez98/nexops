@@ -9,7 +9,9 @@ import { NotificationBell } from '@/components/notification-bell'
 import {
   LogOut, Menu, LayoutDashboard, FileText,
   Settings, TrendingUp, ChevronRight, Briefcase,
-  PlusCircle, CreditCard, ShieldCheck,
+  PlusCircle, CreditCard, ShieldCheck, User, Building2,
+  ClipboardList, Receipt, Wallet, Home, FolderOpen,
+  Users, ShieldAlert, BarChart3, HelpCircle,
 } from 'lucide-react'
 
 interface NavItem {
@@ -21,21 +23,50 @@ interface NavItem {
 
 const NAV_ITEMS: Record<string, NavItem[]> = {
   homeowner: [
-    { label: 'Dashboard', href: '/dashboard/homeowner', icon: LayoutDashboard, exact: true },
-    { label: 'New Request', href: '/dashboard/homeowner/new-request', icon: FileText, exact: true },
-    { label: 'Settings', href: '/dashboard/homeowner/settings', icon: Settings, exact: true },
+    { label: 'Dashboard',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
+    { label: 'Requests',    href: '/dashboard/homeowner/requests',   icon: ClipboardList },
+    { label: 'New Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
+    { label: 'Properties',  href: '/dashboard/homeowner/properties', icon: Home },
+    { label: 'Documents',   href: '/dashboard/homeowner/documents',  icon: FolderOpen },
+    { label: 'Invoices',    href: '/dashboard/homeowner/invoices',   icon: Receipt },
+    { label: 'Payments',    href: '/dashboard/homeowner/payments',   icon: Wallet },
+    { label: 'Profile',     href: '/dashboard/homeowner/profile',    icon: User },
+    { label: 'Settings',    href: '/dashboard/homeowner/settings',   icon: Settings, exact: true },
   ],
   contractor: [
-    { label: 'Dashboard', href: '/dashboard/contractor', icon: LayoutDashboard, exact: true },
-    { label: 'My Projects', href: '/dashboard/contractor/my-projects', icon: Briefcase, exact: true },
-    { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp, exact: true },
-    { label: 'Settings', href: '/dashboard/contractor/settings', icon: Settings, exact: true },
+    { label: 'Dashboard',   href: '/dashboard/contractor',              icon: LayoutDashboard, exact: true },
+    { label: 'Jobs',        href: '/dashboard/contractor/jobs',         icon: Briefcase },
+    { label: 'My Projects', href: '/dashboard/contractor/my-projects',  icon: ClipboardList, exact: true },
+    { label: 'Invoices',    href: '/dashboard/contractor/invoices',     icon: Receipt },
+    { label: 'Payments',    href: '/dashboard/contractor/payments',     icon: Wallet },
+    { label: 'Documents',   href: '/dashboard/contractor/documents',    icon: FolderOpen },
+    { label: 'Analytics',   href: '/dashboard/contractor/analytics',    icon: TrendingUp, exact: true },
+    { label: 'Profile',     href: '/dashboard/contractor/profile',      icon: User },
+    { label: 'Settings',    href: '/dashboard/contractor/settings',     icon: Settings, exact: true },
+  ],
+  'property-manager': [
+    { label: 'Dashboard',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
+    { label: 'Properties',  href: '/dashboard/property-manager/properties',       icon: Building2 },
+    { label: 'Requests',    href: '/dashboard/property-manager/requests',         icon: ClipboardList },
+    { label: 'Invoices',    href: '/dashboard/property-manager/invoices',         icon: Receipt },
+    { label: 'Payments',    href: '/dashboard/property-manager/payments',         icon: Wallet },
+    { label: 'Documents',   href: '/dashboard/property-manager/documents',        icon: FolderOpen },
+    { label: 'Settings',    href: '/dashboard/homeowner/settings',                icon: Settings, exact: true },
+  ],
+  admin: [
+    { label: 'Overview',     href: '/dashboard/admin',             icon: LayoutDashboard, exact: true },
+    { label: 'Contractors',  href: '/dashboard/admin/contractors', icon: ShieldAlert },
+    { label: 'Jobs',         href: '/dashboard/admin/jobs',        icon: Briefcase },
+    { label: 'Matches',      href: '/dashboard/admin/matches',     icon: BarChart3 },
+    { label: 'Users',        href: '/dashboard/admin/users',       icon: Users },
+    { label: 'Invoices',     href: '/dashboard/admin/invoices',    icon: Receipt },
+    { label: 'Documents',    href: '/dashboard/admin/documents',   icon: FolderOpen },
   ],
 }
 
 interface DashboardNavProps {
   userName: string
-  role: 'homeowner' | 'contractor'
+  role: 'homeowner' | 'contractor' | 'property-manager' | 'admin'
   onLogout: () => void
 }
 
@@ -46,17 +77,27 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
 
   const initials = userName.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
 
-  const quickActions = useMemo(() => (
-    role === 'homeowner'
-      ? [
-          { label: 'Submit request', href: '/dashboard/homeowner/new-request', icon: PlusCircle },
-          { label: 'Billing', href: '/dashboard/homeowner/billing', icon: CreditCard },
-        ]
-      : [
-          { label: 'Browse leads', href: '/dashboard/contractor', icon: PlusCircle },
-          { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp },
-        ]
-  ), [role])
+  const quickActions = useMemo(() => {
+    if (role === 'homeowner') {
+      return [
+        { label: 'Submit request', href: '/dashboard/homeowner/new-request', icon: PlusCircle },
+        { label: 'Billing', href: '/dashboard/homeowner/billing', icon: CreditCard },
+      ]
+    }
+    if (role === 'contractor') {
+      return [
+        { label: 'Browse leads', href: '/dashboard/contractor', icon: PlusCircle },
+        { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp },
+      ]
+    }
+    if (role === 'property-manager') {
+      return [
+        { label: 'New request', href: '/dashboard/property-manager/requests/new', icon: PlusCircle },
+        { label: 'Properties', href: '/dashboard/property-manager/properties', icon: Building2 },
+      ]
+    }
+    return []
+  }, [role])
 
   function active(item: NavItem) {
     return item.exact ? pathname === item.href : pathname.startsWith(item.href)
@@ -110,7 +151,7 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5 scrollbar-thin">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-sidebar-muted px-2 mb-3">
-              {role === 'homeowner' ? 'Homeowner' : 'Contractor'}
+              {role === 'homeowner' ? 'Homeowner' : role === 'contractor' ? 'Contractor' : role === 'property-manager' ? 'Prop. Manager' : 'Admin'}
             </p>
             <div className="space-y-0.5">
               {navItems.map(item => {
@@ -198,6 +239,7 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
 
         <div className="flex items-center gap-2">
           {role === 'contractor' && <NotificationBell />}
+          {role === 'property-manager' && <NotificationBell />}
           <div className="h-5 w-px bg-border" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">
