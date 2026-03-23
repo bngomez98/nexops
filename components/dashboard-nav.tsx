@@ -51,7 +51,7 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { label: 'Invoices',    href: '/dashboard/property-manager/invoices',         icon: Receipt },
     { label: 'Payments',    href: '/dashboard/property-manager/payments',         icon: Wallet },
     { label: 'Documents',   href: '/dashboard/property-manager/documents',        icon: FolderOpen },
-    { label: 'Settings',    href: '/dashboard/homeowner/settings',                icon: Settings, exact: true },
+    { label: 'Settings',    href: '/dashboard/property-manager/settings',         icon: Settings, exact: true },
   ],
   admin: [
     { label: 'Overview',     href: '/dashboard/admin',             icon: LayoutDashboard, exact: true },

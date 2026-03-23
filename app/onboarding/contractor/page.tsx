@@ -386,7 +386,7 @@ export default function ContractorOnboardingPage() {
                   <User className="w-10 h-10 text-muted-foreground" />
                 </div>
               )}
-              <input id="photoInput" type="file" accept=".jpg,.jpeg,.png" className="hidden" onChange={e => handleFileChange("photoFile", "photName", e)} />
+              <input id="photoInput" type="file" accept=".jpg,.jpeg,.png" className="hidden" onChange={e => handleFileChange("photoFile", "photoName", e)} />
               <label htmlFor="photoInput" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-background text-[13px] font-medium cursor-pointer hover:bg-muted transition-colors">
                 <Upload className="w-4 h-4" />
                 {formData.photoPreview ? "Change photo" : "Upload photo"}

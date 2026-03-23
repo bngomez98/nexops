@@ -21,6 +21,7 @@ function CallbackInner() {
         return
       }
 
+      const userId = data.session.user.id
       const role = data.session.user?.user_metadata?.role as string | undefined
       const next = params.get("next")
 
@@ -29,7 +30,25 @@ function CallbackInner() {
         return
       }
 
-      // Route to appropriate onboarding or dashboard based on role
+      // Check whether the user has already completed onboarding (profile row exists)
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("user_id", userId)
+        .maybeSingle()
+
+      if (profile) {
+        // Onboarding already completed — send to their dashboard
+        const dashboardMap: Record<string, string> = {
+          contractor:        "/dashboard/contractor",
+          "property-manager": "/dashboard/property-manager",
+          admin:             "/dashboard/admin",
+        }
+        router.push(dashboardMap[role ?? ""] ?? "/dashboard/homeowner")
+        return
+      }
+
+      // New user — route to role-specific onboarding
       if (role === "contractor") {
         router.push("/onboarding/contractor")
       } else if (role === "property-manager") {
