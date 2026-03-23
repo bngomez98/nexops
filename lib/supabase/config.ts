@@ -13,13 +13,7 @@ export function getSupabaseBrowserConfig(): SupabaseConfig {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!url || !anonKey) {
-    if (typeof window === 'undefined') {
-      return FALLBACK_SUPABASE_CONFIG
-    }
-
-    throw new Error(
-      'Missing Supabase browser environment variables. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.',
-    )
+    return FALLBACK_SUPABASE_CONFIG
   }
 
   return { url, anonKey }

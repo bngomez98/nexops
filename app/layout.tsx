@@ -15,9 +15,9 @@ const ZENDESK_KEY = "d8a1128c-008a-443c-894e-4a0fd463bb57"
 
 const THEME_INIT_SCRIPT = `(function(){var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='dark'?'dark':'light');})()`
 
-const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM-PL3NBCWD}');`
+const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
 
-const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GTM-PL3NBCWD}');`
+const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
@@ -96,7 +96,7 @@ export default function RootLayout({
           {GTM_INIT_SCRIPT}
         </Script>
         {/* Google Analytics */}
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GTM-PL3NBCWD}`} strategy="afterInteractive" />
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
@@ -107,13 +107,14 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
       </head>
-      <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PL3NBCWD');</script>
-<!-- End Google Tag Manager -->
+      <body>
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
         </noscript>
         <AuthProvider>
           {children}
@@ -122,10 +123,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <Analytics />
         <SpeedInsights />
         <ZendeskWidget />
-      </body><!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PL3NBCWD"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+      </body>
     </html>
   )
 }
