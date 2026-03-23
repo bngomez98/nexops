@@ -1,8 +1,18 @@
 "use client"
+
 import Link from "next/link"
 import { Logo } from "@/components/logo"
-import { Menu, X } from "lucide-react"
+import { Menu, X, ArrowRight, Phone } from "lucide-react"
 import { useState, useEffect } from "react"
+import { CONTACT_INFO } from "@/lib/contact-info"
+
+const nav = [
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "How It Works", href: "/#process" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Contact", href: "/contact" },
+]
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -14,22 +24,32 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  const nav = [
-    { label: "About",        href: "/about" },
-    { label: "Services",     href: "/services" },
-    { label: "How It Works", href: "/#process" },
-    { label: "Pricing",      href: "/pricing" },
-    { label: "Contact",      href: "/contact" },
-  ]
-
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-background/95 backdrop-blur-xl border-b border-border shadow-sm"
-          : "bg-transparent"
+          : "bg-background/72 backdrop-blur-md"
       }`}
     >
+      <div className="border-b border-border/60 bg-foreground/[0.02]">
+        <div className="mx-auto flex h-9 max-w-6xl items-center justify-between px-6 text-[11px] text-muted-foreground lg:px-8">
+          <p className="hidden sm:block">
+            Fast, verified property maintenance coordination for homeowners and contractors.
+          </p>
+          <div className="flex items-center gap-3 sm:ml-auto">
+            <a href={CONTACT_INFO.phoneHref} className="inline-flex items-center gap-1 hover:text-foreground transition-colors">
+              <Phone className="h-3 w-3" />
+              {CONTACT_INFO.phoneDisplay}
+            </a>
+            <Link href="/contractors" className="inline-flex items-center gap-1 font-medium text-foreground hover:text-primary transition-colors">
+              Contractor network
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" aria-label="Nexus Operations home">
@@ -57,9 +77,10 @@ export function Header() {
             </Link>
             <Link
               href="/auth/sign-up"
-              className="inline-flex items-center px-4 py-2 text-[12.5px] font-semibold bg-primary text-primary-foreground rounded-full hover:opacity-90 transition shadow-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 text-[12.5px] font-semibold bg-primary text-primary-foreground rounded-full hover:opacity-90 transition shadow-sm"
             >
               Get Started
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
@@ -87,6 +108,12 @@ export function Header() {
                   {l.label}
                 </Link>
               ))}
+              <div className="mt-4 rounded-xl border border-border bg-card/70 p-3 text-[12px] text-muted-foreground">
+                <p className="font-medium text-foreground">Need help now?</p>
+                <a href={CONTACT_INFO.phoneHref} className="mt-1 inline-flex items-center gap-1 text-primary hover:underline">
+                  <Phone className="h-3.5 w-3.5" /> {CONTACT_INFO.phoneDisplay}
+                </a>
+              </div>
               <div className="flex gap-3 mt-4 pt-4 border-t border-border">
                 <Link
                   href="/auth/login"
