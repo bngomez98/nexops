@@ -1,102 +1,9 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Menu, X } from 'lucide-react'
 
-const trustStats = [
-  { value: 98,   suffix: '%', label: 'Satisfaction rate',     icon: Star },
-  { value: 1,    suffix: ' hr', label: 'Emergency response',  icon: Clock },
-  { value: 500,  suffix: '+', label: 'Projects completed',    icon: BarChart3 },
-  { value: 150,  suffix: '+', label: 'Verified contractors',  icon: Users },
-]
-
-/* ─── Animated counter hook ──────────────────────────────────────── */
-function useCounter(target: number, duration = 2000, start = false) {
-  const [count, setCount] = useState(0)
-  useEffect(() => {
-    if (!start) return
-    let raf: number
-    const startTime = performance.now()
-    function tick(now: number) {
-      const elapsed = now - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      setCount(Math.round(eased * target))
-      if (progress < 1) raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [target, duration, start])
-  return count
-}
-
-/* ─── Intersection observer hook ─────────────────────────────────── */
-function useInView(threshold = 0.2) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [inView, setInView] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold })
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [threshold])
-  return { ref, inView }
-}
-
-/* ─── Stat counter component ─────────────────────────────────────── */
-function StatCounter({ value, suffix, label, icon: Icon }: { value: number; suffix: string; label: string; icon: React.ElementType }) {
-  const { ref, inView } = useInView(0.3)
-  const count = useCounter(value, 1800, inView)
-  return (
-    <div ref={ref} style={{ textAlign: 'center', padding: '24px 16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8 }}>
-        <Icon size={18} style={{ color: '#3aad58' }} />
-      </div>
-      <div style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 900, letterSpacing: '-0.04em', color: '#fff', lineHeight: 1 }}>
-        {count}{suffix}
-      </div>
-      <div style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', marginTop: 6, fontWeight: 500, letterSpacing: '0.03em' }}>
-        {label}
-      </div>
-    </div>
-  )
-}
-
-/* ─── Fade-up section wrapper ─────────────────────────────────────── */
-function FadeUp({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const { ref, inView } = useInView(0.1)
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(28px)',
-        transition: `opacity 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-/* ─── Nexus orbital icon (inline SVG) ───────────────────────────── */
-function NexusIcon({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-      <line x1="60" y1="47" x2="60" y2="73" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
-      <line x1="47" y1="60" x2="73" y2="60" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
-    </svg>
-  )
-}
-
-/* ─── Main ────────────────────────────────────────────────────────── */
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
@@ -106,13 +13,6 @@ export default function HomePage() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const BG = '#0a0a0a'
-  const CARD = '#111111'
-  const CARD2 = '#161616'
-  const BORDER = 'rgba(255,255,255,0.08)'
-  const GREEN = '#3aad58'
-  const GREEN_DIM = 'rgba(58,173,88,0.12)'
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
@@ -176,7 +76,6 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-          </FadeUp>
 
             {/* Hero Visual */}
             <div className="relative hidden lg:block animate-fade-up" style={{ animationDelay: '0.1s' }}>
@@ -200,14 +99,10 @@ export default function HomePage() {
                       </div>
                     ))}
                   </div>
-                  <Link href="/auth/sign-up" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, background: GREEN, color: '#fff', fontSize: 13.5, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s' }}
-                    onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-                    onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                  >Submit a request <ArrowRight size={14} /></Link>
                 </div>
-              </FadeUp>
+              </div>
             </div>
-          )}
+          </div>
 
           {/* Stats */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up" style={{ animationDelay: '0.2s' }}>
