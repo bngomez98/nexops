@@ -3,6 +3,8 @@ type SupabaseLikeError = {
   message?: string | null
 }
 
+// These messages are specific to Supabase/PostgreSQL error formats and may need
+// updating if Supabase changes its error message wording in future versions.
 const MISSING_SERVICE_REQUESTS_MESSAGES = [
   "Could not find the table 'public.service_requests' in the schema cache",
   'relation "public.service_requests" does not exist',

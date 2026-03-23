@@ -20,6 +20,7 @@ alter table public.profiles
     check (contractor_minimum_service_fee is null or contractor_minimum_service_fee >= 0);
 
 alter table public.service_requests
+  -- Default 9900 cents ($99.00) matches SERVICE_REQUEST_FEE_CENTS in lib/billing/config.ts
   add column if not exists owner_fee_amount_cents integer not null default 9900,
   add column if not exists contractor_fee_amount_cents integer not null default 9900,
   add column if not exists owner_fee_paid boolean not null default false,
