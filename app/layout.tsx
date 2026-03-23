@@ -133,6 +133,7 @@ export default function RootLayout({
           {GTM_INIT_SCRIPT}
         </Script>
         {/* Google Analytics 4 */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"

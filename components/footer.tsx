@@ -115,6 +115,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {CONTACT_INFO.companyName}. {CONTACT_INFO.cityState}. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center gap-5">
+            <span className="text-[11.5px] text-muted-foreground hidden sm:block">Built for transparent project tracking and cleaner dispatch workflows.</span>
             <Link href="/terms"          className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
             <Link href="/privacy"        className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
             <Link href="/user-agreement" className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">User Agreement</Link>

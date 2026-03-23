@@ -132,39 +132,47 @@ export default function AboutPage() {
         {/* Founder */}
         <section className="py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Leadership
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-8">
-                Founded and operated by Brianna Gomez.
-              </h2>
-              <div className="p-6 lg:p-8 rounded-xl bg-card border border-border">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="w-20 h-20 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-                    <span className="text-2xl font-semibold text-foreground/40">
-                      BG
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Brianna Gomez
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Chief Executive Member
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Brianna founded Nexus Operations in January 2026 to
-                      address a specific operational gap she identified in the
-                      Topeka property management market: property managers were
-                      spending disproportionate time coordinating vendor
-                      relationships instead of managing their core
-                      responsibilities. Nexus Operations was built to absorb
-                      that coordination burden entirely, starting with
-                      commercial property maintenance and expanding into
-                      broader B2B operational support.
-                    </p>
-                  </div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              Leadership
+            </p>
+            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-10">
+              Founded and operated by Brianna Gomez.
+            </h2>
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary">
+                  <Image
+                    src="/business-growth-success-strategy.jpg"
+                    alt="Nexus Operations founder"
+                    width={600}
+                    height={450}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-foreground/90 backdrop-blur-sm p-4 text-background">
+                  <p className="font-semibold text-sm">Brianna Gomez</p>
+                  <p className="text-xs opacity-60 mt-0.5">Chief Executive Member · Nexus Operations, LLC</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  Brianna founded Nexus Operations in January 2026 to address a specific operational gap she identified in the Topeka property management market: property managers were spending disproportionate time coordinating vendor relationships instead of managing their core responsibilities.
+                </p>
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  Nexus Operations was built to absorb that coordination burden entirely, starting with commercial property maintenance and expanding into broader B2B operational support.
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-4">
+                  {[
+                    { label: 'Company formed', value: 'January 2026' },
+                    { label: 'Headquarters', value: 'Topeka, KS' },
+                    { label: 'Service area', value: 'Shawnee County' },
+                    { label: 'Business type', value: 'LLC · Kansas' },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="p-4 rounded-xl bg-secondary/60 border border-border">
+                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{label}</p>
+                      <p className="text-sm font-semibold text-foreground">{value}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
