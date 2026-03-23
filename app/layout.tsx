@@ -5,15 +5,30 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/app/lib/auth-context"
-import { RequestsProvider } from "@/app/lib/requests-context"
+import { CookieConsentBanner } from "@/components/cookie-consent"
 import { ZendeskWidget } from "@/components/zendesk-widget"
 import "./globals.css"
 
 const GTM_ID = "GTM-PL3NBCWD"
 const GA_ID = "G-LDGVHFCMKT"
-const ZENDESK_KEY = "d8a1128c-008a-443c-894e-4a0fd463bb57"
 
 const THEME_INIT_SCRIPT = `(function(){var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='dark'?'dark':'light');})()`
+
+// Initialise dataLayer and set consent to denied before GTM/GA load (Consent Mode v2)
+const CONSENT_DEFAULT_SCRIPT = [
+  `window.dataLayer=window.dataLayer||[];`,
+  `function gtag(){dataLayer.push(arguments);}`,
+  `gtag('consent','default',{`,
+  `  analytics_storage:'denied',`,
+  `  ad_storage:'denied',`,
+  `  ad_user_data:'denied',`,
+  `  ad_personalization:'denied',`,
+  `  wait_for_update:500`,
+  `});`,
+  `gtag('set','ads_data_redaction',true);`,
+].join('\n')
+
+const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
 
 const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
 
@@ -83,7 +98,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* Theme flash prevention */}
+        {/* Prevent theme flash */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -91,23 +106,27 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif&display=swap"
           rel="stylesheet"
         />
+        {/* Consent Mode v2 — must run before GTM/GA */}
+        <Script id="consent-default" strategy="beforeInteractive">
+          {CONSENT_DEFAULT_SCRIPT}
+        </Script>
         {/* Google Tag Manager */}
         <Script id="gtm-init" strategy="afterInteractive">
           {GTM_INIT_SCRIPT}
         </Script>
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
         {/* Google Analytics */}
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
-        {/* Zendesk Widget */}
-        <Script
-          id="ze-snippet"
-          src={`https://static.zdassets.com/ekr/snippet.js?key=${ZENDESK_KEY}`}
-          strategy="lazyOnload"
-        />
       </head>
       <body>
+        {/* GTM noscript fallback */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -119,6 +138,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
+        <CookieConsentBanner />
         <Toaster position="bottom-right" richColors closeButton />
         <Analytics />
         <SpeedInsights />

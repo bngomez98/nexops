@@ -184,7 +184,7 @@ function HomeownerDashboardInner() {
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
 
-      <main className="md:ml-[220px] p-5 md:p-7 space-y-6">
+      <main id="main-content" className="md:ml-[240px] p-5 md:p-7 space-y-6">
         {/* Welcome banner */}
         <div className="relative overflow-hidden rounded-2xl bg-primary p-6 md:p-8 text-primary-foreground">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
