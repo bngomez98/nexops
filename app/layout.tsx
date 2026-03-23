@@ -32,6 +32,26 @@ const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.star
 
 const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
 
+// Accept only numeric merchant IDs to prevent injection
+const GOOGLE_MERCHANT_ID = /^\d+$/.test(process.env.NEXT_PUBLIC_GOOGLE_MERCHANT_ID ?? '')
+  ? process.env.NEXT_PUBLIC_GOOGLE_MERCHANT_ID
+  : null
+
+const GCR_BADGE_SCRIPT = GOOGLE_MERCHANT_ID
+  ? [
+      `window.renderBadge = function() {`,
+      `  var c = document.createElement("div");`,
+      `  document.body.appendChild(c);`,
+      `  window.gapi.load("ratingbadge", function() {`,
+      `    window.gapi.ratingbadge.render(c, {`,
+      `      "merchant_id": ${GOOGLE_MERCHANT_ID},`,
+      `      "position": "BOTTOM_RIGHT"`,
+      `    });`,
+      `  });`,
+      `};`,
+    ].join('\n')
+  : null
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
   title: {
@@ -120,6 +140,18 @@ export default function RootLayout({
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
+        {/* Google Customer Reviews Badge */}
+        {GCR_BADGE_SCRIPT && (
+          <>
+            <Script id="gcr-badge-init" strategy="afterInteractive">
+              {GCR_BADGE_SCRIPT}
+            </Script>
+            <Script
+              src="https://apis.google.com/js/platform.js?onload=renderBadge"
+              strategy="lazyOnload"
+            />
+          </>
+        )}
       </head>
       <body>
         {/* GTM noscript fallback */}
