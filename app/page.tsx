@@ -2,275 +2,100 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  Menu, X, MapPin, ArrowRight, Phone, Mail,
-  CheckCircle2, Clock, Shield, Zap, BarChart3,
-  Users, Wrench, ChevronRight, Star,
-} from 'lucide-react'
-
-const services = [
-  { name: 'Tree Removal',   desc: 'Removal, trimming, stump grinding, and storm damage assessment.' },
-  { name: 'Concrete Work',  desc: 'Driveways, patios, sidewalks, foundation repair, and decorative concrete.' },
-  { name: 'Roofing',        desc: 'Shingle replacement, metal roofing, leak repair, and storm restoration.' },
-  { name: 'HVAC',           desc: 'Installation, repair, and maintenance for all heating and cooling systems.' },
-  { name: 'Fencing',        desc: 'Wood, vinyl, chain link, and iron fencing installation and repair.' },
-  { name: 'Electrical',     desc: 'Panel upgrades, wiring, outlet installation, lighting, and code compliance.' },
-  { name: 'Plumbing',       desc: 'Water lines, drain services, fixture installation, and emergency repairs.' },
-  { name: 'General Repair', desc: 'Handyman services, minor repairs, and ongoing home maintenance.' },
-]
-
-const stats = [
-  { value: '8',    label: 'Trade categories' },
-  { value: '$0',   label: 'Contractor cost' },
-  { value: '1',    label: 'Contractor per request' },
-  { value: '100%', label: 'Manually reviewed' },
-]
-
-const steps = [
-  { step: '01', title: 'Submit your request',    desc: 'Describe the work needed, upload photos, and set a budget ceiling. Takes under three minutes.' },
-  { step: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor from our network, matched by trade and location.' },
-  { step: '03', title: 'Work gets done',          desc: 'Your contractor contacts you directly, schedules the visit, and completes the project on your timeline.' },
-  { step: '04', title: 'Record kept forever',     desc: 'Every completed project generates a permanent, documented record including cost, timeline, photos, and follow-up items.' },
-]
+import { ArrowRight, Menu, X } from 'lucide-react'
 
 export default function HomePage() {
-  const [scrollPct, setScrollPct] = useState(0)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-
-  const navLinks = [
-    { href: '#services',     label: 'Services' },
-    { href: '#how-it-works', label: 'How It Works' },
-    { href: '#who-we-serve', label: 'Who We Serve' },
-    { href: '#pricing',      label: 'Pricing' },
-  ]
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const pct = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0
-      setScrollPct(Math.min(pct, 100))
-      setScrolled(window.scrollY > 24)
-    }
+    const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
-    <main className="min-h-screen bg-background font-sans overflow-x-hidden">
-
-      {/* Scroll progress bar */}
-      <div
-        className="fixed top-0 left-0 z-[60] h-[2px] bg-primary transition-[width] duration-75"
-        style={{ width: `${scrollPct}%` }}
-        aria-hidden
-      />
-
-      {/* Header */}
-      <header
-        className={`fixed top-[2px] left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'border-b border-border/60 bg-background/95 backdrop-blur-xl shadow-sm'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 lg:px-8 h-16">
-          <Link href="/" className="flex-shrink-0 flex items-center gap-2.5">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={120}
-              height={40}
-              style={{ height: '26px', width: 'auto' }}
-              priority
-            />
+    <main className="min-h-screen bg-white text-slate-900">
+      {/* Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">N</span>
+            </div>
+            <span className="font-semibold text-slate-900">Nexus</span>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
-            {navLinks.map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                className="px-3.5 py-1.5 text-[13px] font-medium rounded-full transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-muted/60"
-              >
-                {label}
-              </a>
-            ))}
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#services" className="text-sm text-slate-600 hover:text-slate-900 transition">Services</a>
+            <a href="#how-it-works" className="text-sm text-slate-600 hover:text-slate-900 transition">How It Works</a>
+            <a href="#pricing" className="text-sm text-slate-600 hover:text-slate-900 transition">Pricing</a>
+            <a href="#contact" className="text-sm text-slate-600 hover:text-slate-900 transition">Contact</a>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/auth/login"
-              className="hidden text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:block"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/auth/sign-up"
-              className="rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-md shadow-sm"
-            >
-              Get Started
-            </Link>
-            <button
-              className="md:hidden p-1.5 text-muted-foreground hover:text-foreground transition rounded-md hover:bg-muted/60"
-              onClick={() => setMobileOpen(v => !v)}
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <div className="flex items-center gap-4">
+            <Link href="/auth/login" className="hidden md:block text-sm text-slate-600 hover:text-slate-900 transition">Sign In</Link>
+            <Link href="/auth/sign-up" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg text-sm font-medium hover:shadow-lg transition">Get Started</Link>
+            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
 
-        {mobileOpen && (
-          <div className="md:hidden border-t border-border bg-background/98 backdrop-blur-xl animate-fade-in">
-            <div className="mx-auto max-w-6xl px-6 py-4 space-y-1">
-              {navLinks.map(({ href, label }) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2.5 text-[13.5px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition"
-                >
-                  {label}
-                </a>
-              ))}
-              <div className="pt-3 mt-2 border-t border-border flex gap-4 px-3">
-                <Link
-                  href="/auth/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-[13px] font-medium text-muted-foreground hover:text-foreground transition"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/auth/sign-up"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-[13px] font-semibold text-primary hover:underline underline-offset-4"
-                >
-                  Create Account
-                </Link>
-              </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 bg-white">
+            <div className="px-6 py-4 space-y-3">
+              <a href="#services" className="block text-sm text-slate-600 hover:text-slate-900">Services</a>
+              <a href="#how-it-works" className="block text-sm text-slate-600 hover:text-slate-900">How It Works</a>
+              <a href="#pricing" className="block text-sm text-slate-600 hover:text-slate-900">Pricing</a>
+              <a href="#contact" className="block text-sm text-slate-600 hover:text-slate-900">Contact</a>
             </div>
           </div>
         )}
       </header>
 
-      {/* Hero */}
-      <section id="hero" className="relative pt-32 pb-24 lg:pt-44 lg:pb-32 overflow-hidden">
-        <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage: 'linear-gradient(oklch(0.10 0.015 264) 1px, transparent 1px), linear-gradient(90deg, oklch(0.10 0.015 264) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-          }}
-          aria-hidden
-        />
-
-        <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
-          <div
-            className="inline-flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full border border-border bg-card text-[11.5px] text-muted-foreground animate-fade-up"
-            style={{ animationDelay: '0.05s' }}
-          >
-            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span>Topeka, Kansas — Shawnee County and surrounding areas</span>
-          </div>
-
-          <div className="grid gap-12 lg:grid-cols-[1fr_440px] lg:items-center">
-            <div>
-              <h1
-                className="font-heading text-[52px] font-bold tracking-[-0.025em] leading-[1.05] md:text-[68px] lg:text-[80px] text-balance animate-fade-up"
-                style={{ animationDelay: '0.12s' }}
-              >
-                Property maintenance,{' '}
-                <span className="text-primary">handled</span>{' '}
-                from start to finish.
+      {/* Hero Section */}
+      <section className="pt-32 pb-24 lg:pt-40 lg:pb-32 px-6 lg:px-8 overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="animate-fade-up">
+              <p className="text-sm font-mono text-blue-600 mb-4 uppercase tracking-wide">Property Maintenance Platform</p>
+              <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 text-slate-900">
+                Coordinate maintenance{' '}
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">from start to finish</span>
               </h1>
-
-              <div className="mt-7 max-w-xl animate-fade-up" style={{ animationDelay: '0.22s' }}>
-                <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Nexus Operations coordinates maintenance and repair work for property owners and managers in the Topeka area. Submit a request, we assign a verified contractor, manage the project, and give you a permanent record when it&apos;s done.
-                </p>
-              </div>
-
-              <div className="mt-9 flex flex-wrap items-center gap-4 animate-fade-up" style={{ animationDelay: '0.32s' }}>
-                <Link
-                  href="/auth/sign-up"
-                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13.5px] font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg shadow-md"
-                >
-                  Create your account
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
+                Submit a request, we assign a verified contractor, manage the project, and give you a permanent record. One platform. One point of contact.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/auth/sign-up" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg transition">
+                  Create Account <ArrowRight size={18} />
                 </Link>
-                <Link
-                  href="/auth/sign-up?role=contractor"
-                  className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground transition hover:text-foreground"
-                >
-                  Join as a contractor
-                  <ChevronRight className="h-3.5 w-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                <Link href="/auth/sign-up?role=contractor" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-slate-900 rounded-lg font-medium hover:bg-slate-50 transition">
+                  Join as Contractor <ArrowRight size={18} />
                 </Link>
-              </div>
-
-              <div className="mt-10 flex flex-wrap items-center gap-5 animate-fade-up" style={{ animationDelay: '0.42s' }}>
-                {[
-                  { icon: Shield, text: 'Verified contractors only' },
-                  { icon: Zap,    text: 'Assigned same day' },
-                  { icon: Star,   text: 'No contractor fees' },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-                    <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                    <span>{text}</span>
-                  </div>
-                ))}
               </div>
             </div>
 
-            {/* Dashboard preview card */}
-            <div
-              className="hidden lg:block relative rounded-2xl glow-primary overflow-hidden animate-fade-up"
-              style={{ animationDelay: '0.2s' }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-muted/30 border border-border/40" />
-              <div className="relative p-6">
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <p className="text-[10px] font-mono-label text-muted-foreground">Portfolio Overview</p>
-                    <h3 className="text-[15px] font-semibold mt-0.5">Maintenance Dashboard</h3>
-                  </div>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                    <span className="text-[10px] font-semibold text-primary">Live</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  {[
-                    { label: 'Active projects',   value: '3',   change: '+2 this week',    color: 'text-primary' },
-                    { label: 'Completed (30d)',    value: '7',   change: 'up 40% vs prior', color: 'text-emerald-600' },
-                    { label: 'Overdue intervals', value: '2',   change: 'HVAC, Plumbing',  color: 'text-amber-600' },
-                    { label: 'Cost efficiency',   value: '94%', change: 'vs. regional avg', color: 'text-primary' },
-                  ].map(({ label, value, change, color }) => (
-                    <div key={label} className="rounded-xl border border-border/60 bg-background/60 p-3">
-                      <p className="text-[10px] text-muted-foreground font-medium mb-1">{label}</p>
-                      <p className={`text-[20px] font-bold ${color}`}>{value}</p>
-                      <p className="text-[10px] text-muted-foreground/60 mt-0.5">{change}</p>
+            {/* Hero Visual */}
+            <div className="relative hidden lg:block animate-fade-up" style={{ animationDelay: '0.1s' }}>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-500/20 rounded-2xl blur-2xl" />
+              <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 border border-slate-200">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+                    <div>
+                      <p className="text-xs text-slate-500 uppercase tracking-wide font-semibold">Active Projects</p>
+                      <p className="text-3xl font-bold text-slate-900 mt-1">3</p>
                     </div>
-                  ))}
-                </div>
-
-                <div className="rounded-xl border border-border/60 bg-background/60 p-3">
-                  <p className="text-[10px] font-mono-label text-muted-foreground mb-3">Recent activity</p>
-                  <div className="space-y-2.5">
-                    {[
-                      { label: 'Roofing inspection', status: 'In Progress', dot: 'bg-primary' },
-                      { label: 'HVAC maintenance',   status: 'Assigned',    dot: 'bg-violet-500' },
-                      { label: 'Plumbing repair',    status: 'Completed',   dot: 'bg-emerald-500' },
-                    ].map(({ label, status, dot }) => (
-                      <div key={label} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className={`w-1.5 h-1.5 rounded-full ${dot} flex-shrink-0`} />
-                          <span className="text-[11.5px] text-foreground/80">{label}</span>
-                        </div>
-                        <span className="text-[10px] text-muted-foreground">{status}</span>
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <span className="text-2xl">📋</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {['Roofing Inspection', 'HVAC Maintenance', 'Plumbing Repair'].map((item, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200">
+                        <span className="text-sm text-slate-700">{item}</span>
+                        <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-blue-600' : i === 1 ? 'bg-yellow-500' : 'bg-green-500'}`} />
                       </div>
                     ))}
                   </div>
@@ -279,486 +104,157 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Stats row */}
-          <div
-            className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-px bg-border/60 rounded-2xl overflow-hidden border border-border/60 animate-fade-up"
-            style={{ animationDelay: '0.5s' }}
-          >
-            {stats.map(({ value, label }) => (
-              <div key={label} className="bg-card px-6 py-5 text-center">
-                <p className="text-[28px] font-bold text-foreground tracking-tight">{value}</p>
-                <p className="text-[12px] text-muted-foreground mt-1">{label}</p>
+          {/* Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+            {[
+              { value: '8', label: 'Trade Categories' },
+              { value: '$0', label: 'Contractor Cost' },
+              { value: '100%', label: 'Manually Reviewed' },
+              { value: '1', label: 'Contractor Match' },
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-center">
+                <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                <p className="text-xs text-slate-600 uppercase tracking-wide font-semibold mt-2">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* Services */}
-      <section id="services" className="py-24 lg:py-32">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="mb-14">
-            <p className="font-mono-label text-primary mb-4">What we coordinate</p>
-            <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl text-balance">
-              Eight trade categories. One platform.
-            </h2>
-            <p className="mt-4 text-[15px] text-muted-foreground leading-relaxed max-w-xl">
-              Every request is reviewed by Nexus before it reaches a contractor. You get one point of contact, not a list of bids.
-            </p>
+      {/* Services Section */}
+      <section id="services" className="py-24 lg:py-32 bg-gradient-to-b from-slate-50 to-white px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <p className="text-sm font-mono text-blue-600 uppercase tracking-wide mb-4">What We Coordinate</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">Eight trades. One platform.</h2>
+            <p className="text-lg text-slate-600 max-w-2xl">Every request is reviewed by Nexus before it reaches a contractor. You get one point of contact, not a bidding war.</p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {services.map(({ name, desc }) => (
-              <div
-                key={name}
-                className="group rounded-xl border border-border/60 bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 glow-card"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-[14px] font-semibold text-foreground">{name}</h3>
-                  <Wrench className="h-3.5 w-3.5 text-primary/40 group-hover:text-primary/70 transition-colors flex-shrink-0 mt-0.5" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {['Tree Removal', 'Concrete Work', 'Roofing', 'HVAC', 'Fencing', 'Electrical', 'Plumbing', 'General Repair'].map((service, i) => (
+              <div key={i} className="group p-6 rounded-xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-cyan-50 transition cursor-pointer">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold mb-4 group-hover:scale-110 transition">
+                  {i + 1}
                 </div>
-                <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
+                <h3 className="font-semibold text-slate-900 mb-2">{service}</h3>
+                <p className="text-sm text-slate-600">Professional {service.toLowerCase()} services for residential and commercial properties.</p>
               </div>
             ))}
           </div>
-
-          <div className="mt-10">
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 text-[13px] font-medium text-primary hover:underline underline-offset-4"
-            >
-              View all services <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
         </div>
       </section>
-
-      <div className="border-t border-border" />
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 lg:py-32 bg-muted/30">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="mb-14">
-            <p className="font-mono-label text-primary mb-4">The process</p>
-            <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl text-balance">
-              From request to record in four steps.
-            </h2>
+      <section id="how-it-works" className="py-24 lg:py-32 px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <p className="text-sm font-mono text-blue-600 uppercase tracking-wide mb-4">The Process</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900">From request to record in four steps.</h2>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map(({ step, title, desc }) => (
-              <div key={step} className="bg-card rounded-xl border border-border/60 p-5 glow-card">
-                <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 mb-4">
-                  <span className="text-[11px] font-bold text-primary">{step}</span>
-                </div>
-                <h3 className="text-[14px] font-semibold text-foreground mb-2">{title}</h3>
-                <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* Who We Serve */}
-      <section id="who-we-serve" className="py-24 lg:py-32">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="mb-14 text-center">
-            <p className="font-mono-label text-primary mb-4">Who we work with</p>
-            <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl mx-auto text-balance">
-              One platform for owners, managers, and the contractors who do the work.
-            </h2>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid lg:grid-cols-4 gap-8">
             {[
               {
-                icon: Users,
-                title: 'Homeowners',
-                body: "Submit a request, approve an estimate, and watch it close. Nexus handles contractor selection, scheduling, and documentation so you don't have to.",
-                cta: 'Create account',
-                href: '/auth/sign-up',
-                color: 'text-sky-600',
-                bg: 'bg-sky-50 border-sky-100',
+                step: '01',
+                title: 'Submit Your Request',
+                desc: 'Describe the work needed, upload photos, and set a budget ceiling. Takes under three minutes.'
               },
               {
-                icon: Wrench,
-                title: 'Contractors',
-                body: 'Receive project notifications in your trade with scope, photos, and a budget ceiling already attached. Claim what works for you. No fees, no percentages.',
-                cta: 'Apply for access',
-                href: '/auth/sign-up?role=contractor',
-                color: 'text-primary',
-                bg: 'bg-primary/5 border-primary/15',
+                step: '02',
+                title: 'We Assign a Contractor',
+                desc: 'Nexus reviews your request and assigns one verified contractor matched by trade and location.'
               },
               {
-                icon: BarChart3,
-                title: 'Property Managers',
-                body: 'Every property you manage lives in one place. Track maintenance spend by address, by trade, and across the whole portfolio with nothing to reconcile manually.',
-                cta: 'Create account',
-                href: '/auth/sign-up?role=property_manager',
-                color: 'text-violet-600',
-                bg: 'bg-violet-50 border-violet-100',
+                step: '03',
+                title: 'Work Gets Done',
+                desc: 'Your contractor contacts you directly, schedules the visit, and completes the project on time.'
               },
-            ].map(({ icon: Icon, title, body, cta, href, color, bg }) => (
-              <Link
-                key={title}
-                href={href}
-                className="group rounded-2xl border border-border/60 bg-card p-7 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 glow-card"
-              >
-                <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl border ${bg} mb-5`}>
-                  <Icon className={`h-5 w-5 ${color}`} />
+              {
+                step: '04',
+                title: 'Record Kept Forever',
+                desc: 'Every completed project generates a permanent record including cost, timeline, photos, and follow-ups.'
+              },
+            ].map((item, i) => (
+              <div key={i} className="relative">
+                <div className="absolute -left-4 top-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold lg:block hidden">
+                  {i + 1}
                 </div>
-                <h3 className="text-[17px] font-bold text-foreground mb-3">{title}</h3>
-                <p className="text-[13.5px] text-muted-foreground leading-[1.75] mb-5">{body}</p>
-                <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-primary group-hover:gap-2.5 transition-all">
-                  {cta} <ArrowRight className="h-3 w-3" />
-                </span>
-              </Link>
+                <div className="p-6 rounded-xl border border-slate-200 bg-white h-full">
+                  <p className="text-3xl font-bold text-slate-300 mb-2">{item.step}</p>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-3">{item.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* Reporting */}
-      <section id="reporting" className="py-24 lg:py-32 bg-muted/30">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="font-mono-label text-primary mb-4">Data-driven reporting</p>
-              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.02em] max-w-xl text-balance mb-6">
-                When a project closes, the record stays.
-              </h2>
-              <div className="space-y-4 text-[14.5px] text-muted-foreground leading-[1.9]">
-                <p>
-                  <strong className="text-foreground">Every completed project generates a post-project report automatically.</strong>{' '}
-                  It covers what was done, what it cost, how long it took, and what should be scheduled next.
-                </p>
-                <p>
-                  <strong className="text-foreground">Reports get more useful the longer you&apos;re on the platform.</strong>{' '}
-                  After a few projects, patterns start to emerge — recurring issues, trade categories that run over budget, maintenance intervals you&apos;ve let slide.
-                </p>
-                <p>
-                  <strong className="text-foreground">Your service record is yours to keep and use.</strong>{' '}
-                  When it&apos;s time to file an insurance claim, refinance, or prepare for a sale, the Nexus record gives you a timestamped, documented answer.
-                </p>
-              </div>
-              <div className="mt-8">
-                <Link
-                  href="/auth/sign-up"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
-                >
-                  Start tracking your property <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border/60 bg-card overflow-hidden glow-card">
-              <div className="px-5 py-4 border-b border-border/60 bg-muted/30">
-                <p className="text-[11px] font-mono-label text-muted-foreground">Post-project report contents</p>
-              </div>
-              <div className="divide-y divide-border/40">
-                {[
-                  ['Financial summary',      'Total cost, labor vs. materials, variance from budget.'],
-                  ['Efficiency metrics',     'Time to completion, contractor response, scheduling.'],
-                  ['Historical comparison',  'Cost and timeline vs. prior projects in same trade.'],
-                  ['Maintenance intervals',  'Recommended next service date based on property history.'],
-                  ['Follow-up items',        'Issues identified during the project needing attention.'],
-                  ['Recurring issue flags',  'Patterns detected across multiple projects at same address.'],
-                  ['Portfolio benchmarking', 'For managers: performance comparison across addresses.'],
-                ].map(([item, detail]) => (
-                  <div key={item} className="px-5 py-3.5 flex items-start gap-3">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-[12.5px] font-semibold text-foreground">{item}</p>
-                      <p className="text-[11.5px] text-muted-foreground mt-0.5 leading-relaxed">{detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* Pricing */}
-      <section id="pricing" className="py-24 lg:py-32">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="mb-14 text-center">
-            <p className="font-mono-label text-primary mb-4">Pricing</p>
-            <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl mx-auto text-balance">
-              Pay for work completed, not retainers.
-            </h2>
-            <p className="mt-4 text-[15px] text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Nexus charges a transparent markup on completed maintenance work. No subscriptions. No hidden fees. Aligned with delivery.
-            </p>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-3 max-w-4xl mx-auto">
-            {[
-              {
-                name: 'Routine',
-                markup: '25%',
-                sla: 'Assigned within 24 hrs · On-site within 3–5 days',
-                desc: 'Standard maintenance that is not time-sensitive. Scheduled repairs, cosmetic fixes, planned replacements.',
-                highlighted: false,
-              },
-              {
-                name: 'Urgent',
-                markup: '30%',
-                sla: 'Assigned within 4 hrs · On-site next business day',
-                desc: 'Issues requiring prompt attention — non-emergency plumbing, electrical affecting livability, HVAC in moderate weather.',
-                highlighted: true,
-              },
-              {
-                name: 'Emergency',
-                markup: '35%',
-                sla: 'Assigned within 1 hr · On-site within 4 hrs',
-                desc: 'Critical failures requiring immediate response — burst pipes, gas leaks, electrical hazards, HVAC in extreme weather.',
-                highlighted: false,
-              },
-            ].map(({ name, markup, sla, desc, highlighted }) => (
-              <div
-                key={name}
-                className={`rounded-2xl border p-6 transition-all ${
-                  highlighted
-                    ? 'border-primary/40 bg-primary/5 shadow-lg ring-1 ring-primary/20'
-                    : 'border-border/60 bg-card glow-card'
-                }`}
-              >
-                {highlighted && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold mb-4">
-                    <Zap className="h-2.5 w-2.5" /> Most common
-                  </div>
-                )}
-                <h3 className="text-[16px] font-bold text-foreground mb-1">{name}</h3>
-                <p className="text-[32px] font-bold text-primary tracking-tight mb-1">
-                  {markup} <span className="text-[14px] font-normal text-muted-foreground">markup</span>
-                </p>
-                <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed">{sla}</p>
-                <p className="text-[12.5px] text-muted-foreground leading-[1.7]">{desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link
-              href="/pricing"
-              className="inline-flex items-center gap-2 text-[13px] font-medium text-primary hover:underline underline-offset-4"
-            >
-              View full pricing details <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* Contractors */}
-      <section id="contractors" className="py-24 lg:py-32 bg-muted/30">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="font-mono-label text-primary mb-4">For contractors</p>
-              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.02em] max-w-xl text-balance mb-6">
-                If you&apos;re a licensed contractor in the Topeka area, the Nexus network is worth a few minutes of your time.
-              </h2>
-              <div className="space-y-4 text-[14.5px] text-muted-foreground leading-[1.9]">
-                <p>
-                  There&apos;s no cost to join and no ongoing fee to stay active. When a project comes in that matches your trade and service area, you&apos;re notified. You decide if it works.
-                </p>
-                <p>
-                  Every notification includes the full project file: photos, a written scope, and the owner&apos;s budget ceiling, already reviewed by Nexus before it reaches you.
-                </p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/auth/sign-up?role=contractor"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
-                >
-                  Apply for network access <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <Link
-                  href="/contractors"
-                  className="inline-flex items-center gap-2 text-[13px] font-medium text-muted-foreground hover:text-foreground transition"
-                >
-                  Learn more <ChevronRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {[
-                { icon: CheckCircle2, title: 'No joining fee',            desc: 'Free to join, free to stay active. No monthly costs.' },
-                { icon: Shield,       title: 'Pre-screened projects',     desc: 'Every request is reviewed before it reaches you.' },
-                { icon: Clock,        title: 'You control your schedule', desc: 'Claim only the projects that work for your timeline.' },
-                { icon: Zap,          title: 'Full project details',      desc: 'Photos, scope, and budget ceiling included in every notification.' },
-                { icon: BarChart3,    title: 'Direct payment',            desc: 'You get paid directly by the property owner. Nexus takes no percentage.' },
-              ].map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="flex items-start gap-4 rounded-xl border border-border/60 bg-card p-4 glow-card">
-                  <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20">
-                    <Icon className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-[13.5px] font-semibold text-foreground">{title}</p>
-                    <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* CTA */}
-      <section className="py-24 lg:py-32">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card p-10 lg:p-14 text-center relative overflow-hidden">
-            <div className="hero-radial absolute inset-0 opacity-50" aria-hidden />
-            <div className="relative">
-              <p className="font-mono-label text-primary mb-4">Get started today</p>
-              <h2 className="font-heading text-[36px] font-bold leading-[1.15] tracking-[-0.02em] max-w-2xl mx-auto text-balance mb-5">
-                Ready to simplify your property maintenance?
-              </h2>
-              <p className="text-[15px] text-muted-foreground max-w-xl mx-auto mb-9 leading-relaxed">
-                Create your account in minutes. Submit your first request the same day. Nexus handles the rest.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/auth/sign-up"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-[14px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md hover:shadow-lg"
-                >
-                  Create your account <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-[14px] font-medium text-foreground hover:border-primary/30 hover:bg-muted/50 transition"
-                >
-                  Contact us
-                </Link>
-              </div>
-
-              <div className="mt-10 pt-8 border-t border-border/60 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 max-w-3xl mx-auto text-left">
-                {[
-                  { href: '/auth/sign-up',                       label: 'Homeowner account',        sub: 'Submit requests and track projects.' },
-                  { href: '/auth/sign-up?role=property_manager', label: 'Property manager account',  sub: 'Portfolio-level visibility.' },
-                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor application',    sub: 'Join the verified contractor network.' },
-                  { href: '/faq',                                label: 'FAQ',                       sub: 'Platform details and policies.' },
-                ].map(({ href, label, sub }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="group flex items-center justify-between rounded-lg border border-border/60 bg-card/60 px-4 py-3 hover:border-primary/30 hover:bg-card transition-all"
-                  >
-                    <div>
-                      <p className="text-[12.5px] font-semibold text-foreground">{label}</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
-                    </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground flex-shrink-0 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-                  </Link>
-                ))}
-              </div>
-            </div>
+      {/* CTA Section */}
+      <section id="pricing" className="py-24 lg:py-32 px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-cyan-500">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Ready to simplify maintenance?</h2>
+          <p className="text-lg text-blue-50 mb-8">Join homeowners and contractors already using Nexus to streamline property maintenance.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth/sign-up" className="px-8 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:shadow-lg transition">Create Account</Link>
+            <Link href="/auth/sign-up?role=contractor" className="px-8 py-3 border-2 border-white text-white rounded-lg font-semibold hover:bg-white/10 transition">Join as Contractor</Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8 py-14">
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4 mb-12">
+      <footer id="contact" className="py-16 px-6 lg:px-8 bg-slate-900 text-slate-300">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
-              <Link href="/" className="inline-block mb-4">
-                <Image
-                  src="/nexus-logo.png"
-                  alt="Nexus Operations"
-                  width={110}
-                  height={37}
-                  style={{ height: '24px', width: 'auto' }}
-                />
+              <Link href="/" className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg" />
+                <span className="font-semibold text-white">Nexus</span>
               </Link>
-              <p className="text-[12px] text-muted-foreground leading-relaxed mb-4">
-                Managed property services for homeowners, landlords, and property managers in Topeka, Kansas.
-              </p>
-              <div className="flex flex-col gap-1.5">
-                <a href="tel:+17857271106" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Phone className="h-3 w-3" /> (785) 727-1106
-                </a>
-                <a href="mailto:admin@nexusoperations.org" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-                  <Mail className="h-3 w-3" /> admin@nexusoperations.org
-                </a>
+              <p className="text-sm">Property maintenance coordination platform for homeowners and contractors.</p>
+            </div>
+            {[
+              { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Status'] },
+              { title: 'Company', links: ['About', 'Blog', 'Careers', 'Press'] },
+              { title: 'Legal', links: ['Privacy', 'Terms', 'Security', 'Compliance'] },
+            ].map((col, i) => (
+              <div key={i}>
+                <h3 className="font-semibold text-white mb-4">{col.title}</h3>
+                <ul className="space-y-2">
+                  {col.links.map((link, j) => (
+                    <li key={j}><a href="#" className="text-sm hover:text-white transition">{link}</a></li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
-            <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Platform</p>
-              <ul className="space-y-2.5">
-                {[
-                  { href: '#services',     label: 'Services' },
-                  { href: '#how-it-works', label: 'How It Works' },
-                  { href: '#reporting',    label: 'Reporting' },
-                  { href: '/pricing',      label: 'Pricing' },
-                  { href: '/faq',          label: 'FAQ' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <a href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition">{label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Accounts</p>
-              <ul className="space-y-2.5">
-                {[
-                  { href: '/auth/sign-up',                       label: 'Homeowner' },
-                  { href: '/auth/sign-up?role=property_manager', label: 'Property Manager' },
-                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor Application' },
-                  { href: '/auth/login',                         label: 'Sign In' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition">{label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Company</p>
-              <ul className="space-y-2.5">
-                {[
-                  { href: '/about',    label: 'About Us' },
-                  { href: '/contact',  label: 'Contact' },
-                  { href: '/terms',    label: 'Terms of Service' },
-                  { href: '/privacy',  label: 'Privacy Policy' },
-                  { href: '/site-map', label: 'Sitemap' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition">{label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
-
-          <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[11.5px] text-muted-foreground">
-            <p>&copy; 2026 Nexus Operations, LLC. Topeka, Kansas. All rights reserved.</p>
-            <div className="flex items-center gap-5">
-              <Link href="/terms"    className="hover:text-foreground transition">Terms</Link>
-              <Link href="/privacy"  className="hover:text-foreground transition">Privacy</Link>
-              <Link href="/site-map" className="hover:text-foreground transition">Sitemap</Link>
+          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-sm">&copy; 2026 Nexus Operations. All rights reserved.</p>
+            <div className="flex gap-6 mt-4 md:mt-0">
+              {['Twitter', 'LinkedIn', 'GitHub'].map((social, i) => (
+                <a key={i} href="#" className="text-sm hover:text-white transition">{social}</a>
+              ))}
             </div>
           </div>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-up {
+          animation: fadeUp 0.6s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
     </main>
   )
 }
