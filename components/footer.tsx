@@ -56,9 +56,14 @@ export function Footer() {
                 { href: "/#process", label: "How It Works" },
                 { href: "/pricing", label: "Pricing" },
                 { href: "/contact", label: "Contact" },
-              ].map(({ href, label }) => (
+                { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", external: true },
+              ].map(({ href, label, external }) => (
                 <li key={href}>
-                  <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href={href}
+                    className="text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
                     {label}
                   </Link>
                 </li>

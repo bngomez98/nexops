@@ -8,7 +8,7 @@ import { NotificationBell } from '@/components/notification-bell'
 import {
   LogOut, Menu, LayoutDashboard, FileText,
   Settings, TrendingUp, Wrench, ChevronRight, Briefcase,
-  PlusCircle, CreditCard, ShieldCheck,
+  PlusCircle, CreditCard, ShieldCheck, HelpCircle,
 } from 'lucide-react'
 
 interface NavItem {
@@ -153,7 +153,16 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
           </div>
         </nav>
 
-        <div className="px-3 py-4 border-t border-sidebar-border">
+        <div className="px-3 py-4 border-t border-sidebar-border space-y-2">
+          <a
+            href="https://nexusoperations.zendesk.com/hc/en-us"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-[12px] font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            Help Center
+          </a>
           <button
             onClick={onLogout}
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-[12px] font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
