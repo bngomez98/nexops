@@ -2,62 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  Menu, X, ArrowRight, ExternalLink,
-  Camera, CalendarDays, MessageSquare,
-  Eye, Zap, CreditCard,
-  CheckCircle2, Shield, MapPin, Phone, Mail, ChevronRight,
-  Star, Clock, BarChart3, Users, Sparkles, Lock, Activity,
-} from 'lucide-react'
-import { CONTACT_INFO } from '@/lib/contact-info'
-
-/* ─── Data ─────────────────────────────────────────────────────────── */
-const navLinks = [
-  { href: '#homeowners',   label: 'Homeowners' },
-  { href: '#contractors',  label: 'Contractors' },
-  { href: '#pricing',      label: 'Pricing' },
-  { href: '/contact',      label: 'Contact' },
-]
-
-const homeownerFeatures = [
-  { icon: Camera,        title: 'Upload photos & set a budget cap',   desc: 'Show contractors exactly what you need' },
-  { icon: CalendarDays,  title: 'Pick consultation windows',          desc: 'Choose times that work for your schedule' },
-  { icon: MessageSquare, title: 'Track status in one place',          desc: 'Stay updated throughout the entire process' },
-]
-
-const contractorFeatures = [
-  { icon: Eye,       title: 'See everything before claiming', desc: 'Photos, budget, and scope shown upfront' },
-  { icon: Zap,       title: 'First-come, first-served',       desc: 'No bidding wars, no competing quotes' },
-  { icon: CreditCard,title: 'Get paid faster',                desc: 'Unified invoicing and quick payouts' },
-]
-
-const pricingTiers = [
-  {
-    name: 'Routine',     markup: '25%',
-    sla: 'Assigned within 24 hrs · On-site within 3–5 days',
-    desc: 'Standard maintenance that is not time-sensitive. Scheduled repairs, cosmetic fixes, planned replacements.',
-    featured: false,
-  },
-  {
-    name: 'Urgent',      markup: '30%',
-    sla: 'Assigned within 4 hrs · On-site next business day',
-    desc: 'Issues requiring prompt attention — non-emergency plumbing, electrical affecting livability, HVAC in moderate weather.',
-    featured: true,
-  },
-  {
-    name: 'Emergency',   markup: '35%',
-    sla: 'Assigned within 1 hr · On-site within 4 hrs',
-    desc: 'Critical failures requiring immediate response — burst pipes, gas leaks, electrical hazards, HVAC in extreme weather.',
-    featured: false,
-  },
-]
-
-const steps = [
-  { n: '01', title: 'Submit your request',    desc: 'Describe the work needed, upload photos, and set a budget. Takes under three minutes.' },
-  { n: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor matched by trade and location.' },
-  { n: '03', title: 'Work gets done',          desc: 'Your contractor contacts you, schedules the visit, and completes the project on your timeline.' },
-  { n: '04', title: 'Keep a complete record',  desc: 'Every project is saved with costs, timelines, photos, and follow-up details.' },
-]
+import { ArrowRight, Menu, X } from 'lucide-react'
 
 const trustStats = [
   { value: 98,   suffix: '%', label: 'Satisfaction rate',     icon: Star },
@@ -153,14 +98,13 @@ function NexusIcon({ size = 40 }: { size?: number }) {
 
 /* ─── Main ────────────────────────────────────────────────────────── */
 export default function HomePage() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [activeTab, setActiveTab] = useState<'homeowner' | 'contractor'>('homeowner')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const BG = '#0a0a0a'
@@ -171,169 +115,88 @@ export default function HomePage() {
   const GREEN_DIM = 'rgba(58,173,88,0.12)'
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, color: '#fff', fontFamily: "'Inter', sans-serif" }}>
-
-      {/* ── Header ────────────────────────────────────────────────── */}
-      <header style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: scrolled ? 'rgba(10,10,10,0.96)' : '#0a0a0a',
-        backdropFilter: scrolled ? 'blur(16px)' : undefined,
-        borderBottom: `1px solid ${scrolled ? BORDER : 'transparent'}`,
-        transition: 'border-color 0.3s, background 0.3s',
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-
-          {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-            <NexusIcon size={34} />
-            <div style={{ lineHeight: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>NEXUS</div>
-              <div style={{ fontSize: 9, fontWeight: 700, color: GREEN, letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
+    <main className="min-h-screen bg-white text-slate-900">
+      {/* Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">N</span>
             </div>
+            <span className="font-semibold text-slate-900">Nexus</span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }} className="hidden md:flex">
-            {navLinks.map(({ href, label }) => (
-              <a key={href} href={href} style={{ padding: '6px 14px', borderRadius: 9999, fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.6)', textDecoration: 'none', transition: 'color 0.15s, background 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.background = 'transparent' }}
-              >{label}</a>
-            ))}
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#services" className="text-sm text-slate-600 hover:text-slate-900 transition">Services</a>
+            <a href="#how-it-works" className="text-sm text-slate-600 hover:text-slate-900 transition">How It Works</a>
+            <a href="#pricing" className="text-sm text-slate-600 hover:text-slate-900 transition">Pricing</a>
+            <a href="#contact" className="text-sm text-slate-600 hover:text-slate-900 transition">Contact</a>
           </nav>
 
-          {/* CTAs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Link href="/auth/login" className="hidden md:block" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', transition: 'color 0.15s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
-            >Sign in</Link>
-            <Link href="/auth/sign-up" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 20px', borderRadius: 9999, background: GREEN, color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s, transform 0.15s', boxShadow: '0 0 24px rgba(58,173,88,0.35)' }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'scale(1.02)' }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1)' }}
-            >Get started <ArrowRight size={13} /></Link>
-            <button className="md:hidden" onClick={() => setMobileOpen(v => !v)} aria-label="Toggle menu"
-              style={{ padding: 6, color: 'rgba(255,255,255,0.7)', background: 'none', border: 'none', cursor: 'pointer' }}>
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          <div className="flex items-center gap-4">
+            <Link href="/auth/login" className="hidden md:block text-sm text-slate-600 hover:text-slate-900 transition">Sign In</Link>
+            <Link href="/auth/sign-up" className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg text-sm font-medium hover:shadow-lg transition">Get Started</Link>
+            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div style={{ background: '#0a0a0a', borderTop: `1px solid ${BORDER}`, padding: '12px 24px 20px' }} className="md:hidden animate-fade-in">
-            {navLinks.map(({ href, label }) => (
-              <a key={href} href={href} onClick={() => setMobileOpen(false)}
-                style={{ display: 'block', padding: '11px 8px', fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.7)', textDecoration: 'none', borderBottom: `1px solid ${BORDER}` }}>{label}</a>
-            ))}
-            <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-              <Link href="/auth/login" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Sign in</Link>
-              <Link href="/auth/sign-up" style={{ fontSize: 13, fontWeight: 700, color: GREEN, textDecoration: 'none' }} onClick={() => setMobileOpen(false)}>Create account</Link>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 bg-white">
+            <div className="px-6 py-4 space-y-3">
+              <a href="#services" className="block text-sm text-slate-600 hover:text-slate-900">Services</a>
+              <a href="#how-it-works" className="block text-sm text-slate-600 hover:text-slate-900">How It Works</a>
+              <a href="#pricing" className="block text-sm text-slate-600 hover:text-slate-900">Pricing</a>
+              <a href="#contact" className="block text-sm text-slate-600 hover:text-slate-900">Contact</a>
             </div>
           </div>
         )}
       </header>
 
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', overflow: 'hidden', paddingTop: 160, paddingBottom: 100 }}>
-        {/* Background glow */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -120, left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(58,173,88,0.18) 0%, transparent 65%)', borderRadius: '50%' }} />
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '60px 60px', maskImage: 'radial-gradient(ellipse 80% 80% at 50% 10%, black, transparent)' }} />
-        </div>
-
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
-          {/* Location badge */}
-          <div className="animate-fade-up" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: GREEN_DIM, border: `1px solid rgba(58,173,88,0.25)`, borderRadius: 9999, padding: '5px 14px', marginBottom: 28 }}>
-            <MapPin size={12} style={{ color: GREEN }} />
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: GREEN, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{CONTACT_INFO.serviceArea}</span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="animate-fade-up" style={{ animationDelay: '0.05s', fontSize: 'clamp(42px, 6.5vw, 88px)', fontWeight: 900, lineHeight: 1.02, letterSpacing: '-0.035em', maxWidth: 860, marginBottom: 28 }}>
-            Property maintenance,{' '}
-            <span style={{ color: GREEN }}>handled</span>{' '}
-            from start to finish.
-          </h1>
-
-          {/* Subline */}
-          <p className="animate-fade-up" style={{ animationDelay: '0.12s', fontSize: 18, lineHeight: 1.75, color: 'rgba(255,255,255,0.5)', maxWidth: 560, marginBottom: 44 }}>
-            Nexus Operations coordinates maintenance and repair work for property owners in the Topeka area.
-            Submit once — we handle contractor selection, scheduling, and documentation.
-          </p>
-
-          {/* CTAs */}
-          <div className="animate-fade-up" style={{ animationDelay: '0.2s', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-            <Link href="/auth/sign-up" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 30px', borderRadius: 9999, background: GREEN, color: '#fff', fontSize: 14.5, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s, transform 0.15s, box-shadow 0.15s', boxShadow: '0 0 32px rgba(58,173,88,0.4)' }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 40px rgba(58,173,88,0.5)' }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 32px rgba(58,173,88,0.4)' }}
-            >Submit a request <ArrowRight size={15} /></Link>
-            <Link href="/auth/sign-up?role=contractor" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 30px', borderRadius: 9999, border: `1.5px solid rgba(255,255,255,0.18)`, background: 'transparent', color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s, background 0.15s, transform 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'translateY(0)' }}
-            >Join as a contractor <ExternalLink size={14} style={{ opacity: 0.6 }} /></Link>
-          </div>
-
-          {/* Trust badges */}
-          <div className="animate-fade-up" style={{ animationDelay: '0.3s', display: 'flex', flexWrap: 'wrap', gap: 20, marginTop: 48 }}>
-            {[
-              { icon: Shield,        text: 'Verified contractors only' },
-              { icon: Zap,           text: 'Same-day assignment' },
-              { icon: CheckCircle2,  text: 'Manually reviewed requests' },
-              { icon: Lock,          text: 'Secure project records' },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>
-                <Icon size={14} style={{ color: GREEN }} />{text}
+      {/* Hero Section */}
+      <section className="pt-32 pb-24 lg:pt-40 lg:pb-32 px-6 lg:px-8 overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="animate-fade-up">
+              <p className="text-sm font-mono text-blue-600 mb-4 uppercase tracking-wide">Property Maintenance Platform</p>
+              <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 text-slate-900">
+                Coordinate maintenance{' '}
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">from start to finish</span>
+              </h1>
+              <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
+                Submit a request, we assign a verified contractor, manage the project, and give you a permanent record. One platform. One point of contact.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/auth/sign-up" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:shadow-lg transition">
+                  Create Account <ArrowRight size={18} />
+                </Link>
+                <Link href="/auth/sign-up?role=contractor" className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-slate-900 rounded-lg font-medium hover:bg-slate-50 transition">
+                  Join as Contractor <ArrowRight size={18} />
+                </Link>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Stats band ────────────────────────────────────────────── */}
-      <section style={{ borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
-          {trustStats.map(s => <StatCounter key={s.label} {...s} />)}
-        </div>
-      </section>
-
-      {/* ── Features tabs (Homeowners / Contractors) ──────────────── */}
-      <section id="homeowners" style={{ padding: '100px 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-          <FadeUp>
-            <div style={{ display: 'flex', gap: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: 4, width: 'fit-content', marginBottom: 52 }}>
-              {(['homeowner', 'contractor'] as const).map(tab => (
-                <button key={tab} onClick={() => setActiveTab(tab)}
-                  style={{ padding: '9px 22px', borderRadius: 8, fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', transition: 'all 0.2s', background: activeTab === tab ? GREEN : 'transparent', color: activeTab === tab ? '#fff' : 'rgba(255,255,255,0.5)', textTransform: 'capitalize' }}>
-                  {tab === 'homeowner' ? 'For Homeowners' : 'For Contractors'}
-                </button>
-              ))}
             </div>
           </FadeUp>
 
-          {activeTab === 'homeowner' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 28, alignItems: 'start' }}>
-              <FadeUp>
-                <div style={{ borderRadius: 20, overflow: 'hidden', lineHeight: 0 }}>
-                  <Image src="/photo-home.jpg" alt="Modern home interior" width={720} height={520} style={{ width: '100%', height: 'auto', objectFit: 'cover', display: 'block' }} />
-                </div>
-              </FadeUp>
-              <FadeUp delay={0.1}>
-                <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: 36 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: GREEN, marginBottom: 8 }}>Homeowner experience</p>
-                  <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: 28, lineHeight: 1.15 }}>
-                    Submit once.<br/>We handle the rest.
-                  </h2>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 36 }}>
-                    {homeownerFeatures.map(({ icon: Icon, title, desc }) => (
-                      <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                        <div style={{ width: 40, height: 40, borderRadius: 10, background: GREEN_DIM, border: `1px solid rgba(58,173,88,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <Icon size={17} style={{ color: GREEN }} />
-                        </div>
-                        <div>
-                          <p style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 2 }}>{title}</p>
-                          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{desc}</p>
-                        </div>
+            {/* Hero Visual */}
+            <div className="relative hidden lg:block animate-fade-up" style={{ animationDelay: '0.1s' }}>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-500/20 rounded-2xl blur-2xl" />
+              <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 border border-slate-200">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+                    <div>
+                      <p className="text-xs text-slate-500 uppercase tracking-wide font-semibold">Active Projects</p>
+                      <p className="text-3xl font-bold text-slate-900 mt-1">3</p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <span className="text-2xl">📋</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {['Roofing Inspection', 'HVAC Maintenance', 'Plumbing Repair'].map((item, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200">
+                        <span className="text-sm text-slate-700">{item}</span>
+                        <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-blue-600' : i === 1 ? 'bg-yellow-500' : 'bg-green-500'}`} />
                       </div>
                     ))}
                   </div>
@@ -346,264 +209,157 @@ export default function HomePage() {
             </div>
           )}
 
-          {activeTab === 'contractor' && (
-            <div id="contractors" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 28, alignItems: 'start' }}>
-              <FadeUp>
-                <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: 36 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: GREEN, marginBottom: 8 }}>Contractor experience</p>
-                  <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: 28, lineHeight: 1.15 }}>
-                    Stop chasing leads.<br/>Claim exclusive jobs.
-                  </h2>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 36 }}>
-                    {contractorFeatures.map(({ icon: Icon, title, desc }) => (
-                      <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                        <div style={{ width: 40, height: 40, borderRadius: 10, background: GREEN_DIM, border: `1px solid rgba(58,173,88,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <Icon size={17} style={{ color: GREEN }} />
-                        </div>
-                        <div>
-                          <p style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 2 }}>{title}</p>
-                          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    <Link href="/auth/sign-up?role=contractor" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 22px', borderRadius: 9999, background: GREEN, color: '#fff', fontSize: 13.5, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s' }}
-                      onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-                      onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                    >Join the network <ArrowRight size={14} /></Link>
-                    <Link href="#pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 22px', borderRadius: 9999, border: `1.5px solid rgba(255,255,255,0.15)`, color: 'rgba(255,255,255,0.75)', fontSize: 13.5, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s' }}
-                      onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)')}
-                      onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)')}
-                    >View pricing</Link>
-                  </div>
-                </div>
-              </FadeUp>
-              <FadeUp delay={0.1}>
-                <div style={{ borderRadius: 20, overflow: 'hidden', lineHeight: 0 }}>
-                  <Image src="/photo-contractor.jpg" alt="Contractor working on a property" width={720} height={520} style={{ width: '100%', height: 'auto', objectFit: 'cover', display: 'block' }} />
-                </div>
-              </FadeUp>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ── How It Works ──────────────────────────────────────────── */}
-      <section id="how-it-works" style={{ padding: '100px 0', borderTop: `1px solid ${BORDER}`, background: '#0d0d0d' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-          <FadeUp>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: GREEN, marginBottom: 14 }}>The process</p>
-            <h2 style={{ fontSize: 'clamp(28px, 4vw, 46px)', fontWeight: 900, letterSpacing: '-0.03em', maxWidth: 560, marginBottom: 60, lineHeight: 1.1 }}>
-              From request to record<br/>in four steps.
-            </h2>
-          </FadeUp>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 0 }}>
-            {steps.map(({ n, title, desc }, i) => (
-              <FadeUp key={n} delay={i * 0.08}>
-                <div style={{ padding: '32px 28px', borderLeft: i === 0 ? `1px solid ${BORDER}` : undefined, borderRight: `1px solid ${BORDER}`, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}`, marginLeft: i === 0 ? 0 : -1, position: 'relative', transition: 'background 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(58,173,88,0.04)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
-                  <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 900, letterSpacing: '0.12em', color: GREEN, marginBottom: 16, fontVariantNumeric: 'tabular-nums' }}>{n}</span>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>{title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>{desc}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Pricing ───────────────────────────────────────────────── */}
-      <section id="pricing" style={{ padding: '100px 0', borderTop: `1px solid ${BORDER}` }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-          <FadeUp>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: GREEN, marginBottom: 14 }}>Pricing</p>
-            <h2 style={{ fontSize: 'clamp(28px, 4vw, 46px)', fontWeight: 900, letterSpacing: '-0.03em', maxWidth: 540, marginBottom: 14, lineHeight: 1.1 }}>Pay for work completed,<br/>not retainers.</h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', maxWidth: 480, lineHeight: 1.7, marginBottom: 56 }}>
-              Nexus charges a transparent markup on completed work. No subscriptions, no hidden fees.
-            </p>
-          </FadeUp>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
-            {pricingTiers.map(({ name, markup, sla, desc, featured }, i) => (
-              <FadeUp key={name} delay={i * 0.08}>
-                <div style={{ background: featured ? CARD2 : CARD, border: featured ? `1px solid rgba(58,173,88,0.35)` : `1px solid ${BORDER}`, borderRadius: 20, padding: 36, position: 'relative', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: featured ? '0 0 40px rgba(58,173,88,0.12)' : 'none' }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = featured ? '0 8px 60px rgba(58,173,88,0.2)' : '0 8px 40px rgba(0,0,0,0.3)' }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = featured ? '0 0 40px rgba(58,173,88,0.12)' : 'none' }}
-                >
-                  {featured && (
-                    <span style={{ position: 'absolute', top: 20, right: 20, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 9999, background: GREEN, color: '#fff' }}>Most common</span>
-                  )}
-                  <p style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: 'rgba(255,255,255,0.45)' }}>{name}</p>
-                  <p style={{ fontSize: 52, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 4, color: GREEN }}>{markup}
-                    <span style={{ fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.35)', marginLeft: 6 }}>markup</span>
-                  </p>
-                  <p style={{ fontSize: 11.5, marginBottom: 20, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{sla}</p>
-                  <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(255,255,255,0.6)' }}>{desc}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-
-          <p style={{ marginTop: 28, fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
-            <Link href="/pricing" style={{ color: GREEN, textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              View full pricing details <ChevronRight size={14} />
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* ── Platform callout band ──────────────────────────────────── */}
-      <section style={{ padding: '80px 24px', borderTop: `1px solid ${BORDER}`, background: '#0d0d0d' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
-          {[
-            { icon: Activity,  title: 'Live project tracking',  desc: 'See real-time status updates for every active request.' },
-            { icon: Shield,    title: 'Verified professionals', desc: 'Every contractor is vetted before joining the network.' },
-            { icon: Sparkles,  title: 'AI-powered insights',    desc: 'Smart recommendations and automated project summaries.' },
-            { icon: Lock,      title: 'Secure records',         desc: 'Every invoice, photo, and note is archived for you.' },
-          ].map(({ icon: Icon, title, desc }, i) => (
-            <FadeUp key={title} delay={i * 0.07}>
-              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '24px 22px', transition: 'border-color 0.2s, background 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(58,173,88,0.3)'; e.currentTarget.style.background = '#161616' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = CARD }}
-              >
-                <div style={{ width: 38, height: 38, borderRadius: 10, background: GREEN_DIM, border: `1px solid rgba(58,173,88,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                  <Icon size={17} style={{ color: GREEN }} />
-                </div>
-                <p style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 6 }}>{title}</p>
-                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>{desc}</p>
+          {/* Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+            {[
+              { value: '8', label: 'Trade Categories' },
+              { value: '$0', label: 'Contractor Cost' },
+              { value: '100%', label: 'Manually Reviewed' },
+              { value: '1', label: 'Contractor Match' },
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-center">
+                <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                <p className="text-xs text-slate-600 uppercase tracking-wide font-semibold mt-2">{stat.label}</p>
               </div>
-            </FadeUp>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── CTA band ──────────────────────────────────────────────── */}
-      <section style={{ padding: '100px 24px', textAlign: 'center', borderTop: `1px solid ${BORDER}`, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 60% 80% at 50% 50%, rgba(58,173,88,0.08) 0%, transparent 65%)' }} />
-        <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative' }}>
-          <FadeUp>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: GREEN_DIM, border: `1px solid rgba(58,173,88,0.25)`, borderRadius: 9999, padding: '5px 14px', marginBottom: 24 }}>
-              <Sparkles size={12} style={{ color: GREEN }} />
-              <span style={{ fontSize: 11.5, fontWeight: 700, color: GREEN, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Ready to get started?</span>
-            </div>
-            <h2 style={{ fontSize: 'clamp(28px, 4vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.08, marginBottom: 18 }}>
-              Simplify your property maintenance today.
-            </h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, marginBottom: 40 }}>
-              Create an account in minutes. Submit your first request the same day. Nexus handles the rest.
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
-              <Link href="/auth/sign-up" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 32px', borderRadius: 9999, background: GREEN, color: '#fff', fontSize: 14.5, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s, transform 0.15s', boxShadow: '0 0 36px rgba(58,173,88,0.4)' }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)' }}
-              >Create an account <ArrowRight size={15} /></Link>
-              <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 32px', borderRadius: 9999, border: `1.5px solid rgba(255,255,255,0.18)`, color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s, transform 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.transform = 'translateY(0)' }}
-              >Contact us</Link>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
+      {/* Services Section */}
+      <section id="services" className="py-24 lg:py-32 bg-gradient-to-b from-slate-50 to-white px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <p className="text-sm font-mono text-blue-600 uppercase tracking-wide mb-4">What We Coordinate</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">Eight trades. One platform.</h2>
+            <p className="text-lg text-slate-600 max-w-2xl">Every request is reviewed by Nexus before it reaches a contractor. You get one point of contact, not a bidding war.</p>
+          </div>
 
-      {/* ── Footer ────────────────────────────────────────────────── */}
-      <footer style={{ background: '#080808', color: 'rgba(255,255,255,0.45)', padding: '72px 24px 40px', borderTop: `1px solid ${BORDER}` }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 44, marginBottom: 56 }}>
-            {/* Brand */}
-            <div>
-              <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 16 }}>
-                <NexusIcon size={28} />
-                <div style={{ lineHeight: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: '#fff' }}>NEXUS</div>
-                  <div style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {['Tree Removal', 'Concrete Work', 'Roofing', 'HVAC', 'Fencing', 'Electrical', 'Plumbing', 'General Repair'].map((service, i) => (
+              <div key={i} className="group p-6 rounded-xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-lg hover:bg-gradient-to-br hover:from-blue-50 hover:to-cyan-50 transition cursor-pointer">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold mb-4 group-hover:scale-110 transition">
+                  {i + 1}
                 </div>
+                <h3 className="font-semibold text-slate-900 mb-2">{service}</h3>
+                <p className="text-sm text-slate-600">Professional {service.toLowerCase()} services for residential and commercial properties.</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" className="py-24 lg:py-32 px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <p className="text-sm font-mono text-blue-600 uppercase tracking-wide mb-4">The Process</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900">From request to record in four steps.</h2>
+          </div>
+
+          <div className="grid lg:grid-cols-4 gap-8">
+            {[
+              {
+                step: '01',
+                title: 'Submit Your Request',
+                desc: 'Describe the work needed, upload photos, and set a budget ceiling. Takes under three minutes.'
+              },
+              {
+                step: '02',
+                title: 'We Assign a Contractor',
+                desc: 'Nexus reviews your request and assigns one verified contractor matched by trade and location.'
+              },
+              {
+                step: '03',
+                title: 'Work Gets Done',
+                desc: 'Your contractor contacts you directly, schedules the visit, and completes the project on time.'
+              },
+              {
+                step: '04',
+                title: 'Record Kept Forever',
+                desc: 'Every completed project generates a permanent record including cost, timeline, photos, and follow-ups.'
+              },
+            ].map((item, i) => (
+              <div key={i} className="relative">
+                <div className="absolute -left-4 top-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold lg:block hidden">
+                  {i + 1}
+                </div>
+                <div className="p-6 rounded-xl border border-slate-200 bg-white h-full">
+                  <p className="text-3xl font-bold text-slate-300 mb-2">{item.step}</p>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-3">{item.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section id="pricing" className="py-24 lg:py-32 px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-cyan-500">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Ready to simplify maintenance?</h2>
+          <p className="text-lg text-blue-50 mb-8">Join homeowners and contractors already using Nexus to streamline property maintenance.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth/sign-up" className="px-8 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:shadow-lg transition">Create Account</Link>
+            <Link href="/auth/sign-up?role=contractor" className="px-8 py-3 border-2 border-white text-white rounded-lg font-semibold hover:bg-white/10 transition">Join as Contractor</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer id="contact" className="py-16 px-6 lg:px-8 bg-slate-900 text-slate-300">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            <div>
+              <Link href="/" className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg" />
+                <span className="font-semibold text-white">Nexus</span>
               </Link>
-              <p style={{ fontSize: 12.5, lineHeight: 1.75, marginBottom: 16 }}>
-                Managed property services for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <a href={CONTACT_INFO.phoneHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
-                ><Phone size={12} /> {CONTACT_INFO.phoneDisplay}</a>
-                <a href={`mailto:${CONTACT_INFO.email}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
-                ><Mail size={12} /> {CONTACT_INFO.email}</a>
+              <p className="text-sm">Property maintenance coordination platform for homeowners and contractors.</p>
+            </div>
+            {[
+              { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Status'] },
+              { title: 'Company', links: ['About', 'Blog', 'Careers', 'Press'] },
+              { title: 'Legal', links: ['Privacy', 'Terms', 'Security', 'Compliance'] },
+            ].map((col, i) => (
+              <div key={i}>
+                <h3 className="font-semibold text-white mb-4">{col.title}</h3>
+                <ul className="space-y-2">
+                  {col.links.map((link, j) => (
+                    <li key={j}><a href="#" className="text-sm hover:text-white transition">{link}</a></li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
-            {/* Platform */}
-            <div>
-              <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 16 }}>Platform</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {[
-                  { href: '#homeowners',   label: 'For Homeowners' },
-                  { href: '#contractors',  label: 'For Contractors' },
-                  { href: '#how-it-works', label: 'How It Works' },
-                  { href: '#pricing',      label: 'Pricing' },
-                  { href: '/faq',          label: 'FAQ' },
-                ].map(({ href, label }) => (
-                  <li key={href}><a href={href} style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.15s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
-                  >{label}</a></li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Accounts */}
-            <div>
-              <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 16 }}>Accounts</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {[
-                  { href: '/auth/sign-up',                       label: 'Homeowner' },
-                  { href: '/auth/sign-up?role=property_manager', label: 'Property Manager' },
-                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor' },
-                  { href: '/auth/login',                         label: 'Sign In' },
-                ].map(({ href, label }) => (
-                  <li key={href}><Link href={href} style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.15s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
-                  >{label}</Link></li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 16 }}>Company</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {[
-                  { href: '/about',   label: 'About Us' },
-                  { href: '/contact', label: 'Contact' },
-                  { href: '/terms',   label: 'Terms of Service' },
-                  { href: '/privacy', label: 'Privacy Policy' },
-                ].map(({ href, label }) => (
-                  <li key={href}><Link href={href} style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.15s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
-                  >{label}</Link></li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
-
-          <div style={{ borderTop: `1px solid rgba(255,255,255,0.07)`, paddingTop: 24, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, fontSize: 11.5 }}>
-            <p>&copy; 2026 {CONTACT_INFO.companyName}. {CONTACT_INFO.cityState}. All rights reserved.</p>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <Link href="/terms"    style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>Terms</Link>
-              <Link href="/privacy"  style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>Privacy</Link>
-              <Link href="/site-map" style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>Sitemap</Link>
+          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-sm">&copy; 2026 Nexus Operations. All rights reserved.</p>
+            <div className="flex gap-6 mt-4 md:mt-0">
+              {['Twitter', 'LinkedIn', 'GitHub'].map((social, i) => (
+                <a key={i} href="#" className="text-sm hover:text-white transition">{social}</a>
+              ))}
             </div>
           </div>
         </div>
       </footer>
-    </div>
+
+      <style jsx>{`
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-up {
+          animation: fadeUp 0.6s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </main>
   )
 }
