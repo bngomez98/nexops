@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'
 import {
   LogOut, Menu, LayoutDashboard, FileText,
-  Settings, TrendingUp, Wrench, ChevronRight, Briefcase,
+  Settings, TrendingUp, ChevronRight, Briefcase,
   PlusCircle, CreditCard, ShieldCheck,
 } from 'lucide-react'
 
@@ -75,13 +76,16 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         }`}
       >
         <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border flex-shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-            <Wrench className="w-4 h-4 text-primary-foreground" />
-          </div>
-          <div>
-            <span className="block text-[13px] font-bold text-sidebar-foreground">Nexus Ops</span>
-            <span className="block text-[10px] uppercase tracking-[0.18em] text-sidebar-muted">Portal</span>
-          </div>
+          <Link href="/" aria-label="Nexus Operations home">
+            <Image
+              src="/nexus-logo.png"
+              alt="Nexus Operations"
+              width={120}
+              height={40}
+              className="h-6 w-auto brightness-0 invert"
+              priority
+            />
+          </Link>
         </div>
 
         <div className="px-4 pt-4">
@@ -153,7 +157,16 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
           </div>
         </nav>
 
-        <div className="px-3 py-4 border-t border-sidebar-border">
+        <div className="px-3 py-4 border-t border-sidebar-border space-y-2">
+          <a
+            href="https://nexusoperations.zendesk.com/hc/en-us"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-[12px] font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            Help Center
+          </a>
           <button
             onClick={onLogout}
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-[12px] font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
