@@ -94,6 +94,11 @@ export function Footer() {
                 { href: "/user-agreement", label: "User Agreement" },
                 { href: "/site-map",       label: "Sitemap" },
                 { href: "/faq",            label: "FAQ" },
+                { href: "/privacy",          label: "Privacy Policy" },
+                { href: "/terms",            label: "Terms of Service" },
+                { href: "/user-agreement",   label: "User Agreement" },
+                { href: "/site-map",         label: "Sitemap" },
+                { href: "/faq",              label: "FAQ" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
@@ -113,6 +118,9 @@ export function Footer() {
             <span className="text-[11.5px] text-muted-foreground">Built for transparent project tracking and cleaner dispatch workflows.</span>
             <Link href="/terms" className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
             <Link href="/privacy" className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+          <div className="flex flex-wrap items-center gap-5">
+            <Link href="/terms"          className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/privacy"        className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
             <Link href="/user-agreement" className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">User Agreement</Link>
           </div>
         </div>
