@@ -160,6 +160,20 @@
   .animate-fade-in {
     animation: fade-in 0.4s ease both;
   }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(58, 173, 88, 0.3); }
+    50%       { box-shadow: 0 0 40px rgba(58, 173, 88, 0.6); }
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-6px); }
+  }
+  .animate-float {
+    animation: float 3.5s ease-in-out infinite;
+  }
   .text-gradient {
     background: linear-gradient(135deg, oklch(0.48 0.155 142) 0%, oklch(0.58 0.20 155) 50%, oklch(0.62 0.18 170) 100%);
     -webkit-background-clip: text;
@@ -172,6 +186,15 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+  /* Dark page variant for marketing pages */
+  .page-dark {
+    background: #0a0a0a;
+    color: #fff;
+  }
+  .page-dark .text-muted-foreground { color: rgba(255,255,255,0.5); }
+  .page-dark .border-border { border-color: rgba(255,255,255,0.08); }
+  .page-dark .bg-card { background: #111111; }
+  .page-dark .text-foreground { color: #fff; }
   .section-alt {
     background:
       linear-gradient(180deg, oklch(0.97 0.003 142 / 0.5) 0%, transparent 100%),

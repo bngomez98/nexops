@@ -26,7 +26,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="mb-4">
-              <Logo />
+              <Logo adaptive />
             </div>
             <p className="text-[12px] text-muted-foreground leading-relaxed max-w-xs mb-4">
               Managed property maintenance for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.
@@ -99,11 +99,6 @@ export function Footer() {
                 { href: "/user-agreement", label: "User Agreement" },
                 { href: "/site-map",       label: "Sitemap" },
                 { href: "/faq",            label: "FAQ" },
-                { href: "/privacy",          label: "Privacy Policy" },
-                { href: "/terms",            label: "Terms of Service" },
-                { href: "/user-agreement",   label: "User Agreement" },
-                { href: "/site-map",         label: "Sitemap" },
-                { href: "/faq",              label: "FAQ" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
