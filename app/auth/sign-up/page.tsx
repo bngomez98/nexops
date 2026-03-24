@@ -159,7 +159,7 @@ function SignUpInner() {
           <div className="space-y-4 text-[13px] text-muted-foreground leading-[1.75]">
             {isContractor ? (
               <>
-                <p>Receive pre-documented project notifications in your trade. No fees. No competing bids.</p>
+                <p>Receive fully documented project requests in your trade. Your membership covers access — no per-job fees or commissions.</p>
                 <p>Every project you claim comes with photos, scope, and the owner's budget ceiling already in hand.</p>
               </>
             ) : (
@@ -172,8 +172,8 @@ function SignUpInner() {
 
           <div className="border-t border-border pt-6 space-y-3">
             {(isContractor
-              ? ["Free to join and participate", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
-              : ["One contractor per request", "No competing bids", "Permanent service record", "Licensed & insured contractors"]
+              ? ["Free to join and participate", "Full project documentation provided", "Direct payment from owners", "License & insurance verified"]
+              : ["One contractor per request", "Budget set by the owner", "Permanent service record", "Licensed & insured contractors"]
             ).map(item => (
               <div key={item} className="flex items-center gap-2.5 text-[13px] text-foreground">
                 <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />

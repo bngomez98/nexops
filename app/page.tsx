@@ -41,12 +41,12 @@ const contractorFeatures = [
   {
     icon: Eye,
     title: 'Full project visibility before you commit',
-    desc: 'Photos, scope, budget, and location are all visible before claiming.',
+    desc: 'Photos, scope, budget, and location are all provided upfront so you arrive prepared.',
   },
   {
     icon: Zap,
-    title: 'First-come, first-served — no bidding',
-    desc: 'Claim the jobs that match your trade and capacity.',
+    title: 'Matched by trade and location',
+    desc: 'Accept requests that fit your specialty and schedule at your own pace.',
   },
   {
     icon: CreditCard,
@@ -445,7 +445,7 @@ export default function HomePage() {
                   <FileText size={18} style={{ color: '#6ee7a0' }} />
                 </div>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Pre-qualified jobs only</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Full documentation included</p>
                   <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Budget &amp; scope visible upfront</p>
                 </div>
               </div>
@@ -457,10 +457,10 @@ export default function HomePage() {
                 For contractors
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
-                Stop paying for leads that go nowhere.
+                  Every request fully documented before you arrive.
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
-                Nexus delivers pre-qualified, exclusive requests with full scope visible before you commit. No competing quotes, no blind visits.
+                Licensed, insured contractors in Topeka and surrounding areas get matched with property owners who have documented their project in full — scope, photos, budget, and scheduling all provided upfront.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
