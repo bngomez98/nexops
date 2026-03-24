@@ -60,6 +60,18 @@ export async function POST(request: NextRequest) {
 
     if (insertError) throw insertError
 
+    // Attempt auto-match in background (non-blocking)
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
+      await fetch(`${baseUrl}/api/automation/match-contractor`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Cookie: request.headers.get('cookie') ?? '' },
+        body: JSON.stringify({ projectId: sr.id }),
+      })
+    } catch {
+      // Match failure is non-fatal — job will appear on public board
+    }
+
     return NextResponse.json(
       { project: { id: sr.id, title: title || category, category: sr.category, status: sr.status } },
       { status: 201 }
