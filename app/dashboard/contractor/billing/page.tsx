@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
 import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
@@ -24,6 +25,7 @@ export default function ContractorBillingPage() {
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+  const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
 
   const plans = getPlansByRole('contractor')
@@ -51,22 +53,7 @@ export default function ContractorBillingPage() {
   }
 
   async function handleUpgrade(planId: string) {
-    setCheckoutLoading(planId)
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId }),
-      })
-      const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Failed to start checkout'); return }
-      if (!data.url) { toast.error('Stripe checkout URL was not returned'); return }
-      window.location.href = data.url
-    } catch {
-      toast.error('Something went wrong. Please try again.')
-    } finally {
-      setCheckoutLoading(null)
-    }
+    setCheckoutPlanId(planId)
   }
 
   async function handleManageBilling() {
@@ -110,6 +97,12 @@ export default function ContractorBillingPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {checkoutPlanId && (
+        <EmbeddedCheckoutModal
+          planId={checkoutPlanId}
+          onClose={() => setCheckoutPlanId(null)}
+        />
+      )}
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
       <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-8">
 

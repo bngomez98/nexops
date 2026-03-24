@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const { planId } = await req.json()
+    const body = await req.json()
+    const { planId, embedded } = body
+
     const plan = getPlanById(planId)
     if (!plan) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
@@ -56,6 +58,28 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         }
 
+    if (embedded) {
+      // Embedded checkout: return client_secret for use with EmbeddedCheckoutProvider
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        mode: 'subscription',
+        ui_mode: 'embedded',
+        redirect_on_completion: 'never',
+        line_items: [lineItem],
+        metadata: { userId: user.id, planId },
+        subscription_data: {
+          metadata: { userId: user.id, planId },
+        },
+      })
+
+      if (!session.client_secret) {
+        return NextResponse.json({ error: 'Stripe did not return a client secret' }, { status: 500 })
+      }
+
+      return NextResponse.json({ clientSecret: session.client_secret })
+    }
+
+    // Standard redirect checkout
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
