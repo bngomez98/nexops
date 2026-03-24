@@ -86,14 +86,14 @@ export const metadata: Metadata = {
     url: 'https://nexusoperations.org',
     title: 'Nexus Operations | Property Service Management Platform',
     description:
-      'Submit one request. Get one verified contractor. Track every project from start to finish.',
+      'Submit a maintenance request, get a verified contractor assigned, and track every project from start to finish.',
     siteName: 'Nexus Operations',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nexus Operations | Property Services',
     description:
-      'One request. One verified contractor. Complete project history.',
+      'Managed property maintenance — verified contractors, tracked projects, full history.',
   },
   robots: {
     index: true,
