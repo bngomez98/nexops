@@ -2,6 +2,10 @@ import type Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
+import {
+  sendInvoicePaidContractorEmail,
+  sendInvoicePaidClientEmail,
+} from '@/lib/email'
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -85,12 +89,94 @@ export async function POST(req: NextRequest) {
     }
 
     case 'invoice.paid': {
-      const invoice = event.data.object as Stripe.Invoice
-      const requestId = invoice.metadata?.requestId
+      const stripeInvoice = event.data.object as Stripe.Invoice
+
+      // Legacy flow: service_requests.invoice_paid flag
+      const requestId = stripeInvoice.metadata?.requestId
       if (requestId) {
         await supabase.from('service_requests')
           .update({ invoice_paid: true })
           .eq('id', requestId)
+      }
+
+      // Jobs flow: look up internal invoice by stripe_invoice_id, mark complete, send receipts
+      const stripeInvoiceId = stripeInvoice.id
+      const { data: nexusInvoice } = await supabase
+        .from('invoices')
+        .select('id, job_id, contractor_id, client_id, subtotal, nexus_fee, total')
+        .eq('stripe_invoice_id', stripeInvoiceId)
+        .maybeSingle()
+
+      if (nexusInvoice) {
+        // Mark invoice paid
+        await supabase.from('invoices')
+          .update({ status: 'paid' })
+          .eq('id', nexusInvoice.id)
+
+        // Mark job complete
+        await supabase.from('jobs')
+          .update({ status: 'completed' })
+          .eq('id', nexusInvoice.job_id)
+
+        // Log status history
+        await supabase.from('job_status_history').insert({
+          job_id:     nexusInvoice.job_id,
+          status:     'completed',
+          changed_at: new Date().toISOString(),
+          changed_by: 'system',
+        })
+
+        // Fetch job details for email context
+        const { data: job } = await supabase
+          .from('jobs')
+          .select('service_type')
+          .eq('id', nexusInvoice.job_id)
+          .single()
+
+        // Send receipt emails (fire-and-forget)
+        ;(async () => {
+          try {
+            const { getAdminClient } = await import('@/lib/supabase/admin')
+            const admin = getAdminClient()
+
+            const [{ data: contractorAuth }, { data: clientAuth }] = await Promise.all([
+              admin.auth.admin.getUserById(nexusInvoice.contractor_id),
+              admin.auth.admin.getUserById(nexusInvoice.client_id),
+            ])
+
+            const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
+              supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.contractor_id).maybeSingle(),
+              supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.client_id).maybeSingle(),
+            ])
+
+            const serviceType = job?.service_type ?? 'service'
+
+            await Promise.all([
+              contractorAuth.user?.email
+                ? sendInvoicePaidContractorEmail({
+                    to:             contractorAuth.user.email,
+                    contractorName: contractorProfile?.full_name ?? 'Contractor',
+                    serviceType,
+                    subtotal:       nexusInvoice.subtotal,
+                    nexusFee:       nexusInvoice.nexus_fee,
+                    jobId:          nexusInvoice.job_id,
+                  })
+                : Promise.resolve(),
+              clientAuth.user?.email
+                ? sendInvoicePaidClientEmail({
+                    to:             clientAuth.user.email,
+                    clientName:     clientProfile?.full_name ?? 'Client',
+                    contractorName: contractorProfile?.full_name ?? 'Your contractor',
+                    serviceType,
+                    total:          nexusInvoice.total,
+                    jobId:          nexusInvoice.job_id,
+                  })
+                : Promise.resolve(),
+            ])
+          } catch (err) {
+            console.error('[webhook] invoice.paid email error:', err)
+          }
+        })()
       }
       break
     }

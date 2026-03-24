@@ -1,0 +1,283 @@
+/**
+ * Nexus Operations — Resend email utilities
+ *
+ * All outgoing transactional email flows in one place.
+ * Set RESEND_API_KEY + RESEND_FROM_EMAIL in your environment.
+ */
+
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+const FROM   = process.env.RESEND_FROM_EMAIL ?? 'Nexus Operations <noreply@nexusops.com>'
+const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusops.com'
+
+// ─── helpers ─────────────────────────────────────────────────────────────────
+
+function fmt(s: string) {
+  return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function wrap(body: string) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nexus Operations</title>
+</head>
+<body style="font-family:system-ui,-apple-system,sans-serif;background:#f8f8f8;margin:0;padding:0;">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td align="center" style="padding:32px 16px;">
+<table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e5e5;">
+<tr><td style="background:#111827;padding:24px 32px;">
+<span style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Nexus Operations</span>
+</td></tr>
+<tr><td style="padding:32px 32px 24px;">
+${body}
+</td></tr>
+<tr><td style="padding:20px 32px;border-top:1px solid #f0f0f0;background:#fafafa;">
+<p style="margin:0;font-size:12px;color:#9ca3af;">
+Nexus Operations · Topeka, KS · <a href="${SITE}" style="color:#6366f1;">nexusops.com</a>
+</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>`
+}
+
+function btn(label: string, href: string) {
+  return `<a href="${href}" style="display:inline-block;background:#4f46e5;color:#ffffff;font-size:13px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:8px;margin-top:20px;">${label}</a>`
+}
+
+function h1(text: string) {
+  return `<h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#111827;">${text}</h1>`
+}
+
+function p(text: string) {
+  return `<p style="margin:12px 0;font-size:14px;color:#374151;line-height:1.6;">${text}</p>`
+}
+
+function small(text: string) {
+  return `<p style="margin:8px 0;font-size:12px;color:#9ca3af;line-height:1.5;">${text}</p>`
+}
+
+// ─── Safe send wrapper (never throws) ────────────────────────────────────────
+
+async function send(payload: {
+  to: string | string[]
+  subject: string
+  html: string
+}) {
+  if (!process.env.RESEND_API_KEY) {
+    // Email not configured — log and skip silently
+    console.log('[email] RESEND_API_KEY not set — skipping:', payload.subject)
+    return
+  }
+  try {
+    await resend.emails.send({ from: FROM, ...payload })
+  } catch (err) {
+    console.error('[email] send error:', err)
+  }
+}
+
+// ─── Email triggers ───────────────────────────────────────────────────────────
+
+/** 1. Welcome email after successful sign-up */
+export async function sendWelcomeEmail(opts: { to: string; name: string; role: string }) {
+  const dashHref = `${SITE}/dashboard/${opts.role}`
+  await send({
+    to: opts.to,
+    subject: 'Welcome to Nexus Operations',
+    html: wrap(`
+      ${h1(`Welcome, ${opts.name.split(' ')[0]}!`)}
+      ${p(`Your <strong>${fmt(opts.role)}</strong> account has been created. You're now part of Nexus Operations — Topeka's verified property services platform.`)}
+      ${btn('Go to Your Dashboard', dashHref)}
+      ${small('If you didn\'t create this account, please contact us immediately.')}
+    `),
+  })
+}
+
+/** 2. Contractor approved — access confirmed */
+export async function sendContractorApprovedEmail(opts: { to: string; name: string }) {
+  await send({
+    to: opts.to,
+    subject: 'Your Nexus Operations contractor account is approved',
+    html: wrap(`
+      ${h1('You\'re approved!')}
+      ${p(`Hi ${opts.name.split(' ')[0]}, your contractor profile has been verified by the Nexus Operations team. You can now receive job assignments.`)}
+      ${p('Head to your dashboard to check your availability, review your profile, and start receiving notifications for matching projects.')}
+      ${btn('Go to Contractor Dashboard', `${SITE}/dashboard/contractor`)}
+    `),
+  })
+}
+
+/** 3. Contractor document expiring in 30 days */
+export async function sendDocumentExpiringEmail(opts: {
+  to: string
+  name: string
+  docType: string
+  expiresAt: string
+}) {
+  await send({
+    to: opts.to,
+    subject: `Action required: ${fmt(opts.docType)} expiring soon`,
+    html: wrap(`
+      ${h1('Document expiring soon')}
+      ${p(`Hi ${opts.name.split(' ')[0]}, your <strong>${fmt(opts.docType)}</strong> is set to expire on <strong>${new Date(opts.expiresAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong>.`)}
+      ${p('Please upload an updated document to keep your account active and continue receiving job assignments. Your account will be paused if the document expires.')}
+      ${btn('Upload Updated Document', `${SITE}/dashboard/contractor/documents`)}
+    `),
+  })
+}
+
+/** 4. Contractor notified of new job match */
+export async function sendJobMatchedContractorEmail(opts: {
+  to: string
+  name: string
+  jobId: string
+  serviceType: string
+  urgency: string
+  propertyCity: string
+  propertyState: string
+}) {
+  const urgencyLabel = fmt(opts.urgency)
+  await send({
+    to: opts.to,
+    subject: `New job assigned: ${fmt(opts.serviceType)} in ${opts.propertyCity}`,
+    html: wrap(`
+      ${h1('You\'ve been assigned a new job')}
+      ${p(`Hi ${opts.name.split(' ')[0]}, a new <strong>${fmt(opts.serviceType)}</strong> job in <strong>${opts.propertyCity}, ${opts.propertyState}</strong> has been assigned to you.`)}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Service</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;font-weight:600;">${fmt(opts.serviceType)}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Location</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.propertyCity}, ${opts.propertyState}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Urgency</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${urgencyLabel}</td>
+        </tr>
+      </table>
+      ${p('Log in to accept the job, view full details, and contact the client.')}
+      ${btn('View Job Details', `${SITE}/dashboard/contractor/jobs/${opts.jobId}`)}
+      ${small(`Based on urgency tier, expect to contact the client ${opts.urgency === 'emergency' ? 'within 1 hour' : opts.urgency === 'urgent' ? 'within 4 hours' : 'within 24 hours'}.`)}
+    `),
+  })
+}
+
+/** 5. Client notified that a contractor was assigned */
+export async function sendContractorAssignedClientEmail(opts: {
+  to: string
+  clientName: string
+  contractorName: string
+  serviceType: string
+  urgency: string
+  jobId: string
+}) {
+  const contactWindow = opts.urgency === 'emergency' ? '1 hour' : opts.urgency === 'urgent' ? '4 hours' : '24 hours'
+  await send({
+    to: opts.to,
+    subject: `Contractor assigned for your ${fmt(opts.serviceType)} request`,
+    html: wrap(`
+      ${h1('A contractor has been assigned')}
+      ${p(`Hi ${opts.clientName.split(' ')[0]}, <strong>${opts.contractorName}</strong> has been assigned to your <strong>${fmt(opts.serviceType)}</strong> request.`)}
+      ${p(`Expect to be contacted within <strong>${contactWindow}</strong> to schedule the work.`)}
+      ${btn('View Request Details', `${SITE}/dashboard/homeowner/requests/${opts.jobId}`)}
+      ${small('You can view the contractor\'s profile and contact information in your request details page after they accept the job.')}
+    `),
+  })
+}
+
+/** 6. Client receives invoice */
+export async function sendInvoiceSentClientEmail(opts: {
+  to: string
+  clientName: string
+  contractorName: string
+  serviceType: string
+  subtotal: number
+  nexusFee: number
+  total: number
+  jobId: string
+}) {
+  await send({
+    to: opts.to,
+    subject: `Invoice received for your ${fmt(opts.serviceType)} project — $${opts.total.toFixed(2)}`,
+    html: wrap(`
+      ${h1('Invoice received')}
+      ${p(`Hi ${opts.clientName.split(' ')[0]}, <strong>${opts.contractorName}</strong> has submitted an invoice for your <strong>${fmt(opts.serviceType)}</strong> project.`)}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:13px;color:#374151;">Services rendered</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;font-weight:600;text-align:right;">$${opts.subtotal.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:13px;color:#374151;">Nexus platform fee</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;text-align:right;">$${opts.nexusFee.toFixed(2)}</td>
+        </tr>
+        <tr style="background:#f9fafb;border-top:2px solid #e5e5e5;">
+          <td style="padding:12px 16px;font-size:14px;font-weight:700;color:#111827;">Total due</td>
+          <td style="padding:12px 16px;font-size:14px;font-weight:700;color:#111827;text-align:right;">$${opts.total.toFixed(2)}</td>
+        </tr>
+      </table>
+      ${btn('Review & Pay Invoice', `${SITE}/dashboard/homeowner/requests/${opts.jobId}`)}
+    `),
+  })
+}
+
+/** 7. Receipt to contractor when invoice is paid */
+export async function sendInvoicePaidContractorEmail(opts: {
+  to: string
+  contractorName: string
+  serviceType: string
+  subtotal: number
+  nexusFee: number
+  jobId: string
+}) {
+  await send({
+    to: opts.to,
+    subject: `Payment received — ${fmt(opts.serviceType)} — $${opts.subtotal.toFixed(2)}`,
+    html: wrap(`
+      ${h1('Payment received')}
+      ${p(`Hi ${opts.contractorName.split(' ')[0]}, your invoice for the <strong>${fmt(opts.serviceType)}</strong> project has been paid.`)}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:13px;color:#374151;">Your earnings</td>
+          <td style="padding:10px 16px;font-size:13px;font-weight:700;color:#059669;text-align:right;">$${opts.subtotal.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:13px;color:#374151;">Nexus fee (deducted)</td>
+          <td style="padding:10px 16px;font-size:13px;color:#6b7280;text-align:right;">−$${opts.nexusFee.toFixed(2)}</td>
+        </tr>
+      </table>
+      ${p('Your payout will be transferred to your Stripe Express account per your payout schedule.')}
+      ${btn('View Payout Details', `${SITE}/dashboard/contractor/payments`)}
+    `),
+  })
+}
+
+/** 8. Receipt to client when invoice is paid */
+export async function sendInvoicePaidClientEmail(opts: {
+  to: string
+  clientName: string
+  contractorName: string
+  serviceType: string
+  total: number
+  jobId: string
+}) {
+  await send({
+    to: opts.to,
+    subject: `Payment confirmed — ${fmt(opts.serviceType)} — $${opts.total.toFixed(2)}`,
+    html: wrap(`
+      ${h1('Payment confirmed')}
+      ${p(`Hi ${opts.clientName.split(' ')[0]}, your payment of <strong>$${opts.total.toFixed(2)}</strong> for the <strong>${fmt(opts.serviceType)}</strong> project has been received.`)}
+      ${p('Your project record has been updated. All receipts and project history are stored permanently in your account.')}
+      ${btn('View Project Record', `${SITE}/dashboard/homeowner/requests/${opts.jobId}`)}
+      ${small('Thank you for using Nexus Operations.')}
+    `),
+  })
+}
