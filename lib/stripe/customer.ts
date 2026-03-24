@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { stripe } from '@/lib/stripe'
+import { getStripeClient } from '@/lib/stripe/server'
 
 interface EnsureStripeCustomerParams {
   supabase: SupabaseClient<any, 'public', any>
@@ -20,6 +20,7 @@ export async function ensureStripeCustomer({
     return stripeCustomerId
   }
 
+  const stripe = getStripeClient()
   const customer = await stripe.customers.create({
     email: email ?? undefined,
     name: fullName ?? email ?? undefined,

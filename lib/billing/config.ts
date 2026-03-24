@@ -8,7 +8,7 @@ function parseIntegerEnv(value: string | undefined, fallback: number) {
 
 export const DEFAULT_CONTRACTOR_SUBSCRIPTION_PRICE_CENTS = parseIntegerEnv(
   process.env.NEXT_PUBLIC_CONTRACTOR_SUBSCRIPTION_PRICE_CENTS,
-  9900,
+  7900,
 )
 
 export const OWNER_SUBSCRIPTION_MULTIPLIER = 2
