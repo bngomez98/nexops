@@ -36,6 +36,19 @@ export async function POST(req: NextRequest) {
         const userId = session.metadata?.userId
         const planId = session.metadata?.planId
 
+        // Jobs/invoices table payment
+        const invoiceId = session.metadata?.invoice_id
+        if (invoiceId && paymentType === 'invoice') {
+          await supabase.from('invoices')
+            .update({ status: 'paid' })
+            .eq('id', invoiceId)
+          // Mark the associated job as completed
+          const jobId = session.metadata?.job_id
+          if (jobId) {
+            await supabase.from('jobs').update({ status: 'completed' }).eq('id', jobId)
+          }
+        }
+
         // Service request invoice payment
         if (requestId && paymentType) {
           const { data: payment, error: paymentError } = await supabase
