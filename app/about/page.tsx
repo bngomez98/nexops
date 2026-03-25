@@ -89,7 +89,7 @@ export default function AboutPage() {
                   Our mission
                 </p>
                 <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
-                  Reducing coordination overhead in property maintenance.
+                  Reduce coordination overhead in property maintenance.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   Property management companies in Topeka face chronic

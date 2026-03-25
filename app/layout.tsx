@@ -52,6 +52,8 @@ const GCR_BADGE_SCRIPT = GOOGLE_MERCHANT_ID
     ].join('\n')
   : null
 
+const COMPANY_NAME = 'Nexus Operations, LLC'
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
   title: {
@@ -72,9 +74,9 @@ export const metadata: Metadata = {
     'contractor assignment service',
     'Nexus Operations',
   ],
-  authors: [{ name: 'Nexus Operations, LLC' }],
-  creator: 'Nexus Operations, LLC',
-  publisher: 'Nexus Operations, LLC',
+  authors: [{ name: COMPANY_NAME }],
+  creator: COMPANY_NAME,
+  publisher: COMPANY_NAME,
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
