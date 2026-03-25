@@ -7,9 +7,9 @@ import { Mail, Phone, Clock } from "lucide-react"
 import { CONTACT_INFO } from "@/lib/contact-info"
 
 export const metadata: Metadata = {
-  title: "Contact | Submit a Request or Apply as a Contractor",
+  title: "Contact — Submit a Request or Apply as a Contractor in Topeka, KS",
   description:
-    `Submit a home service request or apply as a contractor. For homeowners and property managers. Licensed and insured contractors welcome. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
+    `Contact Nexus Operations to submit a maintenance request or apply as a licensed contractor. Serving homeowners, landlords, and property managers in Topeka and Shawnee County. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
 }
 
 export default function ContactPage() {

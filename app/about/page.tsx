@@ -7,9 +7,9 @@ import Image from "next/image"
 import { ArrowRight, MapPin, Phone, Mail } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Us — Maintenance Coordination in Topeka, KS",
   description:
-    "Nexus Operations LLC is a maintenance coordination company based in Topeka, Kansas. Founded by Brianna Gomez, we serve commercial property managers, residential property owners, and local businesses.",
+    "Nexus Operations LLC is a maintenance coordination company based in Topeka, Kansas. Founded by Brianna Gomez, we coordinate verified contractors for commercial property managers, residential property owners, and local businesses in Shawnee County.",
 }
 
 const timeline = [
@@ -53,10 +53,10 @@ export default function AboutPage() {
                 About Nexus Operations
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                A coordination company,
+                Maintenance coordination
                 <br className="hidden sm:block" />
                 <span className="font-serif italic font-normal text-primary">
-                  not a contractor.
+                  for Topeka property owners.
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
@@ -89,7 +89,7 @@ export default function AboutPage() {
                   Our mission
                 </p>
                 <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
-                  Eliminate coordination failures in property maintenance.
+                  Reducing coordination overhead in property maintenance.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   Property management companies in Topeka face chronic
@@ -187,7 +187,7 @@ export default function AboutPage() {
                 Our trajectory
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground">
-                Building from the ground up.
+                Company timeline and milestones.
               </h2>
             </div>
 
