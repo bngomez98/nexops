@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { messageSchema } from '@/lib/validators'
 
 type RouteContext = { params: Promise<{ jobId: string }> }
 
@@ -67,11 +68,27 @@ export async function POST(
     }
 
     const { jobId } = await params
-    const body = await request.json() as { content?: string; recipient_id?: string }
-    const { content, recipient_id } = body
+    const body = await request.json()
+    const parsed = messageSchema.safeParse(body)
 
-    if (!content || !recipient_id) {
-      return NextResponse.json({ error: 'Missing required fields: content, recipient_id' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
+    }
+
+    const { content, recipient_id } = parsed.data
+
+    // Verify the sender is a party to this job (owner or assigned contractor)
+    const { data: job } = await supabase
+      .from('service_requests')
+      .select('owner_id, contractor_id')
+      .eq('id', jobId)
+      .single()
+
+    if (!job || (job.owner_id !== user.id && job.contractor_id !== user.id)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const { data: message, error } = await supabase

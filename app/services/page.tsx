@@ -53,11 +53,7 @@ export default function ServicesPage() {
                 Our services
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Coordination services for
-                <br className="hidden sm:block" />
-                <span className="font-serif italic font-normal text-primary">
-                  every type of property.
-                </span>
+                Coordination services for every type of property.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 From multifamily properties to individual homes to broader B2B operational support, we adapt our
