@@ -62,6 +62,8 @@ export default function ContractorSettingsPage() {
       setConnectStatus("active")
     } else if (connectParam === "pending") {
       setConnectStatus("pending")
+    } else if (connectParam === "restricted") {
+      setConnectStatus("restricted")
     } else if (connectParam === "error") {
       setError("There was a problem connecting your Stripe account. Please try again.")
     }
