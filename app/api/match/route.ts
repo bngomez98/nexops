@@ -1,5 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  sendJobMatchedContractorEmail,
+  sendContractorAssignedClientEmail,
+} from '@/lib/email'
 
 /** Haversine formula — returns distance in miles between two lat/lng points */
 function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -175,6 +179,54 @@ export async function POST(request: NextRequest) {
       changed_at: new Date().toISOString(),
       changed_by: 'system',
     })
+
+    // Send notification emails (fire-and-forget, never block the response)
+    ;(async () => {
+      try {
+        const { getAdminClient } = await import('@/lib/supabase/admin')
+        const admin = getAdminClient()
+
+        const [{ data: contractorAuth }, { data: clientAuth }] = await Promise.all([
+          admin.auth.admin.getUserById(winner.user_id),
+          admin.auth.admin.getUserById(job.client_id),
+        ])
+
+        const contractorEmail = contractorAuth.user?.email
+        const clientEmail     = clientAuth.user?.email
+        const contractorName  = (winner as any).profiles?.full_name ?? 'Contractor'
+
+        const [{ data: clientProfile }] = await Promise.all([
+          supabase.from('profiles').select('full_name').eq('user_id', job.client_id).maybeSingle(),
+        ])
+        const clientName = clientProfile?.full_name ?? 'Client'
+
+        await Promise.all([
+          contractorEmail
+            ? sendJobMatchedContractorEmail({
+                to:          contractorEmail,
+                name:        contractorName,
+                jobId:       job_id,
+                serviceType: job.service_type,
+                urgency:     job.urgency ?? 'routine',
+                propertyCity:  job.properties?.city  ?? '',
+                propertyState: job.properties?.state ?? '',
+              })
+            : Promise.resolve(),
+          clientEmail
+            ? sendContractorAssignedClientEmail({
+                to:             clientEmail,
+                clientName,
+                contractorName,
+                serviceType:    job.service_type,
+                urgency:        job.urgency ?? 'routine',
+                jobId:          job_id,
+              })
+            : Promise.resolve(),
+        ])
+      } catch (err) {
+        console.error('[match] email error:', err)
+      }
+    })()
 
     return NextResponse.json({
       matched: true,

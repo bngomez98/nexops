@@ -174,6 +174,8 @@ function SignUpInner() {
             {(isContractor
               ? ["Free to join and participate", "Full project documentation provided", "Direct payment from owners", "License & insurance verified"]
               : ["One contractor per request", "Budget set by the owner", "Permanent service record", "Licensed & insured contractors"]
+              ? ["Free to join and participate", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
+              : ["Exclusive contractor per job", "No competing bids", "Permanent service record", "Licensed & insured contractors"]
             ).map(item => (
               <div key={item} className="flex items-center gap-2.5 text-[13px] text-foreground">
                 <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
