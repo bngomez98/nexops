@@ -93,6 +93,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+/* Dashboard typography: cleaner, more professional system for app UI */
+.dashboard-shell {
+  font-family: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", var(--font-sans);
+  letter-spacing: -0.005em;
+}
+
 /* ── Surface utility ──────────────────────── */
 .bg-surface {
   background-color: var(--color-surface);
