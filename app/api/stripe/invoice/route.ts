@@ -10,6 +10,7 @@ const siteUrl = getSiteUrl()
 const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
+  try {
   const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -18,7 +19,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
 
-  const { requestId } = await req.json()
+  let requestId: string
+  try {
+    const body = await req.json()
+    requestId = body.requestId
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+  }
   if (!requestId) {
     return NextResponse.json({ error: "requestId required" }, { status: 400 })
   }
@@ -174,4 +181,8 @@ export async function POST(req: Request) {
   })
 
   return NextResponse.json({ url: session.url })
+  } catch (err) {
+    console.error('[POST /api/stripe/invoice]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
