@@ -77,6 +77,7 @@ export default function HomePage() {
     if (!statsRef.current) return
     const io = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) io.disconnect() },
+      ([e]) => { if (e.isIntersecting) { io.disconnect() } },
       { threshold: 0.5 }
     )
     io.observe(statsRef.current)

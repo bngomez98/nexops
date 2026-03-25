@@ -12,6 +12,8 @@ interface AvatarUploadProps {
   onUpload: (url: string) => void
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024
+
 export function AvatarUpload({ uid, url, name, onUpload }: AvatarUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -29,35 +31,42 @@ export function AvatarUpload({ uid, url, name, onUpload }: AvatarUploadProps) {
     if (!file) return
 
     setError(null)
+
+    if (file.size > MAX_FILE_SIZE) {
+      setError("File must be 5 MB or smaller.")
+      e.target.value = ""
+      return
+    }
+
     setUploading(true)
 
     try {
       const supabase = createClient()
-      const ext = file.name.split(".").pop()
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg"
       const path = `${uid}/avatar.${ext}`
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(path, file, { upsert: true })
+        .upload(path, file, { upsert: true, cacheControl: "3600" })
 
       if (uploadError) throw uploadError
 
       const { data } = supabase.storage.from("avatars").getPublicUrl(path)
-      const publicUrl = `${data.publicUrl}?t=${Date.now()}`
+      const versionedUrl = `${data.publicUrl}?v=${Date.now()}`
 
-      // Save to profiles table
+      // Persist the latest avatar URL for profile displays across the app.
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ avatar_url: data.publicUrl })
-        .eq("id", uid)
+        .upsert({ id: uid, avatar_url: versionedUrl }, { onConflict: "id" })
 
       if (profileError) throw profileError
 
-      onUpload(publicUrl)
+      onUpload(versionedUrl)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Upload failed")
     } finally {
       setUploading(false)
+      e.target.value = ""
     }
   }
 
