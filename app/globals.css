@@ -448,7 +448,10 @@
   box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* ── Animated gradient border ── */
+/* ── Animated gradient border ──
+   Uses @property for custom-property animation. Browsers without
+   @property support (Firefox < 128) will show a static border —
+   the conic-gradient renders but does not rotate. */
 @keyframes gradient-rotate {
   from { --gradient-angle: 0deg; }
   to { --gradient-angle: 360deg; }
