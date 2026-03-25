@@ -415,7 +415,7 @@ export default function HomePage() {
                   <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
                 </p>
                 <p>
-                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
+                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. Approved contractors use a flat monthly membership with no per-lead charges or referral cut.
                 </p>
               </div>
             </div>
@@ -522,7 +522,7 @@ export default function HomePage() {
               {
                 role: "Contractors",
                 sub:  "Licensed tradespeople",
-                body: "Your account is a project feed. When a request is submitted in your trade and service area, you receive a notification. You decide whether to claim it. If you do, it is yours exclusively. You arrive at the job site with the full project file already in hand. There is no fee to join or participate in the network.",
+                body: "Your account is a project feed. When a request is submitted in your trade and service area, you receive a notification. You decide whether to claim it. If you do, it is yours exclusively. You arrive at the job site with the full project file already in hand. Approved contractors use a flat monthly membership with no per-lead charges or referral cut.",
                 href: "/auth/sign-up?role=contractor",
                 cta:  "Apply for access",
               },
@@ -652,7 +652,7 @@ export default function HomePage() {
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
               <p>
-                The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
+                Nexus contractor accounts are billed on a flat monthly membership. There are no per-claim charges and no referral percentages. You receive project notifications, decide which requests to claim, and get paid directly by the property owner.
               </p>
               <p>
                 Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
@@ -739,7 +739,7 @@ export default function HomePage() {
             <div className="divide-y divide-border border-t border-b border-border">
               {[
                 { href: "/faq",                             label: "Frequently asked questions",     sub: "Platform details, requirements, and policies" },
-                { href: "/auth/sign-up?role=contractor",    label: "Contractor network application", sub: "Free to join. Active license and insurance required." },
+                { href: "/auth/sign-up?role=contractor",    label: "Contractor network application", sub: "Flat monthly membership. Active license and insurance required." },
                 { href: "tel:+17854280244",                 label: "(785) 428-0244",                 sub: "Monday – Friday, 8 am – 6 pm CT" },
                 { href: "mailto:admin@nexusoperations.org", label: "admin@nexusoperations.org",      sub: "General inquiries and support" },
               ].map(({ href, label, sub }) => (
@@ -805,7 +805,7 @@ export default function HomePage() {
               {[
                 { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
                 { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
-                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. Flat monthly membership." },
                 { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
               ].map(({ href, label, sub }) => (
                 <Link
@@ -821,6 +821,10 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA / Contact ── */}
       <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
         <div className="max-w-2xl mx-auto text-center">

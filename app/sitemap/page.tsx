@@ -41,6 +41,7 @@ const sections = [
       { href: "/dashboard/contractor",          label: "Contractor Overview",      desc: "Activity summary, claimed requests, and account metrics" },
       { href: "/dashboard/contractor/requests", label: "Open Requests",            desc: "Browse and claim available service requests in your area and trade" },
       { href: "/dashboard/contractor/profile",  label: "Contractor Profile",       desc: "License, insurance, service area, and trade categories" },
+      { href: "/dashboard/contractor/billing",  label: "Contractor Billing",       desc: "Membership billing, invoices, payment methods, and payout setup" },
       { href: "/dashboard/contractor/settings", label: "Contractor Settings",      desc: "Notification preferences and account management" },
     ],
   },

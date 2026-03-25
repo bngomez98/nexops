@@ -58,7 +58,7 @@ const sections = [
       },
       {
         q: "Is there a fee to join or claim requests?",
-        a: "The Nexus contractor network is free to join and free to use. There are no signup fees, monthly subscriptions, per-claim charges, or referral percentages. Contractors receive project notifications, claim work, and are paid directly by the property owner.",
+        a: "Contractor access uses a flat monthly membership. There are no per-claim charges or referral percentages. Contractors receive project notifications, claim work, and are paid directly by the property owner.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",
