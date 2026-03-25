@@ -1,13 +1,30 @@
-import { Check, X } from "lucide-react"
+import { Check } from "lucide-react"
 
-const rows = [
-  { feature: "Lead exclusivity", us: "1 contractor per request", them: "3-7 contractors per lead" },
-  { feature: "Homeowner cost", us: "Free, always", them: "$0 but data sold" },
-  { feature: "Budget transparency", us: "Set upfront by homeowner", them: "Discovered after estimate visit" },
-  { feature: "Photo documentation", us: "Required before match", them: "Optional or not available" },
-  { feature: "Consultation scheduling", us: "Pre-scheduled, confirmed", them: "Phone tag and callbacks" },
-  { feature: "Contractor verification", us: "License, insurance, background", them: "Varies by platform" },
-  { feature: "Phone calls to homeowner", us: "1 contractor contacts you", them: "5-15 calls within hours" },
+const features = [
+  {
+    title: "One assigned contractor",
+    description: "Each request is matched to a single qualified contractor by trade and location.",
+  },
+  {
+    title: "Budget set by the owner",
+    description: "Property owners define their budget cap at submission, so expectations are clear from day one.",
+  },
+  {
+    title: "Photos required at intake",
+    description: "Project photos are submitted before a contractor is assigned, so the scope is documented and understood.",
+  },
+  {
+    title: "Pre-confirmed availability",
+    description: "Owners select their consultation windows upfront. Scheduling is confirmed before the first contact.",
+  },
+  {
+    title: "Verified contractor network",
+    description: "Every contractor is licensed, insured, and background-checked before joining the platform.",
+  },
+  {
+    title: "Complete project record",
+    description: "Costs, timelines, photos, and follow-up notes are stored automatically for every completed request.",
+  },
 ]
 
 export function Comparison() {
@@ -15,45 +32,28 @@ export function Comparison() {
     <section className="py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-16">
-          <p className="text-primary text-sm font-medium tracking-wide mb-3">Why Nexus</p>
+          <p className="text-primary text-sm font-medium tracking-wide mb-3">How it works</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Built to fix what&apos;s broken in home services
+            What every request includes
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Traditional platforms sell your info to multiple contractors. You get bombarded with calls.
-            Contractors waste time on shared leads with low conversion. We eliminate both problems.
+            Every service request on Nexus Operations arrives with the information contractors and
+            property owners need to move forward with confidence.
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border/40">
-                <th className="text-left py-4 pr-6 text-muted-foreground font-medium w-1/3">Feature</th>
-                <th className="text-left py-4 px-6 font-semibold text-primary">Nexus Operations</th>
-                <th className="text-left py-4 pl-6 font-medium text-muted-foreground">Traditional Platforms</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.feature} className="border-b border-border/20">
-                  <td className="py-4 pr-6 text-foreground/80">{row.feature}</td>
-                  <td className="py-4 px-6">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-primary shrink-0" />
-                      <span className="text-foreground">{row.us}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 pl-6">
-                    <div className="flex items-center gap-2">
-                      <X className="h-4 w-4 text-muted-foreground/40 shrink-0" />
-                      <span className="text-muted-foreground">{row.them}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((f) => (
+            <div key={f.title} className="flex items-start gap-4 p-5 rounded-xl bg-card border border-border/40">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 shrink-0 mt-0.5">
+                <Check className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold mb-1">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

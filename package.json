@@ -37,6 +37,8 @@
     "@radix-ui/react-toast": "^1.2.4",
     "@radix-ui/react-toggle": "^1.1.1",
     "@radix-ui/react-toggle-group": "^1.1.1",
+    "@stripe/react-stripe-js": "^5.6.1",
+    "@stripe/stripe-js": "^8.11.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.49.8",
     "@vercel/analytics": "^1.6.1",
