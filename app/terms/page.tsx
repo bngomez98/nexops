@@ -1,6 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
@@ -58,7 +59,8 @@ export default function TermsPage() {
             </p>
 
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">Contact</h2>
-            <p>For questions about these terms, contact us at admin@nexusoperations.org or call (913) 951-1711.</p>
+            <p>For questions about these terms, contact us at {CONTACT_INFO.email} or call {CONTACT_INFO.phoneDisplay}.</p>
+            <p>For questions about these terms, contact us at admin@nexusoperations.org or call 785-727-1106.</p>
           </div>
         </div>
       </main>

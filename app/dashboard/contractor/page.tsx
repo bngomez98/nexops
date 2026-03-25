@@ -1,13 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
+import { AIAssistant } from '@/components/ai-assistant'
+import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
+  RefreshCw, Clock, DollarSign, CheckCircle2, Zap,
 } from 'lucide-react'
 
 interface ProjectRequest {
@@ -38,54 +41,108 @@ interface FilterState {
   sortBy: 'recent' | 'budget-high' | 'budget-low'
 }
 
+const CATEGORY_ICONS: Record<string, string> = {
+  'tree-removal': '🌳', 'concrete-work': '🏗️', 'roofing': '🏠',
+  'hvac': '❄️', 'fencing': '🏡', 'electrical': '⚡', 'plumbing': '🔧', 'excavation': '🚜',
+}
+
 function formatCategory(cat: string) {
   return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
 
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 60) return `${mins}m ago`
+  const hours = Math.floor(diff / 3600000)
+  if (hours < 24) return `${hours}h ago`
   const days = Math.floor(diff / 86400000)
-  if (days === 0) return 'Today'
-  if (days === 1) return 'Yesterday'
   if (days < 30) return `${days}d ago`
   return new Date(dateStr).toLocaleDateString()
 }
 
+function isNew(dateStr: string) {
+  return Date.now() - new Date(dateStr).getTime() < 2 * 60 * 60 * 1000 // < 2 hours
+}
+
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onClose, 3000)
+    return () => clearTimeout(t)
+  }, [onClose])
+
+  return (
+    <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl border animate-fade-up text-sm font-medium ${
+      type === 'success'
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-red-50 border-red-200 text-red-800'
+    }`}>
+      {type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <AlertTriangle className="w-4 h-4 text-red-600" />}
+      {message}
+    </div>
+  )
+}
+
 export default function ContractorDashboard() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]       = useState<any>(null)
   const [profile, setProfile] = useState<ContractorProfile | null>(null)
   const [projects, setProjects]         = useState<ProjectRequest[]>([])
   const [filteredProjects, setFiltered] = useState<ProjectRequest[]>([])
   const [loading, setLoading]   = useState(true)
   const [claimingId, setClaiming] = useState<string | null>(null)
-  const [filters, setFilters]   = useState<FilterState>({
+  const [refreshing, setRefreshing] = useState(false)
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+  const [filters, setFilters] = useState<FilterState>({
     search: '', category: '', budgetRange: '', status: '', location: '', sortBy: 'recent',
   })
+  const pollingRef = useRef<NodeJS.Timeout | null>(null)
+
+  const fetchProjects = useCallback(async () => {
+    const projRes = await fetch('/api/projects/list?type=available')
+    if (projRes.ok) {
+      const { projects: list } = await projRes.json()
+      setProjects(prev => {
+        const newList = list ?? []
+        // Check for new projects compared to current list
+        const prevIds = new Set(prev.map((p: ProjectRequest) => p.id))
+        const hasNew = newList.some((p: ProjectRequest) => !prevIds.has(p.id))
+        if (hasNew && prev.length > 0) {
+          setToast({ message: 'New project available!', type: 'success' })
+        }
+        return newList
+      })
+      setLastRefresh(new Date())
+    }
+  }, [])
 
   useEffect(() => {
     async function load() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const data = await res.json()
         if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(data.user)
         setProfile(data.contractorProfile)
-
-        const projRes = await fetch('/api/projects/list?type=available')
-        if (projRes.ok) {
-          const { projects: list } = await projRes.json()
-          setProjects(list ?? [])
-        }
+        await fetchProjects()
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
     }
     load()
-  }, [router])
+  }, [router, fetchProjects])
+
+  // Auto-poll every 30 seconds
+  useEffect(() => {
+    pollingRef.current = setInterval(fetchProjects, 30000)
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [fetchProjects])
 
   useEffect(() => {
     let result = [...projects]
@@ -116,19 +173,34 @@ export default function ContractorDashboard() {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await fetchProjects()
+    setRefreshing(false)
   }
 
   async function handleClaim(projectId: string) {
     if (!profile) return
-    if (profile.currentActiveProjects >= profile.maxActiveProjects) return
+    if (profile.currentActiveProjects >= profile.maxActiveProjects) {
+      setToast({ message: 'Project capacity reached. Upgrade to claim more.', type: 'error' })
+      return
+    }
     setClaiming(projectId)
     try {
       const res = await fetch(`/api/projects/claim/${projectId}`, { method: 'POST' })
       if (res.ok) {
         setProjects(prev => prev.filter(p => p.id !== projectId))
         setProfile(prev => prev ? { ...prev, currentActiveProjects: prev.currentActiveProjects + 1 } : prev)
+        setToast({ message: 'Project claimed successfully!', type: 'success' })
+      } else {
+        const data = await res.json()
+        setToast({ message: data.error || 'Failed to claim project', type: 'error' })
       }
+    } catch {
+      setToast({ message: 'Network error. Please try again.', type: 'error' })
     } finally {
       setClaiming(null)
     }
@@ -149,9 +221,13 @@ export default function ContractorDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
+
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+      <main id="main-content" className="md:ml-[240px] p-6 space-y-6 animate-fade-up">
         {/* Welcome banner */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
@@ -162,19 +238,34 @@ export default function ContractorDashboard() {
               </p>
               <h1 className="text-2xl font-bold">{profile?.companyName || user.name}</h1>
               <p className="text-primary-foreground/80 text-sm mt-1 flex items-center gap-2">
-                <span className="capitalize">{profile?.membershipTier || 'Free'} plan</span>
+                <span className="capitalize">{profile?.membershipTier || 'Starter'} plan</span>
                 <span className="opacity-40">·</span>
                 <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active</span>
+                <span className="opacity-40">·</span>
+                <span className="flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  {projects.length} available
+                </span>
               </p>
             </div>
-            <Link
-              href="/dashboard/contractor/analytics"
-              className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
-            >
-              <BarChart3 className="w-4 h-4" />
-              Analytics
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-3 py-2 rounded-xl border border-white/20"
+                title={`Last updated ${lastRefresh.toLocaleTimeString()}`}
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+              <Link
+                href="/dashboard/contractor/analytics"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
+              >
+                <BarChart3 className="w-4 h-4" />
+                Analytics
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
           {/* Capacity bar */}
@@ -182,11 +273,11 @@ export default function ContractorDashboard() {
             <div className="relative mt-5">
               <div className="flex items-center justify-between text-[11px] text-primary-foreground/70 mb-1.5">
                 <span>Project capacity</span>
-                <span>{capacityPct}%</span>
+                <span>{profile.currentActiveProjects} / {profile.maxActiveProjects} ({capacityPct}%)</span>
               </div>
               <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-white/70 rounded-full transition-all duration-500"
+                  className={`h-full rounded-full transition-all duration-500 ${atCapacity ? 'bg-red-300/80' : 'bg-white/70'}`}
                   style={{ width: `${Math.min(capacityPct, 100)}%` }}
                 />
               </div>
@@ -199,7 +290,7 @@ export default function ContractorDashboard() {
           {[
             { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, color: 'stat-card-indigo', iconClass: 'text-primary' },
             { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, color: 'stat-card-amber', iconClass: 'text-amber-500' },
-            { label: 'Available', value: projects.length, sub: 'open projects', icon: Layers, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
+            { label: 'Available', value: projects.length, sub: 'matching projects', icon: Layers, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -229,6 +320,21 @@ export default function ContractorDashboard() {
           </div>
         )}
 
+        {/* AI Intelligence */}
+        {projects.length > 0 && (
+          <AIInsightsCard
+            role="contractor"
+            requests={projects.slice(0, 5)}
+            profile={profile}
+          />
+        )}
+
+        {/* Auto-refresh notice */}
+        <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+          <RefreshCw className="w-3 h-3" />
+          Auto-refreshes every 30 seconds · Last updated {lastRefresh.toLocaleTimeString()}
+        </p>
+
         {/* Projects */}
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
@@ -254,7 +360,10 @@ export default function ContractorDashboard() {
                   </div>
                   <p className="font-semibold text-foreground text-[15px] mb-2">No projects available</p>
                   <p className="text-sm text-muted-foreground max-w-xs">
-                    New projects in your service categories will appear here.
+                    New projects in your service categories will appear here automatically.
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-3 flex items-center gap-1">
+                    <RefreshCw className="w-3 h-3" /> Auto-checking every 30 seconds
                   </p>
                 </div>
               ) : filteredProjects.length === 0 ? (
@@ -264,61 +373,83 @@ export default function ContractorDashboard() {
                 </div>
               ) : (
                 <div className="divide-y divide-border">
-                  {filteredProjects.map(project => (
-                    <div key={project.id} className="px-6 py-5 hover:bg-secondary/30 transition-colors">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <Link
-                            href={`/dashboard/contractor/projects/${project.id}`}
-                            className="font-semibold text-foreground hover:text-primary transition-colors text-[14px] leading-snug"
-                          >
-                            {project.title || formatCategory(project.category)}
-                          </Link>
-                          <p className="text-[11.5px] text-muted-foreground mt-0.5 mb-2">
-                            {formatCategory(project.category)}
-                          </p>
-                          <p className="text-[13px] text-muted-foreground line-clamp-2 mb-3">
-                            {project.description}
-                          </p>
-                          <div className="flex items-center gap-4 text-[11.5px] text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              {project.location}
-                            </span>
-                            <span>{timeAgo(project.createdAt)}</span>
+                  {filteredProjects.map(project => {
+                    const icon = CATEGORY_ICONS[project.category] ?? '🔨'
+                    const fresh = isNew(project.createdAt)
+                    return (
+                      <div key={project.id} className="px-6 py-5 hover:bg-secondary/30 transition-colors">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-3 flex-1 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
+                              {icon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                                <Link
+                                  href={`/dashboard/contractor/projects/${project.id}`}
+                                  className="font-semibold text-foreground hover:text-primary transition-colors text-[14px] leading-snug"
+                                >
+                                  {project.title || formatCategory(project.category)}
+                                </Link>
+                                {fresh && (
+                                  <span className="text-[9.5px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-full uppercase tracking-wide animate-pulse">
+                                    NEW
+                                  </span>
+                                )}
+                              </div>
+                              <span className="inline-block text-[11px] font-semibold bg-secondary text-secondary-foreground px-2 py-0.5 rounded-md mb-2">
+                                {formatCategory(project.category)}
+                              </span>
+                              <p className="text-[13px] text-muted-foreground line-clamp-2 mb-3">
+                                {project.description}
+                              </p>
+                              <div className="flex items-center gap-4 text-[11.5px] text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <MapPin className="w-3 h-3" />
+                                  {project.location}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3 h-3" />
+                                  {timeAgo(project.createdAt)}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex-shrink-0 flex flex-col items-end gap-3 pt-0.5">
-                          {project.budget != null && (
-                            <span className="font-bold text-primary text-lg">
-                              ${project.budget.toLocaleString()}
-                            </span>
-                          )}
-                          <div className="flex items-center gap-2">
-                            <Link href={`/dashboard/contractor/projects/${project.id}`}>
-                              <button className="px-3 py-1.5 text-[12px] font-medium border border-border rounded-lg hover:bg-secondary transition-colors">
-                                View
+                          <div className="flex-shrink-0 flex flex-col items-end gap-3 pt-0.5">
+                            {project.budget != null && (
+                              <div className="flex items-center gap-1">
+                                <DollarSign className="w-3.5 h-3.5 text-primary" />
+                                <span className="font-bold text-primary text-lg">
+                                  {project.budget.toLocaleString()}
+                                </span>
+                              </div>
+                            )}
+                            <div className="flex items-center gap-2">
+                              <Link href={`/dashboard/contractor/projects/${project.id}`}>
+                                <button className="px-3 py-1.5 text-[12px] font-medium border border-border rounded-lg hover:bg-secondary transition-colors">
+                                  View
+                                </button>
+                              </Link>
+                              <button
+                                onClick={() => handleClaim(project.id)}
+                                disabled={claimingId === project.id || atCapacity}
+                                className="px-4 py-1.5 text-[12px] font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1.5"
+                              >
+                                {claimingId === project.id ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <>
+                                    <Sparkles className="w-3 h-3" />
+                                    Claim
+                                  </>
+                                )}
                               </button>
-                            </Link>
-                            <button
-                              onClick={() => handleClaim(project.id)}
-                              disabled={claimingId === project.id || atCapacity}
-                              className="px-3 py-1.5 text-[12px] font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1.5"
-                            >
-                              {claimingId === project.id ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              ) : (
-                                <>
-                                  <Sparkles className="w-3 h-3" />
-                                  Claim
-                                </>
-                              )}
-                            </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -340,7 +471,7 @@ export default function ContractorDashboard() {
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'free' },
+              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'starter' },
               { name: 'Enterprise',   price: '$749/mo', projects: 15, highlight: profile?.membershipTier === 'professional' },
             ].map(plan => (
               <div
@@ -367,6 +498,11 @@ export default function ContractorDashboard() {
           </div>
         </div>
       </main>
+
+      <AIAssistant
+        role="contractor"
+        context={profile ? `Contractor: ${profile.companyName ?? user.name}, ${profile.currentActiveProjects ?? 0}/${profile.maxActiveProjects ?? 3} active projects, rating ${profile.averageRating ?? 'N/A'}.` : undefined}
+      />
     </div>
   )
 }

@@ -1,148 +1,125 @@
 import Link from "next/link"
 import { Logo } from "@/components/logo"
+import { Phone, Mail, MapPin, ArrowRight, BadgeCheck } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-secondary/50">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+    <footer className="border-t border-border bg-card">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-14">
+        <div className="mb-10 flex flex-col gap-4 rounded-2xl border border-border bg-background/70 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Launch faster</p>
+            <h2 className="mt-1 text-xl font-semibold text-foreground">One portal for requests, dispatch, updates, and billing.</h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/auth/sign-up" className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 transition">
+              Start free
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:border-primary/30 hover:bg-muted/40 transition">
+              Talk to the team
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <div className="mb-5">
-              <Logo />
+            <div className="mb-4">
+              <Logo adaptive />
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Maintenance coordination for commercial and residential properties.
-              Topeka, Kansas.
+            <p className="text-[12px] text-muted-foreground leading-relaxed max-w-xs mb-4">
+              Managed property maintenance for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.
             </p>
-            <div className="mt-4 flex flex-col gap-1.5 text-sm text-muted-foreground">
-              <a
-                href="tel:+19139511711"
-                className="hover:text-foreground transition-colors"
-              >
-                (913) 951-1711
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-medium text-primary">
+              <BadgeCheck className="h-3.5 w-3.5" /> Verified contractor coordination
+            </div>
+            <div className="flex flex-col gap-2">
+              <a href={CONTACT_INFO.phoneHref} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                <Phone className="h-3 w-3 flex-shrink-0" /> {CONTACT_INFO.phoneDisplay}
               </a>
-              <a
-                href="mailto:admin@nexusoperations.org"
-                className="hover:text-foreground transition-colors"
-              >
-                admin@nexusoperations.org
+              <a href={`mailto:${CONTACT_INFO.email}`} className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                <Mail className="h-3 w-3 flex-shrink-0" /> {CONTACT_INFO.email}
               </a>
+              <span className="inline-flex items-start gap-1.5 text-[12px] text-muted-foreground">
+                <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" /> {CONTACT_INFO.addressLine1}, {CONTACT_INFO.cityStateZip}
+              </span>
             </div>
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
-              Company
-            </h3>
-            <ul className="flex flex-col gap-3 text-sm">
-              <li>
-                <Link
-                  href="/about"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#process"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  How It Works
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Contact
-                </Link>
-              </li>
+            <h3 className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Platform</h3>
+            <ul className="flex flex-col gap-2.5">
+              {[
+                { href: "/about", label: "About Us" },
+                { href: "/services", label: "Services" },
+                { href: "/#process", label: "How It Works" },
+                { href: "/pricing", label: "Pricing" },
+                { href: "/contact", label: "Contact" },
+                { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", external: true },
+              ].map(({ href, label, external }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
-              For Clients
-            </h3>
-            <ul className="flex flex-col gap-3 text-sm">
-              <li>
-                <Link
-                  href="/services#commercial"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Commercial Properties
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services#residential"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Residential Services
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Client Portal
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contractors"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Contractor Network
-                </Link>
-              </li>
+            <h3 className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Accounts</h3>
+            <ul className="flex flex-col gap-2.5">
+              {[
+                { href: "/auth/sign-up", label: "Homeowner" },
+                { href: "/auth/sign-up?role=property_manager", label: "Property Manager" },
+                { href: "/auth/sign-up?role=contractor", label: "Contractor Application" },
+                { href: "/auth/login", label: "Sign In" },
+                { href: "/contractors", label: "Contractor Network" },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
-              Legal
-            </h3>
-            <ul className="flex flex-col gap-3 text-sm">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Terms of Service
-                </Link>
-              </li>
+            <h3 className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Legal</h3>
+            <ul className="flex flex-col gap-2.5">
+              {[
+                { href: "/privacy",        label: "Privacy Policy" },
+                { href: "/terms",          label: "Terms of Service" },
+                { href: "/user-agreement", label: "User Agreement" },
+                { href: "/site-map",       label: "Sitemap" },
+                { href: "/faq",            label: "FAQ" },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-muted-foreground">
-            {"\u00A9"} {new Date().getFullYear()} Nexus Operations, LLC. All
-            rights reserved.
+        <div className="pt-6 border-t border-border flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[11.5px] text-muted-foreground">
+            &copy; {new Date().getFullYear()} {CONTACT_INFO.companyName}. {CONTACT_INFO.cityState}. All rights reserved.
           </p>
-          <p className="text-xs text-muted-foreground">
-            405 SW Fillmore St, Topeka, KS 66606
-          </p>
+          <div className="flex flex-wrap items-center gap-5">
+            <span className="text-[11.5px] text-muted-foreground hidden sm:block">Built for transparent project tracking and cleaner dispatch workflows.</span>
+            <Link href="/terms"          className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/privacy"        className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+            <Link href="/user-agreement" className="text-[11.5px] text-muted-foreground hover:text-foreground transition-colors">User Agreement</Link>
+          </div>
         </div>
       </div>
     </footer>

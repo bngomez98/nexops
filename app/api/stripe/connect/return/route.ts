@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 // Contractor lands here after completing (or abandoning) Stripe Express onboarding.
 // We retrieve the account to check its current verification state and update the profile.

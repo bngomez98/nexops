@@ -1,198 +1,264 @@
-import type Stripe from "stripe"
-import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import { getStripeClient } from "@/lib/stripe/server"
+import type Stripe from 'stripe'
+import { NextRequest, NextResponse } from 'next/server'
+import { getStripeClient } from '@/lib/stripe/server'
+import { getAdminClient } from '@/lib/supabase/admin'
+import {
+  sendInvoicePaidContractorEmail,
+  sendInvoicePaidClientEmail,
+} from '@/lib/email'
 
-
-async function getSupabase() {
-  return createClient()
-}
-
-// ── Thin-payload helpers ──────────────────────────────────────────────────────
-// Stripe sends either a "snapshot" payload (full object embedded in data.object)
-// or a "thin" payload (only id + object type). For thin payloads we must fetch
-// the full object before reading any fields beyond id.
-
-type StripeRef = { id: string; object?: string }
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null
-}
-
-function hasStringId(value: unknown): value is StripeRef {
-  return isRecord(value) && typeof value.id === "string" && value.id.length > 0
-}
-
-function isSnapshot(value: unknown, ...requiredFields: string[]): boolean {
-  if (!isRecord(value)) return false
-  return requiredFields.every((field) => field in value)
-}
-
-async function resolveEventObject<T extends StripeRef>(
-  raw: unknown,
-  requiredFields: string[],
-  retrieve: (id: string) => Promise<T>,
-): Promise<T> {
-  if (isSnapshot(raw, ...requiredFields)) {
-    return raw as T
-  }
-
-  if (!hasStringId(raw)) {
-    throw new Error("Webhook event payload is missing an object id")
-  }
-
-  return retrieve(raw.id)
-}
-
-async function resolveCheckoutSession(raw: unknown): Promise<Stripe.Checkout.Session> {
-  return resolveEventObject(raw, ["mode", "metadata"], (id) => stripe!.checkout.sessions.retrieve(id))
-}
-
-async function resolveCharge(raw: unknown): Promise<Stripe.Charge> {
-  return resolveEventObject(raw, ["payment_intent", "amount"], (id) => stripe!.charges.retrieve(id))
-}
-
-async function resolveAccount(raw: unknown): Promise<Stripe.Account> {
-  return resolveEventObject(raw, ["charges_enabled", "details_submitted"], (id) => stripe!.accounts.retrieve(id))
-}
-
-async function resolveSubscription(raw: unknown): Promise<Stripe.Subscription> {
-  return resolveEventObject(raw, ["status", "customer"], (id) => stripe!.subscriptions.retrieve(id))
-}
-
-async function resolveInvoice(raw: unknown): Promise<Stripe.Invoice> {
-  return resolveEventObject(raw, ["status", "customer"], (id) => stripe!.invoices.retrieve(id))
-}
-
-async function resolveSetupIntent(raw: unknown): Promise<Stripe.SetupIntent> {
-  return resolveEventObject(raw, ["status", "usage"], (id) => stripe!.setupIntents.retrieve(id))
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-
-export async function POST(req: Request) {
-  const stripe = getStripeClient()
+export async function POST(req: NextRequest) {
   const body = await req.text()
-  const sig = req.headers.get("stripe-signature")
+  const sig = req.headers.get('stripe-signature')
 
   if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
-    return NextResponse.json({ error: "Missing signature or webhook secret" }, { status: 400 })
+    return NextResponse.json({ error: 'Missing signature or secret' }, { status: 400 })
   }
+
+  const stripe = getStripeClient()
 
   let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET)
   } catch {
-    return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  const supabase = await getSupabase()
+  try {
+    const supabase = getAdminClient()
 
-  switch (event.type) {
-    // ── Payment completed (dispatch fee or final invoice) ──────────────────
-    case "checkout.session.completed": {
-      const session = event.data.object as Stripe.Checkout.Session
-      const requestId = session.metadata?.request_id
-      const paymentType = session.metadata?.payment_type
+    switch (event.type) {
+      // ── Checkout completed (one-time invoice payment) ──────────────────────
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session
+        const requestId = session.metadata?.request_id
+        const paymentType = session.metadata?.payment_type
+        const userId = session.metadata?.userId
+        const planId = session.metadata?.planId
 
-      if (!requestId || !paymentType) break
+        // Jobs/invoices table payment
+        const invoiceId = session.metadata?.invoice_id
+        if (invoiceId && paymentType === 'invoice') {
+          await supabase.from('invoices')
+            .update({ status: 'paid' })
+            .eq('id', invoiceId)
+          // Mark the associated job as completed
+          const jobId = session.metadata?.job_id
+          if (jobId) {
+            await supabase.from('jobs').update({ status: 'completed' }).eq('id', jobId)
+          }
+        }
 
-      // Mark payment record as paid
-      const { data: payment } = await supabase
-        .from("payments")
-        .update({ status: "paid", stripe_payment_intent_id: session.payment_intent as string, updated_at: new Date().toISOString() })
-        .eq("stripe_session_id", session.id)
-        .select("id, request_id")
-        .maybeSingle()
+        // Service request invoice payment
+        if (requestId && paymentType) {
+          const { data: payment, error: paymentError } = await supabase
+            .from('payments')
+            .update({
+              status: 'paid',
+              stripe_payment_intent_id: session.payment_intent as string,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('stripe_session_id', session.id)
+            .select('id, request_id')
+            .maybeSingle()
 
-      if (!payment) break
+          if (paymentError) throw paymentError
 
-      // On final invoice payment, mark the service request as completed
-      if (paymentType === "invoice") {
-        await supabase
-          .from("service_requests")
-          .update({ status: "completed", completion_date: new Date().toISOString(), updated_at: new Date().toISOString() })
-          .eq("id", requestId)
+          if (payment && paymentType === 'invoice') {
+            await supabase
+              .from('service_requests')
+              .update({
+                status: 'completed',
+                completion_date: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', requestId)
+          }
+        }
+
+        // Subscription checkout
+        if (userId && planId && session.mode === 'subscription') {
+          const subId = session.subscription as string
+          const sub = await stripe.subscriptions.retrieve(subId)
+
+          await supabase.from('billing_subscriptions').upsert({
+            user_id: userId,
+            stripe_subscription_id: subId,
+            stripe_customer_id: session.customer as string,
+            plan_id: planId,
+            status: sub.status,
+            current_period_start: new Date((sub as any).current_period_start * 1000).toISOString(),
+            current_period_end: new Date((sub as any).current_period_end * 1000).toISOString(),
+          }, { onConflict: 'stripe_subscription_id' })
+
+          await supabase.from('profiles').update({
+            subscription_tier: planId,
+            subscription_status: sub.status,
+            stripe_subscription_id: subId,
+          }).eq('id', userId)
+        }
+        break
       }
 
-      break
-    }
+      // ── Subscription updated / deleted ─────────────────────────────────────
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object as Stripe.Subscription
+        const customerId = sub.customer as string
+        const status = sub.status
+        const planId = sub.metadata?.planId
 
-    // ── Refund issued ────────────────────────────────────────────────────
-    case "charge.refunded": {
-      const charge = event.data.object as Stripe.Charge
-      const paymentIntentId = charge.payment_intent as string | null
+        await supabase.from('billing_subscriptions')
+          .update({
+            status,
+            current_period_start: new Date((sub as any).current_period_start * 1000).toISOString(),
+            current_period_end: new Date((sub as any).current_period_end * 1000).toISOString(),
+            cancel_at_period_end: sub.cancel_at_period_end,
+          })
+          .eq('stripe_subscription_id', sub.id)
 
-      if (!paymentIntentId) break
-
-      await supabase
-        .from("payments")
-        .update({ status: "refunded", updated_at: new Date().toISOString() })
-        .eq("stripe_payment_intent_id", paymentIntentId)
-
-      break
-    }
-
-    // ── Contractor Connect account updated ────────────────────────────────
-    case "account.updated": {
-      const account = event.data.object as Stripe.Account
-
-      // Determine new status
-      let status: "active" | "pending" | "restricted" = "pending"
-      if (account.charges_enabled && account.details_submitted) {
-        status = "active"
-      } else if (account.requirements?.disabled_reason) {
-        status = "restricted"
+        const isActive = status === 'active' || status === 'trialing'
+        await supabase.from('profiles')
+          .update({
+            subscription_status: status === 'past_due' ? 'past_due' : (isActive ? status : 'canceled'),
+            subscription_tier: isActive ? (planId ?? 'free') : 'free',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('stripe_customer_id', customerId)
+        break
       }
 
-      await supabase
-        .from("profiles")
-        .update({ stripe_connect_status: status, updated_at: new Date().toISOString() })
-        .eq("stripe_connect_account_id", account.id)
+      // ── Invoice paid (subscription renewal or job invoice) ─────────────────
+      case 'invoice.paid': {
+        const stripeInvoice = event.data.object as Stripe.Invoice
 
-      break
+        // Legacy: service_requests.invoice_paid flag
+        const requestId = stripeInvoice.metadata?.requestId
+        if (requestId) {
+          await supabase.from('service_requests')
+            .update({ invoice_paid: true })
+            .eq('id', requestId)
+        }
+
+        // Jobs flow: look up internal invoice by stripe_invoice_id
+        const { data: nexusInvoice } = await supabase
+          .from('invoices')
+          .select('id, job_id, contractor_id, client_id, subtotal, nexus_fee, total')
+          .eq('stripe_invoice_id', stripeInvoice.id)
+          .maybeSingle()
+
+        if (nexusInvoice) {
+          await supabase.from('invoices')
+            .update({ status: 'paid' })
+            .eq('id', nexusInvoice.id)
+
+          await supabase.from('jobs')
+            .update({ status: 'completed' })
+            .eq('id', nexusInvoice.job_id)
+
+          await supabase.from('job_status_history').insert({
+            job_id:     nexusInvoice.job_id,
+            status:     'completed',
+            changed_at: new Date().toISOString(),
+            changed_by: 'system',
+          })
+
+          const { data: job } = await supabase
+            .from('jobs')
+            .select('service_type')
+            .eq('id', nexusInvoice.job_id)
+            .single()
+
+          // Send receipt emails (fire-and-forget)
+          ;(async () => {
+            try {
+              const admin = getAdminClient()
+              const [{ data: contractorAuth }, { data: clientAuth }] = await Promise.all([
+                admin.auth.admin.getUserById(nexusInvoice.contractor_id),
+                admin.auth.admin.getUserById(nexusInvoice.client_id),
+              ])
+              const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
+                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.contractor_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.client_id).maybeSingle(),
+              ])
+              const serviceType = job?.service_type ?? 'service'
+              await Promise.all([
+                contractorAuth.user?.email
+                  ? sendInvoicePaidContractorEmail({
+                      to:             contractorAuth.user.email,
+                      contractorName: contractorProfile?.full_name ?? 'Contractor',
+                      serviceType,
+                      subtotal:       nexusInvoice.subtotal,
+                      nexusFee:       nexusInvoice.nexus_fee,
+                      jobId:          nexusInvoice.job_id,
+                    })
+                  : Promise.resolve(),
+                clientAuth.user?.email
+                  ? sendInvoicePaidClientEmail({
+                      to:             clientAuth.user.email,
+                      clientName:     clientProfile?.full_name ?? 'Client',
+                      contractorName: contractorProfile?.full_name ?? 'Your contractor',
+                      serviceType,
+                      total:          nexusInvoice.total,
+                      jobId:          nexusInvoice.job_id,
+                    })
+                  : Promise.resolve(),
+              ])
+            } catch (err) {
+              console.error('[webhook] invoice.paid email error:', err)
+            }
+          })()
+        }
+        break
+      }
+
+      // ── Invoice payment failed ──────────────────────────────────────────────
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice
+        const customerId = invoice.customer as string
+        await supabase.from('profiles')
+          .update({ subscription_status: 'past_due', updated_at: new Date().toISOString() })
+          .eq('stripe_customer_id', customerId)
+        break
+      }
+
+      // ── Charge refunded ────────────────────────────────────────────────────
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge
+        const paymentIntentId = charge.payment_intent as string | null
+        if (!paymentIntentId) break
+        await supabase.from('payments')
+          .update({ status: 'refunded', updated_at: new Date().toISOString() })
+          .eq('stripe_payment_intent_id', paymentIntentId)
+        break
+      }
+
+      // ── Stripe Connect account updated ────────────────────────────────────
+      case 'account.updated': {
+        const account = event.data.object as Stripe.Account
+        let status: 'active' | 'pending' | 'restricted' = 'pending'
+        if (account.charges_enabled && account.details_submitted) {
+          status = 'active'
+        } else if (account.requirements?.disabled_reason) {
+          status = 'restricted'
+        }
+        await supabase.from('profiles')
+          .update({ stripe_connect_status: status, updated_at: new Date().toISOString() })
+          .eq('stripe_connect_account_id', account.id)
+        break
+      }
+
+      default:
+        break
     }
 
-    // ── Subscription status changes (contractor membership) ───────────────
-    case "customer.subscription.updated":
-    case "customer.subscription.deleted": {
-      const subscription = event.data.object as Stripe.Subscription
-      const customerId = subscription.customer as string
-      const status = subscription.status
-
-      // Map Stripe subscription status to our simplified enum
-      const mapped =
-        status === "active" || status === "trialing"
-          ? status
-          : status === "past_due"
-          ? "past_due"
-          : "canceled"
-
-      await supabase
-        .from("profiles")
-        .update({ subscription_status: mapped, updated_at: new Date().toISOString() })
-        .eq("stripe_customer_id", customerId)
-
-      break
-    }
-
-    // ── Invoice payment failed (contractor membership) ────────────────────
-    case "invoice.payment_failed": {
-      const invoice = event.data.object as Stripe.Invoice
-      const customerId = invoice.customer as string
-
-      await supabase
-        .from("profiles")
-        .update({ subscription_status: "past_due", updated_at: new Date().toISOString() })
-        .eq("stripe_customer_id", customerId)
-
-      break
-    }
-
-    default:
-      // Unhandled events — return 200 to prevent Stripe retrying
-      break
+    return NextResponse.json({ received: true })
+  } catch (error) {
+    console.error('Stripe webhook processing failed', {
+      eventType: event.type,
+      eventId: event.id,
+      error,
+    })
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
   }
-
-  return NextResponse.json({ received: true })
 }
