@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
+import { Phone, Mail, ArrowRight, MapPin, Menu, X, ShieldCheck, Clock3, BarChart3 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useEffect, useState, useRef } from "react"
 
@@ -17,8 +17,6 @@ const services: Array<{ name: string; desc: string }> = [
   { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 ]
 
-const heroTargets = ["homeowners.", "property managers.", "landlords."]
-
 const navLinks = [
   { href: "#about",       label: "About" },
   { href: "#platform",    label: "Platform" },
@@ -32,9 +30,6 @@ export default function HomePage() {
   const [mobileOpen, setMobileOpen]         = useState(false)
   const [activeSection, setActiveSection]   = useState("")
   const [scrollPct, setScrollPct]           = useState(0)
-  const [heroIdx, setHeroIdx]               = useState(0)
-  const [heroVisible, setHeroVisible]       = useState(true)
-  const [statsTriggered, setStatsTriggered] = useState(false)
   const statsRef = useRef<HTMLDivElement>(null)
 
   /* ── Scroll progress bar ── */
@@ -81,7 +76,8 @@ export default function HomePage() {
   useEffect(() => {
     if (!statsRef.current) return
     const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setStatsTriggered(true); io.disconnect() } },
+      ([e]) => { if (e.isIntersecting) io.disconnect() },
+      ([e]) => { if (e.isIntersecting) { io.disconnect() } },
       { threshold: 0.5 }
     )
     io.observe(statsRef.current)
@@ -90,6 +86,12 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background font-sans overflow-x-hidden">
+      <a
+        href="#hero"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground"
+      >
+        Skip to content
+      </a>
 
       {/* ── Scroll progress bar ── */}
       <div
@@ -196,10 +198,14 @@ export default function HomePage() {
         <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto max-w-6xl px-8">
-          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
+          <div className="flex flex-wrap items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
             <span className="text-[12px] text-muted-foreground font-mono">
               Topeka, Kansas — Shawnee County and surrounding areas
+            </span>
+            <span className="hidden sm:inline text-muted-foreground/50">•</span>
+            <span className="text-[11px] rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-primary">
+              Response in under 24 hours
             </span>
           </div>
 
@@ -238,6 +244,20 @@ export default function HomePage() {
                   Join the contractor network
                   <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </Link>
+              </div>
+
+              <div className="mt-9 grid gap-3 sm:grid-cols-3 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+                {[
+                  { icon: ShieldCheck, title: "Verified network", desc: "Licensed and insured contractors." },
+                  { icon: Clock3, title: "Fast dispatch", desc: "Smart matching by trade and area." },
+                  { icon: BarChart3, title: "Actionable records", desc: "Permanent logs and spend insights." },
+                ].map(({ icon: Icon, title, desc }) => (
+                  <div key={title} className="rounded-xl border border-border/70 bg-card/40 p-4 backdrop-blur-sm">
+                    <Icon className="h-4 w-4 text-primary mb-2" />
+                    <p className="text-[12.5px] font-semibold text-foreground">{title}</p>
+                    <p className="mt-1 text-[11.5px] text-muted-foreground leading-relaxed">{desc}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -802,7 +822,7 @@ export default function HomePage() {
 
             <div className="pt-2 lg:pt-16">
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-6">Quick links</p>
-              {[
+            {[
                 { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
                 { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
                 { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
@@ -821,36 +841,6 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
-      {/* ── CTA / Contact ── */}
-      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
-          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
-            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
-              Start Your Project — Free
-            </button>
-            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
-              Apply as a Contractor
-            </button>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="mailto:admin@nexusoperations.org"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Mail className="h-4 w-4" />
-              admin@nexusoperations.org
-            </a>
-            <a
-              href="tel:9139511711"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Phone className="h-4 w-4" />
-              (913) 951-1711
-            </a>
           </div>
         </div>
       </section>

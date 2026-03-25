@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Only run Supabase session middleware when env vars are present
   if (
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
