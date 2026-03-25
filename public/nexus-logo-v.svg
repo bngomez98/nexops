@@ -1,20 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" fill="none">
-  <!-- Icon: Interlocking orbital X symbol -->
-  <!-- Outer orbital ring 1 (tilted left ellipse) -->
-  <ellipse cx="200" cy="175" rx="110" ry="48" transform="rotate(-40 200 175)" stroke="#3aad58" stroke-width="11" fill="none" stroke-linecap="round"/>
-  <!-- Outer orbital ring 2 (tilted right ellipse) -->
-  <ellipse cx="200" cy="175" rx="110" ry="48" transform="rotate(40 200 175)" stroke="#3aad58" stroke-width="11" fill="none" stroke-linecap="round"/>
-  <!-- Inner orbital ring 1 -->
-  <ellipse cx="200" cy="175" rx="60" ry="26" transform="rotate(-40 200 175)" stroke="#3aad58" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.8"/>
-  <!-- Inner orbital ring 2 -->
-  <ellipse cx="200" cy="175" rx="60" ry="26" transform="rotate(40 200 175)" stroke="#3aad58" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.8"/>
-  <!-- Center cross/node -->
-  <line x1="200" y1="148" x2="200" y2="202" stroke="#3aad58" stroke-width="7" stroke-linecap="round"/>
-  <line x1="174" y1="175" x2="226" y2="175" stroke="#3aad58" stroke-width="7" stroke-linecap="round"/>
-
-  <!-- NEXUS text -->
-  <text x="200" y="310" font-family="'Arial Black', 'Impact', sans-serif" font-size="80" font-weight="900" fill="#3aad58" text-anchor="middle" letter-spacing="4">NEXUS</text>
-
-  <!-- OPERATIONS text -->
-  <text x="200" y="370" font-family="'Arial', 'Helvetica', sans-serif" font-size="30" font-weight="600" fill="#ffffff" text-anchor="middle" letter-spacing="8">OPERATIONS</text>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" stroke-width="5.5" stroke-linecap="round"/>
+  <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" stroke-width="5.5" stroke-linecap="round"/>
+  <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+  <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+  <line x1="60" y1="47" x2="60" y2="73" stroke="oklch(0.618 0.228 264)" stroke-width="5" stroke-linecap="round"/>
+  <line x1="47" y1="60" x2="73" y2="60" stroke="oklch(0.618 0.228 264)" stroke-width="5" stroke-linecap="round"/>
 </svg>
