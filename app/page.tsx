@@ -1,22 +1,5 @@
-"use client"
-
-import Image from "next/image"
-import Link from "next/link"
-import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { useEffect, useState, useRef } from "react"
-
-const services: Array<{ name: string; desc: string }> = [
-  { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration." },
-  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual maintenance." },
-  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
-  { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture replacement." },
-  { name: "Concrete",       desc: "Driveways, patios, sidewalks, foundation repair, and structural flatwork." },
-  { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
-  { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
-  { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -103,7 +86,7 @@ const steps = [
   { n: '04', title: 'Complete record kept',    desc: 'Costs, photos, timelines, and follow-up details are saved automatically.' },
 ]
 
-const stats = [
+const statsData = [
   { value: '< 4 hr', label: 'Avg. assignment time' },
   { value: '1',      label: 'Contractor per request' },
   { value: '100%',   label: 'Verified network' },
@@ -113,7 +96,7 @@ const stats = [
 const heroContent = {
   homeowner: {
     badge: 'For Homeowners & Landlords',
-    heading: <>Property maintenance,<br />handled&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "var(--font-serif)", fontWeight: 400 }}>end&nbsp;to&nbsp;end.</span></>,
+    heading: <>Property maintenance, handled end to end.</>,
     subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
     primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
     secondaryCta: { href: '#process', label: 'See how it works' },
@@ -144,16 +127,12 @@ const heroContent = {
 export default function HomePage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [heroRole, setHeroRole] = useState<'homeowner' | 'contractor'>('homeowner')
-  const heroRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const hero = heroContent[heroRole]
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111' }}>
@@ -189,7 +168,6 @@ export default function HomePage() {
             gap: 16,
           }}
         >
-          {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
             <Image
               src="/nexus-logo.png"
@@ -201,7 +179,6 @@ export default function HomePage() {
             />
           </Link>
 
-          {/* Desktop nav */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }} className="hidden md:flex">
             {navLinks.map(({ href, label }) => (
               <a
@@ -224,7 +201,6 @@ export default function HomePage() {
             ))}
           </nav>
 
-          {/* CTAs */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Link
               href="/auth/login"
@@ -266,10 +242,7 @@ export default function HomePage() {
           </div>
         </div>
         {mobileOpen && (
-          <div
-            style={{ background: '#f5f3ef', borderTop: '1px solid rgba(0,0,0,0.08)', padding: '12px 28px 24px' }}
-            className="md:hidden animate-fade-in"
-          >
+          <div style={{ background: '#f5f3ef', borderTop: '1px solid rgba(0,0,0,0.08)', padding: '12px 28px 24px' }} className="md:hidden">
             {navLinks.map(({ href, label }) => (
               <a
                 key={href}
@@ -289,14 +262,10 @@ export default function HomePage() {
       </header>
 
       {/* ── Hero ── */}
-      <section
-        ref={heroRef}
-        style={{ position: 'relative', overflow: 'hidden' }}
-      >
-        {/* Background image with overlay */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, transition: 'opacity 0.4s' }}>
+      <section style={{ position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <Image
-            src={hero.image}
+            src="/business-handshake-professional-meeting.jpg"
             alt=""
             fill
             priority
@@ -305,41 +274,16 @@ export default function HomePage() {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(245,243,239,0.98) 0%, rgba(245,243,239,0.96) 44%, rgba(245,243,239,0.72) 68%, rgba(245,243,239,0.18) 100%)' }} />
         </div>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', padding: '68px 28px 80px' }}>
-          {/* Role toggle */}
-          <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.06)', borderRadius: 9999, padding: 4, marginBottom: 28, gap: 4 }}>
-            {(['homeowner', 'contractor'] as const).map(role => (
-              <button
-                key={role}
-                onClick={() => setHeroRole(role)}
-                style={{
-                  padding: '7px 18px',
-                  borderRadius: 9999,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
-                  background: heroRole === role ? '#fff' : 'transparent',
-                  color: heroRole === role ? '#111' : '#666',
-                  boxShadow: heroRole === role ? '0 1px 6px rgba(0,0,0,0.12)' : 'none',
-                }}
-              >
-                {role === 'homeowner' ? 'Homeowners' : 'Contractors'}
-              </button>
-            ))}
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', padding: '80px 28px 96px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(61,122,79,0.08)', border: '1px solid rgba(61,122,79,0.2)', borderRadius: 9999, padding: '5px 13px', marginBottom: 20 }}>
+            <MapPin size={12} style={{ color: '#3d7a4f' }} />
+            <span style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: '0.04em', color: '#3d7a4f' }}>{CONTACT_INFO.serviceArea}</span>
           </div>
 
           <div style={{ maxWidth: 620 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(61,122,79,0.08)', border: '1px solid rgba(61,122,79,0.2)', borderRadius: 9999, padding: '5px 13px', marginBottom: 20 }}>
-              <MapPin size={12} style={{ color: '#3d7a4f' }} />
-              <span style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: '0.04em', color: '#3d7a4f' }}>{CONTACT_INFO.serviceArea}</span>
-            </div>
-
             <h1
-              className="animate-fade-up"
               style={{
-                fontSize: 'clamp(34px, 4.8vw, 62px)',
+                fontSize: 'clamp(36px, 5vw, 64px)',
                 fontWeight: 800,
                 lineHeight: 1.08,
                 letterSpacing: '-0.03em',
@@ -347,19 +291,17 @@ export default function HomePage() {
                 color: '#0d0d0d',
               }}
             >
-              {hero.heading}
+              Property maintenance,{' '}
+              <span style={{ color: '#3d7a4f', fontStyle: 'italic' }}>end to end.</span>
             </h1>
 
-            <p
-              className="animate-fade-up"
-              style={{ animationDelay: '0.08s', fontSize: 16.5, lineHeight: 1.72, color: '#4a4a4a', maxWidth: 500, marginBottom: 32 }}
-            >
-              {hero.subheading}
+            <p style={{ fontSize: 16.5, lineHeight: 1.72, color: '#4a4a4a', maxWidth: 500, marginBottom: 32 }}>
+              Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.
             </p>
 
-            <div className="animate-fade-up" style={{ animationDelay: '0.15s', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 36 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 36 }}>
               <Link
-                href={hero.primaryCta.href}
+                href="/auth/sign-up"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,
                   padding: '12px 26px', borderRadius: 9999,
@@ -371,10 +313,10 @@ export default function HomePage() {
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
               >
-                {hero.primaryCta.label} <ArrowRight size={14} />
+                Submit a request <ArrowRight size={14} />
               </Link>
-              <Link
-                href={hero.secondaryCta.href}
+              <a
+                href="#process"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,
                   padding: '12px 24px', borderRadius: 9999,
@@ -385,13 +327,16 @@ export default function HomePage() {
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.background = 'rgba(255,255,255,0.9)' }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.7)' }}
               >
-                {hero.secondaryCta.label}
-              </Link>
+                See how it works
+              </a>
             </div>
 
-            {/* Trust badges */}
-            <div className="animate-fade-up" style={{ animationDelay: '0.22s', display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-              {hero.badges.map(({ icon: Icon, text }) => (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+              {[
+                { icon: Shield, text: 'Verified contractors only' },
+                { icon: Zap, text: 'Same-day assignment' },
+                { icon: CheckCircle2, text: 'Manually reviewed' },
+              ].map(({ icon: Icon, text }) => (
                 <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#555' }}>
                   <Icon size={13} style={{ color: '#3d7a4f', flexShrink: 0 }} />
                   {text}
@@ -402,87 +347,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
-      <section id="who-we-serve" className="py-24">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-16 text-center" data-animate>
-            <p className="font-mono-label text-primary mb-4">Solutions</p>
-            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
-              Built for homeowners, contractors, and property managers.
-            </h2>
-          </div>
-
-          <div className="grid gap-12 sm:grid-cols-3">
-            {[
-              {
-                title: "Homeowners",
-                body: "Submit your request once. Get matched with one verified contractor. Track everything from submission to completion.",
-                cta: "Create account",
-                href: "/auth/sign-up",
-              },
-              {
-                title: "Contractors",
-                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
-                cta: "Apply for access",
-                href: "/auth/sign-up?role=contractor",
-              },
-              {
-                title: "Property Managers",
-                body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
-                cta: "Create account",
-                href: "/auth/sign-up?role=property_manager",
-              },
-            ].map(({ title, body, cta, href }) => (
-              <Link
-                key={title}
-                href={href}
-                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
-                data-animate
-              >
-                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
-                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
-                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
-                  {cta} <ArrowRight className="h-3 w-3" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── Photo Banner: Three user types (visual reference) ── */}
-      <section className="overflow-hidden border-b border-border">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
-          {[
-            {
-              src:     "/photo-homeowner.jpg",
-              label:   "For Homeowners",
-              caption: "One verified contractor. No bidding. No surprises.",
-            },
-            {
-              src:     "/photo-manager.jpg",
-              label:   "For Managers",
-              caption: "Portfolio-level tracking. Spend visibility across all properties.",
-            },
-            {
-              src:     "/photo-contractor.jpg",
-              label:   "For Contractors",
-              caption: "Pre-documented leads. No fees. Direct payment from owners.",
-            },
-          ].map(({ src, label, caption }) => (
-            <div
-              key={label}
-              className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
-            >
-              <div className="photo-card-inner absolute inset-0">
       {/* ── Stats strip ── */}
       <div style={{ background: '#111', color: '#fff', padding: '0 28px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
-          {stats.map(({ value, label }) => (
+          {statsData.map(({ value, label }) => (
             <div key={label} style={{ padding: '28px 24px', borderRight: '1px solid rgba(255,255,255,0.07)', textAlign: 'center' }}>
               <p style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', marginBottom: 4 }}>{value}</p>
               <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{label}</p>
@@ -495,8 +363,6 @@ export default function HomePage() {
       <section id="homeowners" style={{ padding: '112px 28px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
-
-            {/* Text side */}
             <div>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
                 For homeowners &amp; landlords
@@ -532,7 +398,6 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Image side */}
             <div style={{ position: 'relative' }}>
               <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
@@ -542,14 +407,6 @@ export default function HomePage() {
                   style={{ objectFit: 'cover' }}
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="font-mono-label text-primary mb-2">{label}</p>
-                <p className="text-[13px] text-foreground/90">{caption}</p>
-              </div>
-            </div>
-          ))}
-              {/* Floating card */}
               <div style={{
                 position: 'absolute', bottom: -20, left: -20,
                 background: '#fff', borderRadius: 16, padding: '16px 20px',
@@ -574,8 +431,6 @@ export default function HomePage() {
       <section id="contractors" style={{ padding: '112px 28px', background: '#111' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
-
-            {/* Image side (first on mobile, second on desktop visually via CSS order) */}
             <div style={{ position: 'relative', order: 0 }} className="lg:order-last">
               <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
@@ -586,7 +441,6 @@ export default function HomePage() {
                 />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.4) 100%)' }} />
               </div>
-              {/* Floating card */}
               <div style={{
                 position: 'absolute', bottom: -20, right: -20,
                 background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px',
@@ -604,13 +458,12 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Text side */}
             <div>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6ee7a0', marginBottom: 16 }}>
                 For contractors
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
-                  Every request fully documented before you arrive.
+                Every request fully documented before you arrive.
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
                 Licensed, insured contractors in Topeka and surrounding areas get matched with property owners who have documented their project in full — scope, photos, budget, and scheduling all provided upfront.
@@ -639,19 +492,20 @@ export default function HomePage() {
                 >
                   Join the network <ArrowRight size={14} />
                 </Link>
-                <Link
+                <a
                   href="#pricing"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s' }}
                   onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)')}
                   onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
                 >
                   View pricing <ExternalLink size={13} style={{ opacity: 0.6 }} />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
+
       {/* ── How It Works ── */}
       <section id="process" style={{ padding: '112px 28px', background: '#f5f3ef' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -667,25 +521,6 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
-            {[
-              {
-                label: "Fully managed service",
-                body:  "Nexus selects the contractor, confirms the appointment, and maintains the project record. Responsibility for the managed portion stays with Nexus throughout.",
-              },
-              {
-                label: "Exclusive assignment",
-                body:  "One contractor per project, claimed first-come and held exclusively. The property owner works with a single contractor for each request, from consultation through completion.",
-              },
-              {
-                label: "Permanent service record",
-                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
-              },
-              {
-                label: "Property-specific intelligence",
-                body:  "Over time, your service history tells Nexus what your property needs and when. Recommendations are generated from your actual project records and maintenance intervals.",
-              },
-            ].map(({ label, body }, i) => (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
             {steps.map(({ n, title, desc }, i) => (
               <div
@@ -711,6 +546,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       {/* ── Pricing ── */}
       <section id="pricing" style={{ padding: '112px 28px', background: '#0d0d0d', color: '#fff' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -722,12 +558,11 @@ export default function HomePage() {
               Simple plans. Transparent per-job markup.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-              A transparent markup on completed work. Subscription plans available for homeowners and contractors who need more capacity.
-              Start free, upgrade when you need more. Pro plans from <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
+              A transparent markup on completed work. Pro plans from{' '}
+              <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
             </p>
           </div>
 
-          {/* Subscription plan highlights */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 48 }}>
             {[
               { label: 'Free', note: 'Up to 3 requests/yr', role: 'Homeowners & Contractors', accent: false },
@@ -740,7 +575,7 @@ export default function HomePage() {
                   background: accent ? 'rgba(61,122,79,0.15)' : 'rgba(255,255,255,0.04)',
                   border: accent ? '1px solid rgba(61,122,79,0.4)' : '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 16,
-                  padding: '24px 24px',
+                  padding: '24px',
                 }}
               >
                 <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent ? '#6ee7a0' : 'rgba(255,255,255,0.35)', marginBottom: 8 }}>{role}</p>
@@ -750,7 +585,6 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Per-job markup by urgency */}
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
             Per-job coordination markup
           </p>
@@ -763,9 +597,8 @@ export default function HomePage() {
                   border: featured ? 'none' : '1px solid rgba(255,255,255,0.08)',
                   color: featured ? '#111' : '#fff',
                   borderRadius: 20,
-                  padding: '28px 28px',
+                  padding: '28px',
                   position: 'relative',
-                  transition: 'transform 0.2s',
                 }}
               >
                 {featured && (
@@ -797,11 +630,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Social proof / About ── */}
+      {/* ── Why Nexus ── */}
       <section style={{ padding: '112px 28px', background: '#f5f3ef' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
-
             <div>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
                 Why Nexus
@@ -834,7 +666,6 @@ export default function HomePage() {
                   style={{ objectFit: 'cover' }}
                 />
               </div>
-              {/* Stats overlay card */}
               <div style={{
                 position: 'absolute', top: -20, right: -20,
                 background: '#fff', borderRadius: 16, padding: '20px 24px',
@@ -847,34 +678,33 @@ export default function HomePage() {
                 <p style={{ fontSize: 12, color: '#888' }}>Shawnee County network</p>
               </div>
             </div>
+          </div>
 
-            <div className="pt-2 lg:pt-16">
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-6">Quick links</p>
+          {/* Quick links */}
+          <div style={{ marginTop: 64, paddingTop: 64, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+            <p style={{ fontSize: 10.5, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#999', marginBottom: 24 }}>Quick links</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 0, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               {[
-                { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
-                { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
-                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
-                { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
+                { href: '/auth/sign-up',                       label: 'Homeowner account',          sub: 'Submit and manage service requests' },
+                { href: '/auth/sign-up?role=property_manager', label: 'Property manager account',   sub: 'Portfolio-level request management and reporting' },
+                { href: '/auth/sign-up?role=contractor',       label: 'Contractor application',     sub: 'Join the verified contractor network. No fees.' },
+                { href: '/faq',                                label: 'FAQ',                        sub: 'Platform details, requirements, and policies' },
               ].map(({ href, label, sub }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="group flex items-center justify-between border-b border-border py-4 transition-colors hover:border-primary/40"
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 0', borderBottom: '1px solid rgba(0,0,0,0.06)', textDecoration: 'none', transition: 'opacity 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
                   <div>
-                    <p className="text-[13.5px] font-medium text-foreground">{label}</p>
-                    <p className="text-[12px] text-muted-foreground mt-0.5">{sub}</p>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111' }}>{label}</p>
+                    <p style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{sub}</p>
                   </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary flex-shrink-0" />
+                  <ArrowRight size={14} style={{ color: '#aaa', flexShrink: 0, marginLeft: 16 }} />
                 </Link>
               ))}
             </div>
-      {/* ── CTA / Contact ── */}
-      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
-          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
-            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
           </div>
         </div>
       </section>
@@ -908,12 +738,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       {/* ── Footer ── */}
       <footer style={{ background: '#0a0a0a', color: 'rgba(255,255,255,0.5)', padding: '72px 28px 48px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 48, marginBottom: 56 }}>
-            {/* Brand */}
-            <div style={{ gridColumn: 'span 1' }}>
+            <div>
               <Link href="/" style={{ display: 'inline-block', marginBottom: 16 }}>
                 <Image src="/nexus-logo.png" alt="Nexus Operations" width={120} height={40} style={{ height: 26, width: 'auto', filter: 'brightness(0) invert(1) opacity(0.85)' }} />
               </Link>
@@ -933,7 +763,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Platform */}
             <div>
               <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Platform</p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -944,12 +773,11 @@ export default function HomePage() {
                   { href: '#pricing',      label: 'Pricing' },
                   { href: '/faq',          label: 'FAQ' },
                 ].map(({ href, label }) => (
-                  <li key={href}><a href={href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.15s' }}>{label}</a></li>
+                  <li key={href}><a href={href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>{label}</a></li>
                 ))}
               </ul>
             </div>
 
-            {/* Accounts */}
             <div>
               <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Accounts</p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -964,7 +792,6 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* Company */}
             <div>
               <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Company</p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
