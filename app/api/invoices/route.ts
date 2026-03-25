@@ -149,3 +149,79 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { id, status } = await request.json()
+    if (!id || !status) {
+      return NextResponse.json({ error: 'id and status required' }, { status: 400 })
+    }
+
+    const allowedStatuses = ['sent', 'draft']
+    if (!allowedStatuses.includes(status)) {
+      return NextResponse.json({ error: `Invalid status. Allowed: ${allowedStatuses.join(', ')}` }, { status: 400 })
+    }
+
+    // Verify this is the contractor's invoice
+    const { data: invoice } = await supabase
+      .from('invoices')
+      .select('id, contractor_id, client_id, status, job_id, total, nexus_fee, subtotal')
+      .eq('id', id)
+      .single()
+
+    if (!invoice) {
+      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
+    }
+    if (invoice.contractor_id !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (invoice.status === 'paid') {
+      return NextResponse.json({ error: 'Cannot modify a paid invoice' }, { status: 400 })
+    }
+
+    await supabase.from('invoices').update({ status }).eq('id', id)
+
+    // When sending, notify the client
+    if (status === 'sent') {
+      ;(async () => {
+        try {
+          const { getAdminClient } = await import('@/lib/supabase/admin')
+          const admin = getAdminClient()
+          const { data: clientAuth } = await admin.auth.admin.getUserById(invoice.client_id)
+          const clientEmail = clientAuth.user?.email
+          if (!clientEmail) return
+
+          const { data: clientProfile } = await supabase
+            .from('profiles').select('full_name').eq('user_id', invoice.client_id).maybeSingle()
+          const { data: contractorProfile } = await supabase
+            .from('profiles').select('full_name').eq('user_id', user.id).maybeSingle()
+          const { data: job } = await supabase
+            .from('jobs').select('service_type').eq('id', invoice.job_id).single()
+
+          const { sendInvoiceSentClientEmail } = await import('@/lib/email')
+          await sendInvoiceSentClientEmail({
+            to:             clientEmail,
+            clientName:     clientProfile?.full_name ?? 'Client',
+            contractorName: contractorProfile?.full_name ?? 'Your contractor',
+            serviceType:    job?.service_type ?? 'service',
+            total:          invoice.total,
+            jobId:          invoice.job_id,
+          })
+        } catch (err) {
+          console.error('[invoices PATCH] email error:', err)
+        }
+      })()
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('[PATCH /api/invoices]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
