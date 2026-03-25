@@ -8,33 +8,35 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AlertCircle, Loader2, CheckCircle } from "lucide-react"
+import { AlertCircle, Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react"
 
-function ResetPasswordForm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+function ResetPasswordInner() {
+  const router      = useRouter()
+  const params      = useSearchParams()
+  const [password, setPassword]         = useState("")
+  const [confirmPassword, setConfirm]   = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError]   = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [sessionReady, setSessionReady] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [verifying, setVerifying] = useState(true)
+  const [sessionValid, setSessionValid] = useState(false)
 
-  // Supabase sends the token via hash fragment for password reset
-  // The client SDK picks it up automatically on mount
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setSessionReady(true)
-      }
-    })
-  }, [])
+    // Supabase sends the token as a hash fragment; the SSR library handles it
+    // but we verify session here before allowing the form
+    async function checkSession() {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      setSessionValid(!!session)
+      setVerifying(false)
+    }
+    checkSession()
+  }, [params])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
-
     if (password !== confirmPassword) {
       setError("Passwords do not match.")
       return
@@ -43,149 +45,149 @@ function ResetPasswordForm() {
       setError("Password must be at least 8 characters.")
       return
     }
-
     setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase.auth.updateUser({ password })
-    setLoading(false)
-
-    if (error) {
-      setError(error.message)
-      return
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.updateUser({ password })
+      if (error) {
+        setError(error.message)
+      } else {
+        setSuccess(true)
+        setTimeout(() => router.push("/auth/login"), 2500)
+      }
+    } catch {
+      setError("An unexpected error occurred. Please try again.")
+    } finally {
+      setLoading(false)
     }
+  }
 
-    setSuccess(true)
-    setTimeout(() => router.push("/dashboard"), 2500)
+  if (verifying) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (!sessionValid) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div className="w-full max-w-md text-center">
+          <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-5">
+            <AlertCircle className="w-8 h-8 text-destructive" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Invalid or expired link</h1>
+          <p className="text-muted-foreground text-[14px] leading-relaxed mb-6">
+            This password reset link is invalid or has expired. Please request a new one.
+          </p>
+          <Link
+            href="/auth/forgot-password"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-lg bg-primary text-primary-foreground text-[13.5px] font-semibold hover:opacity-90 transition-opacity"
+          >
+            Request New Link
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  if (success) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div className="w-full max-w-md text-center">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-5">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Password updated</h1>
+          <p className="text-muted-foreground text-[14px] leading-relaxed">
+            Your password has been successfully updated. Redirecting to sign in…
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Left panel */}
-      <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] flex-col justify-between border-r border-border bg-card px-12 py-16 flex-shrink-0">
-        <Link href="/">
-          <Image
-            src="/nexus-logo.png"
-            alt="Nexus Operations"
-            width={150}
-            height={50}
-            style={{ height: "28px", width: "auto" }}
-            priority
-          />
-        </Link>
-
-        <div className="space-y-8">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-4">
-              Nexus Operations
-            </p>
-            <h2 className="text-2xl font-bold leading-snug tracking-tight">
-              Property service management for Topeka and Shawnee County.
-            </h2>
-          </div>
-          <div className="text-[13.5px] text-muted-foreground leading-[1.7]">
-            <p>
-              One verified contractor per request. No competing bids. No cold calls.
-              Documentation maintained through job completion.
-            </p>
-          </div>
-        </div>
-
-        <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (785) 428-0244 · admin@nexusoperations.org
-        </p>
-      </div>
-
-      {/* Right panel */}
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-        <div className="mb-8 lg:hidden">
-          <Link href="/">
+    <div className="flex min-h-screen items-center justify-center bg-background px-6">
+      <div className="w-full max-w-[400px]">
+        <div className="mb-8">
+          <Link href="/" className="inline-block mb-6">
             <Image
               src="/nexus-logo.png"
               alt="Nexus Operations"
               width={140}
               height={47}
-              style={{ height: "32px", width: "auto" }}
+              style={{ height: "28px", width: "auto" }}
               priority
             />
           </Link>
+          <h1 className="text-[24px] font-bold tracking-tight">Set new password</h1>
+          <p className="mt-2 text-[14px] text-muted-foreground">
+            Choose a strong password for your account.
+          </p>
         </div>
 
-        <div className="w-full max-w-[400px]">
-          {success ? (
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <CheckCircle className="h-6 w-6 text-primary" />
-              </div>
-              <h1 className="text-[22px] font-bold tracking-tight">Password updated</h1>
-              <p className="mt-2 text-[13.5px] text-muted-foreground">
-                Your password has been changed. Redirecting to your dashboard&hellip;
-              </p>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {error && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-destructive/30 bg-destructive/5 p-3.5 text-[13px] text-destructive">
+              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <span>{error}</span>
             </div>
-          ) : (
-            <>
-              <div className="mb-8">
-                <h1 className="text-[22px] font-bold tracking-tight">Set a new password</h1>
-                <p className="mt-1.5 text-[13.5px] text-muted-foreground">
-                  Choose a strong password for your account.
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {error && (
-                  <div className="flex items-start gap-2.5 rounded border border-destructive/40 bg-destructive/8 p-3 text-[13px] text-destructive">
-                    <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    {error}
-                  </div>
-                )}
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-[13px]">New password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="At least 8 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    autoComplete="new-password"
-                    className="h-10 text-[13px]"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="confirmPassword" className="text-[13px]">Confirm new password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Re-enter password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    autoComplete="new-password"
-                    className="h-10 text-[13px]"
-                  />
-                </div>
-
-                <Button type="submit" className="w-full h-10 text-[13px] font-semibold" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating password...
-                    </>
-                  ) : (
-                    "Update Password"
-                  )}
-                </Button>
-              </form>
-
-              <div className="mt-5 border-t border-border pt-5 text-[13px] text-muted-foreground text-center">
-                <Link href="/auth/login" className="text-primary hover:underline font-medium">
-                  Back to sign in
-                </Link>
-              </div>
-            </>
           )}
-        </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="password" className="text-[13px] font-medium">New password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="At least 8 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                className="h-10 text-[13.5px] rounded-lg pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(v => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="confirm" className="text-[13px] font-medium">Confirm new password</Label>
+            <Input
+              id="confirm"
+              type={showPassword ? "text" : "password"}
+              placeholder="Repeat your new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+              autoComplete="new-password"
+              className="h-10 text-[13.5px] rounded-lg"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full h-10 text-[13.5px] font-semibold rounded-lg"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Updating password...
+              </>
+            ) : (
+              "Update Password"
+            )}
+          </Button>
+        </form>
       </div>
     </div>
   )
@@ -193,8 +195,8 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense>
-      <ResetPasswordForm />
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>}>
+      <ResetPasswordInner />
     </Suspense>
   )
 }

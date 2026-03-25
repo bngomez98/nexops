@@ -1,385 +1,608 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { AvatarUpload } from "@/components/avatar-upload"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { CheckCircle, AlertCircle, Loader2, CreditCard, ExternalLink, Banknote, Clock } from "lucide-react"
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { DashboardNav } from '@/components/dashboard-nav'
+import {
+  Save, Loader2, ArrowLeft, User, Bell, AlertTriangle,
+  CreditCard, Check, Building2, Wrench, Shield, Lock, QrCode, KeyRound, CheckCircle2,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { createClient } from '@/lib/supabase/client'
 
-type ConnectStatus = "not_connected" | "pending" | "active" | "restricted"
+const SERVICE_CATEGORIES = [
+  { value: 'tree-removal',  label: 'Tree Removal',  icon: '🌳' },
+  { value: 'concrete-work', label: 'Concrete Work', icon: '🏗️' },
+  { value: 'roofing',       label: 'Roofing',       icon: '🏠' },
+  { value: 'hvac',          label: 'HVAC',          icon: '❄️' },
+  { value: 'fencing',       label: 'Fencing',       icon: '🏡' },
+  { value: 'electrical',    label: 'Electrical',    icon: '⚡' },
+  { value: 'plumbing',      label: 'Plumbing',      icon: '🔧' },
+  { value: 'excavation',    label: 'Excavation',    icon: '🚜' },
+]
 
-export default function ContractorSettingsPage() {
+type Tab = 'profile' | 'notifications' | 'security' | 'danger'
+
+function ContractorSettingsInner() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [billingLoading, setBillingLoading] = useState(false)
-  const [connectLoading, setConnectLoading] = useState(false)
-  const [uid, setUid] = useState("")
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const [connectStatus, setConnectStatus] = useState<ConnectStatus>("not_connected")
-  const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    emailNotifications: true,
-    smsNotifications: true,
-    availableForRequests: true,
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [tab, setTab] = useState<Tab>('profile')
+  const [formData, setFormData] = useState({
+    companyName: '',
+    bio: '',
+    licenseNumber: '',
+    yearsInBusiness: '',
+    serviceCategories: [] as string[],
+  })
+  const [notifications, setNotifications] = useState({
+    projectNotifications: true,
+    messageNotifications: true,
+    weeklyDigest: true,
   })
 
-  const searchParams = useSearchParams()
+  // 2FA state
+  const [mfaFactors, setMfaFactors]   = useState<any[]>([])
+  const [enrollData, setEnrollData]   = useState<{ qr: string; secret: string; factorId: string } | null>(null)
+  const [verifyCode, setVerifyCode]   = useState('')
+  const [mfaLoading, setMfaLoading]   = useState(false)
+  const [mfaError, setMfaError]       = useState('')
+  const [mfaSuccess, setMfaSuccess]   = useState('')
 
   useEffect(() => {
-    async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      setUid(user.id)
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, phone, avatar_url, stripe_connect_status")
-        .eq("id", user.id)
-        .single()
-
-      setForm((f) => ({
-        ...f,
-        fullName: profile?.full_name ?? user.user_metadata?.full_name ?? "",
-        phone: profile?.phone ?? user.user_metadata?.phone ?? "",
-      }))
-      setAvatarUrl(profile?.avatar_url ?? null)
-      setConnectStatus((profile?.stripe_connect_status as ConnectStatus) ?? "not_connected")
-      setLoading(false)
+    async function loadData() {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/auth/login'); return }
+        const data = await res.json()
+        if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
+        setUser(data.user)
+        const p = data.contractorProfile
+        if (p) {
+          setFormData({
+            companyName: p.companyName ?? '',
+            bio: p.bio ?? '',
+            licenseNumber: p.licenseNumber ?? '',
+            yearsInBusiness: p.yearsInBusiness != null ? String(p.yearsInBusiness) : '',
+            serviceCategories: p.serviceCategories ?? [],
+          })
+        }
+        if (searchParams.get('billing') === 'success') {
+          toast.success('Billing updated successfully!')
+        }
+        // Load MFA factors
+        const supabase = createClient()
+        const { data: mfaData } = await supabase.auth.mfa.listFactors()
+        setMfaFactors(mfaData?.all ?? [])
+      } catch {
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    load()
+    loadData()
+  }, [router, searchParams])
 
-    // Show feedback after returning from Stripe onboarding
-    const connectParam = searchParams.get("connect")
-    if (connectParam === "success") {
-      setConnectStatus("active")
-    } else if (connectParam === "pending") {
-      setConnectStatus("pending")
-    } else if (connectParam === "error") {
-      setError("There was a problem connecting your Stripe account. Please try again.")
-    }
-  }, [searchParams])
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/auth/login')
+  }
 
-  const handleSave = async (e: React.FormEvent) => {
+  function toggleCategory(v: string) {
+    setFormData(prev => ({
+      ...prev,
+      serviceCategories: prev.serviceCategories.includes(v)
+        ? prev.serviceCategories.filter(c => c !== v)
+        : [...prev.serviceCategories, v],
+    }))
+  }
+
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault()
+    if (!formData.companyName.trim() || !formData.bio.trim() || formData.serviceCategories.length === 0) {
+      toast.error('Please fill in company name, bio, and at least one service category.')
+      return
+    }
     setSaving(true)
-    setError(null)
-    const supabase = createClient()
-
-    const { error: authError } = await supabase.auth.updateUser({
-      data: { full_name: form.fullName, phone: form.phone },
-    })
-
-    if (!authError) {
-      await supabase
-        .from("profiles")
-        .update({ full_name: form.fullName, phone: form.phone })
-        .eq("id", uid)
-    }
-
-    setSaving(false)
-    if (authError) {
-      setError(authError.message)
-    } else {
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
+    try {
+      const res = await fetch('/api/settings/contractor', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      if (!res.ok) {
+        const d = await res.json()
+        toast.error(d.error || 'Failed to save settings')
+        return
+      }
+      toast.success('Settings saved!')
+    } catch {
+      toast.error('Failed to save settings. Please try again.')
+    } finally {
+      setSaving(false)
     }
   }
 
-  const handleBillingPortal = async () => {
-    setBillingLoading(true)
+  async function handleDeleteAccount() {
+    setDeleting(true)
     try {
-      const res = await fetch("/api/stripe/portal", { method: "POST" })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error ?? "Could not open billing portal.")
+      const res = await fetch('/api/settings/contractor', { method: 'DELETE' })
+      if (!res.ok) {
+        const d = await res.json()
+        toast.error(d.error || 'Failed to delete account')
+        setShowDeleteConfirm(false)
+        return
       }
+      router.push('/auth/login')
     } catch {
-      setError("Could not open billing portal.")
+      toast.error('Failed to delete account. Please try again.')
+      setShowDeleteConfirm(false)
     } finally {
-      setBillingLoading(false)
+      setDeleting(false)
     }
   }
 
-  const handleConnectStripe = async () => {
-    setConnectLoading(true)
-    setError(null)
+  async function handleEnroll2FA() {
+    setMfaLoading(true)
+    setMfaError('')
     try {
-      const res = await fetch("/api/stripe/connect/onboard", { method: "POST" })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error ?? "Could not start Stripe Connect onboarding.")
-      }
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Nexus Operations Authenticator' })
+      if (error) { setMfaError(error.message); return }
+      setEnrollData({ qr: data.totp.qr_code, secret: data.totp.secret, factorId: data.id })
     } catch {
-      setError("Could not start Stripe Connect onboarding.")
+      setMfaError('Failed to start 2FA setup. Please try again.')
     } finally {
-      setConnectLoading(false)
+      setMfaLoading(false)
+    }
+  }
+
+  async function handleVerify2FA() {
+    if (!enrollData || !verifyCode.trim()) return
+    setMfaLoading(true)
+    setMfaError('')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: enrollData.factorId, code: verifyCode.trim() })
+      if (error) { setMfaError(error.message); return }
+      const { data: mfaData } = await supabase.auth.mfa.listFactors()
+      setMfaFactors(mfaData?.all ?? [])
+      setEnrollData(null)
+      setVerifyCode('')
+      setMfaSuccess('Two-factor authentication enabled successfully!')
+      setTimeout(() => setMfaSuccess(''), 5000)
+    } catch {
+      setMfaError('Invalid code. Please try again.')
+    } finally {
+      setMfaLoading(false)
+    }
+  }
+
+  async function handleDisable2FA(factorId: string) {
+    setMfaLoading(true)
+    setMfaError('')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.mfa.unenroll({ factorId })
+      if (error) { setMfaError(error.message); return }
+      const { data: mfaData } = await supabase.auth.mfa.listFactors()
+      setMfaFactors(mfaData?.all ?? [])
+      setMfaSuccess('Two-factor authentication disabled.')
+      setTimeout(() => setMfaSuccess(''), 5000)
+    } catch {
+      setMfaError('Failed to disable 2FA. Please try again.')
+    } finally {
+      setMfaLoading(false)
     }
   }
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     )
   }
+  if (!user) return null
+
+  const tabs: { id: Tab; label: string; icon: typeof User }[] = [
+    { id: 'profile',       label: 'Profile',       icon: User },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'security',      label: 'Security',      icon: Lock },
+    { id: 'danger',        label: 'Danger Zone',   icon: AlertTriangle },
+  ]
+
+  const totpFactors = mfaFactors.filter(f => f.factor_type === 'totp' && f.status === 'verified')
+  const has2FA = totpFactors.length > 0
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-3xl px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-xl font-bold">Account Settings</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Contact details, notifications, and subscription.</p>
+    <div className="min-h-screen bg-background">
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
+
+      <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-7">
+
+        {/* Header */}
+        <div>
+          <Link href="/dashboard/contractor" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors mb-5">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to dashboard
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight">Account Settings</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage your contractor profile and preferences.</p>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-5">
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Sidebar nav */}
+          <nav className="flex md:flex-col gap-1 md:w-44 flex-shrink-0">
+            {tabs.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setTab(id)}
+                className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-[13px] font-medium transition-all text-left ${
+                  tab === id
+                    ? id === 'danger'
+                      ? 'bg-destructive/10 text-destructive'
+                      : 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                {label}
+              </button>
+            ))}
 
-          {/* Profile photo + contact */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Contact Information</h2>
+            <div className="hidden md:block border-t border-border mt-3 pt-3">
+              <Link
+                href="/dashboard/contractor/billing"
+                className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+              >
+                <CreditCard className="w-4 h-4 flex-shrink-0" />
+                Billing
+              </Link>
             </div>
-            <div className="p-5 space-y-5">
-              <AvatarUpload
-                uid={uid}
-                url={avatarUrl}
-                name={form.fullName || "Contractor"}
-                onUpload={(url) => setAvatarUrl(url)}
-              />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <Label htmlFor="fullName" className="text-xs">Full Name</Label>
-                  <Input id="fullName" placeholder="John Smith" value={form.fullName}
-                    onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="text-sm" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-xs">Phone Number</Label>
-                  <Input id="phone" placeholder="(785) 555-0100" value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })} className="text-sm" />
-                </div>
-              </div>
-            </div>
-          </section>
+          </nav>
 
-          {/* Availability & Notifications */}
-          <section className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="border-b border-border px-5 py-3">
-              <h2 className="text-sm font-semibold">Availability &amp; Notifications</h2>
-            </div>
-            <div className="divide-y divide-border">
-              {[
-                { key: "availableForRequests" as const, label: "Available for new requests",    sub: "Turn off to stop receiving new request notifications" },
-                { key: "emailNotifications"   as const, label: "Email notifications",            sub: "New requests, claim confirmations, consultation reminders" },
-                { key: "smsNotifications"     as const, label: "SMS notifications",              sub: "New request alerts and time-sensitive updates" },
-              ].map(({ key, label, sub }) => (
-                <div key={key} className="flex items-center justify-between px-5 py-4">
-                  <div>
-                    <p className="text-sm font-medium">{label}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            {tab === 'profile' && (
+              <form onSubmit={handleSave} className="space-y-6">
+                {/* Business info */}
+                <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <Building2 className="w-4 h-4 text-primary" />
+                    <h2 className="font-bold text-foreground text-[15px]">Business Information</h2>
                   </div>
-                  <button type="button" onClick={() => setForm({ ...form, [key]: !form[key] })}
-                    className={`relative h-5 w-9 rounded-full transition ${form[key] ? "bg-primary" : "bg-border"}`}
-                    role="switch" aria-checked={form[key]}>
-                    <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${form[key] ? "translate-x-4" : "translate-x-0.5"}`} />
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[12px] font-semibold text-foreground">Company Name *</label>
+                      <input
+                        type="text"
+                        placeholder="Your company name"
+                        value={formData.companyName}
+                        onChange={e => setFormData(p => ({ ...p, companyName: e.target.value }))}
+                        required
+                        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[12px] font-semibold text-foreground">License Number</label>
+                      <input
+                        type="text"
+                        placeholder="e.g., LICENSE123"
+                        value={formData.licenseNumber}
+                        onChange={e => setFormData(p => ({ ...p, licenseNumber: e.target.value }))}
+                        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[12px] font-semibold text-foreground">Years in Business</label>
+                      <input
+                        type="number"
+                        placeholder="5"
+                        min="0"
+                        max="100"
+                        value={formData.yearsInBusiness}
+                        onChange={e => setFormData(p => ({ ...p, yearsInBusiness: e.target.value }))}
+                        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[12px] font-semibold text-foreground">Bio / Description *</label>
+                    <textarea
+                      placeholder="Tell homeowners about your expertise and experience..."
+                      value={formData.bio}
+                      onChange={e => setFormData(p => ({ ...p, bio: e.target.value }))}
+                      rows={4}
+                      required
+                      className="w-full px-3 py-2.5 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Service categories */}
+                <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <Wrench className="w-4 h-4 text-primary" />
+                    <h2 className="font-bold text-foreground text-[15px]">Service Categories</h2>
+                  </div>
+                  <p className="text-[12.5px] text-muted-foreground">
+                    Select all trades you specialize in. You'll receive project notifications matching these categories.
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    {SERVICE_CATEGORIES.map(cat => {
+                      const selected = formData.serviceCategories.includes(cat.value)
+                      return (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          onClick={() => toggleCategory(cat.value)}
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all text-center ${
+                            selected
+                              ? 'border-primary/50 bg-primary/10 text-primary'
+                              : 'border-border bg-background text-muted-foreground hover:border-primary/30 hover:text-foreground'
+                          }`}
+                        >
+                          <span className="text-xl">{cat.icon}</span>
+                          <span className="text-[11px] font-medium leading-tight">{cat.label}</span>
+                          {selected && <Check className="w-3 h-3" />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                  <Link href="/dashboard/contractor" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5">
+                    Cancel
+                  </Link>
+                </div>
+              </form>
+            )}
+
+            {tab === 'notifications' && (
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <Bell className="w-4 h-4 text-primary" />
+                  <h2 className="font-bold text-foreground text-[15px]">Notification Preferences</h2>
+                </div>
+
+                {[
+                  {
+                    key: 'projectNotifications' as const,
+                    title: 'New Project Alerts',
+                    sub: 'Get notified when new projects matching your categories are posted.',
+                  },
+                  {
+                    key: 'messageNotifications' as const,
+                    title: 'Message Notifications',
+                    sub: 'Get notified when homeowners send you messages.',
+                  },
+                  {
+                    key: 'weeklyDigest' as const,
+                    title: 'Weekly Digest',
+                    sub: 'Receive a weekly summary of your activity and new opportunities.',
+                  },
+                ].map(({ key, title, sub }) => (
+                  <label
+                    key={key}
+                    className="flex items-start gap-4 p-4 border border-border rounded-xl cursor-pointer hover:bg-muted/30 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <p className="font-semibold text-foreground text-[13px]">{title}</p>
+                      <p className="text-[12px] text-muted-foreground mt-0.5">{sub}</p>
+                    </div>
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div
+                        onClick={() => setNotifications(p => ({ ...p, [key]: !p[key] }))}
+                        className={`w-10 h-5 rounded-full transition-colors cursor-pointer ${
+                          notifications[key] ? 'bg-primary' : 'bg-muted'
+                        }`}
+                        role="switch"
+                        aria-checked={notifications[key]}
+                      >
+                        <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform mt-0.5 mx-0.5 ${
+                          notifications[key] ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
+                      </div>
+                    </div>
+                  </label>
+                ))}
+
+                <div className="pt-2">
+                  <button
+                    onClick={() => toast.success('Notification preferences saved!')}
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity"
+                  >
+                    <Save className="w-4 h-4" />
+                    Save Preferences
                   </button>
                 </div>
-              ))}
-            </div>
-          </section>
+              </div>
+            )}
 
-          {error && (
-            <div className="flex items-center gap-2 rounded border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />{error}
-            </div>
-          )}
-          {saved && (
-            <div className="flex items-center gap-2 rounded border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
-              <CheckCircle className="h-4 w-4 flex-shrink-0" />Settings saved.
-            </div>
-          )}
+            {tab === 'security' && (
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Lock className="w-4 h-4 text-primary" />
+                  <h2 className="font-semibold text-foreground text-[15px]">Two-Factor Authentication (2FA)</h2>
+                </div>
 
-          <div className="flex justify-end">
-            <Button type="submit" disabled={saving} className="text-[13px]">
-              {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving…</> : "Save Changes"}
-            </Button>
-          </div>
-        </form>
+                {mfaError && (
+                  <div className="flex items-start gap-2 p-3 rounded-lg border border-destructive/30 bg-destructive/8 text-destructive text-[12.5px]">
+                    <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                    {mfaError}
+                  </div>
+                )}
+                {mfaSuccess && (
+                  <div className="flex items-start gap-2 p-3 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700 text-[12.5px]">
+                    <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                    {mfaSuccess}
+                  </div>
+                )}
 
-        {/* Billing — outside the save form so it doesn't submit */}
-        <section className="mt-5 rounded-lg border border-border bg-card overflow-hidden">
-          <div className="border-b border-border px-5 py-3">
-            <h2 className="text-sm font-semibold">Subscription &amp; Billing</h2>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Manage your monthly membership, invoices, and payment method</p>
-          </div>
-          <div className="p-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10">
-                <CreditCard className="h-4 w-4 text-primary" />
+                {has2FA ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2.5 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700">
+                      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                      <p className="text-[12.5px] font-semibold">Two-factor authentication is enabled on your account.</p>
+                    </div>
+                    {totpFactors.map(f => (
+                      <div key={f.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                        <div className="flex items-center gap-2.5">
+                          <KeyRound className="w-4 h-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-[13px] font-semibold text-foreground">{f.friendly_name || 'Authenticator App'}</p>
+                            <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleDisable2FA(f.id)}
+                          disabled={mfaLoading}
+                          className="text-[12px] text-destructive border border-destructive/30 px-3 py-1.5 rounded-lg hover:bg-destructive/10 transition-colors font-medium"
+                        >
+                          {mfaLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Disable'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : enrollData ? (
+                  <div className="space-y-4">
+                    <p className="text-[13px] text-muted-foreground">
+                      Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code below.
+                    </p>
+                    <div className="flex flex-col items-center gap-4 p-5 rounded-xl bg-secondary/30 border border-border">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={enrollData.qr} alt="2FA QR Code" className="w-44 h-44 rounded-lg" />
+                      <div className="text-center">
+                        <p className="text-[11px] text-muted-foreground mb-1">Or enter this code manually:</p>
+                        <code className="text-[12px] font-mono bg-background border border-border px-3 py-1.5 rounded-lg select-all break-all">
+                          {enrollData.secret}
+                        </code>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Verification Code</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          value={verifyCode}
+                          onChange={e => setVerifyCode(e.target.value.replace(/\D/g, ''))}
+                          placeholder="000000"
+                          className="flex-1 px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition font-mono tracking-widest text-center"
+                        />
+                        <button
+                          onClick={handleVerify2FA}
+                          disabled={mfaLoading || verifyCode.length < 6}
+                          className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
+                        >
+                          {mfaLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                          Verify
+                        </button>
+                        <button
+                          onClick={() => { setEnrollData(null); setVerifyCode(''); setMfaError('') }}
+                          className="px-4 py-2.5 rounded-xl border border-border text-[13px] font-semibold hover:bg-secondary transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-[13px] text-muted-foreground">
+                      Add an extra layer of security to your account by requiring a one-time code from your phone on login.
+                    </p>
+                    <button
+                      onClick={handleEnroll2FA}
+                      disabled={mfaLoading}
+                      className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:bg-primary/15 transition-colors"
+                    >
+                      {mfaLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <QrCode className="w-3.5 h-3.5" />}
+                      Enable Two-Factor Authentication
+                    </button>
+                  </div>
+                )}
               </div>
-              <div>
-                <p className="text-sm font-medium">Contractor Membership</p>
-                <p className="text-[11px] text-muted-foreground">Flat monthly fee — no per-lead charges</p>
-              </div>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleBillingPortal}
-              disabled={billingLoading}
-              className="text-[12px] gap-1.5"
-            >
-              {billingLoading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <ExternalLink className="h-3.5 w-3.5" />
-              )}
-              Manage Billing
-            </Button>
-          </div>
-        </section>
+            )}
 
-        {/* Stripe Connect — payout account */}
-        <section className="mt-5 rounded-lg border border-border bg-card overflow-hidden">
-          <div className="border-b border-border px-5 py-3">
-            <h2 className="text-sm font-semibold">Payout Account</h2>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              Connect a bank account so Nexus can pay you automatically after each completed job
-            </p>
-          </div>
-          <div className="p-5">
-            {connectStatus === "active" ? (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-green-500/10">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Stripe account connected</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Payouts are deposited automatically after job completion
-                    </p>
-                  </div>
+            {tab === 'danger' && (
+              <div className="bg-card border border-destructive/30 rounded-2xl p-6 space-y-5">
+                <div className="flex items-center gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-destructive" />
+                  <h2 className="font-bold text-destructive text-[15px]">Danger Zone</h2>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <p className="text-[13px] text-muted-foreground leading-relaxed">
+                  These actions are permanent and cannot be undone. Please proceed with caution.
+                </p>
+
+                <div className="border border-destructive/20 bg-destructive/5 rounded-xl p-5">
+                  <h3 className="font-semibold text-foreground text-[13.5px] mb-1">Delete Account</h3>
+                  <p className="text-[12.5px] text-muted-foreground mb-4">
+                    Permanently delete your contractor account and all associated data. Active projects will be cancelled.
+                  </p>
+
+                  {showDeleteConfirm ? (
+                    <div className="space-y-3">
+                      <p className="text-[12.5px] font-semibold text-destructive">
+                        Are you sure? This cannot be undone.
+                      </p>
+                      <div className="flex gap-2.5">
+                        <button
+                          onClick={handleDeleteAccount}
+                          disabled={deleting}
+                          className="inline-flex items-center gap-2 bg-destructive text-destructive-foreground font-semibold text-[12.5px] px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+                        >
+                          {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <AlertTriangle className="w-4 h-4" />}
+                          {deleting ? 'Deleting...' : 'Yes, Delete Account'}
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm(false)}
+                          className="text-[12.5px] font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-2.5 border border-border rounded-xl"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
                   ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="text-[12.5px] font-semibold text-destructive border border-destructive/30 bg-destructive/5 hover:bg-destructive/10 transition-colors px-4 py-2.5 rounded-xl"
+                    >
+                      Delete Account
+                    </button>
                   )}
-                  Update Account
-                </Button>
-              </div>
-            ) : connectStatus === "pending" ? (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-amber-500/10">
-                    <Clock className="h-4 w-4 text-amber-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Verification in progress</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Stripe is reviewing your information. This usually takes a few minutes.
-                    </p>
-                  </div>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Continue Setup
-                </Button>
-              </div>
-            ) : connectStatus === "restricted" ? (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-destructive/10">
-                    <AlertCircle className="h-4 w-4 text-destructive" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Action required</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Stripe needs additional information before payouts can be enabled
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Fix Issues
-                </Button>
-              </div>
-            ) : (
-              /* not_connected */
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10">
-                    <Banknote className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">No payout account connected</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      Connect with Stripe to receive payments for completed jobs
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleConnectStripe}
-                  disabled={connectLoading}
-                  className="text-[12px] gap-1.5"
-                >
-                  {connectLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  )}
-                  Connect with Stripe
-                </Button>
               </div>
             )}
           </div>
-        </section>
-
-      </div>
+        </div>
+      </main>
     </div>
+  )
+}
+
+export default function ContractorSettings() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>}>
+      <ContractorSettingsInner />
+    </Suspense>
   )
 }

@@ -15,283 +15,388 @@ const services: Array<{ name: string; desc: string }> = [
   { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
   { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
   { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
-]
-
-const heroTargets = ["homeowners.", "property managers.", "landlords."]
+'use client'
+import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import {
+  Menu, X, ArrowRight, ExternalLink,
+  Camera, CalendarDays, MessageSquare,
+  Eye, Zap, CreditCard,
+  CheckCircle2, Shield, MapPin, Phone, Mail, ChevronRight,
+  Star, Clock, FileText,
+} from 'lucide-react'
+import { CONTACT_INFO } from '@/lib/contact-info'
 
 const navLinks = [
-  { href: "#about",       label: "About" },
-  { href: "#platform",    label: "Platform" },
-  { href: "#services",    label: "Services" },
-  { href: "#reporting",   label: "Reporting" },
-  { href: "#contractors", label: "Contractors" },
-  { href: "#contact",     label: "Contact" },
+  { href: '#homeowners',   label: 'Homeowners' },
+  { href: '#contractors',  label: 'Contractors' },
+  { href: '#process',      label: 'How It Works' },
+  { href: '#pricing',      label: 'Pricing' },
+  { href: '/contact',      label: 'Contact' },
 ]
 
+const homeownerFeatures = [
+  {
+    icon: Camera,
+    title: 'Upload photos & set a budget cap',
+    desc: 'Show contractors exactly what you need — no calls, no guesswork.',
+  },
+  {
+    icon: CalendarDays,
+    title: 'Choose your availability',
+    desc: 'Pick consultation windows that fit your schedule.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Track everything in one place',
+    desc: 'Status updates, invoices, and project history — always accessible.',
+  },
+]
+
+const contractorFeatures = [
+  {
+    icon: Eye,
+    title: 'Full project visibility before you commit',
+    desc: 'Photos, scope, budget, and location are all provided upfront so you arrive prepared.',
+  },
+  {
+    icon: Zap,
+    title: 'Matched by trade and location',
+    desc: 'Accept requests that fit your specialty and schedule at your own pace.',
+  },
+  {
+    icon: CreditCard,
+    title: 'Faster, unified payouts',
+    desc: 'Invoicing, approval, and payment through a single workflow.',
+  },
+]
+
+const pricingTiers = [
+  {
+    name: 'Routine',
+    markup: '25%',
+    sla: 'Assigned within 24 hrs · On-site within 3–5 days',
+    desc: 'Scheduled repairs, cosmetic fixes, and planned replacements that are not time-sensitive.',
+    featured: false,
+  },
+  {
+    name: 'Urgent',
+    markup: '30%',
+    sla: 'Assigned within 4 hrs · On-site next business day',
+    desc: 'Issues requiring prompt attention — non-emergency plumbing, electrical affecting livability, HVAC in moderate weather.',
+    featured: true,
+  },
+  {
+    name: 'Emergency',
+    markup: '35%',
+    sla: 'Assigned within 1 hr · On-site within 4 hrs',
+    desc: 'Critical failures — burst pipes, gas leaks, electrical hazards, HVAC failure in extreme weather.',
+    featured: false,
+  },
+]
+
+const steps = [
+  { n: '01', title: 'Submit your request',    desc: 'Describe the work, upload photos, and set a budget. Under three minutes.' },
+  { n: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor matched by trade and location.' },
+  { n: '03', title: 'Work gets done',          desc: 'Your contractor contacts you, schedules the visit, and completes the project.' },
+  { n: '04', title: 'Complete record kept',    desc: 'Costs, photos, timelines, and follow-up details are saved automatically.' },
+]
+
+const stats = [
+  { value: '< 4 hr', label: 'Avg. assignment time' },
+  { value: '1',      label: 'Contractor per request' },
+  { value: '100%',   label: 'Verified network' },
+  { value: '0',      label: 'Hidden fees' },
+]
+
+const heroContent = {
+  homeowner: {
+    badge: 'For Homeowners & Landlords',
+    heading: <>Property maintenance,<br />handled&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>end&nbsp;to&nbsp;end.</span></>,
+    subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
+    primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
+    secondaryCta: { href: '#process', label: 'See how it works' },
+    badges: [
+      { icon: Shield, text: 'Verified contractors only' },
+      { icon: Zap, text: 'Same-day assignment' },
+      { icon: CheckCircle2, text: 'Manually reviewed' },
+    ],
+    image: '/business-handshake-professional-meeting.jpg',
+    floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
+  },
+  contractor: {
+    badge: 'For Contractors',
+    heading: <>Pre-qualified jobs.<br />No bidding wars.<br />Faster&nbsp;payouts.</>,
+    subheading: 'Access exclusive service requests with photos, scope, and budget visible before you commit. Claim jobs that match your trade, get paid faster through unified invoicing.',
+    primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
+    secondaryCta: { href: '#pricing', label: 'View pricing' },
+    badges: [
+      { icon: Eye, text: 'Full scope before committing' },
+      { icon: CreditCard, text: 'Unified payout workflow' },
+      { icon: CheckCircle2, text: 'No competing quotes' },
+    ],
+    image: '/business-analytics-data-visualization.jpg',
+    floatingCard: { icon: FileText, title: 'Pre-qualified only', subtitle: 'Budget & scope visible upfront' },
+  },
+} as const
+
 export default function HomePage() {
-  const [mobileOpen, setMobileOpen]         = useState(false)
-  const [activeSection, setActiveSection]   = useState("")
-  const [scrollPct, setScrollPct]           = useState(0)
-  const [heroIdx, setHeroIdx]               = useState(0)
-  const [heroVisible, setHeroVisible]       = useState(true)
-  const [statsTriggered, setStatsTriggered] = useState(false)
-  const statsRef = useRef<HTMLDivElement>(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [heroRole, setHeroRole] = useState<'homeowner' | 'contractor'>('homeowner')
+  const heroRef = useRef<HTMLDivElement>(null)
 
-  /* ── Scroll progress bar ── */
   useEffect(() => {
-    const onScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
-      setScrollPct((scrollTop / (scrollHeight - clientHeight)) * 100)
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* ── Active nav section ── */
-  useEffect(() => {
-    const ids = navLinks.map(l => l.href.replace("#", ""))
-    const observers: IntersectionObserver[] = []
-    ids.forEach(id => {
-      const el = document.getElementById(id)
-      if (!el) return
-      const io = new IntersectionObserver(
-        ([e]) => { if (e.isIntersecting) setActiveSection(id) },
-        { threshold: 0.3, rootMargin: "-80px 0px -40% 0px" }
-      )
-      io.observe(el)
-      observers.push(io)
-    })
-    return () => observers.forEach(io => io.disconnect())
-  }, [])
-
-  /* ── Scroll-triggered fade animations ── */
-  useEffect(() => {
-    const els = document.querySelectorAll("[data-animate]")
-    const io = new IntersectionObserver(
-      entries => entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target) }
-      }),
-      { threshold: 0.1 }
-    )
-    els.forEach(el => io.observe(el))
-    return () => io.disconnect()
-  }, [])
-
-  /* ── Stats pop animation trigger ── */
-  useEffect(() => {
-    if (!statsRef.current) return
-    const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setStatsTriggered(true); io.disconnect() } },
-      { threshold: 0.5 }
-    )
-    io.observe(statsRef.current)
-    return () => io.disconnect()
-  }, [])
+  const hero = heroContent[heroRole]
 
   return (
-    <main className="min-h-screen bg-background font-sans overflow-x-hidden">
+    <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111', fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
 
-      {/* ── Scroll progress bar ── */}
-      <div
-        className="fixed top-0 left-0 z-[60] h-[2px] bg-primary transition-[width] duration-75"
-        style={{ width: `${scrollPct}%` }}
-        aria-hidden
-      />
+      {/* ── Announcement bar ── */}
+      <div style={{ background: '#111', color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 500, textAlign: 'center', padding: '8px 24px', letterSpacing: '0.01em' }}>
+        Now serving Topeka, KS and surrounding Shawnee County.&nbsp;
+        <a href={CONTACT_INFO.phoneHref} style={{ color: '#6ee7a0', textDecoration: 'none' }}>{CONTACT_INFO.phoneDisplay}</a>
+      </div>
 
       {/* ── Header ── */}
-      <header className="fixed top-[2px] left-0 right-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-8 h-14">
-          <Link href="/" className="flex-shrink-0">
+      <header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          background: scrolled ? 'rgba(245,243,239,0.97)' : '#f5f3ef',
+          backdropFilter: scrolled ? 'blur(16px)' : undefined,
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(0,0,0,0.06)',
+          transition: 'background 0.3s, border-color 0.3s, box-shadow 0.3s',
+          boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.06)' : 'none',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1280,
+            margin: '0 auto',
+            padding: '0 28px',
+            height: 64,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+          }}
+        >
+          {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
             <Image
               src="/nexus-logo.png"
               alt="Nexus Operations"
-              width={150}
-              height={50}
-              style={{ height: "28px", width: "auto" }}
+              width={130}
+              height={44}
+              style={{ height: 26, width: 'auto' }}
               priority
             />
           </Link>
 
-          <nav className="hidden items-center gap-0.5 md:flex" aria-label="Main">
-            {navLinks.map(({ href, label }) => {
-              const id = href.replace("#", "")
-              const active = activeSection === id
-              return (
-                <a
-                  key={href}
-                  href={href}
-                  className={`px-3.5 py-1.5 text-[12.5px] rounded-full transition-all duration-200 ${
-                    active
-                      ? "text-primary bg-primary/10 font-medium"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {label}
-                </a>
-              )
-            })}
+          {/* Desktop nav */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }} className="hidden md:flex">
+            {navLinks.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                style={{
+                  padding: '7px 15px',
+                  borderRadius: 9999,
+                  fontSize: 13.5,
+                  fontWeight: 500,
+                  color: '#555',
+                  transition: 'color 0.15s, background 0.15s',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => { (e.target as HTMLElement).style.color = '#111'; (e.target as HTMLElement).style.background = 'rgba(0,0,0,0.05)' }}
+                onMouseLeave={e => { (e.target as HTMLElement).style.color = '#555'; (e.target as HTMLElement).style.background = 'transparent' }}
+              >
+                {label}
+              </a>
+            ))}
           </nav>
 
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
+          {/* CTAs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Link
               href="/auth/login"
-              className="hidden text-[12.5px] text-muted-foreground transition-colors hover:text-foreground md:block"
+              className="hidden md:block"
+              style={{ fontSize: 13.5, fontWeight: 500, color: '#666', textDecoration: 'none', transition: 'color 0.15s' }}
+              onMouseEnter={e => ((e.target as HTMLElement).style.color = '#111')}
+              onMouseLeave={e => ((e.target as HTMLElement).style.color = '#666')}
             >
-              Sign In
+              Sign in
             </Link>
             <Link
               href="/auth/sign-up"
-              className="rounded-full bg-primary px-4 py-1.5 text-[12px] font-semibold text-primary-foreground transition-all hover:opacity-90"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '9px 20px',
+                borderRadius: 9999,
+                background: '#111',
+                fontSize: 13.5,
+                fontWeight: 600,
+                color: '#fff',
+                textDecoration: 'none',
+                transition: 'opacity 0.15s',
+              }}
+              onMouseEnter={e => { (e.currentTarget).style.opacity = '0.85' }}
+              onMouseLeave={e => { (e.currentTarget).style.opacity = '1' }}
             >
-              Create Account
+              Get started <ArrowRight size={14} />
             </Link>
             <button
-              className="md:hidden p-1.5 text-muted-foreground hover:text-foreground transition"
+              className="md:hidden"
               onClick={() => setMobileOpen(v => !v)}
               aria-label="Toggle menu"
+              style={{ padding: 6, color: '#555', background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
-
-        {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-slide-down">
-            <div className="px-8 py-5 space-y-1">
-              {navLinks.map(({ href, label }) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block py-2.5 text-[13px] text-muted-foreground hover:text-foreground transition"
-                >
-                  {label}
-                </a>
-              ))}
-              <div className="pt-4 mt-3 border-t border-border flex gap-5">
-                <Link
-                  href="/auth/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-[13px] text-muted-foreground hover:text-foreground transition"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/auth/sign-up"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-[13px] font-semibold text-primary hover:underline underline-offset-4"
-                >
-                  Create Account
-                </Link>
-              </div>
+          <div
+            style={{ background: '#f5f3ef', borderTop: '1px solid rgba(0,0,0,0.08)', padding: '12px 28px 24px' }}
+            className="md:hidden animate-fade-in"
+          >
+            {navLinks.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                style={{ display: 'block', padding: '12px 8px', fontSize: 15, fontWeight: 500, color: '#444', textDecoration: 'none', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
+              >
+                {label}
+              </a>
+            ))}
+            <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+              <Link href="/auth/login" style={{ flex: 1, textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 500, color: '#555', textDecoration: 'none', border: '1px solid rgba(0,0,0,0.12)', borderRadius: 10 }} onClick={() => setMobileOpen(false)}>Sign in</Link>
+              <Link href="/auth/sign-up" style={{ flex: 1, textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#fff', textDecoration: 'none', background: '#111', borderRadius: 10 }} onClick={() => setMobileOpen(false)}>Get started</Link>
             </div>
           </div>
         )}
       </header>
 
       {/* ── Hero ── */}
-      <section id="hero" className="relative pt-36 pb-28 overflow-hidden">
-        <div className="hero-radial pointer-events-none absolute inset-0" aria-hidden />
+      <section
+        ref={heroRef}
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        {/* Background image with overlay */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, transition: 'opacity 0.4s' }}>
+          <Image
+            src={hero.image}
+            alt=""
+            fill
+            priority
+            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(245,243,239,0.98) 0%, rgba(245,243,239,0.96) 44%, rgba(245,243,239,0.72) 68%, rgba(245,243,239,0.18) 100%)' }} />
+        </div>
 
-        <div className="relative mx-auto max-w-6xl px-8">
-          <div className="flex items-center gap-2 mb-12 animate-fade-up" style={{ animationDelay: "0.05s" }}>
-            <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
-            <span className="text-[12px] text-muted-foreground font-mono">
-              Topeka, Kansas — Shawnee County and surrounding areas
-            </span>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', padding: '68px 28px 80px' }}>
+          {/* Role toggle */}
+          <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.06)', borderRadius: 9999, padding: 4, marginBottom: 28, gap: 4 }}>
+            {(['homeowner', 'contractor'] as const).map(role => (
+              <button
+                key={role}
+                onClick={() => setHeroRole(role)}
+                style={{
+                  padding: '7px 18px',
+                  borderRadius: 9999,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                  background: heroRole === role ? '#fff' : 'transparent',
+                  color: heroRole === role ? '#111' : '#666',
+                  boxShadow: heroRole === role ? '0 1px 6px rgba(0,0,0,0.12)' : 'none',
+                }}
+              >
+                {role === 'homeowner' ? 'Homeowners' : 'Contractors'}
+              </button>
+            ))}
           </div>
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_480px] lg:items-center">
-            <div>
-              {/* Specialized hero headline */}
-              <h1
-                className="font-heading text-[56px] font-bold tracking-[-0.02em] leading-[1.0] md:text-[72px] lg:text-[84px] text-balance animate-fade-up"
-                style={{ animationDelay: "0.12s" }}
-              >
-                Build a permanent<br />maintenance record.<br />
-                <span className="text-primary inline-block">Monetize the data.</span>
-              </h1>
-
-              <div className="mt-8 max-w-xl space-y-4 animate-fade-up" style={{ animationDelay: "0.22s" }}>
-                <p className="text-[16px] text-muted-foreground leading-[1.85]">
-                  Every maintenance and repair project at your property is documented, stored permanently on the Nexus platform, and used to generate financial insights, maintenance recommendations, and professional records for insurance claims, refinancing, and resale.
-                </p>
-                <p className="text-[14px] text-muted-foreground/70 leading-[1.7]">
-                  Property managers access portfolio-level reporting across all managed addresses. Data aggregates by trade category, by address, and in total — replacing fragmented invoices and scattered records with a single, queryable source of truth.
-                </p>
-              </div>
-
-              <div className="mt-10 flex flex-wrap items-center gap-6 animate-fade-up" style={{ animationDelay: "0.32s" }}>
-                <Link
-                  href="/auth/sign-up"
-                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
-                >
-                  Start building your record
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-                <Link
-                  href="/auth/sign-up?role=contractor"
-                  className="group inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition hover:text-foreground"
-                >
-                  Join the contractor network
-                  <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                </Link>
-              </div>
+          <div style={{ maxWidth: 620 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(61,122,79,0.08)', border: '1px solid rgba(61,122,79,0.2)', borderRadius: 9999, padding: '5px 13px', marginBottom: 20 }}>
+              <MapPin size={12} style={{ color: '#3d7a4f' }} />
+              <span style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: '0.04em', color: '#3d7a4f' }}>{CONTACT_INFO.serviceArea}</span>
             </div>
 
-            {/* Hero visualization: live data dashboard preview */}
-            <div
-              ref={statsRef}
-              className="hidden lg:block relative h-[560px] overflow-hidden rounded-2xl glow-primary animate-fade-up"
-              style={{ animationDelay: "0.2s" }}
+            <h1
+              className="animate-fade-up"
+              style={{
+                fontSize: 'clamp(34px, 4.8vw, 62px)',
+                fontWeight: 800,
+                lineHeight: 1.08,
+                letterSpacing: '-0.03em',
+                marginBottom: 20,
+                color: '#0d0d0d',
+              }}
             >
-              {/* Dashboard mockup background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-muted/40 via-background to-background border border-border/30" />
-              
-              {/* Fake dashboard content */}
-              <div className="absolute inset-0 p-6 flex flex-col">
-                <div className="mb-6">
-                  <p className="text-[11px] font-mono text-muted-foreground/60">Portfolio Overview</p>
-                  <h2 className="text-lg font-heading font-bold mt-1">Maintenance Intelligence</h2>
-                </div>
+              {hero.heading}
+            </h1>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  {[
-                    { label: "Total spend", value: "$12,847", change: "+$2,100 YTD" },
-                    { label: "Active projects", value: "3", change: "2 pending approval" },
-                    { label: "Overdue intervals", value: "2", change: "HVAC, Plumbing" },
-                    { label: "Cost efficiency", value: "94%", change: "vs. regional avg" },
-                  ].map(({ label, value, change }) => (
-                    <div key={label} className="border border-border/20 rounded-lg p-3 bg-background/40 backdrop-blur">
-                      <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-1">{label}</p>
-                      <p className="text-[18px] font-bold text-foreground">{value}</p>
-                      <p className="text-[10px] text-muted-foreground/50 mt-1">{change}</p>
-                    </div>
-                  ))}
-                </div>
+            <p
+              className="animate-fade-up"
+              style={{ animationDelay: '0.08s', fontSize: 16.5, lineHeight: 1.72, color: '#4a4a4a', maxWidth: 500, marginBottom: 32 }}
+            >
+              {hero.subheading}
+            </p>
 
-                <div className="flex-1 border border-border/20 rounded-lg p-4 bg-background/40 backdrop-blur overflow-hidden">
-                  <p className="text-[10px] text-muted-foreground/60 font-mono uppercase mb-3">Recurring items</p>
-                  <div className="space-y-2">
-                    {["Plumbing: 3 calls in 8 mo.", "HVAC: No service in 16 mo.", "Roof inspection overdue"].map((item, i) => (
-                      <div key={item} className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
-                        <div className={`w-2 h-2 rounded-full ${i === 1 ? "bg-red-500/60" : "bg-yellow-500/60"}`} />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Animated accent line */}
-              <div
-                className="absolute top-0 right-0 w-1 h-32 bg-gradient-to-b from-primary to-transparent opacity-60"
+            <div className="animate-fade-up" style={{ animationDelay: '0.15s', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 36 }}>
+              <Link
+                href={hero.primaryCta.href}
                 style={{
-                  animation: "pulse 3s ease-in-out infinite",
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '12px 26px', borderRadius: 9999,
+                  background: '#111', color: '#fff',
+                  fontSize: 14, fontWeight: 700, textDecoration: 'none',
+                  transition: 'opacity 0.15s',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
                 }}
-              />
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                {hero.primaryCta.label} <ArrowRight size={14} />
+              </Link>
+              <Link
+                href={hero.secondaryCta.href}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '12px 24px', borderRadius: 9999,
+                  border: '1.5px solid rgba(0,0,0,0.18)', background: 'rgba(255,255,255,0.7)',
+                  color: '#333', fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                  transition: 'border-color 0.15s, background 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.background = 'rgba(255,255,255,0.9)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.7)' }}
+              >
+                {hero.secondaryCta.label}
+              </Link>
+            </div>
+
+            {/* Trust badges */}
+            <div className="animate-fade-up" style={{ animationDelay: '0.22s', display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+              {hero.badges.map(({ icon: Icon, text }) => (
+                <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#555' }}>
+                  <Icon size={13} style={{ color: '#3d7a4f', flexShrink: 0 }} />
+                  {text}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -374,12 +479,67 @@ export default function HomePage() {
               className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
             >
               <div className="photo-card-inner absolute inset-0">
+      {/* ── Stats strip ── */}
+      <div style={{ background: '#111', color: '#fff', padding: '0 28px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
+          {stats.map(({ value, label }) => (
+            <div key={label} style={{ padding: '28px 24px', borderRight: '1px solid rgba(255,255,255,0.07)', textAlign: 'center' }}>
+              <p style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff', marginBottom: 4 }}>{value}</p>
+              <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── For Homeowners ── */}
+      <section id="homeowners" style={{ padding: '112px 28px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
+
+            {/* Text side */}
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
+                For homeowners &amp; landlords
+              </p>
+              <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#111' }}>
+                Stop chasing contractors.<br />Start getting results.
+              </h2>
+              <p style={{ fontSize: 16, color: '#555', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
+                Submit your request in under three minutes. We handle contractor selection, scheduling, and documentation from start to finish.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
+                {homeownerFeatures.map(({ icon: Icon, title, desc }) => (
+                  <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(61,122,79,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={18} style={{ color: '#3d7a4f' }} />
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: '#111' }}>{title}</p>
+                      <p style={{ fontSize: 13, color: '#666', lineHeight: 1.55 }}>{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/auth/sign-up"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, background: '#111', color: '#fff', fontSize: 14, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                Submit a request <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            {/* Image side */}
+            <div style={{ position: 'relative' }}>
+              <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
-                  src={src}
-                  alt={label}
+                  src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                  alt="Clean modern workspace"
                   fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  style={{ objectFit: 'cover' }}
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
@@ -389,73 +549,122 @@ export default function HomePage() {
               </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── About ── */}
-      <section id="about" className="py-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="grid gap-20 lg:grid-cols-[1fr_380px] lg:items-start">
-
-            <div className="space-y-7" data-animate>
-              <p className="font-mono-label text-primary">About Nexus Operations</p>
-              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] text-balance">
-                Nexus Operations is a property service management company headquartered in Topeka, Kansas.
-              </h2>
-              <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
-                <p>
-                  <strong className="text-foreground">We manage property maintenance, repair, and improvement projects on behalf of homeowners and property managers.</strong> Our platform handles the full lifecycle of a service request: intake and documentation review, contractor assignment from a verified network, consultation scheduling, estimate approval, project tracking, and permanent record storage.
-                </p>
-                <p>
-                  <strong className="text-foreground">Every contractor in the Nexus network is licensed and insured.</strong> Credentials are verified by Nexus staff prior to network activation. Each project is assigned to a single contractor who holds it exclusively through completion. Property owners receive documented estimates, project updates, and a permanent service record for every request.
-                </p>
-                <p>
-                  <strong className="text-foreground">Service history is stored on the platform indefinitely and used to generate maintenance recommendations.</strong> The Nexus reporting system identifies upcoming service intervals, recurring issues by trade category, and deferred maintenance items based on each property's actual records. Property managers with multiple addresses receive portfolio-level reporting across all managed properties.
-                </p>
-                <p>
-                  <strong className="text-foreground">For licensed contractors, the Nexus network provides a direct channel to pre-documented, pre-validated projects.</strong> Contractors receive notifications when requests are submitted in their trade and service area. Claimed projects include photographs, scope descriptions, and budget ceilings. There is no fee to join or participate in the network.
-                </p>
+              {/* Floating card */}
+              <div style={{
+                position: 'absolute', bottom: -20, left: -20,
+                background: '#fff', borderRadius: 16, padding: '16px 20px',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
+                display: 'flex', alignItems: 'center', gap: 12,
+                minWidth: 220,
+              }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: '#3d7a4f', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Clock size={18} style={{ color: '#fff' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>3 min avg. submit time</p>
+                  <p style={{ fontSize: 11.5, color: '#888' }}>Photos, scope, budget in one form</p>
+                </div>
               </div>
             </div>
-
-            {/* Sidebar facts */}
-            <div className="text-[12.5px] border-t border-border">
-              {[
-                ["Founded",                 "2025"],
-                ["Headquarters",            "Topeka, KS 66606"],
-                ["Service area",            "Shawnee County + surrounding"],
-                ["Phone",                   "(785) 428-0244"],
-                ["Email",                   "admin@nexusoperations.org"],
-                ["Contractors per project", "One, assigned exclusively"],
-                ["Contractor verification", "License · Insurance · Manual review"],
-                ["Post-project reporting",  "Included with every account"],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="flex justify-between gap-6 py-3.5 border-b border-border"
-                >
-                  <span className="text-muted-foreground shrink-0">{label}</span>
-                  <span className="text-right font-medium text-foreground">{value}</span>
-                </div>
-              ))}
-            </div>
-
           </div>
         </div>
       </section>
 
-      <div className="border-t border-border" />
+      {/* ── For Contractors ── */}
+      <section id="contractors" style={{ padding: '112px 28px', background: '#111' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
 
-      {/* ── Mission & Values ── */}
-      <section id="mission" className="py-28 bg-surface">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">Mission &amp; Values</p>
-            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every property owner deserves a complete, verified record of what has been maintained, when, and at what cost.
+            {/* Image side (first on mobile, second on desktop visually via CSS order) */}
+            <div style={{ position: 'relative', order: 0 }} className="lg:order-last">
+              <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
+                <Image
+                  src="/business-handshake-professional-meeting.jpg"
+                  alt="Professional contractor handshake"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.4) 100%)' }} />
+              </div>
+              {/* Floating card */}
+              <div style={{
+                position: 'absolute', bottom: -20, right: -20,
+                background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
+                display: 'flex', alignItems: 'center', gap: 12,
+                minWidth: 220,
+              }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(110,231,160,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <FileText size={18} style={{ color: '#6ee7a0' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Full documentation included</p>
+                  <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Budget &amp; scope visible upfront</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Text side */}
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6ee7a0', marginBottom: 16 }}>
+                For contractors
+              </p>
+              <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
+                  Every request fully documented before you arrive.
+              </h2>
+              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
+                Licensed, insured contractors in Topeka and surrounding areas get matched with property owners who have documented their project in full — scope, photos, budget, and scheduling all provided upfront.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
+                {contractorFeatures.map(({ icon: Icon, title, desc }) => (
+                  <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(110,231,160,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={18} style={{ color: '#6ee7a0' }} />
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: '#fff' }}>{title}</p>
+                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.55 }}>{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <Link
+                  href="/auth/sign-up?role=contractor"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, background: '#fff', color: '#111', fontSize: 14, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                >
+                  Join the network <ArrowRight size={14} />
+                </Link>
+                <Link
+                  href="#pricing"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
+                >
+                  View pricing <ExternalLink size={13} style={{ opacity: 0.6 }} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* ── How It Works ── */}
+      <section id="process" style={{ padding: '112px 28px', background: '#f5f3ef' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ maxWidth: 560, marginBottom: 72 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
+              The process
+            </p>
+            <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#111', marginBottom: 16 }}>
+              Request to record in four steps.
             </h2>
+            <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7 }}>
+              Every request follows the same clear path — no ambiguity, no dropped balls.
+            </p>
           </div>
 
           <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
@@ -477,326 +686,165 @@ export default function HomePage() {
                 body:  "Over time, your service history tells Nexus what your property needs and when. Recommendations are generated from your actual project records and maintenance intervals.",
               },
             ].map(({ label, body }, i) => (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
+            {steps.map(({ n, title, desc }, i) => (
               <div
-                key={label}
-                className="value-card rounded-2xl border border-border bg-card/50 p-5 backdrop-blur-sm"
-                data-animate
-                data-delay={String(i + 1)}
+                key={n}
+                style={{
+                  background: i === 1 ? '#3d7a4f' : '#f5f3ef',
+                  padding: '40px 32px',
+                  position: 'relative',
+                }}
               >
-                <p className="text-[13px] font-semibold text-foreground mb-3">{label}</p>
-                <p className="text-[13px] text-muted-foreground leading-[1.8]">{body}</p>
+                <span style={{
+                  display: 'inline-block',
+                  fontSize: 11, fontWeight: 800, letterSpacing: '0.12em',
+                  color: i === 1 ? 'rgba(255,255,255,0.5)' : '#3d7a4f',
+                  marginBottom: 20,
+                }}>
+                  {n}
+                </span>
+                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: i === 1 ? '#fff' : '#111', lineHeight: 1.3 }}>{title}</h3>
+                <p style={{ fontSize: 13.5, color: i === 1 ? 'rgba(255,255,255,0.65)' : '#666', lineHeight: 1.65 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── Platform ── */}
-      <section id="platform" className="py-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-16" data-animate>
-            <p className="font-mono-label text-primary mb-5">The platform</p>
-            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Three account types — homeowners, property managers, and contractors — each with dedicated tools and capabilities.
+      {/* ── Pricing ── */}
+      <section id="pricing" style={{ padding: '112px 28px', background: '#0d0d0d', color: '#fff' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ maxWidth: 600, marginBottom: 64 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6ee7a0', marginBottom: 16 }}>
+              Pricing
+            </p>
+            <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
+              Simple plans. Transparent per-job markup.
             </h2>
-          </div>
-
-          <div className="divide-y divide-border border-t border-b border-border">
-            {[
-              {
-                role: "Homeowners",
-                sub:  "Single-property owners",
-                body: "Your account is a service management dashboard for your property. Submit requests with photos and scope, track active projects in real time, review and approve contractor estimates, and access the complete history of everything Nexus has managed for you. Contractor selection, scheduling, and verification are handled by Nexus.",
-                href: "/auth/sign-up",
-                cta:  "Create account",
-              },
-              {
-                role: "Property Managers",
-                sub:  "Multi-property operators",
-                body: "A single account covers your entire portfolio. Each property has its own request history, cost record, and service documentation. Portfolio-level reporting shows maintenance spend by address and by trade category, flags overdue service intervals, and identifies recurring issues — so you can manage a portfolio's maintenance obligations without reconstructing records from scattered sources.",
-                href: "/auth/sign-up?role=property_manager",
-                cta:  "Create account",
-              },
-              {
-                role: "Contractors",
-                sub:  "Licensed tradespeople",
-                body: "Your account is a project feed. When a request is submitted in your trade and service area, you receive a notification. You decide whether to claim it. If you do, it is yours exclusively. You arrive at the job site with the full project file already in hand. There is no fee to join or participate in the network.",
-                href: "/auth/sign-up?role=contractor",
-                cta:  "Apply for access",
-              },
-            ].map(({ role, sub, body, href, cta }) => (
-              <div key={role} className="grid gap-8 py-10 lg:grid-cols-[200px_1fr_180px] lg:items-start">
-                <div>
-                  <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{role}</p>
-                  <p className="mt-2 text-[13.5px] font-semibold text-foreground">{sub}</p>
-                </div>
-                <div className="space-y-3 text-[14px] text-muted-foreground leading-[1.9] max-w-xl">
-                  <p>{body}</p>
-                </div>
-                <div className="lg:text-right">
-                  <Link
-                    href={href}
-                    className="group inline-flex items-center gap-1.5 text-[12.5px] font-medium text-primary hover:underline underline-offset-4"
-                  >
-                    {cta} <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── Services ── */}
-      <section id="services" className="py-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">Trade categories</p>
-            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Eight trade categories with licensed, insured contractors active in each.
-            </h2>
-            <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-2xl">
-              All requests must include photographs, a written scope, and a maximum budget before the project enters the contractor queue. The network expands as additional contractors are reviewed and approved.
+            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
+              A transparent markup on completed work. Subscription plans available for homeowners and contractors who need more capacity.
+              Start free, upgrade when you need more. Pro plans from <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
             </p>
           </div>
 
-          <div className="grid gap-x-16 sm:grid-cols-2 border-t border-border">
-            {services.map((s, i) => (
+          {/* Subscription plan highlights */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 48 }}>
+            {[
+              { label: 'Free', note: 'Up to 3 requests/yr', role: 'Homeowners & Contractors', accent: false },
+              { label: '$59/mo', note: `Billed annually ($${59 * 12}/yr)`, role: 'Pro — best value', accent: true },
+              { label: '$79/mo', note: 'Billed monthly', role: 'Pro — full flexibility', accent: false },
+            ].map(({ label, note, role, accent }) => (
               <div
-                key={s.name}
-                className={`service-card py-6 border-b border-border ${i % 2 === 1 ? "sm:border-l sm:pl-12 pl-offset" : ""}`}
-                data-animate
-                data-delay={String((i % 4) + 1)}
+                key={label}
+                style={{
+                  background: accent ? 'rgba(61,122,79,0.15)' : 'rgba(255,255,255,0.04)',
+                  border: accent ? '1px solid rgba(61,122,79,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 16,
+                  padding: '24px 24px',
+                }}
               >
-                <p className="text-[13px] font-semibold mb-2 text-foreground">{s.name}</p>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">{s.desc}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent ? '#6ee7a0' : 'rgba(255,255,255,0.35)', marginBottom: 8 }}>{role}</p>
+                <p style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.03em', color: accent ? '#6ee7a0' : '#fff', marginBottom: 4 }}>{label}</p>
+                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)' }}>{note}</p>
               </div>
             ))}
           </div>
-          <p className="mt-6 text-[12px] text-muted-foreground">
-            Need a trade not listed?{" "}
-            <a href="mailto:admin@nexusoperations.org" className="text-primary hover:underline underline-offset-4">
-              Contact us directly.
-            </a>
+
+          {/* Per-job markup by urgency */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
+            Per-job coordination markup
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 36 }}>
+            {pricingTiers.map(({ name, markup, sla, desc, featured }) => (
+              <div
+                key={name}
+                style={{
+                  background: featured ? '#fff' : 'rgba(255,255,255,0.04)',
+                  border: featured ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                  color: featured ? '#111' : '#fff',
+                  borderRadius: 20,
+                  padding: '28px 28px',
+                  position: 'relative',
+                  transition: 'transform 0.2s',
+                }}
+              >
+                {featured && (
+                  <span style={{
+                    position: 'absolute', top: 18, right: 18,
+                    fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                    padding: '4px 10px', borderRadius: 9999,
+                    background: '#3d7a4f', color: '#fff',
+                  }}>
+                    Most common
+                  </span>
+                )}
+                <p style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: featured ? '#666' : 'rgba(255,255,255,0.4)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{name}</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 44, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color: featured ? '#3d7a4f' : '#4ade80' }}>{markup}</span>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: featured ? '#888' : 'rgba(255,255,255,0.4)' }}>markup</span>
+                </div>
+                <p style={{ fontSize: 12, marginBottom: 16, color: featured ? '#888' : 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{sla}</p>
+                <p style={{ fontSize: 13, lineHeight: 1.65, color: featured ? '#444' : 'rgba(255,255,255,0.6)' }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+            <Link href="/pricing" style={{ color: '#6ee7a0', textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+              View full pricing details <ChevronRight size={14} />
+            </Link>
           </p>
         </div>
       </section>
 
-      <div className="border-t border-border" />
+      {/* ── Social proof / About ── */}
+      <section style={{ padding: '112px 28px', background: '#f5f3ef' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
 
-      {/* ── Reporting ── */}
-      <section id="reporting" className="py-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">Data-driven reporting</p>
-            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-2xl text-balance">
-              Every closed project generates a post-project report. Over time, that data builds a complete property service record.
-            </h2>
-          </div>
-
-          <div className="grid gap-20 lg:grid-cols-[1fr_360px] items-start">
-            <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
-              <p>
-                <strong className="text-foreground">Post-project reports are generated after every completed project.</strong> Each report covers three categories: financial data (total cost, cost breakdown by labor and materials, comparison to budget ceiling), efficiency metrics (time from submission to completion, contractor response time, consultation-to-estimate interval), and recommendations (follow-up items identified during the project, suggested maintenance intervals, related services to consider).
-              </p>
-              <p>
-                <strong className="text-foreground">Reports draw on historical, current, and cross-property data.</strong> Historical data includes all prior projects at the same address and within the same trade category. Current data covers the project just completed. Cross-property data, available to property managers, benchmarks performance and spend against other properties in the same portfolio and service area.
-              </p>
-              <p>
-                <strong className="text-foreground">The accumulated service record is a verified ownership asset.</strong> For insurance claims, sale documentation, refinancing, or due diligence, the Nexus service record provides a complete, timestamped history of what has been maintained, when, by whom, and at what cost. Property managers receive portfolio-level aggregation: spend by address, spend by trade, outstanding intervals, and recurring issue flags across all managed properties.
-              </p>
-            </div>
-
-            {/* Report categories */}
             <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-5">
-                Post-project report contents
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
+                Why Nexus
               </p>
-              <div className="border-t border-border text-[12.5px]">
-                {[
-                  ["Financial summary",       "Total cost, labor vs. materials breakdown, variance from budget ceiling."],
-                  ["Efficiency metrics",      "Time to completion, contractor response time, scheduling turnaround."],
-                  ["Historical comparison",   "Cost and timeline compared to prior projects in the same trade category."],
-                  ["Maintenance intervals",   "Recommended next service date based on trade standards and property history."],
-                  ["Follow-up items",         "Issues identified during the project that require separate attention."],
-                  ["Recurring issue flags",   "Patterns detected across multiple projects at the same address or trade."],
-                  ["Portfolio benchmarking",  "For property managers: performance comparison across managed addresses."],
-                ].map(([item, detail]) => (
-                  <div key={item} className="py-4 border-b border-border">
-                    <p className="font-semibold mb-1 text-foreground">{item}</p>
-                    <p className="text-muted-foreground leading-relaxed">{detail}</p>
-                  </div>
-                ))}
-              </div>
+              <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.12, color: '#111', marginBottom: 20 }}>
+                Not a marketplace.<br />An operational partner.
+              </h2>
+              <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 28 }}>
+                We don&apos;t just connect you and walk away. Nexus stays in the loop from intake to invoice — quality-checking, tracking contractor performance, and providing monthly reporting on every request.
+              </p>
+              <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 36 }}>
+                Founded in Topeka, Kansas in 2026, Nexus Operations was built specifically to serve property managers and owners who needed a coordination partner, not another vendor to manage.
+              </p>
+              <Link
+                href="/about"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, color: '#3d7a4f', textDecoration: 'none' }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                About Nexus <ArrowRight size={14} />
+              </Link>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <div className="border-t border-border" />
-
-      {/* ── Contractors ── */}
-      <section id="contractors" className="py-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-14" data-animate>
-            <p className="font-mono-label text-primary mb-5">For contractors</p>
-            <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-xl text-balance">
-              Join the Nexus contractor network. Receive pre-documented project notifications in your trade and service area.
-            </h2>
-          </div>
-
-          <div className="grid gap-16 lg:grid-cols-2 items-start">
-            <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9]">
-              <p>
-                The Nexus contractor network is free to join and free to use. There are no subscription fees, no per-claim charges, and no referral percentages. You receive project notifications, you decide which ones to take, and you get paid directly by the property owner. Nexus does not take a cut.
-              </p>
-              <p>
-                Every project you receive through Nexus comes with photographs, a written scope, and the owner's maximum budget — reviewed and validated by Nexus staff before you receive the notification. You arrive at consultations informed and prepared to provide an estimate.
-              </p>
-              <p>
-                Approval requires a current trade license and active general liability insurance, verified by Nexus staff. Once active, your account runs as long as your credentials remain current. We do not charge for renewals or ongoing participation.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/auth/sign-up?role=contractor"
-                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
-                >
-                  Apply for network access
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </div>
-
-              {/* Editorial photo */}
-              <div className="relative mt-6 h-52 overflow-hidden rounded-xl">
+            <div style={{ position: 'relative' }}>
+              <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
-                  src="/photo-work.jpg"
-                  alt="Contractor documenting project scope on site"
+                  src="/business-analytics-data-visualization.jpg"
+                  alt="Property analytics and data"
                   fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  style={{ objectFit: 'cover' }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
               </div>
-            </div>
-
-            {/* Requirements */}
-            <div>
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-5">
-                Application requirements
-              </p>
-              <div className="border-t border-border text-[12.5px]">
-                {[
-                  ["Active contractor license",    "Required for each applied trade. Must be current at application and maintained on renewal."],
-                  ["General liability insurance",  "Certificate of insurance required. Minimum coverage limits apply. Policy must remain active."],
-                  ["Shawnee County service area",  "Primary coverage required. Adjacent county coverage may be approved separately."],
-                  ["Manual review by Nexus staff", "All applications are reviewed individually. No account is activated automatically."],
-                ].map(([req, detail]) => (
-                  <div key={req} className="py-4 border-b border-border">
-                    <p className="font-semibold mb-1 text-foreground">{req}</p>
-                    <p className="text-muted-foreground leading-relaxed">{detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── CTA ── */}
-      <section className="py-28 bg-surface">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="grid gap-16 lg:grid-cols-2 items-center">
-            <div data-animate>
-              <p className="font-mono-label text-primary mb-5">Get started</p>
-              <h2 className="font-heading text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-balance">
-                Create an account and submit your first service request.
-              </h2>
-              <p className="mt-5 text-[14.5px] text-muted-foreground leading-[1.9] max-w-lg">
-                From the first project, Nexus assigns a verified contractor, schedules the consultation, manages estimate approval, and documents the completed work. Every project adds to your property's permanent service record.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/auth/sign-up"
-                  className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:opacity-90"
-                >
-                  Create a homeowner account
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-                <Link
-                  href="/auth/sign-up?role=property_manager"
-                  className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-2.5 text-[13px] font-medium text-foreground transition hover:border-foreground/30"
-                >
-                  Property manager account
-                </Link>
-              </div>
-            </div>
-            <div className="divide-y divide-border border-t border-b border-border">
-              {[
-                { href: "/faq",                             label: "Frequently asked questions",     sub: "Platform details, requirements, and policies" },
-                { href: "/auth/sign-up?role=contractor",    label: "Contractor network application", sub: "Free to join. Active license and insurance required." },
-                { href: "tel:+17854280244",                 label: "(785) 428-0244",                 sub: "Monday – Friday, 8 am – 6 pm CT" },
-                { href: "mailto:admin@nexusoperations.org", label: "admin@nexusoperations.org",      sub: "General inquiries and support" },
-              ].map(({ href, label, sub }) => (
-                <a
-                  key={href}
-                  href={href}
-                  className="group flex items-center justify-between py-4 transition-colors hover:border-primary/40"
-                >
-                  <div>
-                    <p className="text-[13.5px] font-medium text-foreground">{label}</p>
-                    <p className="text-[12px] text-muted-foreground mt-0.5">{sub}</p>
-                  </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary flex-shrink-0" />
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── Contact ── */}
-      <section id="contact" className="py-28">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="grid gap-20 lg:grid-cols-2 items-start">
-            <div>
-              <p className="font-mono-label text-primary mb-5">Contact</p>
-              <h2 className="font-heading text-[34px] font-bold leading-[1.15] tracking-[-0.01em] max-w-sm text-balance mb-10">
-                Headquarters: Topeka, Kansas. Serving Shawnee County and adjacent areas.
-              </h2>
-              <div className="space-y-5 text-[14.5px] text-muted-foreground leading-[1.9] mb-10">
-                <p>
-                  Nexus Operations is headquartered in Topeka, Kansas and currently serves Shawnee County and adjacent areas. As more contractors are approved, coverage expands outward.
-                </p>
-                <p>
-                  Outside our current service area? Contact us to be added to the geographic waitlist. We notify you when coverage reaches your location.
-                </p>
-              </div>
-              <div className="space-y-4">
-                <a
-                  href="tel:+17854280244"
-                  className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
-                >
-                  <Phone className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  (785) 428-0244. Monday through Friday, 8 am to 6 pm CT.
-                </a>
-                <a
-                  href="mailto:admin@nexusoperations.org"
-                  className="flex items-center gap-3 text-[13.5px] text-muted-foreground transition hover:text-foreground"
-                >
-                  <Mail className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  admin@nexusoperations.org
-                </a>
-                <p className="text-[12px] text-muted-foreground pt-1 pl-[1.375rem]">
-                  Nexus Operations, LLC. Topeka, KS 66606
-                </p>
+              {/* Stats overlay card */}
+              <div style={{
+                position: 'absolute', top: -20, right: -20,
+                background: '#fff', borderRadius: 16, padding: '20px 24px',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.10)',
+              }}>
+                <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
+                  {[1,2,3,4,5].map(i => <Star key={i} size={14} style={{ color: '#f59e0b', fill: '#f59e0b' }} />)}
+                </div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 4 }}>Verified &amp; insured contractors</p>
+                <p style={{ fontSize: 12, color: '#888' }}>Shawnee County network</p>
               </div>
             </div>
 
@@ -827,119 +875,120 @@ export default function HomePage() {
           <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
           <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
             Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <button className="h-11 px-7 bg-[var(--color-primary)] text-black text-[13px] font-bold rounded-full hover:bg-[var(--color-primary-hover)] transition-colors">
-              Start Your Project — Free
-            </button>
-            <button className="h-11 px-7 border border-[var(--color-border)] text-[var(--color-foreground)] text-[13px] font-semibold rounded-full hover:bg-[var(--color-surface-raised)] transition-colors">
-              Apply as a Contractor
-            </button>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="mailto:admin@nexusoperations.org"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Mail className="h-4 w-4" />
-              admin@nexusoperations.org
-            </a>
-            <a
-              href="tel:9139511711"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-muted"
-            >
-              <Phone className="h-4 w-4" />
-              (913) 951-1711
-            </a>
           </div>
         </div>
       </section>
 
+      {/* ── CTA band ── */}
+      <section style={{ background: '#3d7a4f', padding: '96px 28px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 680, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 16 }}>
+            Ready to simplify property maintenance?
+          </h2>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, marginBottom: 40 }}>
+            Create an account in minutes. Submit your first request the same day. Nexus handles the rest.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+            <Link
+              href="/auth/sign-up"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px', borderRadius: 9999, background: '#fff', color: '#111', fontSize: 15, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              Create an account <ArrowRight size={15} />
+            </Link>
+            <Link
+              href="/contact"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px', borderRadius: 9999, border: '1.5px solid rgba(255,255,255,0.4)', color: '#fff', fontSize: 15, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.9)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)')}
+            >
+              Contact us
+            </Link>
+          </div>
+        </div>
+      </section>
       {/* ── Footer ── */}
-      <footer className="border-t border-border py-16">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4 mb-14">
-            <div>
-              <Link href="/">
-                <Image
-                  src="/nexus-logo.png"
-                  alt="Nexus Operations"
-                  width={110}
-                  height={37}
-                  style={{ height: "24px", width: "auto" }}
-                />
+      <footer style={{ background: '#0a0a0a', color: 'rgba(255,255,255,0.5)', padding: '72px 28px 48px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 48, marginBottom: 56 }}>
+            {/* Brand */}
+            <div style={{ gridColumn: 'span 1' }}>
+              <Link href="/" style={{ display: 'inline-block', marginBottom: 16 }}>
+                <Image src="/nexus-logo.png" alt="Nexus Operations" width={120} height={40} style={{ height: 26, width: 'auto', filter: 'brightness(0) invert(1) opacity(0.85)' }} />
               </Link>
-              <p className="mt-5 text-[11.5px] text-muted-foreground leading-relaxed">
-                Managed property services for homeowners, landlords, and property managers in Topeka, Kansas.
+              <p style={{ fontSize: 13, lineHeight: 1.75, marginBottom: 20, maxWidth: 260 }}>
+                Managed property maintenance for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.
               </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <a href={CONTACT_INFO.phoneHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
+                  <Phone size={13} /> {CONTACT_INFO.phoneDisplay}
+                </a>
+                <a href={`mailto:${CONTACT_INFO.email}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
+                  <Mail size={13} /> {CONTACT_INFO.email}
+                </a>
+                <span style={{ display: 'inline-flex', alignItems: 'flex-start', gap: 7, fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+                  <MapPin size={13} style={{ marginTop: 2, flexShrink: 0 }} /> {CONTACT_INFO.addressLine1}, {CONTACT_INFO.cityStateZip}
+                </span>
+              </div>
             </div>
 
+            {/* Platform */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Platform</p>
-              <ul className="space-y-2.5">
+              <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Platform</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
-                  { href: "#about",     label: "About Nexus" },
-                  { href: "#platform",  label: "Platform" },
-                  { href: "#services",  label: "Services" },
-                  { href: "#reporting", label: "Reporting & Advisory" },
-                  { href: "/faq",       label: "FAQ" },
+                  { href: '#homeowners',   label: 'For Homeowners' },
+                  { href: '#contractors',  label: 'For Contractors' },
+                  { href: '#process',      label: 'How It Works' },
+                  { href: '#pricing',      label: 'Pricing' },
+                  { href: '/faq',          label: 'FAQ' },
                 ].map(({ href, label }) => (
-                  <li key={href}>
-                    <a href={href} className="text-[11.5px] text-muted-foreground transition hover:text-foreground">
-                      {label}
-                    </a>
-                  </li>
+                  <li key={href}><a href={href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.15s' }}>{label}</a></li>
                 ))}
               </ul>
             </div>
 
+            {/* Accounts */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Accounts</p>
-              <ul className="space-y-2.5">
+              <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Accounts</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
-                  { href: "/auth/sign-up",                       label: "Homeowner" },
-                  { href: "/auth/sign-up?role=property_manager", label: "Property Manager" },
-                  { href: "/auth/sign-up?role=contractor",       label: "Contractor Application" },
-                  { href: "/auth/login",                         label: "Sign In" },
+                  { href: '/auth/sign-up',                       label: 'Homeowner' },
+                  { href: '/auth/sign-up?role=property_manager', label: 'Property Manager' },
+                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor' },
+                  { href: '/auth/login',                         label: 'Sign In' },
                 ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-[11.5px] text-muted-foreground transition hover:text-foreground">
-                      {label}
-                    </Link>
-                  </li>
+                  <li key={href}><Link href={href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>{label}</Link></li>
                 ))}
               </ul>
             </div>
 
+            {/* Company */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-4">Legal</p>
-              <ul className="space-y-2.5">
+              <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Company</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
-                  { href: "/terms",   label: "Terms of Service" },
-                  { href: "/privacy", label: "Privacy Policy" },
-                  { href: "/sitemap", label: "Sitemap" },
+                  { href: '/about',   label: 'About Us' },
+                  { href: '/contact', label: 'Contact' },
+                  { href: '/terms',   label: 'Terms of Service' },
+                  { href: '/privacy', label: 'Privacy Policy' },
                 ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-[11.5px] text-muted-foreground transition hover:text-foreground">
-                      {label}
-                    </Link>
-                  </li>
+                  <li key={href}><Link href={href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>{label}</Link></li>
                 ))}
               </ul>
             </div>
           </div>
-
-          <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[11px] text-muted-foreground">
-            <p>&copy; 2026 Nexus Operations, LLC. Topeka, Kansas. All rights reserved.</p>
-            <div className="flex items-center gap-5">
-              <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>
-              <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
-              <Link href="/sitemap" className="hover:text-foreground transition">Sitemap</Link>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 28, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, fontSize: 12 }}>
+            <p>&copy; {new Date().getFullYear()} {CONTACT_INFO.companyName}. {CONTACT_INFO.cityState}. All rights reserved.</p>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <Link href="/terms"    style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>Terms</Link>
+              <Link href="/privacy"  style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>Privacy</Link>
+              <Link href="/site-map" style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>Sitemap</Link>
             </div>
           </div>
         </div>
       </footer>
-
-    </main>
+    </div>
   )
 }

@@ -1,17 +1,16 @@
+import type Stripe from "stripe"
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
 import { createClient } from "@/lib/supabase/server"
+import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-})
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 // Nexus platform fee: 15% of the invoice total
 const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
+  const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

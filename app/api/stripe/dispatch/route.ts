@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
 import { createClient } from "@/lib/supabase/server"
+import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-})
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 // Dispatch fee: $89.00 flat
 const DISPATCH_AMOUNT_CENTS = 8900
@@ -14,6 +11,7 @@ const DISPATCH_AMOUNT_CENTS = 8900
 const PLATFORM_FEE_CENTS = Math.round(DISPATCH_AMOUNT_CENTS * 0.15)
 
 export async function POST(req: Request) {
+  const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
