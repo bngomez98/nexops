@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, X, ArrowRight, Phone } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { CONTACT_INFO } from "@/lib/contact-info"
 
 // Header is only used on inner pages (not the home page which has its own header)
@@ -34,12 +35,16 @@ const GREEN = "#3aad58"
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+  const closeMobile = useCallback(() => setMobileOpen(false), [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
+
+  const isActive = (href: string) => pathname === href
 
   return (
     <header
@@ -50,9 +55,11 @@ export function Header() {
         right: 0,
         zIndex: 50,
         background: scrolled ? "rgba(10,10,10,0.96)" : "#0a0a0a",
-        backdropFilter: scrolled ? "blur(16px)" : undefined,
+        backdropFilter: scrolled ? "blur(20px) saturate(1.3)" : undefined,
+        WebkitBackdropFilter: scrolled ? "blur(20px) saturate(1.3)" : undefined,
         borderBottom: `1px solid ${scrolled ? BORDER : "transparent"}`,
-        transition: "border-color 0.3s, background 0.3s",
+        transition: "border-color 0.35s, background 0.35s, box-shadow 0.35s",
+        boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.2)" : "none",
       }}
     >
       {/* Top bar */}
@@ -60,14 +67,14 @@ export function Header() {
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 36, display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
           <p className="hidden sm:block">Fast, verified property maintenance coordination for homeowners and contractors.</p>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
-            <a href={CONTACT_INFO.phoneHref} style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "rgba(255,255,255,0.4)", textDecoration: "none", transition: "color 0.15s" }}
+            <a href={CONTACT_INFO.phoneHref} style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "rgba(255,255,255,0.4)", textDecoration: "none", transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
             >
               <Phone style={{ width: 11, height: 11 }} />
               {CONTACT_INFO.phoneDisplay}
             </a>
-            <Link href="/contractors" style={{ display: "inline-flex", alignItems: "center", gap: 4, color: GREEN, fontWeight: 600, textDecoration: "none", transition: "opacity 0.15s" }}
+            <Link href="/contractors" style={{ display: "inline-flex", alignItems: "center", gap: 4, color: GREEN, fontWeight: 600, textDecoration: "none", transition: "opacity 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
@@ -95,9 +102,21 @@ export function Header() {
               <Link
                 key={l.href}
                 href={l.href}
-                style={{ padding: "6px 14px", borderRadius: 9999, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.15s, background 0.15s" }}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: 9999,
+                  fontSize: 13,
+                  fontWeight: isActive(l.href) ? 600 : 500,
+                  color: isActive(l.href) ? "#fff" : "rgba(255,255,255,0.6)",
+                  textDecoration: "none",
+                  transition: "color 0.2s, background 0.2s",
+                  background: isActive(l.href) ? "rgba(255,255,255,0.08)" : "transparent",
+                }}
                 onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.06)" }}
-                onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.6)"; e.currentTarget.style.background = "transparent" }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = isActive(l.href) ? "#fff" : "rgba(255,255,255,0.6)"
+                  e.currentTarget.style.background = isActive(l.href) ? "rgba(255,255,255,0.08)" : "transparent"
+                }}
               >
                 {l.label}
               </Link>
@@ -106,15 +125,22 @@ export function Header() {
 
           {/* CTA buttons */}
           <div className="hidden lg:flex" style={{ alignItems: "center", gap: 12 }}>
-            <Link href="/auth/login" style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.55)", textDecoration: "none", transition: "color 0.15s" }}
+            <Link href="/auth/login" style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.55)", textDecoration: "none", transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
             >
               Sign In
             </Link>
-            <Link href="/auth/sign-up" style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 20px", borderRadius: 9999, background: GREEN, color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", transition: "opacity 0.15s, transform 0.15s", boxShadow: "0 0 20px rgba(58,173,88,0.3)" }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.88"; e.currentTarget.style.transform = "scale(1.02)" }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1)" }}
+            <Link href="/auth/sign-up" style={{
+              display: "inline-flex", alignItems: "center", gap: 7,
+              padding: "9px 20px", borderRadius: 9999,
+              background: GREEN, color: "#fff",
+              fontSize: 13, fontWeight: 700, textDecoration: "none",
+              transition: "transform 0.2s, box-shadow 0.2s",
+              boxShadow: "0 0 20px rgba(58,173,88,0.3)",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px) scale(1.02)"; e.currentTarget.style.boxShadow = "0 0 30px rgba(58,173,88,0.45)" }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(58,173,88,0.3)" }}
             >
               Get Started <ArrowRight style={{ width: 13, height: 13 }} />
             </Link>
@@ -141,10 +167,22 @@ export function Header() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  style={{ fontSize: 13.5, fontWeight: 500, color: "rgba(255,255,255,0.7)", padding: "10px 12px", borderRadius: 8, textDecoration: "none", transition: "background 0.15s, color 0.15s" }}
+                  style={{
+                    fontSize: 13.5,
+                    fontWeight: isActive(l.href) ? 600 : 500,
+                    color: isActive(l.href) ? "#fff" : "rgba(255,255,255,0.7)",
+                    padding: "10px 12px",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    transition: "background 0.2s, color 0.2s",
+                    background: isActive(l.href) ? "rgba(255,255,255,0.06)" : "transparent",
+                  }}
                   onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#fff" }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.7)" }}
-                  onClick={() => setMobileOpen(false)}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = isActive(l.href) ? "rgba(255,255,255,0.06)" : "transparent"
+                    e.currentTarget.style.color = isActive(l.href) ? "#fff" : "rgba(255,255,255,0.7)"
+                  }}
+                  onClick={closeMobile}
                 >
                   {l.label}
                 </Link>
@@ -156,10 +194,10 @@ export function Header() {
                 </a>
               </div>
               <div style={{ display: "flex", gap: 10, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BORDER}` }}>
-                <Link href="/auth/login" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", borderRadius: 8, border: `1px solid ${BORDER}`, textDecoration: "none" }} onClick={() => setMobileOpen(false)}>
+                <Link href="/auth/login" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.7)", borderRadius: 8, border: `1px solid ${BORDER}`, textDecoration: "none" }} onClick={closeMobile}>
                   Sign In
                 </Link>
-                <Link href="/auth/sign-up" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", fontSize: 13, fontWeight: 700, color: "#fff", borderRadius: 8, background: GREEN, textDecoration: "none" }} onClick={() => setMobileOpen(false)}>
+                <Link href="/auth/sign-up" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", fontSize: 13, fontWeight: 700, color: "#fff", borderRadius: 8, background: GREEN, textDecoration: "none" }} onClick={closeMobile}>
                   Get Started
                 </Link>
               </div>
