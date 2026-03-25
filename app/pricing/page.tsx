@@ -12,16 +12,16 @@ export const metadata: Metadata = {
 
 const subscriptionPlans = [
   {
-    name: "Basic",
-    price: { monthly: "Free", annual: "Free" },
+    name: "Starter",
+    price: { monthly: "Starter", annual: "Starter" },
     billingNote: { monthly: "", annual: "" },
-    description: "Get started with managed property services at no cost.",
+    description: "Ideal for occasional service requests with full platform access.",
     features: [
       "Up to 3 service requests per year",
       "Verified contractor assignment",
       "Real-time project tracking",
       "Digital project history",
-      "Basic email support",
+      "Email support",
     ],
     cta: "Get Started",
     ctaHref: "/auth/sign-up",
@@ -176,7 +176,7 @@ export default function PricingPage() {
                     <span className="text-4xl font-bold text-foreground tracking-tight">
                       {plan.price.monthly}
                     </span>
-                    {plan.price.monthly !== "Free" && (
+                    {plan.price.monthly !== "Starter" && (
                       <span className="text-sm text-muted-foreground ml-1">/mo</span>
                     )}
                   </div>
@@ -351,7 +351,7 @@ export default function PricingPage() {
                   href="/auth/sign-up"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
                 >
-                  Start for Free
+                  Get Started
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link

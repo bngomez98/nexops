@@ -84,8 +84,8 @@ const sections = [
         a: "Before claiming, you can see: the service category, a brief project description, the property address, the budget ceiling, the number of photos attached, and the property owner's availability windows. Full photo access and direct contact information are provided after you claim.",
       },
       {
-        q: "Is there a fee to join or claim requests?",
-        a: "The Nexus contractor network is free to join and free to use. There are no signup fees, monthly subscriptions, per-claim charges, or referral percentages. Contractors receive project notifications, claim work, and are paid directly by the property owner.",
+        q: "Is there a cost to join the Nexus contractor network?",
+        a: "Contractors start on our Starter plan which provides access to the open project board, up to 3 concurrent active projects, and direct client payments. Upgrading to Pro or Elite unlocks higher project capacity, priority matching, and advanced analytics.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",

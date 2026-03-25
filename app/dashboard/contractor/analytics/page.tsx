@@ -107,7 +107,7 @@ export default function AnalyticsDashboard() {
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Membership</p>
                   <p className="text-3xl font-bold text-foreground mt-1 capitalize">
-                    {profile?.membershipTier || 'Free'}
+                    {profile?.membershipTier || 'Starter'}
                   </p>
                 </div>
                 <Award className="w-7 h-7 text-primary opacity-60" />

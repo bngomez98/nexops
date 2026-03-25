@@ -26,6 +26,30 @@ export async function POST(
 
     const { id: projectId } = await params
 
+    // Check contractor qualifications
+    try {
+      const now = new Date().toISOString()
+      const { data: validDocs } = await supabase
+        .from('documents')
+        .select('type')
+        .eq('user_id', user.id)
+        .in('type', ['license', 'insurance'])
+        .or(`expires_at.is.null,expires_at.gt.${now}`)
+        .eq('status', 'approved')
+
+      const hasLicense = validDocs?.some(d => d.type === 'license') ?? false
+      const hasInsurance = validDocs?.some(d => d.type === 'insurance') ?? false
+
+      if (!hasLicense || !hasInsurance) {
+        return NextResponse.json({
+          error: 'Valid license and insurance documents required to claim projects.',
+          missingDocs: true,
+        }, { status: 403 })
+      }
+    } catch (docErr) {
+      console.error('[POST /api/projects/claim] doc check failed (allowing):', docErr)
+    }
+
     // Verify project is still claimable
     const { data: sr } = await supabase
       .from('service_requests')

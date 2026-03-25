@@ -3,11 +3,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, FileText, Briefcase, TrendingUp, Users,
-  Settings, LogOut, Menu, X, Bell, ChevronRight, Wrench,
-  Search, Moon, Sun, ChevronDown, Shield, User as UserIcon
+  Settings, LogOut, Menu, X, Bell, ChevronRight,
+  Search, ChevronDown, Shield, User as UserIcon
 } from 'lucide-react'
 
 interface NavItem {
@@ -27,8 +26,7 @@ const NAVIGATION_CONFIG: Record<string, NavItem[]> = {
   ],
   contractor: [
     { label: 'Command Center', href: '/dashboard/contractor', icon: LayoutDashboard, exact: true },
-    { label: 'Job Board', href: '/dashboard/contractor/jobs', icon: Briefcase, badge: 12 },
-    { label: 'Financials', href: '/dashboard/contractor/earnings', icon: TrendingUp },
+    { label: 'Job Board', href: '/dashboard/contractor/jobs', icon: Briefcase },
     { label: 'Performance Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp, exact: true },
   ],
   homeowner: [
@@ -38,9 +36,8 @@ const NAVIGATION_CONFIG: Record<string, NavItem[]> = {
   ],
   admin: [
     { label: 'System Operations', href: '/dashboard/admin', icon: Shield, exact: true },
-    { label: 'Global Requests', href: '/dashboard/admin/requests', icon: FileText, badge: 89 },
     { label: 'User Management', href: '/dashboard/admin/users', icon: Users },
-    { label: 'Financial Oversight', href: '/dashboard/admin/financials', icon: TrendingUp },
+    { label: 'Financial Oversight', href: '/dashboard/admin/invoices', icon: TrendingUp },
   ],
 }
 
@@ -75,8 +72,7 @@ export function DashboardLayout({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null)
   const navItems = resolveNavigation(userRole, pathname)
   const currentActiveItem = navItems.find(item => checkIsActive(item, pathname))
@@ -100,174 +96,182 @@ export function DashboardLayout({
   const userInitials = userName.split(' ').map(word => word[0]).slice(0, 2).join('').toUpperCase()
 
   return (
-    <div className={`min-h-screen w-full flex bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
-      
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen w-full flex bg-background text-foreground font-sans">
 
-      <motion.aside
-        initial={false}
-        animate={{ 
-          width: isDesktopCollapsed ? '80px' : '280px',
-          x: isMobileMenuOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? '-100%' : 0)
-        }}
-        transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-        className="fixed lg:relative top-0 left-0 h-screen z-50 flex flex-col bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 shadow-2xl lg:shadow-none"
+      {/* Mobile overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        style={{ width: isDesktopCollapsed ? '72px' : '256px', transition: 'width 0.25s cubic-bezier(0.22,1,0.36,1)' }}
+        className={`fixed lg:relative top-0 left-0 h-screen z-50 flex flex-col bg-sidebar border-r border-sidebar-border shadow-xl lg:shadow-none overflow-hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } transition-transform duration-200`}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
-          <Link href="/" className="flex items-center gap-3 overflow-hidden">
-            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-inner">
-              <Wrench className="w-4 h-4 text-white" />
+        {/* Logo */}
+        <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border shrink-0">
+          <Link href="/" className="flex items-center gap-3 overflow-hidden min-w-0">
+            <svg width="28" height="28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
+              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+              <line x1="60" y1="47" x2="60" y2="73" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
+              <line x1="47" y1="60" x2="73" y2="60" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
+            </svg>
+            <div className="overflow-hidden" style={{ opacity: isDesktopCollapsed ? 0 : 1, transition: 'opacity 0.2s ease', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>NEXUS</div>
+              <div style={{ fontSize: 7.5, fontWeight: 700, color: '#3aad58', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
             </div>
-            <motion.span 
-              animate={{ opacity: isDesktopCollapsed ? 0 : 1, display: isDesktopCollapsed ? 'none' : 'block' }}
-              className="text-sm font-bold tracking-wide whitespace-nowrap"
-            >
-              NEXUS OPS
-            </motion.span>
           </Link>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">
-            <X className="w-5 h-5" />
+          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-1.5 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-lg transition-colors">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-6 px-3 custom-scrollbar flex flex-col gap-1">
-          <motion.div 
-            animate={{ opacity: isDesktopCollapsed ? 0 : 1 }}
-            className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400"
+        {/* Nav items */}
+        <nav className="flex-1 overflow-y-auto py-4 px-2.5 scrollbar-thin flex flex-col gap-0.5">
+          <p
+            className="px-2 mb-2 text-[10px] font-semibold uppercase tracking-wider text-sidebar-muted overflow-hidden whitespace-nowrap"
+            style={{ opacity: isDesktopCollapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}
           >
-            {!isDesktopCollapsed && 'Menu'}
-          </motion.div>
-          
+            Navigation
+          </p>
+
           {navItems.map((item) => {
             const isActive = checkIsActive(item, pathname)
             const Icon = item.icon
             return (
-              <Link key={item.href} href={item.href} className="relative group">
-                {isActive && (
-                  <motion.div
-                    layoutId="activeNavIndicator"
-                    className="absolute inset-0 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50"
-                    initial={false}
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
-                  />
+              <Link
+                key={item.href}
+                href={item.href}
+                title={isDesktopCollapsed ? item.label : undefined}
+                className={`flex items-center gap-3 px-2.5 py-2.5 rounded-xl text-[13px] font-medium transition-all group relative overflow-hidden ${
+                  isActive
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm shadow-primary/20'
+                    : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span
+                  className="flex-1 whitespace-nowrap overflow-hidden"
+                  style={{ opacity: isDesktopCollapsed ? 0 : 1, width: isDesktopCollapsed ? 0 : 'auto', transition: 'opacity 0.15s ease, width 0.25s ease' }}
+                >
+                  {item.label}
+                </span>
+                {!isDesktopCollapsed && item.badge && (
+                  <span className="bg-primary/20 text-primary-foreground py-0.5 px-2 rounded-full text-[10px] font-bold shrink-0">
+                    {item.badge}
+                  </span>
                 )}
-                <div className={`relative flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors ${isActive ? 'text-blue-700 dark:text-blue-400 font-medium' : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-neutral-100'}`}>
-                  <div className="flex items-center gap-3 overflow-hidden">
-                    <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300'}`} />
-                    <motion.span animate={{ opacity: isDesktopCollapsed ? 0 : 1, width: isDesktopCollapsed ? 0 : 'auto' }} className="text-sm whitespace-nowrap">
-                      {item.label}
-                    </motion.span>
-                  </div>
-                  {!isDesktopCollapsed && item.badge && (
-                    <span className="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 py-0.5 px-2 rounded-full text-[10px] font-bold">
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
+                {isActive && !isDesktopCollapsed && (
+                  <ChevronRight className="w-3 h-3 ml-auto opacity-60 shrink-0" />
+                )}
               </Link>
             )
           })}
-        </div>
+        </nav>
 
-        <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
-          <button 
+        {/* Collapse toggle */}
+        <div className="p-3 border-t border-sidebar-border">
+          <button
             onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
-            className="hidden lg:flex w-full items-center justify-center py-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+            className="hidden lg:flex w-full items-center justify-center py-2 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
+            title={isDesktopCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${isDesktopCollapsed ? '' : 'rotate-180'}`} />
+            <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${isDesktopCollapsed ? '' : 'rotate-180'}`} />
           </button>
         </div>
-      </motion.aside>
+      </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <header className="h-16 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between px-4 lg:px-8 z-30">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-2 -ml-2 text-neutral-600 hover:bg-neutral-100 rounded-lg">
+      {/* Main content */}
+      <main className="flex-1 flex flex-col min-w-0 min-h-screen overflow-hidden">
+        {/* Topbar */}
+        <header className="sticky top-0 z-30 h-14 bg-card/95 backdrop-blur border-b border-border flex items-center justify-between px-4 lg:px-6 shrink-0">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-1.5 text-muted-foreground hover:bg-secondary rounded-lg transition-colors">
               <Menu className="w-5 h-5" />
             </button>
-            <h1 className="text-lg font-semibold text-neutral-900 dark:text-white hidden sm:block">
-              {pageTitle}
-            </h1>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground font-semibold">Portal</p>
+              <h1 className="text-[13px] font-semibold text-foreground leading-tight hidden sm:block">{pageTitle}</h1>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-5">
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-500 w-64 focus-within:ring-2 focus-within:ring-blue-500 transition-all">
-              <Search className="w-4 h-4" />
-              <input type="text" placeholder="Search operations..." className="bg-transparent border-none outline-none text-sm w-full placeholder:text-neutral-400 dark:placeholder:text-neutral-500 text-neutral-900 dark:text-white" />
-              <div className="flex items-center gap-1 text-[10px] font-medium opacity-50">
-                <kbd className="bg-white dark:bg-neutral-700 px-1.5 py-0.5 rounded shadow-sm border border-neutral-200 dark:border-neutral-600">⌘</kbd>
-                <kbd className="bg-white dark:bg-neutral-700 px-1.5 py-0.5 rounded shadow-sm border border-neutral-200 dark:border-neutral-600">K</kbd>
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Search */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-border text-muted-foreground w-56 focus-within:ring-2 focus-within:ring-primary/40 transition-all">
+              <Search className="w-3.5 h-3.5 shrink-0" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="bg-transparent border-none outline-none text-[12.5px] w-full placeholder:text-muted-foreground text-foreground"
+              />
+              <div className="flex items-center gap-0.5 text-[9px] font-medium opacity-40 shrink-0">
+                <kbd className="bg-background px-1 py-0.5 rounded border border-border">⌘K</kbd>
               </div>
             </div>
 
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors">
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {/* Notifications */}
+            <button className="relative p-1.5 text-muted-foreground hover:bg-secondary rounded-lg transition-colors">
+              <Bell className="w-4.5 h-4.5" />
+              <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-destructive rounded-full ring-2 ring-card" />
             </button>
 
-            <button className="relative p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-neutral-900" />
-            </button>
+            <div className="h-5 w-px bg-border" />
 
-            <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800" />
-
+            {/* Profile dropdown */}
             <div className="relative" ref={dropdownRef}>
-              <button 
+              <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="flex items-center gap-3 p-1 pr-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700"
+                className="flex items-center gap-2 p-1 pr-2 rounded-full hover:bg-secondary transition-colors border border-transparent hover:border-border"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold shadow-sm shrink-0">
                   {userInitials}
                 </div>
-                <div className="hidden sm:flex flex-col items-start">
-                  <span className="text-sm font-semibold leading-none">{userName}</span>
-                  <span className="text-[10px] text-neutral-500 uppercase tracking-wider mt-1">{userRole}</span>
+                <div className="hidden sm:flex flex-col items-start leading-none">
+                  <span className="text-[12.5px] font-semibold text-foreground">{userName}</span>
+                  <span className="text-[9px] text-muted-foreground uppercase tracking-wider mt-0.5">{userRole}</span>
                 </div>
-                <ChevronDown className="w-4 h-4 text-neutral-400 hidden sm:block" />
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground hidden sm:block" />
               </button>
 
-              <AnimatePresence>
-                {isProfileDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right"
-                  >
-                    <div className="p-4 border-b border-neutral-100 dark:border-neutral-800">
-                      <p className="text-sm font-semibold truncate">{userName}</p>
-                      <p className="text-xs text-neutral-500 truncate mt-0.5">{userEmail}</p>
-                    </div>
-                    <div className="p-1.5">
-                      <Link href="/dashboard/settings" className="flex items-center gap-2.5 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors">
-                        <UserIcon className="w-4 h-4" /> Account Settings
-                      </Link>
-                      {onLogout && (
-                        <button onClick={onLogout} className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors mt-1">
-                          <LogOut className="w-4 h-4" /> Sign Out
-                        </button>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-card border border-border rounded-xl shadow-xl overflow-hidden z-50 animate-fade-up origin-top-right">
+                  <div className="px-4 py-3 border-b border-border">
+                    <p className="text-[13px] font-semibold text-foreground truncate">{userName}</p>
+                    <p className="text-[11px] text-muted-foreground truncate mt-0.5">{userEmail}</p>
+                  </div>
+                  <div className="p-1.5">
+                    <Link
+                      href="/dashboard/homeowner/settings"
+                      className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-foreground/80 hover:bg-secondary hover:text-foreground rounded-lg transition-colors"
+                    >
+                      <UserIcon className="w-3.5 h-3.5" /> Account Settings
+                    </Link>
+                    {onLogout && (
+                      <button
+                        onClick={onLogout}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors mt-0.5"
+                      >
+                        <LogOut className="w-3.5 h-3.5" /> Sign Out
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto bg-neutral-50 dark:bg-neutral-950 p-4 lg:p-8">
-          <div className="max-w-7xl mx-auto h-full">
+        {/* Page content */}
+        <div className="flex-1 overflow-y-auto bg-background p-4 lg:p-6 animate-fade-up">
+          <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </div>
@@ -275,3 +279,4 @@ export function DashboardLayout({
     </div>
   )
 }
+

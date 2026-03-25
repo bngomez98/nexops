@@ -9,7 +9,7 @@ import { CONTACT_INFO } from "@/lib/contact-info"
 export const metadata: Metadata = {
   title: "Contact | Submit a Request or Apply as a Contractor",
   description:
-    `Submit a home service request or apply as a contractor. Free for homeowners. Licensed and insured contractors welcome. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
+    `Submit a home service request or apply as a contractor. For homeowners and property managers. Licensed and insured contractors welcome. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
 }
 
 export default function ContactPage() {

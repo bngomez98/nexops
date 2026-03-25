@@ -10,7 +10,7 @@ import {
   Settings, TrendingUp, ChevronRight, Briefcase,
   PlusCircle, CreditCard, ShieldCheck, User, Building2,
   ClipboardList, Receipt, Wallet, Home, FolderOpen,
-  Users, ShieldAlert, BarChart3, HelpCircle,
+  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare,
 } from 'lucide-react'
 
 interface NavItem {
@@ -24,6 +24,7 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
   homeowner: [
     { label: 'Dashboard',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
     { label: 'Requests',    href: '/dashboard/homeowner/requests',   icon: ClipboardList },
+    { label: 'Messages',    href: '/dashboard/messages',             icon: MessageSquare },
     { label: 'New Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
     { label: 'Properties',  href: '/dashboard/homeowner/properties', icon: Home },
     { label: 'Documents',   href: '/dashboard/homeowner/documents',  icon: FolderOpen },
@@ -35,6 +36,7 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
   contractor: [
     { label: 'Dashboard',   href: '/dashboard/contractor',              icon: LayoutDashboard, exact: true },
     { label: 'Jobs',        href: '/dashboard/contractor/jobs',         icon: Briefcase },
+    { label: 'Messages',    href: '/dashboard/messages',                icon: MessageSquare },
     { label: 'My Projects', href: '/dashboard/contractor/my-projects',  icon: ClipboardList, exact: true },
     { label: 'Invoices',    href: '/dashboard/contractor/invoices',     icon: Receipt },
     { label: 'Payments',    href: '/dashboard/contractor/payments',     icon: Wallet },

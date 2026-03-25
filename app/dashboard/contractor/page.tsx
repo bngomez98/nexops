@@ -238,7 +238,7 @@ export default function ContractorDashboard() {
               </p>
               <h1 className="text-2xl font-bold">{profile?.companyName || user.name}</h1>
               <p className="text-primary-foreground/80 text-sm mt-1 flex items-center gap-2">
-                <span className="capitalize">{profile?.membershipTier || 'Free'} plan</span>
+                <span className="capitalize">{profile?.membershipTier || 'Starter'} plan</span>
                 <span className="opacity-40">·</span>
                 <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active</span>
                 <span className="opacity-40">·</span>
@@ -471,7 +471,7 @@ export default function ContractorDashboard() {
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'free' },
+              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'starter' },
               { name: 'Enterprise',   price: '$749/mo', projects: 15, highlight: profile?.membershipTier === 'professional' },
             ].map(plan => (
               <div

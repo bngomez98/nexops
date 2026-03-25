@@ -172,6 +172,8 @@ function SignUpInner() {
 
           <div className="border-t border-border pt-6 space-y-3">
             {(isContractor
+              ? ["Join the verified contractor network", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
+              : ["One contractor per request", "No competing bids", "Permanent service record", "Licensed & insured contractors"]
               ? ["Free to join and participate", "Full project documentation provided", "Direct payment from owners", "License & insurance verified"]
               : ["One contractor per request", "Budget set by the owner", "Permanent service record", "Licensed & insured contractors"]
               ? ["Free to join and participate", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]

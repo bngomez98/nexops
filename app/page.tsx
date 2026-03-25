@@ -602,6 +602,7 @@ export default function HomePage() {
               Simple plans. Transparent per-job markup.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
+              A transparent markup on completed work. Subscription plans available for homeowners and contractors who need more capacity.
               Start free, upgrade when you need more. Pro plans from <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
             </p>
           </div>

@@ -120,7 +120,7 @@ export default function HomeownerBillingPage() {
               </div>
               <div>
                 <p className="font-bold text-foreground text-[15px]">
-                  {isPro ? 'Homeowner Pro' : 'Homeowner Basic (Free)'}
+                  {isPro ? 'Homeowner Pro' : 'Homeowner Starter'}
                 </p>
                 <p className="text-[12px] text-muted-foreground mt-0.5">
                   {isPro ? 'Active subscription · ' + (isAnnual ? '$59/mo (annual)' : '$79/mo (monthly)') : 'No active subscription'}
@@ -183,7 +183,7 @@ export default function HomeownerBillingPage() {
                     </div>
                     <div className="text-right flex-shrink-0 ml-3">
                       <p className="text-2xl font-bold text-foreground">
-                        {plan.priceInCents === 0 ? 'Free' : `$${plan.priceInCents / 100}`}
+                        {plan.priceInCents === 0 ? 'Starter' : `$${plan.priceInCents / 100}`}
                       </p>
                       {plan.priceInCents > 0 && (
                         <p className="text-[11px] text-muted-foreground">/month</p>
@@ -240,9 +240,7 @@ export default function HomeownerBillingPage() {
         <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground border border-border rounded-xl p-4">
           <Shield className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
           <span>
-            All payments are processed securely by{' '}
-            <span className="font-semibold text-foreground">Stripe</span>.
-            Your card details are never stored on our servers.
+            All payments are processed securely. Your card details are never stored on our servers.
           </span>
         </div>
       </main>

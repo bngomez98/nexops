@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useState, useCallback } from 'react'
+import { Suspense, useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
@@ -114,12 +114,23 @@ function HomeownerDashboardInner() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [tab, setTab] = useState<'all' | 'active' | 'completed'>('all')
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const loadRequests = useCallback(async () => {
     const res = await fetch('/api/projects/list?type=my-projects')
     if (res.ok) {
       const { projects } = await res.json()
-      setRequests(projects ?? [])
+      setRequests(prev => {
+        const newList = projects ?? []
+        const prevIds = new Set(prev.map((p: ServiceRequest) => p.id))
+        const hasNew = newList.some((p: ServiceRequest) => !prevIds.has(p.id))
+        if (hasNew && prev.length > 0) {
+          toast.success('Request status updated!')
+        }
+        return newList
+      })
+      setLastRefresh(new Date())
     }
   }, [])
 
@@ -143,6 +154,14 @@ function HomeownerDashboardInner() {
     }
     init()
   }, [router, loadRequests, params])
+
+  // Auto-poll every 30 seconds for status updates
+  useEffect(() => {
+    pollingRef.current = setInterval(loadRequests, 30000)
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [loadRequests])
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -216,7 +235,7 @@ function HomeownerDashboardInner() {
                 onClick={handleRefresh}
                 disabled={refreshing}
                 className="p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
-                title="Refresh"
+                title={`Last updated ${lastRefresh.toLocaleTimeString()} · Auto-refreshes every 30s`}
               >
                 <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
               </button>
@@ -380,7 +399,7 @@ function HomeownerDashboardInner() {
               iconBg: 'bg-violet-500/10',
               iconColor: 'text-violet-500',
               title: 'Billing & Subscription',
-              sub: `Current plan: ${user.subscriptionTier ?? 'Free'}`,
+              sub: `Current plan: ${user.subscriptionTier ?? 'Starter'}`,
             },
             {
               href: '/dashboard/homeowner/settings',
