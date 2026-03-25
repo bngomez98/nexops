@@ -113,7 +113,7 @@ const stats = [
 const heroContent = {
   homeowner: {
     badge: 'For Homeowners & Landlords',
-    heading: <>Property maintenance,<br />handled&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>end&nbsp;to&nbsp;end.</span></>,
+    heading: <>Property maintenance,<br />handled&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "var(--font-serif)", fontWeight: 400 }}>end&nbsp;to&nbsp;end.</span></>,
     subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
     primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
     secondaryCta: { href: '#process', label: 'See how it works' },
@@ -156,7 +156,7 @@ export default function HomePage() {
   const hero = heroContent[heroRole]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111', fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111' }}>
 
       {/* ── Announcement bar ── */}
       <div style={{ background: '#111', color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 500, textAlign: 'center', padding: '8px 24px', letterSpacing: '0.01em' }}>
