@@ -68,8 +68,8 @@ export default function ContractorPaymentsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Total Earned', value: `$${stats.totalPaid.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-            { label: 'Pending Payout', value: `$${stats.pendingPayout.toLocaleString()}`, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+            { label: 'Total Earned', value: `$${stats.totalPaid.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+            { label: 'Pending Payout', value: `$${stats.pendingPayout.toLocaleString()}`, icon: Clock, color: 'text-muted-foreground', bg: 'bg-muted' },
             { label: 'Total Invoices', value: stats.invoiceCount, icon: CreditCard, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
@@ -87,8 +87,8 @@ export default function ContractorPaymentsPage() {
 
         <div className="bg-card border border-border rounded-xl p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
-              <CreditCard className="w-5 h-5 text-violet-500" />
+            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+              <CreditCard className="w-5 h-5 text-muted-foreground" />
             </div>
             <div>
               <p className="text-[14px] font-semibold">Stripe Connect</p>
@@ -96,9 +96,9 @@ export default function ContractorPaymentsPage() {
             </div>
             <div className="ml-auto">
               {stripeAccountId ? (
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Connected</span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">Connected</span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Not Connected</span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-muted text-foreground/70">Not Connected</span>
               )}
             </div>
           </div>

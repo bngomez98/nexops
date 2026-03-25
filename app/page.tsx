@@ -347,6 +347,95 @@ export default function HomePage() {
         </div>
       </section>
 
+      <div className="border-t border-border" />
+
+      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
+      <section id="who-we-serve" className="py-24">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="mb-16 text-center" data-animate>
+            <p className="font-mono-label text-primary mb-4">Solutions</p>
+            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
+              Built for homeowners, contractors, and property managers.
+            </h2>
+          </div>
+
+          <div className="grid gap-12 sm:grid-cols-3">
+            {[
+              {
+                title: "Homeowners",
+                body: "Submit a service request and get matched with one verified contractor. Track everything from submission to completion.",
+                cta: "Create account",
+                href: "/auth/sign-up",
+              },
+              {
+                title: "Contractors",
+                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
+                cta: "Apply for access",
+                href: "/auth/sign-up?role=contractor",
+              },
+              {
+                title: "Property Managers",
+                body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
+                cta: "Create account",
+                href: "/auth/sign-up?role=property_manager",
+              },
+            ].map(({ title, body, cta, href }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
+                data-animate
+              >
+                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
+                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
+                  {cta} <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
+      {/* ── Photo Banner: Three user types (visual reference) ── */}
+      <section className="overflow-hidden border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
+          {[
+            {
+              src:     "/photo-homeowner.jpg",
+              label:   "For Homeowners",
+              caption: "One verified contractor. No bidding. No surprises.",
+            },
+            {
+              src:     "/photo-manager.jpg",
+              label:   "For Managers",
+              caption: "Portfolio-level tracking. Spend visibility across all properties.",
+            },
+            {
+              src:     "/photo-contractor.jpg",
+              label:   "For Contractors",
+              caption: "Documented project requests. No fees. Direct payment from owners.",
+            },
+          ].map(({ src, label, caption }) => (
+            <div
+              key={label}
+              className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
+            >
+              <div className="photo-card-inner absolute inset-0">
+                <Image src={src} alt={label} fill style={{ objectFit: 'cover' }} />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-1">{label}</p>
+                <p className="text-[13px] font-medium text-white leading-snug">{caption}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Stats strip ── */}
       <div style={{ background: '#111', color: '#fff', padding: '0 28px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
@@ -407,6 +496,7 @@ export default function HomePage() {
                   style={{ objectFit: 'cover' }}
                 />
               </div>
+              {/* Floating card */}
               <div style={{
                 position: 'absolute', bottom: -20, left: -20,
                 background: '#fff', borderRadius: 16, padding: '16px 20px',

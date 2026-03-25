@@ -95,7 +95,7 @@ export default function AnalyticsDashboard() {
                     {profile?.averageRating ? `${profile.averageRating.toFixed(1)}/5` : '—'}
                   </p>
                 </div>
-                <Star className="w-7 h-7 text-amber-500 opacity-60" />
+                <Star className="w-7 h-7 text-muted-foreground opacity-60" />
               </div>
               <p className="text-xs text-muted-foreground">
                 {profile?.totalReviews ?? 0} review{profile?.totalReviews !== 1 ? 's' : ''}

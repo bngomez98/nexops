@@ -79,9 +79,9 @@ export default function AdminUsersPage() {
                 </div>
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                   u.role === 'admin' ? 'bg-red-100 text-red-700' :
-                  u.role === 'contractor' ? 'bg-violet-100 text-violet-700' :
-                  u.role === 'property-manager' ? 'bg-sky-100 text-sky-700' :
-                  'bg-emerald-100 text-emerald-700'
+                  u.role === 'contractor' ? 'bg-muted text-foreground/70' :
+                  u.role === 'property-manager' ? 'bg-muted text-foreground/70' :
+                  'bg-muted text-foreground/70'
                 }`}>{fmt(u.role ?? 'unknown')}</span>
               </div>
             ))}
