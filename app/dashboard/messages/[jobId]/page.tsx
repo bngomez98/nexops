@@ -80,10 +80,10 @@ export default function ConversationPage() {
           const msgs = data.messages ?? []
           setMessages(msgs)
           setJobTitle(data.jobTitle ?? 'Project')
-          // Determine recipient from existing messages
-          const other = msgs.find(m => m.sender_id !== me.id || m.recipient_id !== me.id)
-          if (other) {
-            setRecipientId(other.sender_id === me.id ? other.recipient_id : other.sender_id)
+          // Determine recipient: pick the other participant from the first message
+          const first = msgs[0]
+          if (first) {
+            setRecipientId(first.sender_id === me.id ? first.recipient_id : first.sender_id)
           }
         }
       } catch {
@@ -240,8 +240,7 @@ export default function ConversationPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Type a message… (Enter to send, Shift+Enter for newline)"
                 rows={1}
-                className="flex-1 resize-none rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 min-h-[42px] max-h-[120px]"
-                style={{ fieldSizing: 'content' } as React.CSSProperties}
+                className="flex-1 resize-none rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 min-h-[42px] max-h-[120px] overflow-y-auto"
               />
               <Button
                 onClick={sendMessage}

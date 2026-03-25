@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     // Attempt auto-match in background (non-blocking)
     try {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
-      await fetch(`${baseUrl}/api/automation/match-contractor`, {
+      void fetch(`${baseUrl}/api/automation/match-contractor`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Cookie: request.headers.get('cookie') ?? '' },
         body: JSON.stringify({ projectId: sr.id }),
