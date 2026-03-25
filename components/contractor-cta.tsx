@@ -1,21 +1,21 @@
 import Link from "next/link"
-import { ArrowRight, ShieldCheck, Clock, DollarSign } from "lucide-react"
+import { ArrowRight, FileText, Clock, DollarSign } from "lucide-react"
 
 const benefits = [
   {
-    icon: ShieldCheck,
-    title: "Exclusive leads",
-    description: "Every lead you claim is yours alone. No competing with 5 other contractors for the same job.",
+    icon: FileText,
+    title: "Full project visibility before you commit",
+    description: "Scope, photos, budget, and owner-confirmed availability are all provided upfront. You know exactly what the job entails before accepting.",
   },
   {
     icon: Clock,
-    title: "Pre-qualified requests",
-    description: "Photos, specs, budget cap, and consultation times are provided before you claim. No wasted estimate visits.",
+    title: "One contractor per request",
+    description: "Nexus assigns a single qualified contractor per request, matched by trade and location. Review at your own pace and accept when ready.",
   },
   {
     icon: DollarSign,
-    title: "Predictable cost",
-    description: "Monthly subscription from $200-$400. No per-lead fees, no surprise charges, cancel anytime.",
+    title: "Flat monthly membership",
+    description: "One subscription covers access to available requests in your area. No commissions, no per-job fees — your earnings stay yours.",
   },
 ]
 
@@ -27,12 +27,12 @@ export function ContractorCTA() {
           <div>
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop wasting time on shared leads
+              Every request fully documented before you arrive
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              If you are a licensed, insured contractor in Topeka and surrounding areas,
-              Nexus Operations sends you exclusive leads with full project documentation.
-              First-come, first-served. No bidding wars.
+              Licensed, insured contractors in Topeka and surrounding areas get matched with
+              property owners who have documented their project in full — scope, photos, budget,
+              and scheduling all provided before you commit.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link

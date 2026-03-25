@@ -41,12 +41,12 @@ const contractorFeatures = [
   {
     icon: Eye,
     title: 'Full project visibility before you commit',
-    desc: 'Photos, scope, budget, and location are all visible before claiming.',
+    desc: 'Photos, scope, budget, and location are all provided upfront so you arrive prepared.',
   },
   {
     icon: Zap,
-    title: 'First-come, first-served — no bidding',
-    desc: 'Claim the jobs that match your trade and capacity.',
+    title: 'Matched by trade and location',
+    desc: 'Accept requests that fit your specialty and schedule at your own pace.',
   },
   {
     icon: CreditCard,
@@ -93,9 +93,41 @@ const stats = [
   { value: '0',      label: 'Hidden fees' },
 ]
 
+const heroContent = {
+  homeowner: {
+    badge: 'For Homeowners & Landlords',
+    heading: <>Property maintenance,<br />handled&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>end&nbsp;to&nbsp;end.</span></>,
+    subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
+    primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
+    secondaryCta: { href: '#process', label: 'See how it works' },
+    badges: [
+      { icon: Shield, text: 'Verified contractors only' },
+      { icon: Zap, text: 'Same-day assignment' },
+      { icon: CheckCircle2, text: 'Manually reviewed' },
+    ],
+    image: '/business-handshake-professional-meeting.jpg',
+    floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
+  },
+  contractor: {
+    badge: 'For Contractors',
+    heading: <>Pre-qualified jobs.<br />No bidding wars.<br />Faster&nbsp;payouts.</>,
+    subheading: 'Access exclusive service requests with photos, scope, and budget visible before you commit. Claim jobs that match your trade, get paid faster through unified invoicing.',
+    primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
+    secondaryCta: { href: '#pricing', label: 'View pricing' },
+    badges: [
+      { icon: Eye, text: 'Full scope before committing' },
+      { icon: CreditCard, text: 'Unified payout workflow' },
+      { icon: CheckCircle2, text: 'No competing quotes' },
+    ],
+    image: '/business-analytics-data-visualization.jpg',
+    floatingCard: { icon: FileText, title: 'Pre-qualified only', subtitle: 'Budget & scope visible upfront' },
+  },
+} as const
+
 export default function HomePage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [heroRole, setHeroRole] = useState<'homeowner' | 'contractor'>('homeowner')
   const heroRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -103,6 +135,8 @@ export default function HomePage() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const hero = heroContent[heroRole]
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111', fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
@@ -243,88 +277,106 @@ export default function HomePage() {
         style={{ position: 'relative', overflow: 'hidden' }}
       >
         {/* Background image with overlay */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, transition: 'opacity 0.4s' }}>
           <Image
-            src="/business-handshake-professional-meeting.jpg"
+            src={hero.image}
             alt=""
             fill
             priority
             style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
           />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(245,243,239,0.98) 0%, rgba(245,243,239,0.95) 40%, rgba(245,243,239,0.7) 68%, rgba(245,243,239,0.2) 100%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(245,243,239,0.98) 0%, rgba(245,243,239,0.96) 44%, rgba(245,243,239,0.72) 68%, rgba(245,243,239,0.18) 100%)' }} />
         </div>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', padding: '100px 28px 120px' }}>
-          <div style={{ maxWidth: 680 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(61,122,79,0.08)', border: '1px solid rgba(61,122,79,0.2)', borderRadius: 9999, padding: '6px 14px', marginBottom: 28 }}>
-              <MapPin size={13} style={{ color: '#3d7a4f' }} />
-              <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', color: '#3d7a4f' }}>{CONTACT_INFO.serviceArea}</span>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', padding: '68px 28px 80px' }}>
+          {/* Role toggle */}
+          <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.06)', borderRadius: 9999, padding: 4, marginBottom: 28, gap: 4 }}>
+            {(['homeowner', 'contractor'] as const).map(role => (
+              <button
+                key={role}
+                onClick={() => setHeroRole(role)}
+                style={{
+                  padding: '7px 18px',
+                  borderRadius: 9999,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                  background: heroRole === role ? '#fff' : 'transparent',
+                  color: heroRole === role ? '#111' : '#666',
+                  boxShadow: heroRole === role ? '0 1px 6px rgba(0,0,0,0.12)' : 'none',
+                }}
+              >
+                {role === 'homeowner' ? 'Homeowners' : 'Contractors'}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ maxWidth: 620 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(61,122,79,0.08)', border: '1px solid rgba(61,122,79,0.2)', borderRadius: 9999, padding: '5px 13px', marginBottom: 20 }}>
+              <MapPin size={12} style={{ color: '#3d7a4f' }} />
+              <span style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: '0.04em', color: '#3d7a4f' }}>{CONTACT_INFO.serviceArea}</span>
             </div>
 
             <h1
               className="animate-fade-up"
               style={{
-                fontSize: 'clamp(46px, 6.5vw, 80px)',
+                fontSize: 'clamp(34px, 4.8vw, 62px)',
                 fontWeight: 800,
-                lineHeight: 1.04,
+                lineHeight: 1.08,
                 letterSpacing: '-0.03em',
-                marginBottom: 24,
+                marginBottom: 20,
                 color: '#0d0d0d',
               }}
             >
-              Property maintenance,{' '}
-              <span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>coordinated</span>
-              {' '}start to finish.
+              {hero.heading}
             </h1>
 
             <p
               className="animate-fade-up"
-              style={{ animationDelay: '0.1s', fontSize: 18, lineHeight: 1.75, color: '#4a4a4a', maxWidth: 520, marginBottom: 40 }}
+              style={{ animationDelay: '0.08s', fontSize: 16.5, lineHeight: 1.72, color: '#4a4a4a', maxWidth: 500, marginBottom: 32 }}
             >
-              Submit one request. Nexus assigns one verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.
+              {hero.subheading}
             </p>
 
-            <div className="animate-fade-up" style={{ animationDelay: '0.2s', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginBottom: 48 }}>
+            <div className="animate-fade-up" style={{ animationDelay: '0.15s', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 36 }}>
               <Link
-                href="/auth/sign-up"
+                href={hero.primaryCta.href}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '14px 30px', borderRadius: 9999,
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '12px 26px', borderRadius: 9999,
                   background: '#111', color: '#fff',
-                  fontSize: 14.5, fontWeight: 700, textDecoration: 'none',
+                  fontSize: 14, fontWeight: 700, textDecoration: 'none',
                   transition: 'opacity 0.15s',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
               >
-                Submit a request <ArrowRight size={15} />
+                {hero.primaryCta.label} <ArrowRight size={14} />
               </Link>
               <Link
-                href="#process"
+                href={hero.secondaryCta.href}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '14px 28px', borderRadius: 9999,
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '12px 24px', borderRadius: 9999,
                   border: '1.5px solid rgba(0,0,0,0.18)', background: 'rgba(255,255,255,0.7)',
-                  color: '#333', fontSize: 14.5, fontWeight: 600, textDecoration: 'none',
+                  color: '#333', fontSize: 14, fontWeight: 600, textDecoration: 'none',
                   transition: 'border-color 0.15s, background 0.15s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.background = 'rgba(255,255,255,0.9)' }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.7)' }}
               >
-                See how it works
+                {hero.secondaryCta.label}
               </Link>
             </div>
 
             {/* Trust badges */}
-            <div className="animate-fade-up" style={{ animationDelay: '0.3s', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-              {[
-                { icon: Shield,       text: 'Verified contractors only' },
-                { icon: Zap,          text: 'Same-day assignment' },
-                { icon: CheckCircle2, text: 'Manually reviewed' },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 500, color: '#555' }}>
-                  <Icon size={14} style={{ color: '#3d7a4f', flexShrink: 0 }} />
+            <div className="animate-fade-up" style={{ animationDelay: '0.22s', display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+              {hero.badges.map(({ icon: Icon, text }) => (
+                <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#555' }}>
+                  <Icon size={13} style={{ color: '#3d7a4f', flexShrink: 0 }} />
                   {text}
                 </div>
               ))}
@@ -356,7 +408,7 @@ export default function HomePage() {
                 For homeowners &amp; landlords
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#111' }}>
-                One request.<br />One contractor.<br />Zero coordination work.
+                Stop chasing contractors.<br />Start getting results.
               </h2>
               <p style={{ fontSize: 16, color: '#555', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
                 Submit your request in under three minutes. We handle contractor selection, scheduling, and documentation from start to finish.
@@ -445,7 +497,7 @@ export default function HomePage() {
                   <FileText size={18} style={{ color: '#6ee7a0' }} />
                 </div>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Pre-qualified jobs only</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Full documentation included</p>
                   <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Budget &amp; scope visible upfront</p>
                 </div>
               </div>
@@ -457,10 +509,10 @@ export default function HomePage() {
                 For contractors
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
-                Stop paying for leads that go nowhere.
+                  Every request fully documented before you arrive.
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
-                Nexus delivers pre-qualified, exclusive requests with full scope visible before you commit. No competing quotes, no blind visits.
+                Licensed, insured contractors in Topeka and surrounding areas get matched with property owners who have documented their project in full — scope, photos, budget, and scheduling all provided upfront.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
@@ -547,14 +599,42 @@ export default function HomePage() {
               Pricing
             </p>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
-              Pay for work completed, not retainers.
+              Simple plans. Transparent per-job markup.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
               A transparent markup on completed work. Subscription plans available for homeowners and contractors who need more capacity.
+              Start free, upgrade when you need more. Pro plans from <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, marginBottom: 36 }}>
+          {/* Subscription plan highlights */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 48 }}>
+            {[
+              { label: 'Free', note: 'Up to 3 requests/yr', role: 'Homeowners & Contractors', accent: false },
+              { label: '$59/mo', note: `Billed annually ($${59 * 12}/yr)`, role: 'Pro — best value', accent: true },
+              { label: '$79/mo', note: 'Billed monthly', role: 'Pro — full flexibility', accent: false },
+            ].map(({ label, note, role, accent }) => (
+              <div
+                key={label}
+                style={{
+                  background: accent ? 'rgba(61,122,79,0.15)' : 'rgba(255,255,255,0.04)',
+                  border: accent ? '1px solid rgba(61,122,79,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 16,
+                  padding: '24px 24px',
+                }}
+              >
+                <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent ? '#6ee7a0' : 'rgba(255,255,255,0.35)', marginBottom: 8 }}>{role}</p>
+                <p style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.03em', color: accent ? '#6ee7a0' : '#fff', marginBottom: 4 }}>{label}</p>
+                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)' }}>{note}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Per-job markup by urgency */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
+            Per-job coordination markup
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 36 }}>
             {pricingTiers.map(({ name, markup, sla, desc, featured }) => (
               <div
                 key={name}
@@ -563,14 +643,14 @@ export default function HomePage() {
                   border: featured ? 'none' : '1px solid rgba(255,255,255,0.08)',
                   color: featured ? '#111' : '#fff',
                   borderRadius: 20,
-                  padding: '36px 32px',
+                  padding: '28px 28px',
                   position: 'relative',
                   transition: 'transform 0.2s',
                 }}
               >
                 {featured && (
                   <span style={{
-                    position: 'absolute', top: 20, right: 20,
+                    position: 'absolute', top: 18, right: 18,
                     fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
                     padding: '4px 10px', borderRadius: 9999,
                     background: '#3d7a4f', color: '#fff',
@@ -578,13 +658,13 @@ export default function HomePage() {
                     Most common
                   </span>
                 )}
-                <p style={{ fontSize: 12, fontWeight: 700, marginBottom: 12, color: featured ? '#666' : 'rgba(255,255,255,0.4)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{name}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: featured ? '#666' : 'rgba(255,255,255,0.4)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{name}</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
-                  <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color: featured ? '#3d7a4f' : '#4ade80' }}>{markup}</span>
-                  <span style={{ fontSize: 14, fontWeight: 500, color: featured ? '#888' : 'rgba(255,255,255,0.4)' }}>markup</span>
+                  <span style={{ fontSize: 44, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color: featured ? '#3d7a4f' : '#4ade80' }}>{markup}</span>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: featured ? '#888' : 'rgba(255,255,255,0.4)' }}>markup</span>
                 </div>
-                <p style={{ fontSize: 12, marginBottom: 20, color: featured ? '#888' : 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{sla}</p>
-                <p style={{ fontSize: 13.5, lineHeight: 1.65, color: featured ? '#444' : 'rgba(255,255,255,0.6)' }}>{desc}</p>
+                <p style={{ fontSize: 12, marginBottom: 16, color: featured ? '#888' : 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{sla}</p>
+                <p style={{ fontSize: 13, lineHeight: 1.65, color: featured ? '#444' : 'rgba(255,255,255,0.6)' }}>{desc}</p>
               </div>
             ))}
           </div>

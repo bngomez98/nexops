@@ -87,7 +87,7 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
     }
     if (role === 'contractor') {
       return [
-        { label: 'Browse leads', href: '/dashboard/contractor', icon: PlusCircle },
+        { label: 'Browse requests', href: '/dashboard/contractor', icon: PlusCircle },
         { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp },
       ]
     }

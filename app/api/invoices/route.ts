@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { sendInvoiceSentClientEmail } from '@/lib/email'
 
 /** Nexus fee rates by urgency tier */
 const FEE_RATES: Record<string, number> = {
@@ -68,6 +69,44 @@ export async function POST(request: NextRequest) {
     if (insertError) {
       console.error('Invoice insert error:', insertError)
       return NextResponse.json({ error: 'Failed to create invoice' }, { status: 500 })
+    }
+
+    // Send invoice email to client when status is 'sent' (fire-and-forget)
+    if (invoice.status === 'sent') {
+      ;(async () => {
+        try {
+          const { getAdminClient } = await import('@/lib/supabase/admin')
+          const admin = getAdminClient()
+          const { data: clientAuth } = await admin.auth.admin.getUserById(job.client_id)
+          const clientEmail = clientAuth.user?.email
+          if (!clientEmail) return
+
+          const { data: clientProfile } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('user_id', job.client_id)
+            .maybeSingle()
+
+          const { data: contractorProfile } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('user_id', user.id)
+            .maybeSingle()
+
+          await sendInvoiceSentClientEmail({
+            to:             clientEmail,
+            clientName:     clientProfile?.full_name ?? 'Client',
+            contractorName: contractorProfile?.full_name ?? 'Your contractor',
+            serviceType:    job.service_type,
+            subtotal,
+            nexusFee,
+            total,
+            jobId:          job_id,
+          })
+        } catch (err) {
+          console.error('[invoices] email error:', err)
+        }
+      })()
     }
 
     return NextResponse.json({ invoice })
