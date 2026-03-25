@@ -34,7 +34,7 @@ const sections: { label: string; links: SiteMapLink[] }[] = [
     links: [
       { href: "/auth/sign-up",                       label: "Create Account",         desc: "Register as a homeowner, property manager, or contractor" },
       { href: "/auth/sign-up?role=property_manager", label: "Property Manager",       desc: "Register as a property manager" },
-      { href: "/auth/sign-up?role=contractor",       label: "Contractor Application", desc: "Apply to join the Nexus contractor network" },
+      { href: "/auth/sign-up?role=contractor",       label: "Contractor Sign Up", desc: "Sign up to join the Nexus contractor network" },
       { href: "/auth/login",                         label: "Sign In",                desc: "Log in to your Nexus Operations account" },
     ],
   },

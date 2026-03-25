@@ -153,7 +153,7 @@ function HomeownerDashboardInner() {
     setRefreshing(true)
     await loadRequests()
     setRefreshing(false)
-    toast.success('Refreshed')
+    toast.success('Requests refreshed')
   }
 
   if (loading) {
@@ -284,8 +284,10 @@ function HomeownerDashboardInner() {
               </p>
               <p className="text-sm text-muted-foreground mb-6 max-w-xs">
                 {tab === 'all'
-                  ? 'Post your first service request and get matched with a verified contractor.'
-                  : `You have no ${tab} requests at this time.`}
+                  ? 'Submit your first service request and get matched with a verified contractor.'
+                  : tab === 'active'
+                  ? 'No active requests right now. Submit a new request to get started.'
+                  : 'Completed requests will appear here once work is finished and confirmed.'}
               </p>
               {tab === 'all' && (
                 <Link
@@ -293,7 +295,7 @@ function HomeownerDashboardInner() {
                   className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity"
                 >
                   <Plus className="w-4 h-4" />
-                  Post First Request
+                  Submit First Request
                 </Link>
               )}
             </div>

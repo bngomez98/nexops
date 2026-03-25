@@ -15,7 +15,7 @@ const subscriptionPlans = [
     name: "Basic",
     price: { monthly: "Free", annual: "Free" },
     billingNote: { monthly: "", annual: "" },
-    description: "Get started with managed property services at no cost.",
+    description: "Start managing your property maintenance with no upfront commitment.",
     features: [
       "Up to 3 service requests per year",
       "Verified contractor assignment",
@@ -90,7 +90,7 @@ const serviceTiers = [
     markup: "30%",
     sla: "Assigned within 4 hrs · On-site next business day",
     description:
-      "Issues requiring prompt attention. Non-emergency plumbing, electrical, HVAC in moderate weather.",
+      "Issues requiring prompt attention. Non-emergency plumbing, electrical work, or HVAC in moderate weather conditions.",
     features: [
       "Everything in Routine",
       "Contractor assigned within 4 hours",
@@ -344,7 +344,7 @@ export default function PricingPage() {
                 Ready to get started?
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                Join homeowners and property managers who trust Nexus Operations for reliable, coordinated maintenance.
+                Join homeowners and property managers across Topeka who rely on Nexus Operations for reliable, fully coordinated property maintenance.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link

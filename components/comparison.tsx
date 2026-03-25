@@ -2,7 +2,7 @@ import { Check, X } from "lucide-react"
 
 const rows = [
   { feature: "Lead exclusivity", us: "1 contractor per request", them: "3-7 contractors per lead" },
-  { feature: "Homeowner cost", us: "Free, always", them: "$0 but data sold" },
+  { feature: "Homeowner cost", us: "Free to start; optional subscription", them: "$0 but your data is sold to contractors" },
   { feature: "Budget transparency", us: "Set upfront by homeowner", them: "Discovered after estimate visit" },
   { feature: "Photo documentation", us: "Required before match", them: "Optional or not available" },
   { feature: "Consultation scheduling", us: "Pre-scheduled, confirmed", them: "Phone tag and callbacks" },

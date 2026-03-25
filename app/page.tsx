@@ -23,7 +23,7 @@ const services = [
 
 const stats = [
   { value: '8',    label: 'Trade categories' },
-  { value: '$0',   label: 'Contractor cost' },
+  { value: '$0',   label: 'Fee for contractors' },
   { value: '1',    label: 'Contractor per request' },
   { value: '100%', label: 'Manually reviewed' },
 ]
@@ -32,7 +32,7 @@ const steps = [
   { step: '01', title: 'Submit your request',    desc: 'Describe the work needed, upload photos, and set a budget ceiling. Takes under three minutes.' },
   { step: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor from our network, matched by trade and location.' },
   { step: '03', title: 'Work gets done',          desc: 'Your contractor contacts you directly, schedules the visit, and completes the project on your timeline.' },
-  { step: '04', title: 'Keep a complete record',  desc: 'Every completed project is saved in a permanent record with costs, timelines, photos, and follow-up details.' },
+  { step: '04', title: 'Keep a complete record',  desc: 'Every completed project is saved in a permanent, searchable record with costs, timelines, photos, and follow-up details.' },
 ]
 
 export default function HomePage() {
@@ -216,7 +216,7 @@ export default function HomePage() {
               <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 animate-fade-up" style={{ animationDelay: '0.42s' }}>
                 {[
                   { icon: Shield, text: 'Verified contractors only' },
-                  { icon: Zap,    text: 'Same-day contractor assignment' },
+                  { icon: Zap,    text: 'Fast, guaranteed contractor assignment' },
                   { icon: Star,   text: 'No fees for contractors to join' },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
@@ -524,7 +524,7 @@ export default function HomePage() {
               Pay for work completed, not retainers.
             </h2>
             <p className="mt-4 text-[15px] text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Nexus charges a transparent markup on completed maintenance work. No subscriptions. No hidden fees. Aligned with delivery.
+              Per-job pricing based on urgency. You pay the contractor's quoted rate plus a transparent coordination markup — nothing hidden, nothing extra.
             </p>
           </div>
 
@@ -779,7 +779,7 @@ export default function HomePage() {
                 {[
                   { href: '/auth/sign-up',                       label: 'Homeowner account',        sub: 'Submit requests and track projects.' },
                   { href: '/auth/sign-up?role=property_manager', label: 'Property manager account',  sub: 'Portfolio-level visibility.' },
-                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor application',    sub: 'Join the verified contractor network.' },
+                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor sign up',        sub: 'Join the verified contractor network.' },
                   { href: '/faq',                                label: 'FAQ',                       sub: 'Platform details and policies.' },
                 ].map(({ href, label, sub }) => (
                   <Link
@@ -850,7 +850,7 @@ export default function HomePage() {
                 {[
                   { href: '/auth/sign-up',                       label: 'Homeowner' },
                   { href: '/auth/sign-up?role=property_manager', label: 'Property Manager' },
-                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor Application' },
+                  { href: '/auth/sign-up?role=contractor',       label: 'Contractor Sign Up' },
                   { href: '/auth/login',                         label: 'Sign In' },
                 ].map(({ href, label }) => (
                   <li key={href}>
