@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server"
-import { getStripeClient } from "@/lib/stripe/server"
 import { createClient } from "@/lib/supabase/server"
+import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 // Contractor lands here after completing (or abandoning) Stripe Express onboarding.
 // We retrieve the account to check its current verification state and update the profile.
 export async function GET() {
   const stripe = getStripeClient()
-  if (!stripe) {
-    return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
-  }
-
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

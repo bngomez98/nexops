@@ -1,80 +1,70 @@
-"use client"
+'use client'
 
-import { Suspense, useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
+import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
-  CheckCircle,
-  AlertCircle,
-  Loader2,
-  CreditCard,
-  ExternalLink,
-  Shield,
-  Zap,
-  AlertTriangle,
-  Check,
-} from "lucide-react"
-import { StripePricingTable } from "@/components/billing/stripe-pricing-table"
+  Check, Crown, Loader2, ExternalLink, ArrowLeft,
+  CreditCard, Shield, AlertCircle, Zap, Star, TrendingUp,
+} from 'lucide-react'
+import { toast } from 'sonner'
 
-const PRICING_TABLE_ID   = "prctbl_1TBPE0EFsbUunf9StQYzYJqe"
-const STRIPE_PUBLISHABLE = "pk_live_51T6KiTEFsbUunf9SZCRohOy2iHhyoL7HgIign7xKmfzR9837SYXDDlSKdd60E5Ft5vRy7yffafvip2agiwYyxMkc000v1nxqFJ"
+interface UserData {
+  id: string
+  name: string
+  role: string
+  subscriptionTier?: string
+  subscriptionStatus?: string
+}
 
-type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled" | null
-
-function ContractorBillingContent() {
-  const [loading, setLoading]             = useState(true)
+export default function ContractorBillingPage() {
+  const router = useRouter()
+  const [user, setUser] = useState<UserData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+  const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
-  const [error, setError]                 = useState<string | null>(null)
-  const [success, setSuccess]             = useState<string | null>(null)
-  const [subStatus, setSubStatus]         = useState<SubscriptionStatus>(null)
-  const [userEmail, setUserEmail]         = useState<string | undefined>(undefined)
-  const [userId, setUserId]               = useState<string | undefined>(undefined)
 
-  const searchParams = useSearchParams()
+  const plans = getPlansByRole('contractor')
 
   useEffect(() => {
-    async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      setUserEmail(user.email ?? undefined)
-      setUserId(user.id)
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("subscription_status")
-        .eq("id", user.id)
-        .single()
-
-      setSubStatus((profile?.subscription_status as SubscriptionStatus) ?? null)
-      setLoading(false)
-    }
-    load()
-
-    const billingParam = searchParams.get("billing")
-    if (billingParam === "success") {
-      setSuccess("Your subscription is now active. Welcome to the Nexus contractor network.")
-      setSubStatus("active")
-    } else if (billingParam === "canceled") {
-      setError("Checkout was canceled. Your subscription has not been changed.")
-    }
-  }, [searchParams])
-
-  const handleBillingPortal = async () => {
-    setPortalLoading(true)
-    setError(null)
-    try {
-      const res  = await fetch("/api/stripe/portal", { method: "POST" })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        setError(data.error ?? "Could not open billing portal. Please try again.")
+    async function init() {
+      try {
+        const res = await fetch('/api/auth/me')
+        if (!res.ok) { router.push('/auth/login'); return }
+        const { user: u } = await res.json()
+        if (u.role !== 'contractor') { router.push('/dashboard/homeowner/billing'); return }
+        setUser(u)
+      } catch {
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
       }
+    }
+    init()
+  }, [router])
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/auth/login')
+  }
+
+  async function handleUpgrade(planId: string) {
+    setCheckoutPlanId(planId)
+  }
+
+  async function handleManageBilling() {
+    setPortalLoading(true)
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) { toast.error(data.error || 'Failed to open billing portal'); return }
+      window.location.href = data.url
     } catch {
-      setError("Could not open billing portal. Please try again.")
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setPortalLoading(false)
     }
@@ -82,223 +72,197 @@ function ContractorBillingContent() {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
       </div>
     )
   }
+  if (!user) return null
 
-  const isActive  = subStatus === "active" || subStatus === "trialing"
-  const isPastDue = subStatus === "past_due"
+  const currentPlan = user.subscriptionTier ?? 'contractor_free'
+  const isActive = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
+  const isPaid = currentPlan !== 'contractor_free' && isActive
+
+  const planLabels: Record<string, string> = {
+    contractor_free: 'Contractor Starter',
+    contractor_pro: 'Contractor Pro · $79/mo',
+    contractor_elite: 'Contractor Elite · $199/mo',
+  }
+
+  const maxProjects: Record<string, string> = {
+    contractor_free: '3 active projects',
+    contractor_pro: '10 active projects',
+    contractor_elite: 'Unlimited projects',
+  }
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="mx-auto max-w-4xl px-6 py-8">
+    <div className="min-h-screen bg-background">
+      {checkoutPlanId && (
+        <EmbeddedCheckoutModal
+          planId={checkoutPlanId}
+          onClose={() => setCheckoutPlanId(null)}
+        />
+      )}
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
+      <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-8">
 
-        {/* Page header */}
-        <div className="mb-8">
-          <h1 className="text-xl font-bold tracking-tight">Billing & Subscription</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage your Nexus contractor membership, payment method, and billing history.
+        {/* Header */}
+        <div>
+          <Link href="/dashboard/contractor" className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors mb-5">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to dashboard
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight">Billing & Subscription</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Manage your membership and unlock more project capacity.
           </p>
         </div>
 
-        {/* Status alerts */}
-        {success && (
-          <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/8 px-4 py-3.5">
-            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
-              <CheckCircle className="h-3.5 w-3.5 text-primary" />
+        {/* Current plan */}
+        <div className={`rounded-2xl border p-6 ${
+          isPaid ? 'border-primary/30 bg-primary/5' : 'border-border bg-card'
+        }`}>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                isPaid ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
+              }`}>
+                {isPaid ? <Crown className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
+              </div>
+              <div>
+                <p className="font-bold text-foreground text-[15px]">
+                  {planLabels[currentPlan] ?? currentPlan}
+                </p>
+                <p className="text-[12px] text-muted-foreground mt-0.5">
+                  {maxProjects[currentPlan] ?? '—'}
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-primary">{success}</p>
+            {isPaid && (
+              <button
+                onClick={handleManageBilling}
+                disabled={portalLoading}
+                className="inline-flex items-center gap-2 text-[12.5px] font-semibold text-primary border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors px-4 py-2 rounded-xl"
+              >
+                {portalLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ExternalLink className="w-3.5 h-3.5" />}
+                Manage billing
+              </button>
+            )}
           </div>
-        )}
-        {error && (
-          <div className="mb-6 flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3.5">
-            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-destructive/15">
-              <AlertCircle className="h-3.5 w-3.5 text-destructive" />
+
+          {user.subscriptionStatus === 'past_due' && (
+            <div className="mt-4 flex items-center gap-2.5 text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3 text-[12px]">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>Your payment is past due. Please update your payment method to avoid losing access.</span>
             </div>
-            <p className="text-sm text-destructive">{error}</p>
-          </div>
-        )}
-        {isPastDue && (
-          <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-4 py-3.5">
-            <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-amber-500/15">
-              <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+          )}
+        </div>
+
+        {/* Why upgrade callout */}
+        {!isPaid && (
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 flex items-start gap-4">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-amber-500">Payment past due</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                Your last payment failed. Update your payment method to restore full access.
+              <p className="font-semibold text-foreground text-[13.5px] mb-1">Grow your business with a paid plan</p>
+              <p className="text-[12.5px] text-muted-foreground leading-relaxed">
+                Contractors on paid plans earn significantly more — more project slots means more revenue. Upgrade today to take on more work without limits.
               </p>
             </div>
           </div>
         )}
 
-        {/* Active subscription card */}
-        {(isActive || isPastDue) && (
-          <section className="mb-8 overflow-hidden rounded-xl border border-border bg-card">
-            <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
-              <h2 className="text-sm font-semibold">Current Subscription</h2>
-              <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
-                isActive
-                  ? "border-primary/25 bg-primary/10 text-primary"
-                  : "border-amber-500/25 bg-amber-500/10 text-amber-500"
-              }`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${isActive ? "bg-primary" : "bg-amber-500"}`} />
-                {subStatus === "trialing" ? "Trial" : subStatus === "past_due" ? "Past Due" : "Active"}
-              </span>
-            </div>
-            <div className="p-5 space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/15">
-                    <CreditCard className="h-4.5 w-4.5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">Nexus Contractor Membership</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Full access to all open requests in your service area
+        {/* Plans grid */}
+        <div>
+          <h2 className="font-bold text-foreground text-[17px] mb-1">Plans</h2>
+          <p className="text-[13px] text-muted-foreground mb-5">
+            All plans include access to the verified Nexus contractor network.
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
+            {plans.map((plan: Plan) => {
+              const isCurrent = currentPlan === plan.id
+              const isHighlighted = plan.highlighted
+
+              return (
+                <div
+                  key={plan.id}
+                  className={`relative rounded-2xl border p-5 flex flex-col transition-all ${
+                    isHighlighted
+                      ? 'border-primary/40 bg-primary/5 shadow-lg shadow-primary/10'
+                      : 'border-border bg-card'
+                  }`}
+                >
+                  {plan.badge && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[10px] font-bold px-3 py-1 rounded-full tracking-wide">
+                        <Star className="w-2.5 h-2.5" />
+                        {plan.badge}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="mb-4">
+                    <h3 className="font-bold text-foreground text-[14px]">{plan.name}</h3>
+                    <p className="text-[11.5px] text-muted-foreground mt-1 leading-relaxed">{plan.description}</p>
+                    <p className="text-2xl font-bold text-foreground mt-3">
+                      {plan.priceInCents === 0 ? 'Starter' : `$${plan.priceInCents / 100}`}
+                      {plan.priceInCents > 0 && (
+                        <span className="text-[12px] font-normal text-muted-foreground">/mo</span>
+                      )}
                     </p>
                   </div>
+
+                  <ul className="space-y-2 mb-5 flex-1">
+                    {plan.features.map(f => (
+                      <li key={f} className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                        <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {isCurrent ? (
+                    <div className="flex items-center justify-center gap-2 py-2 rounded-xl bg-secondary text-secondary-foreground text-[12px] font-semibold">
+                      <Check className="w-3.5 h-3.5" />
+                      Current Plan
+                    </div>
+                  ) : plan.priceInCents < (plans.find(p => p.id === currentPlan)?.priceInCents ?? 0) ? (
+                    <button disabled className="py-2 rounded-xl bg-secondary text-secondary-foreground text-[12px] font-semibold opacity-40 cursor-not-allowed">
+                      Downgrade
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleUpgrade(plan.id)}
+                      disabled={checkoutLoading === plan.id}
+                      className={`flex items-center justify-center gap-1.5 py-2 rounded-xl text-[12px] font-semibold transition-all ${
+                        isHighlighted
+                          ? 'bg-primary text-primary-foreground hover:opacity-90'
+                          : 'border border-border hover:border-primary hover:text-primary bg-background'
+                      }`}
+                    >
+                      {checkoutLoading === plan.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Zap className="w-3.5 h-3.5" />
+                      )}
+                      Upgrade
+                    </button>
+                  )}
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleBillingPortal}
-                  disabled={portalLoading}
-                  className="gap-1.5 flex-shrink-0 text-xs"
-                >
-                  {portalLoading
-                    ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    : <ExternalLink className="h-3.5 w-3.5" />}
-                  Manage Billing
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted/40 p-4 sm:grid-cols-2">
-                {[
-                  "Unlimited access to open requests",
-                  "Real-time project notifications",
-                  "Full scope and budget before claiming",
-                  "Direct payment, no referral fees",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Check className="h-3 w-3 flex-shrink-0 text-primary" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              <p className="text-xs text-muted-foreground">
-                To update your payment method, view past invoices, or cancel, use the{" "}
-                <button
-                  onClick={handleBillingPortal}
-                  className="text-primary underline-offset-4 hover:underline"
-                >
-                  Stripe billing portal
-                </button>
-                .
-              </p>
-            </div>
-          </section>
-        )}
-
-        {/* Plan selection - Stripe Pricing Table */}
-        {!isActive && !isPastDue && (
-          <section className="mb-8">
-            <div className="mb-6">
-              <h2 className="text-[22px] font-bold leading-tight tracking-tight">
-                Get full access to the Nexus contractor network.
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground max-w-xl">
-                One flat rate. No per-request charges, no referral fees, no hidden costs. Cancel anytime.
-              </p>
-            </div>
-            <StripePricingTable
-              pricingTableId={PRICING_TABLE_ID}
-              publishableKey={STRIPE_PUBLISHABLE}
-              clientReferenceId={userId}
-              customerEmail={userEmail}
-            />
-          </section>
-        )}
-
-        {/* How billing works */}
-        <section className="overflow-hidden rounded-xl border border-border bg-card mb-6">
-          <div className="border-b border-border px-5 py-3.5">
-            <h2 className="text-sm font-semibold">How Billing Works</h2>
+              )
+            })}
           </div>
-          <div className="divide-y divide-border">
-            {[
-              {
-                icon: CreditCard,
-                title: "Flat monthly membership fee",
-                body:  "One predictable charge per billing cycle. No additional fees when you claim requests or complete jobs.",
-              },
-              {
-                icon: Zap,
-                title: "Processed securely by Stripe",
-                body:  "All payment processing is handled by Stripe. Nexus never stores your card details or bank information.",
-              },
-              {
-                icon: Shield,
-                title: "Cancel or pause anytime",
-                body:  "Manage your subscription, update your payment method, or cancel entirely from the Stripe billing portal — no contact required.",
-              },
-              {
-                icon: CheckCircle,
-                title: "Payouts via Stripe Connect",
-                body:  "Job payments from property owners are processed through Stripe Connect and deposited directly to your linked bank account.",
-              },
-            ].map(({ icon: Icon, title, body }) => (
-              <div key={title} className="flex items-start gap-4 px-5 py-4">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                  <Icon className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[12.5px] font-semibold text-foreground">{title}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">{body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Trust note */}
-        <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3.5 text-xs text-muted-foreground">
-          <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
-          <p>
-            Nexus Operations uses Stripe for all payment processing. Your card details are encrypted and stored securely by Stripe — never by Nexus.
-            Questions about billing? Visit the{" "}
-            <a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="text-primary underline-offset-4 hover:underline">
-              Help Center
-            </a>
-            {" "}or call{" "}
-            <a href="tel:+17854280244" className="text-primary underline-offset-4 hover:underline">
-              (785) 428-0244
-            </a>
-            .
-          </p>
         </div>
 
-      </div>
+        {/* Security */}
+        <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground border border-border rounded-xl p-4">
+          <Shield className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+          <span>
+            All payments are processed securely. Your card details are never stored on our servers.
+          </span>
+        </div>
+      </main>
     </div>
-  )
-}
-
-function BillingLoadingFallback() {
-  return (
-    <div className="flex h-64 items-center justify-center">
-      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-    </div>
-  )
-}
-
-export default function ContractorBillingPage() {
-  return (
-    <Suspense fallback={<BillingLoadingFallback />}>
-      <ContractorBillingContent />
-    </Suspense>
   )
 }

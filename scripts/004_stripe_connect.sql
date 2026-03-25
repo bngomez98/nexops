@@ -35,10 +35,12 @@ create table if not exists public.payments (
 alter table public.payments enable row level security;
 
 -- Homeowner (payer) can view their own payments
+drop policy if exists "payments_payer_select" on public.payments;
 create policy "payments_payer_select" on public.payments
   for select using (auth.uid() = payer_id);
 
 -- Contractor can view payments where they receive funds
+drop policy if exists "payments_contractor_select" on public.payments;
 create policy "payments_contractor_select" on public.payments
   for select using (auth.uid() = contractor_id);
 
@@ -48,3 +50,9 @@ create index if not exists payments_stripe_session_id_idx
 
 create index if not exists payments_stripe_payment_intent_id_idx
   on public.payments (stripe_payment_intent_id);
+
+
+drop trigger if exists set_payments_updated_at on public.payments;
+create trigger set_payments_updated_at
+  before update on public.payments
+  for each row execute function public.set_updated_at();

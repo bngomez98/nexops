@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-
 import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const stripe = getStripeClient()
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 // Dispatch fee: $89.00 flat
 const DISPATCH_AMOUNT_CENTS = 8900
@@ -13,13 +11,7 @@ const DISPATCH_AMOUNT_CENTS = 8900
 const PLATFORM_FEE_CENTS = Math.round(DISPATCH_AMOUNT_CENTS * 0.15)
 
 export async function POST(req: Request) {
-  if (!stripe) {
-    return NextResponse.json(
-      { error: "Dispatch checkout is temporarily unavailable. Stripe is not fully configured." },
-      { status: 500 },
-    )
-  }
-
+  const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

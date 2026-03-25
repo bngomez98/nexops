@@ -1,66 +1,55 @@
-import { NextResponse } from "next/server"
-import { getStripeClient } from "@/lib/stripe/server"
-import { createClient } from "@/lib/supabase/server"
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
-const staticPortalUrl = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL ?? null
-
-const stripe = getStripeClient()
+import { NextResponse } from 'next/server'
+import { getSiteUrl } from '@/lib/env'
+import { getStripeClient } from '@/lib/stripe/server'
+import { createClient } from '@/lib/supabase/server'
+import { ensureStripeCustomer } from '@/lib/stripe/customer'
 
 export async function POST() {
-  if (!stripe) {
-    return NextResponse.json(
-      { error: "Billing is temporarily unavailable. Stripe is not fully configured." },
-      { status: 500 },
-    )
-  }
-
   try {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("stripe_customer_id")
-      .eq("id", user.id)
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('stripe_customer_id, stripe_subscription_id, role, full_name, subscription_status')
+      .eq('id', user.id)
       .single()
 
-    if (profileError) {
-      return NextResponse.json({ error: "Unable to load your billing profile." }, { status: 500 })
+    if (!profile) {
+      return NextResponse.json({ error: 'Billing profile not found' }, { status: 404 })
     }
 
-    if (!profile?.stripe_customer_id) {
-      // No Stripe customer yet — fall back to the static Customer Portal login URL
-      // so contractors can still access portal features (e.g. test mode).
-      if (staticPortalUrl) {
-        return NextResponse.json({ url: staticPortalUrl })
-      }
-      return NextResponse.json(
-        { error: "No Stripe billing account was found for your profile. Contact support to complete setup." },
-        { status: 400 },
-      )
-    }
+    const customerId = await ensureStripeCustomer({
+      supabase,
+      userId: user.id,
+      email: user.email,
+      fullName: profile.full_name,
+      stripeCustomerId: profile.stripe_customer_id,
+    })
 
-    const role = user.user_metadata?.role || "homeowner"
-    const returnPath = role === "contractor"
-      ? "/dashboard/contractor/settings"
-      : "/dashboard/billing"
+    const stripe = getStripeClient()
+    const returnPath = profile.role === 'contractor'
+      ? '/dashboard/contractor/billing'
+      : '/dashboard/homeowner/billing'
+
+    const returnUrl = `${getSiteUrl()}${returnPath}`
 
     const session = await stripe.billingPortal.sessions.create({
-      customer: profile.stripe_customer_id,
-      return_url: `${siteUrl}${returnPath}`,
+      customer: customerId,
+      return_url: returnUrl,
+      flow_data: profile.subscription_status === 'past_due' || profile.stripe_subscription_id
+        ? {
+            type: 'payment_method_update',
+          }
+        : undefined,
     })
 
     return NextResponse.json({ url: session.url })
-  } catch {
-    // If session creation fails, fall back to the static portal URL if available.
-    if (staticPortalUrl) {
-      return NextResponse.json({ url: staticPortalUrl })
-    }
-    return NextResponse.json({ error: "We could not open the Stripe billing portal. Please try again." }, { status: 500 })
+  } catch (err) {
+    console.error('[POST /api/stripe/portal]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

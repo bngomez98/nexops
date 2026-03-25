@@ -1,10 +1,37 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ChevronRight } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 export const metadata = {
   title: "FAQ | Nexus Operations",
-  description: "Frequently asked questions about Nexus Operations — property service coordination in Topeka, KS.",
+  description:
+    "Frequently asked questions about Nexus Operations — how to submit service requests, contractor verification, exclusive assignment, fees, and platform policies in Topeka, KS.",
+  keywords: [
+    "Nexus Operations FAQ",
+    "how to hire contractor Topeka",
+    "contractor verification Topeka KS",
+    "property service questions",
+    "home repair FAQ Topeka",
+    "contractor claims process",
+    "property manager FAQ",
+    "homeowner service request help",
+  ],
+  alternates: {
+    canonical: "https://nexusoperations.org/faq",
+  },
+  openGraph: {
+    title: "FAQ | Nexus Operations",
+    description:
+      "Everything you need to know about submitting requests, contractor verification, exclusive assignment, and platform policies.",
+    url: "https://nexusoperations.org/faq",
+    type: "article",
+  },
+  twitter: {
+    title: "FAQ | Nexus Operations",
+    description:
+      "Everything you need to know about submitting requests, contractor verification, exclusive assignment, and platform policies.",
+  },
 }
 
 const sections = [
@@ -12,8 +39,8 @@ const sections = [
     category: "Property Owners",
     questions: [
       {
-        q: "What does it cost to submit a service request?",
-        a: "Property owners and property managers submit requests through a Nexus account. There are no per-request charges or hidden fees associated with submitting a request.",
+        q: "How do I submit a service request?",
+        a: "Log in to your account, select the trade category, upload project photos, describe the scope of work, set a maximum budget, and provide your availability for a contractor consultation. Requests that meet all documentation requirements are routed to the contractor network.",
       },
       {
         q: "What information is required to submit a request?",
@@ -37,7 +64,7 @@ const sections = [
       },
       {
         q: "I manage multiple properties. Can one account cover all of them?",
-        a: "Yes. Property manager accounts support multiple property addresses under a single login, with per-property request history and tracking. Register as a Property Manager during sign-up or contact our support team to upgrade an existing account.",
+        a: `Yes. Property manager accounts support multiple property addresses under a single login, with per-property request history and tracking. Register as a Property Manager during sign-up or contact ${CONTACT_INFO.email} to upgrade an existing account.`,
       },
     ],
   },
@@ -46,7 +73,7 @@ const sections = [
     questions: [
       {
         q: "What is required to join as a contractor?",
-        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license), proof of current general liability insurance, and completion of a background check. Applications without all three items will not be approved.",
+        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license) and proof of current general liability insurance. All applications are reviewed manually by Nexus Operations staff. Applications missing required documentation will not be approved.",
       },
       {
         q: "How does the claim process work?",
@@ -57,12 +84,12 @@ const sections = [
         a: "Before claiming, you can see: the service category, a brief project description, the property address, the budget ceiling, the number of photos attached, and the property owner's availability windows. Full photo access and direct contact information are provided after you claim.",
       },
       {
-        q: "Is there a fee to claim requests?",
-        a: "Individual claims are not charged per-claim. Contractors pay a monthly membership that provides access to all open requests in their service area and categories. Membership details are available after completing the contractor application.",
+        q: "Is there a cost to join the Nexus contractor network?",
+        a: "Contractors start on our Starter plan which provides access to the open project board, up to 3 concurrent active projects, and direct client payments. Upgrading to Pro or Elite unlocks higher project capacity, priority matching, and advanced analytics.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",
-        a: "Contact our support team as soon as possible via the Help Center or by calling (785) 428-0244. The request may be released back to the open pool at Nexus Operations' discretion. Repeated failures to honor claimed consultations will result in account suspension.",
+        a: `Contact ${CONTACT_INFO.email} as soon as possible. The request may be released back to the open pool at Nexus Operations' discretion. Repeated failures to honor claimed consultations will result in account suspension.`,
       },
       {
         q: "Can I set which request types and geographic area I receive?",
@@ -79,11 +106,7 @@ const sections = [
       },
       {
         q: "How are contractors verified?",
-        a: "All contractors must submit a current contractor license, active insurance certificate, and consent to a background check before account approval. Documentation is reviewed manually by Nexus Operations staff. Accounts are not automatically approved.",
-      },
-      {
-        q: "Are there fake jobs or fake service requests on the platform?",
-        a: "No. Only real, user-submitted service requests appear on the portal — not templated or fabricated jobs. Requests are published only after required project details are provided and the account is verified. Suspected fraud is manually reviewed and removed.",
+        a: "All contractors must submit a current contractor license and active insurance certificate before account approval. Documentation is reviewed manually by Nexus Operations staff. Credentials must remain current for continued network access.",
       },
       {
         q: "What happens to my submitted photos and project data?",
@@ -91,15 +114,35 @@ const sections = [
       },
       {
         q: "How do I contact Nexus Operations for support?",
-        a: "Phone: (785) 428-0244, Monday through Friday 8am–6pm CT. Help Center: nexusoperations.zendesk.com/hc/en-us. Our support team responds to all platform inquiries within one business day.",
+        a: `Phone: ${CONTACT_INFO.phoneDisplay}, ${CONTACT_INFO.supportHoursShort}. Email: ${CONTACT_INFO.email}.`,
+        a: "Phone: 785-727-1106, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org.",
       },
     ],
   },
 ]
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: sections.flatMap((section) =>
+    section.questions.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    }))
+  ),
+}
+
 export default function FAQPage() {
   return (
     <main className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 h-14">
           <Link href="/">
@@ -123,7 +166,7 @@ export default function FAQPage() {
       <div className="mx-auto max-w-3xl px-6 py-14">
         <Link href="/" className="mb-8 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back to nexusoperations.org
+          Back to {CONTACT_INFO.website}
         </Link>
 
         <h1 className="text-2xl font-bold mt-4">Frequently Asked Questions</h1>
@@ -155,10 +198,13 @@ export default function FAQPage() {
         <div className="mt-14 rounded-lg border border-border bg-card p-6">
           <h3 className="text-sm font-semibold mb-2">Still have a question?</h3>
           <p className="text-[13px] text-muted-foreground mb-4">
-            Reach us directly by phone or visit the Help Center for platform documentation and additional support resources.
+            Contact us directly or visit the Zendesk help center for additional documentation.
           </p>
           <div className="flex flex-wrap gap-3 text-[13px]">
-            <a href="tel:+17854280244" className="text-primary hover:underline">(785) 428-0244</a>
+            <a href={CONTACT_INFO.phoneHref} className="text-primary hover:underline">{CONTACT_INFO.phoneDisplay}</a>
+            <a href="tel:+17857271106" className="text-primary hover:underline">785-727-1106</a>
+            <span className="text-border">·</span>
+            <a href={`mailto:${CONTACT_INFO.email}`} className="text-primary hover:underline">{CONTACT_INFO.email}</a>
             <span className="text-border">·</span>
             <a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Help Center</a>
           </div>
@@ -167,7 +213,7 @@ export default function FAQPage() {
         <div className="mt-10 border-t border-border pt-8 flex flex-wrap gap-6 text-[12px] text-muted-foreground">
           <Link href="/terms"   className="hover:text-foreground transition">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
-          <Link href="/sitemap" className="hover:text-foreground transition">Sitemap</Link>
+          <Link href="/site-map" className="hover:text-foreground transition">Sitemap</Link>
         </div>
       </div>
     </main>
