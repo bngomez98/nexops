@@ -13,16 +13,16 @@ function NexusIcon({ size = 32, className = "" }: { size?: number; className?: s
       className={className}
     >
       {/* Outer orbital ring – left tilt */}
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="5.5" strokeLinecap="round"/>
       {/* Outer orbital ring – right tilt */}
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="5.5" strokeLinecap="round"/>
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="5.5" strokeLinecap="round"/>
       {/* Inner orbital ring – left tilt */}
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
       {/* Inner orbital ring – right tilt */}
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3aad58" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
       {/* Center cross node */}
-      <line x1="60" y1="47" x2="60" y2="73" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
-      <line x1="47" y1="60" x2="73" y2="60" stroke="#3aad58" strokeWidth="5" strokeLinecap="round"/>
+      <line x1="60" y1="47" x2="60" y2="73" stroke="oklch(0.618 0.228 264)" strokeWidth="5" strokeLinecap="round"/>
+      <line x1="47" y1="60" x2="73" y2="60" stroke="oklch(0.618 0.228 264)" strokeWidth="5" strokeLinecap="round"/>
     </svg>
   )
 }
@@ -68,7 +68,7 @@ export function Logo({
           >
             NEXUS
           </span>
-          <span className="text-[9px] font-semibold tracking-[0.18em] uppercase" style={{ color: '#3aad58' }}>
+          <span className="text-[9px] font-semibold tracking-[0.18em] uppercase" style={{ color: 'oklch(0.618 0.228 264)' }}>
             OPERATIONS
           </span>
         </div>

@@ -134,10 +134,7 @@ export default function PricingPage() {
                 Pricing
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Simple pricing.{" "}
-                <span className="font-serif italic font-normal text-primary">
-                  No surprises.
-                </span>
+                Simple pricing. No surprises.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 Choose the plan that fits your needs. Annual subscribers save 25% — just{" "}
