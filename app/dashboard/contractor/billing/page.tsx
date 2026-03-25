@@ -97,7 +97,7 @@ export default function ContractorBillingPage() {
   const isPaid = currentPlan !== 'contractor_free' && isActive
 
   const planLabels: Record<string, string> = {
-    contractor_free: 'Contractor Free',
+    contractor_free: 'Contractor Starter',
     contractor_pro: 'Contractor Pro · $79/mo',
     contractor_elite: 'Contractor Elite · $199/mo',
   }
@@ -213,7 +213,7 @@ export default function ContractorBillingPage() {
                     <h3 className="font-bold text-foreground text-[14px]">{plan.name}</h3>
                     <p className="text-[11.5px] text-muted-foreground mt-1 leading-relaxed">{plan.description}</p>
                     <p className="text-2xl font-bold text-foreground mt-3">
-                      {plan.priceInCents === 0 ? 'Free' : `$${plan.priceInCents / 100}`}
+                      {plan.priceInCents === 0 ? 'Starter' : `$${plan.priceInCents / 100}`}
                       {plan.priceInCents > 0 && (
                         <span className="text-[12px] font-normal text-muted-foreground">/mo</span>
                       )}
@@ -266,9 +266,7 @@ export default function ContractorBillingPage() {
         <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground border border-border rounded-xl p-4">
           <Shield className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
           <span>
-            All payments are processed securely by{' '}
-            <span className="font-semibold text-foreground">Stripe</span>.
-            Your card details are never stored on our servers.
+            All payments are processed securely. Your card details are never stored on our servers.
           </span>
         </div>
       </main>

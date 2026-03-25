@@ -550,7 +550,7 @@ export default function HomePage() {
               Pay for work completed, not retainers.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-              A transparent markup on completed work. No subscriptions, no monthly fees, no surprises.
+              A transparent markup on completed work. Subscription plans available for homeowners and contractors who need more capacity.
             </p>
           </div>
 

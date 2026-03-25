@@ -399,7 +399,7 @@ function HomeownerDashboardInner() {
               iconBg: 'bg-violet-500/10',
               iconColor: 'text-violet-500',
               title: 'Billing & Subscription',
-              sub: `Current plan: ${user.subscriptionTier ?? 'Free'}`,
+              sub: `Current plan: ${user.subscriptionTier ?? 'Starter'}`,
             },
             {
               href: '/dashboard/homeowner/settings',

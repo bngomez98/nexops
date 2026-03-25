@@ -172,7 +172,7 @@ function SignUpInner() {
 
           <div className="border-t border-border pt-6 space-y-3">
             {(isContractor
-              ? ["Free to join and participate", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
+              ? ["Join the verified contractor network", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
               : ["One contractor per request", "No competing bids", "Permanent service record", "Licensed & insured contractors"]
             ).map(item => (
               <div key={item} className="flex items-center gap-2.5 text-[13px] text-foreground">
