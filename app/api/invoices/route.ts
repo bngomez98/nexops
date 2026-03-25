@@ -165,7 +165,7 @@ export async function PATCH(request: NextRequest) {
 
     const allowedStatuses = ['sent', 'draft']
     if (!allowedStatuses.includes(status)) {
-      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+      return NextResponse.json({ error: `Invalid status. Allowed: ${allowedStatuses.join(', ')}` }, { status: 400 })
     }
 
     // Verify this is the contractor's invoice
@@ -198,9 +198,9 @@ export async function PATCH(request: NextRequest) {
           if (!clientEmail) return
 
           const { data: clientProfile } = await supabase
-            .from('profiles').select('full_name').eq('id', invoice.client_id).maybeSingle()
+            .from('profiles').select('full_name').eq('user_id', invoice.client_id).maybeSingle()
           const { data: contractorProfile } = await supabase
-            .from('profiles').select('full_name').eq('id', user.id).maybeSingle()
+            .from('profiles').select('full_name').eq('user_id', user.id).maybeSingle()
           const { data: job } = await supabase
             .from('jobs').select('service_type').eq('id', invoice.job_id).single()
 
