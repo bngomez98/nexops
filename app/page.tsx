@@ -1,3 +1,20 @@
+"use client"
+
+import Image from "next/image"
+import Link from "next/link"
+import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { useEffect, useState, useRef } from "react"
+
+const services: Array<{ name: string; desc: string }> = [
+  { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration." },
+  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual maintenance." },
+  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
+  { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture replacement." },
+  { name: "Concrete",       desc: "Driveways, patios, sidewalks, foundation repair, and structural flatwork." },
+  { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
+  { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
+  { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
@@ -385,6 +402,83 @@ export default function HomePage() {
         </div>
       </section>
 
+      <div className="border-t border-border" />
+
+      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
+      <section id="who-we-serve" className="py-24">
+        <div className="mx-auto max-w-6xl px-8">
+          <div className="mb-16 text-center" data-animate>
+            <p className="font-mono-label text-primary mb-4">Solutions</p>
+            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
+              Built for homeowners, contractors, and property managers.
+            </h2>
+          </div>
+
+          <div className="grid gap-12 sm:grid-cols-3">
+            {[
+              {
+                title: "Homeowners",
+                body: "Submit your request once. Get matched with one verified contractor. Track everything from submission to completion.",
+                cta: "Create account",
+                href: "/auth/sign-up",
+              },
+              {
+                title: "Contractors",
+                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
+                cta: "Apply for access",
+                href: "/auth/sign-up?role=contractor",
+              },
+              {
+                title: "Property Managers",
+                body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
+                cta: "Create account",
+                href: "/auth/sign-up?role=property_manager",
+              },
+            ].map(({ title, body, cta, href }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group rounded-xl border border-border/50 bg-muted/20 p-8 transition-all hover:border-primary/40 hover:bg-muted/40"
+                data-animate
+              >
+                <h3 className="text-[18px] font-bold text-foreground mb-4">{title}</h3>
+                <p className="text-[14px] text-muted-foreground leading-[1.75] mb-6">{body}</p>
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary group-hover:gap-2.5 transition-all">
+                  {cta} <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="border-t border-border" />
+
+      {/* ── Photo Banner: Three user types (visual reference) ── */}
+      <section className="overflow-hidden border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
+          {[
+            {
+              src:     "/photo-homeowner.jpg",
+              label:   "For Homeowners",
+              caption: "One verified contractor. No bidding. No surprises.",
+            },
+            {
+              src:     "/photo-manager.jpg",
+              label:   "For Managers",
+              caption: "Portfolio-level tracking. Spend visibility across all properties.",
+            },
+            {
+              src:     "/photo-contractor.jpg",
+              label:   "For Contractors",
+              caption: "Pre-documented leads. No fees. Direct payment from owners.",
+            },
+          ].map(({ src, label, caption }) => (
+            <div
+              key={label}
+              className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
+            >
+              <div className="photo-card-inner absolute inset-0">
       {/* ── Stats strip ── */}
       <div style={{ background: '#111', color: '#fff', padding: '0 28px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
@@ -448,6 +542,13 @@ export default function HomePage() {
                   style={{ objectFit: 'cover' }}
                 />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <p className="font-mono-label text-primary mb-2">{label}</p>
+                <p className="text-[13px] text-foreground/90">{caption}</p>
+              </div>
+            </div>
+          ))}
               {/* Floating card */}
               <div style={{
                 position: 'absolute', bottom: -20, left: -20,
@@ -566,6 +667,25 @@ export default function HomePage() {
             </p>
           </div>
 
+          <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
+            {[
+              {
+                label: "Fully managed service",
+                body:  "Nexus selects the contractor, confirms the appointment, and maintains the project record. Responsibility for the managed portion stays with Nexus throughout.",
+              },
+              {
+                label: "Exclusive assignment",
+                body:  "One contractor per project, claimed first-come and held exclusively. The property owner works with a single contractor for each request, from consultation through completion.",
+              },
+              {
+                label: "Permanent service record",
+                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
+              },
+              {
+                label: "Property-specific intelligence",
+                body:  "Over time, your service history tells Nexus what your property needs and when. Recommendations are generated from your actual project records and maintenance intervals.",
+              },
+            ].map(({ label, body }, i) => (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
             {steps.map(({ n, title, desc }, i) => (
               <div
@@ -727,6 +847,34 @@ export default function HomePage() {
                 <p style={{ fontSize: 12, color: '#888' }}>Shawnee County network</p>
               </div>
             </div>
+
+            <div className="pt-2 lg:pt-16">
+              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-6">Quick links</p>
+              {[
+                { href: "/auth/sign-up",                       label: "Homeowner account",          sub: "Submit and manage service requests" },
+                { href: "/auth/sign-up?role=property_manager", label: "Property manager account",   sub: "Portfolio-level request management and reporting" },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor application",     sub: "Join the verified contractor network. No fees." },
+                { href: "/faq",                                label: "FAQ",                        sub: "Platform details, requirements, and policies" },
+              ].map(({ href, label, sub }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="group flex items-center justify-between border-b border-border py-4 transition-colors hover:border-primary/40"
+                >
+                  <div>
+                    <p className="text-[13.5px] font-medium text-foreground">{label}</p>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">{sub}</p>
+                  </div>
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
+      {/* ── CTA / Contact ── */}
+      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
+          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
+            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
           </div>
         </div>
       </section>

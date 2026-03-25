@@ -1,13 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { sendInvoiceSentClientEmail } from '@/lib/email'
-
-/** Nexus fee rates by urgency tier */
-const FEE_RATES: Record<string, number> = {
-  routine:   0.25,
-  urgent:    0.30,
-  emergency: 0.35,
-}
+import { invoiceCreateSchema } from '@/lib/validators'
+import { calculateInvoiceTotals } from '@/lib/business-logic'
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,11 +14,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { job_id, line_items } = body
+    const parsed = invoiceCreateSchema.safeParse(body)
 
-    if (!job_id || !Array.isArray(line_items) || line_items.length === 0) {
-      return NextResponse.json({ error: 'job_id and line_items are required' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
     }
+
+    const { job_id, line_items } = parsed.data
 
     // Fetch the job
     const { data: job, error: jobError } = await supabase
@@ -42,11 +42,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate amounts server-side
-    const subtotal = (line_items as { amount: number }[]).reduce((sum, item) => sum + (item.amount ?? 0), 0)
-    const urgency  = job.urgency ?? 'routine'
-    const feeRate  = FEE_RATES[urgency] ?? FEE_RATES.routine
-    const nexusFee = Math.round(subtotal * feeRate * 100) / 100
-    const total    = subtotal + nexusFee
+    const urgency = job.urgency ?? 'routine'
+    const { subtotal, feeRate, nexusFee, total } = calculateInvoiceTotals(
+      line_items as { amount: number }[],
+      urgency
+    )
 
     // Insert invoice record
     const { data: invoice, error: insertError } = await supabase
