@@ -1,20 +1,3 @@
-"use client"
-
-import Image from "next/image"
-import Link from "next/link"
-import { Phone, Mail, ArrowRight, MapPin, Menu, X } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { useEffect, useState, useRef } from "react"
-
-const services: Array<{ name: string; desc: string }> = [
-  { name: "Roofing",        desc: "Full replacement, storm damage assessment, leak repair, and insurance restoration." },
-  { name: "HVAC",           desc: "Central air, heat pumps, ductless mini-splits, furnace replacement, and annual maintenance." },
-  { name: "Electrical",     desc: "Panel upgrades, circuit additions, rewiring, subpanel installation, and EV charger rough-in." },
-  { name: "Plumbing",       desc: "Water heaters, leak detection, drain clearing, main line repair, and fixture replacement." },
-  { name: "Concrete",       desc: "Driveways, patios, sidewalks, foundation repair, and structural flatwork." },
-  { name: "Tree Service",   desc: "Removal, crown reduction, stump grinding, and post-storm emergency response." },
-  { name: "Fencing",        desc: "Privacy, chain link, vinyl, wood, and commercial perimeter fencing." },
-  { name: "General Repair", desc: "Drywall, carpentry, painting, door and window replacement, and interior repairs." },
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
@@ -452,33 +435,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="border-t border-border" />
-
-      {/* ── Photo Banner: Three user types (visual reference) ── */}
-      <section className="overflow-hidden border-b border-border">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
-          {[
-            {
-              src:     "/photo-homeowner.jpg",
-              label:   "For Homeowners",
-              caption: "One verified contractor. No bidding. No surprises.",
-            },
-            {
-              src:     "/photo-manager.jpg",
-              label:   "For Managers",
-              caption: "Portfolio-level tracking. Spend visibility across all properties.",
-            },
-            {
-              src:     "/photo-contractor.jpg",
-              label:   "For Contractors",
-              caption: "Pre-documented leads. No fees. Direct payment from owners.",
-            },
-          ].map(({ src, label, caption }) => (
-            <div
-              key={label}
-              className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
-            >
-              <div className="photo-card-inner absolute inset-0">
       {/* ── Stats strip ── */}
       <div style={{ background: '#111', color: '#fff', padding: '0 28px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
@@ -542,13 +498,6 @@ export default function HomePage() {
                   style={{ objectFit: 'cover' }}
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="font-mono-label text-primary mb-2">{label}</p>
-                <p className="text-[13px] text-foreground/90">{caption}</p>
-              </div>
-            </div>
-          ))}
               {/* Floating card */}
               <div style={{
                 position: 'absolute', bottom: -20, left: -20,
@@ -667,25 +616,6 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 border-t border-border pt-12">
-            {[
-              {
-                label: "Fully managed service",
-                body:  "Nexus selects the contractor, confirms the appointment, and maintains the project record. Responsibility for the managed portion stays with Nexus throughout.",
-              },
-              {
-                label: "Exclusive assignment",
-                body:  "One contractor per project, claimed first-come and held exclusively. The property owner works with a single contractor for each request, from consultation through completion.",
-              },
-              {
-                label: "Permanent service record",
-                body: "Every project — scope, cost, contractor, photos, outcome — is stored on the platform and retrievable indefinitely. The record belongs to the property.",
-              },
-              {
-                label: "Property-specific intelligence",
-                body:  "Over time, your service history tells Nexus what your property needs and when. Recommendations are generated from your actual project records and maintenance intervals.",
-              },
-            ].map(({ label, body }, i) => (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
             {steps.map(({ n, title, desc }, i) => (
               <div
@@ -869,16 +799,9 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
-      {/* ── CTA / Contact ── */}
-      <section id="contact" className="py-20 px-6 lg:px-10 bg-[var(--color-surface)]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-4 text-balance tracking-tight">Ready to hire with confidence?</h2>
-          <p className="text-[var(--color-subtle)] mb-10 leading-relaxed text-sm">
-            Join Nexus Operations — submit your first project free and get matched with a verified contractor in your area.
           </div>
         </div>
       </section>
-
       {/* ── CTA band ── */}
       <section style={{ background: '#3d7a4f', padding: '96px 28px', textAlign: 'center' }}>
         <div style={{ maxWidth: 680, margin: '0 auto' }}>

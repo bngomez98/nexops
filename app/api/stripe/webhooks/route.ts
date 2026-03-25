@@ -1,12 +1,3 @@
-import { NextResponse } from "next/server"
-import Stripe from "stripe"
-import { createAdminClient } from "@/lib/supabase/admin"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-})
-
-export async function POST(req: Request) {
 import type Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripeClient } from '@/lib/stripe/server'
@@ -33,127 +24,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  try {
-    const supabase = createAdminClient()
-
-    switch (event.type) {
-      case "checkout.session.completed": {
-        const session = event.data.object as Stripe.Checkout.Session
-        const requestId = session.metadata?.request_id
-        const paymentType = session.metadata?.payment_type
-
-        if (!requestId || !paymentType) break
-
-        const { data: payment, error: paymentError } = await supabase
-          .from("payments")
-          .update({
-            status: "paid",
-            stripe_payment_intent_id: session.payment_intent as string,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("stripe_session_id", session.id)
-          .select("id, request_id")
-          .maybeSingle()
-
-        if (paymentError) throw paymentError
-        if (!payment) break
-
-        if (paymentType === "invoice") {
-          const { error: requestError } = await supabase
-            .from("service_requests")
-            .update({
-              status: "completed",
-              completion_date: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            })
-            .eq("id", requestId)
-
-          if (requestError) throw requestError
-        }
-
-        break
-      }
-
-      case "charge.refunded": {
-        const charge = event.data.object as Stripe.Charge
-        const paymentIntentId = charge.payment_intent as string | null
-
-        if (!paymentIntentId) break
-
-        const { error } = await supabase
-          .from("payments")
-          .update({ status: "refunded", updated_at: new Date().toISOString() })
-          .eq("stripe_payment_intent_id", paymentIntentId)
-
-        if (error) throw error
-        break
-      }
-
-      case "account.updated": {
-        const account = event.data.object as Stripe.Account
-
-        let status: "active" | "pending" | "restricted" = "pending"
-        if (account.charges_enabled && account.details_submitted) {
-          status = "active"
-        } else if (account.requirements?.disabled_reason) {
-          status = "restricted"
-        }
-
-        const { error } = await supabase
-          .from("profiles")
-          .update({ stripe_connect_status: status, updated_at: new Date().toISOString() })
-          .eq("stripe_connect_account_id", account.id)
-
-        if (error) throw error
-        break
-      }
-
-      case "customer.subscription.updated":
-      case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription
-        const customerId = subscription.customer as string
-        const status = subscription.status
-
-        const mapped =
-          status === "active" || status === "trialing"
-            ? status
-            : status === "past_due"
-              ? "past_due"
-              : "canceled"
-
-        const { error } = await supabase
-          .from("profiles")
-          .update({ subscription_status: mapped, updated_at: new Date().toISOString() })
-          .eq("stripe_customer_id", customerId)
-
-        if (error) throw error
-        break
-      }
-
-      case "invoice.payment_failed": {
-        const invoice = event.data.object as Stripe.Invoice
-        const customerId = invoice.customer as string
-
-        const { error } = await supabase
-          .from("profiles")
-          .update({ subscription_status: "past_due", updated_at: new Date().toISOString() })
-          .eq("stripe_customer_id", customerId)
-
-        if (error) throw error
-        break
-      }
-
-      default:
-        break
-    }
-
-    return NextResponse.json({ received: true })
-  } catch (error) {
-    console.error("Stripe webhook processing failed", {
-      eventType: event.type,
-      eventId: event.id,
-      error,
-    })
   const supabase = await createClient()
 
   switch (event.type) {
@@ -199,7 +69,6 @@ export async function POST(req: NextRequest) {
         })
         .eq('stripe_subscription_id', sub.id)
 
-      // Update profile tier
       const isActive = status === 'active' || status === 'trialing'
       await supabase.from('profiles')
         .update({
@@ -221,7 +90,6 @@ export async function POST(req: NextRequest) {
     case 'invoice.paid': {
       const stripeInvoice = event.data.object as Stripe.Invoice
 
-      // Legacy flow: service_requests.invoice_paid flag
       const requestId = stripeInvoice.metadata?.requestId
       if (requestId) {
         await supabase.from('service_requests')
@@ -229,7 +97,6 @@ export async function POST(req: NextRequest) {
           .eq('id', requestId)
       }
 
-      // Jobs flow: look up internal invoice by stripe_invoice_id, mark complete, send receipts
       const stripeInvoiceId = stripeInvoice.id
       const { data: nexusInvoice } = await supabase
         .from('invoices')
@@ -238,17 +105,14 @@ export async function POST(req: NextRequest) {
         .maybeSingle()
 
       if (nexusInvoice) {
-        // Mark invoice paid
         await supabase.from('invoices')
           .update({ status: 'paid' })
           .eq('id', nexusInvoice.id)
 
-        // Mark job complete
         await supabase.from('jobs')
           .update({ status: 'completed' })
           .eq('id', nexusInvoice.job_id)
 
-        // Log status history
         await supabase.from('job_status_history').insert({
           job_id:     nexusInvoice.job_id,
           status:     'completed',
@@ -256,14 +120,12 @@ export async function POST(req: NextRequest) {
           changed_by: 'system',
         })
 
-        // Fetch job details for email context
         const { data: job } = await supabase
           .from('jobs')
           .select('service_type')
           .eq('id', nexusInvoice.job_id)
           .single()
 
-        // Send receipt emails (fire-and-forget)
         ;(async () => {
           try {
             const { getAdminClient } = await import('@/lib/supabase/admin')
@@ -315,6 +177,5 @@ export async function POST(req: NextRequest) {
       break
   }
 
-    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 })
-  }
+  return NextResponse.json({ received: true })
 }
