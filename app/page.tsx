@@ -93,6 +93,37 @@ const statsData = [
   { value: '0',      label: 'Hidden fees' },
 ]
 
+const heroContent = {
+  homeowner: {
+    badge: 'For Homeowners & Landlords',
+    heading: <>Property maintenance, handled end to end.</>,
+    subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
+    primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
+    secondaryCta: { href: '#process', label: 'See how it works' },
+    badges: [
+      { icon: Shield, text: 'Verified contractors only' },
+      { icon: Zap, text: 'Same-day assignment' },
+      { icon: CheckCircle2, text: 'Manually reviewed' },
+    ],
+    image: '/business-handshake-professional-meeting.jpg',
+    floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
+  },
+  contractor: {
+    badge: 'For Contractors',
+    heading: <>Pre-qualified jobs.<br />No bidding wars.<br />Faster&nbsp;payouts.</>,
+    subheading: 'Access exclusive service requests with photos, scope, and budget visible before you commit. Claim jobs that match your trade, get paid faster through unified invoicing.',
+    primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
+    secondaryCta: { href: '#pricing', label: 'View pricing' },
+    badges: [
+      { icon: Eye, text: 'Full scope before committing' },
+      { icon: CreditCard, text: 'Unified payout workflow' },
+      { icon: CheckCircle2, text: 'No competing quotes' },
+    ],
+    image: '/business-analytics-data-visualization.jpg',
+    floatingCard: { icon: FileText, title: 'Pre-qualified only', subtitle: 'Budget & scope visible upfront' },
+  },
+} as const
+
 export default function HomePage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
