@@ -102,10 +102,7 @@ export default function ContractorsPage() {
                 For contractors
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Steady work.{" "}
-                <span className="font-serif italic font-normal text-primary">
-                  Guaranteed payment.
-                </span>
+                Steady work. Guaranteed payment.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
                 Nexus Operations connects verified contractors with property
