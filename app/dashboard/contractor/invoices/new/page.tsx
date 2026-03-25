@@ -127,8 +127,8 @@ function NewInvoiceInner() {
         <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
         <main className="md:ml-[240px] p-5 md:p-7 flex items-center justify-center min-h-[calc(100vh-64px)]">
           <div className="text-center max-w-md">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-5">
-              <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+              <CheckCircle2 className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold mb-2">Invoice created</h1>
             <p className="text-muted-foreground text-[14px] mb-6">Your invoice has been saved as a draft.</p>

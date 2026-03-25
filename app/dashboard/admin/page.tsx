@@ -62,10 +62,10 @@ export default function AdminDashboard() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-sky-500', bg: 'bg-sky-500/10' },
-            { label: 'Pending Verifications', value: stats.pendingContractors, icon: ShieldAlert, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-            { label: 'Active Jobs', value: stats.activeJobs, icon: Briefcase, color: 'text-violet-500', bg: 'bg-violet-500/10' },
-            { label: 'Platform Revenue', value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+            { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-muted-foreground', bg: 'bg-muted' },
+            { label: 'Pending Verifications', value: stats.pendingContractors, icon: ShieldAlert, color: 'text-muted-foreground', bg: 'bg-muted' },
+            { label: 'Active Jobs', value: stats.activeJobs, icon: Briefcase, color: 'text-muted-foreground', bg: 'bg-muted' },
+            { label: 'Platform Revenue', value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -82,11 +82,11 @@ export default function AdminDashboard() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { href: '/dashboard/admin/contractors', icon: ShieldAlert, iconBg: 'bg-amber-500/10', iconColor: 'text-amber-500', title: 'Contractor Verification', sub: `${stats.pendingContractors} pending review` },
-            { href: '/dashboard/admin/jobs',        icon: Briefcase,   iconBg: 'bg-violet-500/10', iconColor: 'text-violet-500', title: 'All Jobs', sub: `${stats.activeJobs} active jobs` },
-            { href: '/dashboard/admin/matches',     icon: Activity,    iconBg: 'bg-primary/10',    iconColor: 'text-primary',    title: 'Matching Queue', sub: 'Manual assignment & history' },
-            { href: '/dashboard/admin/users',       icon: Users,       iconBg: 'bg-sky-500/10',    iconColor: 'text-sky-500',    title: 'User Management', sub: `${stats.totalUsers} total users` },
-            { href: '/dashboard/admin/invoices',    icon: DollarSign,  iconBg: 'bg-emerald-500/10', iconColor: 'text-emerald-500', title: 'Invoices & Revenue', sub: `$${stats.revenue.toLocaleString()} earned` },
+            { href: '/dashboard/admin/contractors', icon: ShieldAlert, iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'Contractor Verification', sub: `${stats.pendingContractors} pending review` },
+            { href: '/dashboard/admin/jobs',        icon: Briefcase,   iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'All Jobs', sub: `${stats.activeJobs} active jobs` },
+            { href: '/dashboard/admin/matches',     icon: Activity,    iconBg: 'bg-muted', iconColor: 'text-foreground',    title: 'Matching Queue', sub: 'Manual assignment & history' },
+            { href: '/dashboard/admin/users',       icon: Users,       iconBg: 'bg-muted', iconColor: 'text-muted-foreground',    title: 'User Management', sub: `${stats.totalUsers} total users` },
+            { href: '/dashboard/admin/invoices',    icon: DollarSign,  iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'Invoices & Revenue', sub: `$${stats.revenue.toLocaleString()} earned` },
             { href: '/dashboard/admin/documents',   icon: ShieldAlert, iconBg: 'bg-orange-500/10', iconColor: 'text-orange-500', title: 'Document Review', sub: 'Compliance verification queue' },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
             <Link key={href} href={href}

@@ -21,11 +21,11 @@ interface ProjectRequest {
 }
 
 const STATUS: Record<string, { label: string; pill: string; dot: string }> = {
-  open:          { label: 'Open',         pill: 'status-open',      dot: 'bg-indigo-500' },
-  claimed:       { label: 'Assigned',     pill: 'status-claimed',   dot: 'bg-sky-500' },
-  'in-progress': { label: 'In Progress',  pill: 'status-progress',  dot: 'bg-violet-500' },
-  completed:     { label: 'Completed',    pill: 'status-completed', dot: 'bg-emerald-500' },
-  cancelled:     { label: 'Cancelled',    pill: 'status-cancelled', dot: 'bg-slate-400' },
+  open:          { label: 'Open',         pill: 'status-open',      dot: 'bg-primary' },
+  claimed:       { label: 'Assigned',     pill: 'status-claimed',   dot: 'bg-muted-foreground' },
+  'in-progress': { label: 'In Progress',  pill: 'status-progress',  dot: 'bg-primary' },
+  completed:     { label: 'Completed',    pill: 'status-completed', dot: 'bg-foreground/60' },
+  cancelled:     { label: 'Cancelled',    pill: 'status-cancelled', dot: 'bg-muted-foreground' },
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -125,9 +125,9 @@ export default function ContractorMyProjects() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'Active',    value: active.length,    icon: Wrench,      iconClass: 'text-primary',      color: 'stat-card-indigo' },
-            { label: 'Completed', value: done.length,      icon: CheckCircle2, iconClass: 'text-emerald-500', color: 'stat-card-emerald' },
-            { label: 'Total',     value: projects.length,  icon: Briefcase,   iconClass: 'text-violet-500',   color: 'stat-card-violet' },
+            { label: 'Active',    value: active.length,    icon: Wrench,      iconClass: 'text-primary',       },
+            { label: 'Completed', value: done.length,      icon: CheckCircle2, iconClass: 'text-muted-foreground',  },
+            { label: 'Total',     value: projects.length,  icon: Briefcase,   iconClass: 'text-muted-foreground',    },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -200,7 +200,7 @@ export default function ContractorMyProjects() {
           ) : (
             <div className="divide-y divide-border">
               {filtered.map(project => {
-                const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', dot: 'bg-slate-400' }
+                const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', dot: 'bg-muted-foreground' }
                 const icon = CATEGORY_ICONS[project.category] ?? '🔨'
                 return (
                   <Link

@@ -23,8 +23,8 @@ interface Invoice {
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
   draft: { label: 'Draft', color: 'text-slate-700', bg: 'bg-slate-100' },
-  sent:  { label: 'Sent',  color: 'text-amber-700', bg: 'bg-amber-100' },
-  paid:  { label: 'Paid',  color: 'text-emerald-700', bg: 'bg-emerald-100' },
+  sent:  { label: 'Sent',  color: 'text-foreground/70', bg: 'bg-muted' },
+  paid:  { label: 'Paid',  color: 'text-foreground', bg: 'bg-muted' },
 }
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
@@ -84,8 +84,8 @@ export default function ContractorInvoicesPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Total Earned', value: `$${totalEarned.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-            { label: 'Pending Payment', value: `$${totalPending.toLocaleString()}`, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+            { label: 'Total Earned', value: `$${totalEarned.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+            { label: 'Pending Payment', value: `$${totalPending.toLocaleString()}`, icon: Clock, color: 'text-muted-foreground', bg: 'bg-muted' },
             { label: 'Total Invoices', value: invoices.length, icon: Receipt, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
