@@ -7,7 +7,11 @@
 
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
+  return _resend
+}
 const FROM   = process.env.RESEND_FROM_EMAIL ?? 'Nexus Operations <noreply@nexusops.com>'
 const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusops.com'
 
@@ -76,7 +80,7 @@ async function send(payload: {
     return
   }
   try {
-    await resend.emails.send({ from: FROM, ...payload })
+    await getResend().emails.send({ from: FROM, ...payload })
   } catch (err) {
     console.error('[email] send error:', err)
   }
@@ -278,6 +282,44 @@ export async function sendInvoicePaidClientEmail(opts: {
       ${p('Your project record has been updated. All receipts and project history are stored permanently in your account.')}
       ${btn('View Project Record', `${SITE}/dashboard/homeowner/requests/${opts.jobId}`)}
       ${small('Thank you for using Nexus Operations.')}
+    `),
+  })
+}
+
+/** 9. Contact form submission — sent to the admin inbox */
+export async function sendContactFormEmail(opts: {
+  name: string
+  email: string
+  phone: string
+  type: string
+  message: string
+}) {
+  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusops.com'
+  await send({
+    to: adminEmail,
+    subject: `New contact form: ${fmt(opts.type)} inquiry from ${opts.name}`,
+    html: wrap(`
+      ${h1('New contact form submission')}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Name</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;font-weight:600;">${opts.name}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Email</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.email}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Phone</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.phone || '—'}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Type</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${fmt(opts.type)}</td>
+        </tr>
+      </table>
+      ${p(opts.message)}
+      ${small(`Reply directly to <a href="mailto:${opts.email}" style="color:#6366f1;">${opts.email}</a>`)}
     `),
   })
 }

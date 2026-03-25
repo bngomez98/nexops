@@ -45,7 +45,37 @@ export const contractorProfileSchema = z.object({
   serviceCategories: z.array(z.string()).min(1, 'Select at least one service category'),
 })
 
+export const contactFormSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().min(1, 'Last name is required').max(100),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().max(20).optional(),
+  type: z.enum(['homeowner', 'commercial', 'contractor', 'partner', 'other']),
+  message: z.string().min(10, 'Message must be at least 10 characters').max(5000),
+})
+
+export const invoiceCreateSchema = z.object({
+  job_id: z.string().uuid('Invalid job ID'),
+  line_items: z.array(z.object({
+    description: z.string().min(1).max(500).optional(),
+    amount: z.number().positive('Amount must be positive'),
+  })).min(1, 'At least one line item is required'),
+})
+
+export const messageSchema = z.object({
+  content: z.string().min(1, 'Message content is required').max(5000),
+  recipient_id: z.string().uuid('Invalid recipient ID'),
+})
+
+export const messageWithJobSchema = messageSchema.extend({
+  job_id: z.string().uuid('Invalid job ID'),
+})
+
 export type SignupFormData = z.infer<typeof signupSchema>
 export type LoginFormData = z.infer<typeof loginSchema>
 export type ProjectRequestData = z.infer<typeof projectRequestSchema>
 export type ContractorProfileData = z.infer<typeof contractorProfileSchema>
+export type ContactFormData = z.infer<typeof contactFormSchema>
+export type InvoiceCreateData = z.infer<typeof invoiceCreateSchema>
+export type MessageData = z.infer<typeof messageSchema>
+export type MessageWithJobData = z.infer<typeof messageWithJobSchema>

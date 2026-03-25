@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { messageWithJobSchema } from '@/lib/validators'
 
 // GET /api/messages — list all conversations for the current user
 export async function GET() {
@@ -96,11 +97,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json() as { job_id?: string; content?: string; recipient_id?: string }
-    const { job_id, content, recipient_id } = body
+    const body = await request.json()
+    const parsed = messageWithJobSchema.safeParse(body)
 
-    if (!job_id || !content || !recipient_id) {
-      return NextResponse.json({ error: 'Missing required fields: job_id, content, recipient_id' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
+    }
+
+    const { job_id, content, recipient_id } = parsed.data
+
+    // Verify the sender is a party to this job
+    const { data: job } = await supabase
+      .from('service_requests')
+      .select('owner_id, contractor_id')
+      .eq('id', job_id)
+      .single()
+
+    if (!job || (job.owner_id !== user.id && job.contractor_id !== user.id)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const { data: message, error } = await supabase
