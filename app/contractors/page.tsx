@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -309,7 +310,7 @@ export default function ContractorsPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <a
-                  href="mailto:admin@nexusoperations.org"
+                  href={`mailto:${CONTACT_INFO.email}`}
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
                 >
                   Email us with questions

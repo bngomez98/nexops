@@ -71,6 +71,13 @@ export default function NewProjectRequest() {
   const [uploadedImages, setUploadedImages] = useState<File[]>([])
   const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null)
   const [suggestedBudget, setSuggestedBudget]     = useState<{ min: number; max: number } | null>(null)
+  const [aiAnalysis, setAiAnalysis] = useState<{
+    scopeSummary: string | null
+    riskFlags: string[]
+    permitLikely: boolean
+    urgency: string | null
+    followUpQuestion: string | null
+  } | null>(null)
   const [analyzingText, setAnalyzingText] = useState(false)
   const [formData, setFormData] = useState({
     category: '', title: '', description: '', location: '', budget: '',
@@ -110,6 +117,13 @@ export default function NewProjectRequest() {
           if (data.estimatedBudgetRange) {
             setSuggestedBudget({ min: data.estimatedBudgetRange.min, max: data.estimatedBudgetRange.max })
           }
+          setAiAnalysis({
+            scopeSummary: data.scopeSummary ?? null,
+            riskFlags: data.riskFlags ?? [],
+            permitLikely: data.permitLikely ?? false,
+            urgency: data.urgency ?? null,
+            followUpQuestion: data.followUpQuestion ?? null,
+          })
         }
       } finally {
         setAnalyzingText(false)
@@ -209,7 +223,7 @@ export default function NewProjectRequest() {
         router.push('/auth/login')
       }} />
 
-      <main className="md:ml-[240px] p-5 md:p-7">
+      <main className="md:ml-[220px] p-5 md:p-7">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
@@ -344,8 +358,56 @@ export default function NewProjectRequest() {
                         }}
                         className="font-semibold text-primary hover:underline"
                       >
-                        {suggestedCategory}
+                        {suggestedCategory.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                       </button>
+                    </div>
+                  )}
+
+                  {/* AI analysis panel */}
+                  {aiAnalysis && !analyzingText && (
+                    <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+                      <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-primary/70">
+                        <Zap className="w-3 h-3" />
+                        AI Analysis
+                      </div>
+                      {aiAnalysis.scopeSummary && (
+                        <p className="text-[12.5px] text-foreground/90 leading-relaxed">
+                          {aiAnalysis.scopeSummary}
+                        </p>
+                      )}
+                      {aiAnalysis.urgency && aiAnalysis.urgency !== 'normal' && (
+                        <div className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${
+                          aiAnalysis.urgency === 'urgent' ? 'bg-red-100 text-red-700' :
+                          aiAnalysis.urgency === 'high'   ? 'bg-amber-100 text-amber-700' :
+                          'bg-sky-100 text-sky-700'
+                        }`}>
+                          <AlertCircle className="w-3 h-3" />
+                          {aiAnalysis.urgency.charAt(0).toUpperCase() + aiAnalysis.urgency.slice(1)} urgency detected
+                        </div>
+                      )}
+                      {aiAnalysis.riskFlags.length > 0 && (
+                        <div className="space-y-1">
+                          <p className="text-[10.5px] font-semibold uppercase tracking-wide text-muted-foreground">Things to note</p>
+                          <ul className="space-y-1">
+                            {aiAnalysis.riskFlags.map((flag, i) => (
+                              <li key={i} className="flex items-start gap-1.5 text-[12px] text-foreground/80">
+                                <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
+                                {flag}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {aiAnalysis.permitLikely && (
+                        <p className="text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                          A permit may be required for this type of work in Kansas.
+                        </p>
+                      )}
+                      {aiAnalysis.followUpQuestion && (
+                        <p className="text-[12px] text-muted-foreground italic border-t border-border pt-2.5">
+                          Consider adding: &ldquo;{aiAnalysis.followUpQuestion}&rdquo;
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { AlertCircle, Loader2, Shield, Zap, BarChart3 } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 export default function LoginPage() {
   const [email, setEmail]       = useState("")
@@ -26,7 +27,15 @@ export default function LoginPage() {
       return
     }
     const role = data.user?.user_metadata?.role
-    window.location.href = role === "contractor" ? "/dashboard/contractor" : "/dashboard"
+    if (role === "contractor") {
+      window.location.href = "/dashboard/contractor"
+    } else if (role === "property-manager") {
+      window.location.href = "/dashboard/property-manager"
+    } else if (role === "admin") {
+      window.location.href = "/dashboard/admin"
+    } else {
+      window.location.href = "/dashboard/homeowner"
+    }
   }
 
   return (
@@ -87,7 +96,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (913) 951-1711 · admin@nexusoperations.org
+          {CONTACT_INFO.cityStateZip.replace(/ 66604$/, "")} · {CONTACT_INFO.phoneDisplay} · {CONTACT_INFO.email}
         </p>
       </div>
 

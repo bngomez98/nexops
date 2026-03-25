@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
 import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
@@ -24,6 +25,7 @@ export default function HomeownerBillingPage() {
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+  const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
 
   const plans = getPlansByRole('homeowner')
@@ -51,22 +53,7 @@ export default function HomeownerBillingPage() {
   }
 
   async function handleUpgrade(planId: string) {
-    setCheckoutLoading(planId)
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId }),
-      })
-      const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Failed to start checkout'); return }
-      // Redirect to Stripe hosted checkout using client secret
-      window.location.href = `https://checkout.stripe.com/pay/${data.clientSecret}`
-    } catch {
-      toast.error('Something went wrong. Please try again.')
-    } finally {
-      setCheckoutLoading(null)
-    }
+    setCheckoutPlanId(planId)
   }
 
   async function handleManageBilling() {
@@ -94,12 +81,19 @@ export default function HomeownerBillingPage() {
 
   const currentPlan = user.subscriptionTier ?? 'homeowner_basic'
   const isActive = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
-  const isPro = currentPlan === 'homeowner_pro' && isActive
+  const isPro = (currentPlan === 'homeowner_pro_monthly' || currentPlan === 'homeowner_pro_annual' || currentPlan === 'homeowner_pro') && isActive
+  const isAnnual = currentPlan === 'homeowner_pro_annual'
 
   return (
     <div className="min-h-screen bg-background">
+      {checkoutPlanId && (
+        <EmbeddedCheckoutModal
+          planId={checkoutPlanId}
+          onClose={() => setCheckoutPlanId(null)}
+        />
+      )}
       <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
-      <main className="md:ml-[240px] p-5 md:p-8 max-w-4xl space-y-8">
+      <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-8">
 
         {/* Header */}
         <div>
@@ -126,10 +120,10 @@ export default function HomeownerBillingPage() {
               </div>
               <div>
                 <p className="font-bold text-foreground text-[15px]">
-                  {isPro ? 'Homeowner Pro' : 'Homeowner Basic (Free)'}
+                  {isPro ? 'Homeowner Pro' : 'Homeowner Starter'}
                 </p>
                 <p className="text-[12px] text-muted-foreground mt-0.5">
-                  {isPro ? 'Active subscription · $29/mo' : 'No active subscription'}
+                  {isPro ? 'Active subscription · ' + (isAnnual ? '$59/mo (annual)' : '$79/mo (monthly)') : 'No active subscription'}
                 </p>
               </div>
             </div>
@@ -189,7 +183,7 @@ export default function HomeownerBillingPage() {
                     </div>
                     <div className="text-right flex-shrink-0 ml-3">
                       <p className="text-2xl font-bold text-foreground">
-                        {plan.priceInCents === 0 ? 'Free' : `$${plan.priceInCents / 100}`}
+                        {plan.priceInCents === 0 ? 'Starter' : `$${plan.priceInCents / 100}`}
                       </p>
                       {plan.priceInCents > 0 && (
                         <p className="text-[11px] text-muted-foreground">/month</p>
@@ -246,9 +240,7 @@ export default function HomeownerBillingPage() {
         <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground border border-border rounded-xl p-4">
           <Shield className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
           <span>
-            All payments are processed securely by{' '}
-            <span className="font-semibold text-foreground">Stripe</span>.
-            Your card details are never stored on our servers.
+            All payments are processed securely. Your card details are never stored on our servers.
           </span>
         </div>
       </main>

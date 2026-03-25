@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { AlertCircle, Loader2, CheckCircle2, ChevronRight } from "lucide-react"
+import { CONTACT_INFO } from "@/lib/contact-info"
 
 const SERVICE_CATEGORIES = [
   { value: 'tree-removal',  label: 'Tree Removal' },
@@ -21,7 +22,7 @@ const SERVICE_CATEGORIES = [
   { value: 'excavation',    label: 'Excavation' },
 ]
 
-export default function SignUpPage() {
+function SignUpInner() {
   const searchParams = useSearchParams()
   const roleParam = searchParams.get("role") ?? "homeowner"
 
@@ -35,7 +36,8 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  const isContractor = role === "contractor"
+  const isContractor      = role === "contractor"
+  const isPropertyManager = role === "property-manager"
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
@@ -96,7 +98,10 @@ export default function SignUpPage() {
         return
       }
 
-      window.location.href = isContractor ? "/dashboard/contractor" : "/dashboard/homeowner"
+      const dest = isContractor ? "/onboarding/contractor"
+        : role === "property-manager" ? "/onboarding/property-manager"
+        : "/onboarding/homeowner"
+      window.location.href = dest
     } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
@@ -154,7 +159,7 @@ export default function SignUpPage() {
           <div className="space-y-4 text-[13px] text-muted-foreground leading-[1.75]">
             {isContractor ? (
               <>
-                <p>Receive pre-documented project notifications in your trade. No fees. No competing bids.</p>
+                <p>Receive fully documented project requests in your trade. Your membership covers access — no per-job fees or commissions.</p>
                 <p>Every project you claim comes with photos, scope, and the owner's budget ceiling already in hand.</p>
               </>
             ) : (
@@ -167,8 +172,12 @@ export default function SignUpPage() {
 
           <div className="border-t border-border pt-6 space-y-3">
             {(isContractor
-              ? ["Free to join and participate", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
+              ? ["Join the verified contractor network", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
               : ["One contractor per request", "No competing bids", "Permanent service record", "Licensed & insured contractors"]
+              ? ["Free to join and participate", "Full project documentation provided", "Direct payment from owners", "License & insurance verified"]
+              : ["One contractor per request", "Budget set by the owner", "Permanent service record", "Licensed & insured contractors"]
+              ? ["Free to join and participate", "Pre-documented project leads", "Direct payment from owners", "License & insurance verified"]
+              : ["Exclusive contractor per job", "No competing bids", "Permanent service record", "Licensed & insured contractors"]
             ).map(item => (
               <div key={item} className="flex items-center gap-2.5 text-[13px] text-foreground">
                 <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
@@ -179,7 +188,7 @@ export default function SignUpPage() {
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Topeka, KS · (913) 951-1711 · admin@nexusoperations.org
+          {CONTACT_INFO.cityStateZip.replace(/ 66604$/, "")} · {CONTACT_INFO.phoneDisplay} · {CONTACT_INFO.email}
         </p>
       </div>
 
@@ -209,8 +218,9 @@ export default function SignUpPage() {
           {/* Role toggle */}
           <div className="flex rounded-xl border border-border overflow-hidden mb-6 bg-muted/30 p-1 gap-1">
             {[
-              { key: "homeowner", label: "Homeowner" },
-              { key: "contractor", label: "Contractor" },
+              { key: "homeowner",        label: "Homeowner" },
+              { key: "contractor",       label: "Contractor" },
+              { key: "property-manager", label: "Prop. Manager" },
             ].map(r => (
               <button
                 key={r.key}
@@ -326,7 +336,7 @@ export default function SignUpPage() {
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating account...</>
               ) : (
                 <span className="flex items-center gap-1.5">
-                  Create {isContractor ? "Contractor" : "Homeowner"} Account
+                  Create {isContractor ? "Contractor" : isPropertyManager ? "Property Manager" : "Homeowner"} Account
                   <ChevronRight className="w-4 h-4" />
                 </span>
               )}
@@ -347,5 +357,13 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+      <SignUpInner />
+    </Suspense>
   )
 }

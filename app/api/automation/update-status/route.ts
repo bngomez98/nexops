@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-
-const VALID_TRANSITIONS: Record<string, string[]> = {
-  pending_review: ['in_queue', 'declined'],
-  in_queue: ['assigned', 'declined'],
-  assigned: ['consultation_scheduled', 'declined'],
-  consultation_scheduled: ['in_progress', 'declined'],
-  in_progress: ['completed', 'declined'],
-  completed: [],
-  declined: [],
-  cancelled: [],
-}
+import { isValidTransition, STATUS_TRANSITIONS } from '@/lib/business-logic'
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,8 +40,8 @@ export async function POST(request: NextRequest) {
 
     // Validate state transition
     const currentStatus = project.status
-    const validNextStates = VALID_TRANSITIONS[currentStatus] ?? []
-    if (!validNextStates.includes(newStatus)) {
+    if (!isValidTransition(currentStatus, newStatus)) {
+      const validNextStates = STATUS_TRANSITIONS[currentStatus] ?? []
       return NextResponse.json(
         {
           error: `Invalid transition: ${currentStatus} → ${newStatus}`,
@@ -112,7 +102,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (err) {
-    console.error('[POST /api/automation/update-project-status]', err)
+    console.error('[POST /api/automation/update-status]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

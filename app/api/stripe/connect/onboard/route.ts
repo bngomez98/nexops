@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { getStripeClient } from "@/lib/stripe/server"
+import { getSiteUrl } from "@/lib/env"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexusoperations.org"
+const siteUrl = getSiteUrl()
 
 export async function POST() {
   const stripe = getStripeClient()

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
+import { AIAssistant } from '@/components/ai-assistant'
+import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
@@ -119,14 +121,14 @@ export default function ContractorDashboard() {
     async function load() {
       try {
         const res = await fetch('/api/auth/me')
-        if (!res.ok) { router.push('/login'); return }
+        if (!res.ok) { router.push('/auth/login'); return }
         const data = await res.json()
         if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(data.user)
         setProfile(data.contractorProfile)
         await fetchProjects()
       } catch {
-        router.push('/login')
+        router.push('/auth/login')
       } finally {
         setLoading(false)
       }
@@ -171,7 +173,7 @@ export default function ContractorDashboard() {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   async function handleRefresh() {
@@ -225,7 +227,7 @@ export default function ContractorDashboard() {
 
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      <main className="md:ml-[220px] p-6 space-y-6 animate-fade-up">
+      <main id="main-content" className="md:ml-[240px] p-6 space-y-6 animate-fade-up">
         {/* Welcome banner */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground shadow-lg shadow-primary/20">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
@@ -236,7 +238,7 @@ export default function ContractorDashboard() {
               </p>
               <h1 className="text-2xl font-bold">{profile?.companyName || user.name}</h1>
               <p className="text-primary-foreground/80 text-sm mt-1 flex items-center gap-2">
-                <span className="capitalize">{profile?.membershipTier || 'Free'} plan</span>
+                <span className="capitalize">{profile?.membershipTier || 'Starter'} plan</span>
                 <span className="opacity-40">·</span>
                 <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active</span>
                 <span className="opacity-40">·</span>
@@ -316,6 +318,15 @@ export default function ContractorDashboard() {
               </p>
             </div>
           </div>
+        )}
+
+        {/* AI Intelligence */}
+        {projects.length > 0 && (
+          <AIInsightsCard
+            role="contractor"
+            requests={projects.slice(0, 5)}
+            profile={profile}
+          />
         )}
 
         {/* Auto-refresh notice */}
@@ -460,7 +471,7 @@ export default function ContractorDashboard() {
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'free' },
+              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'starter' },
               { name: 'Enterprise',   price: '$749/mo', projects: 15, highlight: profile?.membershipTier === 'professional' },
             ].map(plan => (
               <div
@@ -487,6 +498,11 @@ export default function ContractorDashboard() {
           </div>
         </div>
       </main>
+
+      <AIAssistant
+        role="contractor"
+        context={profile ? `Contractor: ${profile.companyName ?? user.name}, ${profile.currentActiveProjects ?? 0}/${profile.maxActiveProjects ?? 3} active projects, rating ${profile.averageRating ?? 'N/A'}.` : undefined}
+      />
     </div>
   )
 }

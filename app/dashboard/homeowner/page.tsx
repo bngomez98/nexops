@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Suspense, useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { AIAssistant } from '@/components/ai-assistant'
+import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
   ArrowRight, AlertCircle, Loader2, TrendingUp,
@@ -104,7 +106,7 @@ function ProgressTrack({ status }: { status: string }) {
   )
 }
 
-export default function HomeownerDashboard() {
+function HomeownerDashboardInner() {
   const router = useRouter()
   const params = useSearchParams()
   const [user, setUser] = useState<UserData | null>(null)
@@ -112,12 +114,23 @@ export default function HomeownerDashboard() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [tab, setTab] = useState<'all' | 'active' | 'completed'>('all')
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const loadRequests = useCallback(async () => {
     const res = await fetch('/api/projects/list?type=my-projects')
     if (res.ok) {
       const { projects } = await res.json()
-      setRequests(projects ?? [])
+      setRequests(prev => {
+        const newList = projects ?? []
+        const prevIds = new Set(prev.map((p: ServiceRequest) => p.id))
+        const hasNew = newList.some((p: ServiceRequest) => !prevIds.has(p.id))
+        if (hasNew && prev.length > 0) {
+          toast.success('Request status updated!')
+        }
+        return newList
+      })
+      setLastRefresh(new Date())
     }
   }, [])
 
@@ -141,6 +154,14 @@ export default function HomeownerDashboard() {
     }
     init()
   }, [router, loadRequests, params])
+
+  // Auto-poll every 30 seconds for status updates
+  useEffect(() => {
+    pollingRef.current = setInterval(loadRequests, 30000)
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+    }
+  }, [loadRequests])
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -182,7 +203,7 @@ export default function HomeownerDashboard() {
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
 
-      <main className="md:ml-[240px] p-5 md:p-7 space-y-6">
+      <main id="main-content" className="md:ml-[240px] p-5 md:p-7 space-y-6">
         {/* Welcome banner */}
         <div className="relative overflow-hidden rounded-2xl bg-primary p-6 md:p-8 text-primary-foreground">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -214,7 +235,7 @@ export default function HomeownerDashboard() {
                 onClick={handleRefresh}
                 disabled={refreshing}
                 className="p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
-                title="Refresh"
+                title={`Last updated ${lastRefresh.toLocaleTimeString()} · Auto-refreshes every 30s`}
               >
                 <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
               </button>
@@ -355,6 +376,12 @@ export default function HomeownerDashboard() {
           )}
         </div>
 
+        {/* AI Insights */}
+        <AIInsightsCard
+          role="homeowner"
+          requests={requests}
+        />
+
         {/* Quick actions */}
         <div className="grid sm:grid-cols-3 gap-4">
           {[
@@ -372,7 +399,7 @@ export default function HomeownerDashboard() {
               iconBg: 'bg-violet-500/10',
               iconColor: 'text-violet-500',
               title: 'Billing & Subscription',
-              sub: `Current plan: ${user.subscriptionTier ?? 'Free'}`,
+              sub: `Current plan: ${user.subscriptionTier ?? 'Starter'}`,
             },
             {
               href: '/dashboard/homeowner/settings',
@@ -400,6 +427,19 @@ export default function HomeownerDashboard() {
           ))}
         </div>
       </main>
+
+      <AIAssistant
+        role="homeowner"
+        context={`Homeowner with ${requests.length} total requests, ${completed.length} completed, $${totalSpend.toLocaleString()} tracked spend.`}
+      />
     </div>
+  )
+}
+
+export default function HomeownerDashboard() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>}>
+      <HomeownerDashboardInner />
+    </Suspense>
   )
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
+import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
 import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
@@ -24,6 +25,7 @@ export default function ContractorBillingPage() {
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+  const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
 
   const plans = getPlansByRole('contractor')
@@ -51,21 +53,7 @@ export default function ContractorBillingPage() {
   }
 
   async function handleUpgrade(planId: string) {
-    setCheckoutLoading(planId)
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId }),
-      })
-      const data = await res.json()
-      if (!res.ok) { toast.error(data.error || 'Failed to start checkout'); return }
-      window.location.href = `https://checkout.stripe.com/pay/${data.clientSecret}`
-    } catch {
-      toast.error('Something went wrong. Please try again.')
-    } finally {
-      setCheckoutLoading(null)
-    }
+    setCheckoutPlanId(planId)
   }
 
   async function handleManageBilling() {
@@ -96,7 +84,7 @@ export default function ContractorBillingPage() {
   const isPaid = currentPlan !== 'contractor_free' && isActive
 
   const planLabels: Record<string, string> = {
-    contractor_free: 'Contractor Free',
+    contractor_free: 'Contractor Starter',
     contractor_pro: 'Contractor Pro · $79/mo',
     contractor_elite: 'Contractor Elite · $199/mo',
   }
@@ -109,6 +97,12 @@ export default function ContractorBillingPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {checkoutPlanId && (
+        <EmbeddedCheckoutModal
+          planId={checkoutPlanId}
+          onClose={() => setCheckoutPlanId(null)}
+        />
+      )}
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
       <main className="md:ml-[220px] p-5 md:p-8 max-w-4xl space-y-8">
 
@@ -212,7 +206,7 @@ export default function ContractorBillingPage() {
                     <h3 className="font-bold text-foreground text-[14px]">{plan.name}</h3>
                     <p className="text-[11.5px] text-muted-foreground mt-1 leading-relaxed">{plan.description}</p>
                     <p className="text-2xl font-bold text-foreground mt-3">
-                      {plan.priceInCents === 0 ? 'Free' : `$${plan.priceInCents / 100}`}
+                      {plan.priceInCents === 0 ? 'Starter' : `$${plan.priceInCents / 100}`}
                       {plan.priceInCents > 0 && (
                         <span className="text-[12px] font-normal text-muted-foreground">/mo</span>
                       )}
@@ -265,9 +259,7 @@ export default function ContractorBillingPage() {
         <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground border border-border rounded-xl p-4">
           <Shield className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
           <span>
-            All payments are processed securely by{' '}
-            <span className="font-semibold text-foreground">Stripe</span>.
-            Your card details are never stored on our servers.
+            All payments are processed securely. Your card details are never stored on our servers.
           </span>
         </div>
       </main>

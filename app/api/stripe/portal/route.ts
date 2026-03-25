@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getSiteUrl } from '@/lib/env'
+import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
+import { ensureStripeCustomer } from '@/lib/stripe/customer'
 
 export async function POST() {
   try {
@@ -12,23 +14,37 @@ export async function POST() {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('stripe_customer_id, role')
+      .select('stripe_customer_id, stripe_subscription_id, role, full_name, subscription_status')
       .eq('id', user.id)
       .single()
 
-    if (!profile?.stripe_customer_id) {
-      return NextResponse.json({ error: 'No billing account found' }, { status: 400 })
+    if (!profile) {
+      return NextResponse.json({ error: 'Billing profile not found' }, { status: 404 })
     }
 
-    const returnPath = profile.role === 'contractor'
-      ? '/dashboard/contractor/settings'
-      : '/dashboard/homeowner/settings'
+    const customerId = await ensureStripeCustomer({
+      supabase,
+      userId: user.id,
+      email: user.email,
+      fullName: profile.full_name,
+      stripeCustomerId: profile.stripe_customer_id,
+    })
 
-    const returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusoperations.org'}${returnPath}`
+    const stripe = getStripeClient()
+    const returnPath = profile.role === 'contractor'
+      ? '/dashboard/contractor/billing'
+      : '/dashboard/homeowner/billing'
+
+    const returnUrl = `${getSiteUrl()}${returnPath}`
 
     const session = await stripe.billingPortal.sessions.create({
-      customer: profile.stripe_customer_id,
+      customer: customerId,
       return_url: returnUrl,
+      flow_data: profile.subscription_status === 'past_due' || profile.stripe_subscription_id
+        ? {
+            type: 'payment_method_update',
+          }
+        : undefined,
     })
 
     return NextResponse.json({ url: session.url })

@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, MapPin, Phone, Mail } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -15,19 +17,19 @@ const timeline = [
     date: "January 2026",
     title: "Company Formation",
     description:
-      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 405 SW Fillmore St, Topeka.",
+      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 2611 SW 17th St, Topeka.",
   },
   {
     date: "Q1 2026",
     title: "Contractor Network Development",
     description:
-      "Recruitment and verification of 15-20 contractors across essential maintenance trades in Shawnee County.",
+      "Recruit and verify 15-20 contractors across core maintenance trades in Shawnee County.",
   },
   {
     date: "Q2 2026",
     title: "First Commercial Clients",
     description:
-      "Onboarding property management companies managing 100-800+ units with full coordination services.",
+      "Begin serving property management companies overseeing 100-800+ units with full coordination support.",
   },
   {
     date: "2026-2027",
@@ -45,6 +47,7 @@ export default function AboutPage() {
         {/* Hero */}
         <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:items-center">
             <div className="max-w-3xl">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-6">
                 About Nexus Operations
@@ -57,12 +60,22 @@ export default function AboutPage() {
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Nexus Operations does not swing hammers or run wire. We
-                coordinate the people who do. Our role is to ensure that when a
+                Nexus Operations does not perform the work itself. We
+                coordinate the professionals who do. Our role is to ensure that when a
                 property manager submits a maintenance request, a verified
                 contractor is assigned, arrives on time, completes documented
-                work, and gets paid -- all through a single point of contact.
+                work, and gets paid -- all through one reliable point of contact.
               </p>
+            </div>
+            <div className="hidden lg:block">
+              <Image
+                src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                alt="Modern office workspace"
+                width={560}
+                height={420}
+                className="w-full object-cover rounded-2xl shadow-lg"
+              />
+            </div>
             </div>
           </div>
         </section>
@@ -119,39 +132,47 @@ export default function AboutPage() {
         {/* Founder */}
         <section className="py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Leadership
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-8">
-                Founded and operated by Brianna Gomez.
-              </h2>
-              <div className="p-6 lg:p-8 rounded-xl bg-card border border-border">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="w-20 h-20 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-                    <span className="text-2xl font-semibold text-foreground/40">
-                      BG
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Brianna Gomez
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Chief Executive Member
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Brianna founded Nexus Operations in January 2026 to
-                      address a specific operational gap she identified in the
-                      Topeka property management market: property managers were
-                      spending disproportionate time coordinating vendor
-                      relationships instead of managing their core
-                      responsibilities. Nexus Operations was built to absorb
-                      that coordination burden entirely, starting with
-                      commercial property maintenance and expanding into
-                      broader B2B operational support.
-                    </p>
-                  </div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              Leadership
+            </p>
+            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-10">
+              Founded and operated by Brianna Gomez.
+            </h2>
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary">
+                  <Image
+                    src="/business-growth-success-strategy.jpg"
+                    alt="Nexus Operations founder"
+                    width={600}
+                    height={450}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-foreground/90 backdrop-blur-sm p-4 text-background">
+                  <p className="font-semibold text-sm">Brianna Gomez</p>
+                  <p className="text-xs opacity-60 mt-0.5">Chief Executive Member · Nexus Operations, LLC</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  Brianna founded Nexus Operations in January 2026 to address a specific operational gap she identified in the Topeka property management market: property managers were spending disproportionate time coordinating vendor relationships instead of managing their core responsibilities.
+                </p>
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  Nexus Operations was built to absorb that coordination burden entirely, starting with commercial property maintenance and expanding into broader B2B operational support.
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-4">
+                  {[
+                    { label: 'Company formed', value: 'January 2026' },
+                    { label: 'Headquarters', value: 'Topeka, KS' },
+                    { label: 'Service area', value: 'Shawnee County' },
+                    { label: 'Business type', value: 'LLC · Kansas' },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="p-4 rounded-xl bg-secondary/60 border border-border">
+                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{label}</p>
+                      <p className="text-sm font-semibold text-foreground">{value}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -208,22 +229,22 @@ export default function AboutPage() {
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
                 <a
-                  href="tel:+19139511711"
+                  href={CONTACT_INFO.phoneHref}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Phone className="h-4 w-4" />
-                  (913) 951-1711
+                  {CONTACT_INFO.phoneDisplay}
                 </a>
                 <a
-                  href="mailto:admin@nexusoperations.org"
+                  href={`mailto:${CONTACT_INFO.email}`}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Mail className="h-4 w-4" />
-                  admin@nexusoperations.org
+                  {CONTACT_INFO.email}
                 </a>
                 <span className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  Topeka, KS 66606
+                  {CONTACT_INFO.cityStateZip}
                 </span>
               </div>
               <Link
