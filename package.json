@@ -7,7 +7,9 @@
     "db:migrate": "node scripts/migrate.mjs",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@ai-sdk/react": "3.0.136",
