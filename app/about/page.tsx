@@ -53,11 +53,7 @@ export default function AboutPage() {
                 About Nexus Operations
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                A coordination company,
-                <br className="hidden sm:block" />
-                <span className="font-serif italic font-normal text-primary">
-                  not a contractor.
-                </span>
+                A coordination company, not a contractor.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 Nexus Operations does not perform the work itself. We

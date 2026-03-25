@@ -10,8 +10,8 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
   draft: { label: 'Draft', color: 'text-slate-700', bg: 'bg-slate-100' },
-  sent:  { label: 'Sent',  color: 'text-amber-700', bg: 'bg-amber-100' },
-  paid:  { label: 'Paid',  color: 'text-emerald-700', bg: 'bg-emerald-100' },
+  sent:  { label: 'Sent',  color: 'text-foreground/70', bg: 'bg-muted' },
+  paid:  { label: 'Paid',  color: 'text-foreground', bg: 'bg-muted' },
 }
 
 export default function AdminInvoicesPage() {
@@ -58,9 +58,9 @@ export default function AdminInvoicesPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Nexus Revenue', value: `$${totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+            { label: 'Nexus Revenue', value: `$${totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
             { label: 'Total Volume', value: `$${totalVolume.toLocaleString()}`,   icon: TrendingUp,  color: 'text-primary',    bg: 'bg-primary/10' },
-            { label: 'Total Invoices', value: invoices.length,                    icon: Receipt,     color: 'text-sky-500',    bg: 'bg-sky-500/10' },
+            { label: 'Total Invoices', value: invoices.length,                    icon: Receipt,     color: 'text-muted-foreground', bg: 'bg-muted' },
           ].map(s => {
             const Icon = s.icon
             return (

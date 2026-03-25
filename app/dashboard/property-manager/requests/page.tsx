@@ -17,10 +17,10 @@ interface Request {
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  open:        { label: 'Submitted',   color: 'text-sky-700',     bg: 'bg-sky-100' },
-  matched:     { label: 'Assigned',    color: 'text-violet-700',  bg: 'bg-violet-100' },
+  open:        { label: 'Submitted',   color: 'text-foreground/70', bg: 'bg-muted' },
+  matched:     { label: 'Assigned',    color: 'text-primary', bg: 'bg-primary/10' },
   in_progress: { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10' },
-  completed:   { label: 'Complete',    color: 'text-emerald-700', bg: 'bg-emerald-100' },
+  completed:   { label: 'Complete',    color: 'text-foreground', bg: 'bg-muted' },
 }
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
