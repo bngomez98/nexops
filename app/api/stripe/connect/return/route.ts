@@ -44,6 +44,11 @@ export async function GET() {
     .update({ stripe_connect_status: status })
     .eq("id", user.id)
 
-  const param = status === "active" ? "connect=success" : "connect=pending"
+  const param =
+    status === "active"
+      ? "connect=success"
+      : status === "restricted"
+      ? "connect=restricted"
+      : "connect=pending"
   return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?${param}`)
 }
