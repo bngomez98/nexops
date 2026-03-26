@@ -3,8 +3,8 @@
 import { useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
+import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -130,14 +130,7 @@ function SignUpInner() {
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-[400px] xl:w-[440px] flex-col justify-between border-r border-border bg-card px-10 py-14 flex-shrink-0">
         <Link href="/">
-          <Image
-            src="/nexus-logo.png"
-            alt="Nexus Operations"
-            width={150}
-            height={50}
-            style={{ height: "26px", width: "auto" }}
-            priority
-          />
+          <Logo />
         </Link>
 
         <div className="space-y-7">
@@ -189,7 +182,7 @@ function SignUpInner() {
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 overflow-y-auto">
         <div className="mb-6 lg:hidden">
           <Link href="/">
-            <Image src="/nexus-logo.png" alt="Nexus Operations" width={140} height={47} style={{ height: "28px", width: "auto" }} priority />
+            <Logo />
           </Link>
         </div>
 

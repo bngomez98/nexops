@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Logo } from '@/components/logo'
 import {
   Menu, X, MapPin, ArrowRight, Phone, Mail,
   CheckCircle2, Clock, Shield, Zap, BarChart3,
@@ -78,14 +79,7 @@ export default function HomePage() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 lg:px-8 h-16">
           <Link href="/" className="flex-shrink-0 flex items-center gap-2.5">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={120}
-              height={40}
-              style={{ height: '26px', width: 'auto' }}
-              priority
-            />
+            <Logo />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
@@ -806,13 +800,7 @@ export default function HomePage() {
           <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4 mb-12">
             <div>
               <Link href="/" className="inline-block mb-4">
-                <Image
-                  src="/nexus-logo.png"
-                  alt="Nexus Operations"
-                  width={110}
-                  height={37}
-                  style={{ height: '24px', width: 'auto' }}
-                />
+                <Logo />
               </Link>
               <p className="text-[12px] text-muted-foreground leading-relaxed mb-4">
                 Managed property services for homeowners, landlords, and property managers in {CONTACT_INFO.cityState}.

@@ -1,6 +1,6 @@
 import Link from "next/link"
-import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
+import { Logo } from "@/components/logo"
 
 interface LegalShellProps {
   title: string
@@ -14,14 +14,7 @@ export function LegalShell({ title, updated, children }: LegalShellProps) {
       <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 h-14">
           <Link href="/">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={140}
-              height={47}
-              style={{ height: "32px", width: "auto" }}
-              priority
-            />
+            <Logo />
           </Link>
           <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
             <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>

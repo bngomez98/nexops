@@ -2,11 +2,9 @@
 
 import Script from 'next/script'
 
-const ZENDESK_KEY = process.env.NEXT_PUBLIC_ZENDESK_KEY
+const ZENDESK_KEY = process.env.NEXT_PUBLIC_ZENDESK_KEY || 'd8a1128c-008a-443c-894e-4a0fd463bb57'
 
 export function ZendeskWidget() {
-  if (!ZENDESK_KEY) return null
-
   return (
     <Script
       id="ze-snippet"

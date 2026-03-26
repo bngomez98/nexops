@@ -1,8 +1,8 @@
 "use client"
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
+import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -36,14 +36,7 @@ export default function LoginPage() {
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-[440px] xl:w-[500px] flex-col justify-between border-r border-border bg-card px-12 py-16 flex-shrink-0">
         <Link href="/">
-          <Image
-            src="/nexus-logo.png"
-            alt="Nexus Operations"
-            width={150}
-            height={50}
-            style={{ height: "28px", width: "auto" }}
-            priority
-          />
+          <Logo />
         </Link>
 
         <div className="space-y-10">
@@ -97,14 +90,7 @@ export default function LoginPage() {
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
         <div className="mb-8 lg:hidden">
           <Link href="/">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={140}
-              height={47}
-              style={{ height: "30px", width: "auto" }}
-              priority
-            />
+            <Logo />
           </Link>
         </div>
 
