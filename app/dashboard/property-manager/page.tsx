@@ -102,8 +102,8 @@ export default function PropertyManagerDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { label: 'Properties',    value: stats.totalProperties, icon: Building2,    color: 'text-sky-500',     bg: 'bg-sky-500/10' },
-            { label: 'Active Jobs',   value: stats.activeJobs,      icon: ClipboardList, color: 'text-amber-500',  bg: 'bg-amber-500/10' },
+            { label: 'Properties',    value: stats.totalProperties, icon: Building2,    color: 'text-muted-foreground', bg: 'bg-muted' },
+            { label: 'Active Jobs',   value: stats.activeJobs,      icon: ClipboardList, color: 'text-muted-foreground', bg: 'bg-muted' },
             { label: 'Spend (Month)', value: `$${stats.spendThisMonth.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
@@ -122,9 +122,9 @@ export default function PropertyManagerDashboard() {
         {/* Quick actions */}
         <div className="grid sm:grid-cols-3 gap-4">
           {[
-            { href: '/dashboard/property-manager/properties', icon: Building2, iconBg: 'bg-sky-500/10', iconColor: 'text-sky-500', title: 'Manage Properties', sub: 'View and add managed properties' },
-            { href: '/dashboard/property-manager/requests', icon: ClipboardList, iconBg: 'bg-amber-500/10', iconColor: 'text-amber-500', title: 'Service Requests', sub: 'Track requests across portfolio' },
-            { href: '/dashboard/property-manager/invoices', icon: DollarSign, iconBg: 'bg-primary/10', iconColor: 'text-primary', title: 'Invoices & Spend', sub: 'Portfolio-level financial overview' },
+            { href: '/dashboard/property-manager/properties', icon: Building2, iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'Manage Properties', sub: 'View and add managed properties' },
+            { href: '/dashboard/property-manager/requests', icon: ClipboardList, iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'Service Requests', sub: 'Track requests across portfolio' },
+            { href: '/dashboard/property-manager/invoices', icon: DollarSign, iconBg: 'bg-muted', iconColor: 'text-foreground', title: 'Invoices & Spend', sub: 'Portfolio-level financial overview' },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
             <Link key={href} href={href}
               className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
