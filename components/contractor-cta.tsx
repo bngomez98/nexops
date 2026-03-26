@@ -14,8 +14,8 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "Predictable cost",
-    description: "Monthly subscription from $200-$400. No per-lead fees, no surprise charges, cancel anytime.",
+    title: "No fees, ever",
+    description: "Free to join, free to stay active. No per-lead fees, no commissions taken from your invoices — the platform costs you nothing.",
   },
 ]
 
@@ -27,12 +27,12 @@ export function ContractorCTA() {
           <div>
             <p className="text-primary text-sm font-medium tracking-wide mb-3">For contractors</p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-              Stop wasting time on shared leads
+              Stop competing for shared leads
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              If you are a licensed, insured contractor in Topeka and surrounding areas,
-              Nexus Operations sends you exclusive leads with full project documentation.
-              First-come, first-served. No bidding wars.
+              Licensed, insured contractors in Topeka and surrounding areas receive
+              exclusive leads with full project documentation attached — scope, photos,
+              and a budget ceiling. First-come, first-served. No bidding wars.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link

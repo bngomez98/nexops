@@ -53,7 +53,7 @@ export function Footer() {
               {[
                 { href: "/auth/sign-up",                       label: "Homeowner" },
                 { href: "/auth/sign-up?role=property_manager", label: "Property Manager" },
-                { href: "/auth/sign-up?role=contractor",       label: "Contractor Application" },
+                { href: "/auth/sign-up?role=contractor",       label: "Contractor Sign Up" },
                 { href: "/auth/login",                         label: "Sign In" },
                 { href: "/contractors",                        label: "Contractor Network" },
               ].map(({ href, label }) => (

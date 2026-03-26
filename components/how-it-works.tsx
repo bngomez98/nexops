@@ -15,13 +15,13 @@ const steps = [
     number: "03",
     title: "Work is completed and documented",
     description:
-      "The contractor completes the work and submits photos plus a description to us. We confirm completion with you before processing any payment. You have 48 business hours to raise concerns.",
+      "The contractor completes the work and submits photos plus a description to us. We confirm completion with you before processing any payment. You have 48 hours to raise concerns.",
   },
   {
     number: "04",
     title: "You receive one invoice",
     description:
-      "Monthly invoice with every request, property, work performed, and costs. Transparent contractor cost plus our markup.",
+      "One monthly invoice covering every request, property, work performed, and itemized costs. Contractor cost and coordination markup shown separately.",
   },
 ]
 
