@@ -1,13 +1,23 @@
 'use client'
+import { useAuth } from '@/app/lib/auth-context'
+import { useRequests } from '@/app/lib/requests-context'
+import { DashboardLayout } from '@/components/dashboard-layout'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import {
+  FileText, CheckCircle2, Clock, AlertCircle,
+  Briefcase, Plus, ArrowRight, TrendingUp,
+} from 'lucide-react'
+import Link from 'next/link'
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    available:   'bg-primary/10 text-primary border-primary/20',
-    claimed:     'bg-muted text-foreground/70 border-border',
-    'in-progress':'bg-muted text-primary border-primary/20',
+    available:   'bg-emerald-50 text-emerald-700 border-emerald-200',
+    claimed:     'bg-sky-50 text-sky-700 border-sky-200',
+    'in-progress':'bg-violet-50 text-violet-700 border-violet-200',
     completed:   'bg-muted text-muted-foreground border-border',
-    invoiced:    'bg-muted text-foreground/70 border-border',
-    pending:     'bg-muted text-foreground/70 border-border',
+    invoiced:    'bg-amber-50 text-amber-700 border-amber-200',
+    pending:     'bg-amber-50 text-amber-700 border-amber-200',
   }
   const label: Record<string, string> = {
     available:    'Available',
@@ -24,52 +34,19 @@ function StatusBadge({ status }: { status: string }) {
     </span>
   )
 }
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import { Loader2 } from 'lucide-react'
 
-/**
- * Dashboard root — redirects each user to their role-specific dashboard.
- * This ensures no user ever lands on a generic placeholder page.
- */
 export default function DashboardPage() {
+  const { user, isLoggedIn } = useAuth()
+  const { clientRequests, contractorJobs } = useRequests()
   const router = useRouter()
 
   useEffect(() => {
-    async function redirect() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
+    if (!isLoggedIn) router.push('/auth/login')
+  }, [isLoggedIn, router])
 
-      if (!user) {
-        router.push('/auth/login')
-        return
-      }
+  if (!isLoggedIn) return null
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-
-      const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
-
-      switch (role) {
-        case 'contractor':
-          router.replace('/dashboard/contractor')
-          break
-        case 'property_manager':
-          router.replace('/dashboard/property-manager')
-          break
-        case 'admin':
-          router.replace('/dashboard/admin')
-          break
-        default:
-          router.replace('/dashboard/homeowner')
-      }
-    }
-    redirect()
-  }, [router])
+  const firstName = user?.name?.split(' ')[0] ?? 'there'
 
   return (
     <DashboardLayout>
@@ -109,15 +86,15 @@ export default function DashboardPage() {
                   label: 'Active',
                   value: clientRequests.filter(r => r.status !== 'completed' && r.status !== 'invoiced').length,
                   icon: Clock,
-                  color: 'text-muted-foreground',
-                  bg: 'bg-muted border-border',
+                  color: 'text-sky-600',
+                  bg: 'bg-sky-50 border-sky-100',
                 },
                 {
                   label: 'Completed',
                   value: clientRequests.filter(r => r.status === 'completed' || r.status === 'invoiced').length,
                   icon: CheckCircle2,
-                  color: 'text-primary',
-                  bg: 'bg-primary/5 border-primary/15',
+                  color: 'text-emerald-600',
+                  bg: 'bg-emerald-50 border-emerald-100',
                 },
                 {
                   label: 'Total Spend',
@@ -130,8 +107,8 @@ export default function DashboardPage() {
                   label: 'Total Requests',
                   value: clientRequests.length,
                   icon: TrendingUp,
-                  color: 'text-muted-foreground',
-                  bg: 'bg-muted border-border',
+                  color: 'text-violet-600',
+                  bg: 'bg-violet-50 border-violet-100',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
                 <div key={label} className="rounded-xl border border-border/60 bg-card p-4 glow-card">
@@ -201,15 +178,15 @@ export default function DashboardPage() {
                   label: 'Available',
                   value: contractorJobs.filter(j => j.status === 'available').length,
                   icon: Briefcase,
-                  color: 'text-primary',
-                  bg: 'bg-primary/5 border-primary/15',
+                  color: 'text-emerald-600',
+                  bg: 'bg-emerald-50 border-emerald-100',
                 },
                 {
                   label: 'Active',
                   value: contractorJobs.filter(j => j.status === 'claimed').length,
                   icon: Clock,
-                  color: 'text-muted-foreground',
-                  bg: 'bg-muted border-border',
+                  color: 'text-sky-600',
+                  bg: 'bg-sky-50 border-sky-100',
                 },
                 {
                   label: 'Pending Payout',
@@ -222,8 +199,8 @@ export default function DashboardPage() {
                   label: 'This Month',
                   value: '$245',
                   icon: TrendingUp,
-                  color: 'text-muted-foreground',
-                  bg: 'bg-muted border-border',
+                  color: 'text-violet-600',
+                  bg: 'bg-violet-50 border-violet-100',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
                 <div key={label} className="rounded-xl border border-border/60 bg-card p-4 glow-card">
@@ -292,8 +269,5 @@ export default function DashboardPage() {
         )}
       </div>
     </DashboardLayout>
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <Loader2 className="w-5 h-5 animate-spin text-primary" />
-    </div>
   )
 }

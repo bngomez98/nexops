@@ -52,6 +52,7 @@ const sections: { label: string; links: SiteMapLink[] }[] = [
     links: [
       { href: "/terms",   label: "Terms of Service", desc: "Platform terms and conditions of use" },
       { href: "/privacy", label: "Privacy Policy",   desc: "How Nexus Operations collects and uses your data" },
+      { href: "/user-agreement", label: "User Agreement", desc: "Additional user obligations and platform participation terms" },
     ],
   },
   {
@@ -59,8 +60,6 @@ const sections: { label: string; links: SiteMapLink[] }[] = [
     links: [
       { href: CONTACT_INFO.phoneHref,                    label: CONTACT_INFO.phoneDisplay,     desc: `Phone support — ${CONTACT_INFO.supportHoursShort}`, external: true },
       { href: `mailto:${CONTACT_INFO.email}`,           label: CONTACT_INFO.email,            desc: "Email support — responses within one business day", external: true },
-      { href: "tel:+17857271106",                    label: "785-727-1106",              desc: "Phone support — Monday through Friday, 8 am–6 pm CT", external: true },
-      { href: "mailto:admin@nexusoperations.org",    label: "admin@nexusoperations.org",   desc: "Email support — responses within one business day", external: true },
     ],
   },
 ]
@@ -83,6 +82,7 @@ export default function SiteMapPage() {
           <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
             <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>
             <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
+            <Link href="/user-agreement" className="hover:text-foreground transition">User Agreement</Link>
             <Link href="/faq"     className="hover:text-foreground transition">FAQ</Link>
           </div>
         </div>
@@ -146,6 +146,7 @@ export default function SiteMapPage() {
         <div className="mt-14 border-t border-border pt-8 flex flex-wrap gap-6 text-[12px] text-muted-foreground">
           <Link href="/terms"   className="hover:text-foreground transition">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
+          <Link href="/user-agreement" className="hover:text-foreground transition">User Agreement</Link>
           <Link href="/faq"     className="hover:text-foreground transition">FAQ</Link>
         </div>
       </div>
