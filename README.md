@@ -122,6 +122,17 @@ All tiers include unlimited project claims, full project documentation before cl
 - `Cross-Origin-Opener-Policy: same-origin`
 - `Cross-Origin-Resource-Policy: same-origin`
 
+## CI/CD
+
+GitHub Actions now runs a full CI pipeline on every push and pull request:
+
+- ESLint (`pnpm lint`)
+- TypeScript type checks (`npx tsc --noEmit`)
+- Vitest test suite (`pnpm test`)
+- Production build verification (`pnpm build`)
+
+A dedicated CD workflow deploys to Vercel production after CI succeeds on `main` (or via manual dispatch), when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are configured in repository settings.
+
 ## Deployment
 
 The application is configured for deployment on Vercel. No additional configuration is required beyond connecting the repository. The `next.config.mjs` file does not require environment-specific overrides for basic deployment.
