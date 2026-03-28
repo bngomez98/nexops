@@ -3,8 +3,16 @@ import { generateText, Output } from 'ai'
 import { z } from 'zod'
 import { createRequestId, internalError } from '@/lib/api-error'
 import { normalizeCategorySlug } from '@/lib/category'
+import { isAutomationEnabled } from '@/lib/env'
 
 export async function POST(request: NextRequest) {
+  if (!isAutomationEnabled()) {
+    return NextResponse.json(
+      { error: 'Automation features are disabled', code: 'FEATURE_DISABLED' },
+      { status: 403 },
+    )
+  }
+
   try {
     const { description, title } = await request.json()
 
