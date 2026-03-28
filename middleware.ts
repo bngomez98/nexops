@@ -6,8 +6,13 @@ export async function middleware(request: NextRequest) {
   let response: NextResponse
   
   if (hasSupabaseServerConfig()) {
-    const { updateSession } = await import('@/lib/supabase/proxy')
-    response = await updateSession(request)
+    try {
+      const { updateSession } = await import('@/lib/supabase/proxy')
+      response = await updateSession(request)
+    } catch (error) {
+      console.error('Middleware session update failed', error)
+      response = NextResponse.next()
+    }
   } else {
     response = NextResponse.next()
   }
