@@ -1,12 +1,12 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <style>
     @media (prefers-color-scheme: light) {
-      .background { fill: #0d9488; }
+      .background { fill: #3d7a4f; }
       .node { fill: #ffffff; }
       .center { fill: #f97316; }
     }
     @media (prefers-color-scheme: dark) {
-      .background { fill: #14b8a6; }
+      .background { fill: #2f5f3d; }
       .node { fill: #0f172a; }
       .center { fill: #fb923c; }
     }

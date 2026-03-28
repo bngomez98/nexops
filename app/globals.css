@@ -41,7 +41,7 @@
 }
 
 @theme inline {
-  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-serif: "Instrument Serif", "Georgia", serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --color-background: var(--background);

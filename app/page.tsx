@@ -7,7 +7,7 @@ import {
   Camera, CalendarDays, MessageSquare,
   Eye, Zap, CreditCard,
   CheckCircle2, Shield, MapPin, Phone, Mail, ChevronRight,
-  Star, Clock, FileText,
+  Star, Clock, FileText, Sun, Moon,
 } from 'lucide-react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
@@ -93,42 +93,10 @@ const statsData = [
   { value: 'No',     label: 'Hidden fees' },
 ]
 
-const heroContent = {
-  homeowner: {
-    badge: 'For Homeowners & Landlords',
-    heading: <>Maintenance Coordination<br />for Homeowners in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Topeka,&nbsp;KS</span></>,
-    subheading: 'Submit a service request with photos and a budget, and Nexus assigns a verified contractor, coordinates scheduling, and keeps a documented record of every project.',
-    heading: <>Property maintenance, handled end to end.</>,
-    subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
-    primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
-    secondaryCta: { href: '#process', label: 'See how it works' },
-    badges: [
-      { icon: Shield, text: 'Licensed & insured contractors' },
-      { icon: Zap, text: 'Assignment within 4 hours' },
-      { icon: CheckCircle2, text: 'Every request reviewed' },
-    ],
-    image: '/business-handshake-professional-meeting.jpg',
-    floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
-  },
-  contractor: {
-    badge: 'For Contractors',
-    heading: <>Licensed Contractor<br />Network in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Shawnee&nbsp;County</span></>,
-    subheading: 'Receive pre-qualified service requests with photos, scope, and budget details provided before you commit. Nexus handles client billing and pays contractors directly within 30 days.',
-    primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
-    secondaryCta: { href: '#pricing', label: 'View pricing' },
-    badges: [
-      { icon: Eye, text: 'Full scope provided upfront' },
-      { icon: CreditCard, text: 'Direct contractor payment' },
-      { icon: CheckCircle2, text: 'Exclusive assignment per job' },
-    ],
-    image: '/business-analytics-data-visualization.jpg',
-    floatingCard: { icon: FileText, title: 'Documented requests', subtitle: 'Budget & scope visible upfront' },
-  },
-} as const
-
 export default function HomePage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -136,11 +104,34 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('nexus-theme')
+    const preferredTheme = storedTheme === 'dark' || storedTheme === 'light'
+      ? storedTheme
+      : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    setTheme(preferredTheme)
+  }, [])
+
+  function toggleTheme() {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(nextTheme)
+    localStorage.setItem('nexus-theme', nextTheme)
+    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.add(nextTheme)
+  }
+
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        background: theme === 'dark' ? '#0f1115' : '#f5f3ef',
+        color: theme === 'dark' ? '#f4f4f5' : '#111111',
+        transition: 'background 0.3s, color 0.3s',
+      }}
+    >
 
       {/* ── Announcement bar ── */}
-      <div style={{ background: '#111', color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 500, textAlign: 'center', padding: '8px 24px', letterSpacing: '0.01em' }}>
+      <div style={{ background: theme === 'dark' ? '#050505' : '#111', color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 500, textAlign: 'center', padding: '8px 24px', letterSpacing: '0.01em' }}>
         Now serving Topeka, KS and surrounding Shawnee County.&nbsp;
         <a href={CONTACT_INFO.phoneHref} style={{ color: '#6ee7a0', textDecoration: 'none' }}>{CONTACT_INFO.phoneDisplay}</a>
       </div>
@@ -151,7 +142,9 @@ export default function HomePage() {
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          background: scrolled ? 'rgba(245,243,239,0.97)' : '#f5f3ef',
+          background: scrolled
+            ? (theme === 'dark' ? 'rgba(15,17,21,0.97)' : 'rgba(245,243,239,0.97)')
+            : (theme === 'dark' ? '#0f1115' : '#f5f3ef'),
           backdropFilter: scrolled ? 'blur(16px)' : undefined,
           borderBottom: scrolled ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(0,0,0,0.06)',
           transition: 'background 0.3s, border-color 0.3s, box-shadow 0.3s',
@@ -213,6 +206,25 @@ export default function HomePage() {
             >
               Sign in
             </Link>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 9999,
+                border: '1px solid rgba(0,0,0,0.12)',
+                background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.65)',
+                color: theme === 'dark' ? '#f4f4f5' : '#111',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
             <Link
               href="/auth/sign-up"
               style={{
@@ -267,7 +279,7 @@ export default function HomePage() {
       <section style={{ position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <Image
-            src="/business-handshake-professional-meeting.jpg"
+            src="/minimalist-modern-office-workspace-aerial-view.jpg"
             alt="Nexus Operations coordinating a homeowner project with a vetted contractor."
             fill
             priority
@@ -487,8 +499,8 @@ export default function HomePage() {
             <div style={{ position: 'relative', order: 0 }} className="lg:order-last">
               <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
-                  src="/business-handshake-professional-meeting.jpg"
-                  alt="Professional contractor handshake"
+                  src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                  alt="Professional workspace and project planning"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
@@ -516,8 +528,7 @@ export default function HomePage() {
                 For contractors
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
-                  How Contractors Receive Work Through Nexus
-                Every request fully documented before you arrive.
+                How Contractors Receive Work Through Nexus
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
                 Licensed, insured contractors in Topeka and Shawnee County receive pre-qualified service requests with full project documentation — scope, photos, budget, and scheduling provided before assignment.
@@ -714,7 +725,7 @@ export default function HomePage() {
             <div style={{ position: 'relative' }}>
               <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
-                  src="/business-analytics-data-visualization.jpg"
+                  src="/business-growth-success-strategy.jpg"
                   alt="Property analytics and data"
                   fill
                   style={{ objectFit: 'cover' }}

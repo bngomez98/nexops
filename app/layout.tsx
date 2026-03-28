@@ -52,7 +52,7 @@ const GCR_BADGE_SCRIPT = GOOGLE_MERCHANT_ID
   : null
 
 const COMPANY_NAME = 'Nexus Operations, LLC'
-const DEFAULT_OG_IMAGE = '/business-handshake-professional-meeting.jpg'
+const DEFAULT_OG_IMAGE = '/business-growth-success-strategy.jpg'
 
 const LOCAL_BUSINESS_SCHEMA = {
   '@context': 'https://schema.org',
@@ -110,8 +110,6 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
       { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-dark-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
     apple: '/apple-icon.png',
   },
@@ -158,7 +156,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
         <Script id="consent-default" strategy="beforeInteractive">

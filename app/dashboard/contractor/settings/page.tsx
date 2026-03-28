@@ -53,6 +53,7 @@ function ContractorSettingsInner() {
     messageNotifications: true,
     weeklyDigest: true,
   })
+  const [themePreference, setThemePreference] = useState<'system' | 'light' | 'dark'>('system')
 
   // 2FA state
   const [mfaFactors, setMfaFactors]   = useState<MfaFactor[]>([])
@@ -95,6 +96,36 @@ function ContractorSettingsInner() {
     }
     loadData()
   }, [router, searchParams])
+
+  useEffect(() => {
+    const savedNotifications = localStorage.getItem('contractor-notifications')
+    if (savedNotifications) {
+      try {
+        setNotifications(JSON.parse(savedNotifications))
+      } catch {
+        // ignore invalid local preference cache
+      }
+    }
+    const savedTheme = localStorage.getItem('nexus-theme-preference')
+    if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
+      setThemePreference(savedTheme)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('contractor-notifications', JSON.stringify(notifications))
+  }, [notifications])
+
+  function applyThemePreference(next: 'system' | 'light' | 'dark') {
+    setThemePreference(next)
+    localStorage.setItem('nexus-theme-preference', next)
+    const resolved = next === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : next
+    localStorage.setItem('nexus-theme', resolved)
+    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.add(resolved)
+  }
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -465,6 +496,29 @@ function ContractorSettingsInner() {
                     <Save className="w-4 h-4" />
                     Save Preferences
                   </button>
+                </div>
+              </div>
+            )}
+
+            {tab === 'profile' && (
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                <div className="flex items-center gap-2.5 mb-1">
+                  <User className="w-4 h-4 text-primary" />
+                  <h2 className="font-bold text-foreground text-[15px]">Appearance</h2>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['system', 'light', 'dark'] as const).map(option => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => applyThemePreference(option)}
+                      className={`px-3 py-2 rounded-lg border text-[12px] font-semibold capitalize transition-colors ${
+                        themePreference === option ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:bg-secondary/40'
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
