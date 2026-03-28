@@ -21,6 +21,7 @@ const SERVICE_CATEGORIES = [
   { value: 'electrical',    label: 'Electrical',    icon: '⚡', desc: 'Panel, wiring, outlets, lighting' },
   { value: 'plumbing',      label: 'Plumbing',      icon: '🔧', desc: 'Repairs, drains, installations' },
   { value: 'excavation',    label: 'Excavation',    icon: '🚜', desc: 'Grading, trenching, land clearing' },
+  { value: 'open-request',  label: 'Open Request',  icon: '🌐', desc: 'Broadcast to all service specialties' },
   { value: 'other',         label: 'Other',         icon: '🧩', desc: 'Custom, specialty, or community request' },
 ]
 
@@ -90,7 +91,8 @@ export default function NewProjectRequest() {
   const [analysisError, setAnalysisError] = useState('')
   const [analyzingText, setAnalyzingText] = useState(false)
   const [formData, setFormData] = useState({
-    category: '', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
+    category: 'open-request', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
+    pipelineMode: 'automated', communityVisible: true, accessRequirements: '',
   })
 
   useEffect(() => {
@@ -163,6 +165,9 @@ export default function NewProjectRequest() {
   function validateStep(s: number): boolean {
     setError('')
     setFieldErrors({})
+        if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
+      setFieldErrors({ customCategory: 'Please describe the service category.' })
+      setError('Please describe the service category.')
     if (s === 0 && !formData.category) {
       setError('Please select a service category.')
       return false
@@ -202,6 +207,9 @@ export default function NewProjectRequest() {
       payload.append('description', validated.description)
       payload.append('location', validated.location)
       payload.append('preferredDate', validated.preferredDate)
+      payload.append('pipelineMode', validated.pipelineMode)
+      payload.append('communityVisible', String(validated.communityVisible))
+      if (validated.accessRequirements) payload.append('accessRequirements', validated.accessRequirements)
       if (validated.budget) payload.append('budget', String(parseFloat(validated.budget)))
       uploadedImages.forEach(img => payload.append('images', img))
 
@@ -349,7 +357,7 @@ export default function NewProjectRequest() {
               <button
                 type="button"
                 onClick={nextStep}
-                disabled={!formData.category}
+                disabled={!formData.category || formData.category.length < 2}
                 className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13.5px] py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
                 Continue to Project Details
@@ -597,6 +605,45 @@ export default function NewProjectRequest() {
                   <p className="text-[11px] text-muted-foreground mt-1.5">
                     A rough estimate helps contractors determine fit. Final pricing will be confirmed during consultation.
                   </p>
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-1">
+                  Access &amp; Community Settings
+                </h2>
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Pipeline Mode</label>
+                  <select
+                    name="pipelineMode"
+                    value={formData.pipelineMode}
+                    onChange={e => setFormData(prev => ({ ...prev, pipelineMode: e.target.value as 'standard' | 'automated' | 'community' }))}
+                    className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+                  >
+                    <option value="automated">Automated matching and tracking (recommended)</option>
+                    <option value="community">Community-first routing and contractor visibility</option>
+                    <option value="standard">Standard manual review pipeline</option>
+                  </select>
+                </div>
+                <label className="flex items-start gap-2 text-[12px] text-foreground">
+                  <input
+                    type="checkbox"
+                    checked={formData.communityVisible}
+                    onChange={e => setFormData(prev => ({ ...prev, communityVisible: e.target.checked }))}
+                    className="mt-0.5"
+                  />
+                  Allow this request to be visible to the full trusted contractor community for faster matching.
+                </label>
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Access Notes <span className="text-muted-foreground font-normal">(optional)</span></label>
+                  <textarea
+                    name="accessRequirements"
+                    value={formData.accessRequirements}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="Gate code, best entry, parking details, pets on-site, etc."
+                    className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition resize-none"
+                  />
                 </div>
               </div>
 

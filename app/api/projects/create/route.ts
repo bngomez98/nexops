@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { projectRequestSchema } from '@/lib/validators'
+import { buildPipelineSnapshot, serializePipelineSnapshot } from '@/lib/request-pipeline'
 import { createRequestId, internalError } from '@/lib/api-error'
 import { normalizeCategorySlug } from '@/lib/category'
 
@@ -43,7 +44,10 @@ export async function POST(request: NextRequest) {
 
     // Accept both JSON and FormData
     const contentType = request.headers.get('content-type') ?? ''
-    let category = '', customCategory = '', title = '', description = '', location = '', budget = '', preferredDate = ''
+    let category = 'open-request', customCategory = '', title = '', description = '', location = '', budget = '', preferredDate = ''
+let pipelineMode: 'standard' | 'automated' | 'community' = 'automated'
+let communityVisible = true
+let accessRequirements = ''
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData()
@@ -54,9 +58,12 @@ export async function POST(request: NextRequest) {
       location    = String(formData.get('location') ?? '')
       budget      = String(formData.get('budget') ?? '')
       preferredDate = String(formData.get('preferredDate') ?? '')
+pipelineMode = (String(formData.get('pipelineMode') ?? 'automated') as 'standard' | 'automated' | 'community')
+communityVisible = String(formData.get('communityVisible') ?? 'true') !== 'false'
+accessRequirements = String(formData.get('accessRequirements') ?? '')
     } else {
       const body = await request.json()
-      ;({ category, customCategory, title, description, location, budget, preferredDate } = body)
+      ;({ category, customCategory, title, description, location, budget, preferredDate, pipelineMode, communityVisible, accessRequirements } = body)
     }
 
     const parsed = projectRequestSchema.safeParse({
@@ -67,6 +74,9 @@ export async function POST(request: NextRequest) {
       location,
       budget,
       preferredDate,
+      pipelineMode,
+      communityVisible,
+      accessRequirements,
     })
 
     if (!parsed.success) {
@@ -77,7 +87,12 @@ export async function POST(request: NextRequest) {
     }
 
     const validated = parsed.data
-    const normalizedCategory = normalizeCategory(validated.category, validated.customCategory)
+    const normalizedCategory = normalizeCategory(validated.category || 'open-request', validated.customCategory)
+    const pipeline = buildPipelineSnapshot({
+      mode: validated.pipelineMode,
+      communityVisible: validated.communityVisible,
+      accessRequirements: validated.accessRequirements,
+    })
 
     const { data: sr, error: insertError } = await supabase
       .from('service_requests')
@@ -85,7 +100,7 @@ export async function POST(request: NextRequest) {
         owner_id:         user.id,
         category:         normalizedCategory,
         description:      validated.description,
-        additional_notes: validated.title || null,
+        additional_notes: [validated.title, serializePipelineSnapshot(pipeline)].filter(Boolean).join('\n\n') || null,
         address:          validated.location,
         city:             'Topeka',
         state:            'KS',
