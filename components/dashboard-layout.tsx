@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, FileText, Briefcase, TrendingUp, Users,
   Settings, LogOut, Menu, X, Bell, ChevronRight,
@@ -20,8 +20,9 @@ interface NavItem {
 const NAVIGATION_CONFIG: Record<string, NavItem[]> = {
   client: [
     { label: 'Overview', href: '/dashboard', icon: LayoutDashboard, exact: true },
-    { label: 'Active Requests', href: '/dashboard/requests', icon: FileText, badge: 3 },
-    { label: 'Service History', href: '/dashboard/history', icon: Briefcase },
+    { label: 'Active Requests', href: '/dashboard/requests', icon: FileText },
+    { label: 'Messages', href: '/dashboard/messages', icon: Briefcase },
+    { label: 'Payments', href: '/dashboard/earnings', icon: TrendingUp },
     { label: 'My Team', href: '/dashboard/team', icon: Users },
   ],
   contractor: [
@@ -69,14 +70,28 @@ export function DashboardLayout({
   onLogout,
 }: DashboardLayoutProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+  const [navSearchTerm, setNavSearchTerm] = useState('')
 
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const navItems = resolveNavigation(userRole, pathname)
+  const filteredNavItems = navItems.filter((item) =>
+    item.label.toLowerCase().includes(navSearchTerm.toLowerCase().trim())
+  )
   const currentActiveItem = navItems.find(item => checkIsActive(item, pathname))
   const pageTitle = currentActiveItem?.label ?? 'Dashboard'
+  const accountSettingsHref =
+    userRole === 'contractor'
+      ? '/dashboard/contractor/settings'
+      : userRole === 'admin'
+        ? '/dashboard/admin/users'
+        : userRole === 'homeowner'
+          ? '/dashboard/homeowner/settings'
+          : '/dashboard/requests'
 
   useEffect(() => {
     setIsMobileMenuOpen(false)
@@ -91,6 +106,18 @@ export function DashboardLayout({
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+
+  useEffect(() => {
+    function onShortcut(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        searchInputRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', onShortcut)
+    return () => document.removeEventListener('keydown', onShortcut)
   }, [])
 
   const userInitials = userName.split(' ').map(word => word[0]).slice(0, 2).join('').toUpperCase()
@@ -143,7 +170,11 @@ export function DashboardLayout({
             Navigation
           </p>
 
-          {navItems.map((item) => {
+          {filteredNavItems.length === 0 && (
+            <div className="px-3 py-4 text-xs text-sidebar-muted">No navigation matches your search.</div>
+          )}
+
+          {filteredNavItems.map((item) => {
             const isActive = checkIsActive(item, pathname)
             const Icon = item.icon
             return (
@@ -208,8 +239,11 @@ export function DashboardLayout({
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-border text-muted-foreground w-56 focus-within:ring-2 focus-within:ring-primary/40 transition-all">
               <Search className="w-3.5 h-3.5 shrink-0" />
               <input
+                ref={searchInputRef}
                 type="text"
-                placeholder="Search..."
+                value={navSearchTerm}
+                onChange={(e) => setNavSearchTerm(e.target.value)}
+                placeholder="Search navigation..."
                 className="bg-transparent border-none outline-none text-[12.5px] w-full placeholder:text-muted-foreground text-foreground"
               />
               <div className="flex items-center gap-0.5 text-[9px] font-medium opacity-40 shrink-0">
@@ -249,19 +283,23 @@ export function DashboardLayout({
                   </div>
                   <div className="p-1.5">
                     <Link
-                      href="/dashboard/homeowner/settings"
+                      href={accountSettingsHref}
                       className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-foreground/80 hover:bg-secondary hover:text-foreground rounded-lg transition-colors"
                     >
                       <UserIcon className="w-3.5 h-3.5" /> Account Settings
                     </Link>
-                    {onLogout && (
-                      <button
-                        onClick={onLogout}
+                    <button
+                        onClick={() => {
+                          if (onLogout) {
+                            onLogout()
+                            return
+                          }
+                          router.push('/api/auth/logout')
+                        }}
                         className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors mt-0.5"
                       >
                         <LogOut className="w-3.5 h-3.5" /> Sign Out
                       </button>
-                    )}
                   </div>
                 </div>
               )}
