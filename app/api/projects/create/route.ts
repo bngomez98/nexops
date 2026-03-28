@@ -2,26 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { projectRequestSchema } from '@/lib/validators'
 import { createRequestId, internalError } from '@/lib/api-error'
+import { normalizeCategorySlug } from '@/lib/category'
 
 // Custom categories are stored as URL-safe slugs so they can flow through the
 // same matching, filtering, and analytics paths as predefined categories.
 function normalizeCategory(category: string, customCategory?: string) {
-  const normalizedCategory = category
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 80)
+  if (category.trim().toLowerCase() === 'other') {
+    const normalized = normalizeCategorySlug(customCategory ?? '')
+    return normalized || 'other'
+  }
 
-  if (normalizedCategory !== 'other') return normalizedCategory || 'other'
+  const normalizedCategory = normalizeCategorySlug(category)
 
-  const normalized = (customCategory ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-
-  return normalized || 'other'
+  return normalizedCategory || 'other'
 }
 
 function toConsultationDate(value: string) {
@@ -84,9 +77,6 @@ export async function POST(request: NextRequest) {
     }
 
     const validated = parsed.data
-    if (!validated.preferredDate) {
-      return NextResponse.json({ error: 'Service date is required' }, { status: 400 })
-    }
     const normalizedCategory = normalizeCategory(validated.category, validated.customCategory)
 
     const { data: sr, error: insertError } = await supabase

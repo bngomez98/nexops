@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
 import { createRequestId, internalError } from '@/lib/api-error'
+import { normalizeCategorySlug } from '@/lib/category'
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,7 +52,7 @@ Also provide:
     })
 
     const normalizedSuggestedCategory = typeof result.output.suggestedCategory === 'string'
-      ? result.output.suggestedCategory.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80)
+      ? normalizeCategorySlug(result.output.suggestedCategory)
       : null
 
     return NextResponse.json({

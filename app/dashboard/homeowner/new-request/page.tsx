@@ -24,6 +24,8 @@ const SERVICE_CATEGORIES = [
   { value: 'other',         label: 'Other',         icon: '🧩', desc: 'Custom, specialty, or community request' },
 ]
 
+const SERVICE_CATEGORY_VALUES = new Set(SERVICE_CATEGORIES.map(cat => cat.value))
+
 const STEPS = [
   { label: 'Category', desc: 'What type of work?' },
   { label: 'Details',  desc: 'Describe the project' },
@@ -331,11 +333,7 @@ export default function NewProjectRequest() {
                   <input
                     name="customCategory"
                     value={formData.customCategory}
-                    onChange={(e) => {
-                      handleChange(e)
-                      const value = e.target.value
-                      setFormData(prev => ({ ...prev, category: value.trim() ? 'other' : prev.category }))
-                    }}
+                    onChange={handleChange}
                     placeholder="e.g., pool maintenance, accessibility modification, signage"
                     className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
                       fieldErrors.customCategory ? 'border-destructive' : 'border-input'
@@ -419,7 +417,14 @@ export default function NewProjectRequest() {
                       <button
                         type="button"
                         onClick={() => {
-                          if (suggestedCategory) setFormData(p => ({ ...p, category: suggestedCategory, customCategory: '' }))
+                          if (suggestedCategory) {
+                            const shouldClearCustomCategory = SERVICE_CATEGORY_VALUES.has(suggestedCategory)
+                            setFormData(p => ({
+                              ...p,
+                              category: suggestedCategory,
+                              customCategory: shouldClearCustomCategory ? '' : p.customCategory,
+                            }))
+                          }
                         }}
                         className="font-semibold text-primary hover:underline"
                       >
@@ -554,6 +559,11 @@ export default function NewProjectRequest() {
                   <p className="text-[11px] text-muted-foreground mt-1.5">
                     Choose when you'd like the first visit, estimate, or service window to start.
                   </p>
+                  {!formData.preferredDate && (
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      Select a date to submit this request.
+                    </p>
+                  )}
                 </div>
 
                 <div>
