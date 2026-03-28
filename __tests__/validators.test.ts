@@ -174,14 +174,29 @@ describe('projectRequestSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('rejects overly short custom categories', () => {
+  it('accepts automated community pipeline preferences', () => {
     const result = projectRequestSchema.safeParse({
-      category: 'other',
-      customCategory: 'ab',
-      title: 'Repair specialty feature',
-      description: 'The specialty system needs inspection, documentation, and repair support.',
+      category: 'open-request',
+      title: 'Document and track multi-service request',
+      description: 'Need an automated workflow to match specialists, track progress, and manage billing updates.',
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
+      pipelineMode: 'community',
+      communityVisible: true,
+      accessRequirements: 'Gate code 4421, use east entrance.',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid pipeline mode', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'open-request',
+      title: 'General request for service coordination',
+      description: 'Need request tracking, handling, and documentation support for ongoing service work.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+      pipelineMode: 'unknown-mode',
+      communityVisible: true,
     })
     expect(result.success).toBe(false)
   })
