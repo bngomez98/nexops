@@ -36,13 +36,13 @@ interface UserData {
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string; dot: string; step: number }> = {
-  open:              { label: 'Submitted',   color: 'text-sky-700',     bg: 'bg-sky-100',     dot: 'bg-sky-500',     step: 1 },
-  pending_review:    { label: 'In Review',   color: 'text-amber-700',   bg: 'bg-amber-100',   dot: 'bg-amber-500',   step: 1 },
-  claimed:           { label: 'Assigned',    color: 'text-violet-700',  bg: 'bg-violet-100',  dot: 'bg-violet-500',  step: 2 },
-  'in-progress':     { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10',  dot: 'bg-primary',     step: 3 },
-  in_progress:       { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10',  dot: 'bg-primary',     step: 3 },
-  completed:         { label: 'Completed',   color: 'text-emerald-700', bg: 'bg-emerald-100', dot: 'bg-emerald-500', step: 4 },
-  cancelled:         { label: 'Cancelled',   color: 'text-slate-600',   bg: 'bg-slate-100',   dot: 'bg-slate-400',   step: 0 },
+  open:              { label: 'Submitted',   color: 'text-foreground/70',   bg: 'bg-muted',       dot: 'bg-muted-foreground', step: 1 },
+  pending_review:    { label: 'In Review',   color: 'text-foreground/70',   bg: 'bg-muted',       dot: 'bg-muted-foreground', step: 1 },
+  claimed:           { label: 'Assigned',    color: 'text-primary',         bg: 'bg-primary/10',  dot: 'bg-primary',          step: 2 },
+  'in-progress':     { label: 'In Progress', color: 'text-primary',         bg: 'bg-primary/10',  dot: 'bg-primary',          step: 3 },
+  in_progress:       { label: 'In Progress', color: 'text-primary',         bg: 'bg-primary/10',  dot: 'bg-primary',          step: 3 },
+  completed:         { label: 'Completed',   color: 'text-foreground',      bg: 'bg-muted',       dot: 'bg-foreground/60',    step: 4 },
+  cancelled:         { label: 'Cancelled',   color: 'text-muted-foreground',bg: 'bg-muted',       dot: 'bg-muted-foreground', step: 0 },
 }
 
 const STEPS = ['Submitted', 'Assigned', 'In Progress', 'Completed']
@@ -66,7 +66,7 @@ function timeAgo(d: string) {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const st = STATUS_MAP[status] ?? { label: status, color: 'text-muted-foreground', bg: 'bg-muted', dot: 'bg-slate-400', step: 0 }
+  const st = STATUS_MAP[status] ?? { label: status, color: 'text-muted-foreground', bg: 'bg-muted', dot: 'bg-muted-foreground', step: 0 }
   return (
     <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${st.dot} flex-shrink-0`} />
@@ -193,9 +193,9 @@ function HomeownerDashboardInner() {
   const totalSpend = completed.reduce((s, r) => s + (r.budget ?? 0), 0)
 
   const stats = [
-    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'text-sky-500',     bg: 'bg-sky-500/10' },
-    { label: 'In Progress', value: active.length,     icon: Wrench,       color: 'text-amber-500',   bg: 'bg-amber-500/10' },
-    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'text-muted-foreground', bg: 'bg-muted' },
+    { label: 'In Progress', value: active.length,     icon: Wrench,       color: 'text-muted-foreground', bg: 'bg-muted' },
+    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'text-primary',          bg: 'bg-primary/10' },
     { label: 'Total Spend', value: `$${totalSpend.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
   ]
 
@@ -388,24 +388,24 @@ function HomeownerDashboardInner() {
             {
               href: '/dashboard/homeowner/new-request',
               icon: Plus,
-              iconBg: 'bg-primary/10',
-              iconColor: 'text-primary',
-              title: 'Submit New Request',
+              iconBg: 'bg-muted',
+              iconColor: 'text-foreground',
+              title: 'New Service Request',
               sub: 'Get matched with a verified contractor',
             },
             {
               href: '/dashboard/homeowner/billing',
               icon: CreditCard,
-              iconBg: 'bg-violet-500/10',
-              iconColor: 'text-violet-500',
+              iconBg: 'bg-muted',
+              iconColor: 'text-foreground',
               title: 'Billing & Subscription',
               sub: `Current plan: ${user.subscriptionTier ?? 'Starter'}`,
             },
             {
               href: '/dashboard/homeowner/settings',
               icon: Activity,
-              iconBg: 'bg-amber-500/10',
-              iconColor: 'text-amber-500',
+              iconBg: 'bg-muted',
+              iconColor: 'text-foreground',
               title: 'Account Settings',
               sub: 'Update profile, notifications & preferences',
             },

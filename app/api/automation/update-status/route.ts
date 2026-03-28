@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (err) {
-    console.error('[POST /api/automation/update-project-status]', err)
+    console.error('[POST /api/automation/update-status]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
