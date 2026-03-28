@@ -6,6 +6,7 @@ import { getSiteUrl } from "@/lib/env"
 const siteUrl = getSiteUrl()
 
 export async function POST() {
+  try {
   const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -64,4 +65,8 @@ export async function POST() {
   })
 
   return NextResponse.json({ url: accountLink.url })
+  } catch (err) {
+    console.error('[POST /api/stripe/connect/onboard]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

@@ -55,6 +55,8 @@ export function Footer() {
                 { href: "/services", label: "Services" },
                 { href: "/#process", label: "How It Works" },
                 { href: "/pricing", label: "Pricing" },
+                { href: "/commercial", label: "Commercial" },
+                { href: "/blog", label: "Blog" },
                 { href: "/contact", label: "Contact" },
                 { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", external: true },
               ].map(({ href, label, external }) => (

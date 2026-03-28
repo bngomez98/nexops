@@ -146,7 +146,7 @@ function PMNewRequestInner() {
             <p className="text-[13px] font-semibold">Urgency</p>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { value: 'routine', label: 'Routine', desc: 'Schedule within 1–2 weeks', color: 'text-sky-600' },
+                { value: 'routine', label: 'Routine', desc: 'Schedule within 1–2 weeks', color: 'text-muted-foreground' },
                 { value: 'urgent', label: 'Urgent', desc: 'Needed within 48–72 hours', color: 'text-amber-600' },
                 { value: 'emergency', label: 'Emergency', desc: 'Needs immediate attention', color: 'text-red-600' },
               ].map(u => (
