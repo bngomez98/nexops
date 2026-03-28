@@ -162,7 +162,7 @@ describe('projectRequestSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('rejects custom categories without details', () => {
+  it('accepts "other" category without extra details', () => {
     const result = projectRequestSchema.safeParse({
       category: 'other',
       customCategory: '',
@@ -171,7 +171,30 @@ describe('projectRequestSchema', () => {
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
     })
-    expect(result.success).toBe(false)
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts custom category with category set to other', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'other',
+      customCategory: 'pool-maintenance',
+      title: 'Handle pool chemical balance and filter replacement',
+      description: 'Need recurring pool support and documentation for chemical logs and filtration checks.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts non-enumerated category slugs', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'graffiti-removal',
+      title: 'Remove graffiti from retaining wall',
+      description: 'Need cleanup, surface prep, and matching paint with documented before/after photos.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+    })
+    expect(result.success).toBe(true)
   })
 
   it('accepts automated community pipeline preferences', () => {

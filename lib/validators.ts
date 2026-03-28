@@ -31,6 +31,7 @@ export const loginSchema = z.object({
 
 export const projectRequestSchema = z.object({
   category: z.string().trim().min(1, 'Please select a service category').default('open-request'),
+  category: z.string().trim().min(1, 'Please select a service category').max(80, 'Category must be less than 80 characters'),
   customCategory: z.string().trim().max(80, 'Custom category must be less than 80 characters').optional().or(z.literal('')),
   title: z.string().min(5, 'Title must be at least 5 characters').max(100, 'Title must be less than 100 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters').max(2000, 'Description must be less than 2000 characters'),
@@ -51,14 +52,7 @@ export const projectRequestSchema = z.object({
       return selected >= today
     }, 'Preferred service date cannot be in the past'),
 }).superRefine((data, ctx) => {
-  if (data.category === 'other' && !data.customCategory?.trim()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Please describe the service category',
-      path: ['customCategory'],
-    })
-  }
-  if (data.category === 'other' && data.customCategory?.trim() && data.customCategory.trim().length < 3) {
+  if (data.customCategory?.trim() && data.customCategory.trim().length < 3) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: 'Custom category must be at least 3 characters',

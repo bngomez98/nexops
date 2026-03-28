@@ -2,19 +2,20 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { projectRequestSchema } from '@/lib/validators'
 import { buildPipelineSnapshot, serializePipelineSnapshot } from '@/lib/request-pipeline'
+import { createRequestId, internalError } from '@/lib/api-error'
+import { normalizeCategorySlug } from '@/lib/category'
 
 // Custom categories are stored as URL-safe slugs so they can flow through the
 // same matching, filtering, and analytics paths as predefined categories.
 function normalizeCategory(category: string, customCategory?: string) {
-  if (category !== 'other') return category
+  if (category.trim().toLowerCase() === 'other') {
+    const normalized = normalizeCategorySlug(customCategory ?? '')
+    return normalized || 'other'
+  }
 
-  const normalized = (customCategory ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+  const normalizedCategory = normalizeCategorySlug(category)
 
-  return normalized || 'other'
+  return normalizedCategory || 'other'
 }
 
 function toConsultationDate(value: string) {
@@ -130,7 +131,8 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
       { status: 201 }
     )
   } catch (err) {
-    console.error('[POST /api/projects/create]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[POST /api/projects/create][${requestId}]`, err)
+    return internalError('Unable to create service request', { requestId })
   }
 }
