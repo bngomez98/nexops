@@ -70,7 +70,6 @@ export async function POST(req: NextRequest) {
         })
         .eq('stripe_subscription_id', sub.id)
 
-      // Update profile tier
       const isActive = status === 'active' || status === 'trialing'
       await supabase.from('profiles')
         .update({
