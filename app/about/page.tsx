@@ -70,8 +70,8 @@ export default function AboutPage() {
             </div>
             <div className="hidden lg:block">
               <Image
-                src="/minimalist-modern-office-workspace-aerial-view.jpg"
-                alt="Modern office workspace"
+                src="https://github.com/user-attachments/assets/d5458027-422e-4e06-a659-f7006fe659dd"
+                alt="Nexus Operations office at 2611 SW 17th St in Topeka"
                 width={560}
                 height={420}
                 className="w-full object-cover rounded-2xl shadow-lg"
