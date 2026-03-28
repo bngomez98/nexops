@@ -7,8 +7,10 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, Receipt, PlusCircle, ChevronRight,
-  Clock, CheckCircle2, AlertCircle, DollarSign,
+  Clock, CheckCircle2, DollarSign, Send,
+  AlertCircle,
 } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface Invoice {
   id: string
@@ -23,8 +25,8 @@ interface Invoice {
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
   draft: { label: 'Draft', color: 'text-slate-700', bg: 'bg-slate-100' },
-  sent:  { label: 'Sent',  color: 'text-amber-700', bg: 'bg-amber-100' },
-  paid:  { label: 'Paid',  color: 'text-emerald-700', bg: 'bg-emerald-100' },
+  sent:  { label: 'Sent',  color: 'text-foreground/70', bg: 'bg-muted' },
+  paid:  { label: 'Paid',  color: 'text-foreground', bg: 'bg-muted' },
 }
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
@@ -34,6 +36,7 @@ export default function ContractorInvoicesPage() {
   const [user, setUser]         = useState<any>(null)
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading]   = useState(true)
+  const [sending, setSending]   = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -59,11 +62,34 @@ export default function ContractorInvoicesPage() {
     router.push('/auth/login')
   }
 
+  async function handleSend(invoiceId: string) {
+    setSending(invoiceId)
+    try {
+      const res = await fetch('/api/invoices', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: invoiceId, status: 'sent' }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error ?? 'Failed to send invoice')
+        return
+      }
+      toast.success('Invoice sent to client!')
+      setInvoices(prev => prev.map(inv => inv.id === invoiceId ? { ...inv, status: 'sent' } : inv))
+    } catch {
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setSending(null)
+    }
+  }
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
   if (!user) return null
 
-  const totalEarned = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + i.subtotal, 0)
+  const totalEarned  = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + i.subtotal, 0)
   const totalPending = invoices.filter(i => i.status === 'sent').reduce((s, i) => s + i.subtotal, 0)
+  const totalDrafts  = invoices.filter(i => i.status === 'draft').length
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,7 +98,7 @@ export default function ContractorInvoicesPage() {
         <div className="flex items-start justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Invoices</h1>
-            <p className="text-[14px] text-muted-foreground mt-1">Track your submitted invoices and payment status.</p>
+            <p className="text-[14px] text-muted-foreground mt-1">Create, send, and track your project invoices.</p>
           </div>
           <Link href="/dashboard/contractor/invoices/new">
             <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity">
@@ -82,11 +108,12 @@ export default function ContractorInvoicesPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {[
-            { label: 'Total Earned', value: `$${totalEarned.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-            { label: 'Pending Payment', value: `$${totalPending.toLocaleString()}`, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+            { label: 'Total Earned', value: `$${totalEarned.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+            { label: 'Pending Payment', value: `$${totalPending.toLocaleString()}`, icon: Clock, color: 'text-muted-foreground', bg: 'bg-muted' },
             { label: 'Total Invoices', value: invoices.length, icon: Receipt, color: 'text-primary', bg: 'bg-primary/10' },
+            { label: 'Drafts', value: totalDrafts, icon: AlertCircle, color: 'text-slate-500', bg: 'bg-slate-500/10' },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -129,10 +156,23 @@ export default function ContractorInvoicesPage() {
                     </div>
                     <p className="text-[12px] text-muted-foreground">{new Date(inv.created_at).toLocaleDateString()}</p>
                   </div>
-                  <div className="text-right flex-shrink-0">
+                  <div className="text-right flex-shrink-0 mr-3">
                     <p className="text-[14px] font-bold text-foreground">${inv.subtotal.toLocaleString()}</p>
                     <p className="text-[11px] text-muted-foreground">+ ${inv.nexus_fee.toLocaleString()} fee</p>
                   </div>
+                  {inv.status === 'draft' && (
+                    <button
+                      onClick={() => handleSend(inv.id)}
+                      disabled={sending === inv.id}
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary border border-primary/30 bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
+                    >
+                      {sending === inv.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                      Send
+                    </button>
+                  )}
+                  {inv.status === 'paid' && (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  )}
                 </div>
               )
             })}

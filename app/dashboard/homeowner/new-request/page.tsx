@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ImageUpload } from '@/components/image-upload'
+import { formatDateOnly, todayDateInputValue } from '@/lib/date-format'
 import { projectRequestSchema } from '@/lib/validators'
 import { ZodError } from 'zod'
 import {
   Loader2, ChevronLeft, AlertCircle, CheckCircle2,
-  ArrowRight, MapPin, DollarSign, Zap,
+  ArrowRight, MapPin, DollarSign, Zap, CalendarDays,
 } from 'lucide-react'
 
 const SERVICE_CATEGORIES = [
@@ -20,12 +21,13 @@ const SERVICE_CATEGORIES = [
   { value: 'electrical',    label: 'Electrical',    icon: '⚡', desc: 'Panel, wiring, outlets, lighting' },
   { value: 'plumbing',      label: 'Plumbing',      icon: '🔧', desc: 'Repairs, drains, installations' },
   { value: 'excavation',    label: 'Excavation',    icon: '🚜', desc: 'Grading, trenching, land clearing' },
+  { value: 'other',         label: 'Other',         icon: '🧩', desc: 'Custom, specialty, or community request' },
 ]
 
 const STEPS = [
   { label: 'Category', desc: 'What type of work?' },
   { label: 'Details',  desc: 'Describe the project' },
-  { label: 'Location', desc: 'Where & budget' },
+  { label: 'Location', desc: 'Where, when & budget' },
 ]
 
 function StepIndicator({ current }: { current: number }) {
@@ -60,9 +62,14 @@ function StepIndicator({ current }: { current: number }) {
   )
 }
 
+type RequestUser = {
+  name: string
+  role: string
+}
+
 export default function NewProjectRequest() {
   const router = useRouter()
-  const [user, setUser]             = useState<any>(null)
+  const [user, setUser]             = useState<RequestUser | null>(null)
   const [loading, setLoading]       = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [step, setStep]             = useState(0)
@@ -78,9 +85,10 @@ export default function NewProjectRequest() {
     urgency: string | null
     followUpQuestion: string | null
   } | null>(null)
+  const [analysisError, setAnalysisError] = useState('')
   const [analyzingText, setAnalyzingText] = useState(false)
   const [formData, setFormData] = useState({
-    category: '', title: '', description: '', location: '', budget: '',
+    category: '', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
   })
 
   useEffect(() => {
@@ -100,11 +108,13 @@ export default function NewProjectRequest() {
     check()
   }, [router])
 
-  // Debounced AI analysis
+  // Debounced AI analysis runs after title/description entry so users still get
+  // automation help even when they start with a broad or custom category.
   useEffect(() => {
-    if (!formData.title || !formData.description || formData.category) return
+    if (!formData.title || !formData.description) return
     const timer = setTimeout(async () => {
       setAnalyzingText(true)
+      setAnalysisError('')
       try {
         const res = await fetch('/api/automation/categorize-request', {
           method: 'POST',
@@ -124,7 +134,11 @@ export default function NewProjectRequest() {
             urgency: data.urgency ?? null,
             followUpQuestion: data.followUpQuestion ?? null,
           })
+        } else {
+          setAnalysisError('Automated request analysis is temporarily unavailable. You can still submit your request.')
         }
+      } catch {
+        setAnalysisError('Automated request analysis is temporarily unavailable. You can still submit your request.')
       } finally {
         setAnalyzingText(false)
       }
@@ -145,6 +159,11 @@ export default function NewProjectRequest() {
       setError('Please select a service category.')
       return false
     }
+    if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
+      setFieldErrors({ customCategory: 'Please describe the service category.' })
+      setError('Please describe the service category.')
+      return false
+    }
     if (s === 1) {
       const errs: Record<string, string> = {}
       if (!formData.title.trim()) errs.title = 'Project title is required.'
@@ -160,9 +179,12 @@ export default function NewProjectRequest() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!formData.location.trim()) {
-      setFieldErrors({ location: 'Location is required.' })
-      setError('Please enter the project location.')
+    const stepErrors: Record<string, string> = {}
+    if (!formData.location.trim()) stepErrors.location = 'Location is required.'
+    if (!formData.preferredDate) stepErrors.preferredDate = 'Preferred service date is required.'
+    if (Object.keys(stepErrors).length > 0) {
+      setFieldErrors(stepErrors)
+      setError('Please complete the required scheduling details.')
       return
     }
     setError('')
@@ -171,23 +193,36 @@ export default function NewProjectRequest() {
       const validated = projectRequestSchema.parse(formData)
       setSubmitting(true)
       const payload = new FormData()
-      payload.append('category',    validated.category)
-      payload.append('title',       validated.title)
+      payload.append('category', validated.category)
+      if (validated.customCategory) payload.append('customCategory', validated.customCategory)
+      payload.append('title', validated.title)
       payload.append('description', validated.description)
-      payload.append('location',    validated.location)
+      payload.append('location', validated.location)
+      payload.append('preferredDate', validated.preferredDate)
       if (validated.budget) payload.append('budget', String(parseFloat(validated.budget)))
       uploadedImages.forEach(img => payload.append('images', img))
 
       const res  = await fetch('/api/projects/create', { method: 'POST', body: payload })
       const data = await res.json()
-      if (!res.ok) { setError(data.error || 'Failed to create request'); setSubmitting(false); return }
+      if (!res.ok) {
+        if (data.details) {
+          const serverErrors = Object.fromEntries(
+            Object.entries(data.details).map(([key, messages]) => [key, Array.isArray(messages) ? messages[0] : String(messages)])
+          )
+          setFieldErrors(serverErrors)
+        }
+        setError(data.error || 'Failed to create request')
+        setSubmitting(false)
+        return
+      }
 
       // Trigger smart contractor matching
-      if (data.projectId) {
+      const projectId = data.project?.id ?? data.projectId
+      if (projectId) {
         fetch('/api/automation/match-contractor', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ projectId: data.projectId }),
+          body: JSON.stringify({ projectId }),
         }).catch(() => {})
       }
 
@@ -215,6 +250,7 @@ export default function NewProjectRequest() {
   if (!user) return null
 
   const selectedCat = SERVICE_CATEGORIES.find(c => c.value === formData.category)
+  const minPreferredDate = todayDateInputValue()
 
   return (
     <div className="min-h-screen bg-background">
@@ -284,6 +320,26 @@ export default function NewProjectRequest() {
                     </button>
                   ))}
                 </div>
+                {formData.category === 'other' && (
+                  <div className="mt-4">
+                    <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                      Service Category Details <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      name="customCategory"
+                      value={formData.customCategory}
+                      onChange={handleChange}
+                      placeholder="e.g., pool maintenance, accessibility modification, signage"
+                      className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
+                        fieldErrors.customCategory ? 'border-destructive' : 'border-input'
+                      }`}
+                    />
+                    {fieldErrors.customCategory && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.customCategory}</p>}
+                    <p className="text-[11px] text-muted-foreground mt-1.5">
+                      Custom requests still enter the shared service pipeline so specialists can review, document, and claim them.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <button
@@ -347,10 +403,13 @@ export default function NewProjectRequest() {
                       <Loader2 className="w-3 h-3 animate-spin" /> Analyzing your request…
                     </p>
                   )}
-                  {suggestedCategory && !formData.category && (
+                  {analysisError && (
+                    <p className="text-[11px] text-muted-foreground mt-1">{analysisError}</p>
+                  )}
+                  {suggestedCategory && formData.category === 'other' && suggestedCategory !== 'other' && (
                     <div className="mt-2 flex items-center gap-2 text-[12px]">
                       <Zap className="w-3.5 h-3.5 text-primary" />
-                      <span className="text-muted-foreground">Suggested category:</span>
+                      <span className="text-muted-foreground">AI suggests:</span>
                       <button
                         type="button"
                         onClick={() => {
@@ -378,8 +437,8 @@ export default function NewProjectRequest() {
                       {aiAnalysis.urgency && aiAnalysis.urgency !== 'normal' && (
                         <div className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${
                           aiAnalysis.urgency === 'urgent' ? 'bg-red-100 text-red-700' :
-                          aiAnalysis.urgency === 'high'   ? 'bg-amber-100 text-amber-700' :
-                          'bg-sky-100 text-sky-700'
+                          aiAnalysis.urgency === 'high'   ? 'bg-muted text-foreground/70' :
+                          'bg-muted text-foreground/70'
                         }`}>
                           <AlertCircle className="w-3 h-3" />
                           {aiAnalysis.urgency.charAt(0).toUpperCase() + aiAnalysis.urgency.slice(1)} urgency detected
@@ -391,7 +450,7 @@ export default function NewProjectRequest() {
                           <ul className="space-y-1">
                             {aiAnalysis.riskFlags.map((flag, i) => (
                               <li key={i} className="flex items-start gap-1.5 text-[12px] text-foreground/80">
-                                <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
+                                <span className="text-muted-foreground mt-0.5 flex-shrink-0">•</span>
                                 {flag}
                               </li>
                             ))}
@@ -471,6 +530,28 @@ export default function NewProjectRequest() {
 
                 <div>
                   <label className="flex items-center gap-1.5 text-[12.5px] font-semibold text-foreground mb-1.5">
+                    <CalendarDays className="w-3.5 h-3.5" />
+                    Preferred Service Date <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    name="preferredDate"
+                    type="date"
+                    min={minPreferredDate}
+                    value={formData.preferredDate}
+                    onChange={handleChange}
+                    required
+                    className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
+                      fieldErrors.preferredDate ? 'border-destructive' : 'border-input'
+                    }`}
+                  />
+                  {fieldErrors.preferredDate && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.preferredDate}</p>}
+                  <p className="text-[11px] text-muted-foreground mt-1.5">
+                    Choose when you'd like the first visit, estimate, or service window to start.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-1.5 text-[12.5px] font-semibold text-foreground mb-1.5">
                     <DollarSign className="w-3.5 h-3.5" />
                     Budget Estimate{' '}
                     <span className="text-muted-foreground font-normal">(optional)</span>
@@ -507,12 +588,30 @@ export default function NewProjectRequest() {
               <div className="bg-primary/5 border border-primary/20 rounded-2xl p-5 space-y-3">
                 <h3 className="text-[12px] font-bold uppercase tracking-wide text-primary">Request Summary</h3>
                 <div className="space-y-1.5 text-[13px]">
-                  <p><span className="text-muted-foreground">Category:</span> <span className="font-semibold text-foreground">{selectedCat?.label}</span></p>
+                  <p><span className="text-muted-foreground">Category:</span> <span className="font-semibold text-foreground">{formData.category === 'other' ? formData.customCategory : selectedCat?.label}</span></p>
                   <p><span className="text-muted-foreground">Title:</span> <span className="font-semibold text-foreground">{formData.title}</span></p>
+                  {formData.preferredDate && (
+                    <p><span className="text-muted-foreground">Requested date:</span> <span className="font-semibold text-foreground">{formatDateOnly(formData.preferredDate)}</span></p>
+                  )}
                   {formData.description && (
                     <p><span className="text-muted-foreground">Description:</span> <span className="text-foreground line-clamp-2">{formData.description}</span></p>
                   )}
                 </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+                <h3 className="text-[12px] font-bold uppercase tracking-wide text-foreground">Service Pipeline</h3>
+                <div className="grid sm:grid-cols-5 gap-2">
+                  {['Submit request', 'Match specialists', 'Confirm schedule', 'Track updates & docs', 'Review billing'].map((stage, index) => (
+                    <div key={stage} className="rounded-xl border border-border bg-background p-3">
+                      <p className="text-[10px] font-bold text-primary mb-1">0{index + 1}</p>
+                      <p className="text-[12px] text-foreground leading-snug">{stage}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  Every request feeds the shared community workflow so scheduling, status tracking, documentation, and billing stay connected.
+                </p>
               </div>
 
               <div className="flex gap-3">

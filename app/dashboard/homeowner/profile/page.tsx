@@ -17,6 +17,7 @@ export default function HomeownerProfilePage() {
   const [saved, setSaved]   = useState(false)
   const [error, setError]   = useState<string | null>(null)
   const [photoPreview, setPhotoPreview] = useState('')
+  const [existingPhotoUrl, setExistingPhotoUrl] = useState<string | null>(null)
 
   const [form, setForm] = useState({ fullName: '', phone: '', photoFile: null as File | null })
 
@@ -28,8 +29,11 @@ export default function HomeownerProfilePage() {
       setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'homeowner' })
 
       const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', u.id).single()
-      setForm({ fullName: u.user_metadata?.full_name ?? '', phone: profile?.phone ?? '', photoFile: null })
-      if (profile?.photo_url) setPhotoPreview(profile.photo_url)
+      setForm({ fullName: profile?.full_name ?? u.user_metadata?.full_name ?? '', phone: profile?.phone ?? '', photoFile: null })
+      if (profile?.photo_url) {
+        setExistingPhotoUrl(profile.photo_url)
+        setPhotoPreview(profile.photo_url)
+      }
       setLoading(false)
     }
     load()
@@ -59,9 +63,10 @@ export default function HomeownerProfilePage() {
         role: 'homeowner',
         full_name: form.fullName,
         phone: form.phone || null,
-        ...(photoUrl ? { photo_url: photoUrl } : {}),
+        photo_url: photoUrl ?? existingPhotoUrl ?? null,
       }, { onConflict: 'user_id' })
 
+      if (photoUrl) setExistingPhotoUrl(photoUrl)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch {

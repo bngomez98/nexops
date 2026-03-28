@@ -7,6 +7,7 @@ import { Toaster } from "sonner"
 import { AuthProvider } from "@/app/lib/auth-context"
 import { CookieConsentBanner } from "@/components/cookie-consent"
 import { ZendeskWidget } from "@/components/zendesk-widget"
+import { CONTACT_INFO } from "@/lib/contact-info"
 import "./globals.css"
 
 const GTM_ID = "GTM-PL3NBCWD"
@@ -52,6 +53,27 @@ const GCR_BADGE_SCRIPT = GOOGLE_MERCHANT_ID
     ].join('\n')
   : null
 
+const DEFAULT_OG_IMAGE = '/business-handshake-professional-meeting.jpg'
+
+const LOCAL_BUSINESS_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: CONTACT_INFO.companyName,
+  url: `https://${CONTACT_INFO.website}`,
+  email: CONTACT_INFO.email,
+  telephone: CONTACT_INFO.phoneDisplay,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: CONTACT_INFO.addressLine1,
+    addressLocality: 'Topeka',
+    addressRegion: 'KS',
+    postalCode: '66604',
+    addressCountry: 'US',
+  },
+  areaServed: CONTACT_INFO.serviceArea,
+  openingHours: 'Mo-Fr 08:00-17:00',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
   title: {
@@ -73,6 +95,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Nexus Operations' }],
   creator: 'Nexus Operations',
   publisher: 'Nexus Operations',
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
@@ -88,12 +113,21 @@ export const metadata: Metadata = {
     description:
       'Submit a maintenance request, get a verified contractor assigned, and track every project from start to finish.',
     siteName: 'Nexus Operations',
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: 'Nexus Operations property service coordination',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nexus Operations | Property Services',
     description:
       'Managed property maintenance — verified contractors, tracked projects, full history.',
+    images: [DEFAULT_OG_IMAGE],
   },
   robots: {
     index: true,
@@ -121,7 +155,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap"
           rel="stylesheet"
         />
         {/* Consent Mode v2 — must run before GTM/GA */}
@@ -141,6 +175,12 @@ export default function RootLayout({
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
+        <Script
+          id="local-business-schema"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(LOCAL_BUSINESS_SCHEMA) }}
+        />
         {/* Google Customer Reviews Badge */}
         {GCR_BADGE_SCRIPT && (
           <>

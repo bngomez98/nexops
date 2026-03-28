@@ -31,8 +31,8 @@ const STATUS_OPTIONS = [
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
 const URGENCY_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  routine:   { label: 'Routine',   color: 'text-sky-700',   bg: 'bg-sky-100' },
-  urgent:    { label: 'Urgent',    color: 'text-amber-700', bg: 'bg-amber-100' },
+  routine:   { label: 'Routine',   color: 'text-foreground/70', bg: 'bg-muted' },
+  urgent:    { label: 'Urgent',    color: 'text-foreground/70', bg: 'bg-muted' },
   emergency: { label: 'Emergency', color: 'text-red-700',   bg: 'bg-red-100' },
 }
 

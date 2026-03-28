@@ -7,10 +7,11 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
 import { AIAssistant } from '@/components/ai-assistant'
 import { AIInsightsCard } from '@/components/ai-insights-card'
+import { formatDateOnly } from '@/lib/date-format'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
-  RefreshCw, Clock, DollarSign, CheckCircle2, Zap,
+  RefreshCw, Clock, DollarSign, CheckCircle2, Zap, CalendarDays,
 } from 'lucide-react'
 
 interface ProjectRequest {
@@ -21,6 +22,7 @@ interface ProjectRequest {
   location: string
   budget?: number
   createdAt: string
+  preferredDate?: string | null
 }
 
 interface ContractorProfile {
@@ -39,6 +41,10 @@ interface FilterState {
   status: string
   location: string
   sortBy: 'recent' | 'budget-high' | 'budget-low'
+}
+
+interface ContractorUser {
+  name: string
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -85,7 +91,7 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
 
 export default function ContractorDashboard() {
   const router = useRouter()
-  const [user, setUser]       = useState<any>(null)
+  const [user, setUser]       = useState<ContractorUser | null>(null)
   const [profile, setProfile] = useState<ContractorProfile | null>(null)
   const [projects, setProjects]         = useState<ProjectRequest[]>([])
   const [filteredProjects, setFiltered] = useState<ProjectRequest[]>([])
@@ -288,13 +294,13 @@ export default function ContractorDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, color: 'stat-card-indigo', iconClass: 'text-primary' },
-            { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, color: 'stat-card-amber', iconClass: 'text-amber-500' },
-            { label: 'Available', value: projects.length, sub: 'matching projects', icon: Layers, color: 'stat-card-emerald', iconClass: 'text-emerald-500' },
+            { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, iconClass: 'text-primary' },
+            { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, iconClass: 'text-muted-foreground' },
+            { label: 'Available', value: projects.length, sub: 'open requests in your pipeline', icon: Layers, iconClass: 'text-muted-foreground' },
           ].map(s => {
             const Icon = s.icon
             return (
-              <div key={s.label} className={`bg-card border border-border rounded-xl p-5 ${s.color}`}>
+              <div key={s.label} className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
                   <Icon className={`w-4 h-4 ${s.iconClass}`} />
@@ -359,9 +365,9 @@ export default function ContractorDashboard() {
                     <Briefcase className="w-6 h-6 text-primary" />
                   </div>
                   <p className="font-semibold text-foreground text-[15px] mb-2">No projects available</p>
-                  <p className="text-sm text-muted-foreground max-w-xs">
-                    New projects in your service categories will appear here automatically.
-                  </p>
+                   <p className="text-sm text-muted-foreground max-w-xs">
+                     New community requests appear here automatically, including custom categories that still need a specialist.
+                   </p>
                   <p className="text-[11px] text-muted-foreground mt-3 flex items-center gap-1">
                     <RefreshCw className="w-3 h-3" /> Auto-checking every 30 seconds
                   </p>
@@ -408,6 +414,12 @@ export default function ContractorDashboard() {
                                   <MapPin className="w-3 h-3" />
                                   {project.location}
                                 </span>
+                                {project.preferredDate && (
+                                  <span className="flex items-center gap-1">
+                                    <CalendarDays className="w-3 h-3" />
+                                    Needs service by {formatDateOnly(project.preferredDate)}
+                                  </span>
+                                )}
                                 <span className="flex items-center gap-1">
                                   <Clock className="w-3 h-3" />
                                   {timeAgo(project.createdAt)}
@@ -465,7 +477,7 @@ export default function ContractorDashboard() {
                 Take on more projects and grow your business.
               </p>
             </div>
-            <span className="text-[11px] bg-secondary text-secondary-foreground font-semibold px-2.5 py-1 rounded-full capitalize">
+            <span className="text-[11px] bg-muted text-muted-foreground font-semibold px-2.5 py-1 rounded-full capitalize">
               Current: {profile?.membershipTier || 'free'}
             </span>
           </div>
@@ -476,12 +488,12 @@ export default function ContractorDashboard() {
             ].map(plan => (
               <div
                 key={plan.name}
-                className={`rounded-xl border p-5 ${plan.highlight ? 'border-primary/40 bg-primary/5' : 'border-border'}`}
+                className={`rounded-xl border p-5 ${plan.highlight ? 'border-border bg-muted/40' : 'border-border'}`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-semibold text-foreground">{plan.name}</span>
                   {plan.highlight && (
-                    <span className="text-[10.5px] bg-primary/15 text-primary font-semibold px-2 py-0.5 rounded-full">
+                    <span className="text-[10.5px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
                       Recommended
                     </span>
                   )}
@@ -489,7 +501,7 @@ export default function ContractorDashboard() {
                 <p className="text-2xl font-bold text-foreground mb-1">{plan.price}</p>
                 <p className="text-[12.5px] text-muted-foreground mb-4">Up to {plan.projects} active projects</p>
                 <Link href="/dashboard/contractor/settings">
-                  <button className={`w-full py-2 text-[12.5px] font-semibold rounded-lg transition-opacity hover:opacity-90 ${plan.highlight ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                  <button className="w-full py-2 text-[12.5px] font-semibold rounded-lg border border-border bg-background hover:bg-muted transition-colors">
                     Upgrade to {plan.name}
                   </button>
                 </Link>

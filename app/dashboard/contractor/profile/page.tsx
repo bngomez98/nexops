@@ -31,6 +31,7 @@ export default function ContractorProfilePage() {
   const [saved, setSaved]   = useState(false)
   const [error, setError]   = useState<string | null>(null)
   const [photoPreview, setPhotoPreview] = useState('')
+  const [existingPhotoUrl, setExistingPhotoUrl] = useState<string | null>(null)
 
   const [form, setForm] = useState({
     fullName: '',
@@ -63,14 +64,17 @@ export default function ContractorProfilePage() {
         .single()
 
       setForm({
-        fullName: u.user_metadata?.full_name ?? '',
+        fullName: profile?.full_name ?? u.user_metadata?.full_name ?? '',
         phone: profile?.phone ?? u.user_metadata?.phone ?? '',
         bio: cp?.bio ?? '',
         serviceRadius: String(cp?.service_radius_miles ?? 25),
         tradeCategories: cp?.trade_categories ?? [],
         photoFile: null,
       })
-      if (profile?.photo_url) setPhotoPreview(profile.photo_url)
+      if (profile?.photo_url) {
+        setExistingPhotoUrl(profile.photo_url)
+        setPhotoPreview(profile.photo_url)
+      }
       setLoading(false)
     }
     load()
@@ -109,7 +113,7 @@ export default function ContractorProfilePage() {
         role: 'contractor',
         full_name: form.fullName,
         phone: form.phone || null,
-        ...(photoUrl ? { photo_url: photoUrl } : {}),
+        photo_url: photoUrl ?? existingPhotoUrl ?? null,
       }, { onConflict: 'user_id' })
 
       await supabase.from('contractor_profiles').upsert({
@@ -119,6 +123,7 @@ export default function ContractorProfilePage() {
         trade_categories: form.tradeCategories,
       }, { onConflict: 'user_id' })
 
+      if (photoUrl) setExistingPhotoUrl(photoUrl)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch {
