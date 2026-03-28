@@ -58,6 +58,7 @@ export default function ServicesPage() {
                 <span className="font-serif italic font-normal text-primary">
                   commercial, residential, and B2B clients.
                 </span>
+                Coordination services for every type of property.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 From multifamily properties to individual homes to broader B2B operational support, we adapt our

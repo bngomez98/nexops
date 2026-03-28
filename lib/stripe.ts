@@ -5,7 +5,7 @@ let _client: Stripe | undefined
 
 function getClient(): Stripe {
   if (!_client) {
-    const key = process.env.STRIPE_SECRET_KEY
+    const key = process.env.STRIPE_SECRET_KEY?.trim()
     if (!key) throw new Error('STRIPE_SECRET_KEY is not configured')
     _client = new Stripe(key)
   }

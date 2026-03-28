@@ -7,12 +7,12 @@ import { createClient } from '@/lib/supabase/client'
 import { Loader2, Briefcase, MapPin, Zap, Clock } from 'lucide-react'
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  open:        { label: 'Open',        color: 'text-sky-700',     bg: 'bg-sky-100' },
+  open:        { label: 'Open',        color: 'text-foreground/70', bg: 'bg-muted' },
   unmatched:   { label: 'Unmatched',   color: 'text-red-700',     bg: 'bg-red-100' },
-  matched:     { label: 'Assigned',    color: 'text-violet-700',  bg: 'bg-violet-100' },
+  matched:     { label: 'Assigned',    color: 'text-primary', bg: 'bg-primary/10' },
   in_progress: { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10' },
-  completed:   { label: 'Complete',    color: 'text-emerald-700', bg: 'bg-emerald-100' },
-  cancelled:   { label: 'Cancelled',   color: 'text-slate-600',   bg: 'bg-slate-100' },
+  completed:   { label: 'Complete',    color: 'text-foreground', bg: 'bg-muted' },
+  cancelled:   { label: 'Cancelled',   color: 'text-muted-foreground', bg: 'bg-muted' },
 }
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }

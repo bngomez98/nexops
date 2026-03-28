@@ -138,6 +138,7 @@ export default function PricingPage() {
                 <span className="font-serif italic font-normal text-primary">
                   for homeowners and contractors.
                 </span>
+                Simple pricing. No surprises.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 Choose the plan that fits your needs. Annual subscribers save 25% — just{" "}
@@ -336,8 +337,128 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* CTA */}
+        {/* Commercial B2B Engagement */}
         <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                Commercial Accounts
+              </p>
+              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4">
+                Managing 100+ units? Here is how commercial engagement works.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Property managers overseeing large portfolios get a dedicated engagement model — not a subscription tier. Volume pricing, monthly unified invoicing across all properties, and a defined SLA structure for every urgency level.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-10 mb-12">
+              {/* What's included */}
+              <div className="rounded-2xl border border-border bg-card p-7">
+                <h3 className="text-lg font-semibold text-foreground mb-6">What commercial clients receive</h3>
+                <div className="flex flex-col gap-5">
+                  {[
+                    {
+                      title: "Monthly unified invoicing",
+                      desc: "Every job across all properties consolidated into a single monthly invoice. Line-item detail for each request: property address, trade, contractor cost, and coordination markup. No individual contractor bills to reconcile.",
+                    },
+                    {
+                      title: "SLA enforcement across all tiers",
+                      desc: "Routine (24-hr assignment, 3–5 day on-site), Urgent (4-hr assignment, next business day), Emergency (1-hr assignment, 4-hr on-site). SLA performance is tracked per property and reported monthly.",
+                    },
+                    {
+                      title: "Monthly performance reporting",
+                      desc: "A standard monthly report covering: total requests by property, resolution times vs. SLA, contractor performance ratings, spend by trade category, and any open items.",
+                    },
+                    {
+                      title: "Dedicated coordination contact",
+                      desc: "Commercial accounts get a named point of contact at Nexus Operations for escalations, reporting questions, and new property onboarding.",
+                    },
+                    {
+                      title: "Multi-property portal access",
+                      desc: "Submit and track requests across all properties in a single dashboard. Per-property request history, invoice records, and document storage.",
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="flex gap-3">
+                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-[13.5px] font-semibold text-foreground mb-0.5">{item.title}</p>
+                        <p className="text-[12.5px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Pricing structure */}
+              <div className="flex flex-col gap-5">
+                <div className="rounded-2xl border border-border bg-card p-7">
+                  <h3 className="text-base font-semibold text-foreground mb-4">Commercial pricing structure</h3>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground">Platform access</p>
+                        <p className="text-[12px] text-muted-foreground">Multi-property portal, reporting, document storage</p>
+                      </div>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">Contact for quote</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground">Routine jobs</p>
+                        <p className="text-[12px] text-muted-foreground">Contractor cost + coordination markup</p>
+                      </div>
+                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">25% markup</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground">Urgent jobs</p>
+                        <p className="text-[12px] text-muted-foreground">4-hr assignment, next business day on-site</p>
+                      </div>
+                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">30% markup</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4 py-3">
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground">Emergency jobs</p>
+                        <p className="text-[12px] text-muted-foreground">1-hr assignment, 4-hr on-site, 24/7</p>
+                      </div>
+                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">35% markup</span>
+                    </div>
+                  </div>
+                  <div className="mt-5 pt-5 border-t border-border">
+                    <p className="text-[12px] text-muted-foreground leading-relaxed">
+                      Volume discounts available for portfolios exceeding 200 units or 50+ jobs per month. Discuss your portfolio with our team.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-primary/20 bg-primary/5 p-7">
+                  <h3 className="text-base font-semibold text-foreground mb-2">Considering commercial engagement?</h3>
+                  <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-5">
+                    Commercial onboarding starts with a 30-minute call to review your portfolio, property types, typical request volume, and any existing vendor relationships. No commitment required.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link
+                      href="/commercial"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
+                    >
+                      View commercial terms
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold bg-card border border-border text-foreground rounded-xl hover:bg-secondary/60 transition-colors"
+                    >
+                      Schedule a call
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-16 lg:py-24 bg-secondary/40">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">

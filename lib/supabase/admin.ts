@@ -18,3 +18,8 @@ export function getAdminClient() {
   _admin = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
   return _admin
 }
+
+/** @deprecated Use getAdminClient() instead */
+export function createAdminClient() {
+  return getAdminClient()
+}
