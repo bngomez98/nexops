@@ -135,7 +135,7 @@ export default function DashboardPage() {
                   bg: 'bg-violet-50 border-violet-100',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="rounded-xl border border-border/60 bg-card p-4 glow-card">
+                <div key={label} className="border-b border-border/60 py-4">
                   <div className="flex items-start justify-between mb-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
                     <div className={`flex items-center justify-center w-7 h-7 rounded-lg border ${bg}`}>
@@ -157,7 +157,7 @@ export default function DashboardPage() {
               </div>
 
               {clientRequests.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-muted/20 p-10 text-center">
+                <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                   <p className="text-[14px] font-medium text-foreground mb-1">No requests yet</p>
                   <p className="text-[13px] text-muted-foreground mb-5">Submit your first maintenance request to get started.</p>
@@ -169,7 +169,7 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               ) : (
-                <div className="rounded-xl border border-border/60 bg-card overflow-hidden glow-card divide-y divide-border/40">
+                <div className="divide-y divide-border/40 border-y border-border/60">
                   {clientRequests.slice(0, 5).map((req) => (
                     <div key={req.id} className="flex items-center justify-between px-5 py-3.5 hover:bg-muted/30 transition-colors">
                       <div className="flex-1 min-w-0 mr-4">
@@ -227,7 +227,7 @@ export default function DashboardPage() {
                   bg: 'bg-violet-50 border-violet-100',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="rounded-xl border border-border/60 bg-card p-4 glow-card">
+                <div key={label} className="border-b border-border/60 py-4">
                   <div className="flex items-start justify-between mb-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
                     <div className={`flex items-center justify-center w-7 h-7 rounded-lg border ${bg}`}>
@@ -249,17 +249,17 @@ export default function DashboardPage() {
               </div>
 
               {contractorJobs.filter(j => j.status === 'available').length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-muted/20 p-10 text-center">
+                <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                   <p className="text-[14px] font-medium text-foreground mb-1">No available jobs right now</p>
                   <p className="text-[13px] text-muted-foreground">New jobs matching your trade will appear here when submitted.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="divide-y divide-border/50 border-y border-border/60">
                   {contractorJobs.filter(j => j.status === 'available').map((job) => (
                     <div
                       key={job.id}
-                      className="rounded-xl border border-border/60 bg-card p-5 hover:border-primary/30 hover:shadow-sm transition-all glow-card"
+                      className="py-5 hover:bg-muted/20 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
@@ -285,7 +285,7 @@ export default function DashboardPage() {
 
         {/* ── ADMIN VIEW ── */}
         {user?.role === 'admin' && (
-          <div className="rounded-xl border border-border/60 bg-card p-10 text-center glow-card">
+          <div className="border-y border-border/60 py-10 text-center">
             <AlertCircle className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
             <p className="text-[14px] font-medium text-foreground mb-1">Admin Dashboard</p>
             <p className="text-[13px] text-muted-foreground">Configure reports, manage team access, and review platform activity.</p>

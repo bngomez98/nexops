@@ -156,7 +156,7 @@ export function DashboardLayout({
               <div style={{ fontSize: 7.5, fontWeight: 700, color: 'oklch(0.618 0.228 264)', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
             </div>
           </Link>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-1.5 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-lg transition-colors">
+          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-1.5 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -182,7 +182,7 @@ export function DashboardLayout({
                 key={item.href}
                 href={item.href}
                 title={isDesktopCollapsed ? item.label : undefined}
-                className={`flex items-center gap-3 px-2.5 py-2.5 rounded-xl text-[13px] font-medium transition-all group relative overflow-hidden ${
+                className={`flex items-center gap-3 px-2.5 py-2.5 text-[13px] font-medium transition-all group relative overflow-hidden ${
                   isActive
                     ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm shadow-primary/20'
                     : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
@@ -212,7 +212,7 @@ export function DashboardLayout({
         <div className="p-3 border-t border-sidebar-border">
           <button
             onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
-            className="hidden lg:flex w-full items-center justify-center py-2 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
+            className="hidden lg:flex w-full items-center justify-center py-2 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             title={isDesktopCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${isDesktopCollapsed ? '' : 'rotate-180'}`} />
@@ -225,7 +225,7 @@ export function DashboardLayout({
         {/* Topbar */}
         <header className="sticky top-0 z-30 h-14 bg-card/95 backdrop-blur border-b border-border flex items-center justify-between px-4 lg:px-6 shrink-0">
           <div className="flex items-center gap-3">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-1.5 text-muted-foreground hover:bg-secondary rounded-lg transition-colors">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-1.5 text-muted-foreground hover:bg-secondary transition-colors">
               <Menu className="w-5 h-5" />
             </button>
             <div>
@@ -236,7 +236,7 @@ export function DashboardLayout({
 
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Search */}
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-border text-muted-foreground w-56 focus-within:ring-2 focus-within:ring-primary/40 transition-all">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary border-b border-border text-muted-foreground w-56 focus-within:ring-2 focus-within:ring-primary/40 transition-all">
               <Search className="w-3.5 h-3.5 shrink-0" />
               <input
                 ref={searchInputRef}
@@ -252,7 +252,7 @@ export function DashboardLayout({
             </div>
 
             {/* Notifications */}
-            <button className="relative p-1.5 text-muted-foreground hover:bg-secondary rounded-lg transition-colors">
+            <button className="relative p-1.5 text-muted-foreground hover:bg-secondary transition-colors">
               <Bell className="w-4.5 h-4.5" />
               <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-destructive rounded-full ring-2 ring-card" />
             </button>
@@ -263,9 +263,9 @@ export function DashboardLayout({
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="flex items-center gap-2 p-1 pr-2 rounded-full hover:bg-secondary transition-colors border border-transparent hover:border-border"
+                className="flex items-center gap-2 p-1 pr-2 hover:bg-secondary transition-colors"
               >
-                <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold shadow-sm shrink-0">
+                <div className="w-7 h-7 bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center text-[10px] font-bold shrink-0">
                   {userInitials}
                 </div>
                 <div className="hidden sm:flex flex-col items-start leading-none">
@@ -276,7 +276,7 @@ export function DashboardLayout({
               </button>
 
               {isProfileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-card border border-border rounded-xl shadow-xl overflow-hidden z-50 animate-fade-up origin-top-right">
+                <div className="absolute right-0 mt-2 w-52 bg-card border border-border shadow-xl overflow-hidden z-50 animate-fade-up origin-top-right">
                   <div className="px-4 py-3 border-b border-border">
                     <p className="text-[13px] font-semibold text-foreground truncate">{userName}</p>
                     <p className="text-[11px] text-muted-foreground truncate mt-0.5">{userEmail}</p>
@@ -284,7 +284,7 @@ export function DashboardLayout({
                   <div className="p-1.5">
                     <Link
                       href={accountSettingsHref}
-                      className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-foreground/80 hover:bg-secondary hover:text-foreground rounded-lg transition-colors"
+                      className="flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-foreground/80 hover:bg-secondary hover:text-foreground transition-colors"
                     >
                       <UserIcon className="w-3.5 h-3.5" /> Account Settings
                     </Link>
@@ -296,7 +296,7 @@ export function DashboardLayout({
                           }
                           router.push('/api/auth/logout')
                         }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors mt-0.5"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-destructive hover:bg-destructive/10 transition-colors mt-0.5"
                       >
                         <LogOut className="w-3.5 h-3.5" /> Sign Out
                       </button>
