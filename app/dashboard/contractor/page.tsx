@@ -213,10 +213,11 @@ export default async function ContractorDashboardPage() {
         {/* Quick links */}
         <div className="mt-10">
           <h2 className="text-sm font-semibold mb-4">Resources</h2>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { href: "/dashboard/contractor/profile", label: "Contractor Profile", sub: "Services, service area, bio" },
               { href: "/dashboard/messages",           label: "Messages",            sub: "Active threads with property owners" },
+              { href: "/dashboard/contractor/billing", label: "Billing",             sub: "Membership billing and Stripe payouts" },
               { href: "https://nexusoperations.zendesk.com/hc/en-us", label: "Help Center", sub: "Platform policies and claim process", external: true },
             ].map(({ href, label, sub, external }) => (
               <Link

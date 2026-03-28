@@ -11,6 +11,7 @@ import {
   FileText,
   MessageSquare,
   Settings,
+  CreditCard,
   HelpCircle,
   LogOut,
   Plus,
@@ -35,6 +36,7 @@ const contractorNavItems = [
   { href: "/dashboard/contractor/requests", label: "Open Requests",   icon: ListChecks },
   { href: "/dashboard/messages",            label: "Messages",        icon: MessageSquare },
   { href: "/dashboard/contractor/profile",  label: "Profile",         icon: User },
+  { href: "/dashboard/contractor/billing",  label: "Billing",         icon: CreditCard },
   { href: "/dashboard/contractor/settings", label: "Settings",        icon: Settings },
 ]
 

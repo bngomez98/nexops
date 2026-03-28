@@ -20,6 +20,30 @@ const sections = [
   {
     label: "Account Portals",
     links: [
+      { href: "/auth/sign-up",                        label: "Create Account",                  desc: "Register as a homeowner, property manager, or contractor" },
+      { href: "/auth/sign-up?role=property_manager",  label: "Property Manager Registration",   desc: "Open a property management account supporting multiple addresses" },
+      { href: "/auth/sign-up?role=contractor",        label: "Contractor Application",          desc: "Apply to join the verified contractor network" },
+      { href: "/auth/login",                          label: "Sign In",                         desc: "Access your existing account" },
+    ],
+  },
+  {
+    label: "Property Owner & Manager Dashboard",
+    links: [
+      { href: "/dashboard",                  label: "Dashboard Overview",       desc: "Summary of active requests, recent activity, and account status" },
+      { href: "/dashboard/requests",         label: "My Requests",              desc: "Full list of submitted service requests and their current status" },
+      { href: "/dashboard/requests/new",     label: "Submit New Request",       desc: "Create a new service request with photos, scope, and budget" },
+      { href: "/dashboard/messages",         label: "Messages",                 desc: "Communication threads with assigned contractors" },
+      { href: "/dashboard/settings",         label: "Account Settings",         desc: "Profile, contact details, property addresses, and notifications" },
+    ],
+  },
+  {
+    label: "Contractor Dashboard",
+    links: [
+      { href: "/dashboard/contractor",          label: "Contractor Overview",      desc: "Activity summary, claimed requests, and account metrics" },
+      { href: "/dashboard/contractor/requests", label: "Open Requests",            desc: "Browse and claim available service requests in your area and trade" },
+      { href: "/dashboard/contractor/profile",  label: "Contractor Profile",       desc: "License, insurance, service area, and trade categories" },
+      { href: "/dashboard/contractor/billing",  label: "Contractor Billing",       desc: "Membership billing, invoices, payment methods, and payout setup" },
+      { href: "/dashboard/contractor/settings", label: "Contractor Settings",      desc: "Notification preferences and account management" },
       { href: "/auth/sign-up", label: "Create Account", desc: "Register as homeowner, property manager, or contractor" },
       { href: "/auth/login", label: "Sign In", desc: "Access existing dashboard and project records" },
       { href: "/auth/forgot-password", label: "Forgot Password", desc: "Reset account access securely through email" },

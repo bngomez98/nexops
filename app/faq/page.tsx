@@ -39,6 +39,15 @@ const sections = [
       },
       {
         q: "Is there a fee to join or claim requests?",
+        a: "Contractor access uses a flat monthly membership. There are no per-claim charges or referral percentages. Contractors receive project notifications, claim work, and are paid directly by the property owner.",
+      },
+      {
+        q: "What happens if I claim a request but cannot make the consultation?",
+        a: "Contact admin@nexusoperations.org as soon as possible. The request may be released back to the open pool at Nexus Operations' discretion. Repeated failures to honor claimed consultations will result in account suspension.",
+      },
+      {
+        q: "Can I set which request types and geographic area I receive?",
+        a: "Yes. Your contractor profile allows you to select active service categories (e.g., HVAC, Electrical, Roofing) and set a service radius in miles from your registered address. You will only receive notifications for requests that match both filters.",
         a: "The Nexus contractor network is free to join and free to use. There are no signup fees, monthly subscriptions, per-claim charges, or referral percentages.",
       },
     ],
