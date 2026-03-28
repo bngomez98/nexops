@@ -528,7 +528,7 @@ export default function HomePage() {
                 For contractors
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
-                How Contractors Receive Work Through Nexus
+                How Contractors Receive Documented Work Through Nexus
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
                 Licensed, insured contractors in Topeka and Shawnee County receive pre-qualified service requests with full project documentation — scope, photos, budget, and scheduling provided before assignment.

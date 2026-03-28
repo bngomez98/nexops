@@ -500,29 +500,6 @@ function ContractorSettingsInner() {
               </div>
             )}
 
-            {tab === 'profile' && (
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-                <div className="flex items-center gap-2.5 mb-1">
-                  <User className="w-4 h-4 text-primary" />
-                  <h2 className="font-bold text-foreground text-[15px]">Appearance</h2>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {(['system', 'light', 'dark'] as const).map(option => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => applyThemePreference(option)}
-                      className={`px-3 py-2 rounded-lg border text-[12px] font-semibold capitalize transition-colors ${
-                        themePreference === option ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:bg-secondary/40'
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {tab === 'security' && (
               <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
                 <div className="flex items-center gap-2 mb-1">
@@ -629,6 +606,27 @@ function ContractorSettingsInner() {
                 )}
               </div>
             )}
+
+            <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+              <div className="flex items-center gap-2.5 mb-1">
+                <User className="w-4 h-4 text-primary" />
+                <h2 className="font-bold text-foreground text-[15px]">Appearance</h2>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {(['system', 'light', 'dark'] as const).map(option => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => applyThemePreference(option)}
+                    className={`px-3 py-2 rounded-lg border text-[12px] font-semibold capitalize transition-colors ${
+                      themePreference === option ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:bg-secondary/40'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {tab === 'danger' && (
               <div className="bg-card border border-destructive/30 rounded-2xl p-6 space-y-5">
