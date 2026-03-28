@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, MapPin, Phone, Mail } from "lucide-react"
+import { ArrowRight, MapPin, Phone, Mail, CheckCircle } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -53,11 +53,7 @@ export default function AboutPage() {
                 About Nexus Operations
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                A coordination company,
-                <br className="hidden sm:block" />
-                <span className="font-serif italic font-normal text-primary">
-                  not a contractor.
-                </span>
+                A coordination company, not a contractor.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 Nexus Operations does not perform the work itself. We
@@ -175,6 +171,118 @@ export default function AboutPage() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Process Walkthrough */}
+        <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                How it works
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                From request to resolved: a real example.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A property manager overseeing 120 units submits an emergency request at 11:14 PM on a Saturday.
+                Here is exactly what happens next.
+              </p>
+            </div>
+
+            <div className="relative">
+              {/* Timeline connector line */}
+              <div className="absolute left-[19px] top-8 bottom-8 w-px bg-border hidden sm:block" aria-hidden="true" />
+
+              <div className="flex flex-col gap-0">
+                {[
+                  {
+                    time: "11:14 PM Saturday",
+                    label: "Request submitted",
+                    color: "bg-foreground",
+                    detail: "Property manager logs into the portal and submits: burst pipe in Unit 14B, water actively running, tenant present. Uploads 4 photos. Selects Emergency tier.",
+                    outcome: null,
+                  },
+                  {
+                    time: "11:14 PM",
+                    label: "Automated triage",
+                    color: "bg-primary",
+                    detail: "System classifies as Emergency — Plumbing. SLA clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
+                    outcome: null,
+                  },
+                  {
+                    time: "11:27 PM",
+                    label: "Contractor assigned",
+                    color: "bg-primary",
+                    detail: "On-call plumber from the verified network accepts the assignment. Property manager receives confirmation with contractor name, license number, and ETA. Tenant is notified.",
+                    outcome: "13 minutes to assignment. SLA: 60 minutes.",
+                  },
+                  {
+                    time: "12:51 AM Sunday",
+                    label: "On-site arrival",
+                    color: "bg-primary",
+                    detail: "Contractor arrives at Unit 14B, locates the failed supply line under the kitchen sink, shuts off water to the unit. Submits arrival photo through the portal.",
+                    outcome: "97 minutes from submission. SLA: 4 hours.",
+                  },
+                  {
+                    time: "2:18 AM",
+                    label: "Work completed",
+                    color: "bg-primary",
+                    detail: "Supply line replaced, water restored to unit. Contractor submits 6 completion photos and a written summary noting secondary water intrusion in the cabinet below.",
+                    outcome: null,
+                  },
+                  {
+                    time: "Monday AM",
+                    label: "Invoice issued",
+                    color: "bg-secondary border-2 border-border",
+                    detail: "Nexus Operations generates a unified invoice: $280 contractor cost + $98 Emergency coordination markup (35%) = $378 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
+                    outcome: "One invoice. Full documentation. Zero coordination calls.",
+                  },
+                  {
+                    time: "Within 30 days",
+                    label: "Contractor paid",
+                    color: "bg-green-500",
+                    detail: "Once the property manager pays the invoice, Nexus Operations pays the plumber directly at the full quoted rate of $280. No collection lag, no disputed invoices.",
+                    outcome: null,
+                  },
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-5 sm:gap-8 pb-8 last:pb-0">
+                    <div className="relative flex flex-col items-center">
+                      <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center z-10 ${step.color}`} />
+                    </div>
+                    <div className="flex-1 pt-1.5 pb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 mb-2">
+                        <span className="text-xs font-mono text-muted-foreground">{step.time}</span>
+                        <h3 className="text-sm font-semibold text-foreground">{step.label}</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                        {step.detail}
+                      </p>
+                      {step.outcome && (
+                        <div className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-primary bg-primary/8 rounded-full px-3 py-1">
+                          <CheckCircle className="h-3 w-3" />
+                          {step.outcome}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-12 grid sm:grid-cols-3 gap-4">
+              {[
+                { label: "Time from submission to assignment", value: "13 min", note: "vs. 60-min SLA" },
+                { label: "Time from submission to on-site", value: "97 min", note: "vs. 4-hr SLA" },
+                { label: "Coordination calls made by manager", value: "0", note: "portal handled everything" },
+              ].map((stat) => (
+                <div key={stat.label} className="p-5 rounded-xl bg-card border border-border">
+                  <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
+                  <p className="text-xs font-semibold text-muted-foreground mb-0.5">{stat.label}</p>
+                  <p className="text-[11px] text-primary font-medium">{stat.note}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>

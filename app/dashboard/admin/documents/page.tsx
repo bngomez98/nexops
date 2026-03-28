@@ -71,8 +71,8 @@ export default function AdminDocumentsPage() {
 
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Pending',       value: pending.length,      color: 'text-amber-500',   bg: 'bg-amber-500/10' },
-            { label: 'Verified',      value: verified.length,     color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+            { label: 'Pending',       value: pending.length,      color: 'text-muted-foreground', bg: 'bg-muted' },
+            { label: 'Verified',      value: verified.length,     color: 'text-primary', bg: 'bg-primary/10' },
             { label: 'Expiring Soon', value: expiringSoon.length, color: 'text-red-500',     bg: 'bg-red-500/10' },
           ].map(s => (
             <div key={s.label} className="bg-card border border-border rounded-xl p-4">

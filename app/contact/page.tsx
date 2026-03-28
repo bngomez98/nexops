@@ -3,7 +3,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, Phone, Clock } from "lucide-react"
+import { Mail, Phone, Clock, Shield } from "lucide-react"
 import { CONTACT_INFO } from "@/lib/contact-info"
 
 export const metadata: Metadata = {
@@ -70,6 +70,33 @@ export default function ContactPage() {
                   </div>
                 </div>
 
+                {/* Emergency callout */}
+                <div className="p-6 rounded-xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-950/20">
+                  <div className="flex items-start gap-3">
+                    <Shield className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-sm font-semibold text-foreground mb-1">
+                        Emergency? Use the emergency line.
+                      </h3>
+                      <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-3">
+                        Burst pipe, gas leak, or HVAC failure in extreme weather? Do not wait for a callback.
+                        Emergency requests are handled 24/7 — including nights, weekends, and holidays.
+                        Contractor assignment within 1 hour, on-site within 4 hours.
+                      </p>
+                      <a
+                        href="mailto:emergency@nexusoperations.org"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 dark:text-red-400 hover:underline"
+                      >
+                        <Mail className="h-4 w-4" />
+                        emergency@nexusoperations.org
+                      </a>
+                      <p className="text-[11px] text-muted-foreground mt-1.5">
+                        On-call coordinator responds within 15 minutes around the clock.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="p-6 rounded-xl bg-card border border-border/40">
                   <h3 className="text-sm font-semibold mb-2">Service area</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -80,8 +107,8 @@ export default function ContactPage() {
                 <div className="p-6 rounded-xl bg-card border border-border/40">
                   <h3 className="text-sm font-semibold mb-2">Response time</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    We respond to all inquiries within 24 business hours.
-                    Homeowner project requests are reviewed and routed as quickly as possible.
+                    General inquiries: we respond within 24 business hours.
+                    Emergency requests are handled 24/7 via the emergency line above.
                   </p>
                 </div>
               </div>

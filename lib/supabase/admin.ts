@@ -19,6 +19,7 @@ export function getAdminClient() {
   return _admin
 }
 
+/** @deprecated Use getAdminClient() instead */
 export function createAdminClient() {
   return getAdminClient()
 }

@@ -136,9 +136,9 @@ export default function ProjectDetailsPage() {
     completed: 'Completed',
   }
   const statusClasses: Record<string, string> = {
-    open: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200',
-    claimed: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200',
-    'in-progress': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
+    open: 'bg-primary/10 text-primary',
+    claimed: 'bg-muted text-foreground/70',
+    'in-progress': 'bg-primary/10 text-primary',
     completed: 'bg-muted text-muted-foreground',
   }
 
