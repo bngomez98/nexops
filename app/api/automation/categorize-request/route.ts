@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
-
-const VALID_CATEGORIES = [
-  'tree-removal', 'concrete-work', 'roofing', 'hvac',
-  'fencing', 'electrical', 'plumbing', 'excavation',
-] as const
+import { createRequestId, internalError } from '@/lib/api-error'
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,7 +15,7 @@ export async function POST(request: NextRequest) {
       model: 'openai/gpt-4o-mini',
       output: Output.object({
         schema: z.object({
-          suggestedCategory: z.enum(VALID_CATEGORIES).nullable(),
+          suggestedCategory: z.string().max(80).nullable(),
           confidence: z.number(),
           urgency: z.enum(['urgent', 'high', 'normal', 'low']),
           scopeSummary: z.string(),
@@ -39,15 +35,10 @@ A homeowner has submitted a new project request. Analyze it and return structure
 Title: "${title ?? ''}"
 Description: "${description ?? ''}"
 
-Categorize this request into ONE of these trade categories (or null if unclear):
-- tree-removal: Tree, stump, debris, limb work
-- concrete-work: Driveways, sidewalks, patios, foundations
-- roofing: Roof repair, replacement, gutters, leaks
-- hvac: Heating, cooling, ventilation, furnace, AC, ductwork
-- fencing: Wood, vinyl, chain-link, ornamental fence work
-- electrical: Wiring, panels, outlets, fixtures, lighting
-- plumbing: Pipes, drains, fixtures, water heater, leaks
-- excavation: Grading, trenching, land clearing, drainage
+ Suggest a normalized category slug for this request (or null if unclear).
+ Prefer these common slugs when appropriate:
+ - tree-removal, concrete-work, roofing, hvac, fencing, electrical, plumbing, excavation
+ But do not force these options. If a specialty or community request is a better fit, provide a concise custom slug.
 
 Also provide:
 - confidence: 0-100 how confident you are in the category
@@ -59,9 +50,17 @@ Also provide:
 - followUpQuestion: One clarifying question that would help a contractor prepare better, or null if the description is clear enough`,
     })
 
-    return NextResponse.json(result.output)
+    const normalizedSuggestedCategory = typeof result.output.suggestedCategory === 'string'
+      ? result.output.suggestedCategory.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80)
+      : null
+
+    return NextResponse.json({
+      ...result.output,
+      suggestedCategory: normalizedSuggestedCategory || null,
+    })
   } catch (err) {
-    console.error('[POST /api/automation/categorize-request]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[POST /api/automation/categorize-request][${requestId}]`, err)
+    return internalError('Automated categorization unavailable', { requestId })
   }
 }

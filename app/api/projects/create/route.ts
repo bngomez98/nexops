@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { projectRequestSchema } from '@/lib/validators'
+import { createRequestId, internalError } from '@/lib/api-error'
 
 // Custom categories are stored as URL-safe slugs so they can flow through the
 // same matching, filtering, and analytics paths as predefined categories.
 function normalizeCategory(category: string, customCategory?: string) {
-  if (category !== 'other') return category
+  const normalizedCategory = category
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80)
+
+  if (normalizedCategory !== 'other') return normalizedCategory || 'other'
 
   const normalized = (customCategory ?? '')
     .trim()
@@ -76,6 +84,9 @@ export async function POST(request: NextRequest) {
     }
 
     const validated = parsed.data
+    if (!validated.preferredDate) {
+      return NextResponse.json({ error: 'Service date is required' }, { status: 400 })
+    }
     const normalizedCategory = normalizeCategory(validated.category, validated.customCategory)
 
     const { data: sr, error: insertError } = await supabase
@@ -115,7 +126,8 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     )
   } catch (err) {
-    console.error('[POST /api/projects/create]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[POST /api/projects/create][${requestId}]`, err)
+    return internalError('Unable to create service request', { requestId })
   }
 }

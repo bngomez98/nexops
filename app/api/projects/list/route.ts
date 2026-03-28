@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createRequestId, internalError } from '@/lib/api-error'
 
 function mapStatus(dbStatus: string): string {
   const map: Record<string, string> = {
@@ -33,6 +34,29 @@ export async function GET(request: NextRequest) {
     const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type') ?? 'my-projects'
+    const pipeline = searchParams.get('pipeline') === 'true'
+
+    if (role === 'homeowner' && pipeline) {
+      const { data: rows, error } = await supabase
+        .from('service_requests')
+        .select('id, category, additional_notes, status, created_at, consultation_date')
+        .eq('owner_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50)
+
+      if (error) throw error
+
+      const pipelineProjects = (rows ?? []).map(r => ({
+        id: r.id,
+        title: r.additional_notes || r.category,
+        category: r.category,
+        status: mapStatus(r.status),
+        createdAt: r.created_at,
+        preferredDate: r.consultation_date ?? null,
+      }))
+
+      return NextResponse.json({ projects: pipelineProjects })
+    }
 
     if (role === 'homeowner' && type === 'my-projects') {
       const { data: rows, error } = await supabase
@@ -112,7 +136,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ projects: [] })
   } catch (err) {
-    console.error('[GET /api/projects/list]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[GET /api/projects/list][${requestId}]`, err)
+    return internalError('Unable to load projects', { requestId })
   }
 }
