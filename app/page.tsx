@@ -453,8 +453,8 @@ export default function HomePage() {
             <div style={{ position: 'relative' }}>
               <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
                 <Image
-                  src="/minimalist-modern-office-workspace-aerial-view.jpg"
-                  alt="Clean modern workspace"
+                  src="https://github.com/user-attachments/assets/d5458027-422e-4e06-a659-f7006fe659dd"
+                  alt="Nexus Operations office at 2611 SW 17th St in Topeka"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
