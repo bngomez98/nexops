@@ -133,7 +133,6 @@ export const metadata: Metadata = {
     title: 'Nexus Operations — Property Maintenance Coordination',
     description:
       'Licensed contractor coordination for homeowners and property managers in Topeka, KS. Verified network, guaranteed response times, full project documentation.',
-      'Managed property maintenance — verified contractors, tracked projects, full history.',
     images: [DEFAULT_OG_IMAGE],
   },
   robots: {

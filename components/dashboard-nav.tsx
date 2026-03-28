@@ -10,7 +10,7 @@ import {
   Settings, TrendingUp, ChevronRight, Briefcase,
   PlusCircle, CreditCard, ShieldCheck, User, Building2,
   ClipboardList, Receipt, Wallet, Home, FolderOpen,
-  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare,
+  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare, Workflow,
 } from 'lucide-react'
 
 interface NavItem {
@@ -24,6 +24,7 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
   homeowner: [
     { label: 'Dashboard',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
     { label: 'Requests',    href: '/dashboard/homeowner/requests',   icon: ClipboardList },
+    { label: 'Pipeline',    href: '/dashboard/homeowner/pipeline',   icon: Workflow, exact: true },
     { label: 'Messages',    href: '/dashboard/messages',             icon: MessageSquare },
     { label: 'New Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
     { label: 'Properties',  href: '/dashboard/homeowner/properties', icon: Home },

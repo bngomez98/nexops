@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { apiError, badRequest, unauthorized, forbidden, notFound, internalError } from '@/lib/api-error'
+import { apiError, badRequest, unauthorized, forbidden, notFound, internalError, createRequestId } from '@/lib/api-error'
 
 describe('apiError', () => {
   it('returns a Response with the given status', async () => {
@@ -12,6 +12,21 @@ describe('apiError', () => {
   it('sets Content-Type to application/json', () => {
     const res = apiError('oops', 400)
     expect(res.headers.get('content-type')).toContain('application/json')
+  })
+
+  it('includes optional code, details, and request id', async () => {
+    const res = apiError('oops', 400, {
+      code: 'E_TEST',
+      details: { field: 'category' },
+      requestId: 'req_test_123',
+    })
+    expect(res.headers.get('x-request-id')).toBe('req_test_123')
+    expect(await res.json()).toEqual({
+      error: 'oops',
+      code: 'E_TEST',
+      details: { field: 'category' },
+      requestId: 'req_test_123',
+    })
   })
 })
 
@@ -64,5 +79,13 @@ describe('internalError', () => {
     const res = internalError()
     expect(res.status).toBe(500)
     expect(await res.json()).toEqual({ error: 'Internal server error' })
+  })
+})
+
+describe('createRequestId', () => {
+  it('creates a prefixed request identifier', () => {
+    const id = createRequestId()
+    expect(id.startsWith('req_')).toBe(true)
+    expect(id.length).toBeGreaterThan(8)
   })
 })

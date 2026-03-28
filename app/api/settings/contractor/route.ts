@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { contractorSettingsSchema } from '@/lib/validators'
+import { createRequestId, internalError } from '@/lib/api-error'
 
 export async function PUT(request: NextRequest) {
   try {
@@ -38,8 +39,9 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('[PUT /api/settings/contractor]', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[PUT /api/settings/contractor][${requestId}]`, error)
+    return internalError('Unable to update contractor settings', { requestId })
   }
 }
 
@@ -58,7 +60,8 @@ export async function DELETE() {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('[DELETE /api/settings/contractor]', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[DELETE /api/settings/contractor][${requestId}]`, error)
+    return internalError('Unable to process account request', { requestId })
   }
 }

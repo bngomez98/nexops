@@ -2,9 +2,12 @@
 
 # dependencies
 /node_modules
+.npm
+.pnpm-store
 .pnp
 .pnp.js
 package-lock.json
+yarn.lock
 
 # testing
 coverage
@@ -12,8 +15,6 @@ coverage
 # next.js
 /.next/
 /out/
-.next
-out
 
 # production
 /build
