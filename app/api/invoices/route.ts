@@ -210,6 +210,8 @@ export async function PATCH(request: NextRequest) {
             clientName:     clientProfile?.full_name ?? 'Client',
             contractorName: contractorProfile?.full_name ?? 'Your contractor',
             serviceType:    job?.service_type ?? 'service',
+            subtotal:       invoice.subtotal,
+            nexusFee:       invoice.nexus_fee,
             total:          invoice.total,
             jobId:          invoice.job_id,
           })
@@ -222,86 +224,6 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[PATCH /api/invoices]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-export async function PATCH(request: NextRequest) {
-  try {
-    const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const body = await request.json()
-    const { id, status } = body
-
-    if (!id) {
-      return NextResponse.json({ error: 'Missing invoice ID' }, { status: 400 })
-    }
-
-    // Validation fix identified by agent
-    const allowedStatuses = ['sent', 'draft']
-    if (!allowedStatuses.includes(status)) {
-        return NextResponse.json({ error: `Invalid status. Allowed: ${allowedStatuses.join(', ')}` }, { status: 400 })
-    }
-
-    // Update invoice (ensure contractor owns it)
-    const { data: invoice, error: updateError } = await supabase
-        .from('invoices')
-        .update({ status })
-        .eq('id', id)
-        .eq('contractor_id', user.id) 
-        .select('*, jobs(service_type)')
-        .single()
-
-    if (updateError || !invoice) {
-        return NextResponse.json({ error: 'Failed to update invoice or access denied' }, { status: 404 })
-    }
-
-    // Send email if status changed to 'sent'
-    if (status === 'sent') {
-      ;(async () => {
-        try {
-          const { getAdminClient } = await import('@/lib/supabase/admin')
-          const admin = getAdminClient()
-          const { data: clientAuth } = await admin.auth.admin.getUserById(invoice.client_id)
-          const clientEmail = clientAuth.user?.email
-          if (!clientEmail) return
-
-          // BUG FIX: Use 'user_id' instead of 'id' for profile lookup
-          const { data: clientProfile } = await supabase
-            .from('profiles')
-            .select('full_name')
-            .eq('user_id', invoice.client_id)
-            .maybeSingle()
-
-          const { data: contractorProfile } = await supabase
-            .from('profiles')
-            .select('full_name')
-            .eq('user_id', user.id)
-            .maybeSingle()
-
-          await sendInvoiceSentClientEmail({
-            to:             clientEmail,
-            clientName:     clientProfile?.full_name ?? 'Client',
-            contractorName: contractorProfile?.full_name ?? 'Your contractor',
-            serviceType:    invoice.jobs?.service_type ?? 'Service', // Fetched via join
-            subtotal:       invoice.subtotal,
-            nexusFee:       invoice.nexus_fee,
-            total:          invoice.total,
-            jobId:          invoice.job_id,
-          })
-        } catch (err) {
-          console.error('[invoices PATCH] email error:', err)
-        }
-      })()
-    }
-
-    return NextResponse.json({ invoice })
-  } catch (err) {
-    console.error('Invoice PATCH error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -22,10 +22,10 @@ function NexusIcon({ size = 28 }: { size?: number }) {
 }
 
 const nav = [
-  { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "How It Works", href: "/#how-it-works" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Homeowners", href: "/#homeowners" },
+  { label: "Contractors", href: "/#contractors" },
+  { label: "How It Works", href: "/#process" },
+  { label: "Pricing", href: "/#pricing" },
   { label: "Contact", href: "/contact" },
 ]
 
@@ -208,4 +208,3 @@ export function Header() {
     </header>
   )
 }
-
