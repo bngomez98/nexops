@@ -31,10 +31,29 @@ export const loginSchema = z.object({
 
 export const projectRequestSchema = z.object({
   category: z.string().min(1, 'Please select a service category'),
+  customCategory: z.string().trim().max(80, 'Custom category must be less than 80 characters').optional().or(z.literal('')),
   title: z.string().min(5, 'Title must be at least 5 characters').max(100, 'Title must be less than 100 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters').max(2000, 'Description must be less than 2000 characters'),
   location: z.string().min(3, 'Please enter a valid location'),
-  budget: z.string().min(1, 'Please enter a budget').optional(),
+  budget: z.string().min(1, 'Please enter a budget').optional().or(z.literal('')),
+  preferredDate: z.string()
+    .min(1, 'Please select a preferred service date')
+    .refine(value => !Number.isNaN(Date.parse(value)), 'Please select a valid service date')
+    .refine((value) => {
+      const selected = new Date(value)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      selected.setHours(0, 0, 0, 0)
+      return selected >= today
+    }, 'Preferred service date cannot be in the past'),
+}).superRefine((data, ctx) => {
+  if (data.category === 'other' && !data.customCategory?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please describe the service category',
+      path: ['customCategory'],
+    })
+  }
 })
 
 export const contractorProfileSchema = z.object({
@@ -43,6 +62,22 @@ export const contractorProfileSchema = z.object({
   yearsInBusiness: z.string().min(1, 'Years in business is required'),
   bio: z.string().min(20, 'Bio must be at least 20 characters').max(500, 'Bio must be less than 500 characters'),
   serviceCategories: z.array(z.string()).min(1, 'Select at least one service category'),
+})
+
+export const contractorSettingsSchema = z.object({
+  companyName: z.string().trim().min(2, 'Company name must be at least 2 characters'),
+  licenseNumber: z.string().trim().max(100, 'License number must be less than 100 characters').optional(),
+  yearsInBusiness: z.string()
+    .trim()
+    .refine(value => value === '' || /^\d+$/.test(value), 'Years in business must be a whole number')
+    .refine(value => value === '' || Number(value) <= 100, 'Years in business must be 100 or less'),
+  bio: z.string().trim().min(20, 'Bio must be at least 20 characters').max(500, 'Bio must be less than 500 characters'),
+  serviceCategories: z.array(z.string()).default([]),
+})
+
+export const homeownerSettingsSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  phone: z.string().trim().max(20, 'Phone number must be less than 20 characters').optional().or(z.literal('')),
 })
 
 export const contactFormSchema = z.object({
@@ -75,7 +110,9 @@ export type SignupFormData = z.infer<typeof signupSchema>
 export type LoginFormData = z.infer<typeof loginSchema>
 export type ProjectRequestData = z.infer<typeof projectRequestSchema>
 export type ContractorProfileData = z.infer<typeof contractorProfileSchema>
+export type ContractorSettingsData = z.infer<typeof contractorSettingsSchema>
 export type ContactFormData = z.infer<typeof contactFormSchema>
 export type InvoiceCreateData = z.infer<typeof invoiceCreateSchema>
 export type MessageData = z.infer<typeof messageSchema>
 export type MessageWithJobData = z.infer<typeof messageWithJobSchema>
+export type HomeownerSettingsData = z.infer<typeof homeownerSettingsSchema>

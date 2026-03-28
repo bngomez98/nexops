@@ -1,5 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { projectRequestSchema } from '@/lib/validators'
+
+function normalizeCategory(category: string, customCategory?: string) {
+  if (category !== 'other') return category
+
+  const normalized = (customCategory ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  return normalized || 'other'
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,36 +36,55 @@ export async function POST(request: NextRequest) {
 
     // Accept both JSON and FormData
     const contentType = request.headers.get('content-type') ?? ''
-    let category = '', title = '', description = '', location = '', budget = ''
+    let category = '', customCategory = '', title = '', description = '', location = '', budget = '', preferredDate = ''
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData()
       category    = String(formData.get('category') ?? '')
+      customCategory = String(formData.get('customCategory') ?? '')
       title       = String(formData.get('title') ?? '')
       description = String(formData.get('description') ?? '')
       location    = String(formData.get('location') ?? '')
       budget      = String(formData.get('budget') ?? '')
+      preferredDate = String(formData.get('preferredDate') ?? '')
     } else {
       const body = await request.json()
-      ;({ category, title, description, location, budget } = body)
+      ;({ category, customCategory, title, description, location, budget, preferredDate } = body)
     }
 
-    if (!category || !description || !location) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    const parsed = projectRequestSchema.safeParse({
+      category,
+      customCategory,
+      title,
+      description,
+      location,
+      budget,
+      preferredDate,
+    })
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
     }
+
+    const validated = parsed.data
+    const normalizedCategory = normalizeCategory(validated.category, validated.customCategory)
 
     const { data: sr, error: insertError } = await supabase
       .from('service_requests')
       .insert({
         owner_id:         user.id,
-        category,
-        description,
-        additional_notes: title || null,
-        address:          location,
+        category:         normalizedCategory,
+        description:      validated.description,
+        additional_notes: validated.title || null,
+        address:          validated.location,
         city:             'Topeka',
         state:            'KS',
         zip_code:         '66603',
-        budget_max:       budget ? parseFloat(budget) : null,
+        budget_max:       validated.budget ? parseFloat(validated.budget) : null,
+        consultation_date: new Date(validated.preferredDate).toISOString(),
         status:           'pending_review',
       })
       .select('id, category, status')
@@ -73,7 +105,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { project: { id: sr.id, title: title || category, category: sr.category, status: sr.status } },
+      { project: { id: sr.id, title: validated.title || normalizedCategory, category: sr.category, status: sr.status } },
       { status: 201 }
     )
   } catch (err) {

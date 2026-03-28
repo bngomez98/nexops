@@ -21,6 +21,7 @@ interface ProjectRequest {
   location: string
   budget?: number
   createdAt: string
+  preferredDate?: string | null
 }
 
 interface ContractorProfile {
@@ -39,6 +40,10 @@ interface FilterState {
   status: string
   location: string
   sortBy: 'recent' | 'budget-high' | 'budget-low'
+}
+
+interface ContractorUser {
+  name: string
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -85,7 +90,7 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
 
 export default function ContractorDashboard() {
   const router = useRouter()
-  const [user, setUser]       = useState<any>(null)
+  const [user, setUser]       = useState<ContractorUser | null>(null)
   const [profile, setProfile] = useState<ContractorProfile | null>(null)
   const [projects, setProjects]         = useState<ProjectRequest[]>([])
   const [filteredProjects, setFiltered] = useState<ProjectRequest[]>([])
@@ -290,7 +295,7 @@ export default function ContractorDashboard() {
           {[
             { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, iconClass: 'text-primary' },
             { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, iconClass: 'text-muted-foreground' },
-            { label: 'Available', value: projects.length, sub: 'matching projects', icon: Layers, iconClass: 'text-muted-foreground' },
+            { label: 'Available', value: projects.length, sub: 'open requests in your pipeline', icon: Layers, iconClass: 'text-muted-foreground' },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -359,9 +364,9 @@ export default function ContractorDashboard() {
                     <Briefcase className="w-6 h-6 text-primary" />
                   </div>
                   <p className="font-semibold text-foreground text-[15px] mb-2">No projects available</p>
-                  <p className="text-sm text-muted-foreground max-w-xs">
-                    New projects in your service categories will appear here automatically.
-                  </p>
+                   <p className="text-sm text-muted-foreground max-w-xs">
+                     New community requests appear here automatically, including custom categories that still need a specialist.
+                   </p>
                   <p className="text-[11px] text-muted-foreground mt-3 flex items-center gap-1">
                     <RefreshCw className="w-3 h-3" /> Auto-checking every 30 seconds
                   </p>
@@ -408,6 +413,12 @@ export default function ContractorDashboard() {
                                   <MapPin className="w-3 h-3" />
                                   {project.location}
                                 </span>
+                                {project.preferredDate && (
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    Needs service by {new Date(project.preferredDate).toLocaleDateString()}
+                                  </span>
+                                )}
                                 <span className="flex items-center gap-1">
                                   <Clock className="w-3 h-3" />
                                   {timeAgo(project.createdAt)}

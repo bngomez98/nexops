@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import {
   Save, Loader2, ArrowLeft, User, Bell, AlertTriangle,
-  CreditCard, Check, Building2, Wrench, Shield, Lock, QrCode, KeyRound, CheckCircle2,
+  CreditCard, Check, Building2, Wrench, Lock, QrCode, KeyRound, CheckCircle2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
@@ -23,16 +23,24 @@ const SERVICE_CATEGORIES = [
 ]
 
 type Tab = 'profile' | 'notifications' | 'security' | 'danger'
+type SettingsUser = { name: string }
+type MfaFactor = {
+  id: string
+  factor_type: string
+  status: string
+  friendly_name?: string | null
+}
 
 function ContractorSettingsInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SettingsUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [tab, setTab] = useState<Tab>('profile')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState({
     companyName: '',
     bio: '',
@@ -47,7 +55,7 @@ function ContractorSettingsInner() {
   })
 
   // 2FA state
-  const [mfaFactors, setMfaFactors]   = useState<any[]>([])
+  const [mfaFactors, setMfaFactors]   = useState<MfaFactor[]>([])
   const [enrollData, setEnrollData]   = useState<{ qr: string; secret: string; factorId: string } | null>(null)
   const [verifyCode, setVerifyCode]   = useState('')
   const [mfaLoading, setMfaLoading]   = useState(false)
@@ -104,8 +112,9 @@ function ContractorSettingsInner() {
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
-    if (!formData.companyName.trim() || !formData.bio.trim() || formData.serviceCategories.length === 0) {
-      toast.error('Please fill in company name, bio, and at least one service category.')
+    setFieldErrors({})
+    if (!formData.companyName.trim() || !formData.bio.trim()) {
+      toast.error('Please fill in your company name and bio.')
       return
     }
     setSaving(true)
@@ -117,9 +126,15 @@ function ContractorSettingsInner() {
       })
       if (!res.ok) {
         const d = await res.json()
+        if (d.details) {
+          setFieldErrors(Object.fromEntries(
+            Object.entries(d.details).map(([key, messages]) => [key, Array.isArray(messages) ? messages[0] : String(messages)])
+          ))
+        }
         toast.error(d.error || 'Failed to save settings')
         return
       }
+      setFieldErrors({})
       toast.success('Settings saved!')
     } catch {
       toast.error('Failed to save settings. Please try again.')
@@ -287,8 +302,11 @@ function ContractorSettingsInner() {
                         value={formData.companyName}
                         onChange={e => setFormData(p => ({ ...p, companyName: e.target.value }))}
                         required
-                        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        className={`w-full h-10 px-3 rounded-xl border bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 ${
+                          fieldErrors.companyName ? 'border-destructive' : 'border-input'
+                        }`}
                       />
+                      {fieldErrors.companyName && <p className="text-[11px] text-destructive">{fieldErrors.companyName}</p>}
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[12px] font-semibold text-foreground">License Number</label>
@@ -297,8 +315,11 @@ function ContractorSettingsInner() {
                         placeholder="e.g., LICENSE123"
                         value={formData.licenseNumber}
                         onChange={e => setFormData(p => ({ ...p, licenseNumber: e.target.value }))}
-                        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        className={`w-full h-10 px-3 rounded-xl border bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 ${
+                          fieldErrors.licenseNumber ? 'border-destructive' : 'border-input'
+                        }`}
                       />
+                      {fieldErrors.licenseNumber && <p className="text-[11px] text-destructive">{fieldErrors.licenseNumber}</p>}
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[12px] font-semibold text-foreground">Years in Business</label>
@@ -309,8 +330,11 @@ function ContractorSettingsInner() {
                         max="100"
                         value={formData.yearsInBusiness}
                         onChange={e => setFormData(p => ({ ...p, yearsInBusiness: e.target.value }))}
-                        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        className={`w-full h-10 px-3 rounded-xl border bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 ${
+                          fieldErrors.yearsInBusiness ? 'border-destructive' : 'border-input'
+                        }`}
                       />
+                      {fieldErrors.yearsInBusiness && <p className="text-[11px] text-destructive">{fieldErrors.yearsInBusiness}</p>}
                     </div>
                   </div>
 
@@ -322,8 +346,11 @@ function ContractorSettingsInner() {
                       onChange={e => setFormData(p => ({ ...p, bio: e.target.value }))}
                       rows={4}
                       required
-                      className="w-full px-3 py-2.5 rounded-xl border border-input bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                      className={`w-full px-3 py-2.5 rounded-xl border bg-background text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none ${
+                        fieldErrors.bio ? 'border-destructive' : 'border-input'
+                      }`}
                     />
+                    {fieldErrors.bio && <p className="text-[11px] text-destructive">{fieldErrors.bio}</p>}
                   </div>
                 </div>
 
@@ -334,7 +361,7 @@ function ContractorSettingsInner() {
                     <h2 className="font-bold text-foreground text-[15px]">Service Categories</h2>
                   </div>
                   <p className="text-[12.5px] text-muted-foreground">
-                    Select all trades you specialize in. You'll receive project notifications matching these categories.
+                    Select any specialties you want highlighted. Open requests are no longer capped by these categories, so your pipeline still includes custom community requests.
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     {SERVICE_CATEGORIES.map(cat => {
@@ -356,6 +383,12 @@ function ContractorSettingsInner() {
                         </button>
                       )
                     })}
+                  </div>
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    <p className="text-[12px] font-semibold text-foreground">Access &amp; pipeline coverage</p>
+                    <p className="text-[11.5px] text-muted-foreground mt-1.5">
+                      Categories now improve matching, analytics, and notifications, but they do not block access. You can still review scheduling, documentation, billing, and specialty requests across the shared service pipeline.
+                    </p>
                   </div>
                 </div>
 
