@@ -11,28 +11,29 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { companyName, bio, licenseNumber, yearsInBusiness, serviceCategories } = body
+    const { email, phone } = body
 
-    if (!companyName || !bio || !serviceCategories || serviceCategories.length === 0) {
-      return NextResponse.json({ error: 'Company name, bio, and at least one service category are required' }, { status: 400 })
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
     }
 
+    // Update profile table
     const { error: profileError } = await supabase
       .from('profiles')
-      .update({
-        company: companyName,
-        bio,
-        license_number: licenseNumber ?? '',
-        years_in_business: Number(yearsInBusiness) || 0,
-        service_categories: serviceCategories,
-      })
+      .update({ phone: phone ?? null })
       .eq('id', user.id)
 
     if (profileError) throw profileError
 
+    // Update Supabase Auth email if changed
+    if (email !== user.email) {
+      const { error: emailError } = await supabase.auth.updateUser({ email })
+      if (emailError) throw emailError
+    }
+
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('[PUT /api/settings/contractor]', error)
+  } catch (err) {
+    console.error('[PUT /api/settings/property-manager]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -46,13 +47,13 @@ export async function DELETE() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    // Sign the user out. Full account deletion requires a service role operation
+    // Sign out the user. Full account deletion requires a service role operation
     // handled separately or by a Supabase database trigger/function.
     await supabase.auth.signOut()
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('[DELETE /api/settings/contractor]', error)
+  } catch (err) {
+    console.error('[DELETE /api/settings/property-manager]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
