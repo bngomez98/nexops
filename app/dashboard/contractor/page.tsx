@@ -7,10 +7,11 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
 import { AIAssistant } from '@/components/ai-assistant'
 import { AIInsightsCard } from '@/components/ai-insights-card'
+import { formatDateOnly } from '@/lib/date-format'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
-  RefreshCw, Clock, DollarSign, CheckCircle2, Zap,
+  RefreshCw, Clock, DollarSign, CheckCircle2, Zap, CalendarDays,
 } from 'lucide-react'
 
 interface ProjectRequest {
@@ -415,8 +416,8 @@ export default function ContractorDashboard() {
                                 </span>
                                 {project.preferredDate && (
                                   <span className="flex items-center gap-1">
-                                    <Clock className="w-3 h-3" />
-                                    Needs service by {new Date(project.preferredDate).toLocaleDateString()}
+                                    <CalendarDays className="w-3 h-3" />
+                                    Needs service by {formatDateOnly(project.preferredDate)}
                                   </span>
                                 )}
                                 <span className="flex items-center gap-1">

@@ -173,6 +173,18 @@ describe('projectRequestSchema', () => {
     })
     expect(result.success).toBe(false)
   })
+
+  it('rejects overly short custom categories', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'other',
+      customCategory: 'ab',
+      title: 'Repair specialty feature',
+      description: 'The specialty system needs inspection, documentation, and repair support.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+    })
+    expect(result.success).toBe(false)
+  })
 })
 
 // ─── contractorProfileSchema ─────────────────────────────────────────────────
@@ -219,6 +231,17 @@ describe('contractorSettingsSchema', () => {
       companyName: 'Pro Services LLC',
       licenseNumber: 'LIC123',
       yearsInBusiness: 'five',
+      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      serviceCategories: ['plumbing'],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects negative years in business', () => {
+    const result = contractorSettingsSchema.safeParse({
+      companyName: 'Pro Services LLC',
+      licenseNumber: 'LIC123',
+      yearsInBusiness: '-1',
       bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
       serviceCategories: ['plumbing'],
     })

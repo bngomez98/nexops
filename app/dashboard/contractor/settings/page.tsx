@@ -385,7 +385,7 @@ function ContractorSettingsInner() {
                     })}
                   </div>
                   <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-                    <p className="text-[12px] font-semibold text-foreground">Access &amp; pipeline coverage</p>
+                    <p className="text-[12px] font-semibold text-foreground">Access & pipeline coverage</p>
                     <p className="text-[11.5px] text-muted-foreground mt-1.5">
                       Categories now improve matching, analytics, and notifications, but they do not block access. You can still review scheduling, documentation, billing, and specialty requests across the shared service pipeline.
                     </p>

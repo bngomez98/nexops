@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { projectRequestSchema } from '@/lib/validators'
 
+// Custom categories are stored as URL-safe slugs so they can flow through the
+// same matching, filtering, and analytics paths as predefined categories.
 function normalizeCategory(category: string, customCategory?: string) {
   if (category !== 'other') return category
 
@@ -12,6 +14,10 @@ function normalizeCategory(category: string, customCategory?: string) {
     .replace(/^-+|-+$/g, '')
 
   return normalized || 'other'
+}
+
+function toConsultationDate(value: string) {
+  return value.includes('T') ? value : `${value}T00:00:00Z`
 }
 
 export async function POST(request: NextRequest) {
@@ -84,7 +90,7 @@ export async function POST(request: NextRequest) {
         state:            'KS',
         zip_code:         '66603',
         budget_max:       validated.budget ? parseFloat(validated.budget) : null,
-        consultation_date: new Date(validated.preferredDate).toISOString(),
+        consultation_date: toConsultationDate(validated.preferredDate),
         status:           'pending_review',
       })
       .select('id, category, status')

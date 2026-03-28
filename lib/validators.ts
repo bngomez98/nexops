@@ -54,6 +54,13 @@ export const projectRequestSchema = z.object({
       path: ['customCategory'],
     })
   }
+  if (data.category === 'other' && data.customCategory?.trim() && data.customCategory.trim().length < 3) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Custom category must be at least 3 characters',
+      path: ['customCategory'],
+    })
+  }
 })
 
 export const contractorProfileSchema = z.object({
@@ -64,12 +71,15 @@ export const contractorProfileSchema = z.object({
   serviceCategories: z.array(z.string()).min(1, 'Select at least one service category'),
 })
 
+// Onboarding still requires a specialty selection, while settings now allow an
+// empty preference list so contractors can review the full shared request feed.
 export const contractorSettingsSchema = z.object({
   companyName: z.string().trim().min(2, 'Company name must be at least 2 characters'),
   licenseNumber: z.string().trim().max(100, 'License number must be less than 100 characters').optional(),
   yearsInBusiness: z.string()
     .trim()
     .refine(value => value === '' || /^\d+$/.test(value), 'Years in business must be a whole number')
+    .refine(value => value === '' || Number(value) >= 0, 'Years in business cannot be negative')
     .refine(value => value === '' || Number(value) <= 100, 'Years in business must be 100 or less'),
   bio: z.string().trim().min(20, 'Bio must be at least 20 characters').max(500, 'Bio must be less than 500 characters'),
   serviceCategories: z.array(z.string()).default([]),

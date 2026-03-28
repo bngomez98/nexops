@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ImageUpload } from '@/components/image-upload'
+import { formatDateOnly, todayDateInputValue } from '@/lib/date-format'
 import { projectRequestSchema } from '@/lib/validators'
 import { ZodError } from 'zod'
 import {
@@ -107,7 +108,8 @@ export default function NewProjectRequest() {
     check()
   }, [router])
 
-  // Debounced AI analysis
+  // Debounced AI analysis runs after title/description entry so users still get
+  // automation help even when they start with a broad or custom category.
   useEffect(() => {
     if (!formData.title || !formData.description) return
     const timer = setTimeout(async () => {
@@ -248,6 +250,7 @@ export default function NewProjectRequest() {
   if (!user) return null
 
   const selectedCat = SERVICE_CATEGORIES.find(c => c.value === formData.category)
+  const minPreferredDate = todayDateInputValue()
 
   return (
     <div className="min-h-screen bg-background">
@@ -403,7 +406,7 @@ export default function NewProjectRequest() {
                   {analysisError && (
                     <p className="text-[11px] text-muted-foreground mt-1">{analysisError}</p>
                   )}
-                  {suggestedCategory && suggestedCategory !== formData.category && (
+                  {suggestedCategory && formData.category === 'other' && suggestedCategory !== 'other' && (
                     <div className="mt-2 flex items-center gap-2 text-[12px]">
                       <Zap className="w-3.5 h-3.5 text-primary" />
                       <span className="text-muted-foreground">AI suggests:</span>
@@ -533,7 +536,7 @@ export default function NewProjectRequest() {
                   <input
                     name="preferredDate"
                     type="date"
-                    min={new Date().toISOString().split('T')[0]}
+                    min={minPreferredDate}
                     value={formData.preferredDate}
                     onChange={handleChange}
                     required
@@ -588,7 +591,7 @@ export default function NewProjectRequest() {
                   <p><span className="text-muted-foreground">Category:</span> <span className="font-semibold text-foreground">{formData.category === 'other' ? formData.customCategory : selectedCat?.label}</span></p>
                   <p><span className="text-muted-foreground">Title:</span> <span className="font-semibold text-foreground">{formData.title}</span></p>
                   {formData.preferredDate && (
-                    <p><span className="text-muted-foreground">Requested date:</span> <span className="font-semibold text-foreground">{new Date(formData.preferredDate).toLocaleDateString()}</span></p>
+                    <p><span className="text-muted-foreground">Requested date:</span> <span className="font-semibold text-foreground">{formatDateOnly(formData.preferredDate)}</span></p>
                   )}
                   {formData.description && (
                     <p><span className="text-muted-foreground">Description:</span> <span className="text-foreground line-clamp-2">{formData.description}</span></p>
