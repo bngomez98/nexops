@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { isAutomationEnabled } from '@/lib/env'
 
 interface ContractorMatch {
   contractor_id: string
@@ -11,6 +12,13 @@ interface ContractorMatch {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isAutomationEnabled()) {
+    return NextResponse.json(
+      { error: 'Automation features are disabled', code: 'FEATURE_DISABLED' },
+      { status: 403 },
+    )
+  }
+
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
