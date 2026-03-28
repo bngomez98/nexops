@@ -64,6 +64,19 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Smooth theme transitions — only on the properties that change */
 html, body, main {
   transition:
@@ -78,6 +91,13 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* Dashboard typography: cleaner, more professional system for app UI */
+.dashboard-shell {
+  font-family: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", var(--font-sans);
+  letter-spacing: -0.005em;
 }
 
 /* ── Surface utility ──────────────────────── */
@@ -226,6 +246,16 @@ body {
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 2px 8px rgba(59, 130, 246, 0.06);
   transform: translateY(-2px);
+}
+
+/* ── Focus styles ─────────────────────────── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-ring) 80%, white 20%);
+  outline-offset: 2px;
 }
 
 /* ── Photo card hover ─────────────────────── */

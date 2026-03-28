@@ -50,6 +50,19 @@ export default function ContractorSettingsPage() {
     load()
   }, [])
 
+    // Show feedback after returning from Stripe onboarding
+    const connectParam = searchParams.get("connect")
+    if (connectParam === "success") {
+      setConnectStatus("active")
+    } else if (connectParam === "pending") {
+      setConnectStatus("pending")
+    } else if (connectParam === "restricted") {
+      setConnectStatus("restricted")
+    } else if (connectParam === "error") {
+      setError("There was a problem connecting your Stripe account. Please try again.")
+    }
+  }, [searchParams])
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
