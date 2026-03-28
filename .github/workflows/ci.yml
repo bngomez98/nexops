@@ -27,20 +27,25 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
         run: corepack pnpm install --frozen-lockfile
 
       - name: Build
         run: corepack pnpm build
         env:
-          RESEND_API_KEY: re_dummy
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          RESEND_API_KEY: re_S3g6c5cq_9szCd5g7CsKUtbunkY1jvpmi
+          NEXT_PUBLIC_SITE_URL: https://nexusoperations.org
           # Allow build to complete without real secrets
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
 
       - name: Lint
+        run: pnpm lint
         run: corepack pnpm lint
         continue-on-error: true
-        env:
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+        env: =production
+          NEXT_PUBLIC_SITE_URL: https://nexusoperations.org
