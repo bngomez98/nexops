@@ -82,7 +82,7 @@ export default function LandingPage() {
         <h2 className="text-3xl font-bold text-center mb-14 text-balance">Everything you need to run operations</h2>
         <div className="grid md:grid-cols-2 gap-8">
           {[
-            { icon: Shield, title: 'Role-Based Access', desc: 'Homeowners, property managers, and contractors each see only what's relevant to them.' },
+            { icon: Shield, title: 'Role-Based Access', desc: "Homeowners, property managers, and contractors each see only what's relevant to them." },
             { icon: CheckCircle, title: 'Real-Time Job Tracking', desc: 'From request to completion, every status update is visible to the right people instantly.' },
             { icon: Users, title: 'Secure Profiles', desc: 'Upload a profile photo, manage your credentials, and build trust with every stakeholder.' },
             { icon: Wrench, title: 'Work Order Management', desc: 'Create, assign, prioritize, and close jobs — with full audit history built in.' },

@@ -11,13 +11,22 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  // Fetch jobs based on role
+  if (profileError) {
+    return (
+      <div className="p-8">
+        <div className="bg-red-50 text-red-700 border border-red-200 rounded-xl p-5 text-sm">
+          We could not load your account profile. Please refresh and try again. ({profileError.message})
+        </div>
+      </div>
+    )
+  }
+
   let jobs: Job[] = []
   if (profile?.role === 'homeowner') {
     const { data } = await supabase.from('jobs').select('*').eq('owner_id', user.id).order('created_at', { ascending: false }).limit(5)
