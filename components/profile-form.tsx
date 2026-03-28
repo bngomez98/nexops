@@ -1,11 +1,20 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { Camera, Loader2, CheckCircle, AlertCircle, Building2, HardHat, Home } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { Camera, Loader2, CheckCircle, AlertCircle, Building2, HardHat, Home, ShieldCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { getRoleLabel } from '@/lib/utils'
 import type { Profile } from '@/lib/types'
+
+interface LocalAccessSettings {
+  automation_mode: 'balanced' | 'aggressive'
+  community_visible: boolean
+  allow_auto_matching: boolean
+  collect_extended_data: boolean
+}
+
+const ACCESS_KEY = 'nexus-access-settings'
 
 export default function ProfileForm({ profile, userEmail }: { profile: Profile | null; userEmail: string }) {
   const router = useRouter()
@@ -15,9 +24,24 @@ export default function ProfileForm({ profile, userEmail }: { profile: Profile |
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [localAccessSettings, setLocalAccessSettings] = useState<LocalAccessSettings>({
+    automation_mode: 'balanced',
+    community_visible: true,
+    allow_auto_matching: true,
+    collect_extended_data: true,
+  })
 
   const role = profile?.role ?? 'homeowner'
   const RoleIcon = role === 'property_manager' ? Building2 : role === 'contractor' ? HardHat : Home
+
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem(ACCESS_KEY)
+      if (cached) setLocalAccessSettings(JSON.parse(cached) as LocalAccessSettings)
+    } catch {
+      // Keep defaults if cache is malformed.
+    }
+  }, [])
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -50,34 +74,37 @@ export default function ProfileForm({ profile, userEmail }: { profile: Profile |
     setSaving(true)
     setMessage(null)
 
-    const formData = new FormData(e.currentTarget)
-    const updates: Partial<Profile> = {
-      full_name: formData.get('full_name') as string,
-      phone: formData.get('phone') as string || null,
-      address: formData.get('address') as string || null,
-      company_name: formData.get('company_name') as string || null,
-      license_number: formData.get('license_number') as string || null,
-      trade_specialty: formData.get('trade_specialty') as string || null,
-      updated_at: new Date().toISOString(),
-    }
+    try {
+      const formData = new FormData(e.currentTarget)
+      const updates: Partial<Profile> = {
+        full_name: formData.get('full_name') as string,
+        phone: formData.get('phone') as string || null,
+        address: formData.get('address') as string || null,
+        company_name: formData.get('company_name') as string || null,
+        license_number: formData.get('license_number') as string || null,
+        trade_specialty: formData.get('trade_specialty') as string || null,
+        updated_at: new Date().toISOString(),
+      }
 
-    const { error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', profile!.id)
+      const { error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', profile!.id)
 
-    if (error) {
-      setMessage({ type: 'error', text: error.message })
-    } else {
-      setMessage({ type: 'success', text: 'Profile saved successfully.' })
+      if (error) throw new Error(error.message)
+
+      localStorage.setItem(ACCESS_KEY, JSON.stringify(localAccessSettings))
+      setMessage({ type: 'success', text: 'Profile and access settings saved successfully.' })
       router.refresh()
+    } catch (err: unknown) {
+      setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Unable to save profile.' })
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
   }
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Avatar card */}
       <div className="bg-white border border-[#e2e8f0] rounded-xl p-6">
         <h2 className="text-sm font-semibold text-[#0f1623] mb-4">Profile Photo</h2>
         <div className="flex items-center gap-6">
@@ -92,17 +119,8 @@ export default function ProfileForm({ profile, userEmail }: { profile: Profile |
                 </span>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              disabled={uploading}
-              className="absolute -bottom-1 -right-1 w-7 h-7 bg-[#3b82f6] hover:bg-[#2563eb] rounded-full flex items-center justify-center border-2 border-white transition-colors disabled:opacity-60"
-            >
-              {uploading ? (
-                <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
-              ) : (
-                <Camera className="w-3.5 h-3.5 text-white" />
-              )}
+            <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="absolute -bottom-1 -right-1 w-7 h-7 bg-[#3b82f6] hover:bg-[#2563eb] rounded-full flex items-center justify-center border-2 border-white transition-colors disabled:opacity-60">
+              {uploading ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" /> : <Camera className="w-3.5 h-3.5 text-white" />}
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="sr-only" onChange={handleAvatarChange} />
           </div>
@@ -117,9 +135,8 @@ export default function ProfileForm({ profile, userEmail }: { profile: Profile |
         </div>
       </div>
 
-      {/* Profile form */}
       <form onSubmit={handleSave} className="bg-white border border-[#e2e8f0] rounded-xl p-6 flex flex-col gap-5">
-        <h2 className="text-sm font-semibold text-[#0f1623]">Personal Information</h2>
+        <h2 className="text-sm font-semibold text-[#0f1623]">Account Settings, Access, & Automation</h2>
 
         {message && (
           <div className={`flex items-center gap-2 text-sm px-4 py-3 rounded-lg ${
@@ -132,110 +149,96 @@ export default function ProfileForm({ profile, userEmail }: { profile: Profile |
 
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-[#0f1623]">Email address</label>
-          <input
-            type="email"
-            value={userEmail}
-            disabled
-            className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#94a3b8] bg-[#f8f9fb] cursor-not-allowed"
-          />
+          <input type="email" value={userEmail} disabled className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#94a3b8] bg-[#f8f9fb] cursor-not-allowed" />
         </div>
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="full_name" className="text-sm font-medium text-[#0f1623]">Full name</label>
-          <input
-            id="full_name"
-            name="full_name"
-            type="text"
-            defaultValue={profile?.full_name ?? ''}
-            className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-          />
+          <input id="full_name" name="full_name" type="text" defaultValue={profile?.full_name ?? ''} className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="phone" className="text-sm font-medium text-[#0f1623]">Phone</label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              defaultValue={profile?.phone ?? ''}
-              placeholder="(785) 000-0000"
-              className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-            />
+            <input id="phone" name="phone" type="tel" defaultValue={profile?.phone ?? ''} placeholder="(785) 000-0000" className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
           </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="address" className="text-sm font-medium text-[#0f1623]">Address</label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              defaultValue={profile?.address ?? ''}
-              placeholder="123 Main St, Topeka, KS"
-              className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-            />
+            <input id="address" name="address" type="text" defaultValue={profile?.address ?? ''} placeholder="123 Main St, Topeka, KS" className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
           </div>
         </div>
 
-        {/* Role-specific fields */}
+        <div className="rounded-xl border border-[#e2e8f0] p-4 bg-[#f8fafc]">
+          <div className="flex items-center gap-2 mb-3">
+            <ShieldCheck className="w-4 h-4 text-[#2563eb]" />
+            <h3 className="text-sm font-semibold text-[#0f1623]">Advanced Access & Data Collection</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <label className="flex items-center justify-between gap-3 rounded-lg border border-[#e2e8f0] bg-white px-3 py-2">
+              <span>Automation Mode</span>
+              <select
+                value={localAccessSettings.automation_mode}
+                onChange={(event) => setLocalAccessSettings((prev) => ({ ...prev, automation_mode: event.target.value as 'balanced' | 'aggressive' }))}
+                className="border border-[#e2e8f0] rounded px-2 py-1"
+              >
+                <option value="balanced">Balanced</option>
+                <option value="aggressive">Aggressive</option>
+              </select>
+            </label>
+            <label className="flex items-center justify-between gap-3 rounded-lg border border-[#e2e8f0] bg-white px-3 py-2">
+              <span>Allow Auto-Matching</span>
+              <input
+                type="checkbox"
+                checked={localAccessSettings.allow_auto_matching}
+                onChange={(event) => setLocalAccessSettings((prev) => ({ ...prev, allow_auto_matching: event.target.checked }))}
+              />
+            </label>
+            <label className="flex items-center justify-between gap-3 rounded-lg border border-[#e2e8f0] bg-white px-3 py-2">
+              <span>Community Visibility</span>
+              <input
+                type="checkbox"
+                checked={localAccessSettings.community_visible}
+                onChange={(event) => setLocalAccessSettings((prev) => ({ ...prev, community_visible: event.target.checked }))}
+              />
+            </label>
+            <label className="flex items-center justify-between gap-3 rounded-lg border border-[#e2e8f0] bg-white px-3 py-2">
+              <span>Collect Extended Data</span>
+              <input
+                type="checkbox"
+                checked={localAccessSettings.collect_extended_data}
+                onChange={(event) => setLocalAccessSettings((prev) => ({ ...prev, collect_extended_data: event.target.checked }))}
+              />
+            </label>
+          </div>
+        </div>
+
         {role === 'property_manager' && (
           <div className="flex flex-col gap-1.5">
             <label htmlFor="company_name" className="text-sm font-medium text-[#0f1623]">Company Name</label>
-            <input
-              id="company_name"
-              name="company_name"
-              type="text"
-              defaultValue={profile?.company_name ?? ''}
-              placeholder="Acme Property Management"
-              className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-            />
+            <input id="company_name" name="company_name" type="text" defaultValue={profile?.company_name ?? ''} placeholder="Acme Property Management" className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
           </div>
         )}
 
         {role === 'contractor' && (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="trade_specialty" className="text-sm font-medium text-[#0f1623]">Trade / Specialty</label>
-                <input
-                  id="trade_specialty"
-                  name="trade_specialty"
-                  type="text"
-                  defaultValue={profile?.trade_specialty ?? ''}
-                  placeholder="Plumbing, HVAC, Electrical..."
-                  className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-                />
+                <input id="trade_specialty" name="trade_specialty" type="text" defaultValue={profile?.trade_specialty ?? ''} placeholder="Plumbing, HVAC, Electrical..." className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="license_number" className="text-sm font-medium text-[#0f1623]">License Number</label>
-                <input
-                  id="license_number"
-                  name="license_number"
-                  type="text"
-                  defaultValue={profile?.license_number ?? ''}
-                  placeholder="KS-12345"
-                  className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-                />
+                <input id="license_number" name="license_number" type="text" defaultValue={profile?.license_number ?? ''} placeholder="KS-12345" className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="company_name" className="text-sm font-medium text-[#0f1623]">Company Name</label>
-              <input
-                id="company_name"
-                name="company_name"
-                type="text"
-                defaultValue={profile?.company_name ?? ''}
-                placeholder="Smith Plumbing LLC"
-                className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition"
-              />
+              <input id="company_name" name="company_name" type="text" defaultValue={profile?.company_name ?? ''} placeholder="Smith Plumbing LLC" className="border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f1623] outline-none focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 transition" />
             </div>
           </>
         )}
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="flex items-center justify-center gap-2 w-full bg-[#1e3a8a] hover:bg-[#1e40af] disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors mt-1"
-        >
+        <button type="submit" disabled={saving} className="flex items-center justify-center gap-2 w-full bg-[#1e3a8a] hover:bg-[#1e40af] disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors mt-1">
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
