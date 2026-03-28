@@ -96,31 +96,33 @@ const statsData = [
 const heroContent = {
   homeowner: {
     badge: 'For Homeowners & Landlords',
+    heading: <>Maintenance Coordination<br />for Homeowners in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Topeka,&nbsp;KS</span></>,
+    subheading: 'Submit a service request with photos and a budget, and Nexus assigns a verified contractor, coordinates scheduling, and keeps a documented record of every project.',
     heading: <>Property maintenance, handled end to end.</>,
     subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
     primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
     secondaryCta: { href: '#process', label: 'See how it works' },
     badges: [
-      { icon: Shield, text: 'Verified contractors only' },
-      { icon: Zap, text: 'Same-day assignment' },
-      { icon: CheckCircle2, text: 'Manually reviewed' },
+      { icon: Shield, text: 'Licensed & insured contractors' },
+      { icon: Zap, text: 'Assignment within 4 hours' },
+      { icon: CheckCircle2, text: 'Every request reviewed' },
     ],
     image: '/business-handshake-professional-meeting.jpg',
     floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
   },
   contractor: {
     badge: 'For Contractors',
-    heading: <>Pre-qualified jobs.<br />No bidding wars.<br />Faster&nbsp;payouts.</>,
-    subheading: 'Access exclusive service requests with photos, scope, and budget visible before you commit. Claim jobs that match your trade, get paid faster through unified invoicing.',
+    heading: <>Licensed Contractor<br />Network in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Shawnee&nbsp;County</span></>,
+    subheading: 'Receive pre-qualified service requests with photos, scope, and budget details provided before you commit. Nexus handles client billing and pays contractors directly within 30 days.',
     primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
     secondaryCta: { href: '#pricing', label: 'View pricing' },
     badges: [
-      { icon: Eye, text: 'Full scope before committing' },
-      { icon: CreditCard, text: 'Unified payout workflow' },
-      { icon: CheckCircle2, text: 'No competing quotes' },
+      { icon: Eye, text: 'Full scope provided upfront' },
+      { icon: CreditCard, text: 'Direct contractor payment' },
+      { icon: CheckCircle2, text: 'Exclusive assignment per job' },
     ],
     image: '/business-analytics-data-visualization.jpg',
-    floatingCard: { icon: FileText, title: 'Pre-qualified only', subtitle: 'Budget & scope visible upfront' },
+    floatingCard: { icon: FileText, title: 'Documented requests', subtitle: 'Budget & scope visible upfront' },
   },
 } as const
 
@@ -418,10 +420,10 @@ export default function HomePage() {
                 For homeowners &amp; landlords
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#111' }}>
-                Stop chasing contractors.<br />Start getting results.
+                How Homeowners Use Nexus Operations
               </h2>
               <p style={{ fontSize: 16, color: '#555', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
-                Submit your request in under three minutes. We handle contractor selection, scheduling, and documentation from start to finish.
+                Submit a maintenance request in under three minutes. Nexus reviews and assigns a verified contractor, coordinates scheduling, and documents the completed work.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
@@ -503,8 +505,8 @@ export default function HomePage() {
                   <FileText size={18} style={{ color: '#6ee7a0' }} />
                 </div>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Full documentation included</p>
-                  <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Budget &amp; scope visible upfront</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Scope &amp; budget included</p>
+                  <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Photos &amp; scheduling provided upfront</p>
                 </div>
               </div>
             </div>
@@ -514,10 +516,11 @@ export default function HomePage() {
                 For contractors
               </p>
               <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
+                  How Contractors Receive Work Through Nexus
                 Every request fully documented before you arrive.
               </h2>
               <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
-                Licensed, insured contractors in Topeka and surrounding areas get matched with property owners who have documented their project in full — scope, photos, budget, and scheduling all provided upfront.
+                Licensed, insured contractors in Topeka and Shawnee County receive pre-qualified service requests with full project documentation — scope, photos, budget, and scheduling provided before assignment.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
@@ -565,10 +568,10 @@ export default function HomePage() {
               The process
             </p>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#111', marginBottom: 16 }}>
-              Request to record in four steps.
+              How a Service Request Works
             </h2>
             <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7 }}>
-              Every request follows the same clear path — no ambiguity, no dropped balls.
+              Every maintenance request follows four steps — from submission through documented completion.
             </p>
           </div>
 
@@ -606,7 +609,7 @@ export default function HomePage() {
               Pricing
             </p>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
-              Simple plans. Transparent per-job markup.
+              Subscription Plans and Per-Job Coordination Markup
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
               A transparent markup on completed work. Pro plans from{' '}
@@ -690,13 +693,13 @@ export default function HomePage() {
                 Why Nexus
               </p>
               <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.12, color: '#111', marginBottom: 20 }}>
-                Not a marketplace.<br />An operational partner.
+                Maintenance Coordination, Not a Contractor Marketplace
               </h2>
               <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 28 }}>
-                We don&apos;t just connect you and walk away. Nexus stays in the loop from intake to invoice — quality-checking, tracking contractor performance, and providing monthly reporting on every request.
+                Nexus Operations stays involved from intake to invoice — reviewing contractor performance, enforcing response-time guarantees, and providing monthly reporting on every request handled.
               </p>
               <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 36 }}>
-                Founded in Topeka, Kansas in 2026, Nexus Operations was built specifically to serve property managers and owners who needed a coordination partner, not another vendor to manage.
+                Founded in Topeka, Kansas in 2026, Nexus Operations was built to serve property managers and homeowners who need a coordination partner that manages the full maintenance workflow.
               </p>
               <Link
                 href="/about"
@@ -763,10 +766,10 @@ export default function HomePage() {
       <section style={{ background: '#3d7a4f', padding: '96px 28px', textAlign: 'center' }}>
         <div style={{ maxWidth: 680, margin: '0 auto' }}>
           <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 16 }}>
-            Ready to simplify property maintenance?
+            Create an Account and Submit Your First Request
           </h2>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, marginBottom: 40 }}>
-            Create an account in minutes. Submit your first request the same day. Nexus handles the rest.
+            Sign up in minutes and describe the maintenance work you need. Nexus assigns a verified contractor and manages the project through completion.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
             <Link

@@ -23,7 +23,7 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Services — Commercial, Residential & B2B Coordination",
   description:
     "Nexus Operations provides maintenance coordination for commercial and residential properties, plus B2B operational services including lead generation, vendor management, and consulting. Serving Topeka and Shawnee County, Kansas.",
 }
@@ -53,6 +53,11 @@ export default function ServicesPage() {
                 Our services
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+                Maintenance coordination for
+                <br className="hidden sm:block" />
+                <span className="font-serif italic font-normal text-primary">
+                  commercial, residential, and B2B clients.
+                </span>
                 Coordination services for every type of property.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">

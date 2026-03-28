@@ -65,7 +65,7 @@ export function Header() {
       {/* Top bar */}
       <div style={{ borderBottom: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.02)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 36, display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
-          <p className="hidden sm:block">Fast, verified property maintenance coordination for homeowners and contractors.</p>
+          <p className="hidden sm:block">Property maintenance coordination for homeowners and contractors in Topeka, KS.</p>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
             <a href={CONTACT_INFO.phoneHref} style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "rgba(255,255,255,0.4)", textDecoration: "none", transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
