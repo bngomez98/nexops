@@ -5,7 +5,8 @@
 # For format details, see: https://gh.io/customagents/config
 
 name:
-description:
+description:Full stack development, review all code, files, routing, and configuration, and deployments prior to writing. ensure all functionality exists. integartions should be properly configured, api's fully tested before running. validate all and delete the rest, update cache always. be accurate, full stack developer with ci/cd principles and debugging.
+
 ---
 
 # My Agent
