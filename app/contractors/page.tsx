@@ -12,8 +12,10 @@ import {
   FileText,
   BadgeCheck,
   Wrench,
-  Users,
   BarChart3,
+  Search,
+  Zap,
+  Shield,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -27,7 +29,7 @@ const benefits = [
     icon: DollarSign,
     title: "Guaranteed payment, every job",
     description:
-      "Nexus Operations pays contractors directly within 30 days of job completion. No chasing property managers for payment. No disputed invoices. We handle collections -- you handle the work.",
+      "Nexus Operations pays contractors directly within 30 days of job completion. No chasing property managers for payment. No disputed invoices. We handle collections — you handle the work.",
   },
   {
     icon: Clock,
@@ -78,7 +80,7 @@ const verificationSteps = [
     step: "03",
     title: "Verification review",
     description:
-      "We verify all licenses against state databases, confirm insurance directly with providers, and review references. 3-5 business days.",
+      "We verify all licenses against state databases, confirm insurance directly with providers, and review references. 3–5 business days.",
   },
   {
     icon: CheckCircle,
@@ -88,6 +90,96 @@ const verificationSteps = [
       "Once approved, you are added to the active network and begin receiving assignment notifications matching your trade and availability.",
   },
 ]
+
+const networkCategories = [
+  {
+    trade: "Plumbing",
+    icon: "🔧",
+    activeContractors: 4,
+    credentialRequired: "KS Master/Journeyman Plumber license",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine", "Urgent", "Emergency"],
+  },
+  {
+    trade: "Electrical",
+    icon: "⚡",
+    activeContractors: 3,
+    credentialRequired: "KS Electrical Contractor license",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine", "Urgent", "Emergency"],
+  },
+  {
+    trade: "HVAC",
+    icon: "🌡️",
+    activeContractors: 3,
+    credentialRequired: "KS HVAC Contractor license + EPA 608",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine", "Urgent", "Emergency"],
+  },
+  {
+    trade: "Roofing",
+    icon: "🏠",
+    activeContractors: 2,
+    credentialRequired: "KS Roofing Contractor registration",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine", "Urgent"],
+  },
+  {
+    trade: "General Repair",
+    icon: "🔨",
+    activeContractors: 3,
+    credentialRequired: "KS business license + trade-specific certs",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine", "Urgent"],
+  },
+  {
+    trade: "Painting",
+    icon: "🖌️",
+    activeContractors: 2,
+    credentialRequired: "KS business license",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine"],
+  },
+  {
+    trade: "Concrete",
+    icon: "🧱",
+    activeContractors: 1,
+    credentialRequired: "KS business license",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine"],
+  },
+  {
+    trade: "Fencing",
+    icon: "🪵",
+    activeContractors: 1,
+    credentialRequired: "KS business license",
+    insuranceMin: "$500K general liability",
+    acceptingApps: true,
+    tiers: ["Routine"],
+  },
+  {
+    trade: "Tree Services",
+    icon: "🌲",
+    activeContractors: 1,
+    credentialRequired: "KS business license + liability",
+    insuranceMin: "$1M general liability",
+    acceptingApps: true,
+    tiers: ["Routine", "Urgent"],
+  },
+]
+
+const tierColors: Record<string, string> = {
+  Routine: "bg-secondary text-foreground/70",
+  Urgent: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+  Emergency: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+}
 
 export default function ContractorsPage() {
   return (
@@ -107,7 +199,7 @@ export default function ContractorsPage() {
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
                 Nexus Operations connects verified contractors with property
                 management companies across Shawnee County. We coordinate the
-                work, you execute it. No subscription fees, no lead costs --
+                work, you execute it. No subscription fees, no lead costs —
                 we pay you your full quoted rate on every completed job.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
@@ -119,10 +211,10 @@ export default function ContractorsPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="#how-it-works"
+                  href="#network"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
                 >
-                  How it works
+                  View the network
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -163,8 +255,154 @@ export default function ContractorsPage() {
           </div>
         </section>
 
+        {/* Network at a Glance */}
+        <section id="network" className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-10">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Contractor network
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                Who's in the network.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Every contractor in the network has been manually verified —
+                license confirmed against state records, insurance confirmed
+                directly with the provider. Below is the current network by
+                trade category. Contractor identities are kept confidential
+                until a specific job assignment is confirmed.
+              </p>
+            </div>
+
+            {/* Summary stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+              {[
+                { label: "Active contractors", value: "20+" },
+                { label: "Trade categories", value: "9" },
+                { label: "Accepting applications", value: "All trades" },
+                { label: "Avg. verification time", value: "3–5 days" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="p-5 rounded-xl bg-card border border-border text-center"
+                >
+                  <p className="text-2xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Network table */}
+            <div className="rounded-xl border border-border overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-secondary/60 border-b border-border">
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Trade
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden sm:table-cell">
+                        Credential required
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden md:table-cell">
+                        Insurance min.
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Tiers covered
+                      </th>
+                      <th className="text-center px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Active
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border bg-card">
+                    {networkCategories.map((cat) => (
+                      <tr key={cat.trade} className="hover:bg-secondary/30 transition-colors">
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{cat.icon}</span>
+                            <span className="font-medium text-foreground text-[13px]">
+                              {cat.trade}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden sm:table-cell max-w-[220px]">
+                          {cat.credentialRequired}
+                        </td>
+                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden md:table-cell whitespace-nowrap">
+                          {cat.insuranceMin}
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex flex-wrap gap-1">
+                            {cat.tiers.map((tier) => (
+                              <span
+                                key={tier}
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-medium ${tierColors[tier]}`}
+                              >
+                                {tier}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-center">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                            <span className="text-[12.5px] font-semibold text-foreground">
+                              {cat.activeContractors}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <p className="text-[11.5px] text-muted-foreground">
+                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins.
+                </p>
+                <Link
+                  href="/contact"
+                  className="text-[11.5px] font-semibold text-primary hover:underline whitespace-nowrap"
+                >
+                  Request credential details →
+                </Link>
+              </div>
+            </div>
+
+            {/* Credential verification callout */}
+            <div className="mt-6 grid sm:grid-cols-3 gap-4">
+              {[
+                {
+                  icon: BadgeCheck,
+                  title: "License verified against state records",
+                  desc: "Every license number is cross-checked with Kansas KLCA and relevant trade board databases before approval.",
+                },
+                {
+                  icon: ShieldCheck,
+                  title: "Insurance confirmed with provider",
+                  desc: "We contact the issuing insurance company directly — not just the contractor — to confirm active, adequate coverage.",
+                },
+                {
+                  icon: CheckCircle,
+                  title: "Annual re-verification",
+                  desc: "Credentials are re-checked annually and whenever a policy approaches expiration. Lapsed coverage results in automatic suspension.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="p-5 rounded-xl bg-card border border-border">
+                  <item.icon className="h-5 w-5 text-primary mb-3" />
+                  <h4 className="text-sm font-semibold text-foreground mb-1.5">{item.title}</h4>
+                  <p className="text-[12.5px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* How assignment works */}
-        <section id="how-it-works" className="py-16 lg:py-24">
+        <section id="how-it-works" className="py-16 lg:py-24 bg-secondary/50">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
               <div>
@@ -194,7 +432,7 @@ export default function ContractorsPage() {
                     {
                       num: "4",
                       title: "Get paid within 30 days",
-                      desc: "Submit your invoice at your quoted rate. We handle client billing and pay you directly. No collections, no disputes.",
+                      desc: "Submit your invoice at your quoted rate. Nexus Operations collects payment from the client and pays you directly. No collections, no disputes.",
                     },
                   ].map((step) => (
                     <div key={step.num} className="flex gap-4">
@@ -248,7 +486,7 @@ export default function ContractorsPage() {
         </section>
 
         {/* Verification Process */}
-        <section className="py-16 lg:py-24 bg-secondary/50">
+        <section className="py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
@@ -287,7 +525,7 @@ export default function ContractorsPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-16 lg:py-24">
+        <section className="py-16 lg:py-24 bg-secondary/50">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
@@ -295,7 +533,7 @@ export default function ContractorsPage() {
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
                 Apply to join the Nexus Operations contractor network. The
-                application takes 5 minutes. Verification completes within 3-5
+                application takes 5 minutes. Verification completes within 3–5
                 business days.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
