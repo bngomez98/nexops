@@ -22,14 +22,14 @@ interface Document {
 }
 
 function statusLabel(doc: Document): { label: string; color: string; bg: string } {
-  if (doc.verified) return { label: 'Verified', color: 'text-emerald-700', bg: 'bg-emerald-100' }
-  if (!doc.expires_at) return { label: 'Pending Review', color: 'text-amber-700', bg: 'bg-amber-100' }
+  if (doc.verified) return { label: 'Verified', color: 'text-foreground', bg: 'bg-muted' }
+  if (!doc.expires_at) return { label: 'Pending Review', color: 'text-foreground/70', bg: 'bg-muted' }
   const exp = new Date(doc.expires_at)
   const now = new Date()
   const daysLeft = Math.floor((exp.getTime() - now.getTime()) / 86400000)
   if (daysLeft < 0)  return { label: 'Expired', color: 'text-red-700', bg: 'bg-red-100' }
-  if (daysLeft < 30) return { label: `Expires in ${daysLeft}d`, color: 'text-amber-700', bg: 'bg-amber-100' }
-  return { label: 'Pending Review', color: 'text-amber-700', bg: 'bg-amber-100' }
+  if (daysLeft < 30) return { label: `Expires in ${daysLeft}d`, color: 'text-foreground/70', bg: 'bg-muted' }
+  return { label: 'Pending Review', color: 'text-foreground/70', bg: 'bg-muted' }
 }
 
 const DOC_TYPE_LABELS: Record<string, string> = {

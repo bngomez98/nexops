@@ -378,8 +378,8 @@ export default function NewProjectRequest() {
                       {aiAnalysis.urgency && aiAnalysis.urgency !== 'normal' && (
                         <div className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${
                           aiAnalysis.urgency === 'urgent' ? 'bg-red-100 text-red-700' :
-                          aiAnalysis.urgency === 'high'   ? 'bg-amber-100 text-amber-700' :
-                          'bg-sky-100 text-sky-700'
+                          aiAnalysis.urgency === 'high'   ? 'bg-muted text-foreground/70' :
+                          'bg-muted text-foreground/70'
                         }`}>
                           <AlertCircle className="w-3 h-3" />
                           {aiAnalysis.urgency.charAt(0).toUpperCase() + aiAnalysis.urgency.slice(1)} urgency detected
@@ -391,7 +391,7 @@ export default function NewProjectRequest() {
                           <ul className="space-y-1">
                             {aiAnalysis.riskFlags.map((flag, i) => (
                               <li key={i} className="flex items-start gap-1.5 text-[12px] text-foreground/80">
-                                <span className="text-amber-500 mt-0.5 flex-shrink-0">•</span>
+                                <span className="text-muted-foreground mt-0.5 flex-shrink-0">•</span>
                                 {flag}
                               </li>
                             ))}

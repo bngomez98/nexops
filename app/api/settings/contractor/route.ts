@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest) {
     const { error: profileError } = await supabase
       .from('profiles')
       .update({
-        company_name: companyName,
+        company: companyName,
         bio,
         license_number: licenseNumber ?? '',
         years_in_business: Number(yearsInBusiness) || 0,

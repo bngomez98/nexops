@@ -22,16 +22,16 @@ interface Job {
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  matched:         { label: 'Assigned',       color: 'text-violet-700', bg: 'bg-violet-100' },
+  matched:         { label: 'Assigned',       color: 'text-primary', bg: 'bg-primary/10' },
   in_progress:     { label: 'In Progress',    color: 'text-primary',    bg: 'bg-primary/10' },
-  pending_invoice: { label: 'Pending Invoice',color: 'text-amber-700',  bg: 'bg-amber-100' },
-  completed:       { label: 'Complete',       color: 'text-emerald-700',bg: 'bg-emerald-100' },
-  declined:        { label: 'Declined',       color: 'text-slate-600',  bg: 'bg-slate-100' },
+  pending_invoice: { label: 'Pending Invoice',color: 'text-foreground/70', bg: 'bg-muted' },
+  completed:       { label: 'Complete',       color: 'text-foreground', bg: 'bg-muted' },
+  declined:        { label: 'Declined',       color: 'text-muted-foreground', bg: 'bg-muted' },
 }
 
 const URGENCY_MAP: Record<string, { label: string; color: string }> = {
-  routine:   { label: 'Routine',   color: 'text-sky-600' },
-  urgent:    { label: 'Urgent',    color: 'text-amber-600' },
+  routine:   { label: 'Routine',   color: 'text-muted-foreground' },
+  urgent:    { label: 'Urgent',    color: 'text-foreground/70' },
   emergency: { label: 'Emergency', color: 'text-red-600' },
 }
 

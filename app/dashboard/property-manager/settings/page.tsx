@@ -63,7 +63,7 @@ function PropertyManagerSettingsInner() {
     if (!formData.email) { setError('Email is required'); return }
     setSaving(true)
     try {
-      const res = await fetch('/api/settings/homeowner', {
+      const res = await fetch('/api/settings/property-manager', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -86,7 +86,7 @@ function PropertyManagerSettingsInner() {
     setDeleting(true)
     setError('')
     try {
-      const res = await fetch('/api/settings/homeowner', { method: 'DELETE' })
+      const res = await fetch('/api/settings/property-manager', { method: 'DELETE' })
       if (!res.ok) {
         const data = await res.json()
         setError(data.error || 'Failed to delete account.')
