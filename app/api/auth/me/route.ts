@@ -17,7 +17,10 @@ export async function GET() {
       .eq('id', user.id)
       .single()
 
-    const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
+    const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
+    // Normalise DB value 'property_manager' (underscore) to the hyphenated form
+    // used throughout the front-end.
+    const role = rawRole === 'property_manager' ? 'property-manager' : rawRole
 
     let contractorProfile = null
     if (role === 'contractor') {
@@ -30,6 +33,10 @@ export async function GET() {
 
       contractorProfile = {
         companyName: profile?.company ?? user.user_metadata?.company_name ?? user.email?.split('@')[0],
+        bio: profile?.bio ?? '',
+        licenseNumber: profile?.license_number ?? '',
+        yearsInBusiness: profile?.years_in_business ?? 0,
+        serviceCategories: profile?.service_categories ?? [],
         membershipTier: 'free',
         currentActiveProjects: activeCount ?? 0,
         maxActiveProjects: 3,

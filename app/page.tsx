@@ -607,6 +607,11 @@ export default function HomePage() {
               className="photo-card group relative block h-64 md:h-72 overflow-hidden bg-muted"
             >
               <div className="photo-card-inner absolute inset-0">
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <p className="font-mono-label text-primary mb-2">{label}</p>
+                <p className="text-[13px] text-foreground/90">{caption}</p>
                 <Image src={src} alt={label} fill style={{ objectFit: 'cover' }} />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -695,6 +700,22 @@ export default function HomePage() {
             <div className="reveal reveal-right" style={{ position: 'relative' }}>
             <div style={{ position: 'relative' }}>
               <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
+                <Image
+                  src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                  alt="Clean modern workspace"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
+              {/* Floating card */}
+              <div style={{
+                position: 'absolute', bottom: -20, left: -20,
+                background: '#fff', borderRadius: 16, padding: '16px 20px',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
+                display: 'flex', alignItems: 'center', gap: 12,
+                minWidth: 220,
+              }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: '#3d7a4f', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Image src="/minimalist-modern-office-workspace-aerial-view.jpg" alt="Clean modern workspace" fill style={{ objectFit: 'cover' }} />
               </div>
               {/* Floating glass card */}
@@ -856,6 +877,7 @@ export default function HomePage() {
             </p>
           </div>
 
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
           <div className="stagger-children" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
             {steps.map(({ n, title, desc }, i) => (
               <div
