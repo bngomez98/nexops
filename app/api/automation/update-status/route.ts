@@ -94,6 +94,10 @@ export async function POST(request: NextRequest) {
         }))
       )
 
+    if (notifError) {
+      console.error('[POST /api/automation/update-project-status] notification insert error:', notifError)
+    }
+
     return NextResponse.json({
       success: true,
       projectId,

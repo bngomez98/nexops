@@ -8,6 +8,7 @@ const siteUrl = getSiteUrl()
 const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
+  try {
   const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -125,6 +126,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url })
   }
 
+  let requestId: string
+  try {
+    const body = await req.json()
+    requestId = body.requestId
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+  }
   // ── Flow B: service_requests table (legacy workflow) ──────────────────────
   const { requestId } = body
   if (!requestId) {
@@ -268,4 +276,8 @@ export async function POST(req: Request) {
   })
 
   return NextResponse.json({ url: session.url })
+  } catch (err) {
+    console.error('[POST /api/stripe/invoice]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

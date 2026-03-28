@@ -8,6 +8,7 @@ const siteUrl = getSiteUrl()
 // Contractor lands here after completing (or abandoning) Stripe Express onboarding.
 // We retrieve the account to check its current verification state and update the profile.
 export async function GET() {
+  try {
   const stripe = getStripeClient()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -44,4 +45,8 @@ export async function GET() {
 
   const param = status === "active" ? "connect=success" : "connect=pending"
   return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?${param}`)
+  } catch (err) {
+    console.error('[GET /api/stripe/connect/return]', err)
+    return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
+  }
 }
