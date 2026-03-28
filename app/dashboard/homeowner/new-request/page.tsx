@@ -168,6 +168,8 @@ export default function NewProjectRequest() {
         if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
       setFieldErrors({ customCategory: 'Please describe the service category.' })
       setError('Please describe the service category.')
+      return false
+    }
     if (s === 0 && !formData.category) {
       setError('Please select a service category.')
       return false

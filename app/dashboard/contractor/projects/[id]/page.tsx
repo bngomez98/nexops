@@ -37,7 +37,7 @@ export default function ProjectDetailsPage() {
   const params = useParams()
   const projectId = params.id as string
 
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [project, setProject] = useState<ProjectRequest | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)

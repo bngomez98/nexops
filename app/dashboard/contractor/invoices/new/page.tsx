@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
   Loader2, Plus, Trash2, ChevronLeft, Receipt,
-  AlertCircle, CheckCircle2, DollarSign,
+  AlertCircle, CheckCircle2,
 } from 'lucide-react'
 
 interface LineItem {
@@ -37,7 +37,7 @@ function NewInvoiceInner() {
   const router   = useRouter()
   const params   = useSearchParams()
   const jobId    = params.get('job_id')
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [job, setJob]     = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving]   = useState(false)

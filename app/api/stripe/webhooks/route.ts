@@ -2,6 +2,9 @@ import type Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { getAdminClient } from '@/lib/supabase/admin'
+
+type StripeSubWithPeriod = { current_period_start: number; current_period_end: number }
+
 import {
   sendInvoicePaidContractorEmail,
   sendInvoicePaidClientEmail,
@@ -87,8 +90,8 @@ export async function POST(req: NextRequest) {
             stripe_customer_id: session.customer as string,
             plan_id: planId,
             status: sub.status,
-            current_period_start: new Date((sub as any).current_period_start * 1000).toISOString(),
-            current_period_end: new Date((sub as any).current_period_end * 1000).toISOString(),
+            current_period_start: new Date((sub as unknown as StripeSubWithPeriod).current_period_start * 1000).toISOString(),
+            current_period_end: new Date((sub as unknown as StripeSubWithPeriod).current_period_end * 1000).toISOString(),
           }, { onConflict: 'stripe_subscription_id' })
 
           await supabase.from('profiles').update({
@@ -104,15 +107,14 @@ export async function POST(req: NextRequest) {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription
-        const customerId = sub.customer as string
         const status = sub.status
         const planId = sub.metadata?.planId
 
         await supabase.from('billing_subscriptions')
           .update({
             status,
-            current_period_start: new Date((sub as any).current_period_start * 1000).toISOString(),
-            current_period_end: new Date((sub as any).current_period_end * 1000).toISOString(),
+            current_period_start: new Date((sub as unknown as StripeSubWithPeriod).current_period_start * 1000).toISOString(),
+            current_period_end: new Date((sub as unknown as StripeSubWithPeriod).current_period_end * 1000).toISOString(),
             cancel_at_period_end: sub.cancel_at_period_end,
           })
           .eq('stripe_subscription_id', sub.id)

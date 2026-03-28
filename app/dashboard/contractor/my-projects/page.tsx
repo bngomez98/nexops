@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import {
-  Briefcase, MapPin, Loader2, Clock, DollarSign,
+  Briefcase, MapPin, Loader2, DollarSign,
   ChevronRight, CheckCircle2, Wrench, Calendar,
 } from 'lucide-react'
 
@@ -48,7 +48,7 @@ function timeAgo(dateStr: string) {
 
 export default function ContractorMyProjects() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [projects, setProjects] = useState<ProjectRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<string>('all')

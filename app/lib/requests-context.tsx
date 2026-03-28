@@ -30,7 +30,7 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     setClientRequests((prev) => [newRequest, ...prev])
   }
 
-  const claimJob = (jobId: string, contractorId: string) => {
+  const claimJob = (jobId: string, _contractorId: string) => {
     setContractorJobs((prev) =>
       prev.map((job) =>
         job.id === jobId ? { ...job, status: 'claimed', claimedAt: new Date().toISOString().split('T')[0] } : job

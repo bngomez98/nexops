@@ -93,39 +93,6 @@ const statsData = [
   { value: 'No',     label: 'Hidden fees' },
 ]
 
-const heroContent = {
-  homeowner: {
-    badge: 'For Homeowners & Landlords',
-    heading: <>Maintenance Coordination<br />for Homeowners in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Topeka,&nbsp;KS</span></>,
-    subheading: 'Submit a service request with photos and a budget, and Nexus assigns a verified contractor, coordinates scheduling, and keeps a documented record of every project.',
-    heading: <>Property maintenance, handled end to end.</>,
-    subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
-    primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
-    secondaryCta: { href: '#process', label: 'See how it works' },
-    badges: [
-      { icon: Shield, text: 'Licensed & insured contractors' },
-      { icon: Zap, text: 'Assignment within 4 hours' },
-      { icon: CheckCircle2, text: 'Every request reviewed' },
-    ],
-    image: '/business-handshake-professional-meeting.jpg',
-    floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
-  },
-  contractor: {
-    badge: 'For Contractors',
-    heading: <>Licensed Contractor<br />Network in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Shawnee&nbsp;County</span></>,
-    subheading: 'Receive pre-qualified service requests with photos, scope, and budget details provided before you commit. Nexus handles client billing and pays contractors directly within 30 days.',
-    primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
-    secondaryCta: { href: '#pricing', label: 'View pricing' },
-    badges: [
-      { icon: Eye, text: 'Full scope provided upfront' },
-      { icon: CreditCard, text: 'Direct contractor payment' },
-      { icon: CheckCircle2, text: 'Exclusive assignment per job' },
-    ],
-    image: '/business-analytics-data-visualization.jpg',
-    floatingCard: { icon: FileText, title: 'Documented requests', subtitle: 'Budget & scope visible upfront' },
-  },
-} as const
-
 export default function HomePage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)

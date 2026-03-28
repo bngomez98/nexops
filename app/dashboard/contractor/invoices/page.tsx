@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
-  Loader2, Receipt, PlusCircle, ChevronRight,
+  Loader2, Receipt, PlusCircle,
   Clock, CheckCircle2, DollarSign, Send,
   AlertCircle,
 } from 'lucide-react'
@@ -33,7 +33,7 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function ContractorInvoicesPage() {
   const router = useRouter()
-  const [user, setUser]         = useState<any>(null)
+  const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading]   = useState(true)
   const [sending, setSending]   = useState<string | null>(null)

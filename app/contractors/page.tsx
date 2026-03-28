@@ -11,11 +11,7 @@ import {
   CheckCircle,
   FileText,
   BadgeCheck,
-  Wrench,
   BarChart3,
-  Search,
-  Zap,
-  Shield,
 } from "lucide-react"
 
 export const metadata: Metadata = {
