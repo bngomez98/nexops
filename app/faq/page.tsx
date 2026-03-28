@@ -85,7 +85,7 @@ const sections = [
       },
       {
         q: "Is there a cost to join the Nexus contractor network?",
-        a: "Contractors start on our Starter plan which provides access to the open project board, up to 3 concurrent active projects, and direct client payments. Upgrading to Pro or Elite unlocks higher project capacity, priority matching, and advanced analytics.",
+        a: "Joining the contractor network is free. Nexus Operations does not charge contractors subscription fees or lead fees. Our revenue comes from the coordination markup charged to property management clients. Contractors receive their full quoted rate on every job. Nexus Operations collects payment from the client and pays contractors directly within 30 days of job completion.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",
@@ -105,17 +105,16 @@ const sections = [
         a: "Currently, Nexus Operations serves Topeka, Kansas and the immediate surrounding Shawnee County area. Expansion to additional markets will be announced on this site and via contractor newsletter.",
       },
       {
-        q: "How are contractors verified?",
-        a: "All contractors must submit a current contractor license and active insurance certificate before account approval. Documentation is reviewed manually by Nexus Operations staff. Credentials must remain current for continued network access.",
+        q: "How are contractors verified — and what exactly does that review involve?",
+        a: "Every contractor undergoes a three-part verification before receiving any assignments. First, the license number is cross-checked against Kansas KLCA records and the relevant trade board database (e.g., Kansas State Board of Technical Professions for electrical, Kansas Department of Health and Environment for HVAC). Second, the insurance certificate is confirmed directly with the issuing insurance company — not just reviewed as a document — to verify the policy is active and meets our minimums ($500K general liability per occurrence). Third, if references are provided, we contact them. Verification typically takes 3–5 business days. Credentials are re-verified annually and whenever a policy approaches expiration; lapsed coverage results in automatic suspension from the network. Commercial clients may request the license number and current insurance certificate for any assigned contractor before a job begins.",
       },
       {
         q: "What happens to my submitted photos and project data?",
         a: "Project photos and details are used solely for matching you with a contractor and facilitating the consultation. Your data is never sold, shared with advertising networks, or distributed to multiple contractors. See the Privacy Policy for full data handling details.",
       },
       {
-        q: "How do I contact Nexus Operations for support?",
-        a: `Phone: ${CONTACT_INFO.phoneDisplay}, ${CONTACT_INFO.supportHoursShort}. Email: ${CONTACT_INFO.email}.`,
-        a: "Phone: 785-727-1106, Monday through Friday 8am–6pm CT. Email: admin@nexusoperations.org.",
+        q: "What are business hours, and how do I reach someone for an after-hours emergency?",
+        a: `General support: ${CONTACT_INFO.phoneDisplay}, Monday through Friday 8 am–5 pm CT. Email: ${CONTACT_INFO.email}. For after-hours emergencies (burst pipes, gas leaks, HVAC failure in extreme weather), use the emergency line: emergency@nexusoperations.org. An on-call coordinator responds within 15 minutes around the clock — including nights, weekends, and holidays. Emergency jobs are assigned to a contractor within 1 hour and a contractor is on-site within 4 hours.`,
       },
     ],
   },
