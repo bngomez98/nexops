@@ -19,9 +19,9 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "For Contractors | Join the Network",
+  title: "For Contractors — Join the Nexus Operations Network in Topeka, KS",
   description:
-    "Licensed and insured contractors: join the Nexus Operations network for steady, pre-qualified work with guaranteed payment. No subscription fees. We pay you, not the other way around.",
+    "Licensed and insured contractors in Shawnee County: join the Nexus Operations network for pre-qualified, documented service requests with guaranteed payment within 30 days. No subscription fees.",
 }
 
 const benefits = [
@@ -194,6 +194,10 @@ export default function ContractorsPage() {
                 For contractors
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+                Pre-qualified work.{" "}
+                <span className="font-serif italic font-normal text-primary">
+                  Direct payment within 30 days.
+                </span>
                 Steady work. Guaranteed payment.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
@@ -529,9 +533,10 @@ export default function ContractorsPage() {
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-                Ready for reliable, well-coordinated work?
+                Apply to join the Nexus contractor network.
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
+                The application takes 5 minutes. Verification completes within 3-5 business days. Once approved, you begin receiving assignment notifications.
                 Apply to join the Nexus Operations contractor network. The
                 application takes 5 minutes. Verification completes within 3–5
                 business days.

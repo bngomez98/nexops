@@ -5,9 +5,9 @@ import Link from "next/link"
 import { ArrowRight, Check, Zap, Shield, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Pricing",
+  title: "Pricing — Subscription Plans & Per-Job Coordination Markup",
   description:
-    "Nexus Operations pricing: simple subscription plans starting at $59/month. Annual and monthly options available for homeowners and contractors.",
+    "Nexus Operations pricing: Starter plan included, Pro plans from $59/month billed annually. Per-job coordination markup by urgency tier — 25% routine, 30% urgent, 35% emergency. Serving Topeka and Shawnee County, KS.",
 }
 
 const subscriptionPlans = [
@@ -134,6 +134,10 @@ export default function PricingPage() {
                 Pricing
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+                Plans and pricing{" "}
+                <span className="font-serif italic font-normal text-primary">
+                  for homeowners and contractors.
+                </span>
                 Simple pricing. No surprises.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
@@ -458,10 +462,10 @@ export default function PricingPage() {
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-                Ready to get started?
+                Create an account and choose your plan.
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                Join homeowners and property managers who trust Nexus Operations for reliable, coordinated maintenance.
+                Homeowners and property managers across Topeka use Nexus Operations for coordinated, documented maintenance.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
