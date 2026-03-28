@@ -12,31 +12,8 @@ interface Notification {
   read: boolean
 }
 
-const createInitialNotifications = (): Notification[] => {
-  const now = Date.now()
-
-  return [
-    {
-      id: '1',
-      title: 'New Bid Received',
-      message: 'A contractor has submitted a bid for your roof repair project',
-      type: 'bid',
-      timestamp: new Date(now - 1000 * 60 * 30),
-      read: false,
-    },
-    {
-      id: '2',
-      title: 'Project Claimed',
-      message: 'Your deck construction project has been claimed',
-      type: 'update',
-      timestamp: new Date(now - 1000 * 60 * 60 * 2),
-      read: true,
-    },
-  ]
-}
-
 export function NotificationBell() {
-  const [notifications, setNotifications] = useState<Notification[]>(createInitialNotifications)
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [showPanel, setShowPanel] = useState(false)
 
   const unreadCount = notifications.filter(n => !n.read).length
