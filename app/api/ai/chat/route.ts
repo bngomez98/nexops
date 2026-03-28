@@ -1,11 +1,31 @@
-import { streamText, convertToModelMessages } from 'ai'
+import { streamText, convertToModelMessages, type UIMessage } from 'ai'
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
-export async function POST(req: Request) {
-  const { messages, role, context } = await req.json()
+export async function POST(req: NextRequest) {
+  try {
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
-  const systemPrompt =
-    role === 'contractor'
-      ? `You are a professional contractor assistant for Nexus Operations, a property service management platform in Topeka, Kansas.
+    let body: { messages: UIMessage[]; role: string; context?: string }
+    try {
+      body = await req.json()
+    } catch {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+    }
+
+    const { messages, role, context } = body
+
+    if (!messages || !role) {
+      return NextResponse.json({ error: 'messages and role are required' }, { status: 400 })
+    }
+
+    const systemPrompt =
+      role === 'contractor'
+        ? `You are a professional contractor assistant for Nexus Operations, a property service management platform in Topeka, Kansas.
 
 You help licensed contractors who use the Nexus platform to find, evaluate, and manage service projects. Be concise, direct, and practical.
 
@@ -21,7 +41,7 @@ When reviewing a specific project, analyze: scope clarity, budget realism, timel
 Keep responses focused and actionable. Use bullet points for lists. Do not make up facts about specific projects — only analyze what is shared with you.
 
 ${context ? `Current project context: ${context}` : ''}`
-      : `You are a property advisor assistant for Nexus Operations, a property service management platform in Topeka, Kansas.
+        : `You are a property advisor assistant for Nexus Operations, a property service management platform in Topeka, Kansas.
 
 You help homeowners understand, plan, and track maintenance and repair work on their properties. Be clear, helpful, and honest — this is someone's home.
 
@@ -39,12 +59,16 @@ Keep responses friendly but professional. Be honest when something is outside yo
 
 ${context ? `Account context: ${context}` : ''}`
 
-  const result = streamText({
-    model: 'openai/gpt-4o-mini',
-    system: systemPrompt,
-    messages: await convertToModelMessages(messages),
-    maxOutputTokens: 600,
-  })
+    const result = streamText({
+      model: 'openai/gpt-4o-mini',
+      system: systemPrompt,
+      messages: await convertToModelMessages(messages),
+      maxOutputTokens: 600,
+    })
 
-  return result.toUIMessageStreamResponse()
+    return result.toUIMessageStreamResponse()
+  } catch (err) {
+    console.error('[POST /api/ai/chat]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
