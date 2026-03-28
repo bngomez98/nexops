@@ -6,23 +6,39 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound } from 'lucide-react'
 
+type HomeownerUser = {
+  id: string
+  name: string
+  email: string
+  role: string
+  phone?: string
+}
+
+type MfaFactor = {
+  id: string
+  factor_type: string
+  status: string
+  friendly_name?: string | null
+}
+
 function HomeownerSettingsInner() {
   const router       = useRouter()
   const searchParams = useSearchParams()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<HomeownerUser | null>(null)
   const [loading, setLoading]   = useState(true)
   const [saving, setSaving]     = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
   const [error, setError]     = useState('')
   const [success, setSuccess] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState({ email: '', phone: '' })
   const [notifications, setNotifications] = useState({
     bidNotifications: true, messageNotifications: true, projectUpdates: true, newsletter: false,
   })
 
   // 2FA state
-  const [mfaFactors, setMfaFactors]   = useState<any[]>([])
+  const [mfaFactors, setMfaFactors]   = useState<MfaFactor[]>([])
   const [enrollData, setEnrollData]   = useState<{ qr: string; secret: string; factorId: string } | null>(null)
   const [verifyCode, setVerifyCode]   = useState('')
   const [mfaLoading, setMfaLoading]   = useState(false)
@@ -68,6 +84,7 @@ function HomeownerSettingsInner() {
     e.preventDefault()
     setError('')
     setSuccess('')
+    setFieldErrors({})
     if (!formData.email) { setError('Email is required'); return }
     setSaving(true)
     try {
@@ -78,9 +95,15 @@ function HomeownerSettingsInner() {
       })
       if (!res.ok) {
         const data = await res.json()
+        if (data.details) {
+          setFieldErrors(Object.fromEntries(
+            Object.entries(data.details).map(([key, messages]) => [key, Array.isArray(messages) ? messages[0] : String(messages)])
+          ))
+        }
         setError(data.error || 'Failed to save. Please try again.')
         return
       }
+      setFieldErrors({})
       setSuccess('Settings saved successfully!')
       setTimeout(() => setSuccess(''), 4000)
     } catch {
@@ -242,8 +265,11 @@ function HomeownerSettingsInner() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    fieldErrors.email ? 'border-destructive' : 'border-input'
+                  }`}
                 />
+                {fieldErrors.email && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.email}</p>}
               </div>
 
               <div>
@@ -254,8 +280,11 @@ function HomeownerSettingsInner() {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+1 (785) 555-0100"
-                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                  className={`w-full px-3 py-2.5 rounded-lg border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition ${
+                    fieldErrors.phone ? 'border-destructive' : 'border-input'
+                  }`}
                 />
+                {fieldErrors.phone && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.phone}</p>}
               </div>
 
               <div className="flex gap-3 pt-2">
