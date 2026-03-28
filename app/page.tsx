@@ -96,8 +96,6 @@ const statsData = [
 const heroContent = {
   homeowner: {
     badge: 'For Homeowners & Landlords',
-    heading: <>Maintenance Coordination<br />for Homeowners in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Topeka,&nbsp;KS</span></>,
-    subheading: 'Submit a service request with photos and a budget, and Nexus assigns a verified contractor, coordinates scheduling, and keeps a documented record of every project.',
     heading: <>Property maintenance, handled end to end.</>,
     subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
     primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
@@ -379,7 +377,7 @@ export default function HomePage() {
                 title: "Property Managers",
                 body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
                 cta: "Create account",
-                href: "/auth/sign-up?role=property_manager",
+                href: "/auth/sign-up?role=property-manager",
               },
             ].map(({ title, body, cta, href }) => (
               <Link
@@ -740,7 +738,7 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 0, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               {[
                 { href: '/auth/sign-up',                       label: 'Homeowner account',          sub: 'Submit and manage service requests' },
-                { href: '/auth/sign-up?role=property_manager', label: 'Property manager account',   sub: 'Portfolio-level request management and reporting' },
+                { href: '/auth/sign-up?role=property-manager', label: 'Property manager account',   sub: 'Portfolio-level request management and reporting' },
                 { href: '/auth/sign-up?role=contractor',       label: 'Contractor application',     sub: 'Join the verified contractor network. No fees.' },
                 { href: '/faq',                                label: 'FAQ',                        sub: 'Platform details, requirements, and policies' },
               ].map(({ href, label, sub }) => (
@@ -836,7 +834,7 @@ export default function HomePage() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
                   { href: '/auth/sign-up',                       label: 'Homeowner' },
-                  { href: '/auth/sign-up?role=property_manager', label: 'Property Manager' },
+                  { href: '/auth/sign-up?role=property-manager', label: 'Property Manager' },
                   { href: '/auth/sign-up?role=contractor',       label: 'Contractor' },
                   { href: '/auth/login',                         label: 'Sign In' },
                 ].map(({ href, label }) => (

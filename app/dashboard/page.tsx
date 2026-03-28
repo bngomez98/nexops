@@ -4,6 +4,7 @@ import { useRequests } from '@/app/lib/requests-context'
 import { DashboardLayout } from '@/components/dashboard-layout'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { isHomeownerDashboardRole } from '@/lib/dashboard-role'
 import {
   FileText, CheckCircle2, Clock, AlertCircle,
   Briefcase, Plus, ArrowRight, TrendingUp,
@@ -59,14 +60,14 @@ export default function DashboardPage() {
               Welcome back, {firstName}
             </h1>
             <p className="mt-1 text-[13.5px] text-muted-foreground">
-              {user?.role === 'client'
+              {isHomeownerDashboardRole(user?.role)
                 ? "Here's an overview of your maintenance activity."
                 : user?.role === 'contractor'
                 ? "Here's your job board and earnings summary."
                 : "Admin overview — manage the platform below."}
             </p>
           </div>
-          {user?.role === 'client' && (
+          {isHomeownerDashboardRole(user?.role) && (
             <Link
               href="/dashboard/requests/new"
               className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
@@ -77,7 +78,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ── CLIENT VIEW ── */}
-        {user?.role === 'client' && (
+        {isHomeownerDashboardRole(user?.role) && (
           <>
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
