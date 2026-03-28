@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { homeownerSettingsSchema } from '@/lib/validators'
+import { createRequestId, internalError } from '@/lib/api-error'
 
 export async function PUT(request: NextRequest) {
   try {
@@ -11,11 +13,16 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { email, phone } = body
+    const parsed = homeownerSettingsSchema.safeParse(body)
 
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
     }
+
+    const { email, phone } = parsed.data
 
     // Update profile table
     const { error: profileError } = await supabase
@@ -33,8 +40,9 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    console.error('[PUT /api/settings/property-manager]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[PUT /api/settings/property-manager][${requestId}]`, err)
+    return internalError('Unable to update property manager settings', { requestId })
   }
 }
 
@@ -53,7 +61,8 @@ export async function DELETE() {
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    console.error('[DELETE /api/settings/property-manager]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const requestId = createRequestId()
+    console.error(`[DELETE /api/settings/property-manager][${requestId}]`, err)
+    return internalError('Unable to process account request', { requestId })
   }
 }

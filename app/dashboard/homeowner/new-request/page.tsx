@@ -21,8 +21,11 @@ const SERVICE_CATEGORIES = [
   { value: 'electrical',    label: 'Electrical',    icon: '⚡', desc: 'Panel, wiring, outlets, lighting' },
   { value: 'plumbing',      label: 'Plumbing',      icon: '🔧', desc: 'Repairs, drains, installations' },
   { value: 'excavation',    label: 'Excavation',    icon: '🚜', desc: 'Grading, trenching, land clearing' },
+  { value: 'open-request',  label: 'Open Request',  icon: '🌐', desc: 'Broadcast to all service specialties' },
   { value: 'other',         label: 'Other',         icon: '🧩', desc: 'Custom, specialty, or community request' },
 ]
+
+const SERVICE_CATEGORY_VALUES = new Set(SERVICE_CATEGORIES.map(cat => cat.value))
 
 const STEPS = [
   { label: 'Category', desc: 'What type of work?' },
@@ -88,7 +91,8 @@ export default function NewProjectRequest() {
   const [analysisError, setAnalysisError] = useState('')
   const [analyzingText, setAnalyzingText] = useState(false)
   const [formData, setFormData] = useState({
-    category: '', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
+    category: 'open-request', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
+    pipelineMode: 'automated', communityVisible: true, accessRequirements: '',
   })
 
   useEffect(() => {
@@ -135,7 +139,13 @@ export default function NewProjectRequest() {
             followUpQuestion: data.followUpQuestion ?? null,
           })
         } else {
-          setAnalysisError('Automated request analysis is temporarily unavailable. You can still submit your request.')
+          const data = await res.json().catch(() => ({}))
+          const requestId = typeof data.requestId === 'string' ? data.requestId : ''
+          setAnalysisError(
+            requestId
+              ? `Automated request analysis is temporarily unavailable. You can still submit your request. Reference: ${requestId}`
+              : 'Automated request analysis is temporarily unavailable. You can still submit your request.'
+          )
         }
       } catch {
         setAnalysisError('Automated request analysis is temporarily unavailable. You can still submit your request.')
@@ -155,13 +165,11 @@ export default function NewProjectRequest() {
   function validateStep(s: number): boolean {
     setError('')
     setFieldErrors({})
-    if (s === 0 && !formData.category) {
-      setError('Please select a service category.')
-      return false
-    }
-    if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
+        if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
       setFieldErrors({ customCategory: 'Please describe the service category.' })
       setError('Please describe the service category.')
+    if (s === 0 && !formData.category) {
+      setError('Please select a service category.')
       return false
     }
     if (s === 1) {
@@ -199,6 +207,9 @@ export default function NewProjectRequest() {
       payload.append('description', validated.description)
       payload.append('location', validated.location)
       payload.append('preferredDate', validated.preferredDate)
+      payload.append('pipelineMode', validated.pipelineMode)
+      payload.append('communityVisible', String(validated.communityVisible))
+      if (validated.accessRequirements) payload.append('accessRequirements', validated.accessRequirements)
       if (validated.budget) payload.append('budget', String(parseFloat(validated.budget)))
       uploadedImages.forEach(img => payload.append('images', img))
 
@@ -292,9 +303,12 @@ export default function NewProjectRequest() {
           {step === 0 && (
             <div className="space-y-5">
               <div className="bg-card border border-border rounded-2xl p-6">
-                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-5">
-                  Select Service Category
-                </h2>
+                  <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-3">
+                    Select Service Category
+                  </h2>
+                  <p className="text-[11px] text-muted-foreground mb-5">
+                    Choose a quick category below, or enter your own category to support specialty and community requests.
+                  </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {SERVICE_CATEGORIES.map(cat => (
                     <button
@@ -320,32 +334,30 @@ export default function NewProjectRequest() {
                     </button>
                   ))}
                 </div>
-                {formData.category === 'other' && (
-                  <div className="mt-4">
-                    <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                      Service Category Details <span className="text-destructive">*</span>
-                    </label>
-                    <input
-                      name="customCategory"
-                      value={formData.customCategory}
-                      onChange={handleChange}
-                      placeholder="e.g., pool maintenance, accessibility modification, signage"
-                      className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
-                        fieldErrors.customCategory ? 'border-destructive' : 'border-input'
-                      }`}
-                    />
-                    {fieldErrors.customCategory && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.customCategory}</p>}
-                    <p className="text-[11px] text-muted-foreground mt-1.5">
-                      Custom requests still enter the shared service pipeline so specialists can review, document, and claim them.
-                    </p>
-                  </div>
-                )}
+                <div className="mt-4">
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
+                    Custom Category <span className="text-muted-foreground font-normal">(optional)</span>
+                  </label>
+                  <input
+                    name="customCategory"
+                    value={formData.customCategory}
+                    onChange={handleChange}
+                    placeholder="e.g., pool maintenance, accessibility modification, signage"
+                    className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
+                      fieldErrors.customCategory ? 'border-destructive' : 'border-input'
+                    }`}
+                  />
+                  {fieldErrors.customCategory && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.customCategory}</p>}
+                  <p className="text-[11px] text-muted-foreground mt-1.5">
+                    Custom requests still enter the shared service pipeline so specialists can review, document, and claim them.
+                  </p>
+                </div>
               </div>
 
               <button
                 type="button"
                 onClick={nextStep}
-                disabled={!formData.category}
+                disabled={!formData.category || formData.category.length < 2}
                 className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13.5px] py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
                 Continue to Project Details
@@ -413,7 +425,14 @@ export default function NewProjectRequest() {
                       <button
                         type="button"
                         onClick={() => {
-                          if (suggestedCategory) setFormData(p => ({ ...p, category: suggestedCategory }))
+                          if (suggestedCategory) {
+                            const shouldClearCustomCategory = SERVICE_CATEGORY_VALUES.has(suggestedCategory)
+                            setFormData(p => ({
+                              ...p,
+                              category: suggestedCategory,
+                              customCategory: shouldClearCustomCategory ? '' : p.customCategory,
+                            }))
+                          }
                         }}
                         className="font-semibold text-primary hover:underline"
                       >
@@ -548,6 +567,11 @@ export default function NewProjectRequest() {
                   <p className="text-[11px] text-muted-foreground mt-1.5">
                     Choose when you'd like the first visit, estimate, or service window to start.
                   </p>
+                  {!formData.preferredDate && (
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      Select a date to submit this request.
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -581,6 +605,45 @@ export default function NewProjectRequest() {
                   <p className="text-[11px] text-muted-foreground mt-1.5">
                     A rough estimate helps contractors determine fit. Final pricing will be confirmed during consultation.
                   </p>
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide mb-1">
+                  Access &amp; Community Settings
+                </h2>
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Pipeline Mode</label>
+                  <select
+                    name="pipelineMode"
+                    value={formData.pipelineMode}
+                    onChange={e => setFormData(prev => ({ ...prev, pipelineMode: e.target.value as 'standard' | 'automated' | 'community' }))}
+                    className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+                  >
+                    <option value="automated">Automated matching and tracking (recommended)</option>
+                    <option value="community">Community-first routing and contractor visibility</option>
+                    <option value="standard">Standard manual review pipeline</option>
+                  </select>
+                </div>
+                <label className="flex items-start gap-2 text-[12px] text-foreground">
+                  <input
+                    type="checkbox"
+                    checked={formData.communityVisible}
+                    onChange={e => setFormData(prev => ({ ...prev, communityVisible: e.target.checked }))}
+                    className="mt-0.5"
+                  />
+                  Allow this request to be visible to the full trusted contractor community for faster matching.
+                </label>
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Access Notes <span className="text-muted-foreground font-normal">(optional)</span></label>
+                  <textarea
+                    name="accessRequirements"
+                    value={formData.accessRequirements}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="Gate code, best entry, parking details, pets on-site, etc."
+                    className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition resize-none"
+                  />
                 </div>
               </div>
 
@@ -624,7 +687,7 @@ export default function NewProjectRequest() {
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || !formData.preferredDate}
                   className="flex-1 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13.5px] py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
                 >
                   {submitting ? (

@@ -7,7 +7,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,6 +21,16 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.supabase.in',
         pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+        pathname: '/user-attachments/assets/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.githubusercontent.com',
+        pathname: '/user-attachments/**',
       },
     ],
   },

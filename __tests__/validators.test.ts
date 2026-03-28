@@ -162,7 +162,7 @@ describe('projectRequestSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('rejects custom categories without details', () => {
+  it('accepts "other" category without extra details', () => {
     const result = projectRequestSchema.safeParse({
       category: 'other',
       customCategory: '',
@@ -171,17 +171,55 @@ describe('projectRequestSchema', () => {
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
     })
-    expect(result.success).toBe(false)
+    expect(result.success).toBe(true)
   })
 
-  it('rejects overly short custom categories', () => {
+  it('accepts custom category with category set to other', () => {
     const result = projectRequestSchema.safeParse({
       category: 'other',
-      customCategory: 'ab',
-      title: 'Repair specialty feature',
-      description: 'The specialty system needs inspection, documentation, and repair support.',
+      customCategory: 'pool-maintenance',
+      title: 'Handle pool chemical balance and filter replacement',
+      description: 'Need recurring pool support and documentation for chemical logs and filtration checks.',
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts non-enumerated category slugs', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'graffiti-removal',
+      title: 'Remove graffiti from retaining wall',
+      description: 'Need cleanup, surface prep, and matching paint with documented before/after photos.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts automated community pipeline preferences', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'open-request',
+      title: 'Document and track multi-service request',
+      description: 'Need an automated workflow to match specialists, track progress, and manage billing updates.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+      pipelineMode: 'community',
+      communityVisible: true,
+      accessRequirements: 'Gate code 4421, use east entrance.',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid pipeline mode', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'open-request',
+      title: 'General request for service coordination',
+      description: 'Need request tracking, handling, and documentation support for ongoing service work.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+      pipelineMode: 'unknown-mode',
+      communityVisible: true,
     })
     expect(result.success).toBe(false)
   })
