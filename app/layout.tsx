@@ -1,21 +1,20 @@
-import type React from "react"
-import type { Metadata, Viewport } from "next"
-import Script from "next/script"
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Toaster } from "sonner"
-import { AuthProvider } from "@/app/lib/auth-context"
-import { CookieConsentBanner } from "@/components/cookie-consent"
-import { ZendeskWidget } from "@/components/zendesk-widget"
-import { CONTACT_INFO } from "@/lib/contact-info"
-import "./globals.css"
+import type React from 'react'
+import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Toaster } from 'sonner'
+import { AuthProvider } from '@/app/lib/auth-context'
+import { CookieConsentBanner } from '@/components/cookie-consent'
+import { ZendeskWidget } from '@/components/zendesk-widget'
+import { CONTACT_INFO } from '@/lib/contact-info'
+import './globals.css'
 
-const GTM_ID = "GTM-PL3NBCWD"
-const GA_ID = "G-LDGVHFCMKT"
+const GTM_ID = 'GTM-PL3NBCWD'
+const GA_ID = 'G-LDGVHFCMKT'
 
 const THEME_INIT_SCRIPT = `(function(){var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='dark'?'dark':'light');})()`
 
-// Initialise dataLayer and set consent to denied before GTM/GA load (Consent Mode v2)
 const CONSENT_DEFAULT_SCRIPT = [
   `window.dataLayer=window.dataLayer||[];`,
   `function gtag(){dataLayer.push(arguments);}`,
@@ -33,7 +32,6 @@ const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.star
 
 const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
 
-// Accept only numeric merchant IDs to prevent injection
 const GOOGLE_MERCHANT_ID = /^\d+$/.test(process.env.NEXT_PUBLIC_GOOGLE_MERCHANT_ID ?? '')
   ? process.env.NEXT_PUBLIC_GOOGLE_MERCHANT_ID
   : null
@@ -98,16 +96,22 @@ export const metadata: Metadata = {
   authors: [{ name: COMPANY_NAME }],
   creator: COMPANY_NAME,
   publisher: COMPANY_NAME,
-  authors: [{ name: 'Nexus Operations' }],
-  creator: 'Nexus Operations',
-  publisher: 'Nexus Operations',
   alternates: {
     canonical: '/',
+  },
+  manifest: '/manifest.webmanifest',
+  applicationName: 'Nexus Operations',
+  appleWebApp: {
+    title: 'Nexus Operations',
+    capable: true,
+    statusBarStyle: 'default',
   },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
       { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-dark-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
     apple: '/apple-icon.png',
   },
@@ -119,18 +123,12 @@ export const metadata: Metadata = {
     description:
       'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
     siteName: 'Nexus Operations',
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: 'Nexus Operations property service coordination',
-      },
-    ],
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service coordination' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nexus Operations — Property Maintenance Coordination',
+    description: 'Managed property maintenance with verified contractors, tracked projects, and full service documentation.',
     description:
       'Licensed contractor coordination for homeowners and property managers in Topeka, KS. Verified network, guaranteed response times, full project documentation.',
     images: [DEFAULT_OG_IMAGE],
@@ -139,7 +137,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  generator: 'GPT-5.2-Codex',
+  generator: 'GPT-5.3-Codex',
 }
 
 export const viewport: Viewport = {
@@ -156,7 +154,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* Prevent theme flash */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -164,20 +161,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap"
           rel="stylesheet"
         />
-        {/* Consent Mode v2 — must run before GTM/GA */}
         <Script id="consent-default" strategy="beforeInteractive">
           {CONSENT_DEFAULT_SCRIPT}
         </Script>
-        {/* Google Tag Manager */}
         <Script id="gtm-init" strategy="afterInteractive">
           {GTM_INIT_SCRIPT}
         </Script>
-        {/* Google Analytics 4 */}
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
@@ -187,7 +177,6 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(LOCAL_BUSINESS_SCHEMA) }}
         />
-        {/* Google Customer Reviews Badge */}
         {GCR_BADGE_SCRIPT && (
           <>
             <Script id="gcr-badge-init" strategy="afterInteractive">
@@ -201,7 +190,6 @@ export default function RootLayout({
         )}
       </head>
       <body>
-        {/* GTM noscript fallback */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -210,9 +198,7 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
         <CookieConsentBanner />
         <Toaster position="bottom-right" richColors closeButton />
         <Analytics />
