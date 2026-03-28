@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { contractorSettingsSchema } from '@/lib/validators'
 
 export async function PUT(request: NextRequest) {
   try {
@@ -11,11 +12,16 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { companyName, bio, licenseNumber, yearsInBusiness, serviceCategories } = body
+    const parsed = contractorSettingsSchema.safeParse(body)
 
-    if (!companyName || !bio || !serviceCategories || serviceCategories.length === 0) {
-      return NextResponse.json({ error: 'Company name, bio, and at least one service category are required' }, { status: 400 })
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
     }
+
+    const { companyName, bio, licenseNumber, yearsInBusiness, serviceCategories } = parsed.data
 
     const { error: profileError } = await supabase
       .from('profiles')

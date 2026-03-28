@@ -4,7 +4,9 @@ import {
   loginSchema,
   projectRequestSchema,
   contractorProfileSchema,
+  contractorSettingsSchema,
   contactFormSchema,
+  homeownerSettingsSchema,
   invoiceCreateSchema,
   messageSchema,
   messageWithJobSchema,
@@ -109,6 +111,19 @@ describe('projectRequestSchema', () => {
       description: 'The kitchen sink has been leaking for a week and needs repair.',
       location: 'Topeka, KS',
       budget: '500',
+      preferredDate: '2099-05-01',
+    }
+    expect(projectRequestSchema.safeParse(data).success).toBe(true)
+  })
+
+  it('accepts valid project request without a budget', () => {
+    const data = {
+      category: 'plumbing',
+      title: 'Fix kitchen sink',
+      description: 'The kitchen sink has been leaking for a week and needs repair.',
+      location: 'Topeka, KS',
+      budget: '',
+      preferredDate: '2099-05-01',
     }
     expect(projectRequestSchema.safeParse(data).success).toBe(true)
   })
@@ -119,6 +134,7 @@ describe('projectRequestSchema', () => {
       title: 'Fix sink',
       description: 'Short',
       location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
     }
     const result = projectRequestSchema.safeParse(data)
     expect(result.success).toBe(false)
@@ -130,8 +146,43 @@ describe('projectRequestSchema', () => {
       title: 'Fix',
       description: 'The kitchen sink has been leaking for a week and needs repair.',
       location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
     }
     const result = projectRequestSchema.safeParse(data)
+    expect(result.success).toBe(false)
+  })
+
+  it('requires a preferred service date', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'plumbing',
+      title: 'Fix kitchen sink',
+      description: 'The kitchen sink has been leaking for a week and needs repair.',
+      location: 'Topeka, KS',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects custom categories without details', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'other',
+      customCategory: '',
+      title: 'Repair specialty feature',
+      description: 'The specialty system needs inspection, documentation, and repair support.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects overly short custom categories', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'other',
+      customCategory: 'ab',
+      title: 'Repair specialty feature',
+      description: 'The specialty system needs inspection, documentation, and repair support.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+    })
     expect(result.success).toBe(false)
   })
 })
@@ -159,6 +210,59 @@ describe('contractorProfileSchema', () => {
       serviceCategories: [],
     }
     const result = contractorProfileSchema.safeParse(data)
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('contractorSettingsSchema', () => {
+  it('accepts contractor settings without category caps', () => {
+    const result = contractorSettingsSchema.safeParse({
+      companyName: 'Pro Services LLC',
+      licenseNumber: '',
+      yearsInBusiness: '5',
+      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      serviceCategories: [],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid years in business', () => {
+    const result = contractorSettingsSchema.safeParse({
+      companyName: 'Pro Services LLC',
+      licenseNumber: 'LIC123',
+      yearsInBusiness: 'five',
+      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      serviceCategories: ['plumbing'],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects negative years in business', () => {
+    const result = contractorSettingsSchema.safeParse({
+      companyName: 'Pro Services LLC',
+      licenseNumber: 'LIC123',
+      yearsInBusiness: '-1',
+      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      serviceCategories: ['plumbing'],
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('homeownerSettingsSchema', () => {
+  it('accepts valid homeowner settings', () => {
+    const result = homeownerSettingsSchema.safeParse({
+      email: 'john@example.com',
+      phone: '+1 (785) 555-0100',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid homeowner email', () => {
+    const result = homeownerSettingsSchema.safeParse({
+      email: 'not-an-email',
+      phone: '',
+    })
     expect(result.success).toBe(false)
   })
 })

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "copilot/**", "codex/**"]
+  pull_request:
+    branches: [main, "copilot/**", "codex/**"]
+
+jobs:
+  build:
+    name: Build & Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build
+        run: npx next build
+        env:
+          RESEND_API_KEY: re_dummy
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          # Allow build to complete without real secrets
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
+
+      - name: Lint
+        run: npx next lint --no-ignore
+        continue-on-error: true
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
