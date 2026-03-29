@@ -9,7 +9,7 @@ import { Loader2, Users, Briefcase, ShieldAlert, DollarSign, Activity, ArrowRigh
 
 export default function AdminDashboard() {
   const router = useRouter()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     totalUsers: 0, pendingContractors: 0, activeJobs: 0, revenue: 0,
@@ -35,7 +35,7 @@ export default function AdminDashboard() {
         totalUsers: usersRes.count ?? 0,
         pendingContractors: contractorsRes.count ?? 0,
         activeJobs: jobsRes.count ?? 0,
-        revenue: revenueRes.data?.reduce((s: number, i: any) => s + i.total, 0) ?? 0,
+        revenue: revenueRes.data?.reduce((s: number, i: Record<string, unknown>) => s + (i.total as number), 0) ?? 0,
       })
       setLoading(false)
     }

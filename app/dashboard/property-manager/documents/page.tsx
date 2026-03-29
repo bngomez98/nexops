@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Loader2, FolderOpen, Upload, CheckCircle2, AlertCircle, Clock, Calendar } from 'lucide-react'
+import { Loader2, FolderOpen, Upload, CheckCircle2, AlertCircle } from 'lucide-react'
 
 export default function PMDocumentsPage() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
-  const [docs, setDocs]     = useState<any[]>([])
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
+  const [docs, setDocs]     = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
   const [file, setFile]     = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -87,7 +87,7 @@ export default function PMDocumentsPage() {
           </div>
         ) : (
           <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
-            {docs.map((doc: any) => (
+            {docs.map((doc: Record<string, unknown>) => (
               <div key={doc.id} className="flex items-start gap-3 px-5 py-4">
                 <FolderOpen className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">

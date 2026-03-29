@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {
   Loader2, MapPin, Zap, Clock, ChevronLeft, CheckCircle2,
-  AlertCircle, Upload, FileText, User, Phone,
+  AlertCircle, Upload, Phone,
 } from 'lucide-react'
 
 interface Job {
@@ -22,12 +22,6 @@ interface Job {
   client_profile?: { full_name: string; phone: string; photo_url: string }
 }
 
-const STATUS_OPTIONS = [
-  { value: 'in_progress',     label: 'Mark In Progress' },
-  { value: 'pending_invoice', label: 'Mark Complete — Request Invoice' },
-  { value: 'completed',       label: 'Mark Fully Complete' },
-]
-
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
 const URGENCY_MAP: Record<string, { label: string; color: string; bg: string }> = {
@@ -39,7 +33,7 @@ const URGENCY_MAP: Record<string, { label: string; color: string; bg: string }> 
 export default function ContractorJobDetailPage() {
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
   const [job, setJob]       = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)

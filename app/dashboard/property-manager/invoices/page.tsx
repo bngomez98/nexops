@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Receipt, DollarSign, CheckCircle2, Clock } from 'lucide-react'
+import { Loader2, Receipt, CheckCircle2, Clock } from 'lucide-react'
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
 export default function PMInvoicesPage() {
   const router = useRouter()
-  const [user, setUser]         = useState<any>(null)
-  const [invoices, setInvoices] = useState<any[]>([])
+  const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
+  const [invoices, setInvoices] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
@@ -37,21 +37,24 @@ export default function PMInvoicesPage() {
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
   if (!user) return null
 
-  const totalPaid  = invoices.filter(i => i.status === 'paid').reduce((s: number, i: any) => s + i.total, 0)
-  const totalDue   = invoices.filter(i => i.status === 'sent').reduce((s: number, i: any) => s + i.total, 0)
+  const totalPaid  = invoices.filter(i => (i as Record<string, unknown>).status === 'paid').reduce((s: number, i: Record<string, unknown>) => s + (i.total as number), 0)
+  const totalDue   = invoices.filter(i => (i as Record<string, unknown>).status === 'sent').reduce((s: number, i: Record<string, unknown>) => s + (i.total as number), 0)
 
   // Spend by property
   const byProperty: Record<string, number> = {}
-  invoices.filter(i => i.status === 'paid').forEach((inv: any) => {
-    const addr = inv.jobs?.properties?.address ?? 'Unknown'
-    byProperty[addr] = (byProperty[addr] ?? 0) + inv.total
+  invoices.filter(i => (i as Record<string, unknown>).status === 'paid').forEach((inv: Record<string, unknown>) => {
+    const jobs = inv.jobs as Record<string, unknown> | undefined
+    const props = jobs?.properties as Record<string, unknown> | undefined
+    const addr = (props?.address as string) ?? 'Unknown'
+    byProperty[addr] = (byProperty[addr] ?? 0) + (inv.total as number)
   })
 
   // Spend by category
   const byCategory: Record<string, number> = {}
-  invoices.filter(i => i.status === 'paid').forEach((inv: any) => {
-    const cat = inv.jobs?.service_type ?? 'Other'
-    byCategory[cat] = (byCategory[cat] ?? 0) + inv.total
+  invoices.filter(i => (i as Record<string, unknown>).status === 'paid').forEach((inv: Record<string, unknown>) => {
+    const jobs = inv.jobs as Record<string, unknown> | undefined
+    const cat = (jobs?.service_type as string) ?? 'Other'
+    byCategory[cat] = (byCategory[cat] ?? 0) + (inv.total as number)
   })
 
   const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
@@ -121,7 +124,7 @@ export default function PMInvoicesPage() {
           <div className="flex flex-col items-center justify-center py-16 bg-card border border-border rounded-2xl text-center"><Receipt className="w-10 h-10 text-muted-foreground mb-4" /><p className="font-semibold mb-1">No invoices yet</p></div>
         ) : (
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
-            {invoices.map((inv: any) => {
+            {invoices.map((inv: Record<string, unknown>) => {
               const st = STATUS_MAP[inv.status] ?? STATUS_MAP.draft
               return (
                 <div key={inv.id} className="flex items-center gap-4 px-5 py-4">

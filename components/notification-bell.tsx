@@ -28,19 +28,6 @@ export function NotificationBell() {
     setNotifications(prev => prev.filter(n => n.id !== id))
   }
 
-  function getTypeColor(type: string) {
-    switch (type) {
-      case 'bid':
-        return 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-900/20 dark:border-blue-900 dark:text-blue-200'
-      case 'message':
-        return 'bg-purple-50 border-purple-200 text-purple-900 dark:bg-purple-900/20 dark:border-purple-900 dark:text-purple-200'
-      case 'update':
-        return 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-900/20 dark:border-emerald-900 dark:text-emerald-200'
-      default:
-        return 'bg-gray-50 border-gray-200 text-gray-900 dark:bg-gray-900/20 dark:border-gray-900 dark:text-gray-200'
-    }
-  }
-
   function formatTime(date: Date) {
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()

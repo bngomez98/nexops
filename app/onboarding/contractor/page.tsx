@@ -138,8 +138,7 @@ export default function ContractorOnboardingPage() {
         is_available: true,
       }, { onConflict: "user_id" })
 
-      // Insert documents
-      const now = new Date().toISOString()
+            // Insert documents
       if (licenseUrl) {
         await supabase.from("documents").insert({
           user_id: userId,
@@ -160,7 +159,7 @@ export default function ContractorOnboardingPage() {
       }
 
       router.push("/onboarding/complete?role=contractor")
-    } catch (err) {
+    } catch (_err) {
       setError("Failed to save your profile. Please try again.")
     } finally {
       setSaving(false)
@@ -189,7 +188,7 @@ export default function ContractorOnboardingPage() {
         {/* Step indicator */}
         <div className="flex items-center gap-0 mb-10">
           {STEPS.map((s, i) => {
-            const Icon = s.icon
+            const _Icon = s.icon
             const done    = step > s.id
             const active  = step === s.id
             return (
