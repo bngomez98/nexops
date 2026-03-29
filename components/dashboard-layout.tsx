@@ -89,7 +89,7 @@ export function DashboardLayout({
       ? '/dashboard/contractor/settings'
       : userRole === 'admin'
         ? '/dashboard/admin/users'
-        : userRole === 'homeowner'
+        : (userRole === 'homeowner' || userRole === 'client')
           ? '/dashboard/homeowner/settings'
           : '/dashboard/requests'
 
