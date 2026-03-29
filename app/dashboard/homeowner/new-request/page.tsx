@@ -165,7 +165,7 @@ export default function NewProjectRequest() {
   function validateStep(s: number): boolean {
     setError('')
     setFieldErrors({})
-        if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
+    if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
       setFieldErrors({ customCategory: 'Please describe the service category.' })
       setError('Please describe the service category.')
       return false
