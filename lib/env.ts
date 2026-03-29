@@ -56,6 +56,19 @@ export function getDatabaseUrl(): string | undefined {
   )
 }
 
+/**
+ * Returns the unpooled (direct) Neon/Postgres connection URL.
+ * Set by the Vercel–Neon integration as DATABASE_URL_UNPOOLED.
+ * Use this for migrations or operations that require a direct connection
+ * instead of going through PgBouncer.
+ */
+export function getDatabaseUrlUnpooled(): string | undefined {
+  return (
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.POSTGRES_URL_NON_POOLING
+  )
+}
+
 export function getBlobToken(): string | undefined {
   return process.env.BLOB_READ_WRITE_TOKEN
 }
