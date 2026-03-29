@@ -11,7 +11,7 @@ import { Loader2, User, Upload, CheckCircle2, AlertCircle, Save } from 'lucide-r
 
 export default function HomeownerProfilePage() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved]   = useState(false)

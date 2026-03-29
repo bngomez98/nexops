@@ -32,8 +32,8 @@ interface ContractorInsights {
 
 interface AIInsightsCardProps {
   role: 'homeowner' | 'contractor'
-  requests: any[]
-  profile?: any
+  requests: Record<string, unknown>[]
+  profile?: Record<string, unknown>
 }
 
 const URGENCY_STYLE: Record<string, { bg: string; text: string; icon: React.ElementType }> = {
@@ -81,7 +81,6 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
     if (!fetched && requests.length >= 0) {
       fetchInsights()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requests.length])
 
   return (

@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
 
     const now         = new Date()
     const in30Days    = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
-    const warningDate = new Date(now.getTime() + 31 * 24 * 60 * 60 * 1000) // buffer: don't re-email on day 31
 
     type ExpiringDoc = { id: string; user_id: string; type: string; expires_at: string }
 

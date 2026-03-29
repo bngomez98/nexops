@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Loader2, Users, ShieldX, User } from 'lucide-react'
+import { Loader2, Users } from 'lucide-react'
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
 export default function AdminUsersPage() {
   const router = useRouter()
-  const [user, setUser]   = useState<any>(null)
-  const [users, setUsers] = useState<any[]>([])
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
+  const [users, setUsers] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter]   = useState('all')
 
@@ -68,7 +67,7 @@ export default function AdminUsersPage() {
           </div>
         ) : (
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
-            {displayed.map((u: any) => (
+            {displayed.map((u: Record<string, unknown>) => (
               <div key={u.user_id} className="flex items-center gap-4 px-5 py-4">
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-[12px] font-bold text-primary flex-shrink-0">
                   {u.full_name?.[0]?.toUpperCase() ?? '?'}

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useChat, type UIMessage } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
-import { Sparkles, X, Send, Loader2, ChevronDown, MessageSquare, RotateCcw } from 'lucide-react'
+import { Sparkles, X, Send, Loader2, ChevronDown, RotateCcw } from 'lucide-react'
 
 interface AIAssistantProps {
   role: 'homeowner' | 'contractor'

@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Building2, Plus, Trash2, MapPin, ChevronRight, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Loader2, Building2, Plus, ChevronRight, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 interface Property {
   id: string
@@ -21,7 +21,7 @@ interface Property {
 
 export default function PMPropertiesPage() {
   const router = useRouter()
-  const [user, setUser]             = useState<any>(null)
+  const [user, setUser]             = useState<{ id: string; name: string; role: string } | null>(null)
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading]       = useState(true)
   const [adding, setAdding]         = useState(false)
@@ -58,12 +58,6 @@ export default function PMPropertiesPage() {
     setSuccess('Property added.')
     setTimeout(() => setSuccess(null), 3000)
     setSaving(false)
-  }
-
-  async function handleDelete(id: string) {
-    const supabase = createClient()
-    await supabase.from('properties').delete().eq('id', id)
-    setProperties(prev => prev.filter(p => p.id !== id))
   }
 
   const handleLogout = async () => {

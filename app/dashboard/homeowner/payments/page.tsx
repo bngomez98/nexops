@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, CreditCard, CheckCircle2, ExternalLink, AlertCircle, Receipt } from 'lucide-react'
+import { Loader2, CreditCard, CheckCircle2, AlertCircle, Receipt } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Invoice {
@@ -26,7 +26,7 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 function HomeownerPaymentsInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [user, setUser]         = useState<any>(null)
+  const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading]   = useState(true)
   const [paying, setPaying]     = useState<string | null>(null)

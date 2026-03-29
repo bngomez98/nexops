@@ -8,9 +8,9 @@ import { AIAssistant } from '@/components/ai-assistant'
 import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
-  ArrowRight, AlertCircle, Loader2, TrendingUp,
+  ArrowRight, Loader2,
   ChevronRight, Calendar, DollarSign, MapPin,
-  RefreshCw, CreditCard, Bell, Activity, ReceiptText,
+  RefreshCw, CreditCard, Activity,
 } from 'lucide-react'
 import { toast } from 'sonner'
 

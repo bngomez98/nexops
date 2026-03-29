@@ -11,10 +11,10 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function AdminMatchesPage() {
   const router = useRouter()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
-  const [unmatchedJobs, setUnmatchedJobs] = useState<any[]>([])
-  const [matches, setMatches] = useState<any[]>([])
+  const [unmatchedJobs, setUnmatchedJobs] = useState<Record<string, unknown>[]>([])
+  const [matches, setMatches] = useState<Record<string, unknown>[]>([])
   const [matching, setMatching] = useState<string | null>(null)
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function AdminMatchesPage() {
             </div>
           ) : (
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
-              {matches.map((match: any) => (
+              {matches.map((match: Record<string, unknown>) => (
                 <div key={match.id} className="flex items-center gap-4 px-5 py-4">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                   <div className="flex-1 min-w-0">

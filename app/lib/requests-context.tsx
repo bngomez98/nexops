@@ -62,6 +62,7 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     setClientRequests((prev) => [newRequest, ...prev])
   }
 
+  const claimJob = (jobId: string, _contractorId: string) => {
   const claimJob = (jobId: string, contractorId: string) => {
     void contractorId
     setContractorJobs((prev) =>

@@ -25,6 +25,9 @@ const nav = [
   { href: '/contact', label: 'Contact' },
 ]
 
+export default function HomePage() {
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 const copy = {
   homeowner: {
     badge: 'Homeowners & Property Managers',
