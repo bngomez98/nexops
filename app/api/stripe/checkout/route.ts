@@ -59,12 +59,13 @@ export async function POST(req: NextRequest) {
         }
 
     if (embedded) {
-      // Embedded checkout: return client_secret for use with EmbeddedCheckoutProvider
+      // Embedded checkout: redirect to confirm page on completion
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         mode: 'subscription',
         ui_mode: 'embedded',
-        redirect_on_completion: 'never',
+        redirect_on_completion: 'always',
+        return_url: `${siteUrl}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
         line_items: [lineItem],
         metadata: { userId: user.id, planId },
         subscription_data: {
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
-      success_url: `${siteUrl}${billingPath}?checkout=success`,
+      success_url: `${siteUrl}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}${billingPath}?checkout=cancelled`,
       line_items: [lineItem],
       metadata: { userId: user.id, planId },
