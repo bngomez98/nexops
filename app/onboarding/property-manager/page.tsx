@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AlertCircle, Loader2, CheckCircle2, ChevronRight, ChevronLeft, Upload, User, Building2 } from "lucide-react"
+import { AlertCircle, Loader2, CheckCircle2, ChevronRight, ChevronLeft, Upload, User } from "lucide-react"
 
 const STEPS = [
   { id: 1, label: "Company Info" },

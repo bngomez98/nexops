@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Loader2, ShieldAlert, ShieldCheck, ShieldX, User, CheckCircle2, XCircle } from 'lucide-react'
+import { Loader2, ShieldAlert, ShieldCheck, CheckCircle2, XCircle } from 'lucide-react'
 
 interface Contractor {
   user_id: string
@@ -20,7 +20,7 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function AdminContractorsPage() {
   const router = useRouter()
-  const [user, setUser]             = useState<any>(null)
+  const [user, setUser]             = useState<{ id: string; name: string; role: string } | null>(null)
   const [contractors, setContractors] = useState<Contractor[]>([])
   const [loading, setLoading]       = useState(true)
   const [tab, setTab]               = useState<'pending' | 'verified' | 'all'>('pending')
@@ -122,7 +122,7 @@ export default function AdminContractorsPage() {
                 {/* Documents */}
                 {ct.documents && ct.documents.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {ct.documents.map((doc: any, i: number) => (
+                    {ct.documents.map((doc: { type: string; verified: boolean; file_url: string }, i: number) => (
                       <a key={i} href={doc.file_url} target="_blank" rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-1 rounded-lg border border-border bg-secondary hover:bg-muted transition-colors"
                       >

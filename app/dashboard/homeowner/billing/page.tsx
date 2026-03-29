@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
-import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
+import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
   CreditCard, Shield, AlertCircle, Zap, Star,
@@ -24,7 +24,7 @@ export default function HomeownerBillingPage() {
   const router = useRouter()
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+  const [checkoutLoading, _setCheckoutLoading] = useState<string | null>(null)
   const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
 

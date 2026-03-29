@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
 
         const contractorEmail = contractorAuth.user?.email
         const clientEmail     = clientAuth.user?.email
-        const contractorName  = (winner as any).profiles?.full_name ?? 'Contractor'
+        const contractorName  = (winner as Record<string, unknown> & { profiles?: { full_name?: string } }).profiles?.full_name ?? 'Contractor'
 
         const [{ data: clientProfile }] = await Promise.all([
           supabase.from('profiles').select('full_name').eq('user_id', job.client_id).maybeSingle(),

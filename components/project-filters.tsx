@@ -260,7 +260,7 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
                 name="sort"
                 value="recent"
                 checked={filters.sortBy === 'recent'}
-                onChange={(e) => updateFilter('sortBy', e.target.value as any)}
+                onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
                 className="w-4 h-4"
               />
               <span className="text-sm text-foreground">Most Recent</span>
@@ -271,7 +271,7 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
                 name="sort"
                 value="budget-high"
                 checked={filters.sortBy === 'budget-high'}
-                onChange={(e) => updateFilter('sortBy', e.target.value as any)}
+                onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
                 className="w-4 h-4"
               />
               <span className="text-sm text-foreground">Highest Budget</span>
@@ -282,7 +282,7 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
                 name="sort"
                 value="budget-low"
                 checked={filters.sortBy === 'budget-low'}
-                onChange={(e) => updateFilter('sortBy', e.target.value as any)}
+                onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
                 className="w-4 h-4"
               />
               <span className="text-sm text-foreground">Lowest Budget</span>

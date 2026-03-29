@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { getStripeClient } from '@/lib/stripe/server'
 
 interface EnsureStripeCustomerParams {
-  supabase: SupabaseClient<any, 'public', any>
+  supabase: SupabaseClient
   userId: string
   email?: string | null
   fullName?: string | null

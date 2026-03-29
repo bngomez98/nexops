@@ -7,12 +7,12 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, Building2, ClipboardList, DollarSign,
-  Plus, TrendingUp, BarChart3, ArrowRight,
+  Plus, ArrowRight,
 } from 'lucide-react'
 
 export default function PropertyManagerDashboard() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [stats, setStats]   = useState({
     totalProperties: 0,

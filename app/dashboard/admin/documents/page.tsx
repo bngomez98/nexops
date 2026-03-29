@@ -5,14 +5,14 @@ import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Loader2, FolderOpen, CheckCircle2, XCircle, AlertTriangle, Calendar } from 'lucide-react'
+import { Loader2, FolderOpen, CheckCircle2, AlertTriangle } from 'lucide-react'
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
 export default function AdminDocumentsPage() {
   const router = useRouter()
-  const [user, setUser]   = useState<any>(null)
-  const [docs, setDocs]   = useState<any[]>([])
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
+  const [docs, setDocs]   = useState<Record<string, unknown>[]>([])
   const [loading, setLoading]   = useState(true)
   const [processing, setProcessing] = useState<string | null>(null)
 
@@ -89,7 +89,7 @@ export default function AdminDocumentsPage() {
               <p className="text-[13px] font-semibold text-amber-700">{expiringSoon.length} documents expiring within 30 days</p>
             </div>
             <div className="space-y-1">
-              {expiringSoon.map((d: any) => (
+              {expiringSoon.map((d: Record<string, unknown>) => (
                 <p key={d.id} className="text-[12px] text-amber-700">
                   {d.profiles?.full_name ?? 'Unknown'} — {fmt(d.type)} — expires {new Date(d.expires_at).toLocaleDateString()}
                 </p>
@@ -104,7 +104,7 @@ export default function AdminDocumentsPage() {
               <FolderOpen className="w-10 h-10 text-muted-foreground mb-4" />
               <p className="font-semibold mb-1">No documents uploaded yet</p>
             </div>
-          ) : docs.map((doc: any) => (
+          ) : docs.map((doc: Record<string, unknown>) => (
             <div key={doc.id} className="flex items-start gap-4 px-5 py-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">

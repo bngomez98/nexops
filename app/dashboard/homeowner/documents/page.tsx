@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2, FolderOpen, Upload, CheckCircle2, AlertCircle, Calendar, Clock } from 'lucide-react'
 
@@ -25,7 +24,7 @@ const DOC_TYPE_LABELS: Record<string, string> = {
 
 export default function HomeownerDocumentsPage() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
   const [docs, setDocs]     = useState<Document[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)

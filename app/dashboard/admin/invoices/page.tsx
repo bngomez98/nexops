@@ -16,8 +16,8 @@ const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> =
 
 export default function AdminInvoicesPage() {
   const router = useRouter()
-  const [user, setUser]         = useState<any>(null)
-  const [invoices, setInvoices] = useState<any[]>([])
+  const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
+  const [invoices, setInvoices] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
@@ -44,8 +44,8 @@ export default function AdminInvoicesPage() {
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
   if (!user) return null
 
-  const totalRevenue = invoices.filter(i => i.status === 'paid').reduce((s: number, i: any) => s + i.nexus_fee, 0)
-  const totalVolume  = invoices.filter(i => i.status === 'paid').reduce((s: number, i: any) => s + i.total, 0)
+  const totalRevenue = invoices.filter(i => (i as Record<string, unknown>).status === 'paid').reduce((s: number, i: Record<string, unknown>) => s + (i.nexus_fee as number), 0)
+  const totalVolume  = invoices.filter(i => (i as Record<string, unknown>).status === 'paid').reduce((s: number, i: Record<string, unknown>) => s + (i.total as number), 0)
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,7 +82,7 @@ export default function AdminInvoicesPage() {
           </div>
         ) : (
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
-            {invoices.map((inv: any) => {
+            {invoices.map((inv: Record<string, unknown>) => {
               const st = STATUS_MAP[inv.status] ?? STATUS_MAP.draft
               return (
                 <div key={inv.id} className="flex items-center gap-4 px-5 py-4">
