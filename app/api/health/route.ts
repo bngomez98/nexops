@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   // Check Supabase connectivity if configured
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     try {
       const { createClient } = await import('@/lib/supabase/server')
       const supabase = await createClient()
