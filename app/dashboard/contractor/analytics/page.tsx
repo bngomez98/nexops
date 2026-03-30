@@ -18,7 +18,7 @@ interface ContractorProfile {
 
 export default function AnalyticsDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [profile, setProfile] = useState<ContractorProfile | null>(null)
   const [loading, setLoading] = useState(true)
 

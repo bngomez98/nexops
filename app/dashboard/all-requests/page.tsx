@@ -26,7 +26,7 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function AllRequestsPage() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [stats, setStats] = useState<RequestStats>({ total: 0, active: 0, completed: 0, revenue: 0 })
   const [recent, setRecent] = useState<RecentRequest[]>([])
   const [loading, setLoading] = useState(true)

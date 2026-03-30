@@ -24,7 +24,7 @@ export default function ContractorBillingPage() {
   const router = useRouter()
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
+  const [checkoutLoading, _setCheckoutLoading] = useState<string | null>(null)
   const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
 

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getDatabaseUrl, getDatabaseUrlUnpooled } from '@/lib/env'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,7 +11,7 @@ export async function GET() {
   }
 
   // Check Supabase connectivity if configured
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     try {
       const { createClient } = await import('@/lib/supabase/server')
       const supabase = await createClient()
@@ -21,6 +22,12 @@ export async function GET() {
     }
   } else {
     health.database = 'not_configured'
+  }
+
+  // Report Neon / Postgres connection availability (set by Vercel–Neon integration)
+  health.neon = {
+    pooled: getDatabaseUrl() ? 'configured' : 'not_configured',
+    unpooled: getDatabaseUrlUnpooled() ? 'configured' : 'not_configured',
   }
 
   return NextResponse.json(health)

@@ -11,8 +11,8 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function PMPaymentsPage() {
   const router = useRouter()
-  const [user, setUser]         = useState<any>(null)
-  const [invoices, setInvoices] = useState<any[]>([])
+  const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
+  const [invoices, setInvoices] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
@@ -38,8 +38,8 @@ export default function PMPaymentsPage() {
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
   if (!user) return null
 
-  const due  = invoices.filter((i: any) => i.status === 'sent')
-  const paid = invoices.filter((i: any) => i.status === 'paid')
+  const due  = invoices.filter((i: Record<string, unknown>) => i.status === 'sent')
+  const paid = invoices.filter((i: Record<string, unknown>) => i.status === 'paid')
 
   return (
     <div className="min-h-screen bg-background">
@@ -54,7 +54,7 @@ export default function PMPaymentsPage() {
           <div className="mb-6">
             <p className="text-[13px] font-semibold mb-3">Outstanding ({due.length})</p>
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
-              {due.map((inv: any) => (
+              {due.map((inv: Record<string, unknown>) => (
                 <div key={inv.id} className="flex items-center gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt(inv.jobs.service_type) : 'Invoice'}</p>
@@ -83,7 +83,7 @@ export default function PMPaymentsPage() {
             </div>
           ) : (
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
-              {paid.map((inv: any) => (
+              {paid.map((inv: Record<string, unknown>) => (
                 <div key={inv.id} className="flex items-center gap-4 px-5 py-4">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                   <div className="flex-1 min-w-0">

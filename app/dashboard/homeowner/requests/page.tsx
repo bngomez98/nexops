@@ -7,7 +7,7 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, ClipboardList, MapPin, Clock, ChevronRight,
-  Plus, Calendar, DollarSign, CheckCircle2,
+  Plus, DollarSign,
 } from 'lucide-react'
 
 interface Request {
@@ -39,7 +39,7 @@ function timeAgo(d: string) {
 
 export default function HomeownerRequestsPage() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
   const [requests, setRequests] = useState<Request[]>([])
   const [loading, setLoading]   = useState(true)
   const [tab, setTab]       = useState<'all' | 'active' | 'completed'>('all')

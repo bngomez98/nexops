@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  Loader2, Upload, CheckCircle2, AlertCircle, AlertTriangle, Clock,
+  Loader2, Upload, CheckCircle2, AlertCircle, Clock,
   FileText, ShieldCheck, Calendar,
 } from 'lucide-react'
 
@@ -39,7 +39,7 @@ const DOC_TYPE_LABELS: Record<string, string> = {
 
 export default function ContractorDocumentsPage() {
   const router = useRouter()
-  const [user, setUser]       = useState<any>(null)
+  const [user, setUser]       = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [docs, setDocs]       = useState<Document[]>([])
   const [uploading, setUploading] = useState<string | null>(null)
@@ -91,8 +91,8 @@ export default function ContractorDocumentsPage() {
         .in('type', ['license', 'insurance'])
         .order('created_at', { ascending: false })
       setDocs(data ?? [])
-    } catch (err: any) {
-      setError(err.message ?? 'Upload failed')
+    } catch (err: unknown) {
+      setError((err as Error).message ?? 'Upload failed')
     } finally {
       setUploading(null)
     }

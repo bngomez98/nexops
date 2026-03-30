@@ -7,7 +7,7 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, Briefcase, MapPin, Clock, ChevronRight,
-  CheckCircle2, AlertCircle, Zap,
+  Zap,
 } from 'lucide-react'
 
 interface Job {
@@ -45,7 +45,7 @@ function timeAgo(d: string) {
 
 export default function ContractorJobsPage() {
   const router = useRouter()
-  const [user, setUser]       = useState<any>(null)
+  const [user, setUser]       = useState<{ id: string; name: string; role: string } | null>(null)
   const [jobs, setJobs]       = useState<Job[]>([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab]         = useState<'active' | 'all'>('active')

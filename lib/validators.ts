@@ -30,12 +30,17 @@ export const loginSchema = z.object({
 })
 
 export const projectRequestSchema = z.object({
+  category: z.string().trim().min(1, 'Please select a service category').default('open-request'),
   category: z.string().trim().min(1, 'Please select a service category').max(80, 'Category must be less than 80 characters'),
   customCategory: z.string().trim().max(80, 'Custom category must be less than 80 characters').optional().or(z.literal('')),
   title: z.string().min(5, 'Title must be at least 5 characters').max(100, 'Title must be less than 100 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters').max(2000, 'Description must be less than 2000 characters'),
   location: z.string().min(3, 'Please enter a valid location'),
   budget: z.string().min(1, 'Please enter a budget').optional().or(z.literal('')),
+
+  pipelineMode: z.enum(['standard', 'automated', 'community']).default('automated'),
+  communityVisible: z.boolean().default(true),
+  accessRequirements: z.string().trim().max(500, 'Access notes must be less than 500 characters').optional().or(z.literal('')),
   preferredDate: z.string()
     .min(1, 'Please select a preferred service date')
     .refine(value => !Number.isNaN(Date.parse(value)), 'Please select a valid service date')

@@ -8,7 +8,7 @@ import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, Q
 
 function PropertyManagerSettingsInner() {
   const router = useRouter()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading]   = useState(true)
   const [saving, setSaving]     = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -21,7 +21,7 @@ function PropertyManagerSettingsInner() {
   })
 
   // 2FA state
-  const [mfaFactors, setMfaFactors]   = useState<any[]>([])
+  const [mfaFactors, setMfaFactors]   = useState<Record<string, unknown>[]>([])
   const [enrollData, setEnrollData]   = useState<{ qr: string; secret: string; factorId: string } | null>(null)
   const [verifyCode, setVerifyCode]   = useState('')
   const [mfaLoading, setMfaLoading]   = useState(false)
@@ -351,7 +351,6 @@ function PropertyManagerSettingsInner() {
                   Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code below.
                 </p>
                 <div className="flex flex-col items-center gap-4 p-5 rounded-xl bg-secondary/30 border border-border">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={enrollData.qr} alt="2FA QR Code" className="w-44 h-44 rounded-lg" />
                   <div className="text-center">
                     <p className="text-[11px] text-muted-foreground mb-1">Or enter this code manually:</p>

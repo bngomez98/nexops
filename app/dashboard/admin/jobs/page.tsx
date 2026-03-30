@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Briefcase, MapPin, Zap, Clock } from 'lucide-react'
+import { Loader2, Briefcase, MapPin, Clock } from 'lucide-react'
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
   open:        { label: 'Open',        color: 'text-foreground/70', bg: 'bg-muted' },
@@ -19,8 +19,8 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function AdminJobsPage() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
-  const [jobs, setJobs] = useState<any[]>([])
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
+  const [jobs, setJobs] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter]   = useState('all')
 
