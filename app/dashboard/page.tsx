@@ -81,11 +81,6 @@ export default function DashboardPage() {
                 : "Admin overview — manage the platform below."}
             </p>
           </div>
-          {isHomeownerDashboardRole(user?.role) && (
-            <Link
-              href="/dashboard/requests/new"
-              className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
-
           <div className="flex items-center gap-2">
             <button
               onClick={handleResetDashboard}
