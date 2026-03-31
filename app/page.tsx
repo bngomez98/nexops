@@ -6,12 +6,21 @@ import Image from 'next/image'
 import {
   ArrowRight,
   CalendarCheck2,
+  CheckCircle2,
   ChevronDown,
+  ChevronRight,
+  Clock,
   Clock3,
   CreditCard,
   Eye,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
   ShieldCheck,
   Sparkles,
+  Star,
+  Zap,
 } from 'lucide-react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
@@ -25,9 +34,6 @@ const nav = [
   { href: '/contact', label: 'Contact' },
 ]
 
-export default function HomePage() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
 const copy = {
   homeowner: {
     badge: 'For Homeowners & Landlords',
@@ -58,7 +64,7 @@ const copy = {
     title: 'Claim better-fit jobs with full context upfront.',
     subtitle:
       'See scope, budget, photos, and location before you accept. Use one workspace for dispatch, updates, and payout visibility.',
-    image: '/business-analytics-data-visualization.jpg',
+    image: '/photo-contractor.jpg',
     ctaPrimary: { href: '/auth/sign-up?role=contractor', label: 'Join network' },
     ctaSecondary: { href: '/dashboard/contractor', label: 'Contractor dashboard' },
     bullets: [
@@ -86,6 +92,25 @@ const faqs = [
   ['Is everything visible in one place?', 'Yes. Requests, messages, documents, and invoices stay in one dashboard timeline.'],
   ['How are contractors vetted?', 'Trade fit, insurance, and service reliability are verified before approval.'],
 ] as const
+
+const statsData = [
+  { value: '20+', label: 'Verified contractors' },
+  { value: '< 4h', label: 'Urgent assignment' },
+  { value: '100%', label: 'Documented jobs' },
+  { value: '30d', label: 'Payment guarantee' },
+]
+
+const homeownerFeatures = [
+  { icon: Shield, title: 'Licensed & insured contractors', desc: 'Every contractor in the network carries verified insurance and trade licensing.' },
+  { icon: Zap, title: 'Assignment within 4 hours', desc: 'Urgent requests are routed to an available contractor in under four hours.' },
+  { icon: CheckCircle2, title: 'Every request reviewed', desc: 'Nexus staff review each request before dispatch to ensure accuracy.' },
+]
+
+const pricingTiers = [
+  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Time-sensitive repairs requiring rapid contractor response.', featured: true },
+  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: '24/7 emergency response for critical property issues.', featured: false },
+]
 
 export default function HomePage() {
   const [audience, setAudience] = useState<Audience>('homeowner')
@@ -168,6 +193,8 @@ export default function HomePage() {
           <Image src={hero.image} alt="Nexus workflow" width={1200} height={700} className="h-full w-full object-cover" />
         </section>
 
+      <section className="border-t border-slate-200 py-12">
+        <div className="mx-auto max-w-7xl px-4">
           <div className="grid gap-12 sm:grid-cols-3">
             {[
               {
@@ -283,73 +310,9 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-        <section id="solutions" className="border-t border-slate-200 py-12">
-          <h2 className="text-2xl font-bold">Built for daily operations, not one-off tickets</h2>
-          <div className="mt-6 space-y-5 text-sm text-slate-700">
-            <p className="border-b border-slate-200 pb-4"><strong className="text-slate-900">Single timeline:</strong> request updates, documents, and payment history stay connected.</p>
-            <p className="border-b border-slate-200 pb-4"><strong className="text-slate-900">Structured dispatch:</strong> assignment is based on trade, location, and urgency.</p>
-            <p><strong className="text-slate-900">Professional communication:</strong> centralized updates reduce missed calls and vague status checks.</p>
-          </div>
-        </section>
-
-        <section id="process" className="border-t border-slate-200 py-12">
-          <h2 className="text-2xl font-bold">How it works</h2>
-          <ol className="mt-5 divide-y divide-slate-200 border-y border-slate-200">
-            {process.map(([step, title, detail]) => (
-              <li key={step} className="grid gap-3 py-4 md:grid-cols-[80px_1fr]">
-                <span className="text-sm font-semibold text-emerald-700">{step}</span>
-                <div>
-                  <h3 className="font-semibold">{title}</h3>
-                  <p className="text-sm text-slate-600">{detail}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section id="pricing" className="border-t border-slate-200 py-12">
-          <h2 className="text-2xl font-bold">Pricing tiers</h2>
-          <div className="mt-5 overflow-x-auto">
-            <table className="w-full min-w-[680px] border-collapse text-left text-sm">
-              <thead>
-                <tr className="border-b border-slate-300 text-slate-500">
-                  <th className="py-2 font-semibold">Tier</th>
-                  <th className="py-2 font-semibold">Markup</th>
-                  <th className="py-2 font-semibold">SLA</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pricing.map(([tier, rate, sla]) => (
-                  <tr key={tier} className="border-b border-slate-200">
-                    <td className="py-3 font-semibold">{tier}</td>
-                    <td className="py-3">{rate}</td>
-                    <td className="py-3 text-slate-600">{sla}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="border-t border-slate-200 py-12">
-          <h2 className="text-2xl font-bold">FAQ</h2>
-          <div className="mt-4 divide-y divide-slate-200 border-y border-slate-200">
-            {faqs.map(([q, a], i) => (
-              <div key={q}>
-                <button
-                  onClick={() => setFaqIndex(faqIndex === i ? null : i)}
-                  className="flex w-full items-center justify-between py-3 text-left text-sm font-semibold"
-                >
-                  {q}
-                  <ChevronDown className={`h-4 w-4 transition ${faqIndex === i ? 'rotate-180' : ''}`} />
-                </button>
-                {faqIndex === i && <p className="pb-3 text-sm text-slate-600">{a}</p>}
-              </div>
-            ))}
           </div>
         </div>
       </section>
-
       {/* ── Pricing ── */}
       <section id="pricing" style={{ padding: '112px 28px', background: '#0d0d0d', color: '#fff' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -618,7 +581,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-        </section>
       </main>
     </div>
   )
