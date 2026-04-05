@@ -47,7 +47,7 @@ const copy = {
       { icon: CheckCircle2, text: 'Every request reviewed' },
     ],
     badge: 'Homeowners & Property Managers',
-    title: 'Maintenance operations without follow-up chaos.',
+    title: 'Nexus handles your maintenance operations without the follow-up chaos.',
     subtitle:
       'Submit one request with photos and budget. Nexus assigns qualified contractors, tracks progress, and keeps every update in one timeline.',
     image: '/business-handshake-professional-meeting.jpg',
@@ -57,6 +57,9 @@ const copy = {
       { icon: CalendarCheck2, text: 'Contractors are matched based on availability and trade fit.' },
       { icon: ShieldCheck, text: 'Every contractor in our network is verified and insured.' },
       { icon: CreditCard, text: 'Every completed job includes clean invoices and full records.' },
+      { icon: CalendarCheck2, text: 'We schedule jobs around contractor availability.' },
+      { icon: ShieldCheck, text: 'Every contractor is verified and carries insurance.' },
+      { icon: CreditCard, text: 'You receive clean invoices and complete records.' },
     ],
   },
   contractor: {
@@ -71,12 +74,16 @@ const copy = {
       { icon: Eye, text: 'Review the scope and photos before accepting any job.' },
       { icon: Clock3, text: 'Jobs are routed quickly so you spend less time waiting.' },
       { icon: CreditCard, text: 'Payments are tracked and processed through one workflow.' },
+      { icon: Eye, text: 'You see scope and photos before you accept a job.' },
+      { icon: Clock3, text: 'Jobs move through faster assignment cycles.' },
+      { icon: CreditCard, text: 'Payments are processed through a streamlined flow.' },
     ],
   },
 } as const
 
 const process = [
   ['01', 'Submit request', 'Describe the issue, upload photos, and set a budget range.'],
+  ['01', 'Submit request', 'Describe the issue, upload photos, and set your budget range.'],
   ['02', 'Dispatch review', 'Nexus routes the request to one matched contractor.'],
   ['03', 'Track and close', 'The timeline, messages, and invoice all stay synchronized.'],
 ] as const
@@ -101,15 +108,18 @@ const statsData = [
 ]
 
 const homeownerFeatures = [
-  { icon: Shield, title: 'Licensed & insured contractors', desc: 'Every contractor in the network carries verified insurance and trade licensing.' },
-  { icon: Zap, title: 'Assignment within 4 hours', desc: 'Urgent requests are routed to an available contractor in under four hours.' },
-  { icon: CheckCircle2, title: 'Every request reviewed', desc: 'Nexus staff review each request before dispatch to ensure accuracy.' },
+  { icon: Shield, title: 'All contractors are licensed and insured.', desc: 'Every contractor in the network carries verified insurance and trade licensing.' },
+  { icon: Zap, title: 'Contractors are assigned within four hours.', desc: 'Urgent requests are routed to an available contractor in under four hours.' },
+  { icon: CheckCircle2, title: 'Every request is reviewed before dispatch.', desc: 'Nexus staff review each request before dispatch to ensure accuracy.' },
 ]
 
 const pricingTiers = [
   { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Standard maintenance work with flexible scheduling.', featured: false },
   { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Time-sensitive repairs that require rapid contractor response.', featured: true },
   { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Around-the-clock emergency response for critical property issues.', featured: false },
+  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
+  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
 ]
 
 export default function HomePage() {
@@ -307,6 +317,8 @@ export default function HomePage() {
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>Average submit time is under 3 minutes.</p>
                   <p style={{ fontSize: 11.5, color: '#888' }}>Include photos, scope, and budget in one form.</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>Average submit time is 3 minutes.</p>
+                  <p style={{ fontSize: 11.5, color: '#888' }}>Submit photos, scope, and budget in one form.</p>
                 </div>
               </div>
             </div>
@@ -321,10 +333,10 @@ export default function HomePage() {
               Pricing
             </p>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
-              Subscription Plans or Markup
+              Choose a subscription plan or pay a markup per job.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-              A transparent markup on completed work. Pro plans from{' '}
+              We charge a transparent markup on completed work. Pro plans start at{' '}
               <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
             </p>
           </div>
@@ -352,7 +364,7 @@ export default function HomePage() {
           </div>
 
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
-            Per-job coordination markup
+            These markup rates apply per coordinated job.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 36 }}>
             {pricingTiers.map(({ name, markup, sla, desc, featured }) => (
@@ -405,7 +417,7 @@ export default function HomePage() {
                 Why Nexus
               </p>
               <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.12, color: '#111', marginBottom: 20 }}>
-                Maintenance Coordination, Not a Contractor Marketplace
+                Nexus Provides Maintenance Coordination, Not a Contractor Marketplace.
               </h2>
               <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 28 }}>
                 Nexus Operations stays involved from intake to invoice — reviewing contractor performance, enforcing response-time guarantees, and providing monthly reporting on every request handled.
@@ -440,8 +452,8 @@ export default function HomePage() {
                 <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
                   {[1,2,3,4,5].map(i => <Star key={i} size={14} style={{ color: '#f59e0b', fill: '#f59e0b' }} />)}
                 </div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 4 }}>Verified &amp; insured contractors</p>
-                <p style={{ fontSize: 12, color: '#888' }}>Shawnee County network</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 4 }}>All contractors are verified and insured.</p>
+                <p style={{ fontSize: 12, color: '#888' }}>We serve the Shawnee County network.</p>
               </div>
             </div>
           </div>
