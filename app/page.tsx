@@ -54,6 +54,9 @@ const copy = {
     ctaPrimary: { href: '/auth/sign-up', label: 'Submit request' },
     ctaSecondary: { href: '/dashboard/homeowner', label: 'Homeowner dashboard' },
     bullets: [
+      { icon: CalendarCheck2, text: 'Contractors are matched based on availability and trade fit.' },
+      { icon: ShieldCheck, text: 'Every contractor in our network is verified and insured.' },
+      { icon: CreditCard, text: 'Every completed job includes clean invoices and full records.' },
       { icon: CalendarCheck2, text: 'We schedule jobs around contractor availability.' },
       { icon: ShieldCheck, text: 'Every contractor is verified and carries insurance.' },
       { icon: CreditCard, text: 'You receive clean invoices and complete records.' },
@@ -68,6 +71,9 @@ const copy = {
     ctaPrimary: { href: '/auth/sign-up?role=contractor', label: 'Join network' },
     ctaSecondary: { href: '/dashboard/contractor', label: 'Contractor dashboard' },
     bullets: [
+      { icon: Eye, text: 'Review the scope and photos before accepting any job.' },
+      { icon: Clock3, text: 'Jobs are routed quickly so you spend less time waiting.' },
+      { icon: CreditCard, text: 'Payments are tracked and processed through one workflow.' },
       { icon: Eye, text: 'You see scope and photos before you accept a job.' },
       { icon: Clock3, text: 'Jobs move through faster assignment cycles.' },
       { icon: CreditCard, text: 'Payments are processed through a streamlined flow.' },
@@ -76,9 +82,10 @@ const copy = {
 } as const
 
 const process = [
+  ['01', 'Submit request', 'Describe the issue, upload photos, and set a budget range.'],
   ['01', 'Submit request', 'Describe the issue, upload photos, and set your budget range.'],
   ['02', 'Dispatch review', 'Nexus routes the request to one matched contractor.'],
-  ['03', 'Track and close', 'Timeline, messages, and invoice stay synchronized.'],
+  ['03', 'Track and close', 'The timeline, messages, and invoice all stay synchronized.'],
 ] as const
 
 const pricing = [
@@ -89,7 +96,7 @@ const pricing = [
 
 const faqs = [
   ['How fast are urgent requests assigned?', 'Most urgent requests are assigned within 4 hours.'],
-  ['Is everything visible in one place?', 'Yes. Requests, messages, documents, and invoices stay in one dashboard timeline.'],
+  ['Is everything visible in one place?', 'Yes — requests, messages, documents, and invoices stay in one dashboard timeline.'],
   ['How are contractors vetted?', 'Trade fit, insurance, and service reliability are verified before approval.'],
 ] as const
 
@@ -107,6 +114,9 @@ const homeownerFeatures = [
 ]
 
 const pricingTiers = [
+  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Time-sensitive repairs that require rapid contractor response.', featured: true },
+  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Around-the-clock emergency response for critical property issues.', featured: false },
   { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
   { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
   { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
@@ -199,13 +209,13 @@ export default function HomePage() {
             {[
               {
                 title: "Homeowners",
-                body: "Submit your request. Get matched with one verified contractor. Track everything from submission to completion.",
+                body: "Submit a request, get matched with one verified contractor, and track everything from submission to completion.",
                 cta: "Create account",
                 href: "/auth/sign-up",
               },
               {
                 title: "Contractors",
-                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
+                body: "Receive pre-documented project notifications in your trade, claim what fits your schedule, and get paid directly by property owners.",
                 cta: "Apply for access",
                 href: "/auth/sign-up?role=contractor",
               },
@@ -305,6 +315,8 @@ export default function HomePage() {
                   <Clock size={18} style={{ color: '#fff' }} />
                 </div>
                 <div>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>Average submit time is under 3 minutes.</p>
+                  <p style={{ fontSize: 11.5, color: '#888' }}>Include photos, scope, and budget in one form.</p>
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>Average submit time is 3 minutes.</p>
                   <p style={{ fontSize: 11.5, color: '#888' }}>Submit photos, scope, and budget in one form.</p>
                 </div>
