@@ -62,28 +62,28 @@ const verificationSteps = [
     step: "01",
     title: "Apply online",
     description:
-      "Complete the application with your business info, service categories, and coverage area within Shawnee County.",
+      "Complete the short application with your business info, trade specialties, and service area. Any home service category is welcome.",
   },
   {
     icon: BadgeCheck,
     step: "02",
-    title: "Submit documentation",
+    title: "We review within 12 hours",
     description:
-      "Upload your business license, trade licenses, liability insurance certificate, and workers comp (if applicable).",
+      "A member of our team reviews every application and follows up at the email you provide — guaranteed within 12 hours.",
   },
   {
     icon: ShieldCheck,
     step: "03",
-    title: "Verification review",
+    title: "Credential verification",
     description:
-      "We verify all licenses against state databases, confirm insurance directly with providers, and review references. 3–5 business days.",
+      "We verify licenses against state databases and confirm insurance coverage directly with your provider before approval.",
   },
   {
     icon: CheckCircle,
     step: "04",
     title: "Start receiving work",
     description:
-      "Once approved, you are added to the active network and begin receiving assignment notifications matching your trade and availability.",
+      "Once approved, you're added to the active network and begin receiving assignment notifications matching your trade and availability.",
   },
 ]
 
@@ -192,9 +192,8 @@ export default function ContractorsPage() {
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
                 Pre-qualified work.{" "}
                 <span className="font-serif italic font-normal text-primary">
-                  Direct payment within 30 days.
+                  Guaranteed payment within 30 days.
                 </span>
-                Steady work. Guaranteed payment.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
                 Nexus Operations connects verified contractors with property
@@ -204,10 +203,10 @@ export default function ContractorsPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  href="/contact"
+                  href="/contractors/apply"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
                 >
-                  Apply to Join
+                  Apply to Join — 12-hour review
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
@@ -278,9 +277,9 @@ export default function ContractorsPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
               {[
                 { label: "Active contractors", value: "20+" },
-                { label: "Trade categories", value: "9" },
-                { label: "Accepting applications", value: "All trades" },
-                { label: "Avg. verification time", value: "3–5 days" },
+                { label: "Trade categories", value: "All trades" },
+                { label: "Accepting applications", value: "Open" },
+                { label: "Application review time", value: "12 hours" },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -361,13 +360,13 @@ export default function ContractorsPage() {
               </div>
               <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <p className="text-[11.5px] text-muted-foreground">
-                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins.
+                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
                 </p>
                 <Link
-                  href="/contact"
+                  href="/contractors/apply"
                   className="text-[11.5px] font-semibold text-primary hover:underline whitespace-nowrap"
                 >
-                  Request credential details →
+                  Apply to join →
                 </Link>
               </div>
             </div>
@@ -473,10 +472,10 @@ export default function ContractorsPage() {
                   </div>
                   <div className="mt-6 pt-6 border-t border-border">
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      We currently accept contractors in: plumbing, electrical,
-                      HVAC, concrete, tree services, roofing, fencing, painting,
-                      and general repair. Additional categories added as demand
-                      warrants.
+                      We accept contractors across all home service and trade categories —
+                      plumbing, electrical, HVAC, roofing, concrete, landscaping, painting,
+                      fencing, appliance repair, and more. If you provide skilled home
+                      services, apply.
                     </p>
                   </div>
                 </div>
@@ -529,27 +528,25 @@ export default function ContractorsPage() {
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-                Apply to join the Nexus contractor network.
+                Ready to join the network?
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                The application takes 5 minutes. Verification completes within 3-5 business days. Once approved, you begin receiving assignment notifications.
-                Apply to join the Nexus Operations contractor network. The
-                application takes 5 minutes. Verification completes within 3–5
-                business days.
+                The application takes under five minutes. Every application is reviewed within 12 hours.
+                All home service trades are welcome.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
-                  href="/contact"
+                  href="/contractors/apply"
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
                 >
-                  Apply Now
+                  Apply Now — 12-Hour Review
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <a
                   href={`mailto:${CONTACT_INFO.email}`}
                   className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
                 >
-                  Email us with questions
+                  Email with questions
                   <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
