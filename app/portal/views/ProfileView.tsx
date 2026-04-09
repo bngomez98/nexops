@@ -15,7 +15,7 @@ import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 
 export function ProfileView() {
-  const { currentUser, jobs } = usePortal()
+  const { currentUser, jobs, loading, error } = usePortal()
   const [notifyMessages, setNotifyMessages] = useState(true)
   const [notifyStatus, setNotifyStatus] = useState(true)
   const [notifyPayments, setNotifyPayments] = useState(false)
@@ -42,6 +42,12 @@ export function ProfileView() {
 
   return (
     <div className="space-y-5">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading profile…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Profile data unavailable: {error}</div>
+      )}
       <section className="glass-tinted p-6 relative overflow-hidden">
         <div className="absolute -top-20 -right-16 h-56 w-56 rounded-full bg-indigo-500/30 blur-3xl pointer-events-none" />
         <div className="relative flex items-center gap-5">

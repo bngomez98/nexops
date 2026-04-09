@@ -11,8 +11,8 @@ interface AdminViewProps {
 }
 
 export function AdminView({ onOpenJob }: AdminViewProps) {
-  const { jobs, users, currentUser, assignContractor } = usePortal()
-  const stats = dashboardStats(currentUser.id, 'admin')
+  const { jobs, users, currentUser, assignContractor, loading, error } = usePortal()
+  const stats = dashboardStats(jobs, currentUser.id, 'admin')
   const contractors = users.filter((u) => u.role === 'contractor')
   const customers = users.filter((u) => u.role === 'homeowner' || u.role === 'manager')
 
@@ -22,6 +22,12 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
 
   return (
     <div className="space-y-5">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading admin operations data…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Admin data unavailable: {error}</div>
+      )}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70 inline-flex items-center gap-1.5">
@@ -87,7 +93,9 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
                     <button
                       type="button"
                       key={c.id}
-                      onClick={() => assignContractor(j.id, c.id)}
+                      onClick={() => {
+                        void assignContractor(j.id, c.id)
+                      }}
                       className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30 inline-flex items-center gap-1.5"
                     >
                       <Avatar user={c} size={16} />
