@@ -241,7 +241,7 @@ export default function AboutPage() {
                     time: "Monday AM",
                     label: "Invoice issued",
                     color: "bg-secondary border-2 border-border",
-                    detail: "Nexus Operations generates a unified invoice: $280 contractor cost + $98 Emergency coordination markup (35%) = $378 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
+                    detail: "Nexus Operations generates a unified invoice: $280 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
                     outcome: "One invoice. Full documentation. Zero coordination calls.",
                   },
                   {
