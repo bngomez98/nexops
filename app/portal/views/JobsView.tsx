@@ -7,7 +7,7 @@ import {
   STATUS_LABEL,
   type Category,
   type JobStatus,
-} from '../lib/mock-data'
+} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { JobCard } from '../components/JobCard'
 

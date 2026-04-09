@@ -10,7 +10,7 @@ import {
   Star,
 } from 'lucide-react'
 import { useState } from 'react'
-import { formatMoney, formatRelative } from '../lib/mock-data'
+import { formatMoney, formatRelative } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 

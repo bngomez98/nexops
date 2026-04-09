@@ -1,13 +1,11 @@
 'use client'
 
-import { Bell, ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { Bell } from 'lucide-react'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from './Avatar'
 
 export function PortalHeader() {
-  const { currentUser, users, setCurrentUserId } = usePortal()
-  const [open, setOpen] = useState(false)
+  const { currentUser } = usePortal()
 
   const roleLabel: Record<string, string> = {
     admin: 'Operations admin',
@@ -42,52 +40,16 @@ export function PortalHeader() {
           <span className="dot-pulse" />
         </button>
 
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            className="flex items-center gap-2 glass-soft pl-1.5 pr-3 py-1 rounded-full hover:bg-white/10 transition"
-          >
-            <Avatar user={currentUser} size={32} />
-            <div className="text-left hidden sm:block">
-              <div className="text-[11px] font-semibold text-white leading-tight">
-                {currentUser.name}
-              </div>
-              <div className="text-[9.5px] uppercase tracking-wider text-indigo-200/60">
-                {roleLabel[currentUser.role]}
-              </div>
+        <div className="flex items-center gap-2 glass-soft pl-1.5 pr-3 py-1 rounded-full">
+          <Avatar user={currentUser} size={32} />
+          <div className="text-left hidden sm:block">
+            <div className="text-[11px] font-semibold text-white leading-tight">
+              {currentUser.name}
             </div>
-            <ChevronDown size={14} className="text-indigo-200/70" />
-          </button>
-
-          {open && (
-            <div className="absolute right-0 top-12 w-60 glass p-2 z-30 rise">
-              <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60 px-3 py-2">
-                Switch view
-              </div>
-              {users.map((u) => (
-                <button
-                  key={u.id}
-                  type="button"
-                  onClick={() => {
-                    setCurrentUserId(u.id)
-                    setOpen(false)
-                  }}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition ${
-                    u.id === currentUser.id ? 'bg-white/10' : 'hover:bg-white/5'
-                  }`}
-                >
-                  <Avatar user={u} size={32} />
-                  <div className="text-left flex-1 min-w-0">
-                    <div className="text-xs font-semibold text-white truncate">{u.name}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-indigo-200/60">
-                      {roleLabel[u.role]}
-                    </div>
-                  </div>
-                </button>
-              ))}
+            <div className="text-[9.5px] uppercase tracking-wider text-indigo-200/60">
+              {roleLabel[currentUser.role]}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </header>

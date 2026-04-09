@@ -2,7 +2,7 @@
 
 import { Briefcase, FileText, Search, Tag, Users } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { CATEGORY_LABEL, type Category } from '../lib/mock-data'
+import { CATEGORY_LABEL, type Category } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 import { StatusPill } from '../components/StatusPill'
