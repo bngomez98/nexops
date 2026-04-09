@@ -26,7 +26,7 @@ export default function ContactPage() {
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Whether you are a homeowner looking to submit a project request or a contractor
-                interested in joining our network, we'd love to hear from you.
+                interested in joining our network, we&apos;d love to hear from you.
               </p>
             </div>
 

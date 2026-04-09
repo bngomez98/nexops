@@ -262,7 +262,7 @@ export default function ContractorsPage() {
                 Contractor network
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                Who's in the network.
+                Who&apos;s in the network.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Every contractor in the network has been manually verified —

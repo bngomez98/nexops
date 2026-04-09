@@ -116,7 +116,7 @@ export default function BlogPost() {
               </ul>
               <p>
                 When reviewing the record, confirm: the license is active (not expired, suspended, or inactive),
-                the name on the license matches the contractor's legal name or business name, and the license
+                the name on the license matches the contractor&apos;s legal name or business name, and the license
                 type covers the scope of work being performed.
               </p>
 
