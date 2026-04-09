@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
     let body: { role: string; requests?: InsightRequest[] | ProjectScore[]; profile?: ContractorProfile }
     try {
       body = await req.json()
-    } catch {
+    } catch (err) {
+      console.error(err)
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
     }
 

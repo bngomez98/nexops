@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
     let body: { messages: UIMessage[]; role: string; context?: string }
     try {
       body = await req.json()
-    } catch {
+    } catch (err) {
+      console.error(err)
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
     }
 

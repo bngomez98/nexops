@@ -97,6 +97,7 @@ export async function GET(
         finalCost: sr.final_cost ?? null,
         completionDate: sr.completion_date ?? null,
         assignedContractorId: sr.assigned_contractor_id ?? null,
+        ownerId: sr.owner_id,
         contractorName,
         contractorPhone,
         ownerId: sr.owner_id ?? null,
@@ -145,11 +146,11 @@ export async function POST(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    // Only owner or assigned contractor can update
-    if (role === 'homeowner' && sr.owner_id !== user.id) {
+    // Only owner, assigned contractor, or admin can update
+    if (role !== 'admin' && role === 'homeowner' && sr.owner_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
-    if (role === 'contractor' && sr.assigned_contractor_id !== user.id) {
+    if (role !== 'admin' && role === 'contractor' && sr.assigned_contractor_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -157,6 +158,9 @@ export async function POST(
     if (body.status) updates.status = body.status
     if (body.final_cost !== undefined) updates.final_cost = body.final_cost
     if (body.consultation_date !== undefined) updates.consultation_date = body.consultation_date
+    if (role === 'admin' && body.assigned_contractor_id !== undefined) {
+      updates.assigned_contractor_id = body.assigned_contractor_id
+    }
 
     const { data: updated, error: updateError } = await supabase
       .from('service_requests')

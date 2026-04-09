@@ -97,7 +97,8 @@ export default function ContractorJobDetailPage() {
       if (!res.ok) throw new Error('Upload failed')
       setSuccess('Contract uploaded.')
       setContractFile(null)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Contract upload failed.')
     } finally {
       setUploadingContract(false)

@@ -69,7 +69,8 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
       const json = await res.json()
       setData(json)
       setFetched(true)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError(true)
     } finally {
       setLoading(false)

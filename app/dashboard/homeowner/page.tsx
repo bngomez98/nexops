@@ -147,7 +147,8 @@ function HomeownerDashboardInner() {
         if (params.get('submitted') === '1') {
           toast.success('Request submitted! A contractor will be assigned shortly.')
         }
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)

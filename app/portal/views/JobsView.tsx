@@ -3,6 +3,12 @@
 import { Plus, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { STATUS_LABEL, formatCategoryLabel, type PortalJobStatus } from '../lib/portal-utils'
+import {
+  CATEGORY_LABEL,
+  STATUS_LABEL,
+  type Category,
+  type JobStatus,
+} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { JobCard } from '../components/JobCard'
 

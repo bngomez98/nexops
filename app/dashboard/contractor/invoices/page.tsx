@@ -77,7 +77,8 @@ export default function ContractorInvoicesPage() {
       }
       toast.success('Invoice sent to client!')
       setInvoices(prev => prev.map(inv => inv.id === invoiceId ? { ...inv, status: 'sent' } : inv))
-    } catch {
+    } catch (err) {
+      console.error(err)
       toast.error('Something went wrong. Please try again.')
     } finally {
       setSending(null)

@@ -76,7 +76,8 @@ export default function AvailableWorkPage() {
         const { projects } = await res.json()
         setRequests(projects ?? [])
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       router.push('/auth/login')
     } finally {
       setLoading(false)

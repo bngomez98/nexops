@@ -10,6 +10,9 @@ import {
   buildInitials,
   type PortalJob,
 } from '../lib/portal-utils'
+  type Job,
+} from '../lib/portal-types'
+import { usePortal } from '../lib/portal-context'
 import { StatusPill } from './StatusPill'
 import { Avatar } from './Avatar'
 
@@ -66,6 +69,10 @@ export function JobCard({ job, index = 0, onOpen }: JobCardProps) {
           <span className="inline-flex items-center gap-1.5">
             <Avatar user={contractorAvatar} size={18} />
             {contractorName.split(' ')[0]}
+        {(contractor || job.contractorName) && (
+          <span className="inline-flex items-center gap-1.5">
+            {contractor && <Avatar user={contractor} size={18} />}
+            {(contractor?.name ?? job.contractorName ?? '').split(' ')[0]}
           </span>
         )}
         <span className="inline-flex items-center gap-1.5">

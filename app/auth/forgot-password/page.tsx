@@ -29,7 +29,8 @@ export default function ForgotPasswordPage() {
       } else {
         setSent(true)
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)

@@ -21,6 +21,8 @@ import {
   formatRelative,
   type PortalJob,
 } from '../lib/portal-utils'
+  type Job,
+} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from './Avatar'
 import { Sheet } from './Sheet'
@@ -34,6 +36,9 @@ interface JobDetailSheetProps {
 export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
   const { jobs, currentUser, advanceStatus, postMessage } = usePortal()
   const job = useMemo<PortalJob | null>(() => jobs.find((j) => j.id === jobId) ?? null, [jobs, jobId])
+  const { jobs, users, currentUser, advanceStatus, postMessage, assignContractor, refreshJob } =
+    usePortal()
+  const job = useMemo<Job | null>(() => jobs.find((j) => j.id === jobId) ?? null, [jobs, jobId])
 
   const [draft, setDraft] = useState('')
   const [messages, setMessages] = useState<
@@ -41,6 +46,11 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
   >([])
   const [messagesLoading, setMessagesLoading] = useState(false)
   const [isPaying, setIsPaying] = useState(false)
+
+  useEffect(() => {
+    if (!jobId) return
+    void refreshJob(jobId)
+  }, [jobId, refreshJob])
 
   if (!job) {
     return (
@@ -135,6 +145,8 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
     } finally {
       setIsPaying(false)
     }
+    void postMessage(job.id, draft)
+    setDraft('')
   }
 
   return (
@@ -200,7 +212,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             })}
           </div>
           {canAdvance && (currentUser.role === 'admin' || currentUser.role === 'contractor') && (
-            <button type="button" className="btn-ghost mt-4 w-full" onClick={() => advanceStatus(job.id)}>
+            <button type="button" className="btn-ghost mt-4 w-full" onClick={() => void advanceStatus(job.id)}>
               Advance to {STATUS_LABEL[STATUS_FLOW[STATUS_FLOW.indexOf(job.status) + 1]]}
             </button>
           )}
@@ -223,6 +235,27 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
               <div className="min-w-0">
                 <div className="text-[10px] uppercase tracking-wider text-indigo-200/50">Contractor</div>
                 <div className="text-sm font-semibold text-white truncate">{job.contractorName}</div>
+                <div className="text-sm font-semibold text-white truncate">{contractor.name}</div>
+                <div className="text-[11px] text-indigo-200/60 inline-flex items-center gap-1">
+                  <Star size={11} className="fill-amber-300 text-amber-300" />
+                  {contractor.rating?.toFixed(1)} · {contractor.jobsCompleted} jobs
+                </div>
+              </div>
+            </div>
+          ) : canAssign ? (
+            <div className="glass-soft p-4">
+              <div className="text-[10px] uppercase tracking-wider text-indigo-200/50 mb-2">Assign contractor</div>
+              <div className="flex flex-wrap gap-1.5">
+                {availableContractors.map((c) => (
+                  <button
+                    type="button"
+                    key={c.id}
+                    onClick={() => void assignContractor(job.id, c.id)}
+                    className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30"
+                  >
+                    {c.name.split(' ')[0]}
+                  </button>
+                ))}
               </div>
             </div>
           ) : (

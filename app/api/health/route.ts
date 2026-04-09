@@ -17,7 +17,8 @@ export async function GET() {
       const supabase = await createClient()
       const { error } = await supabase.from('profiles').select('id').limit(1)
       health.database = error ? 'error' : 'connected'
-    } catch {
+    } catch (err) {
+      console.error(err)
       health.database = 'unavailable'
     }
   } else {

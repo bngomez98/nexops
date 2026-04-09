@@ -73,7 +73,8 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
         setClientRequests(parsed.clientRequests)
         setContractorJobs(parsed.contractorJobs)
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       localStorage.removeItem(REQUESTS_STORAGE_KEY)
     }
   }, [])

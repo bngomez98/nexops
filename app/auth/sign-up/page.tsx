@@ -102,7 +102,8 @@ function SignUpInner() {
         : role === "property-manager" ? "/onboarding/property-manager"
         : "/onboarding/homeowner"
       window.location.href = dest
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)

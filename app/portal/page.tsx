@@ -16,12 +16,20 @@ import { SearchView } from './views/SearchView'
 
 export default function PortalPage() {
   const { currentUser, loading, error } = usePortal()
+  const { currentUser, loading } = usePortal()
   const [tab, setTab] = useState<Tab>('dashboard')
   const [submitOpen, setSubmitOpen] = useState(false)
   const [openJobId, setOpenJobId] = useState<string | null>(null)
 
   useEffect(() => {
     if (currentUser && tab === 'admin' && currentUser.role !== 'admin') {
+    if (!loading && currentUser.role === 'contractor' && tab === 'admin') {
+      setTab('dashboard')
+    }
+  }, [currentUser.role, loading, tab])
+
+  useEffect(() => {
+    if (tab === 'admin' && currentUser.role !== 'admin') {
       setTab('dashboard')
     }
   }, [currentUser, tab])

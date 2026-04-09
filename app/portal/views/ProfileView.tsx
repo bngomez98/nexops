@@ -8,6 +8,8 @@ import {
   Shield,
 } from 'lucide-react'
 import { formatMoney, formatRelative } from '../lib/portal-utils'
+import { useState } from 'react'
+import { formatMoney, formatRelative } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 
