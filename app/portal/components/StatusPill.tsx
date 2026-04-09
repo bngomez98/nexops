@@ -1,4 +1,4 @@
-import { STATUS_LABEL, type JobStatus } from '../lib/mock-data'
+import { STATUS_LABEL, type JobStatus } from '../lib/portal-types'
 
 const ICON: Record<JobStatus, string> = {
   pending: '◐',

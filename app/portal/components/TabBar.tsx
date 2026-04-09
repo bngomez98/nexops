@@ -1,7 +1,7 @@
 'use client'
 
 import { Briefcase, Layout, Search, Shield, User } from 'lucide-react'
-import type { Role } from '../lib/mock-data'
+import type { Role } from '../lib/portal-types'
 
 export type Tab = 'dashboard' | 'jobs' | 'search' | 'profile' | 'admin'
 
