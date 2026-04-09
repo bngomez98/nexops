@@ -4,6 +4,7 @@ import { projectRequestSchema } from '@/lib/validators'
 import { buildPipelineSnapshot, serializePipelineSnapshot } from '@/lib/request-pipeline'
 import { createRequestId, internalError } from '@/lib/api-error'
 import { normalizeCategorySlug } from '@/lib/category'
+import { isAutomationEnabled } from '@/lib/env'
 
 // Custom categories are stored as URL-safe slugs so they can flow through the
 // same matching, filtering, and analytics paths as predefined categories.
@@ -24,6 +25,7 @@ function toConsultationDate(value: string) {
 
 export async function POST(request: NextRequest) {
   try {
+    const automationEnabled = isAutomationEnabled()
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -89,8 +91,8 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
     const validated = parsed.data
     const normalizedCategory = normalizeCategory(validated.category || 'open-request', validated.customCategory)
     const pipeline = buildPipelineSnapshot({
-      mode: validated.pipelineMode,
-      communityVisible: validated.communityVisible,
+      mode: automationEnabled ? validated.pipelineMode : 'standard',
+      communityVisible: automationEnabled ? validated.communityVisible : false,
       accessRequirements: validated.accessRequirements,
     })
 
@@ -115,15 +117,17 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
     if (insertError) throw insertError
 
     // Attempt auto-match in background (non-blocking)
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
-      void fetch(`${baseUrl}/api/automation/match-contractor`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Cookie: request.headers.get('cookie') ?? '' },
-        body: JSON.stringify({ projectId: sr.id }),
-      })
-    } catch {
-      // Match failure is non-fatal — job will appear on public board
+    if (automationEnabled) {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
+        void fetch(`${baseUrl}/api/automation/match-contractor`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Cookie: request.headers.get('cookie') ?? '' },
+          body: JSON.stringify({ projectId: sr.id }),
+        })
+      } catch {
+        // Match failure is non-fatal — job will appear on public board
+      }
     }
 
     return NextResponse.json(
