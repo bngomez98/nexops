@@ -35,16 +35,6 @@ const nav = [
 
 const copy = {
   homeowner: {
-    badge: 'For Homeowners & Landlords',
-    heading: <>Property maintenance, handled end to end.</>,
-    subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
-    primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
-    secondaryCta: { href: '#process', label: 'See how it works' },
-    badges: [
-      { icon: Shield, text: 'Licensed & insured contractors' },
-      { icon: Zap, text: 'Assignment within 4 hours' },
-      { icon: CheckCircle2, text: 'Every request reviewed' },
-    ],
     badge: 'Homeowners & Property Managers',
     title: 'Property maintenance, handled end to end.',
     subtitle:
@@ -56,9 +46,6 @@ const copy = {
       { icon: CalendarCheck2, text: 'Contractors are matched based on availability and trade fit.' },
       { icon: ShieldCheck, text: 'Every contractor in our network is verified and insured.' },
       { icon: CreditCard, text: 'Every completed job includes clean invoices and full records.' },
-      { icon: CalendarCheck2, text: 'We schedule jobs around contractor availability.' },
-      { icon: ShieldCheck, text: 'Every contractor is verified and carries insurance.' },
-      { icon: CreditCard, text: 'You receive clean invoices and complete records.' },
     ],
   },
   contractor: {
@@ -73,9 +60,6 @@ const copy = {
       { icon: Eye, text: 'Review the scope and photos before accepting any job.' },
       { icon: Clock3, text: 'Jobs are routed quickly so you spend less time waiting.' },
       { icon: CreditCard, text: 'Payments are tracked and processed through one workflow.' },
-      { icon: Eye, text: 'You see scope and photos before you accept a job.' },
-      { icon: Clock3, text: 'Jobs move through faster assignment cycles.' },
-      { icon: CreditCard, text: 'Payments are processed through a streamlined flow.' },
     ],
   },
 } as const
@@ -94,9 +78,6 @@ const homeownerFeatures = [
 ]
 
 const pricingTiers = [
-  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Standard maintenance work with flexible scheduling.', featured: false },
-  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Time-sensitive repairs that require rapid contractor response.', featured: true },
-  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Around-the-clock emergency response for critical property issues.', featured: false },
   { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
   { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
   { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
