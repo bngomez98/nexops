@@ -8,9 +8,9 @@ import { AIAssistant } from '@/components/ai-assistant'
 import { AIInsightsCard } from '@/components/ai-insights-card'
 import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
-  ArrowRight, AlertCircle, Loader2, TrendingUp,
+  ArrowRight, Loader2,
   ChevronRight, Calendar, DollarSign, MapPin,
-  RefreshCw, CreditCard, Bell, Activity, ReceiptText,
+  RefreshCw, CreditCard, Activity, Crown, Sparkles, Zap, TrendingUp,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -31,6 +31,7 @@ interface UserData {
   email: string
   name: string
   role: string
+  avatarUrl?: string | null
   subscriptionTier?: string
   subscriptionStatus?: string
 }
@@ -193,20 +194,28 @@ function HomeownerDashboardInner() {
   const totalSpend = completed.reduce((s, r) => s + (r.budget ?? 0), 0)
 
   const stats = [
-    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'text-muted-foreground', bg: 'bg-muted' },
-    { label: 'In Progress', value: active.length,     icon: Wrench,       color: 'text-muted-foreground', bg: 'bg-muted' },
-    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'text-primary',          bg: 'bg-primary/10' },
-    { label: 'Total Spend', value: `$${totalSpend.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'text-amber-600 dark:text-amber-400',   bg: 'bg-amber-500/10',   ring: 'ring-amber-500/20' },
+    { label: 'In Progress', value: active.length,     icon: Wrench,       color: 'text-blue-600 dark:text-blue-400',     bg: 'bg-blue-500/10',    ring: 'ring-blue-500/20' },
+    { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10', ring: 'ring-emerald-500/20' },
+    { label: 'Total Spend', value: `$${totalSpend.toLocaleString()}`, icon: DollarSign, color: 'text-primary',              bg: 'bg-primary/10',     ring: 'ring-primary/20' },
   ]
+
+  const tier = user.subscriptionTier ?? 'homeowner_basic'
+  const subActive = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
+  const isPro = subActive && (tier === 'homeowner_pro_monthly' || tier === 'homeowner_pro_annual' || tier === 'homeowner_pro')
+  const planLabel = isPro
+    ? (tier === 'homeowner_pro_annual' ? 'Pro Annual · $59/mo' : 'Pro Monthly · $79/mo')
+    : 'Starter · Free'
+  const requestsRemaining = isPro ? null : Math.max(0, 3 - requests.length)
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} />
+      <DashboardNav userName={user.name} role="homeowner" onLogout={handleLogout} avatarUrl={user.avatarUrl} />
 
       <main id="main-content" className="md:ml-[240px] p-5 md:p-7 space-y-6">
         {/* Welcome banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-primary p-6 md:p-8 text-primary-foreground">
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/70 p-6 md:p-8 text-primary-foreground shadow-xl shadow-primary/20">
+          <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
               <pattern id="g" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
                 <path d="M0 40L40 0M-10 10L10-10M30 50L50 30" stroke="white" strokeWidth="1" fill="none"/>
@@ -214,34 +223,38 @@ function HomeownerDashboardInner() {
               <rect width="100%" height="100%" fill="url(#g)"/>
             </svg>
           </div>
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-32 -left-10 w-60 h-60 bg-white/[0.04] rounded-full blur-3xl pointer-events-none" />
           <div className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-5">
-            <div>
-              <p className="text-primary-foreground/60 text-[11px] font-bold uppercase tracking-widest mb-1.5">
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-1.5 text-primary-foreground/80 text-[10px] font-bold uppercase tracking-[0.16em] bg-white/10 border border-white/15 px-2.5 py-1 rounded-full mb-3">
+                <Sparkles className="w-3 h-3" />
                 Homeowner Portal
-              </p>
+              </div>
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
                 {requests.length === 0
-                  ? `Welcome, ${user.name.split(' ')[0]}`
-                  : `${open.length + active.length > 0 ? `${open.length + active.length} active` : 'No active'} requests`}
+                  ? `Welcome, ${user.name.split(' ')[0]}.`
+                  : `Welcome back, ${user.name.split(' ')[0]}`}
               </h1>
-              <p className="text-primary-foreground/70 text-sm mt-1.5">
+              <p className="text-primary-foreground/75 text-[13.5px] mt-2 leading-relaxed">
                 {requests.length === 0
-                  ? 'Submit your first service request to get started.'
-                  : `${completed.length} completed · $${totalSpend.toLocaleString()} total tracked`}
+                  ? 'Submit your first service request — we\'ll match you with a verified contractor.'
+                  : `${open.length + active.length} active · ${completed.length} completed · $${totalSpend.toLocaleString()} tracked spend`}
               </p>
             </div>
             <div className="flex items-center gap-2.5 flex-shrink-0">
               <button
                 onClick={handleRefresh}
                 disabled={refreshing}
-                className="p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+                className="p-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors backdrop-blur-sm"
                 title={`Last updated ${lastRefresh.toLocaleTimeString()} · Auto-refreshes every 30s`}
+                aria-label="Refresh"
               >
                 <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
               </button>
               <Link
                 href="/dashboard/homeowner/new-request"
-                className="inline-flex items-center gap-2 bg-white text-primary font-bold text-[13px] px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 bg-white text-primary font-bold text-[13px] px-5 py-2.5 rounded-xl hover:bg-white/90 transition-all shadow-lg shadow-black/10"
               >
                 <Plus className="w-4 h-4" />
                 New Request
@@ -250,19 +263,95 @@ function HomeownerDashboardInner() {
           </div>
         </div>
 
+        {/* Subscription Card — prominent */}
+        <div className={`relative overflow-hidden rounded-2xl border ${
+          isPro
+            ? 'border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent'
+            : 'border-primary/25 bg-gradient-to-br from-primary/8 via-card to-card'
+        } p-5 md:p-6`}>
+          <div className="absolute -top-16 -right-16 w-52 h-52 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
+          <div className="relative flex flex-col md:flex-row md:items-center gap-5 justify-between">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
+                isPro
+                  ? 'bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/30'
+                  : 'bg-primary/10 text-primary ring-1 ring-primary/20'
+              }`}>
+                {isPro ? <Crown className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="font-bold text-foreground text-[15px]">{planLabel}</p>
+                  {isPro && (
+                    <span className="text-[9.5px] font-bold uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                      Active
+                    </span>
+                  )}
+                </div>
+                <p className="text-[12.5px] text-muted-foreground mt-0.5 leading-relaxed">
+                  {isPro
+                    ? 'Unlimited requests, priority matching, and insurance-ready reports.'
+                    : requestsRemaining != null && requestsRemaining > 0
+                    ? `${requestsRemaining} of 3 free requests remaining this year. Upgrade for unlimited.`
+                    : 'Free tier limit reached. Upgrade to Pro to keep submitting requests.'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {!isPro && (
+                <Link
+                  href="/dashboard/homeowner/billing"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-bold text-[12.5px] px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
+                >
+                  <Zap className="w-3.5 h-3.5" />
+                  Upgrade to Pro
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              )}
+              <Link
+                href="/dashboard/homeowner/billing"
+                className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary border border-primary/30 bg-background hover:bg-primary/5 transition-colors px-3.5 py-2.5 rounded-xl"
+              >
+                {isPro ? 'Manage' : 'Compare plans'}
+              </Link>
+            </div>
+          </div>
+
+          {/* Benefits strip when not Pro */}
+          {!isPro && (
+            <div className="relative mt-5 pt-5 border-t border-primary/15 grid grid-cols-3 gap-3 text-center">
+              {[
+                { icon: Zap,        label: 'Unlimited requests' },
+                { icon: TrendingUp, label: 'Priority matching' },
+                { icon: CheckCircle2, label: 'Insurance reports' },
+              ].map(b => {
+                const Icon = b.icon
+                return (
+                  <div key={b.label} className="flex flex-col items-center gap-1.5">
+                    <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Icon className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                    <p className="text-[11px] font-medium text-foreground/80">{b.label}</p>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
         {/* Stats grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map(s => {
             const Icon = s.icon
             return (
-              <div key={s.label} className="bg-card border border-border rounded-xl p-4 md:p-5">
+              <div key={s.label} className="group relative bg-card border border-border rounded-xl p-4 md:p-5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
-                  <div className={`w-8 h-8 rounded-lg ${s.bg} flex items-center justify-center`}>
+                  <div className={`w-9 h-9 rounded-xl ${s.bg} ring-1 ${s.ring} flex items-center justify-center group-hover:scale-105 transition-transform`}>
                     <Icon className={`w-4 h-4 ${s.color}`} />
                   </div>
                 </div>
-                <p className="text-2xl font-bold text-foreground">{s.value}</p>
+                <p className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">{s.value}</p>
               </div>
             )
           })}
@@ -388,34 +477,34 @@ function HomeownerDashboardInner() {
             {
               href: '/dashboard/homeowner/new-request',
               icon: Plus,
-              iconBg: 'bg-muted',
-              iconColor: 'text-foreground',
+              iconBg: 'bg-gradient-to-br from-primary/15 to-primary/5',
+              iconColor: 'text-primary',
               title: 'New Service Request',
               sub: 'Get matched with a verified contractor',
             },
             {
               href: '/dashboard/homeowner/billing',
               icon: CreditCard,
-              iconBg: 'bg-muted',
-              iconColor: 'text-foreground',
+              iconBg: 'bg-gradient-to-br from-emerald-500/15 to-emerald-500/5',
+              iconColor: 'text-emerald-600 dark:text-emerald-400',
               title: 'Billing & Subscription',
-              sub: `Current plan: ${user.subscriptionTier ?? 'Starter'}`,
+              sub: isPro ? `${planLabel} · Active` : 'Starter plan · Upgrade to Pro',
             },
             {
               href: '/dashboard/homeowner/settings',
               icon: Activity,
-              iconBg: 'bg-muted',
-              iconColor: 'text-foreground',
+              iconBg: 'bg-gradient-to-br from-blue-500/15 to-blue-500/5',
+              iconColor: 'text-blue-600 dark:text-blue-400',
               title: 'Account Settings',
-              sub: 'Update profile, notifications & preferences',
+              sub: 'Profile photo, notifications & security',
             },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
             <Link
               key={href}
               href={href}
-              className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+              className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/30 hover:bg-primary/[0.03] hover:shadow-lg hover:shadow-primary/5 transition-all"
             >
-              <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
+              <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
                 <Icon className={`w-5 h-5 ${iconColor}`} />
               </div>
               <div className="flex-1 min-w-0">

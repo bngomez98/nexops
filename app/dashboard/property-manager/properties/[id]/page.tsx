@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Building2, ChevronLeft, ClipboardList, MapPin, Clock, ChevronRight } from 'lucide-react'
+import { Loader2, Building2, ChevronLeft, ClipboardList } from 'lucide-react'
 
 interface Property {
   id: string
@@ -35,7 +35,7 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 export default function PMPropertyDetailPage() {
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [property, setProperty] = useState<Property | null>(null)
   const [jobs, setJobs]   = useState<Job[]>([])
   const [loading, setLoading] = useState(true)

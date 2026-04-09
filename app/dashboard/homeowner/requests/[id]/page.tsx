@@ -7,7 +7,7 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, MapPin, Zap, Clock, ChevronLeft,
-  User, Phone, CheckCircle2, FileText, CreditCard,
+  Phone, CheckCircle2, CreditCard,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -42,10 +42,10 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 export default function HomeownerRequestDetailPage() {
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [job, setJob]     = useState<Job | null>(null)
   const [loading, setLoading] = useState(true)
-  const [invoice, setInvoice] = useState<any>(null)
+  const [invoice, setInvoice] = useState<Record<string, unknown> | null>(null)
 
   useEffect(() => {
     async function load() {

@@ -24,11 +24,11 @@ const SERVICE_CATEGORIES = [
 function PMNewRequestInner() {
   const router  = useRouter()
   const params  = useSearchParams()
-  const [user, setUser]   = useState<any>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving]   = useState(false)
   const [error, setError]     = useState<string | null>(null)
-  const [properties, setProperties] = useState<any[]>([])
+  const [properties, setProperties] = useState<Record<string, unknown>[]>([])
 
   const [form, setForm] = useState({
     propertyId: params.get('property_id') ?? '',

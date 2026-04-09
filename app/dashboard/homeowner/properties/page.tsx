@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Home, Plus, Trash2, MapPin, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Loader2, Home, Plus, Trash2, CheckCircle2, AlertCircle } from 'lucide-react'
 
 interface Property {
   id: string
@@ -20,7 +20,7 @@ interface Property {
 
 export default function HomeownerPropertiesPage() {
   const router = useRouter()
-  const [user, setUser]             = useState<any>(null)
+  const [user, setUser]             = useState<{ id: string; name: string; role: string } | null>(null)
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading]       = useState(true)
   const [adding, setAdding]         = useState(false)

@@ -1,103 +1,42 @@
 'use client'
-import { useState, useEffect } from 'react'
+
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  Menu, X, ArrowRight, ExternalLink,
-  Camera, CalendarDays, MessageSquare,
-  Eye, Zap, CreditCard,
-  CheckCircle2, Shield, MapPin, Phone, Mail, ChevronRight,
-  Star, Clock, FileText,
+  ArrowRight,
+  CalendarCheck2,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Clock,
+  Clock3,
+  CreditCard,
+  Eye,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Zap,
 } from 'lucide-react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
-const navLinks = [
-  { href: '#homeowners',   label: 'Homeowners' },
-  { href: '#contractors',  label: 'Contractors' },
-  { href: '#process',      label: 'How It Works' },
-  { href: '#pricing',      label: 'Pricing' },
-  { href: '/contact',      label: 'Contact' },
+type Audience = 'homeowner' | 'contractor'
+
+const nav = [
+  { href: '#home', label: 'Home' },
+  { href: '#solutions', label: 'Solutions' },
+  { href: '#process', label: 'Process' },
+  { href: '#pricing', label: 'Pricing' },
+  { href: '/contact', label: 'Contact' },
 ]
 
-const homeownerFeatures = [
-  {
-    icon: Camera,
-    title: 'Upload photos & set a budget cap',
-    desc: 'Show contractors exactly what you need — no calls, no guesswork.',
-  },
-  {
-    icon: CalendarDays,
-    title: 'Choose your availability',
-    desc: 'Pick consultation windows that fit your schedule.',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Track everything in one place',
-    desc: 'Status updates, invoices, and project history — always accessible.',
-  },
-]
-
-const contractorFeatures = [
-  {
-    icon: Eye,
-    title: 'Full project visibility before you commit',
-    desc: 'Photos, scope, budget, and location are all provided upfront so you arrive prepared.',
-  },
-  {
-    icon: Zap,
-    title: 'Matched by trade and location',
-    desc: 'Accept requests that fit your specialty and schedule at your own pace.',
-  },
-  {
-    icon: CreditCard,
-    title: 'Faster, unified payouts',
-    desc: 'Invoicing, approval, and payment through a single workflow.',
-  },
-]
-
-const pricingTiers = [
-  {
-    name: 'Routine',
-    markup: '25%',
-    sla: 'Assigned within 24 hrs · On-site within 3–5 days',
-    desc: 'Scheduled repairs, cosmetic fixes, and planned replacements that are not time-sensitive.',
-    featured: false,
-  },
-  {
-    name: 'Urgent',
-    markup: '30%',
-    sla: 'Assigned within 4 hrs · On-site next business day',
-    desc: 'Issues requiring prompt attention — non-emergency plumbing, electrical affecting livability, HVAC in moderate weather.',
-    featured: true,
-  },
-  {
-    name: 'Emergency',
-    markup: '35%',
-    sla: 'Assigned within 1 hr · On-site within 4 hrs',
-    desc: 'Critical failures — burst pipes, gas leaks, electrical hazards, HVAC failure in extreme weather.',
-    featured: false,
-  },
-]
-
-const steps = [
-  { n: '01', title: 'Submit your request',    desc: 'Describe the work, upload photos, and set a budget. Under three minutes.' },
-  { n: '02', title: 'We assign a contractor', desc: 'Nexus reviews your request and assigns one verified contractor matched by trade and location.' },
-  { n: '03', title: 'Work gets done',          desc: 'Your contractor contacts you, schedules the visit, and completes the project.' },
-  { n: '04', title: 'Complete record kept',    desc: 'Costs, photos, timelines, and follow-up details are saved automatically.' },
-]
-
-const statsData = [
-  { value: '< 4 hr', label: 'Avg. assignment time' },
-  { value: '1',      label: 'Contractor per request' },
-  { value: '100%',   label: 'Verified network' },
-  { value: 'No',     label: 'Hidden fees' },
-]
-
-const heroContent = {
+const copy = {
   homeowner: {
     badge: 'For Homeowners & Landlords',
-    heading: <>Maintenance Coordination<br />for Homeowners in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Topeka,&nbsp;KS</span></>,
-    subheading: 'Submit a service request with photos and a budget, and Nexus assigns a verified contractor, coordinates scheduling, and keeps a documented record of every project.',
     heading: <>Property maintenance, handled end to end.</>,
     subheading: 'Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.',
     primaryCta: { href: '/auth/sign-up', label: 'Submit a request' },
@@ -107,271 +46,176 @@ const heroContent = {
       { icon: Zap, text: 'Assignment within 4 hours' },
       { icon: CheckCircle2, text: 'Every request reviewed' },
     ],
+    badge: 'Homeowners & Property Managers',
+    title: 'Property maintenance, handled end to end.',
+    subtitle:
+      'Submit one request with photos and budget. Nexus assigns qualified contractors, tracks progress, and keeps every update in one timeline.',
     image: '/business-handshake-professional-meeting.jpg',
-    floatingCard: { icon: Clock, title: '3 min avg. submit time', subtitle: 'Photos, scope, budget in one form' },
+    ctaPrimary: { href: '/auth/sign-up', label: 'Submit request' },
+    ctaSecondary: { href: '/dashboard/homeowner', label: 'Homeowner dashboard' },
+    bullets: [
+      { icon: CalendarCheck2, text: 'Contractors are matched based on availability and trade fit.' },
+      { icon: ShieldCheck, text: 'Every contractor in our network is verified and insured.' },
+      { icon: CreditCard, text: 'Every completed job includes clean invoices and full records.' },
+      { icon: CalendarCheck2, text: 'We schedule jobs around contractor availability.' },
+      { icon: ShieldCheck, text: 'Every contractor is verified and carries insurance.' },
+      { icon: CreditCard, text: 'You receive clean invoices and complete records.' },
+    ],
   },
   contractor: {
-    badge: 'For Contractors',
-    heading: <>Licensed Contractor<br />Network in&nbsp;<span style={{ color: '#3d7a4f', fontStyle: 'italic', fontFamily: "'Instrument Serif', Georgia, serif", fontWeight: 400 }}>Shawnee&nbsp;County</span></>,
-    subheading: 'Receive pre-qualified service requests with photos, scope, and budget details provided before you commit. Nexus handles client billing and pays contractors directly within 30 days.',
-    primaryCta: { href: '/auth/sign-up?role=contractor', label: 'Join the network' },
-    secondaryCta: { href: '#pricing', label: 'View pricing' },
-    badges: [
-      { icon: Eye, text: 'Full scope provided upfront' },
-      { icon: CreditCard, text: 'Direct contractor payment' },
-      { icon: CheckCircle2, text: 'Exclusive assignment per job' },
+    badge: 'Contractor Network',
+    title: 'Claim better-fit jobs with full context upfront.',
+    subtitle:
+      'See scope, budget, photos, and location before you accept. Use one workspace for dispatch, updates, and payout visibility.',
+    image: '/photo-contractor.jpg',
+    ctaPrimary: { href: '/auth/sign-up?role=contractor', label: 'Join network' },
+    ctaSecondary: { href: '/dashboard/contractor', label: 'Contractor dashboard' },
+    bullets: [
+      { icon: Eye, text: 'Review the scope and photos before accepting any job.' },
+      { icon: Clock3, text: 'Jobs are routed quickly so you spend less time waiting.' },
+      { icon: CreditCard, text: 'Payments are tracked and processed through one workflow.' },
+      { icon: Eye, text: 'You see scope and photos before you accept a job.' },
+      { icon: Clock3, text: 'Jobs move through faster assignment cycles.' },
+      { icon: CreditCard, text: 'Payments are processed through a streamlined flow.' },
     ],
-    image: '/business-analytics-data-visualization.jpg',
-    floatingCard: { icon: FileText, title: 'Documented requests', subtitle: 'Budget & scope visible upfront' },
   },
 } as const
 
-export default function HomePage() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+const process = [
+  ['01', 'Submit request', 'Describe the issue, upload photos, and set a budget range.'],
+  ['01', 'Submit request', 'Describe the issue, upload photos, and set your budget range.'],
+  ['02', 'Dispatch review', 'Nexus routes the request to one matched contractor.'],
+  ['03', 'Track and close', 'The timeline, messages, and invoice all stay synchronized.'],
+] as const
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+const pricing = [
+  ['Routine', '25%', 'Assigned < 24h · On-site in 3–5 days'],
+  ['Urgent', '30%', 'Assigned < 4h · Next business day on-site'],
+  ['Emergency', '35%', 'Assigned < 1h · On-site within 4 hours'],
+] as const
+
+const faqs = [
+  ['How fast are urgent requests assigned?', 'Most urgent requests are assigned within 4 hours.'],
+  ['Is everything visible in one place?', 'Yes — requests, messages, documents, and invoices stay in one dashboard timeline.'],
+  ['How are contractors vetted?', 'Trade fit, insurance, and service reliability are verified before approval.'],
+] as const
+
+const statsData = [
+  { value: '20+', label: 'Verified contractors' },
+  { value: '< 4h', label: 'Urgent assignment' },
+  { value: '100%', label: 'Documented jobs' },
+  { value: '30d', label: 'Payment guarantee' },
+]
+
+const homeownerFeatures = [
+  { icon: Shield, title: 'All contractors are licensed and insured.', desc: 'Every contractor in the network carries verified insurance and trade licensing.' },
+  { icon: Zap, title: 'Contractors are assigned within four hours.', desc: 'Urgent requests are routed to an available contractor in under four hours.' },
+  { icon: CheckCircle2, title: 'Every request is reviewed before dispatch.', desc: 'Nexus staff review each request before dispatch to ensure accuracy.' },
+]
+
+const pricingTiers = [
+  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Time-sensitive repairs that require rapid contractor response.', featured: true },
+  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Around-the-clock emergency response for critical property issues.', featured: false },
+  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
+  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
+]
+
+export default function HomePage() {
+  const [audience, setAudience] = useState<Audience>('homeowner')
+  const [faqIndex, setFaqIndex] = useState<number | null>(0)
+  const hero = useMemo(() => copy[audience], [audience])
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f3ef', color: '#111111' }}>
-
-      {/* ── Announcement bar ── */}
-      <div style={{ background: '#111', color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 500, textAlign: 'center', padding: '8px 24px', letterSpacing: '0.01em' }}>
-        Now serving Topeka, KS and surrounding Shawnee County.&nbsp;
-        <a href={CONTACT_INFO.phoneHref} style={{ color: '#6ee7a0', textDecoration: 'none' }}>{CONTACT_INFO.phoneDisplay}</a>
+    <div id="home" className="min-h-screen bg-[#f5f3ef] text-slate-900">
+      <div className="border-b border-slate-800 bg-slate-900 px-4 py-2 text-center text-xs text-white/80">
+        Serving Topeka & Shawnee County · <a className="text-emerald-300" href={CONTACT_INFO.phoneHref}>{CONTACT_INFO.phoneDisplay}</a>
       </div>
 
-      {/* ── Header ── */}
-      <header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 50,
-          background: scrolled ? 'rgba(245,243,239,0.97)' : '#f5f3ef',
-          backdropFilter: scrolled ? 'blur(16px)' : undefined,
-          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(0,0,0,0.06)',
-          transition: 'background 0.3s, border-color 0.3s, box-shadow 0.3s',
-          boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.06)' : 'none',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1280,
-            margin: '0 auto',
-            padding: '0 28px',
-            height: 64,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-          }}
-        >
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, textDecoration: 'none' }}>
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={130}
-              height={44}
-              style={{ height: 26, width: 'auto' }}
-              priority
-            />
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-[#f5f3ef]/95 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+          <Link href="/">
+            <Image src="/nexus-logo.png" alt="Nexus Operations" width={130} height={40} className="h-7 w-auto" priority />
           </Link>
 
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }} className="hidden md:flex">
-            {navLinks.map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                style={{
-                  padding: '7px 15px',
-                  borderRadius: 9999,
-                  fontSize: 13.5,
-                  fontWeight: 500,
-                  color: '#555',
-                  transition: 'color 0.15s, background 0.15s',
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => { (e.target as HTMLElement).style.color = '#111'; (e.target as HTMLElement).style.background = 'rgba(0,0,0,0.05)' }}
-                onMouseLeave={e => { (e.target as HTMLElement).style.color = '#555'; (e.target as HTMLElement).style.background = 'transparent' }}
-              >
-                {label}
+          <nav className="hidden items-center gap-6 md:flex">
+            {nav.map((item) => (
+              <a key={item.href} href={item.href} className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                {item.label}
               </a>
             ))}
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Link
-              href="/auth/login"
-              className="hidden md:block"
-              style={{ fontSize: 13.5, fontWeight: 500, color: '#666', textDecoration: 'none', transition: 'color 0.15s' }}
-              onMouseEnter={e => ((e.target as HTMLElement).style.color = '#111')}
-              onMouseLeave={e => ((e.target as HTMLElement).style.color = '#666')}
-            >
-              Sign in
+          <div className="flex items-center gap-3">
+            <Link href="/auth/login" className="hidden text-sm font-medium text-slate-600 md:inline">Sign in</Link>
+            <Link href="/auth/sign-up" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+              Get started <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/auth/sign-up"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '9px 20px',
-                borderRadius: 9999,
-                background: '#111',
-                fontSize: 13.5,
-                fontWeight: 600,
-                color: '#fff',
-                textDecoration: 'none',
-                transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => { (e.currentTarget).style.opacity = '0.85' }}
-              onMouseLeave={e => { (e.currentTarget).style.opacity = '1' }}
-            >
-              Get started <ArrowRight size={14} />
-            </Link>
-            <button
-              className="md:hidden"
-              onClick={() => setMobileOpen(v => !v)}
-              aria-label="Toggle menu"
-              style={{ padding: 6, color: '#555', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
           </div>
         </div>
-        {mobileOpen && (
-          <div style={{ background: '#f5f3ef', borderTop: '1px solid rgba(0,0,0,0.08)', padding: '12px 28px 24px' }} className="md:hidden">
-            {navLinks.map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                style={{ display: 'block', padding: '12px 8px', fontSize: 15, fontWeight: 500, color: '#444', textDecoration: 'none', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
-              >
-                {label}
-              </a>
-            ))}
-            <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-              <Link href="/auth/login" style={{ flex: 1, textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 500, color: '#555', textDecoration: 'none', border: '1px solid rgba(0,0,0,0.12)', borderRadius: 10 }} onClick={() => setMobileOpen(false)}>Sign in</Link>
-              <Link href="/auth/sign-up" style={{ flex: 1, textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#fff', textDecoration: 'none', background: '#111', borderRadius: 10 }} onClick={() => setMobileOpen(false)}>Get started</Link>
-            </div>
-          </div>
-        )}
       </header>
 
-      {/* ── Hero ── */}
-      <section style={{ position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <Image
-            src="/business-handshake-professional-meeting.jpg"
-            alt="Nexus Operations coordinating a homeowner project with a vetted contractor."
-            fill
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
-          />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(245,243,239,0.98) 0%, rgba(245,243,239,0.96) 44%, rgba(245,243,239,0.72) 68%, rgba(245,243,239,0.18) 100%)' }} />
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', padding: '80px 28px 96px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(61,122,79,0.08)', border: '1px solid rgba(61,122,79,0.2)', borderRadius: 9999, padding: '5px 13px', marginBottom: 20 }}>
-            <MapPin size={12} style={{ color: '#3d7a4f' }} />
-            <span style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: '0.04em', color: '#3d7a4f' }}>{CONTACT_INFO.serviceArea}</span>
-          </div>
-
-          <div style={{ maxWidth: 620 }}>
-            <h1
-              style={{
-                fontSize: 'clamp(36px, 5vw, 64px)',
-                fontWeight: 800,
-                lineHeight: 1.08,
-                letterSpacing: '-0.03em',
-                marginBottom: 20,
-                color: '#0d0d0d',
-              }}
-            >
-              Property maintenance,{' '}
-              <span style={{ color: '#3d7a4f', fontStyle: 'italic' }}>end to end.</span>
-            </h1>
-
-            <p style={{ fontSize: 16.5, lineHeight: 1.72, color: '#4a4a4a', maxWidth: 500, marginBottom: 32 }}>
-              Describe the work, upload photos, and set a budget cap. Nexus assigns a verified contractor, handles scheduling, and keeps a complete project record — so you never have to chase anyone.
+      <main className="mx-auto max-w-7xl px-4">
+        <section className="grid gap-8 pb-14 pt-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-emerald-700">
+              <Sparkles className="h-3.5 w-3.5" /> {hero.badge}
             </p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 36 }}>
-              <Link
-                href="/auth/sign-up"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '12px 26px', borderRadius: 9999,
-                  background: '#111', color: '#fff',
-                  fontSize: 14, fontWeight: 700, textDecoration: 'none',
-                  transition: 'opacity 0.15s',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-              >
-                Submit a request <ArrowRight size={14} />
+            <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">{hero.title}</h1>
+            <p className="mt-4 max-w-2xl text-base text-slate-600">{hero.subtitle}</p>
+
+            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <Link href={hero.ctaPrimary.href} className="text-sm font-semibold text-slate-900 underline underline-offset-4">
+                {hero.ctaPrimary.label}
               </Link>
-              <a
-                href="#process"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '12px 24px', borderRadius: 9999,
-                  border: '1.5px solid rgba(0,0,0,0.18)', background: 'rgba(255,255,255,0.7)',
-                  color: '#333', fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                  transition: 'border-color 0.15s, background 0.15s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.background = 'rgba(255,255,255,0.9)' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.7)' }}
+              <Link href={hero.ctaSecondary.href} className="text-sm font-semibold text-slate-600 underline underline-offset-4">
+                {hero.ctaSecondary.label}
+              </Link>
+            </div>
+
+            <div className="mt-8 flex gap-2 border-y border-slate-200 py-3">
+              <button
+                onClick={() => setAudience('homeowner')}
+                className={`px-3 py-1 text-sm font-semibold ${audience === 'homeowner' ? 'text-slate-900' : 'text-slate-500'}`}
               >
-                See how it works
-              </a>
+                Homeowner
+              </button>
+              <span className="text-slate-300">/</span>
+              <button
+                onClick={() => setAudience('contractor')}
+                className={`px-3 py-1 text-sm font-semibold ${audience === 'contractor' ? 'text-slate-900' : 'text-slate-500'}`}
+              >
+                Contractor
+              </button>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-              {[
-                { icon: Shield, text: 'Verified contractors only' },
-                { icon: Zap, text: 'Same-day assignment' },
-                { icon: CheckCircle2, text: 'Manually reviewed' },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#555' }}>
-                  <Icon size={13} style={{ color: '#3d7a4f', flexShrink: 0 }} />
-                  {text}
-                </div>
+            <ul className="mt-4 space-y-2 text-sm text-slate-700">
+              {hero.bullets.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-2">
+                  <Icon className="h-4 w-4 text-emerald-700" /> {text}
+                </li>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="border-t border-border" />
-
-      {/* ── WHO WE SERVE: Three columns with icons/labels ── */}
-      <section id="who-we-serve" className="py-24">
-        <div className="mx-auto max-w-6xl px-8">
-          <div className="mb-16 text-center" data-animate>
-            <p className="font-mono-label text-primary mb-4">Solutions</p>
-            <h2 className="font-heading text-[42px] font-bold leading-[1.2] tracking-[-0.01em] max-w-2xl mx-auto text-balance">
-              Built for homeowners, contractors, and property managers.
-            </h2>
+            </ul>
           </div>
 
+          <Image src={hero.image} alt="Nexus workflow" width={1200} height={700} className="h-full w-full object-cover" />
+        </section>
+
+      <section className="border-t border-slate-200 py-12">
+        <div className="mx-auto max-w-7xl px-4">
           <div className="grid gap-12 sm:grid-cols-3">
             {[
               {
                 title: "Homeowners",
-                body: "Submit your request once. Get matched with one verified contractor. Track everything from submission to completion.",
+                body: "Submit a request, get matched with one verified contractor, and track everything from submission to completion.",
                 cta: "Create account",
                 href: "/auth/sign-up",
               },
               {
                 title: "Contractors",
-                body: "Receive pre-documented project notifications in your trade. Claim what fits your schedule. Get paid directly by property owners.",
+                body: "Receive pre-documented project notifications in your trade, claim what fits your schedule, and get paid directly by property owners.",
                 cta: "Apply for access",
                 href: "/auth/sign-up?role=contractor",
               },
@@ -379,7 +223,7 @@ export default function HomePage() {
                 title: "Property Managers",
                 body: "Manage your entire portfolio from one dashboard. Track spend by property, by trade category, and in aggregate across all your managed addresses.",
                 cta: "Create account",
-                href: "/auth/sign-up?role=property_manager",
+                href: "/auth/sign-up?role=property-manager",
               },
             ].map(({ title, body, cta, href }) => (
               <Link
@@ -471,136 +315,16 @@ export default function HomePage() {
                   <Clock size={18} style={{ color: '#fff' }} />
                 </div>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>3 min avg. submit time</p>
-                  <p style={{ fontSize: 11.5, color: '#888' }}>Photos, scope, budget in one form</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>Average submit time is under 3 minutes.</p>
+                  <p style={{ fontSize: 11.5, color: '#888' }}>Include photos, scope, and budget in one form.</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 1 }}>Average submit time is 3 minutes.</p>
+                  <p style={{ fontSize: 11.5, color: '#888' }}>Submit photos, scope, and budget in one form.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* ── For Contractors ── */}
-      <section id="contractors" style={{ padding: '112px 28px', background: '#111' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
-            <div style={{ position: 'relative', order: 0 }} className="lg:order-last">
-              <div style={{ borderRadius: 24, overflow: 'hidden', aspectRatio: '4/3', position: 'relative' }}>
-                <Image
-                  src="/business-handshake-professional-meeting.jpg"
-                  alt="Professional contractor handshake"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.4) 100%)' }} />
-              </div>
-              <div style={{
-                position: 'absolute', bottom: -20, right: -20,
-                background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px',
-                boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
-                display: 'flex', alignItems: 'center', gap: 12,
-                minWidth: 220,
-              }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(110,231,160,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <FileText size={18} style={{ color: '#6ee7a0' }} />
-                </div>
-                <div>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Scope &amp; budget included</p>
-                  <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Photos &amp; scheduling provided upfront</p>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6ee7a0', marginBottom: 16 }}>
-                For contractors
-              </p>
-              <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: 20, color: '#fff' }}>
-                  How Contractors Receive Work Through Nexus
-                Every request fully documented before you arrive.
-              </h2>
-              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 36, maxWidth: 440 }}>
-                Licensed, insured contractors in Topeka and Shawnee County receive pre-qualified service requests with full project documentation — scope, photos, budget, and scheduling provided before assignment.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 40 }}>
-                {contractorFeatures.map(({ icon: Icon, title, desc }) => (
-                  <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(110,231,160,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon size={18} style={{ color: '#6ee7a0' }} />
-                    </div>
-                    <div>
-                      <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: '#fff' }}>{title}</p>
-                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.55 }}>{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <Link
-                  href="/auth/sign-up?role=contractor"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, background: '#fff', color: '#111', fontSize: 14, fontWeight: 700, textDecoration: 'none', transition: 'opacity 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
-                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                >
-                  Join the network <ArrowRight size={14} />
-                </Link>
-                <a
-                  href="#pricing"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}
-                >
-                  View pricing <ExternalLink size={13} style={{ opacity: 0.6 }} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── How It Works ── */}
-      <section id="process" style={{ padding: '112px 28px', background: '#f5f3ef' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ maxWidth: 560, marginBottom: 72 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
-              The process
-            </p>
-            <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#111', marginBottom: 16 }}>
-              How a Service Request Works
-            </h2>
-            <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7 }}>
-              Every maintenance request follows four steps — from submission through documented completion.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 1, background: 'rgba(0,0,0,0.08)', borderRadius: 20, overflow: 'hidden' }}>
-            {steps.map(({ n, title, desc }, i) => (
-              <div
-                key={n}
-                style={{
-                  background: i === 1 ? '#3d7a4f' : '#f5f3ef',
-                  padding: '40px 32px',
-                  position: 'relative',
-                }}
-              >
-                <span style={{
-                  display: 'inline-block',
-                  fontSize: 11, fontWeight: 800, letterSpacing: '0.12em',
-                  color: i === 1 ? 'rgba(255,255,255,0.5)' : '#3d7a4f',
-                  marginBottom: 20,
-                }}>
-                  {n}
-                </span>
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: i === 1 ? '#fff' : '#111', lineHeight: 1.3 }}>{title}</h3>
-                <p style={{ fontSize: 13.5, color: i === 1 ? 'rgba(255,255,255,0.65)' : '#666', lineHeight: 1.65 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Pricing ── */}
       <section id="pricing" style={{ padding: '112px 28px', background: '#0d0d0d', color: '#fff' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -609,10 +333,10 @@ export default function HomePage() {
               Pricing
             </p>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
-              Subscription Plans and Per-Job Coordination Markup
+              Choose a subscription plan or pay a markup per job.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-              A transparent markup on completed work. Pro plans from{' '}
+              We charge a transparent markup on completed work. Pro plans start at{' '}
               <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
             </p>
           </div>
@@ -640,7 +364,7 @@ export default function HomePage() {
           </div>
 
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
-            Per-job coordination markup
+            These markup rates apply per coordinated job.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 36 }}>
             {pricingTiers.map(({ name, markup, sla, desc, featured }) => (
@@ -693,7 +417,7 @@ export default function HomePage() {
                 Why Nexus
               </p>
               <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.12, color: '#111', marginBottom: 20 }}>
-                Maintenance Coordination, Not a Contractor Marketplace
+                Nexus Provides Maintenance Coordination, Not a Contractor Marketplace.
               </h2>
               <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 28 }}>
                 Nexus Operations stays involved from intake to invoice — reviewing contractor performance, enforcing response-time guarantees, and providing monthly reporting on every request handled.
@@ -728,8 +452,8 @@ export default function HomePage() {
                 <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
                   {[1,2,3,4,5].map(i => <Star key={i} size={14} style={{ color: '#f59e0b', fill: '#f59e0b' }} />)}
                 </div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 4 }}>Verified &amp; insured contractors</p>
-                <p style={{ fontSize: 12, color: '#888' }}>Shawnee County network</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 4 }}>All contractors are verified and insured.</p>
+                <p style={{ fontSize: 12, color: '#888' }}>We serve the Shawnee County network.</p>
               </div>
             </div>
           </div>
@@ -740,7 +464,7 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 0, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               {[
                 { href: '/auth/sign-up',                       label: 'Homeowner account',          sub: 'Submit and manage service requests' },
-                { href: '/auth/sign-up?role=property_manager', label: 'Property manager account',   sub: 'Portfolio-level request management and reporting' },
+                { href: '/auth/sign-up?role=property-manager', label: 'Property manager account',   sub: 'Portfolio-level request management and reporting' },
                 { href: '/auth/sign-up?role=contractor',       label: 'Contractor application',     sub: 'Join the verified contractor network. No fees.' },
                 { href: '/faq',                                label: 'FAQ',                        sub: 'Platform details, requirements, and policies' },
               ].map(({ href, label, sub }) => (
@@ -836,7 +560,7 @@ export default function HomePage() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
                   { href: '/auth/sign-up',                       label: 'Homeowner' },
-                  { href: '/auth/sign-up?role=property_manager', label: 'Property Manager' },
+                  { href: '/auth/sign-up?role=property-manager', label: 'Property Manager' },
                   { href: '/auth/sign-up?role=contractor',       label: 'Contractor' },
                   { href: '/auth/login',                         label: 'Sign In' },
                 ].map(({ href, label }) => (
@@ -869,6 +593,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+      </main>
     </div>
   )
 }

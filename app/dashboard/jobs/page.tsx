@@ -39,7 +39,7 @@ function timeAgo(d: string) {
 
 export default function ContractorJobBoardPage() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [jobs, setJobs] = useState<AvailableJob[]>([])
   const [loading, setLoading] = useState(true)
   const [claiming, setClaiming] = useState<string | null>(null)

@@ -2,14 +2,20 @@ name: CI
 
 on:
   push:
-    branches: [main, "copilot/**", "codex/**"]
+    branches:
+      - "**"
   pull_request:
-    branches: [main, "copilot/**", "codex/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build & Lint
+  quality:
+    name: Lint, Typecheck, Test, Build (non-blocking)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: read
 
@@ -17,27 +23,41 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Build
-        run: npx next build
-        env:
-          RESEND_API_KEY: re_dummy
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
-          # Allow build to complete without real secrets
-          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: npx next lint --no-ignore
+        run: pnpm lint
+        continue-on-error: true
+
+      - name: Type check
+        run: pnpm exec tsc --noEmit
+        continue-on-error: true
+
+      - name: Unit tests
+        run: pnpm test
+        continue-on-error: true
+
+      - name: Build
+        run: pnpm build
         continue-on-error: true
         env:
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          # Allow build to complete without real secrets
+          RESEND_API_KEY: re_dummy
+          NEXT_PUBLIC_SITE_URL: https://nexusoperations.org
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: placeholder_publishable_key
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder

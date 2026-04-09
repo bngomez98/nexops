@@ -52,7 +52,7 @@ const GCR_BADGE_SCRIPT = GOOGLE_MERCHANT_ID
   : null
 
 const COMPANY_NAME = 'Nexus Operations, LLC'
-const DEFAULT_OG_IMAGE = '/business-handshake-professional-meeting.jpg'
+const DEFAULT_OG_IMAGE = '/nexus-logo.png'
 
 const LOCAL_BUSINESS_SCHEMA = {
   '@context': 'https://schema.org',
@@ -109,11 +109,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
+      { url: '/nexus-favicon.png', sizes: '180x180', type: 'image/png' },
       { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-dark-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/nexus-favicon.png',
+    shortcut: '/nexus-favicon.png',
   },
   openGraph: {
     type: 'website',

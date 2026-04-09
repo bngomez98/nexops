@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 
 export default function ContractorPaymentsPage() {
   const router = useRouter()
-  const [user, setUser]         = useState<any>(null)
+  const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading]   = useState(true)
   const [stripeAccountId, setStripeAccountId] = useState<string | null>(null)
   const [stats, setStats]       = useState({ totalPaid: 0, pendingPayout: 0, invoiceCount: 0 })

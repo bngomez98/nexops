@@ -54,7 +54,7 @@ const text = await response.text()
 
 if (!response.ok) {
   let detail = text
-  try { detail = JSON.stringify(JSON.parse(text), null, 2) } catch {}
+  try { detail = JSON.stringify(JSON.parse(text), null, 2) } catch { /* intentional */ }
   console.error(`Migration failed (HTTP ${response.status}):\n${detail}`)
   process.exit(1)
 }
@@ -63,4 +63,4 @@ console.log('✓ Migrations applied successfully.')
 try {
   const result = JSON.parse(text)
   if (result?.length) console.log(JSON.stringify(result, null, 2))
-} catch {}
+} catch { /* intentional */ }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, ClipboardList, MapPin, Clock, ChevronRight, Plus } from 'lucide-react'
+import { Loader2, ClipboardList, MapPin, Clock, Plus } from 'lucide-react'
 
 interface Request {
   id: string
@@ -27,7 +27,7 @@ function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.
 
 export default function PMRequestsPage() {
   const router = useRouter()
-  const [user, setUser]     = useState<any>(null)
+  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
   const [requests, setRequests] = useState<Request[]>([])
   const [loading, setLoading]   = useState(true)
 

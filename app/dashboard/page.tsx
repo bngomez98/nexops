@@ -4,6 +4,7 @@ import { useRequests } from '@/app/lib/requests-context'
 import { DashboardLayout } from '@/components/dashboard-layout'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { isHomeownerDashboardRole } from '@/lib/dashboard-role'
 import {
   FileText, CheckCircle2, Clock, AlertCircle,
   Briefcase, Plus, ArrowRight, TrendingUp,
@@ -36,8 +37,8 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function DashboardPage() {
-  const { user, isLoggedIn } = useAuth()
-  const { clientRequests, contractorJobs } = useRequests()
+  const { user, isLoggedIn, logout } = useAuth()
+  const { clientRequests, contractorJobs, clearCachedData } = useRequests()
   const router = useRouter()
 
   useEffect(() => {
@@ -48,36 +49,59 @@ export default function DashboardPage() {
 
   const firstName = user?.name?.split(' ')[0] ?? 'there'
 
+  const handleLogout = async () => {
+    await logout()
+    router.push('/auth/login')
+  }
+
+  const handleResetDashboard = () => {
+    clearCachedData()
+  }
+
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      userName={user?.name ?? 'System User'}
+      userRole={user?.role ?? 'client'}
+      userEmail={user?.email ?? 'user@nexusops.com'}
+      onLogout={handleLogout}
+    >
       <div id="main-content" className="space-y-8 max-w-5xl">
 
         {/* Page header */}
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-[22px] font-bold tracking-tight text-foreground">
               Welcome back, {firstName}
             </h1>
             <p className="mt-1 text-[13.5px] text-muted-foreground">
-              {user?.role === 'client'
+              {isHomeownerDashboardRole(user?.role)
                 ? "Here's an overview of your maintenance activity."
                 : user?.role === 'contractor'
                 ? "Here's your job board and earnings summary."
                 : "Admin overview — manage the platform below."}
             </p>
           </div>
-          {user?.role === 'client' && (
-            <Link
-              href="/dashboard/requests/new"
-              className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleResetDashboard}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-[12.5px] font-semibold text-foreground hover:bg-muted/50 transition"
             >
-              <Plus className="h-3.5 w-3.5" /> New Request
-            </Link>
-          )}
+              Reset cached dashboard
+            </button>
+
+            {user?.role === 'client' && (
+              <Link
+                href="/dashboard/requests/new"
+                className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
+              >
+                <Plus className="h-3.5 w-3.5" /> New Request
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* ── CLIENT VIEW ── */}
-        {user?.role === 'client' && (
+        {isHomeownerDashboardRole(user?.role) && (
           <>
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -111,7 +135,7 @@ export default function DashboardPage() {
                   bg: 'bg-violet-50 border-violet-100',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="rounded-xl border border-border/60 bg-card p-4 glow-card">
+                <div key={label} className="border-b border-border/60 py-4">
                   <div className="flex items-start justify-between mb-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
                     <div className={`flex items-center justify-center w-7 h-7 rounded-lg border ${bg}`}>
@@ -133,7 +157,7 @@ export default function DashboardPage() {
               </div>
 
               {clientRequests.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-muted/20 p-10 text-center">
+                <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                   <p className="text-[14px] font-medium text-foreground mb-1">No requests yet</p>
                   <p className="text-[13px] text-muted-foreground mb-5">Submit your first maintenance request to get started.</p>
@@ -145,7 +169,7 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               ) : (
-                <div className="rounded-xl border border-border/60 bg-card overflow-hidden glow-card divide-y divide-border/40">
+                <div className="divide-y divide-border/40 border-y border-border/60">
                   {clientRequests.slice(0, 5).map((req) => (
                     <div key={req.id} className="flex items-center justify-between px-5 py-3.5 hover:bg-muted/30 transition-colors">
                       <div className="flex-1 min-w-0 mr-4">
@@ -197,13 +221,16 @@ export default function DashboardPage() {
                 },
                 {
                   label: 'This Month',
-                  value: '$245',
+                  value: '$' + contractorJobs
+                    .filter(j => j.status === 'completed' || j.status === 'invoiced')
+                    .reduce((s, j) => s + (j.payout || 0), 0)
+                    .toLocaleString(),
                   icon: TrendingUp,
                   color: 'text-violet-600',
                   bg: 'bg-violet-50 border-violet-100',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="rounded-xl border border-border/60 bg-card p-4 glow-card">
+                <div key={label} className="border-b border-border/60 py-4">
                   <div className="flex items-start justify-between mb-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
                     <div className={`flex items-center justify-center w-7 h-7 rounded-lg border ${bg}`}>
@@ -225,17 +252,17 @@ export default function DashboardPage() {
               </div>
 
               {contractorJobs.filter(j => j.status === 'available').length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-muted/20 p-10 text-center">
+                <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                   <p className="text-[14px] font-medium text-foreground mb-1">No available jobs right now</p>
                   <p className="text-[13px] text-muted-foreground">New jobs matching your trade will appear here when submitted.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="divide-y divide-border/50 border-y border-border/60">
                   {contractorJobs.filter(j => j.status === 'available').map((job) => (
                     <div
                       key={job.id}
-                      className="rounded-xl border border-border/60 bg-card p-5 hover:border-primary/30 hover:shadow-sm transition-all glow-card"
+                      className="py-5 hover:bg-muted/20 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
@@ -261,7 +288,7 @@ export default function DashboardPage() {
 
         {/* ── ADMIN VIEW ── */}
         {user?.role === 'admin' && (
-          <div className="rounded-xl border border-border/60 bg-card p-10 text-center glow-card">
+          <div className="border-y border-border/60 py-10 text-center">
             <AlertCircle className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
             <p className="text-[14px] font-medium text-foreground mb-1">Admin Dashboard</p>
             <p className="text-[13px] text-muted-foreground">Configure reports, manage team access, and review platform activity.</p>

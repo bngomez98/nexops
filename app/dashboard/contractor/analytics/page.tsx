@@ -18,7 +18,7 @@ interface ContractorProfile {
 
 export default function AnalyticsDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [profile, setProfile] = useState<ContractorProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -63,8 +63,8 @@ export default function AnalyticsDashboard() {
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+      <main className="md:ml-[240px] p-6 space-y-6 animate-fade-up">
+        <div>
           <h1 className="text-2xl font-bold text-foreground">Performance Analytics</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {profile?.companyName || user.name} — your live account metrics
