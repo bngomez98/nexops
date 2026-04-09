@@ -47,7 +47,7 @@ const copy = {
       { icon: CheckCircle2, text: 'Every request reviewed' },
     ],
     badge: 'Homeowners & Property Managers',
-    title: 'Nexus handles your maintenance operations without the follow-up chaos.',
+    title: 'Property maintenance, handled end to end.',
     subtitle:
       'Submit one request with photos and budget. Nexus assigns qualified contractors, tracks progress, and keeps every update in one timeline.',
     image: '/business-handshake-professional-meeting.jpg',
