@@ -6,6 +6,7 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { ImageUpload } from '@/components/image-upload'
 import { formatDateOnly, todayDateInputValue } from '@/lib/date-format'
 import { projectRequestSchema } from '@/lib/validators'
+import { parseBooleanEnv } from '@/lib/env'
 import { ZodError } from 'zod'
 import {
   Loader2, ChevronLeft, AlertCircle, CheckCircle2,
@@ -72,6 +73,7 @@ type RequestUser = {
 
 export default function NewProjectRequest() {
   const router = useRouter()
+  const automationEnabled = parseBooleanEnv(process.env.NEXT_PUBLIC_AUTOMATION_ENABLED)
   const [user, setUser]             = useState<RequestUser | null>(null)
   const [loading, setLoading]       = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -92,7 +94,7 @@ export default function NewProjectRequest() {
   const [analyzingText, setAnalyzingText] = useState(false)
   const [formData, setFormData] = useState({
     category: 'open-request', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
-    pipelineMode: 'automated', communityVisible: true, accessRequirements: '',
+    pipelineMode: automationEnabled ? 'automated' : 'standard', communityVisible: automationEnabled, accessRequirements: '',
   })
 
   useEffect(() => {
@@ -115,6 +117,7 @@ export default function NewProjectRequest() {
   // Debounced AI analysis runs after title/description entry so users still get
   // automation help even when they start with a broad or custom category.
   useEffect(() => {
+    if (!automationEnabled) return
     if (!formData.title || !formData.description) return
     const timer = setTimeout(async () => {
       setAnalyzingText(true)
@@ -174,6 +177,12 @@ export default function NewProjectRequest() {
       setError('Please select a service category.')
       return false
     }
+    if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
+      setFieldErrors({ customCategory: 'Please describe the service category.' })
+      setError('Please describe the service category.')
+      return false
+    }
+
     if (s === 1) {
       const errs: Record<string, string> = {}
       if (!formData.title.trim()) errs.title = 'Project title is required.'
@@ -231,7 +240,7 @@ export default function NewProjectRequest() {
 
       // Trigger smart contractor matching
       const projectId = data.project?.id ?? data.projectId
-      if (projectId) {
+      if (automationEnabled && projectId) {
         fetch('/api/automation/match-contractor', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -420,7 +429,7 @@ export default function NewProjectRequest() {
                   {analysisError && (
                     <p className="text-[11px] text-muted-foreground mt-1">{analysisError}</p>
                   )}
-                  {suggestedCategory && formData.category === 'other' && suggestedCategory !== 'other' && (
+                  {automationEnabled && suggestedCategory && formData.category === 'other' && suggestedCategory !== 'other' && (
                     <div className="mt-2 flex items-center gap-2 text-[12px]">
                       <Zap className="w-3.5 h-3.5 text-primary" />
                       <span className="text-muted-foreground">AI suggests:</span>
@@ -444,7 +453,7 @@ export default function NewProjectRequest() {
                   )}
 
                   {/* AI analysis panel */}
-                  {aiAnalysis && !analyzingText && (
+                  {automationEnabled && aiAnalysis && !analyzingText && (
                     <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
                       <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-primary/70">
                         <Zap className="w-3 h-3" />
@@ -591,7 +600,7 @@ export default function NewProjectRequest() {
                     placeholder="e.g., 2500"
                     className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
                   />
-                  {suggestedBudget && !formData.budget && (
+                  {automationEnabled && suggestedBudget && !formData.budget && (
                     <div className="mt-2 flex items-center gap-2 text-[12px]">
                       <Zap className="w-3.5 h-3.5 text-primary" />
                       <span className="text-muted-foreground">Estimated range:</span>
@@ -620,18 +629,25 @@ export default function NewProjectRequest() {
                     name="pipelineMode"
                     value={formData.pipelineMode}
                     onChange={e => setFormData(prev => ({ ...prev, pipelineMode: e.target.value as 'standard' | 'automated' | 'community' }))}
+                    disabled={!automationEnabled}
                     className="w-full px-3 py-2.5 rounded-xl border border-input text-[13px] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
                   >
-                    <option value="automated">Automated matching and tracking (recommended)</option>
-                    <option value="community">Community-first routing and contractor visibility</option>
+                    {automationEnabled && <option value="automated">Automated matching and tracking (recommended)</option>}
+                    {automationEnabled && <option value="community">Community-first routing and contractor visibility</option>}
                     <option value="standard">Standard manual review pipeline</option>
                   </select>
+                  {!automationEnabled && (
+                    <p className="text-[11px] text-muted-foreground mt-1.5">
+                      Automated and community modes are currently unavailable.
+                    </p>
+                  )}
                 </div>
                 <label className="flex items-start gap-2 text-[12px] text-foreground">
                   <input
                     type="checkbox"
                     checked={formData.communityVisible}
                     onChange={e => setFormData(prev => ({ ...prev, communityVisible: e.target.checked }))}
+                    disabled={!automationEnabled}
                     className="mt-0.5"
                   />
                   Allow this request to be visible to the full trusted contractor community for faster matching.

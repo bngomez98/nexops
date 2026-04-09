@@ -221,7 +221,10 @@ export default function DashboardPage() {
                 },
                 {
                   label: 'This Month',
-                  value: '$245',
+                  value: '$' + contractorJobs
+                    .filter(j => j.status === 'completed' || j.status === 'invoiced')
+                    .reduce((s, j) => s + (j.payout || 0), 0)
+                    .toLocaleString(),
                   icon: TrendingUp,
                   color: 'text-violet-600',
                   bg: 'bg-violet-50 border-violet-100',

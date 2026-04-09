@@ -1,7 +1,40 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { mockClientRequests, mockContractorJobs, type MaintenanceRequest, type ContractorJob } from './mock-data'
+
+export interface MaintenanceRequest {
+  id: string
+  propertyId: string
+  propertyName: string
+  type: string
+  status: 'pending' | 'assigned' | 'in-progress' | 'completed' | 'invoiced'
+  budget: number
+  createdAt: string
+  updatedAt: string
+  dueDate: string
+  description: string
+  images?: string[]
+  assignedContractor?: {
+    id: string
+    name: string
+    phone: string
+  }
+  estimatedCost?: number
+  invoiceAmount?: number
+}
+
+export interface ContractorJob {
+  id: string
+  requestId: string
+  propertyName: string
+  type: string
+  status: 'available' | 'claimed' | 'completed' | 'invoiced'
+  budget: number
+  description: string
+  claimedAt?: string
+  completedAt?: string
+  payout?: number
+}
 
 const STORAGE_VERSION = 'v2'
 const OLD_STORAGE_KEYS = ['nexus-requests-cache', 'nexus-dashboard-cache']
@@ -25,8 +58,8 @@ interface PersistedRequests {
 }
 
 export function RequestsProvider({ children }: { children: ReactNode }) {
-  const [clientRequests, setClientRequests] = useState<MaintenanceRequest[]>(mockClientRequests)
-  const [contractorJobs, setContractorJobs] = useState<ContractorJob[]>(mockContractorJobs)
+  const [clientRequests, setClientRequests] = useState<MaintenanceRequest[]>([])
+  const [contractorJobs, setContractorJobs] = useState<ContractorJob[]>([])
 
   useEffect(() => {
     OLD_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key))
@@ -88,8 +121,8 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
   const clearCachedData = () => {
     localStorage.removeItem(REQUESTS_STORAGE_KEY)
     OLD_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key))
-    setClientRequests(mockClientRequests)
-    setContractorJobs(mockContractorJobs)
+    setClientRequests([])
+    setContractorJobs([])
   }
 
   return (
