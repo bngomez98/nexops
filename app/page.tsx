@@ -7,7 +7,6 @@ import {
   ArrowRight,
   CalendarCheck2,
   CheckCircle2,
-  ChevronDown,
   ChevronRight,
   Clock,
   Clock3,
@@ -81,25 +80,6 @@ const copy = {
   },
 } as const
 
-const process = [
-  ['01', 'Submit request', 'Describe the issue, upload photos, and set a budget range.'],
-  ['01', 'Submit request', 'Describe the issue, upload photos, and set your budget range.'],
-  ['02', 'Dispatch review', 'Nexus routes the request to one matched contractor.'],
-  ['03', 'Track and close', 'The timeline, messages, and invoice all stay synchronized.'],
-] as const
-
-const pricing = [
-  ['Routine', '25%', 'Assigned < 24h · On-site in 3–5 days'],
-  ['Urgent', '30%', 'Assigned < 4h · Next business day on-site'],
-  ['Emergency', '35%', 'Assigned < 1h · On-site within 4 hours'],
-] as const
-
-const faqs = [
-  ['How fast are urgent requests assigned?', 'Most urgent requests are assigned within 4 hours.'],
-  ['Is everything visible in one place?', 'Yes — requests, messages, documents, and invoices stay in one dashboard timeline.'],
-  ['How are contractors vetted?', 'Trade fit, insurance, and service reliability are verified before approval.'],
-] as const
-
 const statsData = [
   { value: '20+', label: 'Verified contractors' },
   { value: '< 4h', label: 'Urgent assignment' },
@@ -124,7 +104,6 @@ const pricingTiers = [
 
 export default function HomePage() {
   const [audience, setAudience] = useState<Audience>('homeowner')
-  const [faqIndex, setFaqIndex] = useState<number | null>(0)
   const hero = useMemo(() => copy[audience], [audience])
 
   return (
