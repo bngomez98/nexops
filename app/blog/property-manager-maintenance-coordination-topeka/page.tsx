@@ -64,9 +64,9 @@ export default function BlogPost() {
               <h2 className="text-xl font-semibold text-foreground">The hidden cost of decentralized coordination</h2>
               <p>
                 When a tenant reports a plumbing issue, the typical workflow for a property manager without a
-                structured coordination system looks like this: receive the call or text, determine whether it's
+                structured coordination system looks like this: receive the call or text, determine whether it&apos;s
                 urgent, think through which plumber they know who might be available, call that plumber, wait for
-                a callback, relay the tenant's information, confirm access arrangements, follow up to verify the
+                a callback, relay the tenant&apos;s information, confirm access arrangements, follow up to verify the
                 appointment was kept, wait for the invoice, reconcile the invoice against what was discussed, and
                 then process payment.
               </p>
@@ -117,7 +117,7 @@ export default function BlogPost() {
               </p>
               <ul className="space-y-2 pl-4">
                 <li>Requests are submitted through a single portal with a defined format (scope, photos, urgency)</li>
-                <li>A contractor is assigned within a defined window — not "when someone is available"</li>
+                <li>A contractor is assigned within a defined window — not &quot;when someone is available&quot;</li>
                 <li>SLA compliance is tracked automatically, not via phone follow-up</li>
                 <li>Every job generates photo documentation and a written completion record</li>
                 <li>Invoicing is consolidated — one bill per month across all jobs, not 15 separate contractor invoices</li>
