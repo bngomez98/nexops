@@ -383,7 +383,7 @@ export default function ContractorApplyPage() {
                     <h3 className="font-semibold text-foreground text-sm">12-hour review</h3>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Every application is reviewed by a member of our team. You'll receive a
+                    Every application is reviewed by a member of our team. You&apos;ll receive a
                     decision at the email you provide within 12 hours of submission.
                   </p>
                 </div>
