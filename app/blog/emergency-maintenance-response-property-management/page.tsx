@@ -46,21 +46,21 @@ export default function BlogPost() {
                 Most property managers who have managed a portfolio for more than a year have a short list of contractors they trust. For routine jobs in business hours, this works fine. For an emergency at 11 PM on a Saturday, it becomes a race to find someone available — and it usually falls to whoever picks up first, not whoever is best qualified.
               </p>
               <p>
-                When the call comes in, the property manager starts dialing. One plumber doesn't answer. The second says he can't make it until morning. The third agrees but gives a rate 40% above normal. The tenant is told help is coming, but no one knows when. The manager stays up waiting for updates.
+                When the call comes in, the property manager starts dialing. One plumber doesn&apos;t answer. The second says he can&apos;t make it until morning. The third agrees but gives a rate 40% above normal. The tenant is told help is coming, but no one knows when. The manager stays up waiting for updates.
               </p>
               <h2 className="text-xl font-semibold text-foreground">What a documented emergency process looks like</h2>
               <p>
-                A documented emergency process removes the improvisation. Instead of starting from scratch when the call comes in, the response follows a defined path: the request is submitted through a portal with basic information (unit, issue type, photos), a contractor is assigned from a pre-verified on-call pool within a defined window (1 hour in the case of Nexus Operations' Emergency tier), and the tenant and property manager both receive confirmation with contractor details and ETA.
+                A documented emergency process removes the improvisation. Instead of starting from scratch when the call comes in, the response follows a defined path: the request is submitted through a portal with basic information (unit, issue type, photos), a contractor is assigned from a pre-verified on-call pool within a defined window (1 hour in the case of Nexus Operations&apos; Emergency tier), and the tenant and property manager both receive confirmation with contractor details and ETA.
               </p>
               <p>
                 The key difference is that the property manager is not the dispatcher. They submit the request and receive updates. The coordination work — finding the contractor, confirming availability, scheduling arrival — happens in the system.
               </p>
               <h2 className="text-xl font-semibold text-foreground">After-hours coverage: what the SLA actually means</h2>
               <p>
-                The Nexus Operations Emergency tier — contractor assigned within 1 hour, on-site within 4 hours — applies around the clock. Including 11 PM Saturday. That coverage is only possible because the contractor pool is maintained in advance, on-call rotation exists, and the coordination process doesn't depend on one person being awake and available.
+                The Nexus Operations Emergency tier — contractor assigned within 1 hour, on-site within 4 hours — applies around the clock. Including 11 PM Saturday. That coverage is only possible because the contractor pool is maintained in advance, on-call rotation exists, and the coordination process doesn&apos;t depend on one person being awake and available.
               </p>
               <p>
-                For property managers whose current emergency plan is "hope someone answers," this is the structural difference. It's not about working harder in the moment. It's about building the system before the call comes in.
+                For property managers whose current emergency plan is &quot;hope someone answers,&quot; this is the structural difference. It&apos;s not about working harder in the moment. It&apos;s about building the system before the call comes in.
               </p>
               <h2 className="text-xl font-semibold text-foreground">The after-hours contact path</h2>
               <p>

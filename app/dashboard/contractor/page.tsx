@@ -322,7 +322,7 @@ export default function ContractorDashboard() {
             <div>
               <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Project capacity reached</p>
               <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-                You've reached your limit of {profile?.maxActiveProjects} active projects.{' '}
+                You&apos;ve reached your limit of {profile?.maxActiveProjects} active projects.{' '}
                 <Link href="/dashboard/contractor/settings" className="underline font-medium">Upgrade your plan</Link> to take on more work.
               </p>
             </div>
