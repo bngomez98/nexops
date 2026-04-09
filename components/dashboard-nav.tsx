@@ -10,7 +10,7 @@ import {
   Settings, TrendingUp, ChevronRight, Briefcase,
   PlusCircle, CreditCard, ShieldCheck, User, Building2,
   ClipboardList, Receipt, Wallet, Home, FolderOpen,
-  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare, Workflow,
+  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare, Workflow, Zap,
 } from 'lucide-react'
 
 interface NavItem {
@@ -35,16 +35,17 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { label: 'Settings',    href: '/dashboard/homeowner/settings',   icon: Settings, exact: true },
   ],
   contractor: [
-    { label: 'Dashboard',   href: '/dashboard/contractor',              icon: LayoutDashboard, exact: true },
-    { label: 'Jobs',        href: '/dashboard/contractor/jobs',         icon: Briefcase },
-    { label: 'Messages',    href: '/dashboard/messages',                icon: MessageSquare },
-    { label: 'My Projects', href: '/dashboard/contractor/my-projects',  icon: ClipboardList, exact: true },
-    { label: 'Invoices',    href: '/dashboard/contractor/invoices',     icon: Receipt },
-    { label: 'Payments',    href: '/dashboard/contractor/payments',     icon: Wallet },
-    { label: 'Documents',   href: '/dashboard/contractor/documents',    icon: FolderOpen },
-    { label: 'Analytics',   href: '/dashboard/contractor/analytics',    icon: TrendingUp, exact: true },
-    { label: 'Profile',     href: '/dashboard/contractor/profile',      icon: User },
-    { label: 'Settings',    href: '/dashboard/contractor/settings',     icon: Settings, exact: true },
+    { label: 'Dashboard',        href: '/dashboard/contractor',                   icon: LayoutDashboard, exact: true },
+    { label: 'Available Work',   href: '/dashboard/contractor/available-work',    icon: Zap, exact: true },
+    { label: 'Jobs',             href: '/dashboard/contractor/jobs',              icon: Briefcase },
+    { label: 'Messages',         href: '/dashboard/messages',                     icon: MessageSquare },
+    { label: 'My Assignments',   href: '/dashboard/contractor/my-projects',       icon: ClipboardList, exact: true },
+    { label: 'Invoices',         href: '/dashboard/contractor/invoices',          icon: Receipt },
+    { label: 'Payments',         href: '/dashboard/contractor/payments',          icon: Wallet },
+    { label: 'Documents',        href: '/dashboard/contractor/documents',         icon: FolderOpen },
+    { label: 'Analytics',        href: '/dashboard/contractor/analytics',         icon: TrendingUp, exact: true },
+    { label: 'Profile',          href: '/dashboard/contractor/profile',           icon: User },
+    { label: 'Settings',         href: '/dashboard/contractor/settings',          icon: Settings, exact: true },
   ],
   'property-manager': [
     { label: 'Dashboard',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
@@ -89,7 +90,7 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
     }
     if (role === 'contractor') {
       return [
-        { label: 'Browse requests', href: '/dashboard/contractor', icon: PlusCircle },
+        { label: 'Available Work', href: '/dashboard/contractor/available-work', icon: Zap },
         { label: 'Analytics', href: '/dashboard/contractor/analytics', icon: TrendingUp },
       ]
     }
