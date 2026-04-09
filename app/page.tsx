@@ -77,10 +77,10 @@ const homeownerFeatures = [
   { icon: CheckCircle2, title: 'Every request is reviewed before dispatch.', desc: 'Nexus staff review each request before dispatch to ensure accuracy.' },
 ]
 
-const pricingTiers = [
-  { name: 'Routine', markup: '25%', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
-  { name: 'Urgent', markup: '30%', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
-  { name: 'Emergency', markup: '35%', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
+const urgencyTiers = [
+  { name: 'Routine', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
+  { name: 'Emergency', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
 ]
 
 export default function HomePage() {
@@ -293,11 +293,11 @@ export default function HomePage() {
               Pricing
             </p>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
-              Choose a subscription plan or pay a markup per job.
+              Simple subscription plans.
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-              We charge a transparent markup on completed work. Pro plans start at{' '}
-              <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — plus a straightforward markup on completed work, billed separately.
+              Start free or go Pro for unlimited requests. Annual plans start at{' '}
+              <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — save 25% vs monthly.
             </p>
           </div>
 
@@ -324,10 +324,10 @@ export default function HomePage() {
           </div>
 
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
-            These markup rates apply per coordinated job.
+            Response time guarantees by urgency tier.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 36 }}>
-            {pricingTiers.map(({ name, markup, sla, desc, featured }) => (
+            {urgencyTiers.map(({ name, sla, desc, featured }) => (
               <div
                 key={name}
                 style={{
@@ -350,10 +350,6 @@ export default function HomePage() {
                   </span>
                 )}
                 <p style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: featured ? '#666' : 'rgba(255,255,255,0.4)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{name}</p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
-                  <span style={{ fontSize: 44, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color: featured ? '#3d7a4f' : '#4ade80' }}>{markup}</span>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: featured ? '#888' : 'rgba(255,255,255,0.4)' }}>markup</span>
-                </div>
                 <p style={{ fontSize: 12, marginBottom: 16, color: featured ? '#888' : 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{sla}</p>
                 <p style={{ fontSize: 13, lineHeight: 1.65, color: featured ? '#444' : 'rgba(255,255,255,0.6)' }}>{desc}</p>
               </div>
@@ -367,7 +363,6 @@ export default function HomePage() {
           </p>
         </div>
       </section>
-
       {/* ── Why Nexus ── */}
       <section style={{ padding: '112px 28px', background: '#f5f3ef' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>

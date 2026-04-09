@@ -16,7 +16,6 @@ const slaTable = [
     tier: "Routine",
     assignment: "Within 24 hours",
     onSite: "3–5 business days",
-    markup: "25%",
     examples: "Scheduled repairs, cosmetic fixes, planned replacements",
     icon: Clock,
   },
@@ -24,7 +23,6 @@ const slaTable = [
     tier: "Urgent",
     assignment: "Within 4 hours",
     onSite: "Next business day",
-    markup: "30%",
     examples: "Non-emergency plumbing, HVAC issues in moderate weather, electrical faults",
     icon: Zap,
   },
@@ -32,7 +30,6 @@ const slaTable = [
     tier: "Emergency",
     assignment: "Within 1 hour",
     onSite: "Within 4 hours (24/7)",
-    markup: "35%",
     examples: "Burst pipes, gas leaks, HVAC failure in extreme weather, major electrical hazards",
     icon: Shield,
   },
@@ -127,7 +124,7 @@ export default function CommercialPage() {
                 {
                   icon: FileText,
                   title: "Monthly unified invoicing",
-                  desc: "Every completed job across all your properties consolidated into a single monthly invoice. Line-item detail showing property address, trade, contractor cost, markup tier, and total. No individual contractor bills to reconcile.",
+                  desc: "Every completed job across all your properties consolidated into a single monthly invoice. Line-item detail showing property address, trade, and total. No individual contractor bills to reconcile.",
                 },
                 {
                   icon: Shield,
@@ -189,7 +186,6 @@ export default function CommercialPage() {
                     <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tier</th>
                     <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Assignment SLA</th>
                     <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">On-site SLA</th>
-                    <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden md:table-cell">Markup</th>
                     <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden lg:table-cell">Typical use</th>
                   </tr>
                 </thead>
@@ -206,7 +202,6 @@ export default function CommercialPage() {
                         </td>
                         <td className="px-6 py-4 text-[13px] text-foreground font-medium">{row.assignment}</td>
                         <td className="px-6 py-4 text-[13px] text-foreground font-medium">{row.onSite}</td>
-                        <td className="px-6 py-4 text-[13px] font-bold text-primary hidden md:table-cell">{row.markup}</td>
                         <td className="px-6 py-4 text-[12.5px] text-muted-foreground hidden lg:table-cell max-w-xs">{row.examples}</td>
                       </tr>
                     )
@@ -276,28 +271,28 @@ export default function CommercialPage() {
                     <div className="flex items-start justify-between gap-4 pb-4 border-b border-border">
                       <div>
                         <p className="text-[13.5px] font-semibold text-foreground">Per-job: Routine</p>
-                        <p className="text-[12px] text-muted-foreground">Contractor cost + markup</p>
+                        <p className="text-[12px] text-muted-foreground">Assigned within 24 hrs · On-site within 3–5 days</p>
                       </div>
-                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">25%</span>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
                     </div>
                     <div className="flex items-start justify-between gap-4 pb-4 border-b border-border">
                       <div>
                         <p className="text-[13.5px] font-semibold text-foreground">Per-job: Urgent</p>
-                        <p className="text-[12px] text-muted-foreground">Contractor cost + markup</p>
+                        <p className="text-[12px] text-muted-foreground">Assigned within 4 hrs · Next business day on-site</p>
                       </div>
-                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">30%</span>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-[13.5px] font-semibold text-foreground">Per-job: Emergency</p>
-                        <p className="text-[12px] text-muted-foreground">Contractor cost + markup, 24/7</p>
+                        <p className="text-[12px] text-muted-foreground">Assigned within 1 hr · On-site within 4 hrs, 24/7</p>
                       </div>
-                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">35%</span>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
                     </div>
                   </div>
                   <div className="mt-6 pt-5 border-t border-border">
                     <p className="text-[12px] text-muted-foreground leading-relaxed">
-                      Volume discounts available for portfolios generating 50+ jobs per month. Platform access pricing depends on portfolio size and reporting requirements. Discuss your situation with our team.
+                      Volume pricing available for large portfolios. Platform access pricing depends on portfolio size and reporting requirements. Discuss your situation with our team.
                     </p>
                   </div>
                 </div>
