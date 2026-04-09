@@ -125,7 +125,8 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
           headers: { 'Content-Type': 'application/json', Cookie: request.headers.get('cookie') ?? '' },
           body: JSON.stringify({ projectId: sr.id }),
         })
-      } catch {
+      } catch (err) {
+        console.error(err)
         // Match failure is non-fatal — job will appear on public board
       }
     }

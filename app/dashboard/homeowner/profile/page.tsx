@@ -69,7 +69,8 @@ export default function HomeownerProfilePage() {
       if (photoUrl) setExistingPhotoUrl(photoUrl)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Failed to save profile.')
     } finally {
       setSaving(false)

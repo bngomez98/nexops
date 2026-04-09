@@ -55,7 +55,8 @@ function ResetPasswordInner() {
         setSuccess(true)
         setTimeout(() => router.push("/auth/login"), 2500)
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)

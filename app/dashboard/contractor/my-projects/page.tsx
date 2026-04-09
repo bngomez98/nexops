@@ -67,7 +67,8 @@ export default function ContractorMyProjects() {
           const { projects: list } = await projRes.json()
           setProjects(list ?? [])
         }
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)

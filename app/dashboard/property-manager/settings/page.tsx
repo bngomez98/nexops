@@ -42,7 +42,8 @@ function PropertyManagerSettingsInner() {
         const supabase = createClient()
         const { data: mfaData } = await supabase.auth.mfa.listFactors()
         setMfaFactors(mfaData?.all ?? [])
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -75,7 +76,8 @@ function PropertyManagerSettingsInner() {
       }
       setSuccess('Settings saved successfully!')
       setTimeout(() => setSuccess(''), 4000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Failed to save. Please try again.')
     } finally {
       setSaving(false)
@@ -94,7 +96,8 @@ function PropertyManagerSettingsInner() {
         return
       }
       router.push('/auth/login')
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Failed to delete account.')
       setShowDelete(false)
     } finally {
@@ -112,7 +115,8 @@ function PropertyManagerSettingsInner() {
       const qr = data.totp.qr_code
       const secret = data.totp.secret
       setEnrollData({ qr, secret, factorId: data.id })
-    } catch {
+    } catch (err) {
+      console.error(err)
       setMfaError('Failed to start 2FA setup. Please try again.')
     } finally {
       setMfaLoading(false)
@@ -136,7 +140,8 @@ function PropertyManagerSettingsInner() {
       setVerifyCode('')
       setMfaSuccess('Two-factor authentication enabled successfully!')
       setTimeout(() => setMfaSuccess(''), 5000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setMfaError('Invalid code. Please try again.')
     } finally {
       setMfaLoading(false)
@@ -154,7 +159,8 @@ function PropertyManagerSettingsInner() {
       setMfaFactors(mfaData?.all ?? [])
       setMfaSuccess('Two-factor authentication disabled.')
       setTimeout(() => setMfaSuccess(''), 5000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setMfaError('Failed to disable 2FA. Please try again.')
     } finally {
       setMfaLoading(false)

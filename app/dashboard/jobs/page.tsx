@@ -107,7 +107,8 @@ export default function ContractorJobBoardPage() {
         .order('created_at', { ascending: false })
       setMyJobs(mine ?? [])
       setTab('mine')
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Something went wrong. Please try again.')
     } finally {
       setClaiming(null)
