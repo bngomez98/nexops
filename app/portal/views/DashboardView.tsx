@@ -31,12 +31,13 @@ export function DashboardView({
   onOpenJob,
   onSeeAllJobs,
 }: DashboardViewProps) {
-  const { currentUser, jobs } = usePortal()
+  const { currentUser, jobs, loading, error } = usePortal()
   const visible = jobs.filter((j) => {
     if (currentUser.role === 'admin') return true
     if (currentUser.role === 'contractor') return j.contractorId === currentUser.id
     return j.homeownerId === currentUser.id
   })
+  const stats = dashboardStats(jobs, currentUser.id, currentUser.role)
   const stats = dashboardStatsForJobs(visible)
   const recent = [...visible]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
@@ -45,6 +46,12 @@ export function DashboardView({
 
   return (
     <div className="space-y-6">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading live operations data…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Failed to load portal data: {error}</div>
+      )}
       {/* Hero stats card */}
       <motion.section
         initial={{ opacity: 0, y: 18 }}
