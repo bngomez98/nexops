@@ -2,13 +2,12 @@ import type Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { getAdminClient } from '@/lib/supabase/admin'
-
-type StripeSubWithPeriod = { current_period_start: number; current_period_end: number }
-
 import {
   sendInvoicePaidContractorEmail,
   sendInvoicePaidClientEmail,
 } from '@/lib/email'
+
+type StripeSubWithPeriod = { current_period_start: number; current_period_end: number }
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
