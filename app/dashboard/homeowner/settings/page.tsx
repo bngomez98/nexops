@@ -4,7 +4,9 @@ import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound } from 'lucide-react'
+import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound, Camera, Upload } from 'lucide-react'
+
+const NOTIF_PREFS_KEY = 'nexus.homeowner.notif-prefs'
 
 type HomeownerUser = {
   id: string
@@ -12,6 +14,7 @@ type HomeownerUser = {
   email: string
   role: string
   phone?: string
+  avatarUrl?: string | null
 }
 
 type MfaFactor = {
@@ -36,6 +39,13 @@ function HomeownerSettingsInner() {
   const [notifications, setNotifications] = useState({
     bidNotifications: true, messageNotifications: true, projectUpdates: true, newsletter: false,
   })
+  const [notifDirty, setNotifDirty] = useState(false)
+  const [notifSaving, setNotifSaving] = useState(false)
+
+  // Profile photo
+  const [photoPreview, setPhotoPreview] = useState('')
+  const [photoFile, setPhotoFile]       = useState<File | null>(null)
+  const [photoUploading, setPhotoUploading] = useState(false)
 
   // 2FA state
   const [mfaFactors, setMfaFactors]   = useState<MfaFactor[]>([])
@@ -54,6 +64,13 @@ function HomeownerSettingsInner() {
         if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
         setFormData({ email: data.user.email, phone: data.user.phone ?? '' })
+        if (data.user.avatarUrl) setPhotoPreview(data.user.avatarUrl)
+
+        // Restore saved notification preferences.
+        try {
+          const saved = localStorage.getItem(NOTIF_PREFS_KEY)
+          if (saved) setNotifications(prev => ({ ...prev, ...JSON.parse(saved) }))
+        } catch { /* ignore */ }
 
         // Load MFA factors
         const supabase = createClient()
@@ -110,6 +127,79 @@ function HomeownerSettingsInner() {
       setError('Failed to save. Please try again.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  function handleNotifChange(key: keyof typeof notifications) {
+    setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
+    setNotifDirty(true)
+  }
+
+  async function handleSaveNotifs() {
+    setNotifSaving(true)
+    try {
+      localStorage.setItem(NOTIF_PREFS_KEY, JSON.stringify(notifications))
+      setNotifDirty(false)
+      setSuccess('Notification preferences saved.')
+      setTimeout(() => setSuccess(''), 4000)
+    } finally {
+      setNotifSaving(false)
+    }
+  }
+
+  function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Photo must be smaller than 10 MB.')
+      return
+    }
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setError('Please upload a JPG, PNG, or WebP image.')
+      return
+    }
+    setError('')
+    setPhotoFile(file)
+    setPhotoPreview(URL.createObjectURL(file))
+  }
+
+  async function handlePhotoSave() {
+    if (!photoFile || !user) return
+    setPhotoUploading(true)
+    setError('')
+    try {
+      const supabase = createClient()
+      const ext  = photoFile.name.split('.').pop() || 'jpg'
+      const path = `${user.id}/profile.${ext}`
+      const buf  = await photoFile.arrayBuffer()
+      const { data, error: uploadError } = await supabase.storage
+        .from('profile-photos')
+        .upload(path, buf, { contentType: photoFile.type, upsert: true })
+      if (uploadError) throw uploadError
+      if (!data) throw new Error('No upload result')
+
+      const { data: urlData } = supabase.storage.from('profile-photos').getPublicUrl(data.path)
+      const publicUrl = urlData.publicUrl
+
+      // Try both profile schemas — update whichever row actually exists.
+      await supabase.from('profiles').upsert({
+        id: user.id,
+        user_id: user.id,
+        role: 'homeowner',
+        full_name: user.name,
+        photo_url: publicUrl,
+        avatar_url: publicUrl,
+      } as Record<string, unknown>, { onConflict: 'id' })
+
+      setPhotoFile(null)
+      setUser(prev => prev ? { ...prev, avatarUrl: publicUrl } : prev)
+      setSuccess('Profile photo updated.')
+      setTimeout(() => setSuccess(''), 4000)
+    } catch (err) {
+      console.error(err)
+      setError('Failed to upload photo. Please try again.')
+    } finally {
+      setPhotoUploading(false)
     }
   }
 
@@ -208,7 +298,7 @@ function HomeownerSettingsInner() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav userName={user.name} role="homeowner" onLogout={async () => {
+      <DashboardNav userName={user.name} role="homeowner" avatarUrl={user.avatarUrl} onLogout={async () => {
         await fetch('/api/auth/logout', { method: 'POST' })
         router.push('/auth/login')
       }} />
@@ -236,17 +326,52 @@ function HomeownerSettingsInner() {
 
           {/* Profile card */}
           <div className="bg-card border border-border rounded-2xl overflow-hidden">
-            <div className="flex items-center gap-4 px-6 py-5 border-b border-border bg-primary/5">
-              <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold">
-                {initials}
+            <div className="flex items-center gap-5 px-6 py-6 border-b border-border bg-gradient-to-br from-primary/8 via-primary/3 to-transparent">
+              <div className="relative group">
+                {photoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photoPreview}
+                    alt="Profile"
+                    className="w-20 h-20 rounded-full object-cover ring-4 ring-primary/15 shadow-md"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/70 text-primary-foreground flex items-center justify-center text-2xl font-bold ring-4 ring-primary/15 shadow-md">
+                    {initials}
+                  </div>
+                )}
+                <label
+                  htmlFor="settingsPhotoInput"
+                  className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-background border-2 border-primary/40 text-primary flex items-center justify-center cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm"
+                  title="Change profile photo"
+                >
+                  <Camera className="w-4 h-4" />
+                </label>
+                <input
+                  id="settingsPhotoInput"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={handlePhotoSelect}
+                />
               </div>
-              <div>
-                <p className="font-semibold text-foreground">{user.name}</p>
-                <p className="text-[12.5px] text-muted-foreground">{user.email}</p>
-                <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full mt-1 inline-block capitalize">
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-foreground text-[15px]">{user.name}</p>
+                <p className="text-[12.5px] text-muted-foreground truncate">{user.email}</p>
+                <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full mt-1.5 inline-block capitalize">
                   {user.role}
                 </span>
               </div>
+              {photoFile && (
+                <button
+                  onClick={handlePhotoSave}
+                  disabled={photoUploading}
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[12px] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 flex-shrink-0"
+                >
+                  {photoUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                  {photoUploading ? 'Uploading…' : 'Save photo'}
+                </button>
+              )}
             </div>
 
             <form onSubmit={handleSave} className="p-6 space-y-5">
@@ -309,32 +434,61 @@ function HomeownerSettingsInner() {
 
           {/* Notifications */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Bell className="w-4 h-4 text-primary" />
-              <h2 className="font-semibold text-foreground text-[14px]">Notification Preferences</h2>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground text-[14px]">Notification Preferences</h2>
+              </div>
+              {notifDirty && (
+                <span className="text-[10.5px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  Unsaved changes
+                </span>
+              )}
             </div>
-            {[
-              { key: 'bidNotifications',     label: 'Bid Notifications',    desc: 'When contractors submit bids on your requests' },
-              { key: 'messageNotifications', label: 'Messages',              desc: 'When contractors send you a message' },
-              { key: 'projectUpdates',       label: 'Project Updates',       desc: 'Status changes on your ongoing requests' },
-              { key: 'newsletter',           label: 'Newsletter',            desc: 'Tips and home improvement trends' },
-            ].map(n => (
-              <label
-                key={n.key}
-                className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-secondary/30 cursor-pointer transition-colors"
+            <div className="space-y-2">
+              {[
+                { key: 'bidNotifications',     label: 'Bid Notifications',    desc: 'When contractors submit bids on your requests' },
+                { key: 'messageNotifications', label: 'Messages',              desc: 'When contractors send you a message' },
+                { key: 'projectUpdates',       label: 'Project Updates',       desc: 'Status changes on your ongoing requests' },
+                { key: 'newsletter',           label: 'Newsletter',            desc: 'Tips and home improvement trends' },
+              ].map(n => {
+                const enabled = notifications[n.key as keyof typeof notifications]
+                return (
+                  <button
+                    type="button"
+                    key={n.key}
+                    onClick={() => handleNotifChange(n.key as keyof typeof notifications)}
+                    className={`w-full flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all ${
+                      enabled
+                        ? 'border-primary/30 bg-primary/5 hover:bg-primary/8'
+                        : 'border-border bg-background hover:bg-secondary/30'
+                    }`}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-semibold text-foreground">{n.label}</p>
+                      <p className="text-[12px] text-muted-foreground">{n.desc}</p>
+                    </div>
+                    <div className={`relative w-10 h-[22px] rounded-full transition-colors flex-shrink-0 ${
+                      enabled ? 'bg-primary' : 'bg-muted'
+                    }`}>
+                      <div className={`absolute top-0.5 left-0.5 w-[18px] h-[18px] rounded-full bg-white shadow-sm transition-transform ${
+                        enabled ? 'translate-x-[18px]' : ''
+                      }`} />
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+            <div className="pt-1">
+              <button
+                onClick={handleSaveNotifs}
+                disabled={!notifDirty || notifSaving}
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[12.5px] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <input
-                  type="checkbox"
-                  checked={notifications[n.key as keyof typeof notifications]}
-                  onChange={() => setNotifications(prev => ({ ...prev, [n.key]: !prev[n.key as keyof typeof notifications] }))}
-                  className="w-4 h-4 rounded mt-0.5 accent-primary"
-                />
-                <div>
-                  <p className="text-[13px] font-semibold text-foreground">{n.label}</p>
-                  <p className="text-[12px] text-muted-foreground">{n.desc}</p>
-                </div>
-              </label>
-            ))}
+                {notifSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                Save preferences
+              </button>
+            </div>
           </div>
 
           {/* Two-Factor Authentication */}
