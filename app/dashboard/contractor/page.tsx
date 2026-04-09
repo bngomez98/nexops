@@ -11,7 +11,7 @@ import { formatDateOnly } from '@/lib/date-format'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
-  RefreshCw, Clock, DollarSign, CheckCircle2, Zap, CalendarDays,
+  RefreshCw, Clock, DollarSign, CheckCircle2, Zap, CalendarDays, Crown,
 } from 'lucide-react'
 
 interface ProjectRequest {
@@ -45,6 +45,9 @@ interface FilterState {
 
 interface ContractorUser {
   name: string
+  avatarUrl?: string | null
+  subscriptionTier?: string
+  subscriptionStatus?: string
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -231,7 +234,7 @@ export default function ContractorDashboard() {
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
 
-      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
+      <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} avatarUrl={user.avatarUrl} />
 
       <main id="main-content" className="md:ml-[240px] p-6 space-y-6 animate-fade-up">
         {/* Welcome banner */}
@@ -468,41 +471,76 @@ export default function ContractorDashboard() {
           </div>
         </div>
 
-        {/* Upgrade section */}
-        <div className="bg-card border border-border rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h3 className="font-semibold text-foreground text-[15px]">Upgrade your plan</h3>
-              <p className="text-[12.5px] text-muted-foreground mt-0.5">
-                Take on more projects and grow your business.
-              </p>
+        {/* Upgrade / subscription section — prominent */}
+        <div className="relative overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-6">
+          <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30">
+                <Crown className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground text-[17px]">Grow your business</h3>
+                <p className="text-[12.5px] text-muted-foreground mt-0.5">
+                  Take on more projects and unlock priority routing.
+                </p>
+              </div>
             </div>
-            <span className="text-[11px] bg-muted text-muted-foreground font-semibold px-2.5 py-1 rounded-full capitalize">
-              Current: {profile?.membershipTier || 'free'}
-            </span>
+            <Link
+              href="/dashboard/contractor/billing"
+              className="inline-flex items-center justify-center gap-1.5 text-[12px] font-semibold text-primary border border-primary/30 bg-background hover:bg-primary/5 transition-colors px-4 py-2.5 rounded-xl"
+            >
+              View all plans
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="relative grid sm:grid-cols-2 gap-4">
             {[
-              { name: 'Professional', price: '$299/mo', projects: 5,  highlight: !profile?.membershipTier || profile.membershipTier === 'starter' },
-              { name: 'Enterprise',   price: '$749/mo', projects: 15, highlight: profile?.membershipTier === 'professional' },
+              {
+                name: 'Contractor Pro',
+                price: '$59',
+                cadence: '/mo billed annually',
+                desc: 'Up to 10 active projects · Priority notifications · Verified badge',
+                highlight: true,
+                badge: 'Best Value',
+              },
+              {
+                name: 'Contractor Elite',
+                price: '$199',
+                cadence: '/mo',
+                desc: 'Unlimited projects · First-look on new requests · Dedicated manager',
+                highlight: false,
+              },
             ].map(plan => (
               <div
                 key={plan.name}
-                className={`rounded-xl border p-5 ${plan.highlight ? 'border-border bg-muted/40' : 'border-border'}`}
+                className={`relative rounded-xl border p-5 transition-all ${
+                  plan.highlight
+                    ? 'border-primary/40 bg-background shadow-lg shadow-primary/10'
+                    : 'border-border bg-background/60'
+                }`}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-semibold text-foreground">{plan.name}</span>
-                  {plan.highlight && (
-                    <span className="text-[10.5px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">
-                      Recommended
-                    </span>
-                  )}
+                {plan.badge && (
+                  <span className="absolute -top-2.5 left-4 text-[9.5px] font-bold uppercase tracking-wider bg-primary text-primary-foreground px-2.5 py-1 rounded-full">
+                    {plan.badge}
+                  </span>
+                )}
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-bold text-foreground text-[14px]">{plan.name}</span>
                 </div>
-                <p className="text-2xl font-bold text-foreground mb-1">{plan.price}</p>
-                <p className="text-[12.5px] text-muted-foreground mb-4">Up to {plan.projects} active projects</p>
-                <Link href="/dashboard/contractor/settings">
-                  <button className="w-full py-2 text-[12.5px] font-semibold rounded-lg border border-border bg-background hover:bg-muted transition-colors">
-                    Upgrade to {plan.name}
+                <p className="text-3xl font-bold text-foreground tracking-tight">
+                  {plan.price}
+                  <span className="text-[12px] font-normal text-muted-foreground">{plan.cadence}</span>
+                </p>
+                <p className="text-[12px] text-muted-foreground mt-2 mb-4 leading-relaxed">{plan.desc}</p>
+                <Link href="/dashboard/contractor/billing">
+                  <button className={`w-full py-2.5 text-[12.5px] font-semibold rounded-lg transition-all inline-flex items-center justify-center gap-1.5 ${
+                    plan.highlight
+                      ? 'bg-primary text-primary-foreground hover:opacity-90 shadow-md shadow-primary/20'
+                      : 'border border-border bg-background hover:border-primary/40 hover:text-primary'
+                  }`}>
+                    <Zap className="w-3.5 h-3.5" />
+                    Upgrade to {plan.name.replace('Contractor ', '')}
                   </button>
                 </Link>
               </div>

@@ -11,12 +11,12 @@ import { CONTACT_INFO } from "@/lib/contact-info"
 function NexusIcon({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="5.5" strokeLinecap="round"/>
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="5.5" strokeLinecap="round"/>
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-      <line x1="60" y1="47" x2="60" y2="73" stroke="oklch(0.618 0.228 264)" strokeWidth="5" strokeLinecap="round"/>
-      <line x1="47" y1="60" x2="73" y2="60" stroke="oklch(0.618 0.228 264)" strokeWidth="5" strokeLinecap="round"/>
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round"/>
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round"/>
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+      <line x1="60" y1="47" x2="60" y2="73" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round"/>
+      <line x1="47" y1="60" x2="73" y2="60" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round"/>
     </svg>
   )
 }
@@ -30,7 +30,7 @@ const nav = [
 ]
 
 const BORDER = "rgba(255,255,255,0.08)"
-const GREEN = "oklch(0.618 0.228 264)"
+const GREEN = "#3d7a4f"
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)

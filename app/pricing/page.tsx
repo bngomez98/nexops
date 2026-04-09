@@ -134,14 +134,13 @@ export default function PricingPage() {
                 Pricing
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Plans and pricing{" "}
+                Simple pricing,{" "}
                 <span className="font-serif italic font-normal text-primary">
-                  for homeowners and contractors.
+                  no surprises.
                 </span>
-                Simple pricing. No surprises.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Choose the plan that fits your needs. Annual subscribers save 25% — just{" "}
+                Plans for homeowners and contractors. Annual subscribers save 25% — just{" "}
                 <strong className="text-foreground">$59/month</strong> vs{" "}
                 <strong className="text-foreground">$79/month</strong> on our flexible monthly plan.
               </p>

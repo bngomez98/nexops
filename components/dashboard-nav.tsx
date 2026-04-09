@@ -70,9 +70,10 @@ interface DashboardNavProps {
   userName: string
   role: 'homeowner' | 'contractor' | 'property-manager' | 'admin'
   onLogout: () => void
+  avatarUrl?: string | null
 }
 
-export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
+export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardNavProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const navItems = NAV_ITEMS[role] ?? []
@@ -121,16 +122,16 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border flex-shrink-0">
           <Link href="/" aria-label="Nexus Operations home" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
             <svg width="26" height="26" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="5.5" strokeLinecap="round"/>
-              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="5.5" strokeLinecap="round"/>
-              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="oklch(0.618 0.228 264)" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-              <line x1="60" y1="47" x2="60" y2="73" stroke="oklch(0.618 0.228 264)" strokeWidth="5" strokeLinecap="round"/>
-              <line x1="47" y1="60" x2="73" y2="60" stroke="oklch(0.618 0.228 264)" strokeWidth="5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round"/>
+              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+              <line x1="60" y1="47" x2="60" y2="73" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round"/>
+              <line x1="47" y1="60" x2="73" y2="60" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round"/>
             </svg>
             <div style={{ lineHeight: 1 }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>NEXUS</div>
-              <div style={{ fontSize: 7.5, fontWeight: 700, color: 'oklch(0.618 0.228 264)', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
+              <div style={{ fontSize: 7.5, fontWeight: 700, color: '#3d7a4f', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
             </div>
           </Link>
         </div>
@@ -139,9 +140,18 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
           <div className="rounded-2xl border border-white/8 bg-white/4 p-3">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-sidebar-muted">Workspace</p>
             <div className="mt-2 flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-[12px] font-bold text-primary">
-                {initials}
-              </div>
+              {avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={avatarUrl}
+                  alt={userName}
+                  className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/30"
+                />
+              ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-[12px] font-bold text-primary ring-2 ring-primary/20">
+                  {initials}
+                </div>
+              )}
               <div className="min-w-0">
                 <p className="truncate text-[12.5px] font-semibold text-sidebar-foreground">{userName}</p>
                 <p className="text-[10px] capitalize text-sidebar-muted">{role}</p>
@@ -244,13 +254,21 @@ export function DashboardNav({ userName, role, onLogout }: DashboardNavProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          {role === 'contractor' && <NotificationBell />}
-          {role === 'property-manager' && <NotificationBell />}
+          {role !== 'admin' && <NotificationBell />}
           <div className="h-5 w-px bg-border" />
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">
-              {initials}
-            </div>
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt={userName}
+                className="w-7 h-7 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">
+                {initials}
+              </div>
+            )}
             <span className="hidden sm:block text-[12.5px] font-medium text-foreground">{userName}</span>
           </div>
           <Button variant="ghost" size="sm" onClick={onLogout} className="hidden md:flex gap-1.5 text-muted-foreground h-8 px-2">
