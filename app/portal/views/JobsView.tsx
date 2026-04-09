@@ -2,12 +2,7 @@
 
 import { Plus, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import {
-  CATEGORY_LABEL,
-  STATUS_LABEL,
-  type Category,
-  type JobStatus,
-} from '../lib/mock-data'
+import { STATUS_LABEL, formatCategoryLabel, type PortalJobStatus } from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { JobCard } from '../components/JobCard'
 
@@ -16,34 +11,24 @@ interface JobsViewProps {
   onOpenJob: (jobId: string) => void
 }
 
-const STATUS_FILTERS: ('all' | JobStatus)[] = ['all', 'pending', 'assigned', 'in_progress', 'complete']
-const CATEGORY_FILTERS: ('all' | Category)[] = [
-  'all',
-  'plumbing',
-  'electrical',
-  'hvac',
-  'landscaping',
-  'cleaning',
-  'handyman',
-  'other',
-]
+const STATUS_FILTERS: ('all' | PortalJobStatus)[] = ['all', 'open', 'claimed', 'in-progress', 'completed', 'cancelled']
 
 export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
   const { jobs, currentUser } = usePortal()
   const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]>('all')
-  const [categoryFilter, setCategoryFilter] =
-    useState<(typeof CATEGORY_FILTERS)[number]>('all')
+  const [categoryFilter, setCategoryFilter] = useState('all')
   const [query, setQuery] = useState('')
+
+  const categoryOptions = useMemo(() => {
+    const unique = new Set(jobs.map((j) => j.category).filter(Boolean))
+    return ['all', ...Array.from(unique).sort()]
+  }, [jobs])
 
   const visible = useMemo(() => {
     return jobs.filter((j) => {
-      if (currentUser.role === 'contractor' && j.contractorId !== currentUser.id) return false
-      if (
-        currentUser.role !== 'admin' &&
-        currentUser.role !== 'contractor' &&
-        j.homeownerId !== currentUser.id
-      )
+      if (currentUser.role === 'contractor' && j.status !== 'open' && j.contractorId !== currentUser.id) {
         return false
+      }
       if (statusFilter !== 'all' && j.status !== statusFilter) return false
       if (categoryFilter !== 'all' && j.category !== categoryFilter) return false
       if (query.trim()) {
@@ -101,7 +86,7 @@ export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
           ))}
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {CATEGORY_FILTERS.map((c) => (
+          {categoryOptions.map((c) => (
             <button
               type="button"
               key={c}
@@ -112,7 +97,7 @@ export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
                   : 'bg-white/5 border-white/10 text-indigo-200/70 hover:bg-white/10'
               }`}
             >
-              {c === 'all' ? 'All categories' : CATEGORY_LABEL[c]}
+              {c === 'all' ? 'All categories' : formatCategoryLabel(c)}
             </button>
           ))}
         </div>

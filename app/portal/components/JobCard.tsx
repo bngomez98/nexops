@@ -3,24 +3,31 @@
 import { motion } from 'framer-motion'
 import { Calendar, MapPin } from 'lucide-react'
 import {
-  CATEGORY_LABEL,
   PRIORITY_LABEL,
+  formatCategoryLabel,
   formatRelative,
-  type Job,
-} from '../lib/mock-data'
-import { usePortal } from '../lib/portal-context'
+  avatarGradient,
+  buildInitials,
+  type PortalJob,
+} from '../lib/portal-utils'
 import { StatusPill } from './StatusPill'
 import { Avatar } from './Avatar'
 
 interface JobCardProps {
-  job: Job
+  job: PortalJob
   index?: number
   onOpen?: (jobId: string) => void
 }
 
 export function JobCard({ job, index = 0, onOpen }: JobCardProps) {
-  const { users } = usePortal()
-  const contractor = users.find((u) => u.id === job.contractorId)
+  const contractorName = job.contractorName
+  const contractorAvatar = contractorName
+    ? {
+        initials: buildInitials(contractorName),
+        avatarColor: avatarGradient(contractorName),
+        avatarUrl: null,
+      }
+    : null
 
   return (
     <motion.button
@@ -37,7 +44,7 @@ export function JobCard({ job, index = 0, onOpen }: JobCardProps) {
         <div className="flex items-center gap-2">
           <span className={`priority-dot priority-${job.priority}`} aria-hidden />
           <span className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70">
-            #{job.shortId} · {CATEGORY_LABEL[job.category]}
+            #{job.shortId} · {formatCategoryLabel(job.category)}
           </span>
         </div>
         <StatusPill status={job.status} />
@@ -55,10 +62,10 @@ export function JobCard({ job, index = 0, onOpen }: JobCardProps) {
           <MapPin size={12} />
           {job.location.split(',')[0]}
         </span>
-        {contractor && (
+        {contractorName && contractorAvatar && (
           <span className="inline-flex items-center gap-1.5">
-            <Avatar user={contractor} size={18} />
-            {contractor.name.split(' ')[0]}
+            <Avatar user={contractorAvatar} size={18} />
+            {contractorName.split(' ')[0]}
           </span>
         )}
         <span className="inline-flex items-center gap-1.5">

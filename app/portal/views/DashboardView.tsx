@@ -11,11 +11,10 @@ import {
   Users,
 } from 'lucide-react'
 import {
-  dashboardStats,
-  formatRelative,
   STATUS_LABEL,
-  type Job,
-} from '../lib/mock-data'
+  formatRelative,
+  type PortalJob,
+} from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { JobCard } from '../components/JobCard'
 import { StatsArc } from '../components/StatsArc'
@@ -33,11 +32,11 @@ export function DashboardView({
 }: DashboardViewProps) {
   const { currentUser, jobs } = usePortal()
   const visible = jobs.filter((j) => {
-    if (currentUser.role === 'admin') return true
-    if (currentUser.role === 'contractor') return j.contractorId === currentUser.id
-    return j.homeownerId === currentUser.id
+    if (currentUser.role === 'admin' || currentUser.role === 'property-manager' || currentUser.role === 'manager') return true
+    if (currentUser.role === 'contractor') return j.contractorId === currentUser.id || j.status === 'open'
+    return j.ownerId === currentUser.id
   })
-  const stats = dashboardStats(currentUser.id, currentUser.role)
+  const stats = buildStats(visible)
   const recent = [...visible]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .slice(0, 4)
@@ -218,7 +217,7 @@ interface ActivityItem {
   when: string
 }
 
-function buildActivity(jobs: Job[]): ActivityItem[] {
+function buildActivity(jobs: PortalJob[]): ActivityItem[] {
   const items: ActivityItem[] = []
   for (const j of jobs) {
     items.push({
@@ -227,18 +226,24 @@ function buildActivity(jobs: Job[]): ActivityItem[] {
       text: `New request “${j.title}” — ${STATUS_LABEL[j.status]}`,
       when: formatRelative(j.createdAt),
     })
-    for (const m of j.messages) {
-      items.push({
-        id: `msg-${m.id}`,
-        jobId: j.id,
-        text: `${m.authorName} on #${j.shortId}: ${truncate(m.body, 50)}`,
-        when: formatRelative(m.timestamp),
-      })
-    }
   }
   return items.sort((a, b) => (a.when > b.when ? 1 : -1))
 }
 
-function truncate(s: string, n: number) {
-  return s.length > n ? s.slice(0, n - 1) + '…' : s
+function buildStats(jobs: PortalJob[]) {
+  const openJobs = jobs.filter((j) => j.status !== 'completed' && j.status !== 'cancelled')
+  const completed = jobs.filter((j) => j.status === 'completed')
+  const pendingPayment = jobs.filter((j) => j.invoiceAmount && !j.invoicePaid).length
+  const total = jobs.length || 1
+  const completionRate = Math.round((completed.length / total) * 100)
+  const activeContractors = new Set(
+    openJobs.filter((j) => j.contractorId).map((j) => j.contractorId),
+  ).size
+  return {
+    open: openJobs.length,
+    completed: completed.length,
+    pendingPayment,
+    completionRate,
+    activeContractors,
+  }
 }

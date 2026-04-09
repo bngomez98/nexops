@@ -23,6 +23,7 @@ export interface PortalJob {
   category: string
   priority: PortalPriority
   status: PortalJobStatus
+  rawStatus?: string | null
   location: string
   createdAt: string
   preferredDate?: string | null
@@ -123,4 +124,3 @@ export function mapUrgencyToPriority(urgency?: string | null): PortalPriority {
   if (normalized === 'low') return 'low'
   return 'normal'
 }
-
