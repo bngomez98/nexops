@@ -1,5 +1,3 @@
-
-
 Nexus Operations is a Next.js web application serving Topeka, KS and the surrounding region. Homeowners submit documented project requests — including photos, written scope, and a maximum budget — and licensed, insured contractors can claim projects exclusively. Projects are immediately removed from all other contractors' feeds upon claim.
 
 **For homeowners:** Free to submit requests. Matched with one verified contractor, confirmed within 24 hours.
@@ -26,28 +24,28 @@ Nexus Operations is a Next.js web application serving Topeka, KS and the surroun
 
 **Install dependencies:**
 
-```bash
+\`\`\`bash
 pnpm install
-```
+\`\`\`
 
 **Start the development server:**
 
-```bash
+\`\`\`bash
 pnpm dev
-```
+\`\`\`
 
 The application will be available at `http://localhost:3000`.
 
 **Build for production:**
 
-```bash
+\`\`\`bash
 pnpm build
 pnpm start
-```
+\`\`\`
 
 ## Project Structure
 
-```
+\`\`\`
 nexops/
 ├── app/                    # Next.js App Router pages and API routes
 │   ├── api/                # Server-side API handlers
@@ -69,7 +67,7 @@ nexops/
 │   ├── store.ts            # In-memory data store (development)
 │   └── utils.ts            # Shared helpers
 └── middleware.ts            # Security headers and route protection
-```
+\`\`\`
 
 ## Authentication
 
@@ -78,7 +76,7 @@ Role-based routing is enforced via `middleware.ts`. Two user roles exist:
 - `homeowner` — access to `/dashboard/homeowner/*`
 - `contractor` — access to `/dashboard/contractor/*`
 
-Session tokens are validated server-side on every protected request. Unauthenticated users are redirected to `/login`.
+Session tokens are validated server-side on every protected request. Unauthenticated users are redirected to `/auth/login`.
 
 ## API Endpoints
 
@@ -107,10 +105,7 @@ Session tokens are validated server-side on every protected request. Unauthentic
 ## Membership Tiers
 
 | Tier | Price | Key Differentiator |
-|---|---|---|
-| Standard | $299/month | Full project feed, first-come first-served |
-| Premium | $499/month | 90-second advance notification window |
-| Elite | $749/month | 10-minute exclusive window on $5K+ projects |
+
 
 All tiers include unlimited project claims, full project documentation before claiming, and a performance dashboard. No annual contracts. Cancel anytime.
 
@@ -126,6 +121,19 @@ All tiers include unlimited project claims, full project documentation before cl
 - `Permissions-Policy` (camera, microphone, geolocation restricted)
 - `Cross-Origin-Opener-Policy: same-origin`
 - `Cross-Origin-Resource-Policy: same-origin`
+
+## CI/CD
+
+GitHub Actions now runs a full CI pipeline on every push and pull request:
+
+- ESLint (`pnpm lint`)
+- TypeScript type checks (`npx tsc --noEmit`)
+- Vitest test suite (`pnpm test`)
+- Production build verification (`pnpm build`)
+
+**Note:** These checks are currently non-blocking (using `continue-on-error: true`) to allow for remediation of existing codebase issues. They will be enforced in a future update.
+
+A dedicated CD workflow deploys to Vercel production after CI succeeds on `main` (or via manual dispatch), when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are configured in repository settings.
 
 ## Deployment
 

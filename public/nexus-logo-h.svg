@@ -1,0 +1,10 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="30" cy="30" rx="26" ry="11" transform="rotate(-42 30 30)" stroke="#3d7a4f" stroke-width="2.75" stroke-linecap="round"/>
+  <ellipse cx="30" cy="30" rx="26" ry="11" transform="rotate(42 30 30)" stroke="#3d7a4f" stroke-width="2.75" stroke-linecap="round"/>
+  <ellipse cx="30" cy="30" rx="14" ry="6" transform="rotate(-42 30 30)" stroke="#3d7a4f" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+  <ellipse cx="30" cy="30" rx="14" ry="6" transform="rotate(42 30 30)" stroke="#3d7a4f" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+  <line x1="30" y1="23" x2="30" y2="37" stroke="#3d7a4f" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="23" y1="30" x2="37" y2="30" stroke="#3d7a4f" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="62" y="40" font-size="20" font-weight="800" fill="white" letter-spacing="-0.01em">NEXUS</text>
+  <text x="62" y="52" font-size="8" font-weight="700" fill="#3d7a4f" letter-spacing="0.08em">OPERATIONS</text>
+</svg>

@@ -1,0 +1,377 @@
+import type { Metadata } from "next"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { CONTACT_INFO } from "@/lib/contact-info"
+import Link from "next/link"
+import Image from "next/image"
+import { ArrowRight, MapPin, Phone, Mail, CheckCircle } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "About Us — Maintenance Coordination in Topeka, KS",
+  description:
+    "Nexus Operations LLC is a maintenance coordination company based in Topeka, Kansas. Founded by Brianna Gomez, we coordinate verified contractors for commercial property managers, residential property owners, and local businesses in Shawnee County.",
+}
+
+const timeline = [
+  {
+    date: "January 2026",
+    title: "Company Formation",
+    description:
+      "Nexus Operations LLC formed as a Kansas Limited Liability Company, headquartered at 2611 SW 17th St, Topeka.",
+  },
+  {
+    date: "Q1 2026",
+    title: "Contractor Network Development",
+    description:
+      "Recruit and verify 15-20 contractors across core maintenance trades in Shawnee County.",
+  },
+  {
+    date: "Q2 2026",
+    title: "First Commercial Clients",
+    description:
+      "Begin serving property management companies overseeing 100-800+ units with full coordination support.",
+  },
+  {
+    date: "2026-2027",
+    title: "B2B Service Expansion",
+    description:
+      "Extending our operational coordination model to include lead generation, vendor management, and strategic consulting for local businesses.",
+  },
+]
+
+export default function AboutPage() {
+  return (
+    <div className="min-h-screen">
+      <Header />
+      <main>
+        {/* Hero */}
+        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:items-center">
+            <div className="max-w-3xl">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-6">
+                About Nexus Operations
+              </p>
+              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+                Maintenance coordination
+                <br className="hidden sm:block" />
+                <span className="font-serif italic font-normal text-primary">
+                  for Topeka property owners.
+                </span>
+                A coordination company, not a contractor.
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                Nexus Operations does not perform the work itself. We
+                coordinate the professionals who do. Our role is to ensure that when a
+                property manager submits a maintenance request, a verified
+                contractor is assigned, arrives on time, completes documented
+                work, and gets paid -- all through one reliable point of contact.
+              </p>
+            </div>
+            <div className="hidden lg:block">
+              <Image
+                src="https://github.com/user-attachments/assets/d5458027-422e-4e06-a659-f7006fe659dd"
+                alt="Nexus Operations office at 2611 SW 17th St in Topeka"
+                width={560}
+                height={420}
+                className="w-full object-cover rounded-2xl shadow-lg"
+              />
+            </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission */}
+        <section className="py-16 lg:py-24 bg-secondary/50">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                  Our mission
+                </p>
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
+                  Reduce coordination overhead in property maintenance.
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Property management companies in Topeka face chronic
+                  challenges: maintenance staff turnover rates of 35-50%
+                  annually, emergency coordination consuming 8-15 hours of
+                  manager time weekly, and tenant satisfaction declining from
+                  delayed repair response.
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Properties under 200 units often cannot justify the $3,500-$4,500
+                  monthly cost of a full-time maintenance employee. Nexus Operations
+                  provides that coordination capacity at a fraction of the cost,
+                  with built-in redundancy that no single employee can match.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                  Our approach
+                </p>
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
+                  Integrated operational partnership.
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  We are not a marketplace that connects and walks away. We stay
+                  in the loop from intake to invoice, ensuring quality, tracking
+                  contractor performance across multiple dimensions, and
+                  providing monthly reporting on every request handled.
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Beyond maintenance, our B2B services model extends to lead
+                  generation, vendor management, and consulting -- creating a
+                  single strategic partner for diverse business operational
+                  needs in the Topeka market.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Founder */}
+        <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              Leadership
+            </p>
+            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-10">
+              Founded and operated by Brianna Gomez.
+            </h2>
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary">
+                  <Image
+                    src="/business-growth-success-strategy.jpg"
+                    alt="Nexus Operations founder"
+                    width={600}
+                    height={450}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-foreground/90 backdrop-blur-sm p-4 text-background">
+                  <p className="font-semibold text-sm">Brianna Gomez</p>
+                  <p className="text-xs opacity-60 mt-0.5">Chief Executive Member · Nexus Operations, LLC</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  Brianna founded Nexus Operations in January 2026 to address a specific operational gap she identified in the Topeka property management market: property managers were spending disproportionate time coordinating vendor relationships instead of managing their core responsibilities.
+                </p>
+                <p className="text-muted-foreground leading-relaxed text-[15px]">
+                  Nexus Operations was built to absorb that coordination burden entirely, starting with commercial property maintenance and expanding into broader B2B operational support.
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-4">
+                  {[
+                    { label: 'Company formed', value: 'January 2026' },
+                    { label: 'Headquarters', value: 'Topeka, KS' },
+                    { label: 'Service area', value: 'Shawnee County' },
+                    { label: 'Business type', value: 'LLC · Kansas' },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="p-4 rounded-xl bg-secondary/60 border border-border">
+                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{label}</p>
+                      <p className="text-sm font-semibold text-foreground">{value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Process Walkthrough */}
+        <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                How it works
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                From request to resolved: a real example.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A property manager overseeing 120 units submits an emergency request at 11:14 PM on a Saturday.
+                Here is exactly what happens next.
+              </p>
+            </div>
+
+            <div className="relative">
+              {/* Timeline connector line */}
+              <div className="absolute left-[19px] top-8 bottom-8 w-px bg-border hidden sm:block" aria-hidden="true" />
+
+              <div className="flex flex-col gap-0">
+                {[
+                  {
+                    time: "11:14 PM Saturday",
+                    label: "Request submitted",
+                    color: "bg-foreground",
+                    detail: "Property manager logs into the portal and submits: burst pipe in Unit 14B, water actively running, tenant present. Uploads 4 photos. Selects Emergency tier.",
+                    outcome: null,
+                  },
+                  {
+                    time: "11:14 PM",
+                    label: "Automated triage",
+                    color: "bg-primary",
+                    detail: "System classifies as Emergency — Plumbing. SLA clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
+                    outcome: null,
+                  },
+                  {
+                    time: "11:27 PM",
+                    label: "Contractor assigned",
+                    color: "bg-primary",
+                    detail: "On-call plumber from the verified network accepts the assignment. Property manager receives confirmation with contractor name, license number, and ETA. Tenant is notified.",
+                    outcome: "13 minutes to assignment. SLA: 60 minutes.",
+                  },
+                  {
+                    time: "12:51 AM Sunday",
+                    label: "On-site arrival",
+                    color: "bg-primary",
+                    detail: "Contractor arrives at Unit 14B, locates the failed supply line under the kitchen sink, shuts off water to the unit. Submits arrival photo through the portal.",
+                    outcome: "97 minutes from submission. SLA: 4 hours.",
+                  },
+                  {
+                    time: "2:18 AM",
+                    label: "Work completed",
+                    color: "bg-primary",
+                    detail: "Supply line replaced, water restored to unit. Contractor submits 6 completion photos and a written summary noting secondary water intrusion in the cabinet below.",
+                    outcome: null,
+                  },
+                  {
+                    time: "Monday AM",
+                    label: "Invoice issued",
+                    color: "bg-secondary border-2 border-border",
+                    detail: "Nexus Operations generates a unified invoice: $280 contractor cost + $98 Emergency coordination markup (35%) = $378 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
+                    outcome: "One invoice. Full documentation. Zero coordination calls.",
+                  },
+                  {
+                    time: "Within 30 days",
+                    label: "Contractor paid",
+                    color: "bg-green-500",
+                    detail: "Once the property manager pays the invoice, Nexus Operations pays the plumber directly at the full quoted rate of $280. No collection lag, no disputed invoices.",
+                    outcome: null,
+                  },
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-5 sm:gap-8 pb-8 last:pb-0">
+                    <div className="relative flex flex-col items-center">
+                      <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center z-10 ${step.color}`} />
+                    </div>
+                    <div className="flex-1 pt-1.5 pb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 mb-2">
+                        <span className="text-xs font-mono text-muted-foreground">{step.time}</span>
+                        <h3 className="text-sm font-semibold text-foreground">{step.label}</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                        {step.detail}
+                      </p>
+                      {step.outcome && (
+                        <div className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-primary bg-primary/8 rounded-full px-3 py-1">
+                          <CheckCircle className="h-3 w-3" />
+                          {step.outcome}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-12 grid sm:grid-cols-3 gap-4">
+              {[
+                { label: "Time from submission to assignment", value: "13 min", note: "vs. 60-min SLA" },
+                { label: "Time from submission to on-site", value: "97 min", note: "vs. 4-hr SLA" },
+                { label: "Coordination calls made by manager", value: "0", note: "portal handled everything" },
+              ].map((stat) => (
+                <div key={stat.label} className="p-5 rounded-xl bg-card border border-border">
+                  <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
+                  <p className="text-xs font-semibold text-muted-foreground mb-0.5">{stat.label}</p>
+                  <p className="text-[11px] text-primary font-medium">{stat.note}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Timeline */}
+        <section className="py-16 lg:py-24 bg-secondary/50">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Our trajectory
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground">
+                Company timeline and milestones.
+              </h2>
+            </div>
+
+            <div className="flex flex-col gap-0">
+              {timeline.map((item, i) => (
+                <div
+                  key={item.date}
+                  className={`flex gap-6 lg:gap-10 py-6 ${
+                    i < timeline.length - 1
+                      ? "border-b border-border"
+                      : ""
+                  }`}
+                >
+                  <div className="shrink-0 w-32 lg:w-40">
+                    <span className="text-sm font-medium text-primary">
+                      {item.date}
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-base font-semibold text-foreground mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact info */}
+        <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
+                Get in touch.
+              </h2>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
+                <a
+                  href={CONTACT_INFO.phoneHref}
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Phone className="h-4 w-4" />
+                  {CONTACT_INFO.phoneDisplay}
+                </a>
+                <a
+                  href={`mailto:${CONTACT_INFO.email}`}
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Mail className="h-4 w-4" />
+                  {CONTACT_INFO.email}
+                </a>
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4" />
+                  {CONTACT_INFO.cityStateZip}
+                </span>
+              </div>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+              >
+                Contact Us
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  )
+}

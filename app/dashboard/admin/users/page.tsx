@@ -1,0 +1,92 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { DashboardNav } from '@/components/dashboard-nav'
+import { createClient } from '@/lib/supabase/client'
+import { Loader2, Users } from 'lucide-react'
+
+function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
+
+export default function AdminUsersPage() {
+  const router = useRouter()
+  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
+  const [users, setUsers] = useState<Record<string, unknown>[]>([])
+  const [loading, setLoading] = useState(true)
+  const [filter, setFilter]   = useState('all')
+
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: { user: u } } = await supabase.auth.getUser()
+      if (!u) { router.push('/auth/login'); return }
+      if (u.user_metadata?.role !== 'admin') { router.push('/dashboard'); return }
+      setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'admin' })
+
+      const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false })
+      setUsers(data ?? [])
+      setLoading(false)
+    }
+    load()
+  }, [router])
+
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+  }
+
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
+  if (!user) return null
+
+  const displayed = filter === 'all' ? users : users.filter(u => u.role === filter)
+
+  return (
+    <div className="min-h-screen bg-background">
+      <DashboardNav userName={user.name} role="admin" onLogout={handleLogout} />
+      <main className="md:ml-[240px] p-5 md:p-7">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight">User Management</h1>
+          <p className="text-[14px] text-muted-foreground mt-1">{users.length} total users across all roles.</p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-5">
+          {['all', 'homeowner', 'contractor', 'property-manager', 'admin'].map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg border transition-colors ${filter === f ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border text-muted-foreground hover:text-foreground'}`}
+            >
+              {f === 'all' ? `All (${users.length})` : `${fmt(f)} (${users.filter(u => u.role === f).length})`}
+            </button>
+          ))}
+        </div>
+
+        {displayed.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-card border border-border rounded-2xl text-center">
+            <Users className="w-10 h-10 text-muted-foreground mb-4" />
+            <p className="font-semibold mb-1">No users found</p>
+          </div>
+        ) : (
+          <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
+            {displayed.map((u: Record<string, unknown>) => (
+              <div key={u.user_id} className="flex items-center gap-4 px-5 py-4">
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-[12px] font-bold text-primary flex-shrink-0">
+                  {u.full_name?.[0]?.toUpperCase() ?? '?'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-[13.5px]">{u.full_name ?? 'Unknown'}</p>
+                  <p className="text-[12px] text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</p>
+                </div>
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                  u.role === 'admin' ? 'bg-red-100 text-red-700' :
+                  u.role === 'contractor' ? 'bg-muted text-foreground/70' :
+                  u.role === 'property-manager' ? 'bg-muted text-foreground/70' :
+                  'bg-muted text-foreground/70'
+                }`}>{fmt(u.role ?? 'unknown')}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
