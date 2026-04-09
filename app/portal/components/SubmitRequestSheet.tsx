@@ -17,7 +17,7 @@ import {
   PRIORITY_LABEL,
   type Category,
   type Priority,
-} from '../lib/mock-data'
+} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Sheet } from './Sheet'
 
@@ -74,12 +74,12 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
     onClose()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim() || !description.trim() || !location.trim()) {
       setError('Add a title, description, and location to submit.')
       return
     }
-    const job = submitRequest({
+    const job = await submitRequest({
       title: title.trim(),
       description: description.trim(),
       category,
@@ -87,6 +87,10 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
       location: location.trim(),
       photoCount,
     })
+    if (!job) {
+      setError('Unable to submit request right now. Please try again.')
+      return
+    }
     reset()
     onClose()
     onSubmitted?.(job.id)
@@ -219,7 +223,7 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
           <button type="button" className="btn-ghost flex-1" onClick={handleClose}>
             Cancel
           </button>
-          <button type="button" className="btn-primary flex-1" onClick={handleSubmit}>
+          <button type="button" className="btn-primary flex-1" onClick={() => void handleSubmit()}>
             Submit request
           </button>
         </div>
