@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Calendar,
@@ -20,7 +20,7 @@ import {
   formatMoney,
   formatRelative,
   type Job,
-} from '../lib/mock-data'
+} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from './Avatar'
 import { Sheet } from './Sheet'
@@ -32,11 +32,17 @@ interface JobDetailSheetProps {
 }
 
 export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
-  const { jobs, users, currentUser, advanceStatus, postMessage, assignContractor } = usePortal()
+  const { jobs, users, currentUser, advanceStatus, postMessage, assignContractor, refreshJob } =
+    usePortal()
   const job = useMemo<Job | null>(() => jobs.find((j) => j.id === jobId) ?? null, [jobs, jobId])
 
   const [draft, setDraft] = useState('')
   const [signed, setSigned] = useState(false)
+
+  useEffect(() => {
+    if (!jobId) return
+    void refreshJob(jobId)
+  }, [jobId, refreshJob])
 
   if (!job) {
     return (
@@ -57,7 +63,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
 
   const handleSend = () => {
     if (!draft.trim()) return
-    postMessage(job.id, draft)
+    void postMessage(job.id, draft)
     setDraft('')
   }
 
@@ -124,7 +130,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             })}
           </div>
           {canAdvance && (currentUser.role === 'admin' || currentUser.role === 'contractor') && (
-            <button type="button" className="btn-ghost mt-4 w-full" onClick={() => advanceStatus(job.id)}>
+            <button type="button" className="btn-ghost mt-4 w-full" onClick={() => void advanceStatus(job.id)}>
               Advance to {STATUS_LABEL[STATUS_FLOW[STATUS_FLOW.indexOf(job.status) + 1]]}
             </button>
           )}
@@ -162,7 +168,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
                   <button
                     type="button"
                     key={c.id}
-                    onClick={() => assignContractor(job.id, c.id)}
+                    onClick={() => void assignContractor(job.id, c.id)}
                     className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30"
                   >
                     {c.name.split(' ')[0]}

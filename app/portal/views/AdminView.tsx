@@ -1,7 +1,7 @@
 'use client'
 
 import { ExternalLink, Shield, UserPlus, Users } from 'lucide-react'
-import { dashboardStats, formatMoney, STATUS_LABEL } from '../lib/mock-data'
+import { dashboardStatsForJobs, formatMoney, STATUS_LABEL } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 import { StatusPill } from '../components/StatusPill'
@@ -12,7 +12,7 @@ interface AdminViewProps {
 
 export function AdminView({ onOpenJob }: AdminViewProps) {
   const { jobs, users, currentUser, assignContractor } = usePortal()
-  const stats = dashboardStats(currentUser.id, 'admin')
+  const stats = dashboardStatsForJobs(jobs)
   const contractors = users.filter((u) => u.role === 'contractor')
   const customers = users.filter((u) => u.role === 'homeowner' || u.role === 'manager')
 
@@ -87,7 +87,7 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
                     <button
                       type="button"
                       key={c.id}
-                      onClick={() => assignContractor(j.id, c.id)}
+                      onClick={() => void assignContractor(j.id, c.id)}
                       className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30 inline-flex items-center gap-1.5"
                     >
                       <Avatar user={c} size={16} />

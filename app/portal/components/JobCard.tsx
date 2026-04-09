@@ -7,7 +7,7 @@ import {
   PRIORITY_LABEL,
   formatRelative,
   type Job,
-} from '../lib/mock-data'
+} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { StatusPill } from './StatusPill'
 import { Avatar } from './Avatar'
@@ -55,10 +55,10 @@ export function JobCard({ job, index = 0, onOpen }: JobCardProps) {
           <MapPin size={12} />
           {job.location.split(',')[0]}
         </span>
-        {contractor && (
+        {(contractor || job.contractorName) && (
           <span className="inline-flex items-center gap-1.5">
-            <Avatar user={contractor} size={18} />
-            {contractor.name.split(' ')[0]}
+            {contractor && <Avatar user={contractor} size={18} />}
+            {(contractor?.name ?? job.contractorName ?? '').split(' ')[0]}
           </span>
         )}
         <span className="inline-flex items-center gap-1.5">
