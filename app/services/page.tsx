@@ -134,9 +134,8 @@ export default function ServicesPage() {
                 </h3>
                 <div className="rounded-xl bg-card border border-border p-6 lg:p-8 mb-6">
                   <p className="text-muted-foreground leading-relaxed mb-6">
-                    Cost-plus markup on completed work. No retainers, no
-                    subscriptions. Revenue is aligned directly with service
-                    delivery volume.
+                    Simple subscription plans for homeowners and contractors. No
+                    retainers or hidden fees — one invoice per billing cycle.
                   </p>
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between py-3 border-b border-border">
@@ -144,7 +143,7 @@ export default function ServicesPage() {
                         Routine Maintenance
                       </span>
                       <span className="text-sm font-medium text-foreground">
-                        25% markup
+                        Assigned &lt; 24h
                       </span>
                     </div>
                     <div className="flex items-center justify-between py-3 border-b border-border">
@@ -152,7 +151,7 @@ export default function ServicesPage() {
                         Urgent Repairs
                       </span>
                       <span className="text-sm font-medium text-foreground">
-                        30% markup
+                        Assigned &lt; 4h
                       </span>
                     </div>
                     <div className="flex items-center justify-between py-3">
@@ -160,16 +159,14 @@ export default function ServicesPage() {
                         Emergency Response
                       </span>
                       <span className="text-sm font-medium text-foreground">
-                        35% markup
+                        Assigned &lt; 1h
                       </span>
                     </div>
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Markup reflects coordination complexity and urgency-driven
-                  operating costs. Contractors receive their full quoted rates
-                  -- the markup is applied on top, not deducted from their
-                  compensation.
+                  All urgency tiers include guaranteed response times, photo
+                  documentation, and unified monthly invoicing.
                 </p>
               </div>
             </div>
@@ -205,7 +202,7 @@ export default function ServicesPage() {
                     "Same response time guarantees by urgency category",
                     "No minimum commitment or long-term contracts",
                     "Direct communication on every maintenance request",
-                    "Transparent pricing -- contractor cost plus service markup",
+                    "Transparent pricing -- one invoice per billing cycle",
                   ].map((item) => (
                     <div
                       key={item}

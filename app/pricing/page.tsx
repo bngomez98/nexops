@@ -2,12 +2,12 @@ import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
-import { ArrowRight, Check, Zap, Shield, Clock } from "lucide-react"
+import { ArrowRight, Check } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Pricing — Subscription Plans & Per-Job Coordination Markup",
+  title: "Pricing — Subscription Plans",
   description:
-    "Nexus Operations pricing: Starter plan included, Pro plans from $59/month billed annually. Per-job coordination markup by urgency tier — 25% routine, 30% urgent, 35% emergency. Serving Topeka and Shawnee County, KS.",
+    "Nexus Operations pricing: Starter plan included, Pro plans from $59/month billed annually. Serving Topeka and Shawnee County, KS.",
 }
 
 const subscriptionPlans = [
@@ -64,60 +64,6 @@ const subscriptionPlans = [
     cta: "Start Monthly Plan",
     ctaHref: "/auth/sign-up",
     highlighted: false,
-  },
-]
-
-const serviceTiers = [
-  {
-    name: "Routine",
-    markup: "25%",
-    sla: "Assigned within 24 hrs · On-site within 3–5 days",
-    description:
-      "Standard maintenance requests. Scheduled repairs, cosmetic fixes, planned replacements.",
-    features: [
-      "Contractor assigned within 24 hours",
-      "On-site within 3–5 business days",
-      "Photo documentation on every job",
-      "Monthly unified invoicing",
-      "Quality assurance review",
-      "Full request tracking in portal",
-    ],
-    highlighted: false,
-    icon: Clock,
-  },
-  {
-    name: "Urgent",
-    markup: "30%",
-    sla: "Assigned within 4 hrs · On-site next business day",
-    description:
-      "Issues requiring prompt attention. Non-emergency plumbing, electrical, HVAC in moderate weather.",
-    features: [
-      "Everything in Routine",
-      "Contractor assigned within 4 hours",
-      "On-site next business day",
-      "Escalation if primary contractor declines",
-      "Priority assignment from network",
-      "Direct status updates",
-    ],
-    highlighted: true,
-    icon: Zap,
-  },
-  {
-    name: "Emergency",
-    markup: "35%",
-    sla: "Assigned within 1 hr · On-site within 4 hrs",
-    description:
-      "Critical failures requiring immediate response. Burst pipes, gas leaks, HVAC failure in extreme weather.",
-    features: [
-      "Everything in Urgent",
-      "Contractor assigned within 1 hour",
-      "On-site within 4 hours",
-      "Automatic backup contractor",
-      "24/7 coordination availability",
-      "Real-time updates until resolution",
-    ],
-    highlighted: false,
-    icon: Shield,
   },
 ]
 
@@ -229,63 +175,94 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Service Tier Pricing */}
+        {/* Service Tiers — SLA Reference */}
         <section className="py-16 lg:py-24 bg-secondary/40">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                Per-Job Pricing
+                Response Times
               </p>
               <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4">
-                Cost-plus markup by urgency.
+                Guaranteed response by urgency.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Beyond your subscription, individual jobs are invoiced at cost plus a coordination markup based on urgency. You always see both line items — full transparency.
+                Every request is triaged by urgency. SLA response times are contractual — if a contractor declines, backup assignment is automatic.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
-              {serviceTiers.map((tier) => {
-                const Icon = tier.icon
-                return (
-                  <div
-                    key={tier.name}
-                    className={`p-7 rounded-2xl border flex flex-col ${
-                      tier.highlighted
-                        ? "bg-primary/5 border-primary/20 shadow-lg shadow-primary/10"
-                        : "bg-card border-border"
-                    }`}
-                  >
-                    {tier.highlighted && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full self-start mb-4">
-                        Most Common
-                      </span>
-                    )}
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${tier.highlighted ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <h3 className="text-base font-bold text-foreground">{tier.name}</h3>
-                    </div>
-                    <div className="flex items-baseline gap-1 mb-1">
-                      <span className="text-3xl font-bold text-primary">{tier.markup}</span>
-                      <span className="text-sm text-muted-foreground">markup</span>
-                    </div>
-                    <p className="text-[11.5px] text-muted-foreground mb-2 font-medium">{tier.sla}</p>
-                    <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-6 mt-2">
-                      {tier.description}
-                    </p>
-                    <ul className="flex flex-col gap-3 flex-grow">
-                      {tier.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2.5 text-[12.5px]">
-                          <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                          <span className="text-foreground/70">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              })}
+              {[
+                {
+                  name: "Routine",
+                  sla: "Assigned within 24 hrs · On-site within 3–5 days",
+                  description: "Standard maintenance requests. Scheduled repairs, cosmetic fixes, planned replacements.",
+                  features: [
+                    "Contractor assigned within 24 hours",
+                    "On-site within 3–5 business days",
+                    "Photo documentation on every job",
+                    "Monthly unified invoicing",
+                    "Quality assurance review",
+                    "Full request tracking in portal",
+                  ],
+                  highlighted: false,
+                },
+                {
+                  name: "Urgent",
+                  sla: "Assigned within 4 hrs · On-site next business day",
+                  description: "Issues requiring prompt attention. Non-emergency plumbing, electrical, HVAC in moderate weather.",
+                  features: [
+                    "Everything in Routine",
+                    "Contractor assigned within 4 hours",
+                    "On-site next business day",
+                    "Escalation if primary contractor declines",
+                    "Priority assignment from network",
+                    "Direct status updates",
+                  ],
+                  highlighted: true,
+                },
+                {
+                  name: "Emergency",
+                  sla: "Assigned within 1 hr · On-site within 4 hrs",
+                  description: "Critical failures requiring immediate response. Burst pipes, gas leaks, HVAC failure in extreme weather.",
+                  features: [
+                    "Everything in Urgent",
+                    "Contractor assigned within 1 hour",
+                    "On-site within 4 hours",
+                    "Automatic backup contractor",
+                    "24/7 coordination availability",
+                    "Real-time updates until resolution",
+                  ],
+                  highlighted: false,
+                },
+              ].map((tier) => (
+                <div
+                  key={tier.name}
+                  className={`p-7 rounded-2xl border flex flex-col ${
+                    tier.highlighted
+                      ? "bg-primary/5 border-primary/20 shadow-lg shadow-primary/10"
+                      : "bg-card border-border"
+                  }`}
+                >
+                  {tier.highlighted && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full self-start mb-4">
+                      Most Common
+                    </span>
+                  )}
+                  <h3 className="text-base font-bold text-foreground mb-2">{tier.name}</h3>
+                  <p className="text-[11.5px] text-muted-foreground mb-2 font-medium">{tier.sla}</p>
+                  <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-6 mt-2">
+                    {tier.description}
+                  </p>
+                  <ul className="flex flex-col gap-3 flex-grow">
+                    {tier.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2.5 text-[12.5px]">
+                        <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                        <span className="text-foreground/70">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
 
             {/* Invoice example */}
@@ -293,28 +270,24 @@ export default function PricingPage() {
               <div>
                 <h3 className="text-xl font-semibold text-foreground mb-4">How your invoice works.</h3>
                 <p className="text-[13.5px] text-muted-foreground leading-relaxed mb-6">
-                  Every invoice shows the contractor&apos;s quoted cost and our coordination markup as separate line items. You always see exactly what you&apos;re paying for.
+                  Every invoice shows a full line-item breakdown of work performed. You always see exactly what you&apos;re paying for.
                 </p>
                 <div className="rounded-2xl bg-card border border-border p-6">
                   <p className="text-[12px] font-semibold text-muted-foreground mb-4 uppercase tracking-wider">Example: Routine plumbing repair</p>
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between py-2 border-b border-border">
-                      <span className="text-[13px] text-muted-foreground">Contractor cost</span>
+                      <span className="text-[13px] text-muted-foreground">Service: Plumbing repair</span>
                       <span className="text-[13px] font-semibold text-foreground">$400.00</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 border-b border-border">
-                      <span className="text-[13px] text-muted-foreground">Coordination markup (25%)</span>
-                      <span className="text-[13px] font-semibold text-foreground">$100.00</span>
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <span className="text-[13px] font-bold text-foreground">Total invoiced</span>
-                      <span className="text-[13px] font-bold text-primary">$500.00</span>
+                      <span className="text-[13px] font-bold text-primary">$400.00</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">What the markup covers.</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-4">What your subscription covers.</h3>
                 <div className="flex flex-col gap-4">
                   {[
                     { title: "Request intake & classification", desc: "We triage every request, assign the right trade, and match to the best-available contractor." },
@@ -359,7 +332,7 @@ export default function PricingPage() {
                   {[
                     {
                       title: "Monthly unified invoicing",
-                      desc: "Every job across all properties consolidated into a single monthly invoice. Line-item detail for each request: property address, trade, contractor cost, and coordination markup. No individual contractor bills to reconcile.",
+                      desc: "Every job across all properties consolidated into a single monthly invoice. Line-item detail for each request: property address, trade, and total. No individual contractor bills to reconcile.",
                     },
                     {
                       title: "SLA enforcement across all tiers",
@@ -404,28 +377,28 @@ export default function PricingPage() {
                     <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
                       <div>
                         <p className="text-[13px] font-semibold text-foreground">Routine jobs</p>
-                        <p className="text-[12px] text-muted-foreground">Contractor cost + coordination markup</p>
+                        <p className="text-[12px] text-muted-foreground">Assigned within 24 hrs · On-site within 3–5 days</p>
                       </div>
-                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">25% markup</span>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
                     </div>
                     <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
                       <div>
                         <p className="text-[13px] font-semibold text-foreground">Urgent jobs</p>
                         <p className="text-[12px] text-muted-foreground">4-hr assignment, next business day on-site</p>
                       </div>
-                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">30% markup</span>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
                     </div>
                     <div className="flex items-start justify-between gap-4 py-3">
                       <div>
                         <p className="text-[13px] font-semibold text-foreground">Emergency jobs</p>
                         <p className="text-[12px] text-muted-foreground">1-hr assignment, 4-hr on-site, 24/7</p>
                       </div>
-                      <span className="text-[13px] font-bold text-primary whitespace-nowrap">35% markup</span>
+                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
                     </div>
                   </div>
                   <div className="mt-5 pt-5 border-t border-border">
                     <p className="text-[12px] text-muted-foreground leading-relaxed">
-                      Volume discounts available for portfolios exceeding 200 units or 50+ jobs per month. Discuss your portfolio with our team.
+                      Volume pricing available for large portfolios. Discuss your portfolio with our team.
                     </p>
                   </div>
                 </div>

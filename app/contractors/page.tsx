@@ -37,7 +37,7 @@ const benefits = [
     icon: ShieldCheck,
     title: "No subscription fees or lead costs",
     description:
-      "We never charge contractors to receive work. Our revenue comes from the coordination markup charged to property clients. You receive your full quoted rate on every job.",
+      "We never charge contractors to receive work. No subscription fees, no lead fees. You receive your full quoted rate on every job.",
   },
   {
     icon: BarChart3,

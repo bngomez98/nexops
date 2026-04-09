@@ -85,7 +85,7 @@ const sections = [
       },
       {
         q: "Is there a cost to join the Nexus contractor network?",
-        a: "Joining the contractor network is free. Nexus Operations does not charge contractors subscription fees or lead fees. Our revenue comes from the coordination markup charged to property management clients. Contractors receive their full quoted rate on every job. Nexus Operations collects payment from the client and pays contractors directly within 30 days of job completion.",
+        a: "Joining the contractor network is free. Nexus Operations does not charge contractors subscription fees or lead fees. Contractors receive their full quoted rate on every job. Nexus Operations collects payment from the client and pays contractors directly within 30 days of job completion.",
       },
       {
         q: "What happens if I claim a request but cannot make the consultation?",
