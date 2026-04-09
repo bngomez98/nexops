@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { PortalProvider } from './lib/portal-context'
 import './portal.css'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Nexus Operations — Portal',
   description: 'Premium property operations platform — submit jobs, track progress live, and pay invoices in one place.',
