@@ -1,7 +1,7 @@
-'use client'
+import { DashboardClientLayout } from './dashboard-client-layout'
 
-import { RequestsProvider } from '@/app/lib/requests-context'
+export const dynamic = 'force-dynamic'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return <RequestsProvider>{children}</RequestsProvider>
+  return <DashboardClientLayout>{children}</DashboardClientLayout>
 }
