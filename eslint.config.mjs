@@ -5,7 +5,6 @@ import path from "path"
 import { fileURLToPath } from "url"
 import tseslint from "typescript-eslint"
 import nextPlugin from '@next/eslint-plugin-next'
-import tseslint from 'typescript-eslint'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

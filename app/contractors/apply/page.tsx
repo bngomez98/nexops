@@ -90,7 +90,8 @@ export default function ContractorApplyPage() {
         return
       }
       setSubmitted(true)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Network error. Please check your connection and try again.')
     } finally {
       setSubmitting(false)

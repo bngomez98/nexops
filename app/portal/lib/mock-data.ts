@@ -373,7 +373,7 @@ export function dashboardStats(userId: string, role: Role) {
 }
 
 export function formatRelative(iso: string): string {
-  const now = new Date('2026-04-09T16:00:00Z').getTime()
+  const now = Date.now()
   const then = new Date(iso).getTime()
   const diff = Math.max(0, now - then)
   const mins = Math.round(diff / 60000)

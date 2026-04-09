@@ -38,7 +38,8 @@ export default function ContractorBillingPage() {
         const { user: u } = await res.json()
         if (u.role !== 'contractor') { router.push('/dashboard/homeowner/billing'); return }
         setUser(u)
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -63,7 +64,8 @@ export default function ContractorBillingPage() {
       const data = await res.json()
       if (!res.ok) { toast.error(data.error || 'Failed to open billing portal'); return }
       window.location.href = data.url
-    } catch {
+    } catch (err) {
+      console.error(err)
       toast.error('Something went wrong. Please try again.')
     } finally {
       setPortalLoading(false)

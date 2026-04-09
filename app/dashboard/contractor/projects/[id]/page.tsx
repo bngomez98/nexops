@@ -62,7 +62,8 @@ export default function ProjectDetailsPage() {
         if (!projRes.ok) { router.push('/dashboard/contractor'); return }
         const { project: proj } = await projRes.json()
         setProject(proj)
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -84,7 +85,8 @@ export default function ProjectDetailsPage() {
         setClaimed(true)
         setProject(prev => prev ? { ...prev, status: 'claimed' } : prev)
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       // ignore
     } finally {
       setClaiming(false)
@@ -99,7 +101,8 @@ export default function ProjectDetailsPage() {
       // Bid submission requires a dedicated backend endpoint
       await handleClaim()
       router.push('/dashboard/contractor')
-    } catch {
+    } catch (err) {
+      console.error(err)
       // ignore
     } finally {
       setSubmittingBid(false)

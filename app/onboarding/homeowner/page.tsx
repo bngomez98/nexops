@@ -112,7 +112,8 @@ export default function HomeownerOnboardingPage() {
       }
 
       router.push("/onboarding/complete?role=homeowner")
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError("Failed to save your profile. Please try again.")
     } finally {
       setSaving(false)

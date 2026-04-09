@@ -136,7 +136,8 @@ export default function ContractorDashboard() {
         setUser(data.user)
         setProfile(data.contractorProfile)
         await fetchProjects()
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -208,7 +209,8 @@ export default function ContractorDashboard() {
         const data = await res.json()
         setToast({ message: data.error || 'Failed to claim project', type: 'error' })
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       setToast({ message: 'Network error. Please try again.', type: 'error' })
     } finally {
       setClaiming(null)

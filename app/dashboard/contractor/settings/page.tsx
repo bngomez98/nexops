@@ -87,7 +87,8 @@ function ContractorSettingsInner() {
         const supabase = createClient()
         const { data: mfaData } = await supabase.auth.mfa.listFactors()
         setMfaFactors(mfaData?.all ?? [])
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -136,7 +137,8 @@ function ContractorSettingsInner() {
       }
       setFieldErrors({})
       toast.success('Settings saved!')
-    } catch {
+    } catch (err) {
+      console.error(err)
       toast.error('Failed to save settings. Please try again.')
     } finally {
       setSaving(false)
@@ -154,7 +156,8 @@ function ContractorSettingsInner() {
         return
       }
       router.push('/auth/login')
-    } catch {
+    } catch (err) {
+      console.error(err)
       toast.error('Failed to delete account. Please try again.')
       setShowDeleteConfirm(false)
     } finally {
@@ -170,7 +173,8 @@ function ContractorSettingsInner() {
       const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Nexus Operations Authenticator' })
       if (error) { setMfaError(error.message); return }
       setEnrollData({ qr: data.totp.qr_code, secret: data.totp.secret, factorId: data.id })
-    } catch {
+    } catch (err) {
+      console.error(err)
       setMfaError('Failed to start 2FA setup. Please try again.')
     } finally {
       setMfaLoading(false)
@@ -191,7 +195,8 @@ function ContractorSettingsInner() {
       setVerifyCode('')
       setMfaSuccess('Two-factor authentication enabled successfully!')
       setTimeout(() => setMfaSuccess(''), 5000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setMfaError('Invalid code. Please try again.')
     } finally {
       setMfaLoading(false)
@@ -209,7 +214,8 @@ function ContractorSettingsInner() {
       setMfaFactors(mfaData?.all ?? [])
       setMfaSuccess('Two-factor authentication disabled.')
       setTimeout(() => setMfaSuccess(''), 5000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setMfaError('Failed to disable 2FA. Please try again.')
     } finally {
       setMfaLoading(false)

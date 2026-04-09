@@ -63,7 +63,8 @@ export default function HomeownerDocumentsPage() {
       const { data } = await supabase.from('documents').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
       setDocs(data ?? [])
       setFile(null)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Upload failed. Please try again.')
     } finally {
       setUploading(false)
