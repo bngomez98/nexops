@@ -1,8 +1,9 @@
 import { cn } from '@/lib/utils'
+import type { PortalUser } from '../lib/portal-utils'
 import type { PortalUser } from '../lib/portal-types'
 
 interface AvatarProps {
-  user: Pick<PortalUser, 'initials' | 'avatarColor'>
+  user: Pick<PortalUser, 'initials' | 'avatarColor' | 'avatarUrl'>
   size?: number
   className?: string
 }
@@ -10,7 +11,7 @@ interface AvatarProps {
 export function Avatar({ user, size = 40, className }: AvatarProps) {
   return (
     <span
-      className={cn('avatar bg-gradient-to-br', user.avatarColor, className)}
+      className={cn('avatar bg-gradient-to-br overflow-hidden', user.avatarColor, className)}
       style={{
         width: size,
         height: size,
@@ -18,7 +19,12 @@ export function Avatar({ user, size = 40, className }: AvatarProps) {
       }}
       aria-hidden
     >
-      {user.initials}
+      {user.avatarUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
+      ) : (
+        user.initials
+      )}
     </span>
   )
 }

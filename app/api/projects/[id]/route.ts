@@ -38,7 +38,7 @@ export async function GET(
 
     const { data: sr, error } = await supabase
       .from('service_requests')
-      .select('id, owner_id, assigned_contractor_id, category, description, additional_notes, address, budget_max, status, created_at, consultation_date, final_cost, completion_date')
+      .select('id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, budget_max, urgency, status, created_at, consultation_date, final_cost, completion_date, photo_urls, invoice_amount, invoice_paid')
       .eq('id', id)
       .single()
 
@@ -56,6 +56,7 @@ export async function GET(
 
     // Optionally fetch contractor profile name if assigned
     let contractorName = null
+    let contractorPhone = null
     if (sr.assigned_contractor_id) {
       const { data: cProfile } = await supabase
         .from('profiles')
@@ -63,16 +64,32 @@ export async function GET(
         .eq('id', sr.assigned_contractor_id)
         .single()
       contractorName = cProfile?.company || cProfile?.full_name || null
+      contractorPhone = cProfile?.phone ?? null
     }
+
+    let ownerName = null
+    let ownerPhone = null
+    if (sr.owner_id) {
+      const { data: oProfile } = await supabase
+        .from('profiles')
+        .select('full_name, phone')
+        .eq('id', sr.owner_id)
+        .single()
+      ownerName = oProfile?.full_name ?? null
+      ownerPhone = oProfile?.phone ?? null
+    }
+
+    const title = sr.title || sr.additional_notes?.split('\n')[0] || sr.category
 
     return NextResponse.json({
       project: {
         id: sr.id,
-        title: sr.additional_notes || sr.category,
+        title,
         description: sr.description,
         category: sr.category,
         location: sr.address,
         budget: sr.budget_max ?? null,
+        urgency: sr.urgency ?? null,
         status: mapStatus(sr.status),
         rawStatus: sr.status,
         createdAt: sr.created_at,
@@ -82,6 +99,13 @@ export async function GET(
         assignedContractorId: sr.assigned_contractor_id ?? null,
         ownerId: sr.owner_id,
         contractorName,
+        contractorPhone,
+        ownerId: sr.owner_id ?? null,
+        ownerName,
+        ownerPhone,
+        photoUrls: sr.photo_urls ?? [],
+        invoiceAmount: sr.invoice_amount ?? null,
+        invoicePaid: sr.invoice_paid ?? false,
       }
     })
   } catch (err) {
