@@ -349,3 +349,63 @@ create policy "avatars_delete_own" on storage.objects for delete
 drop policy if exists "avatars_select_public" on storage.objects;
 create policy "avatars_select_public" on storage.objects for select
   using (bucket_id = 'avatars');
+
+-- ── compatibility extensions (portal + automation + settings) ────────────────
+alter table public.profiles add column if not exists email text;
+alter table public.profiles add column if not exists bio text;
+alter table public.profiles add column if not exists license_number text;
+alter table public.profiles add column if not exists years_in_business integer not null default 0;
+alter table public.profiles add column if not exists service_categories text[] not null default '{}';
+alter table public.profiles add column if not exists service_area text;
+alter table public.profiles add column if not exists average_rating numeric(3,2) not null default 0;
+alter table public.profiles add column if not exists reviews_count integer not null default 0;
+alter table public.profiles add column if not exists is_active boolean not null default true;
+alter table public.profiles add column if not exists notify_messages boolean not null default true;
+alter table public.profiles add column if not exists notify_status_changes boolean not null default true;
+alter table public.profiles add column if not exists notify_payments boolean not null default false;
+
+alter table public.service_requests add column if not exists title text;
+alter table public.service_requests add column if not exists urgency text not null default 'routine';
+alter table public.service_requests add column if not exists invoice_amount numeric(10,2);
+alter table public.service_requests add column if not exists invoice_paid boolean not null default false;
+alter table public.service_requests add column if not exists status_reason text;
+
+create table if not exists public.documents (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null references public.profiles(id) on delete cascade,
+  type        text not null,
+  file_url    text not null,
+  status      text not null default 'pending'
+                check (status in ('pending', 'approved', 'rejected')),
+  expires_at  timestamptz,
+  created_at  timestamptz not null default now()
+);
+
+alter table public.documents enable row level security;
+
+drop policy if exists "documents_self_access" on public.documents;
+create policy "documents_self_access" on public.documents for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create table if not exists public.notifications (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid not null references public.profiles(id) on delete cascade,
+  title      text not null,
+  body       text,
+  type       text,
+  read       boolean not null default false,
+  link       text,
+  metadata   jsonb,
+  created_at timestamptz not null default now()
+);
+
+alter table public.notifications enable row level security;
+
+drop policy if exists "notifications_self_access" on public.notifications;
+create policy "notifications_self_access" on public.notifications for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create index if not exists notifications_user_id_idx
+  on public.notifications (user_id, read, created_at desc);

@@ -14,6 +14,8 @@ import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 
 export function ProfileView() {
+  const { currentUser, jobs, preferences, updatePreferences } = usePortal()
+  const [saving, setSaving] = useState(false)
   const { currentUser, jobs } = usePortal()
   const { currentUser, jobs, loading, error } = usePortal()
   const [notifyMessages, setNotifyMessages] = useState(true)
@@ -48,6 +50,19 @@ export function ProfileView() {
     homeowner: 'Homeowner',
     contractor: 'Contractor',
     manager: 'Property manager',
+  }
+
+  const handlePreferenceChange = async (next: {
+    notifyMessages: boolean
+    notifyStatus: boolean
+    notifyPayments: boolean
+  }) => {
+    setSaving(true)
+    try {
+      await updatePreferences(next)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -141,6 +156,44 @@ export function ProfileView() {
 
         <section className="glass p-5">
           <div className="flex items-center gap-2 mb-3">
+            <Bell size={15} className="text-indigo-200" />
+            <h3 className="text-sm font-semibold text-white">Notifications</h3>
+            {saving && <span className="text-[10px] text-indigo-200/60">Saving…</span>}
+          </div>
+          <div className="space-y-2">
+            <ToggleRow
+              label="Status changes"
+              description="When a job moves to assigned, in progress, or complete"
+              checked={preferences.notifyStatus}
+              onChange={(value) =>
+                handlePreferenceChange({
+                  ...preferences,
+                  notifyStatus: value,
+                })
+              }
+            />
+            <ToggleRow
+              label="New messages"
+              description="Per-job chat replies and mentions"
+              checked={preferences.notifyMessages}
+              onChange={(value) =>
+                handlePreferenceChange({
+                  ...preferences,
+                  notifyMessages: value,
+                })
+              }
+            />
+            <ToggleRow
+              label="Payment confirmations"
+              description="Stripe receipts and approvals"
+              checked={preferences.notifyPayments}
+              onChange={(value) =>
+                handlePreferenceChange({
+                  ...preferences,
+                  notifyPayments: value,
+                })
+              }
+            />
             <Shield size={15} className="text-indigo-200" />
             <h3 className="text-sm font-semibold text-white">Account overview</h3>
           </div>
