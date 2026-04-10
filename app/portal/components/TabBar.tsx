@@ -1,14 +1,15 @@
 'use client'
 
 import { Briefcase, Layout, Search, Shield, User } from 'lucide-react'
-import type { Role } from '../lib/mock-data'
+import type { PortalRole } from '../lib/portal-utils'
+import type { Role } from '../lib/portal-types'
 
 export type Tab = 'dashboard' | 'jobs' | 'search' | 'profile' | 'admin'
 
 interface TabBarProps {
   active: Tab
   onChange: (tab: Tab) => void
-  role: Role
+  role: PortalRole
 }
 
 const TABS: { id: Tab; label: string; Icon: React.ComponentType<{ size?: number }> }[] = [

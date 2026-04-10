@@ -4,7 +4,16 @@ import { Footer } from "@/components/footer"
 import { CONTACT_INFO } from "@/lib/contact-info"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, MapPin, Phone, Mail, CheckCircle } from "lucide-react"
+import {
+  ArrowRight,
+  MapPin,
+  Phone,
+  Mail,
+  CheckCircle,
+  MonitorSmartphone,
+  Database,
+  Layers3,
+} from "lucide-react"
 
 export const metadata: Metadata = {
   title: "About Us — Maintenance Coordination in Topeka, KS",
@@ -39,6 +48,27 @@ const timeline = [
   },
 ]
 
+const engineeringCapabilities = [
+  {
+    title: "Front-end Development",
+    description:
+      "Responsive, production-ready interfaces built for speed, clarity, and real-world user workflows.",
+    icon: MonitorSmartphone,
+  },
+  {
+    title: "Back-end Development",
+    description:
+      "Reliable APIs, business logic, and data integrations that support secure and scalable operations.",
+    icon: Database,
+  },
+  {
+    title: "Complete Builds",
+    description:
+      "End-to-end delivery from planning and architecture to deployment, QA, and ongoing support.",
+    icon: Layers3,
+  },
+]
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
@@ -58,8 +88,10 @@ export default function AboutPage() {
                 <span className="font-serif italic font-normal text-primary">
                   for Topeka property owners.
                 </span>
-                A coordination company, not a contractor.
               </h1>
+              <p className="text-sm uppercase tracking-[0.14em] font-medium text-muted-foreground mb-6">
+                A coordination company, not a contractor.
+              </p>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 Nexus Operations does not perform the work itself. We
                 coordinate the professionals who do. Our role is to ensure that when a
@@ -131,7 +163,7 @@ export default function AboutPage() {
         </section>
 
         {/* Founder */}
-        <section className="py-16 lg:py-24">
+        <section id="process" className="py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
               Leadership
@@ -176,6 +208,36 @@ export default function AboutPage() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Capabilities */}
+        <section className="py-16 lg:py-24 border-t border-border">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Delivery capabilities
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                Front-end, back-end, and complete build execution.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                We support operational teams with product execution across the full stack and
+                deliverables that are ready for real production use.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              {engineeringCapabilities.map(({ title, description, icon: Icon }) => (
+                <div key={title} className="rounded-2xl border border-border bg-card p-6">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
