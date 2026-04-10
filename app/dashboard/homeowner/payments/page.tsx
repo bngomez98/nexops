@@ -86,7 +86,8 @@ function HomeownerPaymentsInner() {
       if (data.url) {
         window.location.href = data.url
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       toast.error('Something went wrong. Please try again.')
     } finally {
       setPaying(null)

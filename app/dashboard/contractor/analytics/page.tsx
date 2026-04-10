@@ -31,7 +31,8 @@ export default function AnalyticsDashboard() {
         if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(data.user)
         setProfile(data.contractorProfile)
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)

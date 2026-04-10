@@ -66,7 +66,7 @@ export function DashboardLayout({
   children,
   userName = 'System User',
   userRole = 'client',
-  userEmail = 'user@nexusops.com',
+  userEmail = '',
   onLogout,
 }: DashboardLayoutProps) {
   const pathname = usePathname()

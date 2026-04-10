@@ -4,7 +4,7 @@ import { isAutomationEnabled } from '@/lib/env'
 
 interface ContractorMatch {
   contractor_id: string
-  email: string
+  email: string | null
   full_name: string
   match_score: number
   active_projects: number
@@ -65,6 +65,7 @@ export async function POST(request: NextRequest) {
     const { data: contractors, error: contractorsError } = await supabase
       .from('profiles')
       .select('id, user_id, email, full_name, service_categories, service_area, average_rating, reviews_count, is_active')
+      .select('id, full_name, email, category, service_categories, skills, service_area, average_rating, reviews_count')
       .eq('role', 'contractor')
       .neq('is_active', false)
 
@@ -112,6 +113,18 @@ export async function POST(request: NextRequest) {
 
         const serviceCategories = toCategoryList(contractor.service_categories)
         if (serviceCategories.length > 0 && !serviceCategories.includes(projectCategory)) {
+        // Category/skills match (40 points)
+         const contractorCategories = Array.from(
+           new Set(
+             [
+               ...(Array.isArray(contractor.service_categories) ? contractor.service_categories : []),
+               ...(contractor.category ? contractor.category.split(',') : []),
+             ]
+               .map((c) => String(c).trim().toLowerCase())
+               .filter(Boolean),
+           ),
+         )
+        if (!contractorCategories.includes(project.category.toLowerCase())) {
           score -= 40
         }
 

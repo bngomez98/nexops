@@ -37,6 +37,8 @@ export const projectRequestSchema = z.object({
   description: z.string().min(20, 'Description must be at least 20 characters').max(2000, 'Description must be less than 2000 characters'),
   location: z.string().min(3, 'Please enter a valid location'),
   budget: z.string().min(1, 'Please enter a budget').optional().or(z.literal('')),
+  urgency: z.enum(['urgent', 'high', 'normal', 'low']).optional(),
+  photoUrls: z.array(z.string().min(1)).max(8, 'Maximum 8 photos allowed').optional(),
 
   pipelineMode: z.enum(['standard', 'automated', 'community']).default('automated'),
   communityVisible: z.boolean().default(true),

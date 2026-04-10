@@ -41,7 +41,8 @@ function BillingConfirmInner() {
       if (!res.ok) { router.push('/auth/login'); return }
       const { user: u } = await res.json()
       setUser(u)
-    } catch {
+    } catch (err) {
+      console.error(err)
       router.push('/auth/login')
     } finally {
       setLoading(false)
@@ -55,7 +56,8 @@ function BillingConfirmInner() {
       if (!res.ok) return
       const { user: u } = await res.json()
       setUser(u)
-    } catch {
+    } catch (err) {
+      console.error(err)
       // ignore refresh errors silently
     } finally {
       setRefreshing(false)

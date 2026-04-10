@@ -28,21 +28,21 @@ const categories = [
     name: "HVAC",
     description: "Installation, repair, and maintenance for heating and cooling systems.",
     budget: "$3,000 - $20,000",
-    available: false,
+    available: true,
   },
   {
     icon: Fence,
     name: "Fencing",
     description: "Wood, vinyl, chain link, and iron fencing installation and repair.",
     budget: "$1,500 - $8,000",
-    available: false,
+    available: true,
   },
   {
     icon: Zap,
     name: "Electrical",
     description: "Panel upgrades, wiring, outlet installation, lighting, and code compliance.",
     budget: "$500 - $10,000",
-    available: false,
+    available: true,
   },
 ]
 

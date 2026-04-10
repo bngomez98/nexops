@@ -109,7 +109,8 @@ export default function PropertyManagerOnboardingPage() {
       }
 
       router.push("/onboarding/complete?role=property-manager")
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError("Failed to save your profile. Please try again.")
     } finally {
       setSaving(false)
