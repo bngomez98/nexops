@@ -37,7 +37,7 @@ export function DashboardView({
     if (currentUser.role === 'contractor') return j.contractorId === currentUser.id
     return j.homeownerId === currentUser.id
   })
-  const stats = dashboardStats(currentUser.id, currentUser.role)
+  const stats = dashboardStats(jobs, currentUser.id, currentUser.role)
   const recent = [...visible]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .slice(0, 4)

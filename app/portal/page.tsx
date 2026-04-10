@@ -14,7 +14,7 @@ import { ProfileView } from './views/ProfileView'
 import { SearchView } from './views/SearchView'
 
 export default function PortalPage() {
-  const { currentUser } = usePortal()
+  const { currentUser, loading, error, refresh } = usePortal()
   const [tab, setTab] = useState<Tab>('dashboard')
   const [submitOpen, setSubmitOpen] = useState(false)
   const [openJobId, setOpenJobId] = useState<string | null>(null)
@@ -24,6 +24,30 @@ export default function PortalPage() {
       setTab('dashboard')
     }
   }, [currentUser.role, tab])
+
+
+  if (loading) {
+    return (
+      <div className="portal-content">
+        <PortalHeader />
+        <div className="glass p-6 text-sm text-indigo-200/70">Loading portal data…</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="portal-content">
+        <PortalHeader />
+        <div className="glass p-6 space-y-3">
+          <div className="text-sm text-rose-300">{error}</div>
+          <button type="button" className="btn-primary" onClick={() => { void refresh() }}>
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="portal-content">

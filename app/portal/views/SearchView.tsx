@@ -11,18 +11,10 @@ interface SearchViewProps {
   onOpenJob: (jobId: string) => void
 }
 
-const DOCS = [
-  { id: 'doc-1', title: 'How to submit a maintenance request', tag: 'Guide' },
-  { id: 'doc-2', title: 'Stripe payments and invoicing FAQ', tag: 'Billing' },
-  { id: 'doc-3', title: 'Contractor onboarding checklist', tag: 'Onboarding' },
-  { id: 'doc-4', title: 'Service Level Agreement (SLA) overview', tag: 'Policy' },
-  { id: 'doc-5', title: 'Photo upload best practices', tag: 'Guide' },
-]
-
 const CATEGORIES_LIST = Object.entries(CATEGORY_LABEL) as [Category, string][]
 
 export function SearchView({ onOpenJob }: SearchViewProps) {
-  const { jobs, users } = usePortal()
+  const { jobs, users, docs } = usePortal()
   const [q, setQ] = useState('')
 
   const results = useMemo(() => {
@@ -31,7 +23,7 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
       return {
         jobs: jobs.slice(0, 4),
         users: users.slice(0, 4),
-        docs: DOCS.slice(0, 4),
+        docs: docs.slice(0, 4),
         categories: CATEGORIES_LIST,
       }
     }
@@ -46,10 +38,10 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
       users: users.filter(
         (u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query),
       ),
-      docs: DOCS.filter((d) => d.title.toLowerCase().includes(query)),
+      docs: docs.filter((d) => d.title.toLowerCase().includes(query)),
       categories: CATEGORIES_LIST.filter(([, label]) => label.toLowerCase().includes(query)),
     }
-  }, [q, jobs, users])
+  }, [q, jobs, users, docs])
 
   return (
     <div className="space-y-5">

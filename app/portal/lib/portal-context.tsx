@@ -1,16 +1,16 @@
 'use client'
 
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {
-  JOBS as INITIAL_JOBS,
-  USERS,
+  STATUS_FLOW,
   type Category,
   type Job,
+  type JobMessage,
   type JobStatus,
+  type NotificationPreferences,
+  type PortalDoc,
   type PortalUser,
   type Priority,
-  type Role,
-  STATUS_FLOW,
 } from './mock-data'
 
 interface NewRequestInput {
@@ -24,122 +24,222 @@ interface NewRequestInput {
 
 interface PortalContextValue {
   currentUser: PortalUser
-  setCurrentUserId: (id: string) => void
   users: PortalUser[]
   jobs: Job[]
-  submitRequest: (input: NewRequestInput) => Job
-  advanceStatus: (jobId: string) => void
-  assignContractor: (jobId: string, contractorId: string) => void
-  postMessage: (jobId: string, body: string) => void
+  docs: PortalDoc[]
+  preferences: NotificationPreferences
+  loading: boolean
+  error: string | null
+  refresh: () => Promise<void>
+  submitRequest: (input: NewRequestInput) => Promise<Job>
+  advanceStatus: (jobId: string) => Promise<void>
+  assignContractor: (jobId: string, contractorId: string) => Promise<void>
+  postMessage: (jobId: string, body: string) => Promise<void>
+  updatePreferences: (prefs: NotificationPreferences) => Promise<void>
+}
+
+const FALLBACK_USER: PortalUser = {
+  id: 'portal-user',
+  name: 'Portal User',
+  email: '',
+  phone: '',
+  role: 'homeowner',
+  avatarColor: 'from-indigo-400 to-blue-500',
+  initials: 'PU',
+}
+
+const FALLBACK_PREFS: NotificationPreferences = {
+  notifyMessages: true,
+  notifyStatus: true,
+  notifyPayments: false,
 }
 
 const PortalContext = createContext<PortalContextValue | null>(null)
 
-let nextJobNumber = 1043
-let nextMsgId = 1000
-
 export function PortalProvider({ children }: { children: React.ReactNode }) {
-  const [currentUserId, setCurrentUserId] = useState<string>('u-admin')
-  const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS)
+  const [currentUser, setCurrentUser] = useState<PortalUser>(FALLBACK_USER)
+  const [users, setUsers] = useState<PortalUser[]>([FALLBACK_USER])
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [docs, setDocs] = useState<PortalDoc[]>([])
+  const [preferences, setPreferences] = useState<NotificationPreferences>(FALLBACK_PREFS)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const currentUser = useMemo(
-    () => USERS.find((u) => u.id === currentUserId) ?? USERS[0],
-    [currentUserId],
-  )
+  const refresh = useCallback(async () => {
+    setLoading(true)
+    setError(null)
 
-  const submitRequest = useCallback(
-    (input: NewRequestInput): Job => {
-      const id = `j-${nextJobNumber}`
-      const shortId = String(nextJobNumber)
-      nextJobNumber += 1
-      const newJob: Job = {
-        id,
-        shortId,
-        title: input.title,
-        description: input.description,
-        category: input.category,
-        priority: input.priority,
-        status: 'pending',
-        location: input.location,
-        createdAt: new Date().toISOString(),
-        homeownerId: currentUser.role === 'homeowner' || currentUser.role === 'manager' ? currentUser.id : 'u-home-1',
-        photos: Array.from({ length: input.photoCount }).map((_, i) => ({
-          id: `np-${id}-${i}`,
-          kind: 'attachment' as const,
-          caption: `Photo ${i + 1}`,
-          hue: 200 + i * 30,
-        })),
-        messages: [],
+    try {
+      const response = await fetch('/api/portal/bootstrap', { cache: 'no-store' })
+      const payload = await response.json()
+
+      if (!response.ok) {
+        throw new Error(payload?.error || 'Failed to load portal data')
       }
-      setJobs((prev) => [newJob, ...prev])
-      return newJob
-    },
-    [currentUser],
-  )
 
-  const advanceStatus = useCallback((jobId: string) => {
+      setCurrentUser(payload.currentUser ?? FALLBACK_USER)
+      setUsers(Array.isArray(payload.users) && payload.users.length > 0 ? payload.users : [payload.currentUser ?? FALLBACK_USER])
+      setJobs(Array.isArray(payload.jobs) ? payload.jobs : [])
+      setDocs(Array.isArray(payload.docs) ? payload.docs : [])
+      setPreferences(payload.preferences ?? FALLBACK_PREFS)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load portal data')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    void refresh()
+  }, [refresh])
+
+  const submitRequest = useCallback(async (input: NewRequestInput): Promise<Job> => {
+    const response = await fetch('/api/portal/requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    })
+
+    const payload = await response.json()
+
+    if (!response.ok || !payload?.job) {
+      throw new Error(payload?.error || 'Unable to submit request')
+    }
+
+    setJobs((prev) => [payload.job as Job, ...prev])
+    return payload.job as Job
+  }, [])
+
+  const advanceStatus = useCallback(async (jobId: string) => {
+    const current = jobs.find((job) => job.id === jobId)
+    if (!current) return
+
+    const currentIndex = STATUS_FLOW.indexOf(current.status)
+    const nextStatus = STATUS_FLOW[Math.min(currentIndex + 1, STATUS_FLOW.length - 1)] as JobStatus
+
+    const response = await fetch(`/api/portal/jobs/${jobId}/status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newStatus: nextStatus }),
+    })
+
+    const payload = await response.json()
+
+    if (!response.ok) {
+      throw new Error(payload?.error || 'Unable to update status')
+    }
+
     setJobs((prev) =>
-      prev.map((j) => {
-        if (j.id !== jobId) return j
-        const idx = STATUS_FLOW.indexOf(j.status)
-        const next = STATUS_FLOW[Math.min(idx + 1, STATUS_FLOW.length - 1)]
-        return { ...j, status: next as JobStatus }
-      }),
+      prev.map((job) =>
+        job.id === jobId
+          ? {
+              ...job,
+              status: (payload?.portalStatus as JobStatus) ?? nextStatus,
+            }
+          : job,
+      ),
+    )
+  }, [jobs])
+
+  const assignContractor = useCallback(async (jobId: string, contractorId: string) => {
+    const response = await fetch(`/api/portal/jobs/${jobId}/assign`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contractorId }),
+    })
+
+    const payload = await response.json()
+    if (!response.ok) {
+      throw new Error(payload?.error || 'Unable to assign contractor')
+    }
+
+    setJobs((prev) =>
+      prev.map((job) =>
+        job.id === jobId
+          ? {
+              ...job,
+              contractorId,
+              status: payload?.status ?? (job.status === 'pending' ? 'assigned' : job.status),
+            }
+          : job,
+      ),
     )
   }, [])
 
-  const assignContractor = useCallback((jobId: string, contractorId: string) => {
+  const postMessage = useCallback(async (jobId: string, body: string) => {
+    const trimmed = body.trim()
+    if (!trimmed) return
+
+    const response = await fetch(`/api/portal/jobs/${jobId}/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: trimmed }),
+    })
+
+    const payload = await response.json()
+    if (!response.ok || !payload?.message) {
+      throw new Error(payload?.error || 'Unable to send message')
+    }
+
     setJobs((prev) =>
-      prev.map((j) => {
-        if (j.id !== jobId) return j
+      prev.map((job) => {
+        if (job.id !== jobId) return job
+
         return {
-          ...j,
-          contractorId,
-          status: j.status === 'pending' ? 'assigned' : j.status,
+          ...job,
+          messages: [...job.messages, payload.message as JobMessage],
         }
       }),
     )
   }, [])
 
-  const postMessage = useCallback(
-    (jobId: string, body: string) => {
-      const trimmed = body.trim()
-      if (!trimmed) return
-      const messageId = `nm-${++nextMsgId}`
-      setJobs((prev) =>
-        prev.map((j) => {
-          if (j.id !== jobId) return j
-          return {
-            ...j,
-            messages: [
-              ...j.messages,
-              {
-                id: messageId,
-                authorId: currentUser.id,
-                authorName: currentUser.name,
-                body: trimmed,
-                timestamp: new Date().toISOString(),
-              },
-            ],
-          }
-        }),
-      )
-    },
-    [currentUser],
-  )
+  const updatePreferences = useCallback(async (prefs: NotificationPreferences) => {
+    const response = await fetch('/api/portal/preferences', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(prefs),
+    })
+
+    const payload = await response.json()
+
+    if (!response.ok) {
+      throw new Error(payload?.error || 'Unable to update preferences')
+    }
+
+    setPreferences(payload.preferences ?? prefs)
+  }, [])
 
   const value = useMemo<PortalContextValue>(
     () => ({
       currentUser,
-      setCurrentUserId,
-      users: USERS,
+      users,
       jobs,
+      docs,
+      preferences,
+      loading,
+      error,
+      refresh,
       submitRequest,
       advanceStatus,
       assignContractor,
       postMessage,
+      updatePreferences,
     }),
-    [currentUser, jobs, submitRequest, advanceStatus, assignContractor, postMessage],
+    [
+      currentUser,
+      users,
+      jobs,
+      docs,
+      preferences,
+      loading,
+      error,
+      refresh,
+      submitRequest,
+      advanceStatus,
+      assignContractor,
+      postMessage,
+      updatePreferences,
+    ],
   )
 
   return <PortalContext.Provider value={value}>{children}</PortalContext.Provider>
@@ -150,5 +250,3 @@ export function usePortal(): PortalContextValue {
   if (!ctx) throw new Error('usePortal must be used within PortalProvider')
   return ctx
 }
-
-export type { Role }

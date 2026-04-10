@@ -1,6 +1,7 @@
 'use client'
 
 import { ExternalLink, Shield, UserPlus, Users } from 'lucide-react'
+import { useState } from 'react'
 import { dashboardStats, formatMoney, STATUS_LABEL } from '../lib/mock-data'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
@@ -12,7 +13,8 @@ interface AdminViewProps {
 
 export function AdminView({ onOpenJob }: AdminViewProps) {
   const { jobs, users, currentUser, assignContractor } = usePortal()
-  const stats = dashboardStats(currentUser.id, 'admin')
+  const [assignError, setAssignError] = useState('')
+  const stats = dashboardStats(jobs, currentUser.id, 'admin')
   const contractors = users.filter((u) => u.role === 'contractor')
   const customers = users.filter((u) => u.role === 'homeowner' || u.role === 'manager')
 
@@ -98,6 +100,7 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
               </div>
             ))}
         </div>
+        {assignError && <div className="mt-3 text-xs text-rose-300">{assignError}</div>}
       </section>
 
       <div className="grid lg:grid-cols-2 gap-5">

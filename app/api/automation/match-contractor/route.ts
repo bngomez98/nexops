@@ -11,6 +11,21 @@ interface ContractorMatch {
   average_rating: number
 }
 
+function toCategoryList(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim().toLowerCase()).filter(Boolean)
+  }
+
+  if (typeof value === 'string') {
+    return value
+      .split(',')
+      .map((item) => item.trim().toLowerCase())
+      .filter(Boolean)
+  }
+
+  return []
+}
+
 export async function POST(request: NextRequest) {
   if (!isAutomationEnabled()) {
     return NextResponse.json(
@@ -21,7 +36,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
@@ -33,94 +51,104 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'projectId is required' }, { status: 400 })
     }
 
-    // Get the project details
-    const { data: project, error: projError } = await supabase
+    const { data: project, error: projectError } = await supabase
       .from('service_requests')
-      .select('*')
+      .select('id, owner_id, category, budget_max')
       .eq('id', projectId)
       .eq('owner_id', user.id)
       .single()
 
-    if (projError || !project) {
+    if (projectError || !project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    // Get all available contractors
-    const { data: contractors, error: contError } = await supabase
+    const { data: contractors, error: contractorsError } = await supabase
       .from('profiles')
-      .select('id, full_name, email, category, skills, service_area, average_rating, reviews_count')
+      .select('id, user_id, email, full_name, service_categories, service_area, average_rating, reviews_count, is_active')
       .eq('role', 'contractor')
-      .eq('is_active', true)
+      .neq('is_active', false)
 
-    if (contError || !contractors) {
+    if (contractorsError || !contractors) {
       return NextResponse.json({ matches: [] })
     }
 
-    // Count active projects for each contractor
+    const contractorIds = contractors
+      .map((contractor) =>
+        typeof contractor.id === 'string'
+          ? contractor.id
+          : typeof contractor.user_id === 'string'
+            ? contractor.user_id
+            : null,
+      )
+      .filter((id): id is string => Boolean(id))
+
     const { data: activeProjectsData } = await supabase
       .from('service_requests')
       .select('assigned_contractor_id')
-      .in('assigned_contractor_id', contractors.map(c => c.id))
+      .in('assigned_contractor_id', contractorIds)
       .in('status', ['assigned', 'consultation_scheduled', 'in_progress'])
 
-    const projectCountByContractor = contractors.reduce((acc, c) => {
-      acc[c.id] = activeProjectsData?.filter(p => p.assigned_contractor_id === c.id).length ?? 0
+    const projectCountByContractor = contractorIds.reduce<Record<string, number>>((acc, id) => {
+      acc[id] = activeProjectsData?.filter((projectRow) => projectRow.assigned_contractor_id === id).length ?? 0
       return acc
-    }, {} as Record<string, number>)
+    }, {})
 
-    // Calculate match scores
+    const projectCategory = String(project.category).toLowerCase()
+
     const matches: ContractorMatch[] = contractors
-      .map(contractor => {
+      .map((contractor) => {
+        const contractorId =
+          typeof contractor.id === 'string'
+            ? contractor.id
+            : typeof contractor.user_id === 'string'
+              ? contractor.user_id
+              : null
+
+        if (!contractorId) {
+          return null
+        }
+
         let score = 100
 
-        // Category/skills match (40 points)
-        const contractorCategories = (contractor.category || '').split(',').map(c => c.trim().toLowerCase())
-        if (!contractorCategories.includes(project.category.toLowerCase())) {
+        const serviceCategories = toCategoryList(contractor.service_categories)
+        if (serviceCategories.length > 0 && !serviceCategories.includes(projectCategory)) {
           score -= 40
         }
 
-        // Budget match (30 points) - if budget matches their typical range
         if (project.budget_max) {
-          const minReasonableBudget = project.budget_max * 0.8
-          const maxReasonableBudget = project.budget_max * 1.2
-          const typicalBudget = project.budget_max
-          if (typicalBudget < minReasonableBudget || typicalBudget > maxReasonableBudget) {
-            score -= 15
+          const activeProjects = projectCountByContractor[contractorId] || 0
+          if (activeProjects >= 3) {
+            score -= 20
+          } else if (activeProjects >= 2) {
+            score -= 10
           }
         }
 
-        // Workload capacity (20 points)
-        const activeProjects = projectCountByContractor[contractor.id] || 0
-        if (activeProjects >= 3) {
-          score -= 20
-        } else if (activeProjects >= 2) {
-          score -= 10
-        }
-
-        // Rating boost (10 points)
-        const rating = contractor.average_rating || 0
+        const rating =
+          typeof contractor.average_rating === 'number' ? contractor.average_rating : 0
         if (rating >= 4.5) {
           score += 10
-        } else if (rating >= 4.0) {
+        } else if (rating >= 4) {
           score += 5
         }
 
         return {
-          contractor_id: contractor.id,
-          email: contractor.email,
-          full_name: contractor.full_name,
+          contractor_id: contractorId,
+          email: typeof contractor.email === 'string' ? contractor.email : '',
+          full_name:
+            (typeof contractor.full_name === 'string' && contractor.full_name) ||
+            'Contractor',
           match_score: Math.max(0, Math.min(100, score)),
-          active_projects: activeProjects,
+          active_projects: projectCountByContractor[contractorId] || 0,
           average_rating: rating,
         }
       })
+      .filter((match): match is ContractorMatch => Boolean(match))
       .sort((a, b) => b.match_score - a.match_score)
-      .slice(0, 5) // Top 5 matches
+      .slice(0, 5)
 
-    // Auto-suggest if top match score > 85
     if (matches.length > 0 && matches[0].match_score > 85) {
       const topMatch = matches[0]
-      // Auto-assign the contractor if score is very high
       const { error: updateError } = await supabase
         .from('service_requests')
         .update({
@@ -134,17 +162,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           matches,
           autoAssigned: true,
-          message: `Project automatically assigned to ${topMatch.full_name} (${(topMatch.match_score).toFixed(0)}% match)`,
+          message: `Project automatically assigned to ${topMatch.full_name} (${topMatch.match_score.toFixed(0)}% match)`,
         })
       }
     }
 
-    return NextResponse.json({
-      matches,
-      autoAssigned: false,
-    })
-  } catch (err) {
-    console.error('[POST /api/automation/match-contractor]', err)
+    return NextResponse.json({ matches, autoAssigned: false })
+  } catch (error) {
+    console.error('[POST /api/automation/match-contractor]', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

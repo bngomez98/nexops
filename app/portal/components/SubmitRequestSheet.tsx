@@ -58,6 +58,7 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
   const [location, setLocation] = useState('')
   const [photoCount, setPhotoCount] = useState(0)
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   const reset = () => {
     setTitle('')
@@ -74,22 +75,29 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
     onClose()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim() || !description.trim() || !location.trim()) {
       setError('Add a title, description, and location to submit.')
       return
     }
-    const job = submitRequest({
-      title: title.trim(),
-      description: description.trim(),
-      category,
-      priority,
-      location: location.trim(),
-      photoCount,
-    })
-    reset()
-    onClose()
-    onSubmitted?.(job.id)
+    setSubmitting(true)
+    try {
+      const job = await submitRequest({
+        title: title.trim(),
+        description: description.trim(),
+        category,
+        priority,
+        location: location.trim(),
+        photoCount,
+      })
+      reset()
+      onClose()
+      onSubmitted?.(job.id)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to submit request.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -216,11 +224,11 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
         )}
 
         <div className="flex items-center gap-3 pt-2">
-          <button type="button" className="btn-ghost flex-1" onClick={handleClose}>
+          <button type="button" className="btn-ghost flex-1" onClick={handleClose} disabled={submitting}>
             Cancel
           </button>
-          <button type="button" className="btn-primary flex-1" onClick={handleSubmit}>
-            Submit request
+          <button type="button" className="btn-primary flex-1" onClick={() => { void handleSubmit() }} disabled={submitting}>
+            {submitting ? 'Submitting…' : 'Submit request'}
           </button>
         </div>
       </div>
