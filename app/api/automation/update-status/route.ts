@@ -95,8 +95,8 @@ export async function POST(request: NextRequest) {
           user_id: recipientId,
           type: 'status_update',
           title: `Project status updated: ${statusLabels[newStatus]}`,
-          message: `Your project has been updated to ${statusLabels[newStatus]}.`,
-          project_id: projectId,
+          body: `Your project has been updated to ${statusLabels[newStatus]}.`,
+          link: `/dashboard/requests/${projectId}`,
           read: false,
           created_at: new Date().toISOString(),
         }))

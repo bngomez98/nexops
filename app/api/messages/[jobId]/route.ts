@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { messageSchema } from '@/lib/validators'
 
 type RouteContext = { params: Promise<{ jobId: string }> }
+export const dynamic = 'force-dynamic'
 
 // GET /api/messages/[jobId] — all messages for a job, marks unread as read
 export async function GET(
@@ -83,11 +84,11 @@ export async function POST(
     // Verify the sender is a party to this job (owner or assigned contractor)
     const { data: job } = await supabase
       .from('service_requests')
-      .select('owner_id, contractor_id')
+      .select('owner_id, assigned_contractor_id')
       .eq('id', jobId)
       .single()
 
-    if (!job || (job.owner_id !== user.id && job.contractor_id !== user.id)) {
+    if (!job || (job.owner_id !== user.id && job.assigned_contractor_id !== user.id)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

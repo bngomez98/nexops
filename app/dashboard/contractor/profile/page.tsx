@@ -59,7 +59,7 @@ export default function ContractorProfilePage() {
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', u.id)
+        .eq('id', u.id)
         .single()
 
       setForm({
@@ -108,12 +108,12 @@ export default function ContractorProfilePage() {
       }
 
       await supabase.from('profiles').upsert({
-        user_id: user.id,
+        id: user.id,
         role: 'contractor',
         full_name: form.fullName,
         phone: form.phone || null,
         photo_url: photoUrl ?? existingPhotoUrl ?? null,
-      }, { onConflict: 'user_id' })
+      }, { onConflict: 'id' })
 
       await supabase.from('contractor_profiles').upsert({
         user_id: user.id,

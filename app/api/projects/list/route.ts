@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createRequestId, internalError } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 function mapStatus(dbStatus: string): string {
   const map: Record<string, string> = {
     pending_review: 'open',
