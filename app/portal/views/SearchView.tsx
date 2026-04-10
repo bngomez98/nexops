@@ -21,6 +21,7 @@ const DOCS = [
 
 export function SearchView({ onOpenJob }: SearchViewProps) {
   const { jobs, conversations } = usePortal()
+  const { jobs, users, loading, error } = usePortal()
   const [q, setQ] = useState('')
 
   const results = useMemo(() => {
@@ -50,6 +51,12 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
 
   return (
     <div className="space-y-5">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading searchable records…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Search data unavailable: {error}</div>
+      )}
       <div>
         <h2 className="text-2xl font-semibold text-white tracking-tight">Universal search</h2>
         <p className="text-xs text-indigo-200/60">

@@ -21,6 +21,8 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
   ).size
   const grossMoney = jobs.reduce((sum, j) => sum + (j.invoiceAmount ?? 0), 0)
   const latest = [...jobs].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 6)
+  const { jobs, users, currentUser, assignContractor, loading, error } = usePortal()
+  const stats = dashboardStats(jobs, currentUser.id, 'admin')
   const { jobs, users, currentUser, assignContractor } = usePortal()
   const stats = dashboardStatsForJobs(jobs)
   const contractors = users.filter((u) => u.role === 'contractor')
@@ -32,6 +34,12 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
 
   return (
     <div className="space-y-5">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading admin operations data…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Admin data unavailable: {error}</div>
+      )}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70 inline-flex items-center gap-1.5">
@@ -89,6 +97,9 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
                     <button
                       type="button"
                       key={c.id}
+                      onClick={() => {
+                        void assignContractor(j.id, c.id)
+                      }}
                       onClick={() => void assignContractor(j.id, c.id)}
                       className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30 inline-flex items-center gap-1.5"
                     >

@@ -46,6 +46,8 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
   >([])
   const [messagesLoading, setMessagesLoading] = useState(false)
   const [isPaying, setIsPaying] = useState(false)
+  const [signed, setSigned] = useState(false)
+  const [actionError, setActionError] = useState('')
 
   useEffect(() => {
     if (!jobId) return
@@ -110,7 +112,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
     }
   }, [jobId, job?.ownerId, job?.ownerName, job?.contractorId, job?.contractorName])
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!draft.trim()) return
     void postMessage(job.id, draft).then((message) => {
       if (message) {
@@ -144,6 +146,12 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
       }
     } finally {
       setIsPaying(false)
+    setActionError('')
+    try {
+      await postMessage(job.id, draft)
+      setDraft('')
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to send message')
     }
     void postMessage(job.id, draft)
     setDraft('')
@@ -212,6 +220,16 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             })}
           </div>
           {canAdvance && (currentUser.role === 'admin' || currentUser.role === 'contractor') && (
+            <button
+              type="button"
+              className="btn-ghost mt-4 w-full"
+              onClick={() => {
+                setActionError('')
+                void advanceStatus(job.id).catch((err) => {
+                  setActionError(err instanceof Error ? err.message : 'Failed to update status')
+                })
+              }}
+            >
             <button type="button" className="btn-ghost mt-4 w-full" onClick={() => void advanceStatus(job.id)}>
               Advance to {STATUS_LABEL[STATUS_FLOW[STATUS_FLOW.indexOf(job.status) + 1]]}
             </button>
@@ -247,6 +265,17 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
               <div className="text-[10px] uppercase tracking-wider text-indigo-200/50 mb-2">Assign contractor</div>
               <div className="flex flex-wrap gap-1.5">
                 {availableContractors.map((c) => (
+                    <button
+                      type="button"
+                      key={c.id}
+                      onClick={() => {
+                        setActionError('')
+                        void assignContractor(job.id, c.id).catch((err) => {
+                          setActionError(err instanceof Error ? err.message : 'Failed to assign contractor')
+                        })
+                      }}
+                      className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30"
+                    >
                   <button
                     type="button"
                     key={c.id}
@@ -336,13 +365,16 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSend()
+                if (e.key === 'Enter') void handleSend()
               }}
             />
-            <button type="button" className="btn-primary !px-4" onClick={handleSend}>
+            <button type="button" className="btn-primary !px-4" onClick={() => void handleSend()}>
               <Send size={15} />
             </button>
           </div>
+          {actionError && (
+            <div className="text-xs text-rose-300 mt-2">{actionError}</div>
+          )}
         </div>
 
         {/* Invoice */}

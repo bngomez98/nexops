@@ -20,7 +20,7 @@ interface JobsViewProps {
 const STATUS_FILTERS: ('all' | PortalJobStatus)[] = ['all', 'open', 'claimed', 'in-progress', 'completed', 'cancelled']
 
 export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
-  const { jobs, currentUser } = usePortal()
+  const { jobs, currentUser, loading, error } = usePortal()
   const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]>('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [query, setQuery] = useState('')
@@ -110,7 +110,17 @@ export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {visible.length === 0 && (
+        {loading && (
+          <div className="glass p-8 col-span-full text-center text-sm text-indigo-200/60">
+            Loading jobs…
+          </div>
+        )}
+        {error && (
+          <div className="glass p-8 col-span-full text-center text-sm text-rose-300">
+            Failed to load jobs: {error}
+          </div>
+        )}
+        {!loading && !error && visible.length === 0 && (
           <div className="glass p-8 col-span-full text-center text-sm text-indigo-200/60">
             No jobs match these filters yet.
           </div>
