@@ -87,7 +87,7 @@ export default function ContactPage() {
               Talk to a real person in Topeka.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Whether you're a homeowner with a project, a property manager evaluating a commercial
+              Whether you&apos;re a homeowner with a project, a property manager evaluating a commercial
               engagement, or a contractor interested in joining the network — we respond to every
               inquiry within one business day.
             </p>
@@ -171,7 +171,7 @@ export default function ContactPage() {
                   {CONTACT_INFO.serviceArea}.
                 </p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                  Not sure if we cover your address? Call us and we'll confirm on the spot.
+                  Not sure if we cover your address? Call us and we&apos;ll confirm on the spot.
                 </p>
               </div>
             </aside>
@@ -188,7 +188,7 @@ export default function ContactPage() {
           <SectionHeading
             eyebrow="Skip the form"
             title="Other ways to get started."
-            description="If you already know what you're looking for, take the shortcut."
+            description="If you already know what you&apos;re looking for, take the shortcut."
             align="center"
           />
 

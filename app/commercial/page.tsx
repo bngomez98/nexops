@@ -205,6 +205,11 @@ export default function CommercialPage() {
                 <p className="text-[12.5px] text-muted-foreground leading-relaxed">
                   The 1-hour assignment and 4-hour on-site SLAs apply around the clock. A burst pipe
                   at 11 PM on a Saturday is handled the same as one at 10 AM on a Tuesday.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {slaTable.map(({ tier, assignment, onSite, examples, icon: Icon }) => (
               <div
@@ -223,7 +228,7 @@ export default function CommercialPage() {
                   {examples}
                 </p>
               </div>
-            </div>
+            ))}
           </div>
 
           <div className="mt-6 rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
