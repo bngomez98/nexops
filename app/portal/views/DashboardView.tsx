@@ -41,6 +41,7 @@ export function DashboardView({
     if (currentUser.role === 'contractor') return j.contractorId === currentUser.id || j.status === 'open'
     return j.ownerId === currentUser.id
   })
+  const stats = dashboardStats(jobs, currentUser.id, currentUser.role)
   const stats = buildStats(visible)
   const stats = dashboardStats(jobs, currentUser.id, currentUser.role)
   const stats = dashboardStatsForJobs(visible)

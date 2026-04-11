@@ -151,6 +151,8 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
       await postMessage(job.id, draft)
       setDraft('')
     } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Unable to send message')
+    }
       setActionError(err instanceof Error ? err.message : 'Failed to send message')
     }
     void postMessage(job.id, draft)
@@ -220,6 +222,12 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             })}
           </div>
           {canAdvance && (currentUser.role === 'admin' || currentUser.role === 'contractor') && (
+            <button type="button" className="btn-ghost mt-4 w-full" onClick={() => {
+              setActionError('')
+              void advanceStatus(job.id).catch((err) => {
+                setActionError(err instanceof Error ? err.message : 'Unable to update status')
+              })
+            }}>
             <button
               type="button"
               className="btn-ghost mt-4 w-full"
@@ -279,6 +287,12 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
                   <button
                     type="button"
                     key={c.id}
+                    onClick={() => {
+                      setActionError('')
+                      void assignContractor(job.id, c.id).catch((err) => {
+                        setActionError(err instanceof Error ? err.message : 'Unable to assign contractor')
+                      })
+                    }}
                     onClick={() => void assignContractor(job.id, c.id)}
                     className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30"
                   >
@@ -365,6 +379,12 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  void handleSend()
+                }
+              }}
+            />
+            <button type="button" className="btn-primary !px-4" onClick={() => { void handleSend() }}>
                 if (e.key === 'Enter') void handleSend()
               }}
             />
@@ -373,6 +393,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             </button>
           </div>
           {actionError && (
+            <div className="mt-2 text-xs text-rose-300">{actionError}</div>
             <div className="text-xs text-rose-300 mt-2">{actionError}</div>
           )}
         </div>

@@ -91,6 +91,7 @@ export async function POST(request: NextRequest) {
         file_url: uploadData.path,
         expires_at: expiresAt || null,
         verified: false,
+        status: 'pending',
       })
     }
 

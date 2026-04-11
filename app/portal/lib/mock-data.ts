@@ -73,6 +73,18 @@ export interface Job {
   review?: JobReview
 }
 
+export interface PortalDoc {
+  id: string
+  title: string
+  tag: string
+}
+
+export interface NotificationPreferences {
+  notifyMessages: boolean
+  notifyStatus: boolean
+  notifyPayments: boolean
+}
+
 export const CATEGORY_LABEL: Record<Category, string> = {
   plumbing: 'Plumbing',
   electrical: 'Electrical',
@@ -109,9 +121,7 @@ export function dashboardStats(jobs: Job[], userId: string, role: Role) {
   const visible = jobsForUser(jobs, userId, role)
   const open = visible.filter((j) => j.status !== 'complete').length
   const completed = visible.filter((j) => j.status === 'complete').length
-  const pendingPayment = visible.filter(
-    (j) => j.invoice && j.invoice.status !== 'paid',
-  ).length
+  const pendingPayment = visible.filter((j) => j.invoice && j.invoice.status !== 'paid').length
   const total = visible.length || 1
   const completionRate = Math.round((completed / total) * 100)
   const activeContractors = new Set(
@@ -123,7 +133,8 @@ export function dashboardStats(jobs: Job[], userId: string, role: Role) {
 export function formatRelative(iso: string): string {
   const now = Date.now()
   const then = new Date(iso).getTime()
-  const diff = Math.max(0, now - then)
+  if (Number.isNaN(then)) return 'just now'
+  const diff = Math.max(0, Date.now() - then)
   const mins = Math.round(diff / 60000)
   if (mins < 1) return 'just now'
   if (mins < 60) return `${mins}m ago`

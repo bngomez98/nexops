@@ -95,6 +95,10 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
       onClose()
       onSubmitted?.(job.id)
     } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to submit request.')
+    } finally {
+      setSubmitting(false)
+    }
       setError(err instanceof Error ? err.message : 'Failed to submit request')
     } finally {
       setSubmitting(false)
@@ -240,9 +244,11 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
         )}
 
         <div className="flex items-center gap-3 pt-2">
-          <button type="button" className="btn-ghost flex-1" onClick={handleClose}>
+          <button type="button" className="btn-ghost flex-1" onClick={handleClose} disabled={submitting}>
             Cancel
           </button>
+          <button type="button" className="btn-primary flex-1" onClick={() => { void handleSubmit() }} disabled={submitting}>
+            {submitting ? 'Submitting…' : 'Submit request'}
           <button type="button" className="btn-primary flex-1" onClick={() => void handleSubmit()} disabled={submitting}>
             {submitting ? 'Submitting…' : 'Submit request'}
           <button type="button" className="btn-primary flex-1" onClick={() => void handleSubmit()}>

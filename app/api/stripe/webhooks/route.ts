@@ -179,8 +179,8 @@ export async function POST(req: NextRequest) {
                 admin.auth.admin.getUserById(nexusInvoice.client_id),
               ])
               const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
-                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.contractor_id).maybeSingle(),
-                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.client_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
               ])
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([

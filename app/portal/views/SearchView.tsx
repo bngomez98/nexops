@@ -11,6 +11,10 @@ interface SearchViewProps {
   onOpenJob: (jobId: string) => void
 }
 
+const CATEGORIES_LIST = Object.entries(CATEGORY_LABEL) as [Category, string][]
+
+export function SearchView({ onOpenJob }: SearchViewProps) {
+  const { jobs, users, docs } = usePortal()
 const DOCS = [
   { id: 'doc-1', title: 'Homeowner FAQ', tag: 'FAQ', href: '/faq' },
   { id: 'doc-2', title: 'Services overview', tag: 'Services', href: '/services' },
@@ -30,6 +34,9 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
     if (!query) {
       return {
         jobs: jobs.slice(0, 4),
+        users: users.slice(0, 4),
+        docs: docs.slice(0, 4),
+        categories: CATEGORIES_LIST,
         people: conversations.slice(0, 4),
         docs: DOCS.slice(0, 4),
         categories: categoryList,
@@ -43,6 +50,13 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
           j.location.toLowerCase().includes(query) ||
           j.shortId.includes(query),
       ),
+      users: users.filter(
+        (u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query),
+      ),
+      docs: docs.filter((d) => d.title.toLowerCase().includes(query)),
+      categories: CATEGORIES_LIST.filter(([, label]) => label.toLowerCase().includes(query)),
+    }
+  }, [q, jobs, users, docs])
       people: conversations.filter((c) => c.otherUserName.toLowerCase().includes(query)),
       docs: DOCS.filter((d) => d.title.toLowerCase().includes(query)),
       categories: categoryList.filter((label) => label.toLowerCase().includes(query)),
