@@ -66,6 +66,16 @@ export const STATUS_LABEL: Record<PortalJobStatus, string> = {
 
 export const STATUS_FLOW: PortalJobStatus[] = ['open', 'claimed', 'in-progress', 'completed']
 
+export const CATEGORY_LABEL: Record<string, string> = {
+  plumbing: 'Plumbing',
+  electrical: 'Electrical',
+  hvac: 'HVAC',
+  landscaping: 'Landscaping',
+  cleaning: 'Cleaning',
+  handyman: 'Handyman',
+  other: 'Other',
+}
+
 export const PRIORITY_LABEL: Record<PortalPriority, string> = {
   low: 'Low',
   normal: 'Normal',

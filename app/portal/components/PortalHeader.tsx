@@ -2,8 +2,7 @@
 
 import { Bell, ChevronDown, LogOut } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { formatRelative } from '../lib/portal-context'
-import { Bell } from 'lucide-react'
+import { formatRelative } from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from './Avatar'
 
@@ -17,7 +16,6 @@ export function PortalHeader() {
   } = usePortal()
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
-  const { currentUser } = usePortal()
 
   const roleLabel: Record<string, string> = {
     admin: 'Operations admin',
@@ -73,13 +71,6 @@ export function PortalHeader() {
           )}
         </button>
 
-        <div className="flex items-center gap-2 glass-soft pl-1.5 pr-3 py-1 rounded-full">
-          <Avatar user={currentUser} size={32} />
-          <div className="text-left hidden sm:block">
-            <div className="text-[11px] font-semibold text-white leading-tight">{currentUser.name}</div>
-            <div className="text-[9.5px] uppercase tracking-wider text-indigo-200/60">
-              {roleLabel[currentUser.role]}
-            </div>
         <div className="relative">
           <button
             type="button"
@@ -114,16 +105,8 @@ export function PortalHeader() {
                 <LogOut size={14} />
                 Sign out
               </button>
-        <div className="flex items-center gap-2 glass-soft pl-1.5 pr-3 py-1 rounded-full">
-          <Avatar user={currentUser} size={32} />
-          <div className="text-left hidden sm:block">
-            <div className="text-[11px] font-semibold text-white leading-tight">
-              {currentUser.name}
             </div>
-            <div className="text-[9.5px] uppercase tracking-wider text-indigo-200/60">
-              {roleLabel[currentUser.role]}
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
