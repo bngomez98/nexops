@@ -15,6 +15,11 @@ type ServiceRequestRow = {
   status: string
   created_at: string
   consultation_date: string | null
+  urgency?: string | null
+  photo_urls?: string[] | null
+  invoice_amount?: number | null
+  invoice_paid?: boolean | null
+  title?: string | null
 }
 
 function mapStatus(dbStatus: string): string {
@@ -37,6 +42,8 @@ function deriveTitle(row: { title?: string | null; additional_notes?: string | n
   const notes = row.additional_notes?.split('\n')[0]?.trim()
   if (notes) return notes
   return row.category ?? 'Service request'
+}
+
 async function getContractorNameMap(
   supabase: Awaited<ReturnType<typeof createClient>>,
   rows: ServiceRequestRow[],
@@ -86,8 +93,7 @@ export async function GET(request: NextRequest) {
     if (role === 'homeowner' && pipeline) {
       const { data: rows, error } = await supabase
         .from('service_requests')
-        .select('id, category, title, additional_notes, status, created_at, consultation_date, urgency')
-        .select('id, owner_id, assigned_contractor_id, category, additional_notes, status, created_at, consultation_date')
+        .select('id, owner_id, assigned_contractor_id, category, title, additional_notes, status, created_at, consultation_date, urgency')
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false })
         .limit(50)
@@ -115,8 +121,7 @@ export async function GET(request: NextRequest) {
     if (role === 'homeowner' && type === 'my-projects') {
       const { data: rows, error } = await supabase
         .from('service_requests')
-        .select('id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid, owner_id, assigned_contractor_id')
-        .select('id, owner_id, assigned_contractor_id, category, description, additional_notes, address, budget_max, status, created_at, consultation_date')
+        .select('id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid')
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false })
 
@@ -138,8 +143,6 @@ export async function GET(request: NextRequest) {
         photoUrls: r.photo_urls ?? [],
         invoiceAmount: r.invoice_amount ?? null,
         invoicePaid: r.invoice_paid ?? false,
-        ownerId: r.owner_id ?? null,
-        assignedContractorId: r.assigned_contractor_id ?? null,
         ownerId: r.owner_id,
         assignedContractorId: r.assigned_contractor_id ?? null,
         contractorName: r.assigned_contractor_id ? contractorNames.get(r.assigned_contractor_id) ?? null : null,
@@ -152,8 +155,7 @@ export async function GET(request: NextRequest) {
       // Build query for unclaimed projects
       const query = supabase
         .from('service_requests')
-        .select('id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid, owner_id, assigned_contractor_id')
-        .select('id, owner_id, assigned_contractor_id, category, description, additional_notes, address, budget_max, status, created_at, consultation_date')
+        .select('id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid')
         .in('status', ['pending_review', 'in_queue'])
         .is('assigned_contractor_id', null)
         .order('created_at', { ascending: false })
@@ -177,8 +179,6 @@ export async function GET(request: NextRequest) {
         photoUrls: r.photo_urls ?? [],
         invoiceAmount: r.invoice_amount ?? null,
         invoicePaid: r.invoice_paid ?? false,
-        ownerId: r.owner_id ?? null,
-        assignedContractorId: r.assigned_contractor_id ?? null,
         ownerId: r.owner_id,
         assignedContractorId: r.assigned_contractor_id ?? null,
         contractorName: null,
@@ -190,8 +190,7 @@ export async function GET(request: NextRequest) {
     if (role === 'contractor' && type === 'my-projects') {
       const { data: rows, error } = await supabase
         .from('service_requests')
-        .select('id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid, owner_id, assigned_contractor_id')
-        .select('id, owner_id, assigned_contractor_id, category, description, additional_notes, address, budget_max, status, created_at, consultation_date')
+        .select('id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid')
         .eq('assigned_contractor_id', user.id)
         .order('created_at', { ascending: false })
 
@@ -212,7 +211,7 @@ export async function GET(request: NextRequest) {
         photoUrls: r.photo_urls ?? [],
         invoiceAmount: r.invoice_amount ?? null,
         invoicePaid: r.invoice_paid ?? false,
-        ownerId: r.owner_id ?? null,
+        ownerId: r.owner_id,
         assignedContractorId: r.assigned_contractor_id ?? null,
       }))
 
@@ -222,13 +221,14 @@ export async function GET(request: NextRequest) {
     if ((role === 'admin' || role === 'property-manager' || role === 'manager') && type === 'all') {
       const { data: rows, error } = await supabase
         .from('service_requests')
-        .select('id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid, owner_id, assigned_contractor_id')
+        .select('id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid')
         .order('created_at', { ascending: false })
         .limit(100)
 
       if (error) throw error
 
-      const projects = (rows ?? []).map(r => ({
+      const contractorNames = await getContractorNameMap(supabase, (rows ?? []) as ServiceRequestRow[])
+      const projects = ((rows ?? []) as ServiceRequestRow[]).map((r) => ({
         id: r.id,
         title: deriveTitle(r),
         description: r.description,
@@ -243,8 +243,6 @@ export async function GET(request: NextRequest) {
         photoUrls: r.photo_urls ?? [],
         invoiceAmount: r.invoice_amount ?? null,
         invoicePaid: r.invoice_paid ?? false,
-        ownerId: r.owner_id ?? null,
-        assignedContractorId: r.assigned_contractor_id ?? null,
         ownerId: r.owner_id,
         assignedContractorId: r.assigned_contractor_id ?? null,
         contractorName: r.assigned_contractor_id ? contractorNames.get(r.assigned_contractor_id) ?? null : null,
