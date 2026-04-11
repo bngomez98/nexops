@@ -8,7 +8,7 @@ import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
 import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
-  CreditCard, Shield, AlertCircle, Zap, Star, TrendingUp,
+  CreditCard, Shield, AlertCircle, Zap, Star, TrendingUp, FileText, Download,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
