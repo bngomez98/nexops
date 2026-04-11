@@ -59,7 +59,7 @@ const sections = [
     questions: [
       {
         q: 'What does it cost to join the contractor network?',
-        a: 'Nothing. Starter contractor accounts are free, forever. Pro and Elite tiers are optional upgrades that unlock additional capacity and priority routing, but they are not required to receive work.',
+        a: 'Nothing. Starter contractor accounts are free, forever. Pro and Elite tiers are optional upgrades that raise project capacity limits and enable priority routing, but they are not required to receive work.',
       },
       {
         q: 'What is required to join?',

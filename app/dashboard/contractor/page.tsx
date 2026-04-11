@@ -482,9 +482,9 @@ export default function ContractorDashboard() {
                 <Crown className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-foreground text-[17px]">Grow your business</h3>
+                <h3 className="font-bold text-foreground text-[17px]">Raise your project limit</h3>
                 <p className="text-[12.5px] text-muted-foreground mt-0.5">
-                  Take on more projects and unlock priority routing.
+                  Paid plans allow more active projects and enable priority routing.
                 </p>
               </div>
             </div>
@@ -510,7 +510,7 @@ export default function ContractorDashboard() {
                 name: 'Contractor Elite',
                 price: '$199',
                 cadence: '/mo',
-                desc: 'Unlimited projects · First-look on new requests · Dedicated manager',
+                desc: 'Unlimited projects · First dispatch priority · Dedicated account manager',
                 highlight: false,
               },
             ].map(plan => (

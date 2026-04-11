@@ -93,7 +93,7 @@ const differentiators = [
   {
     icon: CreditCard,
     title: 'Unified, transparent billing',
-    desc: 'One monthly invoice consolidates every request across every property. No surprise bills, no chasing contractors for paperwork.',
+    desc: 'One monthly invoice consolidates every request across every property. No surprise bills and no separate contractor paperwork to collect.',
   },
 ]
 
@@ -250,7 +250,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Who we serve"
             title="Built for everyone who owns, manages, or services property."
-            description="Nexus Operations is the single point of contact that ties homeowners, property managers, and licensed contractors together in one coordinated workflow."
+            description="Nexus Operations is a single point of contact for homeowners, property managers, and licensed contractors, coordinating their work within one shared workflow."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -282,7 +282,7 @@ export default function HomePage() {
               <SectionHeading
                 eyebrow="Services"
                 title="Every trade you need. One coordinator."
-                description="From a leaking faucet to an HVAC failure on a cold Sunday night, Nexus routes the right licensed contractor and manages the entire job."
+                description="Whether the request is a leaking faucet or an after-hours HVAC failure, Nexus assigns a licensed contractor in the right trade and manages the full job."
               />
               <Link
                 href="/services"
@@ -369,7 +369,7 @@ export default function HomePage() {
               <SectionHeading
                 eyebrow="Why Nexus Operations"
                 title="A maintenance coordinator, not a contractor marketplace."
-                description="Marketplaces hand you a list of names and walk away. Nexus stays involved from the moment a request is submitted until the invoice is closed — reviewing scope, coordinating schedules, verifying work, and publishing records you can trust."
+                description="Marketplaces give you a list of names and end their involvement there. Nexus stays involved from the moment a request is submitted until the invoice is closed — reviewing scope, coordinating schedules, verifying work, and publishing a full documentation record."
               />
 
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -562,11 +562,11 @@ export default function HomePage() {
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-[44px]">
-              Ready to hand off your maintenance calendar?
+              Ready to hand off your maintenance coordination?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
-              Create an account in under two minutes and submit your first request today. Our team
-              reviews every submission before dispatch — no waiting on a marketplace timer.
+              Create an account in under two minutes and submit your first request today. A Nexus
+              coordinator reviews every submission before dispatching a contractor.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link

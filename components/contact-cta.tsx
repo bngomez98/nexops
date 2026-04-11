@@ -12,14 +12,14 @@ export function ContactCTA() {
               Get started
             </p>
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-              Ready to eliminate your
+              Ready to hand off
               <br className="hidden sm:block" />
-              coordination burden?
+              contractor coordination?
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-10">
               Whether you manage a commercial portfolio or own residential
-              properties, we can start coordinating your maintenance requests
-              within days. No contracts, no setup fees.
+              properties, Nexus Operations can begin handling your maintenance
+              requests within a few business days. No contracts, no setup fees.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

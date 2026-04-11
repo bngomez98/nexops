@@ -275,9 +275,9 @@ export default function CommercialPage() {
                 Property managers, landlords, and REITs running multi-unit portfolios.
               </h3>
               <p className="mt-4 text-[14px] leading-relaxed text-muted-foreground">
-                If you manage 10 or more doors — whether that&apos;s small multi-family, scattered-site
-                rentals, or commercial real estate — a Nexus commercial engagement pays for itself
-                in hours saved coordinating contractors and chasing invoices.
+                If you manage 10 or more units — including small multi-family, scattered-site
+                rentals, or commercial real estate — a Nexus commercial engagement can reduce the
+                hours your team spends coordinating contractors and tracking invoices.
               </p>
             </div>
             <ul className="flex flex-col gap-3">

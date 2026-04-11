@@ -33,28 +33,28 @@ const benefits = [
   },
   {
     icon: ClipboardList,
-    title: 'Jobs you can actually scope',
-    desc: 'Every assignment arrives with photos, scope notes, budget range, property address, and access details — so you walk in ready to work.',
+    title: 'Jobs with full scope details',
+    desc: 'Every assignment arrives with photos, scope notes, budget range, property address, and access details before you accept.',
   },
   {
     icon: ShieldCheck,
     title: 'No lead fees, no subscriptions required',
-    desc: 'Starter accounts are free, forever. Pro and Elite tiers unlock additional capacity, priority routing, and analytics — but they are optional.',
+    desc: 'Starter accounts are free, forever. Pro and Elite tiers add higher project limits, priority routing, and analytics — but they are optional.',
   },
   {
     icon: BarChart3,
     title: 'Performance-based priority',
-    desc: 'Consistent response times, clean documentation, and high ratings earn priority assignment on higher-value work. Reliability compounds.',
+    desc: 'Consistent response times, complete documentation, and high ratings earn priority assignment on higher-value work.',
   },
   {
     icon: Hammer,
-    title: 'Focus on the work, not admin',
-    desc: 'Messaging, photo upload, status updates, and invoicing are all built into one contractor dashboard — no more spreadsheet wrangling.',
+    title: 'Admin tools in one dashboard',
+    desc: 'Messaging, photo upload, status updates, and invoicing are all handled in a single contractor dashboard, with no separate spreadsheets to maintain.',
   },
   {
     icon: Users,
-    title: 'A coordinator on your side',
-    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus coordinators intervene so you can keep moving.',
+    title: 'Direct support from a coordinator',
+    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, a Nexus coordinator will resolve the issue so the job can proceed.',
   },
 ]
 
@@ -103,7 +103,7 @@ export default function ContractorsPage() {
                 <Sparkles className="h-3 w-3" /> For licensed contractors
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                Get paid for the work — not the paperwork.
+                Pre-documented jobs, direct payouts, no lead fees.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Join the Nexus Operations contractor network and receive pre-documented jobs from
@@ -281,7 +281,7 @@ export default function ContractorsPage() {
             {[
               {
                 q: 'Does it cost anything to join?',
-                a: 'No. Starter contractor accounts are free, forever. You can optionally upgrade to Pro or Elite tiers to unlock additional capacity and priority routing — but it is not required to receive work.',
+                a: 'No. Starter contractor accounts are free, forever. You can optionally upgrade to Pro or Elite tiers for higher project limits and priority routing — but it is not required to receive work.',
               },
               {
                 q: 'How fast do I get paid?',

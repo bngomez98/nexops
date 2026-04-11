@@ -84,14 +84,13 @@ export default function AboutPage() {
                 <MapPin className="h-3 w-3" /> {CONTACT_INFO.cityState}
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                We built Nexus Operations to replace the contractor guessing game.
+                We built Nexus Operations so property owners have a single, accountable coordinator.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Most property owners in Topeka juggle a patchwork of contractors, handwritten
-                invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable coordinator that handles the work end-to-end — intake, dispatch,
-                documentation, and billing — so owners can focus on running their properties, not
-                chasing tradespeople.
+                Most property owners in Topeka work with an assortment of contractors, handwritten
+                invoices, and unreturned calls. Nexus Operations was founded to act as the single
+                point of contact that handles each job from start to finish — intake, dispatch,
+                documentation, and billing — so owners do not have to contact tradespeople directly.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
