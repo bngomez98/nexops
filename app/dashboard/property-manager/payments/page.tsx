@@ -6,6 +6,7 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, CreditCard, CheckCircle2, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
@@ -14,6 +15,7 @@ export default function PMPaymentsPage() {
   const [user, setUser]         = useState<{ id: string; name: string; role: string } | null>(null)
   const [invoices, setInvoices] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading]   = useState(true)
+  const [payingId, setPayingId] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -33,6 +35,30 @@ export default function PMPaymentsPage() {
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/auth/login')
+  }
+
+  async function handlePay(invoiceId: string) {
+    setPayingId(invoiceId)
+    try {
+      const res = await fetch('/api/stripe/invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ invoiceId }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error || 'Failed to initiate payment')
+        return
+      }
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setPayingId(null)
+    }
   }
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
@@ -55,18 +81,30 @@ export default function PMPaymentsPage() {
             <p className="text-[13px] font-semibold mb-3">Outstanding ({due.length})</p>
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
               {due.map((inv: Record<string, unknown>) => (
-                <div key={inv.id} className="flex items-center gap-4 px-5 py-4">
+                <div key={inv.id as string} className="flex items-center gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt(inv.jobs.service_type) : 'Invoice'}</p>
-                    {inv.jobs?.properties && <p className="text-[12px] text-muted-foreground">{inv.jobs.properties.address}</p>}
+                    <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as Record<string, unknown>).service_type as string) : 'Invoice'}</p>
+                    {(inv.jobs as Record<string, unknown>)?.properties && <p className="text-[12px] text-muted-foreground">{((inv.jobs as Record<string, unknown>).properties as Record<string, unknown>).address as string}</p>}
                   </div>
-                  <p className="text-[14px] font-bold flex-shrink-0">${inv.total?.toLocaleString()}</p>
+                  <p className="text-[14px] font-bold flex-shrink-0">${(inv.total as number)?.toLocaleString()}</p>
                   {inv.stripe_payment_url ? (
-                    <a href={inv.stripe_payment_url} target="_blank" rel="noopener noreferrer">
-                      <Button size="sm" className="h-9 px-4 text-[13px] flex-shrink-0">Pay <ExternalLink className="w-3.5 h-3.5 ml-1.5" /></Button>
+                    <a href={inv.stripe_payment_url as string} target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" className="h-9 px-4 text-[13px] flex-shrink-0">
+                        Pay <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                      </Button>
                     </a>
                   ) : (
-                    <Button size="sm" variant="outline" disabled className="h-9 px-4 text-[13px] flex-shrink-0"><CreditCard className="w-3.5 h-3.5 mr-1.5" /> Pay</Button>
+                    <Button
+                      size="sm"
+                      className="h-9 px-4 text-[13px] flex-shrink-0"
+                      disabled={payingId === (inv.id as string)}
+                      onClick={() => handlePay(inv.id as string)}
+                    >
+                      {payingId === (inv.id as string)
+                        ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        : <><CreditCard className="w-3.5 h-3.5 mr-1.5" /> Pay</>
+                      }
+                    </Button>
                   )}
                 </div>
               ))}
@@ -84,13 +122,13 @@ export default function PMPaymentsPage() {
           ) : (
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
               {paid.map((inv: Record<string, unknown>) => (
-                <div key={inv.id} className="flex items-center gap-4 px-5 py-4">
+                <div key={inv.id as string} className="flex items-center gap-4 px-5 py-4">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt(inv.jobs.service_type) : 'Invoice'}</p>
-                    {inv.jobs?.properties && <p className="text-[12px] text-muted-foreground">{inv.jobs.properties.address}</p>}
+                    <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as Record<string, unknown>).service_type as string) : 'Invoice'}</p>
+                    {(inv.jobs as Record<string, unknown>)?.properties && <p className="text-[12px] text-muted-foreground">{((inv.jobs as Record<string, unknown>).properties as Record<string, unknown>).address as string}</p>}
                   </div>
-                  <p className="text-[14px] font-bold text-emerald-600">${inv.total?.toLocaleString()}</p>
+                  <p className="text-[14px] font-bold text-emerald-600">${(inv.total as number)?.toLocaleString()}</p>
                 </div>
               ))}
             </div>
