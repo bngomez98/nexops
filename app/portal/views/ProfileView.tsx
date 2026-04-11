@@ -1,21 +1,23 @@
 'use client'
 
 import {
-  Bell,
   Camera,
   CreditCard,
   Mail,
   Phone,
   Shield,
-  Star,
 } from 'lucide-react'
+import { formatMoney, formatRelative } from '../lib/portal-utils'
 import { useState } from 'react'
-import { formatMoney, formatRelative } from '../lib/mock-data'
+import { formatMoney, formatRelative } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 
 export function ProfileView() {
+  const { currentUser, jobs, preferences, updatePreferences } = usePortal()
+  const [saving, setSaving] = useState(false)
   const { currentUser, jobs } = usePortal()
+  const { currentUser, jobs, loading, error } = usePortal()
   const [notifyMessages, setNotifyMessages] = useState(true)
   const [notifyStatus, setNotifyStatus] = useState(true)
   const [notifyPayments, setNotifyPayments] = useState(false)
@@ -23,15 +25,25 @@ export function ProfileView() {
   const myInvoices = jobs
     .filter((j) =>
       currentUser.role === 'contractor'
-        ? j.contractorId === currentUser.id && j.invoice
-        : j.homeownerId === currentUser.id && j.invoice,
+        ? j.contractorId === currentUser.id && j.invoiceAmount
+        : j.ownerId === currentUser.id && j.invoiceAmount,
     )
-    .map((j) => ({ job: j, invoice: j.invoice! }))
-
-  const reviewsReceived =
-    currentUser.role === 'contractor'
-      ? jobs.filter((j) => j.contractorId === currentUser.id && j.review)
-      : []
+    .map((j) => ({
+      job: j,
+      invoice: {
+        amount: j.invoiceAmount ?? 0,
+        status: j.invoicePaid ? 'paid' : 'pending',
+        submittedAt: j.createdAt,
+        paidAt: j.invoicePaid ? j.createdAt : null,
+      },
+    }))
+  const isContractor = currentUser.role === 'contractor'
+  const activeCount = isContractor
+    ? jobs.filter((j) => j.contractorId === currentUser.id && j.status !== 'completed').length
+    : jobs.filter((j) => j.ownerId === currentUser.id && j.status !== 'completed').length
+  const completedCount = isContractor
+    ? jobs.filter((j) => j.contractorId === currentUser.id && j.status === 'completed').length
+    : jobs.filter((j) => j.ownerId === currentUser.id && j.status === 'completed').length
 
   const roleLabel: Record<string, string> = {
     admin: 'Operations admin',
@@ -40,8 +52,27 @@ export function ProfileView() {
     manager: 'Property manager',
   }
 
+  const handlePreferenceChange = async (next: {
+    notifyMessages: boolean
+    notifyStatus: boolean
+    notifyPayments: boolean
+  }) => {
+    setSaving(true)
+    try {
+      await updatePreferences(next)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div className="space-y-5">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading profile…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Profile data unavailable: {error}</div>
+      )}
       <section className="glass-tinted p-6 relative overflow-hidden">
         <div className="absolute -top-20 -right-16 h-56 w-56 rounded-full bg-indigo-500/30 blur-3xl pointer-events-none" />
         <div className="relative flex items-center gap-5">
@@ -95,7 +126,7 @@ export function ProfileView() {
           <div className="space-y-2.5">
             {myInvoices.map(({ job, invoice }) => (
               <div
-                key={invoice.id}
+                key={job.id}
                 className="glass-soft p-3 flex items-center justify-between"
               >
                 <div className="min-w-0">
@@ -108,7 +139,7 @@ export function ProfileView() {
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-semibold text-white">
-                    {formatMoney(invoice.amountCents)}
+                    {formatMoney(invoice.amount)}
                   </div>
                   <div
                     className={`text-[10.5px] uppercase tracking-wider ${
@@ -127,91 +158,60 @@ export function ProfileView() {
           <div className="flex items-center gap-2 mb-3">
             <Bell size={15} className="text-indigo-200" />
             <h3 className="text-sm font-semibold text-white">Notifications</h3>
+            {saving && <span className="text-[10px] text-indigo-200/60">Saving…</span>}
           </div>
           <div className="space-y-2">
             <ToggleRow
               label="Status changes"
               description="When a job moves to assigned, in progress, or complete"
-              checked={notifyStatus}
-              onChange={setNotifyStatus}
+              checked={preferences.notifyStatus}
+              onChange={(value) =>
+                handlePreferenceChange({
+                  ...preferences,
+                  notifyStatus: value,
+                })
+              }
             />
             <ToggleRow
               label="New messages"
               description="Per-job chat replies and mentions"
-              checked={notifyMessages}
-              onChange={setNotifyMessages}
+              checked={preferences.notifyMessages}
+              onChange={(value) =>
+                handlePreferenceChange({
+                  ...preferences,
+                  notifyMessages: value,
+                })
+              }
             />
             <ToggleRow
               label="Payment confirmations"
               description="Stripe receipts and approvals"
-              checked={notifyPayments}
-              onChange={setNotifyPayments}
+              checked={preferences.notifyPayments}
+              onChange={(value) =>
+                handlePreferenceChange({
+                  ...preferences,
+                  notifyPayments: value,
+                })
+              }
             />
+            <Shield size={15} className="text-indigo-200" />
+            <h3 className="text-sm font-semibold text-white">Account overview</h3>
+          </div>
+          <div className="space-y-2 text-[12px] text-indigo-200/70">
+            <p>
+              {isContractor ? 'Active assignments' : 'Open requests'}:{' '}
+              <span className="text-white font-semibold">{activeCount}</span>
+            </p>
+            <p>
+              {isContractor ? 'Completed work' : 'Completed requests'}:{' '}
+              <span className="text-white font-semibold">{completedCount}</span>
+            </p>
+            <p className="text-indigo-200/50">
+              Manage your profile and notification settings in the main dashboard.
+            </p>
           </div>
         </section>
       </div>
-
-      {reviewsReceived.length > 0 && (
-        <section className="glass p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Star size={15} className="text-amber-300 fill-amber-300" />
-            <h3 className="text-sm font-semibold text-white">Reviews received</h3>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-3">
-            {reviewsReceived.map((j) => (
-              <div key={j.id} className="glass-soft p-3.5">
-                <div className="flex items-center gap-1 text-amber-300 mb-1">
-                  {Array.from({ length: j.review!.rating }).map((_, i) => (
-                    <Star key={i} size={12} className="fill-amber-300" />
-                  ))}
-                </div>
-                <div className="text-sm text-white leading-snug">“{j.review!.body}”</div>
-                <div className="text-[11px] text-indigo-200/55 mt-1">
-                  for #{j.shortId} · {j.title}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
-  )
-}
-
-function ToggleRow({
-  label,
-  description,
-  checked,
-  onChange,
-}: {
-  label: string
-  description: string
-  checked: boolean
-  onChange: (v: boolean) => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!checked)}
-      className="w-full flex items-center justify-between gap-3 glass-soft p-3 text-left hover:bg-white/10 transition"
-    >
-      <div className="min-w-0">
-        <div className="text-sm font-medium text-white">{label}</div>
-        <div className="text-[11px] text-indigo-200/60">{description}</div>
-      </div>
-      <span
-        className={`relative h-6 w-10 rounded-full border transition ${
-          checked
-            ? 'bg-gradient-to-br from-indigo-500 to-sky-400 border-white/30'
-            : 'bg-white/5 border-white/15'
-        }`}
-      >
-        <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
-            checked ? 'left-[18px]' : 'left-0.5'
-          }`}
-        />
-      </span>
-    </button>
   )
 }

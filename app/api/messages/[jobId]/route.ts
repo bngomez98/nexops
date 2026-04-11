@@ -49,7 +49,24 @@ export async function GET(
 
     const jobTitle = (job?.additional_notes as string | null) || job?.category || 'Project'
 
-    return NextResponse.json({ messages: messages ?? [], jobTitle })
+    const senderIds = Array.from(new Set((messages ?? []).map((message) => message.sender_id)))
+    const { data: profiles } = senderIds.length
+      ? await supabase.from('profiles').select('id, full_name').in('id', senderIds)
+      : { data: [] }
+
+    const namesById = new Map(
+      (profiles ?? []).map((profile) => [profile.id, (profile.full_name as string | null) ?? 'User']),
+    )
+
+    const portalMessages = (messages ?? []).map((message) => ({
+      ...message,
+      authorId: message.sender_id,
+      authorName: namesById.get(message.sender_id) ?? 'User',
+      body: message.content,
+      timestamp: message.created_at,
+    }))
+
+    return NextResponse.json({ messages: portalMessages, jobTitle })
   } catch (err) {
     console.error('[GET /api/messages/[jobId]]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -105,7 +122,21 @@ export async function POST(
 
     if (error) throw error
 
-    return NextResponse.json({ message }, { status: 201 })
+    const { data: senderProfile } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    return NextResponse.json({
+      message: {
+        ...message,
+        authorId: message.sender_id,
+        authorName: (senderProfile?.full_name as string | null) ?? 'User',
+        body: message.content,
+        timestamp: message.created_at,
+      },
+    }, { status: 201 })
   } catch (err) {
     console.error('[POST /api/messages/[jobId]]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

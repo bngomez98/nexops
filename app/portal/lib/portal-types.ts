@@ -25,13 +25,6 @@ export interface PortalUser {
   jobsCompleted?: number
 }
 
-export interface JobPhoto {
-  id: string
-  kind: 'before' | 'after' | 'attachment'
-  caption: string
-  hue: number
-}
-
 export interface JobMessage {
   id: string
   authorId: string
@@ -64,25 +57,13 @@ export interface Job {
   status: JobStatus
   location: string
   createdAt: string
-  scheduledFor?: string
   homeownerId: string
   contractorId?: string
-  photos: JobPhoto[]
+  contractorName?: string
+  rawStatus?: string
   messages: JobMessage[]
   invoice?: JobInvoice
   review?: JobReview
-}
-
-export interface PortalDoc {
-  id: string
-  title: string
-  tag: string
-}
-
-export interface NotificationPreferences {
-  notifyMessages: boolean
-  notifyStatus: boolean
-  notifyPayments: boolean
 }
 
 export const CATEGORY_LABEL: Record<Category, string> = {
@@ -111,30 +92,22 @@ export const PRIORITY_LABEL: Record<Priority, string> = {
 
 export const STATUS_FLOW: JobStatus[] = ['pending', 'assigned', 'in_progress', 'complete']
 
-export function jobsForUser(jobs: Job[], userId: string, role: Role): Job[] {
-  if (role === 'admin') return jobs
-  if (role === 'contractor') return jobs.filter((j) => j.contractorId === userId)
-  return jobs.filter((j) => j.homeownerId === userId)
-}
-
-export function dashboardStats(jobs: Job[], userId: string, role: Role) {
-  const visible = jobsForUser(jobs, userId, role)
-  const open = visible.filter((j) => j.status !== 'complete').length
-  const completed = visible.filter((j) => j.status === 'complete').length
-  const pendingPayment = visible.filter((j) => j.invoice && j.invoice.status !== 'paid').length
-  const total = visible.length || 1
+export function dashboardStatsForJobs(jobs: Job[]) {
+  const open = jobs.filter((j) => j.status !== 'complete').length
+  const completed = jobs.filter((j) => j.status === 'complete').length
+  const pendingPayment = jobs.filter((j) => j.invoice && j.invoice.status !== 'paid').length
+  const total = jobs.length || 1
   const completionRate = Math.round((completed / total) * 100)
   const activeContractors = new Set(
-    visible.filter((j) => j.contractorId && j.status !== 'complete').map((j) => j.contractorId),
+    jobs.filter((j) => j.contractorId && j.status !== 'complete').map((j) => j.contractorId),
   ).size
-  return { open, completed, pendingPayment, completionRate, activeContractors, total: visible.length }
+  return { open, completed, pendingPayment, completionRate, activeContractors, total: jobs.length }
 }
 
 export function formatRelative(iso: string): string {
   const now = Date.now()
   const then = new Date(iso).getTime()
-  if (Number.isNaN(then)) return 'just now'
-  const diff = Math.max(0, Date.now() - then)
+  const diff = Math.max(0, now - then)
   const mins = Math.round(diff / 60000)
   if (mins < 1) return 'just now'
   if (mins < 60) return `${mins}m ago`
@@ -147,3 +120,4 @@ export function formatRelative(iso: string): string {
 export function formatMoney(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`
 }
+

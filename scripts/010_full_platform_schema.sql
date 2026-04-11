@@ -1,6 +1,7 @@
 -- ============================================================
 -- Nexus Operations — Full Platform Schema (Phase 1–10)
 -- Run this in your Supabase SQL editor after existing migrations
+-- NOTE: Runtime migrations use scripts/setup.sql as the canonical schema.
 -- ============================================================
 
 -- Profiles (one row per user, for all roles)
@@ -14,6 +15,15 @@ create table if not exists profiles (
   created_at  timestamptz not null default now(),
   constraint profiles_user_id_unique unique (user_id)
 );
+
+alter table profiles add column if not exists email text;
+alter table profiles add column if not exists category text;
+alter table profiles add column if not exists skills text[] not null default '{}';
+alter table profiles add column if not exists service_area text;
+alter table profiles add column if not exists service_categories text[] not null default '{}';
+alter table profiles add column if not exists average_rating numeric(3,2) not null default 0;
+alter table profiles add column if not exists reviews_count integer not null default 0;
+alter table profiles add column if not exists is_active boolean not null default true;
 
 -- Contractor profiles
 create table if not exists contractor_profiles (
@@ -157,6 +167,9 @@ create table if not exists notifications (
   link       text,
   created_at timestamptz not null default now()
 );
+
+alter table notifications add column if not exists message text;
+alter table notifications add column if not exists project_id uuid;
 
 create index if not exists notifications_user_id_idx on notifications(user_id);
 create index if not exists notifications_read_idx on notifications(user_id, read);
