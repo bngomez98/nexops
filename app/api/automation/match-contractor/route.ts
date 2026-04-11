@@ -114,21 +114,8 @@ export async function POST(request: NextRequest) {
         let score = 100
 
         // Category match (40 points)
-        const contractorCategories = (contractor.service_categories ?? []).map(c => String(c).toLowerCase())
         const serviceCategories = toCategoryList(contractor.service_categories)
         if (serviceCategories.length > 0 && !serviceCategories.includes(projectCategory)) {
-        // Category/skills match (40 points)
-         const contractorCategories = Array.from(
-           new Set(
-             [
-               ...(Array.isArray(contractor.service_categories) ? contractor.service_categories : []),
-               ...(contractor.category ? contractor.category.split(',') : []),
-             ]
-               .map((c) => String(c).trim().toLowerCase())
-               .filter(Boolean),
-           ),
-         )
-        if (!contractorCategories.includes(project.category.toLowerCase())) {
           score -= 40
         }
 
@@ -150,7 +137,6 @@ export async function POST(request: NextRequest) {
         }
 
         // Rating boost (10 points)
-        const rating = 0
         const rating =
           typeof contractor.average_rating === 'number' ? contractor.average_rating : 0
         if (rating >= 4.5) {
