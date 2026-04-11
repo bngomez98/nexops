@@ -49,6 +49,7 @@ export default function BlogPost() {
               </p>
               <h2 className="text-xl font-semibold text-foreground">What unified invoicing actually means</h2>
               <p>
+                Unified invoicing means one invoice per billing cycle, covering all jobs across all properties. Each line item shows: the property address, the job date, the trade, the urgency tier, the contractor, and the billed amount. The invoice is itemized enough to attribute costs to specific properties and audit any line item, but consolidated enough to process as a single payment.
                 Unified invoicing means one invoice per billing cycle, covering all jobs across all properties. Each line item shows: the property address, the job date, the trade, the contractor&apos;s base cost, the coordination markup, and the total. The invoice is itemized enough to attribute costs to specific properties and audit any line item, but consolidated enough to process as a single payment.
               </p>
               <p>
