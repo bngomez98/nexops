@@ -116,7 +116,7 @@ export default function ContractorBillingPage() {
           </Link>
           <h1 className="text-2xl font-bold tracking-tight">Billing & Subscription</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Manage your membership and unlock more project capacity.
+            Manage your membership and increase your active project limit.
           </p>
         </div>
 
@@ -167,9 +167,9 @@ export default function ContractorBillingPage() {
               <TrendingUp className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-foreground text-[13.5px] mb-1">Grow your business with a paid plan</p>
+              <p className="font-semibold text-foreground text-[13.5px] mb-1">Higher project limits on paid plans</p>
               <p className="text-[12.5px] text-muted-foreground leading-relaxed">
-                Contractors on paid plans earn significantly more — more project slots means more revenue. Upgrade today to take on more work without limits.
+                Paid plans raise the number of active projects you can hold at once. Contractor Pro allows up to 10 active projects; Contractor Elite has no project cap.
               </p>
             </div>
           </div>

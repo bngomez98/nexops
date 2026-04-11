@@ -47,7 +47,7 @@ const included = [
   },
   {
     icon: Users,
-    title: 'Dedicated coordinators',
+    title: 'Human review on every request',
     desc: 'Real Nexus staff review every request before dispatch.',
   },
   {
@@ -60,7 +60,7 @@ const included = [
 const faqs = [
   {
     q: 'Is there a contract?',
-    a: 'No. Every plan is month-to-month (or cancel-anytime annual). Cancel with a click inside your billing portal — no phone calls, no retention games.',
+    a: 'No. Every plan is month-to-month (or cancel-anytime annual). Cancel directly from your billing portal — no phone calls and no retention offers required.',
   },
   {
     q: 'What counts as a service request?',
@@ -76,7 +76,7 @@ const faqs = [
   },
   {
     q: 'Do contractors pay to join?',
-    a: 'Contractors can join for free with a starter profile. Pro and Elite tiers unlock additional capacity, priority routing, and analytics.',
+    a: 'Contractors can join for free with a starter profile. Pro and Elite tiers add higher project limits, priority routing, and earnings analytics.',
   },
   {
     q: 'What if I only need one project this year?',
@@ -201,7 +201,7 @@ export default function PricingPage() {
           <SectionHeading
             eyebrow="For licensed contractors"
             title="Grow your business through the Nexus network."
-            description="Join for free. Upgrade to unlock unlimited capacity, priority routing, and earnings analytics. No marketplace fees — ever."
+            description="Join for free. Upgrade for higher project limits, priority routing, and earnings analytics. No marketplace fees — ever."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -222,7 +222,7 @@ export default function PricingPage() {
         <Section>
           <SectionHeading
             eyebrow="Included in every plan"
-            title="You get the full coordination stack — from day one."
+            title="Every plan includes the same coordination features from day one."
             align="center"
           />
 
@@ -253,7 +253,7 @@ export default function PricingPage() {
               </h3>
               <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
                 Multi-property portfolios, multi-family buildings, and commercial real estate get
-                custom pricing, dedicated coordinators, and portfolio-level reporting. Tell us about
+                custom pricing, a named Nexus representative, and portfolio-level reporting. Tell us about
                 your operation and we&apos;ll put a quote together.
               </p>
             </div>

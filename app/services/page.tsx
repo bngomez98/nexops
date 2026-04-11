@@ -113,7 +113,7 @@ const urgencyTiers = [
 
 const process = [
   { step: '01', title: 'Submit', desc: 'Fill out a three-minute request with the issue, photos, property address, and urgency.' },
-  { step: '02', title: 'Review', desc: 'A Nexus coordinator reads the request, confirms scope, and selects the best-fit contractor.' },
+  { step: '02', title: 'Review', desc: 'A Nexus team member reads the request, confirms scope, and selects the best-fit contractor.' },
   { step: '03', title: 'Dispatch', desc: 'We notify the contractor, confirm access, and update you when the job is scheduled.' },
   { step: '04', title: 'Document', desc: 'Arrival photos, completion photos, and a written summary land in your dashboard.' },
   { step: '05', title: 'Invoice', desc: 'The job rolls into your monthly unified invoice with line-item transparency.' },
@@ -131,7 +131,7 @@ export default function ServicesPage() {
               <Sparkles className="h-3 w-3" /> Services
             </p>
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Every trade you need. One coordinator.
+              Every trade you need. One service.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Nexus Operations coordinates every trade a typical property requires — routine,
@@ -160,7 +160,7 @@ export default function ServicesPage() {
           <SectionHeading
             eyebrow="Trade categories"
             title="What we coordinate."
-            description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn't fit a category, submit a request anyway — our coordinators will route it."
+            description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn't fit a category, submit a request anyway — our team will route it."
           />
 
           <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -249,7 +249,7 @@ export default function ServicesPage() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
               {[
-                { icon: ClipboardList, title: 'Human review', desc: 'Every request read by a coordinator before dispatch.' },
+                { icon: ClipboardList, title: 'Human review', desc: 'Every request read by a Nexus team member before dispatch.' },
                 { icon: Wrench, title: 'Verified contractor', desc: 'Matched to a trade specialist with confirmed license and insurance.' },
                 { icon: FileText, title: 'Photo documentation', desc: 'Arrival and completion photos attached to every job.' },
                 { icon: ShieldCheck, title: 'Unified invoice', desc: 'Consolidated into your monthly billing with line-item detail.' },
@@ -280,7 +280,7 @@ export default function ServicesPage() {
               Have a job that doesn't fit a category?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Submit it anyway. Our coordinators route every request, including the weird ones.
+              Submit it anyway. Our team routes every request, including ones that don't fit a listed category.
               Serving {CONTACT_INFO.serviceArea}.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

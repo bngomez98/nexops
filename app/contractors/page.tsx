@@ -33,28 +33,28 @@ const benefits = [
   },
   {
     icon: ClipboardList,
-    title: 'Jobs you can actually scope',
-    desc: 'Every assignment arrives with photos, scope notes, budget range, property address, and access details — so you walk in ready to work.',
+    title: 'Jobs with full scope details',
+    desc: 'Every assignment arrives with photos, scope notes, budget range, property address, and access details before you accept.',
   },
   {
     icon: ShieldCheck,
     title: 'No lead fees, no subscriptions required',
-    desc: 'Starter accounts are free, forever. Pro and Elite tiers unlock additional capacity, priority routing, and analytics — but they are optional.',
+    desc: 'Starter accounts are free, forever. Pro and Elite tiers add higher project limits, priority routing, and analytics — but they are optional.',
   },
   {
     icon: BarChart3,
     title: 'Performance-based priority',
-    desc: 'Consistent response times, clean documentation, and high ratings earn priority assignment on higher-value work. Reliability compounds.',
+    desc: 'Consistent response times, complete documentation, and high ratings earn priority assignment on higher-value work.',
   },
   {
     icon: Hammer,
-    title: 'Focus on the work, not admin',
-    desc: 'Messaging, photo upload, status updates, and invoicing are all built into one contractor dashboard — no more spreadsheet wrangling.',
+    title: 'Admin tools in one dashboard',
+    desc: 'Messaging, photo upload, status updates, and invoicing are all handled in a single contractor dashboard, with no separate spreadsheets to maintain.',
   },
   {
     icon: Users,
-    title: 'A coordinator on your side',
-    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus coordinators intervene so you can keep moving.',
+    title: 'Direct support from Nexus Operations',
+    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus Operations will resolve the issue so the job can proceed.',
   },
 ]
 
@@ -71,7 +71,7 @@ const requirements = [
 const onboarding = [
   { step: '01', title: 'Apply', desc: 'Create a contractor account and submit your trade categories, insurance, and references.' },
   { step: '02', title: 'Verify', desc: 'We confirm license status, insurance certificates, and contact your references within 2–3 business days.' },
-  { step: '03', title: 'Onboard', desc: 'One call with a Nexus coordinator to walk through the dashboard, payment setup, and scheduling preferences.' },
+  { step: '03', title: 'Onboard', desc: 'One call with a Nexus team member to walk through the dashboard, payment setup, and scheduling preferences.' },
   { step: '04', title: 'Activate', desc: 'Your profile goes live in the network and matching jobs begin routing to your dashboard.' },
 ]
 
@@ -103,7 +103,7 @@ export default function ContractorsPage() {
                 <Sparkles className="h-3 w-3" /> For licensed contractors
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                Get paid for the work — not the paperwork.
+                Pre-documented jobs, direct payouts, no lead fees.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Join the Nexus Operations contractor network and receive pre-documented jobs from
@@ -281,7 +281,7 @@ export default function ContractorsPage() {
             {[
               {
                 q: 'Does it cost anything to join?',
-                a: 'No. Starter contractor accounts are free, forever. You can optionally upgrade to Pro or Elite tiers to unlock additional capacity and priority routing — but it is not required to receive work.',
+                a: 'No. Starter contractor accounts are free, forever. You can optionally upgrade to Pro or Elite tiers for higher project limits and priority routing — but it is not required to receive work.',
               },
               {
                 q: 'How fast do I get paid?',
@@ -325,8 +325,8 @@ export default function ContractorsPage() {
               Ready to join the network?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Apply in minutes. A Nexus coordinator will follow up to verify your license, insurance,
-              and onboard you to the dashboard.
+              Apply in minutes. The Nexus team will follow up to verify your license and insurance,
+              then walk you through the dashboard.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
