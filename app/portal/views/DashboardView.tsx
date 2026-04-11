@@ -15,11 +15,6 @@ import {
   formatRelative,
   type PortalJob,
 } from '../lib/portal-utils'
-  dashboardStatsForJobs,
-  formatRelative,
-  STATUS_LABEL,
-  type Job,
-} from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { JobCard } from '../components/JobCard'
 import { StatsArc } from '../components/StatsArc'
@@ -41,10 +36,7 @@ export function DashboardView({
     if (currentUser.role === 'contractor') return j.contractorId === currentUser.id || j.status === 'open'
     return j.ownerId === currentUser.id
   })
-  const stats = dashboardStats(jobs, currentUser.id, currentUser.role)
   const stats = buildStats(visible)
-  const stats = dashboardStats(jobs, currentUser.id, currentUser.role)
-  const stats = dashboardStatsForJobs(visible)
   const recent = [...visible]
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .slice(0, 4)

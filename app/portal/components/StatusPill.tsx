@@ -1,5 +1,4 @@
 import { STATUS_LABEL, type PortalJobStatus } from '../lib/portal-utils'
-import { STATUS_LABEL, type JobStatus } from '../lib/portal-types'
 
 const ICON: Record<PortalJobStatus, string> = {
   open: '◐',

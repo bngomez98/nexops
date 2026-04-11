@@ -64,10 +64,7 @@ export async function POST(request: NextRequest) {
 
     const { data: contractors, error: contractorsError } = await supabase
       .from('profiles')
-      .select('id, full_name, email, service_categories')
-      .eq('role', 'contractor')
-      .select('id, user_id, email, full_name, service_categories, service_area, average_rating, reviews_count, is_active')
-      .select('id, full_name, email, category, service_categories, skills, service_area, average_rating, reviews_count')
+      .select('id, full_name, email, service_categories, average_rating, reviews_count, is_active')
       .eq('role', 'contractor')
       .neq('is_active', false)
 
@@ -76,13 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     const contractorIds = contractors
-      .map((contractor) =>
-        typeof contractor.id === 'string'
-          ? contractor.id
-          : typeof contractor.user_id === 'string'
-            ? contractor.user_id
-            : null,
-      )
+      .map((contractor) => (typeof contractor.id === 'string' ? contractor.id : null))
       .filter((id): id is string => Boolean(id))
 
     const { data: activeProjectsData } = await supabase
@@ -100,12 +91,7 @@ export async function POST(request: NextRequest) {
 
     const matches: ContractorMatch[] = contractors
       .map((contractor) => {
-        const contractorId =
-          typeof contractor.id === 'string'
-            ? contractor.id
-            : typeof contractor.user_id === 'string'
-              ? contractor.user_id
-              : null
+        const contractorId = typeof contractor.id === 'string' ? contractor.id : null
 
         if (!contractorId) {
           return null
@@ -119,17 +105,8 @@ export async function POST(request: NextRequest) {
           score -= 40
         }
 
-        if (project.budget_max) {
-          const activeProjects = projectCountByContractor[contractorId] || 0
-          if (activeProjects >= 3) {
-            score -= 20
-          } else if (activeProjects >= 2) {
-            score -= 10
-          }
-        }
-
         // Workload capacity (20 points)
-        const activeProjects = projectCountByContractor[contractor.id] || 0
+        const activeProjects = projectCountByContractor[contractorId] || 0
         if (activeProjects >= 3) {
           score -= 20
         } else if (activeProjects >= 2) {
@@ -152,7 +129,7 @@ export async function POST(request: NextRequest) {
             (typeof contractor.full_name === 'string' && contractor.full_name) ||
             'Contractor',
           match_score: Math.max(0, Math.min(100, score)),
-          active_projects: projectCountByContractor[contractorId] || 0,
+          active_projects: activeProjects,
           average_rating: rating,
         }
       })

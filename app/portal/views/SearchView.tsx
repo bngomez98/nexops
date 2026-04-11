@@ -1,9 +1,8 @@
 'use client'
 
-import { Briefcase, FileText, Search, Tag, Users } from 'lucide-react'
+import { Briefcase, FileText, Search, Tag } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { formatCategoryLabel } from '../lib/portal-utils'
-import { CATEGORY_LABEL, type Category } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
 import { StatusPill } from '../components/StatusPill'
 
@@ -11,10 +10,6 @@ interface SearchViewProps {
   onOpenJob: (jobId: string) => void
 }
 
-const CATEGORIES_LIST = Object.entries(CATEGORY_LABEL) as [Category, string][]
-
-export function SearchView({ onOpenJob }: SearchViewProps) {
-  const { jobs, users, docs } = usePortal()
 const DOCS = [
   { id: 'doc-1', title: 'Homeowner FAQ', tag: 'FAQ', href: '/faq' },
   { id: 'doc-2', title: 'Services overview', tag: 'Services', href: '/services' },
@@ -24,8 +19,7 @@ const DOCS = [
 ]
 
 export function SearchView({ onOpenJob }: SearchViewProps) {
-  const { jobs, conversations } = usePortal()
-  const { jobs, users, loading, error } = usePortal()
+  const { jobs } = usePortal()
   const [q, setQ] = useState('')
 
   const results = useMemo(() => {
@@ -34,10 +28,6 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
     if (!query) {
       return {
         jobs: jobs.slice(0, 4),
-        users: users.slice(0, 4),
-        docs: docs.slice(0, 4),
-        categories: CATEGORIES_LIST,
-        people: conversations.slice(0, 4),
         docs: DOCS.slice(0, 4),
         categories: categoryList,
       }
@@ -50,27 +40,13 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
           j.location.toLowerCase().includes(query) ||
           j.shortId.includes(query),
       ),
-      users: users.filter(
-        (u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query),
-      ),
-      docs: docs.filter((d) => d.title.toLowerCase().includes(query)),
-      categories: CATEGORIES_LIST.filter(([, label]) => label.toLowerCase().includes(query)),
-    }
-  }, [q, jobs, users, docs])
-      people: conversations.filter((c) => c.otherUserName.toLowerCase().includes(query)),
       docs: DOCS.filter((d) => d.title.toLowerCase().includes(query)),
       categories: categoryList.filter((label) => label.toLowerCase().includes(query)),
     }
-  }, [q, jobs, conversations])
+  }, [q, jobs])
 
   return (
     <div className="space-y-5">
-      {loading && (
-        <div className="glass p-4 text-xs text-indigo-200/70">Loading searchable records…</div>
-      )}
-      {error && (
-        <div className="glass p-4 text-xs text-rose-300">Search data unavailable: {error}</div>
-      )}
       <div>
         <h2 className="text-2xl font-semibold text-white tracking-tight">Universal search</h2>
         <p className="text-xs text-indigo-200/60">
@@ -111,29 +87,6 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
                 </div>
               </div>
               <StatusPill status={j.status} />
-            </button>
-          ))}
-        </div>
-      </ResultGroup>
-
-      <ResultGroup title="People" icon={Users} count={results.people.length} empty="No contacts yet.">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-          {results.people.map((person) => (
-            <button
-              key={person.jobId}
-              type="button"
-              onClick={() => onOpenJob(person.jobId)}
-              className="glass-soft p-3 flex items-center gap-3 text-left hover:bg-white/10 transition"
-            >
-              <div className="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs text-indigo-100">
-                {person.otherUserName.split(' ').map((part) => part[0]).slice(0, 2).join('')}
-              </div>
-              <div className="min-w-0">
-                <div className="text-sm font-semibold text-white truncate">{person.otherUserName}</div>
-                <div className="text-[10.5px] uppercase tracking-wider text-indigo-200/55">
-                  Latest: {person.lastMessage.slice(0, 32)}
-                </div>
-              </div>
             </button>
           ))}
         </div>
