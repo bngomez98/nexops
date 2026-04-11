@@ -10,7 +10,6 @@ import {
   buildInitials,
   type PortalJob,
 } from '../lib/portal-utils'
-import { usePortal } from '../lib/portal-context'
 import { StatusPill } from './StatusPill'
 import { Avatar } from './Avatar'
 

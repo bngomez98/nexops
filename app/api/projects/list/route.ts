@@ -196,7 +196,6 @@ export async function GET(request: NextRequest) {
 
       if (error) throw error
 
-      const contractorNames = await getContractorNameMap(supabase, (rows ?? []) as ServiceRequestRow[])
       const projects = ((rows ?? []) as ServiceRequestRow[]).map((r) => ({
         id: r.id,
         title: deriveTitle(r),

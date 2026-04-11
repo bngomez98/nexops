@@ -1,7 +1,7 @@
 'use client'
 
 import { ExternalLink, Shield } from 'lucide-react'
-import { STATUS_LABEL, formatMoney, formatCategoryLabel } from '../lib/portal-utils'
+import { formatMoney, formatCategoryLabel } from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { StatusPill } from '../components/StatusPill'
 
@@ -10,7 +10,7 @@ interface AdminViewProps {
 }
 
 export function AdminView({ onOpenJob }: AdminViewProps) {
-  const { jobs, currentUser } = usePortal()
+  const { jobs } = usePortal()
   const openJobs = jobs.filter((j) => j.status !== 'completed' && j.status !== 'cancelled')
   const completedJobs = jobs.filter((j) => j.status === 'completed')
   const pendingInvoices = jobs.filter((j) => j.invoiceAmount && !j.invoicePaid)

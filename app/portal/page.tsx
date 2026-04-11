@@ -15,7 +15,7 @@ import { ProfileView } from './views/ProfileView'
 import { SearchView } from './views/SearchView'
 
 export default function PortalPage() {
-  const { currentUser, loading, error, refresh } = usePortal()
+  const { currentUser, loading, error } = usePortal()
   const [tab, setTab] = useState<Tab>('dashboard')
   const [submitOpen, setSubmitOpen] = useState(false)
   const [openJobId, setOpenJobId] = useState<string | null>(null)
