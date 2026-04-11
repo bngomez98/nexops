@@ -62,7 +62,8 @@ export default function ConversationPage() {
       const data = await res.json() as { messages: Message[]; jobTitle: string }
       setMessages(data.messages ?? [])
       setJobTitle(data.jobTitle ?? 'Project')
-    } catch {
+    } catch (err) {
+      console.error(err)
       // network error — keep existing state
     }
   }, [jobId])
@@ -86,7 +87,8 @@ export default function ConversationPage() {
             setRecipientId(first.sender_id === me.id ? first.recipient_id : first.sender_id)
           }
         }
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -127,7 +129,8 @@ export default function ConversationPage() {
         const data = await res.json() as { message: Message }
         setMessages(prev => [...prev, data.message])
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       setContent(text) // restore on failure
     } finally {
       setSending(false)

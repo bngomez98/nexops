@@ -28,7 +28,7 @@ export default function HomeownerProfilePage() {
       if (!u) { router.push('/auth/login'); return }
       setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'homeowner' })
 
-      const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', u.id).single()
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', u.id).single()
       setForm({ fullName: profile?.full_name ?? u.user_metadata?.full_name ?? '', phone: profile?.phone ?? '', photoFile: null })
       if (profile?.photo_url) {
         setExistingPhotoUrl(profile.photo_url)
@@ -59,17 +59,18 @@ export default function HomeownerProfilePage() {
       }
 
       await supabase.from('profiles').upsert({
-        user_id: user.id,
+        id: user.id,
         role: 'homeowner',
         full_name: form.fullName,
         phone: form.phone || null,
         photo_url: photoUrl ?? existingPhotoUrl ?? null,
-      }, { onConflict: 'user_id' })
+      }, { onConflict: 'id' })
 
       if (photoUrl) setExistingPhotoUrl(photoUrl)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError('Failed to save profile.')
     } finally {
       setSaving(false)

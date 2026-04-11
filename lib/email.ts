@@ -12,8 +12,8 @@ function getResend(): Resend {
   if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
   return _resend
 }
-const FROM   = process.env.RESEND_FROM_EMAIL ?? 'Nexus Operations <noreply@nexusops.com>'
-const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusops.com'
+const FROM   = process.env.RESEND_FROM_EMAIL ?? 'Nexus Operations <noreply@nexusoperations.org>'
+const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusoperations.org'
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
@@ -41,7 +41,7 @@ ${body}
 </td></tr>
 <tr><td style="padding:20px 32px;border-top:1px solid #f0f0f0;background:#fafafa;">
 <p style="margin:0;font-size:12px;color:#9ca3af;">
-Nexus Operations · Topeka, KS · <a href="${SITE}" style="color:#6366f1;">nexusops.com</a>
+Nexus Operations · Topeka, KS · <a href="${SITE}" style="color:#6366f1;">nexusoperations.org</a>
 </p>
 </td></tr>
 </table>
@@ -294,7 +294,7 @@ export async function sendContactFormEmail(opts: {
   type: string
   message: string
 }) {
-  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusops.com'
+  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.org'
   await send({
     to: adminEmail,
     subject: `New contact form: ${fmt(opts.type)} inquiry from ${opts.name}`,

@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET)
-  } catch {
+  } catch (err) {
+    console.error(err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
@@ -178,8 +179,8 @@ export async function POST(req: NextRequest) {
                 admin.auth.admin.getUserById(nexusInvoice.client_id),
               ])
               const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
-                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.contractor_id).maybeSingle(),
-                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.client_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
               ])
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([

@@ -2,6 +2,19 @@
 
 ## Quick Start: Using the New Portal Features
 
+### Environment & Migration Prerequisites
+
+1. Keep automation disabled by default in non-production environments:
+   - `NEXT_PUBLIC_AUTOMATION_ENABLED=false`
+   - `AUTOMATION_ENABLED=` (unset unless intentionally enabled)
+2. Apply database migrations from the canonical schema file:
+   - `scripts/setup.sql` is the runtime source of truth
+   - `corepack pnpm db:migrate` uses `scripts/setup.sql` by default
+   - Optional override: `SUPABASE_MIGRATION_FILE=setup.sql`
+3. Ensure required Supabase migration vars are set before running migrations:
+   - `SUPABASE_PROJECT_REF`
+   - `SUPABASE_ACCESS_TOKEN`
+
 ### For Homeowners: Posting a Request with AI Assistance
 
 1. **Navigate to**: Dashboard → New Request

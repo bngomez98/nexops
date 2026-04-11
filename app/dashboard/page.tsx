@@ -62,7 +62,7 @@ export default function DashboardPage() {
     <DashboardLayout
       userName={user?.name ?? 'System User'}
       userRole={user?.role ?? 'client'}
-      userEmail={user?.email ?? 'user@nexusops.com'}
+      userEmail={user?.email ?? ''}
       onLogout={handleLogout}
     >
       <div id="main-content" className="space-y-8 max-w-5xl">

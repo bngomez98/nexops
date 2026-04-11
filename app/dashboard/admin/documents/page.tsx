@@ -37,8 +37,8 @@ export default function AdminDocumentsPage() {
   async function handleVerify(docId: string, verified: boolean) {
     setProcessing(docId)
     const supabase = createClient()
-    await supabase.from('documents').update({ verified }).eq('id', docId)
-    setDocs(prev => prev.map(d => d.id === docId ? { ...d, verified } : d))
+    await supabase.from('documents').update({ verified, status: verified ? 'approved' : 'pending' }).eq('id', docId)
+    setDocs(prev => prev.map(d => d.id === docId ? { ...d, verified, status: verified ? 'approved' : 'pending' } : d))
     setProcessing(null)
   }
 

@@ -1,9 +1,12 @@
 'use client'
 
+import { ExternalLink, Shield } from 'lucide-react'
+import { STATUS_LABEL, formatMoney, formatCategoryLabel } from '../lib/portal-utils'
 import { ExternalLink, Shield, UserPlus, Users } from 'lucide-react'
+import { useState } from 'react'
 import { dashboardStats, formatMoney, STATUS_LABEL } from '../lib/mock-data'
+import { dashboardStatsForJobs, formatMoney, STATUS_LABEL } from '../lib/portal-types'
 import { usePortal } from '../lib/portal-context'
-import { Avatar } from '../components/Avatar'
 import { StatusPill } from '../components/StatusPill'
 
 interface AdminViewProps {
@@ -11,8 +14,21 @@ interface AdminViewProps {
 }
 
 export function AdminView({ onOpenJob }: AdminViewProps) {
+  const { jobs, currentUser } = usePortal()
+  const openJobs = jobs.filter((j) => j.status !== 'completed' && j.status !== 'cancelled')
+  const completedJobs = jobs.filter((j) => j.status === 'completed')
+  const pendingInvoices = jobs.filter((j) => j.invoiceAmount && !j.invoicePaid)
+  const activeContractors = new Set(
+    openJobs.filter((j) => j.contractorId).map((j) => j.contractorId),
+  ).size
+  const grossMoney = jobs.reduce((sum, j) => sum + (j.invoiceAmount ?? 0), 0)
+  const latest = [...jobs].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 6)
+  const { jobs, users, currentUser, assignContractor, loading, error } = usePortal()
+  const stats = dashboardStats(jobs, currentUser.id, 'admin')
   const { jobs, users, currentUser, assignContractor } = usePortal()
-  const stats = dashboardStats(currentUser.id, 'admin')
+  const [assignError, setAssignError] = useState('')
+  const stats = dashboardStats(jobs, currentUser.id, 'admin')
+  const stats = dashboardStatsForJobs(jobs)
   const contractors = users.filter((u) => u.role === 'contractor')
   const customers = users.filter((u) => u.role === 'homeowner' || u.role === 'manager')
 
@@ -22,6 +38,12 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
 
   return (
     <div className="space-y-5">
+      {loading && (
+        <div className="glass p-4 text-xs text-indigo-200/70">Loading admin operations data…</div>
+      )}
+      {error && (
+        <div className="glass p-4 text-xs text-rose-300">Admin data unavailable: {error}</div>
+      )}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70 inline-flex items-center gap-1.5">
@@ -42,21 +64,13 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
         </a>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <AdminStat label="Total jobs" value={jobs.length} />
-        <AdminStat label="Open" value={stats.open} accent="text-sky-300" />
-        <AdminStat label="Active contractors" value={stats.activeContractors} accent="text-violet-300" />
-        <AdminStat label="Gross billed" value={formatMoney(grossMoney)} accent="text-emerald-300" />
-      </div>
-
-      <section className="glass p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <h3 className="text-sm font-semibold text-white">Unassigned jobs</h3>
-            <p className="text-[11px] text-indigo-200/55">
-              Tap a contractor to assign them instantly.
-            </p>
-          </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <AdminStat label="Total jobs" value={jobs.length} />
+          <AdminStat label="Open" value={openJobs.length} accent="text-sky-300" />
+          <AdminStat label="Completed" value={completedJobs.length} accent="text-emerald-300" />
+          <AdminStat label="Active contractors" value={activeContractors} accent="text-violet-300" />
+          <AdminStat label="Pending invoices" value={pendingInvoices.length} accent="text-amber-300" />
+          <AdminStat label="Gross billed" value={formatMoney(grossMoney)} accent="text-emerald-300" />
         </div>
         <div className="space-y-2.5">
           {jobs.filter((j) => !j.contractorId).length === 0 && (
@@ -87,7 +101,10 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
                     <button
                       type="button"
                       key={c.id}
-                      onClick={() => assignContractor(j.id, c.id)}
+                      onClick={() => {
+                        void assignContractor(j.id, c.id)
+                      }}
+                      onClick={() => void assignContractor(j.id, c.id)}
                       className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30 inline-flex items-center gap-1.5"
                     >
                       <Avatar user={c} size={16} />
@@ -98,6 +115,7 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
               </div>
             ))}
         </div>
+        {assignError && <div className="mt-3 text-xs text-rose-300">{assignError}</div>}
       </section>
 
       <div className="grid lg:grid-cols-2 gap-5">
@@ -127,27 +145,37 @@ export function AdminView({ onOpenJob }: AdminViewProps) {
 
         <section className="glass p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <UserPlus size={15} className="text-indigo-200" />
-              <h3 className="text-sm font-semibold text-white">Customers</h3>
+            <div>
+              <h3 className="text-sm font-semibold text-white">Latest activity</h3>
+              <p className="text-[11px] text-indigo-200/55">
+                Most recent service requests across the portfolio.
+              </p>
             </div>
           </div>
-          <div className="space-y-2">
-            {customers.map((u) => (
-              <div key={u.id} className="glass-soft p-3 flex items-center gap-3">
-                <Avatar user={u} size={36} />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-white truncate">{u.name}</div>
-                  <div className="text-[11px] text-indigo-200/60 truncate">{u.email}</div>
-                </div>
-                <span className="text-[10px] uppercase tracking-wider text-indigo-200/55">
-                  {u.role}
-                </span>
+          <div className="space-y-2.5">
+            {latest.length === 0 && (
+              <div className="text-xs text-indigo-200/50 py-4 text-center">
+                No jobs yet.
               </div>
+            )}
+            {latest.map((job) => (
+              <button
+                key={job.id}
+                type="button"
+                onClick={() => onOpenJob(job.id)}
+                className="w-full glass-soft p-3.5 flex items-center gap-3 text-left hover:bg-white/10 transition"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-white truncate">{job.title}</div>
+                  <div className="text-[11px] text-indigo-200/60 truncate">
+                    #{job.shortId} · {formatCategoryLabel(job.category)} · {job.location.split(',')[0]}
+                  </div>
+                </div>
+                <StatusPill status={job.status} />
+              </button>
             ))}
           </div>
         </section>
-      </div>
     </div>
   )
 }

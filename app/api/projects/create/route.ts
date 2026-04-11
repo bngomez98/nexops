@@ -47,9 +47,11 @@ export async function POST(request: NextRequest) {
     // Accept both JSON and FormData
     const contentType = request.headers.get('content-type') ?? ''
     let category = 'open-request', customCategory = '', title = '', description = '', location = '', budget = '', preferredDate = ''
-let pipelineMode: 'standard' | 'automated' | 'community' = 'automated'
-let communityVisible = true
-let accessRequirements = ''
+    let urgency = ''
+    let photoUrls: string[] = []
+    let pipelineMode: 'standard' | 'automated' | 'community' = 'automated'
+    let communityVisible = true
+    let accessRequirements = ''
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData()
@@ -60,12 +62,15 @@ let accessRequirements = ''
       location    = String(formData.get('location') ?? '')
       budget      = String(formData.get('budget') ?? '')
       preferredDate = String(formData.get('preferredDate') ?? '')
-pipelineMode = (String(formData.get('pipelineMode') ?? 'automated') as 'standard' | 'automated' | 'community')
-communityVisible = String(formData.get('communityVisible') ?? 'true') !== 'false'
-accessRequirements = String(formData.get('accessRequirements') ?? '')
+      urgency     = String(formData.get('urgency') ?? '')
+      const rawPhotoUrls = formData.getAll('photoUrls').map((value) => String(value))
+      photoUrls = rawPhotoUrls.filter(Boolean)
+      pipelineMode = (String(formData.get('pipelineMode') ?? 'automated') as 'standard' | 'automated' | 'community')
+      communityVisible = String(formData.get('communityVisible') ?? 'true') !== 'false'
+      accessRequirements = String(formData.get('accessRequirements') ?? '')
     } else {
       const body = await request.json()
-      ;({ category, customCategory, title, description, location, budget, preferredDate, pipelineMode, communityVisible, accessRequirements } = body)
+      ;({ category, customCategory, title, description, location, budget, preferredDate, urgency, photoUrls, pipelineMode, communityVisible, accessRequirements } = body)
     }
 
     const parsed = projectRequestSchema.safeParse({
@@ -75,6 +80,8 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
       description,
       location,
       budget,
+      urgency,
+      photoUrls,
       preferredDate,
       pipelineMode,
       communityVisible,
@@ -90,6 +97,8 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
 
     const validated = parsed.data
     const normalizedCategory = normalizeCategory(validated.category || 'open-request', validated.customCategory)
+    const normalizedUrgency = validated.urgency || 'normal'
+    const normalizedPhotoUrls = validated.photoUrls?.filter(Boolean) ?? []
     const pipeline = buildPipelineSnapshot({
       mode: automationEnabled ? validated.pipelineMode : 'standard',
       communityVisible: automationEnabled ? validated.communityVisible : false,
@@ -98,19 +107,22 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
 
     const { data: sr, error: insertError } = await supabase
       .from('service_requests')
-      .insert({
-        owner_id:         user.id,
-        category:         normalizedCategory,
-        description:      validated.description,
-        additional_notes: [validated.title, serializePipelineSnapshot(pipeline)].filter(Boolean).join('\n\n') || null,
-        address:          validated.location,
-        city:             'Topeka',
-        state:            'KS',
-        zip_code:         '66603',
-        budget_max:       validated.budget ? parseFloat(validated.budget) : null,
-        consultation_date: toConsultationDate(validated.preferredDate),
-        status:           'pending_review',
-      })
+        .insert({
+          owner_id:         user.id,
+          category:         normalizedCategory,
+          title:            validated.title,
+          description:      validated.description,
+          additional_notes: [validated.title, serializePipelineSnapshot(pipeline)].filter(Boolean).join('\n\n') || null,
+          address:          validated.location,
+          city:             'Topeka',
+          state:            'KS',
+          zip_code:         '66603',
+          budget_max:       validated.budget ? parseFloat(validated.budget) : null,
+          urgency:          normalizedUrgency,
+          photo_urls:       normalizedPhotoUrls.length > 0 ? normalizedPhotoUrls : null,
+          consultation_date: toConsultationDate(validated.preferredDate),
+          status:           'pending_review',
+        })
       .select('id, category, status')
       .single()
 
@@ -125,7 +137,8 @@ accessRequirements = String(formData.get('accessRequirements') ?? '')
           headers: { 'Content-Type': 'application/json', Cookie: request.headers.get('cookie') ?? '' },
           body: JSON.stringify({ projectId: sr.id }),
         })
-      } catch {
+      } catch (err) {
+        console.error(err)
         // Match failure is non-fatal — job will appear on public board
       }
     }
