@@ -13,13 +13,151 @@ begin
 end;
 $$;
 
+-- ── enum types ───────────────────────────────────────────────
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'profile_role'
+  ) then
+    create type public.profile_role as enum ('homeowner', 'property_manager', 'contractor', 'admin');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'stripe_connect_status'
+  ) then
+    create type public.stripe_connect_status as enum ('pending', 'active', 'restricted');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'subscription_plan_type'
+  ) then
+    create type public.subscription_plan_type as enum ('contractor', 'owner');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'subscription_status'
+  ) then
+    create type public.subscription_status as enum (
+      'inactive',
+      'incomplete',
+      'incomplete_expired',
+      'trialing',
+      'active',
+      'past_due',
+      'canceled',
+      'unpaid',
+      'paused'
+    );
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'service_request_status'
+  ) then
+    create type public.service_request_status as enum (
+      'pending_review',
+      'in_queue',
+      'assigned',
+      'consultation_scheduled',
+      'in_progress',
+      'completed',
+      'declined',
+      'cancelled'
+    );
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'document_status'
+  ) then
+    create type public.document_status as enum ('pending', 'approved', 'rejected');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'job_urgency'
+  ) then
+    create type public.job_urgency as enum ('routine', 'urgent', 'emergency');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'job_status'
+  ) then
+    create type public.job_status as enum (
+      'open',
+      'unmatched',
+      'matched',
+      'assigned',
+      'in_progress',
+      'completed',
+      'cancelled'
+    );
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'match_response'
+  ) then
+    create type public.match_response as enum ('accepted', 'declined');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'invoice_status'
+  ) then
+    create type public.invoice_status as enum ('draft', 'sent', 'paid', 'void');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'payment_type'
+  ) then
+    create type public.payment_type as enum ('dispatch', 'invoice', 'claim_fee');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'payment_status'
+  ) then
+    create type public.payment_status as enum ('pending', 'paid', 'refunded', 'failed');
+  end if;
+end $$;
+
 -- ── profiles ─────────────────────────────────────────────────
 create table if not exists public.profiles (
   id                               uuid primary key references auth.users(id) on delete cascade,
   full_name                        text,
   email                            text,
-  role                             text not null default 'homeowner'
-                                    check (role in ('homeowner', 'property_manager', 'contractor', 'admin')),
+  role                             public.profile_role not null default 'homeowner',
   phone                            text,
   company                          text,
   avatar_url                       text,
@@ -30,13 +168,11 @@ create table if not exists public.profiles (
   service_categories               text[],
   stripe_customer_id               text,
   stripe_connect_account_id        text,
-  stripe_connect_status            text
-                                    check (stripe_connect_status in ('pending', 'active', 'restricted')),
+  stripe_connect_status            public.stripe_connect_status,
   subscription_tier                text default 'free',
-  subscription_status              text default 'inactive',
+  subscription_status              public.subscription_status default 'inactive',
   stripe_subscription_id           text,
-  subscription_plan_type           text
-                                    check (subscription_plan_type in ('contractor', 'owner')),
+  subscription_plan_type           public.subscription_plan_type,
   subscription_price_cents         integer
                                     check (subscription_price_cents is null or subscription_price_cents > 0),
   contractor_hourly_rate           numeric(10,2)
@@ -64,8 +200,7 @@ end;
 $$;
   id             uuid primary key references auth.users(id) on delete cascade,
   full_name      text,
-  role           text not null default 'homeowner'
-                   check (role in ('homeowner', 'property_manager', 'contractor', 'admin')),
+  role           public.profile_role not null default 'homeowner',
   phone          text,
   email          text,
   company        text,
@@ -79,8 +214,7 @@ $$;
   is_active      boolean not null default true,
   stripe_customer_id          text,
   stripe_connect_account_id   text,
-  stripe_connect_status       text
-                   check (stripe_connect_status in ('pending', 'active', 'restricted')),
+  stripe_connect_status       public.stripe_connect_status,
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
@@ -96,9 +230,9 @@ alter table public.profiles add column if not exists average_rating numeric(3,2)
 alter table public.profiles add column if not exists reviews_count integer not null default 0;
 alter table public.profiles add column if not exists is_active boolean not null default true;
 alter table public.profiles add column if not exists subscription_tier text default 'free';
-alter table public.profiles add column if not exists subscription_status text default 'inactive';
+alter table public.profiles add column if not exists subscription_status public.subscription_status default 'inactive';
 alter table public.profiles add column if not exists stripe_subscription_id text;
-alter table public.profiles add column if not exists stripe_connect_status text;
+alter table public.profiles add column if not exists stripe_connect_status public.stripe_connect_status;
 
 update public.profiles
 set user_id = id
@@ -263,17 +397,7 @@ create table if not exists public.service_requests (
   preferred_dates              text,
   additional_notes             text,
   photo_urls                   text[],
-  status                       text not null default 'pending_review'
-                                 check (status in (
-                                   'pending_review',
-                                   'in_queue',
-                                   'assigned',
-                                   'consultation_scheduled',
-                                   'in_progress',
-                                   'completed',
-                                   'declined',
-                                   'cancelled'
-                                 )),
+  status                       public.service_request_status not null default 'pending_review',
   status_reason                text,
   assigned_contractor_id       uuid references auth.users(id) on delete set null,
   consultation_date            timestamptz,
@@ -300,17 +424,7 @@ create table if not exists public.service_requests (
   preferred_dates         text,
   additional_notes        text,
   photo_urls              text[],
-  status                  text not null default 'pending_review'
-                            check (status in (
-                              'pending_review',
-                              'in_queue',
-                              'assigned',
-                              'consultation_scheduled',
-                              'in_progress',
-                              'completed',
-                              'declined',
-                              'cancelled'
-                            )),
+  status                  public.service_request_status not null default 'pending_review',
   assigned_contractor_id  uuid references public.profiles(id) on delete set null,
   status_reason           text,
   consultation_date       timestamptz,
@@ -382,13 +496,12 @@ create table if not exists public.documents (
   type       text not null,
   file_url   text not null,
   expires_at timestamptz,
-  status     text not null default 'pending'
-             check (status in ('pending', 'approved', 'rejected')),
+  status     public.document_status not null default 'pending',
   verified   boolean not null default false,
   created_at timestamptz not null default now()
 );
 
-alter table public.documents add column if not exists status text not null default 'pending';
+alter table public.documents add column if not exists status public.document_status not null default 'pending';
 alter table public.documents add column if not exists verified boolean not null default false;
 
 update public.documents
@@ -426,10 +539,10 @@ create table if not exists public.jobs (
   client_id      uuid not null references public.profiles(id) on delete cascade,
   property_id    uuid references public.properties(id) on delete set null,
   service_type   text not null,
-  urgency        text not null default 'routine',
+  urgency        public.job_urgency not null default 'routine',
   description    text,
   budget_ceiling numeric(10,2),
-  status         text not null default 'open',
+  status         public.job_status not null default 'open',
   contractor_id  uuid references public.profiles(id) on delete set null,
   created_at     timestamptz not null default now()
 );
@@ -437,7 +550,7 @@ create table if not exists public.jobs (
 create table if not exists public.job_status_history (
   id          uuid primary key default gen_random_uuid(),
   job_id      uuid not null references public.jobs(id) on delete cascade,
-  status      text not null,
+  status      public.job_status not null,
   changed_at  timestamptz not null default now(),
   changed_by  text not null default 'system'
 );
@@ -447,7 +560,7 @@ create table if not exists public.matches (
   job_id         uuid not null references public.jobs(id) on delete cascade,
   contractor_id  uuid not null references public.profiles(id) on delete cascade,
   offered_at     timestamptz not null default now(),
-  response       text,
+  response       public.match_response,
   responded_at   timestamptz
 );
 
@@ -461,9 +574,8 @@ create table if not exists public.invoices (
   nexus_fee           numeric(10,2) not null default 0,
   total               numeric(10,2) not null default 0,
   fee_rate            numeric(4,3) not null default 0.25,
-  urgency             text not null default 'routine',
-  status              text not null default 'draft'
-                      check (status in ('draft', 'sent', 'paid', 'void')),
+  urgency             public.job_urgency not null default 'routine',
+  status              public.invoice_status not null default 'draft',
   stripe_invoice_id   text,
   stripe_payment_url  text,
   created_at          timestamptz not null default now()
@@ -746,8 +858,7 @@ create table if not exists public.documents (
   file_url   text not null,
   expires_at timestamptz,
   verified   boolean not null default false,
-  status     text not null default 'pending'
-             check (status in ('pending', 'approved', 'rejected')),
+  status     public.document_status not null default 'pending',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -803,13 +914,12 @@ create table if not exists public.payments (
   request_id               uuid not null references public.service_requests(id) on delete cascade,
   payer_id                 uuid not null references auth.users(id),
   contractor_id            uuid not null references auth.users(id),
-  type                     text not null check (type in ('dispatch', 'invoice', 'claim_fee')),
+  type                     public.payment_type not null,
   amount_cents             integer not null,
   application_fee_cents    integer not null,
   stripe_session_id        text,
   stripe_payment_intent_id text,
-  status                   text not null default 'pending'
-                             check (status in ('pending', 'paid', 'refunded', 'failed')),
+  status                   public.payment_status not null default 'pending',
   created_at               timestamptz not null default now(),
   updated_at               timestamptz not null default now()
 );
@@ -844,10 +954,10 @@ create table if not exists public.jobs (
   client_id     uuid not null references auth.users(id) on delete cascade,
   property_id   uuid references public.properties(id) on delete set null,
   service_type  text not null,
-  urgency       text not null default 'routine',
+  urgency       public.job_urgency not null default 'routine',
   description   text,
   budget_ceiling numeric(10,2),
-  status        text not null default 'open',
+  status        public.job_status not null default 'open',
   contractor_id uuid references auth.users(id) on delete set null,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
@@ -881,7 +991,7 @@ create table if not exists public.matches (
   job_id         uuid not null references public.jobs(id) on delete cascade,
   contractor_id  uuid not null references auth.users(id) on delete cascade,
   offered_at     timestamptz not null default now(),
-  response       text,
+  response       public.match_response,
   responded_at   timestamptz
 );
 
@@ -905,7 +1015,7 @@ for insert with check (auth.uid() is not null);
 create table if not exists public.job_status_history (
   id          uuid primary key default gen_random_uuid(),
   job_id      uuid not null references public.jobs(id) on delete cascade,
-  status      text not null,
+  status      public.job_status not null,
   changed_at  timestamptz not null default now(),
   changed_by  text not null default 'system'
 );
@@ -937,8 +1047,8 @@ create table if not exists public.invoices (
   nexus_fee           numeric(10,2) not null default 0,
   total               numeric(10,2) not null default 0,
   fee_rate            numeric(4,3) not null default 0.25,
-  urgency             text not null default 'routine',
-  status              text not null default 'draft',
+  urgency             public.job_urgency not null default 'routine',
+  status              public.invoice_status not null default 'draft',
   stripe_invoice_id   text,
   stripe_payment_url  text,
   created_at          timestamptz not null default now(),
@@ -1105,7 +1215,7 @@ alter table public.profiles add column if not exists notify_status_changes boole
 alter table public.profiles add column if not exists notify_payments boolean not null default false;
 
 alter table public.service_requests add column if not exists title text;
-alter table public.service_requests add column if not exists urgency text not null default 'routine';
+alter table public.service_requests add column if not exists urgency public.job_urgency not null default 'routine';
 alter table public.service_requests add column if not exists invoice_amount numeric(10,2);
 alter table public.service_requests add column if not exists invoice_paid boolean not null default false;
 alter table public.service_requests add column if not exists status_reason text;
@@ -1115,8 +1225,7 @@ create table if not exists public.documents (
   user_id     uuid not null references public.profiles(id) on delete cascade,
   type        text not null,
   file_url    text not null,
-  status      text not null default 'pending'
-                check (status in ('pending', 'approved', 'rejected')),
+  status      public.document_status not null default 'pending',
   expires_at  timestamptz,
   created_at  timestamptz not null default now()
 );
