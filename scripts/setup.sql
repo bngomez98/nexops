@@ -13,6 +13,145 @@ begin
 end;
 $$;
 
+-- ── enum types ───────────────────────────────────────────────
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'profile_role'
+  ) then
+    create type public.profile_role as enum ('homeowner', 'property_manager', 'contractor', 'admin');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'stripe_connect_status'
+  ) then
+    create type public.stripe_connect_status as enum ('pending', 'active', 'restricted');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'subscription_plan_type'
+  ) then
+    create type public.subscription_plan_type as enum ('contractor', 'owner');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'subscription_status'
+  ) then
+    create type public.subscription_status as enum (
+      'inactive',
+      'incomplete',
+      'incomplete_expired',
+      'trialing',
+      'active',
+      'past_due',
+      'canceled',
+      'unpaid',
+      'paused'
+    );
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'service_request_status'
+  ) then
+    create type public.service_request_status as enum (
+      'pending_review',
+      'in_queue',
+      'assigned',
+      'consultation_scheduled',
+      'in_progress',
+      'completed',
+      'declined',
+      'cancelled'
+    );
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'document_status'
+  ) then
+    create type public.document_status as enum ('pending', 'approved', 'rejected');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'job_urgency'
+  ) then
+    create type public.job_urgency as enum ('routine', 'urgent', 'emergency');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'job_status'
+  ) then
+    create type public.job_status as enum (
+      'open',
+      'unmatched',
+      'matched',
+      'assigned',
+      'in_progress',
+      'completed',
+      'cancelled'
+    );
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'match_response'
+  ) then
+    create type public.match_response as enum ('accepted', 'declined');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'invoice_status'
+  ) then
+    create type public.invoice_status as enum ('draft', 'sent', 'paid', 'void');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'payment_type'
+  ) then
+    create type public.payment_type as enum ('dispatch', 'invoice', 'claim_fee');
+  end if;
+
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where n.nspname = 'public' and t.typname = 'payment_status'
+  ) then
+    create type public.payment_status as enum ('pending', 'paid', 'refunded', 'failed');
+  end if;
+end $$;
+
 -- ── profiles ─────────────────────────────────────────────────
 create table if not exists public.profiles (
   id                               uuid primary key references auth.users(id) on delete cascade,
