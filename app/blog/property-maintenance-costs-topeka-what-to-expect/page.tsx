@@ -83,24 +83,24 @@ export default function BlogPost() {
               <h2 className="text-xl font-semibold text-foreground">What drives costs higher</h2>
               <p>Several factors consistently push repair costs above the midpoint of these ranges:</p>
               <ul className="pl-4 space-y-1">
-                <li><strong>Emergency or after-hours response</strong> — contractors typically charge a premium for off-hours calls, which is reflected in the Nexus Operations 35% Emergency markup vs. 25% Routine.</li>
+                <li><strong>Emergency or after-hours response</strong> — contractors typically charge a premium for off-hours calls, reflected in Emergency tier invoicing.</li>
                 <li><strong>Access difficulty</strong> — units with finished ceilings above plumbing runs, cramped mechanical rooms, or multi-story access add labor time.</li>
                 <li><strong>Material lead times</strong> — specialty parts, older system components, or supply chain constraints can extend timelines and increase quotes.</li>
                 <li><strong>Deferred maintenance compounding</strong> — a minor leak found late often involves secondary repairs: cabinet replacement, drywall, mold mitigation.</li>
               </ul>
-              <h2 className="text-xl font-semibold text-foreground">How the Nexus Operations markup model works with these costs</h2>
+              <h2 className="text-xl font-semibold text-foreground">How Nexus Operations invoicing works</h2>
               <p>
-                When Nexus Operations handles a job, the contractor quotes their rate and that rate becomes the base cost on the invoice. The coordination markup (25–35% depending on urgency tier) is added on top and shown as a separate line item. For a $400 plumbing job at the Routine tier, that is $100 in markup, for a total of $500.
+                When Nexus Operations handles a job, the contractor's quoted rate becomes the line item on your monthly invoice — no per-job percentage surcharge bolted on top. Coordination, SLA tracking, documentation, and unified billing are all covered by your Nexus subscription plan, not by a cut of each contractor's work.
               </p>
               <p>
-                The markup covers contractor sourcing, SLA enforcement, documentation, and unified invoicing. Property managers receive one invoice per month across all jobs — not a separate bill from each contractor.
+                The result: property managers receive one consolidated monthly invoice that itemizes every job across every property — not a separate bill from each contractor, and not a confusing split between "base cost" and "markup" on every line.
               </p>
             </div>
             <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-primary/5">
-              <h3 className="text-base font-semibold text-foreground mb-2">See how invoicing works</h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">The pricing page shows a full invoice example with contractor cost and markup broken out as separate line items.</p>
-              <Link href="/pricing#invoice" className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity">
-                View pricing and invoice example <ArrowRight className="h-4 w-4" />
+              <h3 className="text-base font-semibold text-foreground mb-2">See how pricing works</h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">The pricing page shows current subscription plans for homeowners, portfolios, and contractors — with everything that is included at each tier.</p>
+              <Link href="/pricing" className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity">
+                View pricing <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="mt-10 pt-8 border-t border-border">

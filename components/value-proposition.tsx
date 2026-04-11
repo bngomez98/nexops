@@ -19,9 +19,9 @@ const values = [
   },
   {
     icon: Receipt,
-    title: "Transparent Cost-Plus Pricing",
+    title: "Unified monthly invoicing",
     description:
-      "No retainers, no subscription fees. You pay the contractor's quoted rate plus a transparent 25-35% coordination markup based on urgency. One invoice per billing cycle.",
+      "One consolidated invoice per billing cycle covering every job across every property, with line-item detail by trade, urgency, and contractor. No more chasing paperwork.",
     accent: "text-primary",
     bg: "bg-primary/8 border-primary/15",
   },
