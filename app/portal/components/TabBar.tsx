@@ -2,7 +2,6 @@
 
 import { Briefcase, Layout, Search, Shield, User } from 'lucide-react'
 import type { PortalRole } from '../lib/portal-utils'
-import type { Role } from '../lib/portal-types'
 
 export type Tab = 'dashboard' | 'jobs' | 'search' | 'profile' | 'admin'
 
