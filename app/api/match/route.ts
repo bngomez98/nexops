@@ -5,21 +5,6 @@ import {
   sendContractorAssignedClientEmail,
 } from '@/lib/email'
 
-/** Haversine formula — returns distance in miles between two lat/lng points */
-function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 3958.8 // Earth radius in miles
-  const dLat = ((lat2 - lat1) * Math.PI) / 180
-  const dLng = ((lng2 - lng1) * Math.PI) / 180
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2)
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-  return R * c
-}
-
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -51,9 +36,6 @@ export async function POST(request: NextRequest) {
     if (job.status !== 'open' && job.status !== 'unmatched') {
       return NextResponse.json({ error: 'Job is not eligible for matching' }, { status: 400 })
     }
-
-    const jobLat = job.properties?.lat
-    const jobLng = job.properties?.lng
 
     // Fetch eligible contractors:
     // - verified, available
@@ -105,8 +87,7 @@ export async function POST(request: NextRequest) {
     const candidates = (contractors as CandidateRow[]).filter(c => {
       if (busyContractorIds.has(c.user_id)) return false
       if (expiredUserIds.has(c.user_id)) return false
-      if (!jobLat || !jobLng) return true
-      return (c.service_radius_miles ?? 25) >= 0
+      return true
     })
 
     if (candidates.length === 0) {
@@ -126,12 +107,9 @@ export async function POST(request: NextRequest) {
       countByContractor[r.contractor_id] = (countByContractor[r.contractor_id] ?? 0) + 1
     })
 
+    // Rank candidates: by completed job count (distance omitted — contractor lat/lng not available)
     candidates.sort((a, b) => {
-      const distA = jobLat && jobLng ? haversineDistance(jobLat, jobLng, jobLat, jobLng) : 9999
-      const distB = jobLat && jobLng ? haversineDistance(jobLat, jobLng, jobLat, jobLng) : 9999
-
-      if (Math.abs(distA - distB) > 5) return distA - distB // Proximity first (>5mi diff)
-      return (countByContractor[b.user_id] ?? 0) - (countByContractor[a.user_id] ?? 0) // Then by experience
+      return (countByContractor[b.user_id] ?? 0) - (countByContractor[a.user_id] ?? 0)
     })
 
     const winner = candidates[0]
