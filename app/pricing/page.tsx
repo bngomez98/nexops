@@ -253,6 +253,7 @@ export default function PricingPage() {
               </h3>
               <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
                 Multi-property portfolios, multi-family buildings, and commercial real estate get
+                custom pricing, dedicated coordinators, and portfolio-level reporting. Tell us about
                 custom pricing, a named Nexus representative, and portfolio-level reporting. Tell us about
                 your operation and we&apos;ll put a quote together.
               </p>
