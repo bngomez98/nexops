@@ -1066,17 +1066,29 @@ create trigger set_contractor_profiles_updated_at
 -- ── jobs ──────────────────────────────────────────────────────
 create table if not exists public.jobs (
   id             uuid primary key default gen_random_uuid(),
-  client_id      uuid not null references auth.users(id) on delete cascade,
+  client_id      uuid not null references public.profiles(id) on delete cascade,
   property_id    uuid references public.properties(id) on delete set null,
   service_type   text not null,
   urgency        text not null default 'routine',
   description    text,
   budget_ceiling numeric(10,2),
   status         text not null default 'open',
-  contractor_id  uuid references auth.users(id) on delete set null,
+  contractor_id  uuid references public.profiles(id) on delete set null,
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
+
+alter table public.jobs
+  drop constraint if exists jobs_client_id_fkey,
+  drop constraint if exists jobs_contractor_id_fkey;
+
+alter table public.jobs
+  add constraint jobs_client_id_fkey
+  foreign key (client_id) references public.profiles(id) on delete cascade;
+
+alter table public.jobs
+  add constraint jobs_contractor_id_fkey
+  foreign key (contractor_id) references public.profiles(id) on delete set null;
 
 alter table public.jobs enable row level security;
 
