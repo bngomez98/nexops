@@ -1546,13 +1546,20 @@ create table if not exists public.notifications (
   id         uuid primary key default gen_random_uuid(),
   user_id    uuid not null references public.profiles(id) on delete cascade,
   title      text not null,
+  message    text,
   body       text,
+  project_id uuid references public.service_requests(id) on delete set null,
   type       text,
   read       boolean not null default false,
   link       text,
   metadata   jsonb,
   created_at timestamptz not null default now()
 );
+
+alter table public.notifications
+  add column if not exists message text;
+alter table public.notifications
+  add column if not exists project_id uuid references public.service_requests(id) on delete set null;
 
 alter table public.notifications enable row level security;
 
@@ -1563,3 +1570,5 @@ create policy "notifications_self_access" on public.notifications for all
 
 create index if not exists notifications_user_id_idx
   on public.notifications (user_id, read, created_at desc);
+create index if not exists notifications_project_id_idx
+  on public.notifications (project_id);
