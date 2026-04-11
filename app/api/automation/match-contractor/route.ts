@@ -64,6 +64,8 @@ export async function POST(request: NextRequest) {
 
     const { data: contractors, error: contractorsError } = await supabase
       .from('profiles')
+      .select('id, full_name, email, service_categories')
+      .eq('role', 'contractor')
       .select('id, user_id, email, full_name, service_categories, service_area, average_rating, reviews_count, is_active')
       .select('id, full_name, email, category, service_categories, skills, service_area, average_rating, reviews_count')
       .eq('role', 'contractor')
@@ -111,6 +113,8 @@ export async function POST(request: NextRequest) {
 
         let score = 100
 
+        // Category match (40 points)
+        const contractorCategories = (contractor.service_categories ?? []).map(c => String(c).toLowerCase())
         const serviceCategories = toCategoryList(contractor.service_categories)
         if (serviceCategories.length > 0 && !serviceCategories.includes(projectCategory)) {
         // Category/skills match (40 points)
@@ -137,6 +141,16 @@ export async function POST(request: NextRequest) {
           }
         }
 
+        // Workload capacity (20 points)
+        const activeProjects = projectCountByContractor[contractor.id] || 0
+        if (activeProjects >= 3) {
+          score -= 20
+        } else if (activeProjects >= 2) {
+          score -= 10
+        }
+
+        // Rating boost (10 points)
+        const rating = 0
         const rating =
           typeof contractor.average_rating === 'number' ? contractor.average_rating : 0
         if (rating >= 4.5) {

@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { messageSchema } from '@/lib/validators'
 
 type RouteContext = { params: Promise<{ jobId: string }> }
+export const dynamic = 'force-dynamic'
 
 // GET /api/messages/[jobId] — all messages for a job, marks unread as read
 export async function GET(

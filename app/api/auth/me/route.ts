@@ -10,24 +10,11 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    // Fetch profile from public.profiles.
-    // The codebase has two profile schemas — one keyed by `id` (=auth.uid) and
-    // one keyed by `user_id`. Try both so the photo_url / avatar_url resolve
-    // regardless of which schema is active.
     let { data: profile } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)
       .maybeSingle()
-
-    if (!profile) {
-      const { data: byUserId } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle()
-      profile = byUserId
-    }
 
     const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
     // Normalise DB value 'property_manager' (underscore) to the hyphenated form
