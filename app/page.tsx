@@ -142,12 +142,6 @@ const testimonials = [
   },
 ]
 
-const urgencyTiers = [
-  { name: 'Routine', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
-  { name: 'Urgent', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
-  { name: 'Emergency', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
-]
-
 export default function HomePage() {
   const homeownerPlans = getPlansByRole('homeowner').slice(0, 3)
 
@@ -331,10 +325,6 @@ export default function HomePage() {
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {howItWorks.map(({ step, title, desc, icon: Icon }) => (
               <div key={step} className="relative rounded-2xl border border-border bg-card p-6">
-              <div
-                key={step}
-                className="relative rounded-2xl border border-border bg-card p-6"
-              >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
                     Step {step}

@@ -117,10 +117,6 @@ export default function AboutPage() {
                 accountable coordinator that handles the work end-to-end — intake, dispatch,
                 documentation, and billing — so owners can focus on running their properties, not
                 chasing tradespeople.
-                Most property owners in Topeka work with an assortment of contractors, handwritten
-                invoices, and unreturned calls. Nexus Operations was founded to act as the single
-                point of contact that handles each job from start to finish — intake, dispatch,
-                documentation, and billing — so owners do not have to contact tradespeople directly.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -201,7 +197,6 @@ export default function AboutPage() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <p className="mt-4 text-[15px] font-bold text-foreground">{title}</p>
-                <p className="mt-5 text-[15px] font-bold text-foreground">{title}</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
               </div>
             ))}
@@ -366,7 +361,6 @@ export default function AboutPage() {
                         </div>
                       )}
                     </div>
-                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">{desc}</p>
                   </div>
                 ))}
               </div>

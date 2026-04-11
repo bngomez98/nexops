@@ -90,10 +90,10 @@ export default function BlogPost() {
               </ul>
               <h2 className="text-xl font-semibold text-foreground">How Nexus Operations invoicing works</h2>
               <p>
-                When Nexus Operations handles a job, the contractor's quoted rate becomes the line item on your monthly invoice — no per-job percentage surcharge bolted on top. Coordination, SLA tracking, documentation, and unified billing are all covered by your Nexus subscription plan, not by a cut of each contractor's work.
+                When Nexus Operations handles a job, the contractor&apos;s quoted rate becomes the line item on your monthly invoice — no per-job percentage surcharge bolted on top. Coordination, SLA tracking, documentation, and unified billing are all covered by your Nexus subscription plan, not by a cut of each contractor&apos;s work.
               </p>
               <p>
-                The result: property managers receive one consolidated monthly invoice that itemizes every job across every property — not a separate bill from each contractor, and not a confusing split between "base cost" and "markup" on every line.
+                The result: property managers receive one consolidated monthly invoice that itemizes every job across every property — not a separate bill from each contractor, and not a confusing split between &quot;base cost&quot; and &quot;markup&quot; on every line.
               </p>
             </div>
             <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-primary/5">

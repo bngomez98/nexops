@@ -135,7 +135,7 @@ export default function ServicesPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Nexus Operations coordinates every trade a typical property requires — routine,
-              urgent, or emergency. Here's everything we handle, plus how we route each request
+              urgent, or emergency. Here&apos;s everything we handle, plus how we route each request
               through our licensed, insured network.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -160,7 +160,7 @@ export default function ServicesPage() {
           <SectionHeading
             eyebrow="Trade categories"
             title="What we coordinate."
-            description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn't fit a category, submit a request anyway — our team will route it."
+            description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn&apos;t fit a category, submit a request anyway — our team will route it."
           />
 
           <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -243,8 +243,8 @@ export default function ServicesPage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What every job includes"
-                title="Coordination is not a separate product — it's the whole point."
-                description="You don't pay per task or per photo or per note. Every Nexus request gets the full treatment."
+                title="Coordination is not a separate product — it&apos;s the whole point."
+                description="You don&apos;t pay per task or per photo or per note. Every Nexus request gets the full treatment."
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
@@ -277,10 +277,10 @@ export default function ServicesPage() {
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
-              Have a job that doesn't fit a category?
+              Have a job that doesn&apos;t fit a category?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Submit it anyway. Our team routes every request, including ones that don't fit a listed category.
+              Submit it anyway. Our team routes every request, including ones that don&apos;t fit a listed category.
               Serving {CONTACT_INFO.serviceArea}.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

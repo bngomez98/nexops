@@ -35,8 +35,6 @@ function getSubscriptionPeriod(sub: Stripe.Subscription): {
     end: endUnix ? new Date(endUnix * 1000).toISOString() : null,
   }
 }
-type StripeSubWithPeriod = { current_period_start: number; current_period_end: number }
-
 export async function POST(req: NextRequest) {
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')

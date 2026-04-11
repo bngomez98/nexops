@@ -6,6 +6,7 @@ import { Menu, X, ArrowRight, Phone } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 import { Logo } from '@/components/logo'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 const nav = [
   { label: 'Services', href: '/services' },
@@ -82,6 +83,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <ThemeToggle />
           <Link
             href="/auth/login"
             className="text-[13.5px] font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -130,6 +132,7 @@ export function Header() {
             </ul>
 
             <div className="mt-4 flex gap-3 border-t border-border pt-4">
+              <ThemeToggle className="w-full justify-center border-border/70" />
               <Link
                 href="/auth/login"
                 onClick={closeMobile}

@@ -197,14 +197,6 @@ export default function CommercialPage() {
             </table>
           </div>
 
-          <div className="mt-6 p-5 rounded-2xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-950/20">
-            <div className="flex items-start gap-3">
-              <Shield className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-foreground mb-1">Emergency tier is 24/7 — including nights, weekends, and holidays</p>
-                <p className="text-[12.5px] text-muted-foreground leading-relaxed">
-                  The 1-hour assignment and 4-hour on-site SLAs apply around the clock. A burst pipe
-                  at 11 PM on a Saturday is handled the same as one at 10 AM on a Tuesday.
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {slaTable.map(({ tier, assignment, onSite, examples, icon: Icon }) => (
               <div
@@ -223,7 +215,7 @@ export default function CommercialPage() {
                   {examples}
                 </p>
               </div>
-            </div>
+            ))}
           </div>
 
           <div className="mt-6 rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
