@@ -6,18 +6,43 @@ import {
   Mail,
   Phone,
   Shield,
+  Star,
+  Bell,
 } from 'lucide-react'
-import { formatMoney, formatRelative } from '../lib/portal-utils'
 import { useState } from 'react'
-import { formatMoney, formatRelative } from '../lib/portal-types'
+import { formatMoney, formatRelative } from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from '../components/Avatar'
 
+function ToggleRow({
+  label,
+  description,
+  checked,
+  onChange,
+}: {
+  label: string
+  description: string
+  checked: boolean
+  onChange: (value: boolean) => void
+}) {
+  return (
+    <label className="flex items-start gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 accent-indigo-400"
+      />
+      <div>
+        <div className="text-sm text-white">{label}</div>
+        <div className="text-[11px] text-indigo-200/55">{description}</div>
+      </div>
+    </label>
+  )
+}
+
 export function ProfileView() {
-  const { currentUser, jobs, preferences, updatePreferences } = usePortal()
-  const [saving, setSaving] = useState(false)
   const { currentUser, jobs } = usePortal()
-  const { currentUser, jobs, loading, error } = usePortal()
   const [notifyMessages, setNotifyMessages] = useState(true)
   const [notifyStatus, setNotifyStatus] = useState(true)
   const [notifyPayments, setNotifyPayments] = useState(false)
@@ -50,29 +75,11 @@ export function ProfileView() {
     homeowner: 'Homeowner',
     contractor: 'Contractor',
     manager: 'Property manager',
-  }
-
-  const handlePreferenceChange = async (next: {
-    notifyMessages: boolean
-    notifyStatus: boolean
-    notifyPayments: boolean
-  }) => {
-    setSaving(true)
-    try {
-      await updatePreferences(next)
-    } finally {
-      setSaving(false)
-    }
+    'property-manager': 'Property manager',
   }
 
   return (
     <div className="space-y-5">
-      {loading && (
-        <div className="glass p-4 text-xs text-indigo-200/70">Loading profile…</div>
-      )}
-      {error && (
-        <div className="glass p-4 text-xs text-rose-300">Profile data unavailable: {error}</div>
-      )}
       <section className="glass-tinted p-6 relative overflow-hidden">
         <div className="absolute -top-20 -right-16 h-56 w-56 rounded-full bg-indigo-500/30 blur-3xl pointer-events-none" />
         <div className="relative flex items-center gap-5">
@@ -158,42 +165,28 @@ export function ProfileView() {
           <div className="flex items-center gap-2 mb-3">
             <Bell size={15} className="text-indigo-200" />
             <h3 className="text-sm font-semibold text-white">Notifications</h3>
-            {saving && <span className="text-[10px] text-indigo-200/60">Saving…</span>}
           </div>
           <div className="space-y-2">
             <ToggleRow
               label="Status changes"
               description="When a job moves to assigned, in progress, or complete"
-              checked={preferences.notifyStatus}
-              onChange={(value) =>
-                handlePreferenceChange({
-                  ...preferences,
-                  notifyStatus: value,
-                })
-              }
+              checked={notifyStatus}
+              onChange={setNotifyStatus}
             />
             <ToggleRow
               label="New messages"
               description="Per-job chat replies and mentions"
-              checked={preferences.notifyMessages}
-              onChange={(value) =>
-                handlePreferenceChange({
-                  ...preferences,
-                  notifyMessages: value,
-                })
-              }
+              checked={notifyMessages}
+              onChange={setNotifyMessages}
             />
             <ToggleRow
               label="Payment confirmations"
               description="Stripe receipts and approvals"
-              checked={preferences.notifyPayments}
-              onChange={(value) =>
-                handlePreferenceChange({
-                  ...preferences,
-                  notifyPayments: value,
-                })
-              }
+              checked={notifyPayments}
+              onChange={setNotifyPayments}
             />
+          </div>
+          <div className="flex items-center gap-2 mt-5 mb-3">
             <Shield size={15} className="text-indigo-200" />
             <h3 className="text-sm font-semibold text-white">Account overview</h3>
           </div>

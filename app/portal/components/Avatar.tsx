@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import type { PortalUser } from '../lib/portal-utils'
-import type { PortalUser } from '../lib/portal-types'
 
 interface AvatarProps {
   user: Pick<PortalUser, 'initials' | 'avatarColor' | 'avatarUrl'>

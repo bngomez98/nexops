@@ -131,7 +131,6 @@ export function dashboardStats(jobs: Job[], userId: string, role: Role) {
 }
 
 export function formatRelative(iso: string): string {
-  const now = Date.now()
   const then = new Date(iso).getTime()
   if (Number.isNaN(then)) return 'just now'
   const diff = Math.max(0, Date.now() - then)
