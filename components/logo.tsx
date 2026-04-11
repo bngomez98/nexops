@@ -1,7 +1,7 @@
-import Image from "next/image"
+import Image from 'next/image'
 
 /** Inline SVG icon that matches the Nexus Operations orbital mark */
-function NexusIcon({ size = 32, className = "" }: { size?: number; className?: string }) {
+function NexusIcon({ size = 30, className = '' }: { size?: number; className?: string }) {
   return (
     <svg
       width={size}
@@ -12,35 +12,31 @@ function NexusIcon({ size = 32, className = "" }: { size?: number; className?: s
       aria-hidden="true"
       className={className}
     >
-      {/* Outer orbital ring – left tilt */}
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round"/>
-      {/* Outer orbital ring – right tilt */}
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round"/>
-      {/* Inner orbital ring – left tilt */}
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-      {/* Inner orbital ring – right tilt */}
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-      {/* Center cross node */}
-      <line x1="60" y1="47" x2="60" y2="73" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round"/>
-      <line x1="47" y1="60" x2="73" y2="60" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round"/>
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round" />
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round" />
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+      <line x1="60" y1="47" x2="60" y2="73" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round" />
+      <line x1="47" y1="60" x2="73" y2="60" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round" />
     </svg>
   )
 }
 
 export function Logo({
-  className = "",
+  className = '',
   compact = false,
-  variant = "default",
-  /** When true, renders text in foreground color (adapts to light/dark themes) */
-  adaptive = false,
+  variant = 'default',
+  /** When true, text is rendered in white instead of foreground color (use on dark backgrounds) */
+  onDark = false,
 }: {
   className?: string
   compact?: boolean
-  /** "default" = icon + wordmark | "icon" = icon only | "image" = uses nexus-logo.png */
-  variant?: "default" | "icon" | "image"
+  variant?: 'default' | 'icon' | 'image'
+  onDark?: boolean
+  /** Legacy prop – ignored. Kept to avoid breaking older call sites. */
   adaptive?: boolean
 }) {
-  if (variant === "image") {
+  if (variant === 'image') {
     return (
       <Image
         src="/nexus-logo.png"
@@ -53,22 +49,23 @@ export function Logo({
     )
   }
 
-  if (variant === "icon") {
+  if (variant === 'icon') {
     return <NexusIcon size={32} className={className} />
   }
 
   return (
-    <div className={`flex items-center gap-2.5 ${className}`}>
+    <div className={`inline-flex items-center gap-2.5 ${className}`}>
       <NexusIcon size={compact ? 24 : 30} />
       {!compact && (
         <div className="flex flex-col leading-none">
           <span
-            className={adaptive ? "text-[15px] font-bold tracking-tight text-foreground" : "text-[15px] font-bold tracking-tight"}
-            style={adaptive ? undefined : { color: '#fff' }}
+            className={`text-[15px] font-extrabold tracking-tight ${
+              onDark ? 'text-white' : 'text-foreground'
+            }`}
           >
             NEXUS
           </span>
-          <span className="text-[9px] font-semibold tracking-[0.18em] uppercase" style={{ color: '#3d7a4f' }}>
+          <span className="mt-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-primary">
             OPERATIONS
           </span>
         </div>

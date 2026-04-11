@@ -1570,5 +1570,24 @@ create policy "notifications_self_access" on public.notifications for all
 
 create index if not exists notifications_user_id_idx
   on public.notifications (user_id, read, created_at desc);
+
+
+-- ----------------------------------------------------------------
+-- Vector extension and document_embeddings table (migration 014)
+-- ----------------------------------------------------------------
+
+create extension if not exists vector with schema extensions;
+
+create table if not exists public.document_embeddings (
+  id        serial primary key,
+  title     text not null,
+  body      text not null,
+  embedding extensions.vector(384)
+);
+
+create index if not exists document_embeddings_embedding_idx
+  on public.document_embeddings
+  using ivfflat (embedding extensions.vector_cosine_ops)
+  with (lists = 100);
 create index if not exists notifications_project_id_idx
   on public.notifications (project_id);

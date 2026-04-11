@@ -1,3 +1,27 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import {
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  FileText,
+  Headphones,
+  Shield,
+  Sparkles,
+  Star,
+  Users,
+} from 'lucide-react'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
+import { Section, SectionHeading } from '@/components/section'
+import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
+import { CONTACT_INFO } from '@/lib/contact-info'
+
+export const metadata: Metadata = {
+  title: 'Pricing — Simple, Transparent Subscription Plans',
+  description:
+    'Nexus Operations offers transparent subscription plans for homeowners, property managers, and contractors. Start free. Upgrade when you need unlimited requests. No long-term contracts.',
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -10,171 +34,218 @@ export const metadata: Metadata = {
     "Nexus Operations pricing: Starter plan included, Pro plans from $59/month billed annually. Serving Topeka and Shawnee County, KS.",
 }
 
-const subscriptionPlans = [
+const included = [
   {
-    name: "Starter",
-    price: { monthly: "Starter", annual: "Starter" },
-    billingNote: { monthly: "", annual: "" },
-    description: "Ideal for occasional service requests with full platform access.",
-    features: [
-      "Up to 3 service requests per year",
-      "Verified contractor assignment",
-      "Real-time project tracking",
-      "Digital project history",
-      "Email support",
-    ],
-    cta: "Get Started",
-    ctaHref: "/auth/sign-up",
-    highlighted: false,
+    icon: Shield,
+    title: 'Verified contractor network',
+    desc: 'Every contractor is license- and insurance-verified before joining.',
   },
   {
-    name: "Pro Annual",
-    price: { monthly: "$59", annual: "$59" },
-    billingNote: { monthly: "per month, billed annually ($708/yr)", annual: "per month, billed annually ($708/yr)" },
-    description: "Our most popular plan — full access at the best rate.",
-    features: [
-      "Unlimited service requests",
-      "Priority contractor matching",
-      "Maintenance schedule & reminders",
-      "Spend analytics & reporting",
-      "Invoice & document storage",
-      "Priority phone & email support",
-      "Insurance-ready project reports",
-      "Save $240/yr vs monthly",
-    ],
-    cta: "Start Annual Plan",
-    ctaHref: "/auth/sign-up",
-    highlighted: true,
-    badge: "Best Value",
+    icon: Clock,
+    title: 'Response-time guarantees',
+    desc: 'Urgent assignments under 4 hours, emergencies under 1 hour.',
   },
   {
-    name: "Pro Monthly",
-    price: { monthly: "$79", annual: "$79" },
-    billingNote: { monthly: "per month, cancel anytime", annual: "per month, cancel anytime" },
-    description: "Full access to all features with monthly flexibility.",
-    features: [
-      "Unlimited service requests",
-      "Priority contractor matching",
-      "Maintenance schedule & reminders",
-      "Spend analytics & reporting",
-      "Invoice & document storage",
-      "Priority phone & email support",
-      "Insurance-ready project reports",
-    ],
-    cta: "Start Monthly Plan",
-    ctaHref: "/auth/sign-up",
-    highlighted: false,
+    icon: FileText,
+    title: 'Full job documentation',
+    desc: 'Arrival photos, completion photos, and written scope on every job.',
+  },
+  {
+    icon: CreditCard,
+    title: 'Unified billing',
+    desc: 'One clean invoice consolidates every request across every property.',
+  },
+  {
+    icon: Users,
+    title: 'Dedicated coordinators',
+    desc: 'Real Nexus staff review every request before dispatch.',
+  },
+  {
+    icon: Headphones,
+    title: 'Human support',
+    desc: 'Talk to a real person during business hours — phone, email, or portal.',
   },
 ]
 
+const faqs = [
+  {
+    q: 'Is there a contract?',
+    a: 'No. Every plan is month-to-month (or cancel-anytime annual). Cancel with a click inside your billing portal — no phone calls, no retention games.',
+  },
+  {
+    q: 'What counts as a service request?',
+    a: 'A service request is any single job or project submitted through your dashboard — a leaky faucet, a broken light fixture, a turn-over punch list, or an emergency repair. Starter accounts are limited to three per calendar year; Pro subscribers get unlimited requests.',
+  },
+  {
+    q: 'Do you charge per job?',
+    a: 'No. Your subscription covers coordination and dispatch. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
+  },
+  {
+    q: 'Can I switch plans?',
+    a: 'Yes — upgrade, downgrade, or change billing cadence at any time from your billing portal. Changes prorate automatically.',
+  },
+  {
+    q: 'Do contractors pay to join?',
+    a: 'Contractors can join for free with a starter profile. Pro and Elite tiers unlock additional capacity, priority routing, and analytics.',
+  },
+  {
+    q: 'What if I only need one project this year?',
+    a: 'The free Starter plan covers up to three service requests per year — perfect for occasional needs. No payment method required to sign up.',
+  },
+]
+
+function PlanCard({
+  plan,
+  featured = false,
+}: {
+  plan: Plan
+  featured?: boolean
+}) {
 export default function PricingPage() {
   return (
-    <div className="min-h-screen">
+    <div
+      className={`relative flex flex-col rounded-2xl border p-7 ${
+        featured
+          ? 'border-primary/50 bg-primary/5 shadow-xl shadow-primary/10'
+          : 'border-border bg-card'
+      }`}
+    >
+      {plan.badge && (
+        <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-primary-foreground">
+          <Star className="h-2.5 w-2.5 fill-current" /> {plan.badge}
+        </span>
+      )}
+
+      <h3 className="text-[18px] font-bold text-foreground">{plan.name}</h3>
+      <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{plan.description}</p>
+
+      <div className="mt-6 flex items-baseline gap-2">
+        <span className="text-4xl font-extrabold tracking-tight text-foreground">
+          {formatPrice(plan.priceInCents, plan.interval)}
+        </span>
+        {plan.priceInCents > 0 && <span className="text-[13px] text-muted-foreground">USD</span>}
+      </div>
+      {plan.billingLabel && (
+        <p className="mt-1 text-[12px] text-muted-foreground">{plan.billingLabel}</p>
+      )}
+
+      <ul className="mt-6 flex flex-1 flex-col gap-2.5 text-[13px] text-muted-foreground">
+        {plan.features.map((f) => (
+          <li key={f} className="flex gap-2">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <Link
+        href="/auth/sign-up"
+        className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-[13px] font-semibold transition ${
+          featured
+            ? 'bg-primary text-primary-foreground hover:opacity-90'
+            : 'border border-border bg-background text-foreground hover:border-primary/40 hover:text-primary'
+        }`}
+      >
+        {plan.priceInCents === 0 ? 'Start free' : `Choose ${plan.name}`}
+        <ArrowRight className="h-3.5 w-3.5" />
+      </Link>
+    </div>
+  )
+}
+
+export default function PricingPage() {
+  const homeownerPlans = getPlansByRole('homeowner')
+  const contractorPlans = getPlansByRole('contractor')
+
+  return (
+    <div className="min-h-screen bg-background">
       <Header />
       <main>
-        {/* Hero */}
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-20">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-6">
-                Pricing
-              </p>
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Simple pricing,{" "}
-                <span className="font-serif italic font-normal text-primary">
-                  no surprises.
-                </span>
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Plans for homeowners and contractors. Annual subscribers save 25% — just{" "}
-                <strong className="text-foreground">$59/month</strong> vs{" "}
-                <strong className="text-foreground">$79/month</strong> on our flexible monthly plan.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Subscription Plans */}
-        <section className="pb-20 lg:pb-28">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="grid md:grid-cols-3 gap-5">
-              {subscriptionPlans.map((plan) => (
-                <div
-                  key={plan.name}
-                  className={`relative flex flex-col rounded-2xl border p-7 transition-shadow ${
-                    plan.highlighted
-                      ? "bg-primary/5 border-primary/30 shadow-xl shadow-primary/10"
-                      : "bg-card border-border"
-                  }`}
-                >
-                  {plan.badge && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                      <span className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[10px] font-bold px-3.5 py-1 rounded-full tracking-widest uppercase">
-                        {plan.badge}
-                      </span>
-                    </div>
-                  )}
-
-                  <h3 className="text-base font-bold text-foreground mb-1">{plan.name}</h3>
-                  <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-5">{plan.description}</p>
-
-                  <div className="mb-1">
-                    <span className="text-4xl font-bold text-foreground tracking-tight">
-                      {plan.price.monthly}
-                    </span>
-                    {plan.price.monthly !== "Starter" && (
-                      <span className="text-sm text-muted-foreground ml-1">/mo</span>
-                    )}
-                  </div>
-                  {plan.billingNote.monthly && (
-                    <p className="text-[11.5px] text-muted-foreground mb-6">{plan.billingNote.monthly}</p>
-                  )}
-
-                  <ul className="flex flex-col gap-3 mb-8 flex-grow mt-4">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-[13px]">
-                        <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span className="text-foreground/75">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={plan.ctaHref}
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl transition-all ${
-                      plan.highlighted
-                        ? "bg-primary text-primary-foreground hover:opacity-90 shadow-md shadow-primary/20"
-                        : "bg-secondary text-foreground hover:bg-secondary/80"
-                    }`}
-                  >
-                    {plan.cta}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              ))}
-            </div>
-
-            {/* Savings callout */}
-            <div className="mt-8 p-5 rounded-2xl bg-primary/5 border border-primary/15 flex flex-col sm:flex-row items-start sm:items-center gap-3 justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center flex-shrink-0">
-                  <Check className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[13.5px] font-semibold text-foreground">Annual plan saves you $240 per year</p>
-                  <p className="text-[12px] text-muted-foreground">$59/mo × 12 = $708/yr vs $79/mo × 12 = $948/yr</p>
-                </div>
-              </div>
+        {/* ── Hero ──────────────────────────────────────────── */}
+        <section className="border-b border-border bg-background">
+          <div className="mx-auto max-w-5xl px-6 py-20 text-center sm:py-24">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+              <Sparkles className="h-3 w-3" /> Pricing
+            </p>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+              Simple, transparent pricing.
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+              Start free. Upgrade when you need unlimited requests. Every plan includes our verified
+              contractor network, response-time guarantees, and full job documentation — no hidden
+              per-job fees, no long-term contracts.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/auth/sign-up"
-                className="text-[12.5px] font-semibold text-primary hover:underline whitespace-nowrap"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
               >
-                Start annual plan →
+                Get started free <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
+              >
+                Talk to sales
               </Link>
             </div>
           </div>
         </section>
 
+        {/* ── Homeowner plans ───────────────────────────────── */}
+        <Section id="homeowner-plans">
+          <SectionHeading
+            eyebrow="For homeowners & landlords"
+            title="Plans for anyone who owns a property."
+            description="Whether you own a single home or rent out a few units, start with the plan that fits your volume. Upgrade or cancel anytime."
+          />
+
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {homeownerPlans.map((plan) => (
+              <PlanCard key={plan.id} plan={plan} featured={!!plan.highlighted} />
+            ))}
+          </div>
+        </Section>
+
+        {/* ── Contractor plans ──────────────────────────────── */}
+        <Section tone="muted" id="contractor-plans">
+          <SectionHeading
+            eyebrow="For licensed contractors"
+            title="Grow your business through the Nexus network."
+            description="Join for free. Upgrade to unlock unlimited capacity, priority routing, and earnings analytics. No marketplace fees — ever."
+          />
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {contractorPlans.map((plan) => (
+              <PlanCard key={plan.id} plan={plan} featured={!!plan.highlighted} />
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-[13px] text-muted-foreground">
+            Contractors are paid directly after completed jobs — Nexus never holds your money.{' '}
+            <Link href="/contractors" className="font-semibold text-primary hover:underline">
+              Contractor details →
+            </Link>
+          </p>
+        </Section>
+
+        {/* ── What's included ───────────────────────────────── */}
+        <Section>
+          <SectionHeading
+            eyebrow="Included in every plan"
+            title="You get the full coordination stack — from day one."
+            align="center"
+          />
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {included.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex gap-4 rounded-2xl border border-border bg-card p-6">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-[14.5px] font-semibold text-foreground">{title}</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
         {/* Service Tiers — SLA Reference */}
         <section className="py-16 lg:py-24 bg-secondary/40">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -305,25 +376,50 @@ export default function PricingPage() {
                   ))}
                 </div>
               </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ── Commercial callout ────────────────────────────── */}
+        <Section tone="muted">
+          <div className="grid gap-8 rounded-3xl border border-border bg-background p-8 sm:p-10 lg:grid-cols-3 lg:items-center">
+            <div className="lg:col-span-2">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                Managing 10+ units?
+              </p>
+              <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Commercial &amp; portfolio pricing available.
+              </h3>
+              <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
+                Multi-property portfolios, multi-family buildings, and commercial real estate get
+                custom pricing, dedicated coordinators, and portfolio-level reporting. Tell us about
+                your operation and we'll put a quote together.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 lg:justify-end">
+              <Link
+                href="/commercial"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+              >
+                Commercial details <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-5 py-2.5 text-[13px] font-semibold text-foreground hover:border-primary/40 transition"
+              >
+                Request a quote
+              </Link>
             </div>
           </div>
-        </section>
+        </Section>
 
-        {/* Commercial B2B Engagement */}
-        <section className="py-16 lg:py-24">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                Commercial Accounts
-              </p>
-              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4">
-                Managing 100+ units? Here is how commercial engagement works.
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Property managers overseeing large portfolios get a dedicated engagement model — not a subscription tier. Volume pricing, monthly unified invoicing across all properties, and a defined SLA structure for every urgency level.
-              </p>
-            </div>
-
+        {/* ── FAQ ───────────────────────────────────────────── */}
+        <Section id="faq">
+          <SectionHeading
+            eyebrow="Pricing FAQ"
+            title="Answers before you sign up."
+            align="center"
+          />
             <div className="grid lg:grid-cols-2 gap-10 mb-12">
               {/* What's included */}
               <div className="rounded-2xl border border-border bg-card p-7">
@@ -403,57 +499,52 @@ export default function PricingPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-primary/20 bg-primary/5 p-7">
-                  <h3 className="text-base font-semibold text-foreground mb-2">Considering commercial engagement?</h3>
-                  <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-5">
-                    Commercial onboarding starts with a 30-minute call to review your portfolio, property types, typical request volume, and any existing vendor relationships. No commitment required.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Link
-                      href="/commercial"
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
-                    >
-                      View commercial terms
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold bg-card border border-border text-foreground rounded-xl hover:bg-secondary/60 transition-colors"
-                    >
-                      Schedule a call
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-3">
+            {faqs.map(({ q, a }) => (
+              <details
+                key={q}
+                className="group rounded-2xl border border-border bg-card p-5 open:border-primary/40"
+              >
+                <summary className="flex cursor-pointer items-center justify-between gap-4 text-[14.5px] font-semibold text-foreground">
+                  {q}
+                  <ArrowRight className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-transform group-open:rotate-90" />
+                </summary>
+                <p className="mt-3 text-[13.5px] leading-relaxed text-muted-foreground">{a}</p>
+              </details>
+            ))}
           </div>
-        </section>
 
-        {/* CTA */}
-        <section className="py-16 lg:py-24 bg-secondary/40">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-                Create an account and choose your plan.
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                Homeowners and property managers across Topeka use Nexus Operations for coordinated, documented maintenance.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link
-                  href="/auth/sign-up"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity"
-                >
-                  Get Started
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold bg-secondary text-foreground rounded-xl hover:bg-secondary/80 transition-colors"
-                >
-                  Contact Sales
-                </Link>
-              </div>
+          <p className="mt-10 text-center text-[13px] text-muted-foreground">
+            Still have questions? Call {CONTACT_INFO.phoneDisplay} or email{' '}
+            <a href={`mailto:${CONTACT_INFO.email}`} className="font-semibold text-primary hover:underline">
+              {CONTACT_INFO.email}
+            </a>
+          </p>
+        </Section>
+
+        {/* ── CTA ───────────────────────────────────────────── */}
+        <section className="bg-primary">
+          <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
+            <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
+              Ready to simplify maintenance?
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
+              Create an account and submit your first request in under two minutes. No credit card
+              required for the free plan.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/auth/sign-up"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-primary shadow-lg hover:opacity-95 transition"
+              >
+                Get started free <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-[14px] font-semibold text-white hover:bg-white/10 transition"
+              >
+                Talk to the team
+              </Link>
             </div>
           </div>
         </section>
