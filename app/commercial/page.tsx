@@ -23,14 +23,14 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'Commercial & Portfolio Property Management',
   description:
-    'Nexus Operations commercial engagement model for property managers overseeing multi-unit portfolios in Topeka, KS. Dedicated coordinators, SLA-backed response, consolidated monthly invoicing, and portfolio-wide reporting.',
+    'Nexus Operations commercial engagement model for property managers overseeing multi-unit portfolios in Topeka, KS. Named account representative, SLA-backed response, consolidated monthly invoicing, and portfolio-wide reporting.',
 }
 
 const portfolioBenefits = [
   {
     icon: Users,
-    title: 'Dedicated coordinator',
-    desc: 'A named Nexus coordinator acts as your single point of contact for every request across your portfolio.',
+    title: 'Named account representative',
+    desc: 'A named Nexus team member acts as your single point of contact for every request across your portfolio.',
   },
   {
     icon: ClipboardList,
@@ -97,7 +97,7 @@ const onboarding = [
   { step: '01', title: 'Discovery call', desc: 'Tell us about your portfolio — unit count, geography, preferred workflow, pain points.' },
   { step: '02', title: 'Proposal', desc: 'We put together a pricing proposal and scope of work within 48 business hours.' },
   { step: '03', title: 'Onboarding', desc: 'We load your properties, contacts, preferred contractors, and access notes into the dashboard.' },
-  { step: '04', title: 'Go live', desc: 'Your team submits requests through Nexus; your dedicated coordinator runs the day-to-day.' },
+  { step: '04', title: 'Go live', desc: 'Your team submits requests through Nexus; your named Nexus representative manages day-to-day operations.' },
 ]
 
 export default function CommercialPage() {
@@ -116,7 +116,7 @@ export default function CommercialPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Nexus Operations offers a dedicated engagement model for multi-property portfolios —
-              with a named coordinator, custom workflows, monthly performance reports, and
+              with a named Nexus representative, custom workflows, monthly performance reports, and
               consolidated billing across every unit you manage.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -205,6 +205,44 @@ export default function CommercialPage() {
                 <p className="text-[12.5px] text-muted-foreground leading-relaxed">
                   The 1-hour assignment and 4-hour on-site SLAs apply around the clock. A burst pipe
                   at 11 PM on a Saturday is handled the same as one at 10 AM on a Tuesday.
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {slaTable.map(({ tier, assignment, onSite, examples, icon: Icon }) => (
+              <div
+                key={tier}
+                className="flex flex-col rounded-2xl border border-border bg-background p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                    {tier}
+                  </p>
+                  <Icon className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <p className="mt-4 text-[14px] font-semibold text-foreground">{assignment}</p>
+                <p className="text-[13px] text-muted-foreground">{onSite}</p>
+                <p className="mt-5 border-t border-border pt-4 text-[12.5px] leading-relaxed text-muted-foreground">
+                  {examples}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
+            <div className="flex items-start gap-3">
+              <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
+              <div>
+                <p className="text-[14px] font-bold text-foreground">
+                  Emergency tier is 24/7 — including nights, weekends, and holidays.
+                </p>
+                <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
+                  The 1-hour assignment and 4-hour on-site SLAs apply around the clock. For
+                  after-hours emergencies, submit through the portal or email{' '}
+                  <a
+                    href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}`}
+                    className="font-semibold text-destructive hover:underline"
+                  >
+                    emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}
+                  </a>
+                  .
                 </p>
               </div>
             </div>
@@ -218,7 +256,7 @@ export default function CommercialPage() {
               <SectionHeading
                 eyebrow="Portfolio reporting"
                 title="Visibility into every property, every month."
-                description="Your dedicated coordinator delivers a monthly performance report with aggregated metrics, trend lines, and spend breakdowns."
+                description="Your named Nexus representative delivers a monthly performance report with aggregated metrics, spend breakdowns, and trend data."
               />
               <Link
                 href="/contact"
@@ -276,9 +314,9 @@ export default function CommercialPage() {
                 Property managers, landlords, and REITs running multi-unit portfolios.
               </h3>
               <p className="mt-4 text-[14px] leading-relaxed text-muted-foreground">
-                If you manage 10 or more doors — whether that's small multi-family, scattered-site
-                rentals, or commercial real estate — a Nexus commercial engagement pays for itself
-                in hours saved coordinating contractors and chasing invoices.
+                If you manage 10 or more units — including small multi-family, scattered-site
+                rentals, or commercial real estate — a Nexus commercial engagement can reduce the
+                hours your team spends coordinating contractors and tracking invoices.
               </p>
             </div>
             <ul className="flex flex-col gap-3">
@@ -292,10 +330,10 @@ export default function CommercialPage() {
               ].map((t) => (
                 <li
                   key={t}
-                  className="flex items-start gap-3 rounded-xl border border-border bg-background p-3.5"
+                  className="flex items-center gap-3 text-[14px] font-medium text-foreground"
                 >
-                  <BadgeCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
-                  <span className="text-[13.5px] font-medium text-foreground">{t}</span>
+                  <BadgeCheck className="h-5 w-5 flex-shrink-0 text-primary" />
+                  {t}
                 </li>
               ))}
             </ul>
@@ -305,12 +343,12 @@ export default function CommercialPage() {
         {/* ── CTA ──────────────────────────────────────── */}
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
-            <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
-              Ready for a dedicated maintenance partner?
+            <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-[44px]">
+              Ready to simplify your portfolio maintenance?
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Tell us about your portfolio and we'll put together a custom proposal. Our team
-              responds to commercial inquiries within one business day.
+            <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
+              Schedule a discovery call and we&apos;ll put together a custom proposal for your portfolio
+              within two business days.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link

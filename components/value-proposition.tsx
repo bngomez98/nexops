@@ -21,7 +21,7 @@ const values = [
     icon: Receipt,
     title: "Unified monthly invoicing",
     description:
-      "One consolidated invoice per billing cycle covering every job across every property, with line-item detail by trade, urgency, and contractor. No more chasing paperwork.",
+      "One consolidated invoice per billing cycle covering every job across every property, with line-item detail by trade, urgency, and contractor. No separate paperwork to track down.",
     title: "Transparent Pricing",
     description:
       "No retainers, no hidden fees. Simple subscription plans for homeowners and contractors. One invoice per billing cycle covering all coordinated work.",
@@ -32,7 +32,7 @@ const values = [
     icon: Users,
     title: "One Point of Contact",
     description:
-      "Stop managing 15 vendor relationships. Submit a request, we handle trade matching, scheduling, quality assurance, and payment coordination with a single monthly invoice.",
+      "Instead of managing 15 separate vendor relationships, submit one request. Nexus Operations handles trade matching, scheduling, quality assurance, and payment coordination, with a single monthly invoice.",
     accent: "text-violet-600",
     bg: "bg-violet-50 border-violet-100",
   },
@@ -47,14 +47,14 @@ export function ValueProposition() {
             Why Nexus Operations
           </p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-            The coordination layer your
+            One service that manages
             <br className="hidden sm:block" />
-            properties have been missing.
+            every property maintenance request.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Property managers spend 8-15 hours per week chasing contractors,
-            confirming arrivals, and following up on incomplete work. We
-            eliminate that burden entirely.
+            Property managers spend 8-15 hours per week contacting contractors,
+            confirming arrivals, and following up on incomplete work. Nexus
+            Operations handles those tasks instead.
           </p>
         </div>
 

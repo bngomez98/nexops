@@ -6,8 +6,6 @@ import {
   BadgeCheck,
   CheckCircle2,
   ClipboardList,
-  ChevronRight,
-  Clock,
   Clock3,
   CreditCard,
   FileText,
@@ -59,7 +57,7 @@ const howItWorks = [
   {
     step: '02',
     title: 'We dispatch a verified contractor',
-    desc: 'Our coordinators review the request, match trade and availability, and assign a licensed, insured contractor.',
+    desc: 'Nexus Operations reviews the request, matches the trade and availability, and assigns a licensed, insured contractor.',
     icon: Users,
   },
   {
@@ -95,7 +93,7 @@ const differentiators = [
   {
     icon: CreditCard,
     title: 'Unified, transparent billing',
-    desc: 'One monthly invoice consolidates every request across every property. No surprise bills, no chasing contractors for paperwork.',
+    desc: 'One monthly invoice consolidates every request across every property. No surprise bills and no separate contractor paperwork to collect.',
   },
 ]
 
@@ -225,7 +223,7 @@ export default function HomePage() {
                       ))}
                     </div>
                     <p className="mt-2 text-[13px] font-semibold text-foreground">
-                      "We finally have one inbox for every maintenance request."
+                      &quot;We finally have one inbox for every maintenance request.&quot;
                     </p>
                     <p className="mt-1 text-[11.5px] text-muted-foreground">
                       Property manager · 12-unit portfolio
@@ -258,7 +256,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Who we serve"
             title="Built for everyone who owns, manages, or services property."
-            description="Nexus Operations is the single point of contact that ties homeowners, property managers, and licensed contractors together in one coordinated workflow."
+            description="Nexus Operations is a single point of contact for homeowners, property managers, and licensed contractors, coordinating their work within one shared workflow."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -289,8 +287,8 @@ export default function HomePage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="Services"
-                title="Every trade you need. One coordinator."
-                description="From a leaking faucet to an HVAC failure on a cold Sunday night, Nexus routes the right licensed contractor and manages the entire job."
+                title="Every trade you need. One service."
+                description="Whether the request is a leaking faucet or an after-hours HVAC failure, Nexus assigns a licensed contractor in the right trade and manages the full job."
               />
               <Link
                 href="/services"
@@ -333,6 +331,10 @@ export default function HomePage() {
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {howItWorks.map(({ step, title, desc, icon: Icon }) => (
               <div key={step} className="relative rounded-2xl border border-border bg-card p-6">
+              <div
+                key={step}
+                className="relative rounded-2xl border border-border bg-card p-6"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
                     Step {step}
@@ -372,8 +374,8 @@ export default function HomePage() {
             <div className="lg:col-span-6">
               <SectionHeading
                 eyebrow="Why Nexus Operations"
-                title="A maintenance coordinator, not a contractor marketplace."
-                description="Marketplaces hand you a list of names and walk away. Nexus stays involved from the moment a request is submitted until the invoice is closed — reviewing scope, coordinating schedules, verifying work, and publishing records you can trust."
+                title="A managed service, not a contractor marketplace."
+                description="Marketplaces give you a list of names and end their involvement there. Nexus stays involved from the moment a request is submitted until the invoice is closed — reviewing scope, coordinating schedules, verifying work, and publishing a full documentation record."
               />
 
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -391,6 +393,13 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+
+              <Link
+                href="/about"
+                className="mt-8 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-primary hover:gap-2 transition-all"
+              >
+                Learn more about Nexus <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
           </div>
         </Section>
@@ -485,7 +494,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <blockquote className="mt-4 flex-1 text-[14px] leading-relaxed text-foreground">
-                  “{quote}”
+                  &quot;{quote}&quot;
                 </blockquote>
                 <figcaption className="mt-5 border-t border-border pt-4">
                   <p className="text-[13px] font-semibold text-foreground">{name}</p>
@@ -559,11 +568,11 @@ export default function HomePage() {
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-[44px]">
-              Ready to hand off your maintenance calendar?
+              Ready to hand off your maintenance coordination?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
-              Create an account in under two minutes and submit your first request today. Our team
-              reviews every submission before dispatch — no waiting on a marketplace timer.
+              Create an account in under two minutes and submit your first request today. A Nexus
+              Nexus Operations reviews every submission before dispatching a contractor.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
