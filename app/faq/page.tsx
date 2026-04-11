@@ -26,7 +26,7 @@ const sections = [
     questions: [
       {
         q: 'How do I submit a service request?',
-        a: 'Sign in to your dashboard, pick the trade category, upload a few photos, describe the issue, and choose an availability window. Our coordinator reads the request, confirms scope, and dispatches a license-verified contractor within the SLA window for the urgency tier you selected.',
+        a: 'Sign in to your dashboard, pick the trade category, upload a few photos, describe the issue, and choose an availability window. A Nexus team member reads the request, confirms scope, and dispatches a license-verified contractor within the SLA window for the urgency tier you selected.',
       },
       {
         q: 'What information do I need to include with a request?',
@@ -34,7 +34,7 @@ const sections = [
       },
       {
         q: 'Will multiple contractors contact me about my request?',
-        a: 'No. Nexus is not a marketplace. One coordinator reviews your request and assigns it to one contractor. You will not receive cold calls, emails, or competing quotes from other tradespeople.',
+        a: 'No. Nexus is not a marketplace. One Nexus team member reviews your request and assigns it to one contractor. You will not receive cold calls, emails, or competing quotes from other tradespeople.',
       },
       {
         q: 'How fast will someone be on-site?',
@@ -102,11 +102,11 @@ const sections = [
       },
       {
         q: 'How do I reach someone after hours for an emergency?',
-        a: `General support runs ${CONTACT_INFO.businessHours} at ${CONTACT_INFO.phoneDisplay} or ${CONTACT_INFO.email}. For after-hours emergencies — burst pipes, gas leaks, HVAC failure in extreme weather — email emergency@nexusoperations.org. An on-call coordinator responds within 15 minutes around the clock, including nights, weekends, and holidays.`,
+        a: `General support runs ${CONTACT_INFO.businessHours} at ${CONTACT_INFO.phoneDisplay} or ${CONTACT_INFO.email}. For after-hours emergencies — burst pipes, gas leaks, HVAC failure in extreme weather — email emergency@nexusoperations.org. An on-call Nexus team member responds within 15 minutes around the clock, including nights, weekends, and holidays.`,
       },
       {
         q: 'What if I have a complaint about a contractor or a job?',
-        a: `Email ${CONTACT_INFO.email} with the request ID and a description of the issue. A Nexus coordinator will investigate, contact the contractor, and work toward a resolution. If a job falls short of our standards, we will make it right.`,
+        a: `Email ${CONTACT_INFO.email} with the request ID and a description of the issue. Nexus Operations will investigate, contact the contractor, and resolve the issue. If a job falls short of our standards, we will make it right.`,
       },
     ],
   },
@@ -193,7 +193,7 @@ export default function FAQPage() {
               Still have questions?
             </p>
             <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Talk to a real coordinator.
+              Still have questions?
             </h3>
             <p className="mx-auto mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
               Reach out directly and a member of the Nexus team will get back to you within one

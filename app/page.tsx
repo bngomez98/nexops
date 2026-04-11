@@ -57,7 +57,7 @@ const howItWorks = [
   {
     step: '02',
     title: 'We dispatch a verified contractor',
-    desc: 'Our coordinators review the request, match trade and availability, and assign a licensed, insured contractor.',
+    desc: 'Nexus Operations reviews the request, matches the trade and availability, and assigns a licensed, insured contractor.',
     icon: Users,
   },
   {
@@ -281,7 +281,7 @@ export default function HomePage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="Services"
-                title="Every trade you need. One coordinator."
+                title="Every trade you need. One service."
                 description="Whether the request is a leaking faucet or an after-hours HVAC failure, Nexus assigns a licensed contractor in the right trade and manages the full job."
               />
               <Link
@@ -368,7 +368,7 @@ export default function HomePage() {
             <div className="lg:col-span-6">
               <SectionHeading
                 eyebrow="Why Nexus Operations"
-                title="A maintenance coordinator, not a contractor marketplace."
+                title="A managed service, not a contractor marketplace."
                 description="Marketplaces give you a list of names and end their involvement there. Nexus stays involved from the moment a request is submitted until the invoice is closed — reviewing scope, coordinating schedules, verifying work, and publishing a full documentation record."
               />
 
@@ -566,7 +566,7 @@ export default function HomePage() {
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
               Create an account in under two minutes and submit your first request today. A Nexus
-              coordinator reviews every submission before dispatching a contractor.
+              Nexus Operations reviews every submission before dispatching a contractor.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link

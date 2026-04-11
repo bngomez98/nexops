@@ -39,7 +39,7 @@ const values = [
   {
     icon: HeartHandshake,
     title: 'Locally owned',
-    desc: 'We live in Topeka. Our coordinators know the neighborhoods, the building stock, and the trades community.',
+    desc: 'We live in Topeka. Our team knows the neighborhoods, the building stock, and the trades community.',
   },
   {
     icon: FileText,
@@ -58,7 +58,7 @@ const commitments = [
 ]
 
 const milestones = [
-  { year: '2026', title: 'Nexus Operations founded', desc: 'Launched in Topeka, KS to give homeowners and property managers a single, accountable maintenance coordinator.' },
+  { year: '2026', title: 'Nexus Operations founded', desc: 'Launched in Topeka, KS to give homeowners and property managers a single, accountable service for property maintenance.' },
   { year: '2026', title: 'Verified contractor network', desc: 'Built a starting roster of 20+ license-verified trades across plumbing, electrical, HVAC, and general repair.' },
   { year: '2026', title: 'Unified billing launched', desc: 'Rolled out monthly consolidated invoices so owners stop juggling contractor-by-contractor billing.' },
   { year: '2026', title: 'Commercial portfolio tier', desc: 'Introduced dedicated coordination tiers for property managers with 10+ units under management.' },
@@ -84,7 +84,7 @@ export default function AboutPage() {
                 <MapPin className="h-3 w-3" /> {CONTACT_INFO.cityState}
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                We built Nexus Operations so property owners have a single, accountable coordinator.
+                We built Nexus Operations so property owners have a single, accountable service for maintenance.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Most property owners in Topeka work with an assortment of contractors, handwritten
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
                   Founded in Topeka, Kansas in 2026, we&apos;re locally owned and operated. Our
-                  coordinators live in the community we serve.
+                  our team lives in the community we serve.
                 </p>
               </div>
             </div>
@@ -276,7 +276,7 @@ export default function AboutPage() {
                 {CONTACT_INFO.serviceArea}.
               </h3>
               <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
-                Our coordinators and contractor network serve every neighborhood in Topeka and
+                Nexus Operations and our contractor network serve every neighborhood in Topeka and
                 surrounding Shawnee County communities. If you&apos;re unsure whether we cover your
                 address, call us directly and we&apos;ll confirm on the spot.
               </p>

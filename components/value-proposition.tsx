@@ -47,7 +47,7 @@ export function ValueProposition() {
             Why Nexus Operations
           </p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4 text-balance">
-            A single coordinator for
+            One service that manages
             <br className="hidden sm:block" />
             every property maintenance request.
           </h2>

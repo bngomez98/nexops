@@ -53,8 +53,8 @@ const benefits = [
   },
   {
     icon: Users,
-    title: 'Direct support from a coordinator',
-    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, a Nexus coordinator will resolve the issue so the job can proceed.',
+    title: 'Direct support from Nexus Operations',
+    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus Operations will resolve the issue so the job can proceed.',
   },
 ]
 
@@ -71,7 +71,7 @@ const requirements = [
 const onboarding = [
   { step: '01', title: 'Apply', desc: 'Create a contractor account and submit your trade categories, insurance, and references.' },
   { step: '02', title: 'Verify', desc: 'We confirm license status, insurance certificates, and contact your references within 2–3 business days.' },
-  { step: '03', title: 'Onboard', desc: 'One call with a Nexus coordinator to walk through the dashboard, payment setup, and scheduling preferences.' },
+  { step: '03', title: 'Onboard', desc: 'One call with a Nexus team member to walk through the dashboard, payment setup, and scheduling preferences.' },
   { step: '04', title: 'Activate', desc: 'Your profile goes live in the network and matching jobs begin routing to your dashboard.' },
 ]
 
@@ -325,8 +325,8 @@ export default function ContractorsPage() {
               Ready to join the network?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Apply in minutes. A Nexus coordinator will follow up to verify your license, insurance,
-              and onboard you to the dashboard.
+              Apply in minutes. The Nexus team will follow up to verify your license and insurance,
+              then walk you through the dashboard.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
