@@ -4,12 +4,16 @@ import Image from 'next/image'
 import {
   ArrowRight,
   BadgeCheck,
+  CheckCircle,
   ClipboardList,
   Compass,
+  Database,
   FileText,
   HeartHandshake,
   Landmark,
+  Layers3,
   MapPin,
+  MonitorSmartphone,
   ShieldCheck,
   Target,
   Users,
@@ -71,6 +75,27 @@ const services = [
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
 ]
 
+const engineeringCapabilities = [
+  {
+    title: "Front-end Development",
+    description:
+      "Responsive, production-ready interfaces built for speed, clarity, and real-world user workflows.",
+    icon: MonitorSmartphone,
+  },
+  {
+    title: "Back-end Development",
+    description:
+      "Reliable APIs, business logic, and data integrations that support secure and scalable operations.",
+    icon: Database,
+  },
+  {
+    title: "Complete Builds",
+    description:
+      "End-to-end delivery from planning and architecture to deployment, QA, and ongoing support.",
+    icon: Layers3,
+  },
+]
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
@@ -87,6 +112,11 @@ export default function AboutPage() {
                 We built Nexus Operations so property owners have a single, accountable service for maintenance.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                Most property owners in Topeka juggle a patchwork of contractors, handwritten
+                invoices, and missed callbacks. We founded Nexus Operations to be the single,
+                accountable coordinator that handles the work end-to-end — intake, dispatch,
+                documentation, and billing — so owners can focus on running their properties, not
+                chasing tradespeople.
                 Most property owners in Topeka work with an assortment of contractors, handwritten
                 invoices, and unreturned calls. Nexus Operations was founded to act as the single
                 point of contact that handles each job from start to finish — intake, dispatch,
@@ -170,6 +200,7 @@ export default function AboutPage() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
+                <p className="mt-4 text-[15px] font-bold text-foreground">{title}</p>
                 <p className="mt-5 text-[15px] font-bold text-foreground">{title}</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
               </div>
@@ -204,13 +235,144 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <p className="text-[14px] font-semibold text-foreground">{title}</p>
-                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">{desc}</p>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">
+                      {desc}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </Section>
+
+        {/* Capabilities */}
+        <section className="py-16 lg:py-24 border-t border-border">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Delivery capabilities
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                Front-end, back-end, and complete build execution.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                We support operational teams with product execution across the full stack and
+                deliverables that are ready for real production use.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              {engineeringCapabilities.map(({ title, description, icon: Icon }) => (
+                <div key={title} className="rounded-2xl border border-border bg-card p-6">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Process Walkthrough */}
+        <section className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                How it works
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                From request to resolved: a real example.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A property manager overseeing 120 units submits an emergency request at 11:14 PM on a Saturday.
+                Here is exactly what happens next.
+              </p>
+            </div>
+
+            <div className="relative">
+              {/* Timeline connector line */}
+              <div className="absolute left-[19px] top-8 bottom-8 w-px bg-border hidden sm:block" aria-hidden="true" />
+
+              <div className="flex flex-col gap-0">
+                {[
+                  {
+                    time: "11:14 PM Saturday",
+                    label: "Request submitted",
+                    color: "bg-foreground",
+                    detail: "Property manager logs into the portal and submits: burst pipe in Unit 14B, water actively running, tenant present. Uploads 4 photos. Selects Emergency tier.",
+                    outcome: null,
+                  },
+                  {
+                    time: "11:14 PM",
+                    label: "Automated triage",
+                    color: "bg-primary",
+                    detail: "System classifies as Emergency — Plumbing. SLA clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
+                    outcome: null,
+                  },
+                  {
+                    time: "11:27 PM",
+                    label: "Contractor assigned",
+                    color: "bg-primary",
+                    detail: "On-call plumber from the verified network accepts the assignment. Property manager receives confirmation with contractor name, license number, and ETA. Tenant is notified.",
+                    outcome: "13 minutes to assignment. SLA: 60 minutes.",
+                  },
+                  {
+                    time: "12:51 AM Sunday",
+                    label: "On-site arrival",
+                    color: "bg-primary",
+                    detail: "Contractor arrives at Unit 14B, locates the failed supply line under the kitchen sink, shuts off water to the unit. Submits arrival photo through the portal.",
+                    outcome: "97 minutes from submission. SLA: 4 hours.",
+                  },
+                  {
+                    time: "2:18 AM",
+                    label: "Work completed",
+                    color: "bg-primary",
+                    detail: "Supply line replaced, water restored to unit. Contractor submits 6 completion photos and a written summary noting secondary water intrusion in the cabinet below.",
+                    outcome: null,
+                  },
+                  {
+                    time: "Monday AM",
+                    label: "Invoice issued",
+                    color: "bg-secondary border-2 border-border",
+                    detail: "Nexus Operations generates a unified invoice: $280 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
+                    outcome: "One invoice. Full documentation. Zero coordination calls.",
+                  },
+                  {
+                    time: "Within 30 days",
+                    label: "Contractor paid",
+                    color: "bg-green-500",
+                    detail: "Once the property manager pays the invoice, Nexus Operations pays the plumber directly at the full quoted rate of $280. No collection lag, no disputed invoices.",
+                    outcome: null,
+                  },
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-5 sm:gap-8 pb-8 last:pb-0">
+                    <div className="relative flex flex-col items-center">
+                      <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center z-10 ${step.color}`} />
+                    </div>
+                    <div className="flex-1 pt-1.5 pb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 mb-2">
+                        <span className="text-xs font-mono text-muted-foreground">{step.time}</span>
+                        <h3 className="text-sm font-semibold text-foreground">{step.label}</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                        {step.detail}
+                      </p>
+                      {step.outcome && (
+                        <div className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-primary bg-primary/8 rounded-full px-3 py-1">
+                          <CheckCircle className="h-3 w-3" />
+                          {step.outcome}
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">{desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ── Commitments ───────────────────────────────────── */}
         <Section tone="dark">

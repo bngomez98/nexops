@@ -53,6 +53,8 @@ const benefits = [
   },
   {
     icon: Users,
+    title: 'A coordinator on your side',
+    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus coordinators intervene so you can keep moving.',
     title: 'Direct support from Nexus Operations',
     desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus Operations will resolve the issue so the job can proceed.',
   },
@@ -90,6 +92,23 @@ const trades = [
   'Snow removal',
 ]
 
+const tierColors: Record<string, string> = {
+  Starter: 'bg-secondary text-foreground',
+  Pro: 'bg-primary/10 text-primary',
+  Elite: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+}
+
+const networkCategories = [
+  { trade: 'Plumbing', icon: '🔧', credentialRequired: 'KS plumber license', insuranceMin: '$500K GL', tiers: ['Starter', 'Pro', 'Elite'], activeContractors: '3+' },
+  { trade: 'Electrical', icon: '⚡', credentialRequired: 'KS electrical license', insuranceMin: '$500K GL', tiers: ['Starter', 'Pro', 'Elite'], activeContractors: '3+' },
+  { trade: 'HVAC', icon: '🌡️', credentialRequired: 'EPA 608 cert', insuranceMin: '$500K GL', tiers: ['Starter', 'Pro', 'Elite'], activeContractors: '2+' },
+  { trade: 'General repair', icon: '🔨', credentialRequired: 'KS contractor reg.', insuranceMin: '$500K GL', tiers: ['Starter', 'Pro'], activeContractors: '5+' },
+  { trade: 'Roofing', icon: '🏠', credentialRequired: 'KS contractor reg.', insuranceMin: '$1M GL', tiers: ['Starter', 'Pro'], activeContractors: '2+' },
+  { trade: 'Appliances', icon: '🍳', credentialRequired: 'Trade experience', insuranceMin: '$500K GL', tiers: ['Starter', 'Pro'], activeContractors: '2+' },
+  { trade: 'Landscaping', icon: '🌿', credentialRequired: 'KS contractor reg.', insuranceMin: '$300K GL', tiers: ['Starter'], activeContractors: '2+' },
+  { trade: 'Flooring', icon: '🪵', credentialRequired: 'Trade experience', insuranceMin: '$500K GL', tiers: ['Starter', 'Pro'], activeContractors: '1+' },
+]
+
 export default function ContractorsPage() {
   return (
     <div className="min-h-screen bg-background">
@@ -103,6 +122,7 @@ export default function ContractorsPage() {
                 <Sparkles className="h-3 w-3" /> For licensed contractors
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+                Get paid for the work — not the paperwork.
                 Pre-documented jobs, direct payouts, no lead fees.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
@@ -136,6 +156,115 @@ export default function ContractorsPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Network at a Glance */}
+        <section id="network" className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-10">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Contractor network
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                Who&apos;s in the network.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Every contractor in the network has been manually verified —
+                license confirmed against state records, insurance confirmed
+                directly with the provider. Below is the current network by
+                trade category. Contractor identities are kept confidential
+                until a specific job assignment is confirmed.
+              </p>
+            </div>
+
+            {/* Summary stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+              {[
+                { label: "Active contractors", value: "20+" },
+                { label: "Trade categories", value: "All trades" },
+                { label: "Accepting applications", value: "Open" },
+                { label: "Application review time", value: "12 hours" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="p-5 rounded-xl bg-card border border-border text-center"
+                >
+                  <p className="text-2xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+            {/* Network table */}
+            <div className="mt-10 rounded-xl border border-border overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-secondary/60 border-b border-border">
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Trade
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden sm:table-cell">
+                        Credential required
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden md:table-cell">
+                        Insurance min.
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Tiers covered
+                      </th>
+                      <th className="text-center px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Active
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border bg-card">
+                    {networkCategories.map((cat) => (
+                      <tr key={cat.trade} className="hover:bg-secondary/30 transition-colors">
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{cat.icon}</span>
+                            <span className="font-medium text-foreground text-[13px]">
+                              {cat.trade}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden sm:table-cell max-w-[220px]">
+                          {cat.credentialRequired}
+                        </td>
+                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden md:table-cell whitespace-nowrap">
+                          {cat.insuranceMin}
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex flex-wrap gap-1">
+                            {cat.tiers.map((tier) => (
+                              <span
+                                key={tier}
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-medium ${tierColors[tier]}`}
+                              >
+                                {tier}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-center">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                            <span className="text-[12.5px] font-semibold text-foreground">
+                              {cat.activeContractors}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <p className="text-[11.5px] text-muted-foreground">
+                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
 
             <div className="lg:col-span-5">
               <div className="rounded-3xl border border-border bg-card p-8">

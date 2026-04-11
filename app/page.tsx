@@ -142,6 +142,12 @@ const testimonials = [
   },
 ]
 
+const urgencyTiers = [
+  { name: 'Routine', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
+  { name: 'Urgent', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
+  { name: 'Emergency', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
+]
+
 export default function HomePage() {
   const homeownerPlans = getPlansByRole('homeowner').slice(0, 3)
 
@@ -324,6 +330,7 @@ export default function HomePage() {
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {howItWorks.map(({ step, title, desc, icon: Icon }) => (
+              <div key={step} className="relative rounded-2xl border border-border bg-card p-6">
               <div
                 key={step}
                 className="relative rounded-2xl border border-border bg-card p-6"
@@ -340,7 +347,6 @@ export default function HomePage() {
             ))}
           </div>
         </Section>
-
         {/* ── Why Nexus ──────────────────────────────────────── */}
         <Section tone="muted" id="why-nexus">
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
