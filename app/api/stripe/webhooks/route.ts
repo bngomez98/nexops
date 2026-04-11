@@ -35,6 +35,7 @@ function getSubscriptionPeriod(sub: Stripe.Subscription): {
     end: endUnix ? new Date(endUnix * 1000).toISOString() : null,
   }
 }
+type StripeSubWithPeriod = { current_period_start: number; current_period_end: number }
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -49,7 +50,8 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET)
-  } catch {
+  } catch (err) {
+    console.error(err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 

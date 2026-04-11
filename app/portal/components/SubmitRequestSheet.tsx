@@ -15,9 +15,8 @@ import {
 import {
   CATEGORY_LABEL,
   PRIORITY_LABEL,
-  type Category,
-  type Priority,
-} from '../lib/mock-data'
+  type PortalPriority,
+} from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { Sheet } from './Sheet'
 
@@ -27,7 +26,7 @@ interface SubmitRequestSheetProps {
   onSubmitted?: (jobId: string) => void
 }
 
-const CATEGORY_ICONS: Record<Category, React.ComponentType<{ size?: number }>> = {
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
   plumbing: Droplet,
   electrical: Zap,
   hvac: Wind,
@@ -37,7 +36,7 @@ const CATEGORY_ICONS: Record<Category, React.ComponentType<{ size?: number }>> =
   other: Hammer,
 }
 
-const CATEGORIES: Category[] = [
+const CATEGORIES: string[] = [
   'plumbing',
   'electrical',
   'hvac',
@@ -47,17 +46,18 @@ const CATEGORIES: Category[] = [
   'other',
 ]
 
-const PRIORITIES: Priority[] = ['low', 'normal', 'high', 'urgent']
+const PRIORITIES: PortalPriority[] = ['low', 'normal', 'high', 'urgent']
 
 export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequestSheetProps) {
   const { submitRequest } = usePortal()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [category, setCategory] = useState<Category>('plumbing')
-  const [priority, setPriority] = useState<Priority>('normal')
+  const [category, setCategory] = useState<string>('plumbing')
+  const [priority, setPriority] = useState<PortalPriority>('normal')
   const [location, setLocation] = useState('')
   const [photoCount, setPhotoCount] = useState(0)
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   const reset = () => {
     setTitle('')
@@ -74,22 +74,30 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
     onClose()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim() || !description.trim() || !location.trim()) {
       setError('Add a title, description, and location to submit.')
       return
     }
-    const job = submitRequest({
-      title: title.trim(),
-      description: description.trim(),
-      category,
-      priority,
-      location: location.trim(),
-      photoCount,
-    })
-    reset()
-    onClose()
-    onSubmitted?.(job.id)
+    setSubmitting(true)
+    setError('')
+    try {
+      const job = await submitRequest({
+        title: title.trim(),
+        description: description.trim(),
+        category,
+        priority,
+        location: location.trim(),
+        photoCount,
+      })
+      reset()
+      onClose()
+      onSubmitted?.(job.id)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to submit request.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -216,11 +224,11 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
         )}
 
         <div className="flex items-center gap-3 pt-2">
-          <button type="button" className="btn-ghost flex-1" onClick={handleClose}>
+          <button type="button" className="btn-ghost flex-1" onClick={handleClose} disabled={submitting}>
             Cancel
           </button>
-          <button type="button" className="btn-primary flex-1" onClick={handleSubmit}>
-            Submit request
+          <button type="button" className="btn-primary flex-1" onClick={() => { void handleSubmit() }} disabled={submitting}>
+            {submitting ? 'Submitting…' : 'Submit request'}
           </button>
         </div>
       </div>

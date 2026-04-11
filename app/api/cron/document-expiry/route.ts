@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
           const { data: profile } = await admin
             .from('profiles')
             .select('full_name')
-            .eq('user_id', userId)
+            .eq('id', userId)
             .maybeSingle() as { data: { full_name: string | null } | null }
 
           const name = profile?.full_name ?? 'Contractor'

@@ -45,14 +45,14 @@ export default function BlogPost() {
                 A service level agreement (SLA) is a written commitment that a service will be delivered within specific, measurable time windows. In property maintenance, that typically means two things: how long until a contractor is assigned to the job, and how long until the contractor is on-site.
               </p>
               <p>
-                An SLA is not a best-effort promise. It's a defined standard against which actual performance is measured. If performance falls below the standard, there's a documented gap — and typically a defined consequence or escalation path.
+                An SLA is not a best-effort promise. It&apos;s a defined standard against which actual performance is measured. If performance falls below the standard, there&apos;s a documented gap — and typically a defined consequence or escalation path.
               </p>
-              <h2 className="text-xl font-semibold text-foreground">Why most property managers don't have one</h2>
+              <h2 className="text-xl font-semibold text-foreground">Why most property managers don&apos;t have one</h2>
               <p>
                 Most property manager / contractor relationships in the Topeka market are informal. The contractor is a trusted contact, work gets done on a handshake, and response times are understood rather than documented. This works fine when the relationship is stable and the contractor has capacity.
               </p>
               <p>
-                It fails when the contractor is unavailable, when there's a dispute about how quickly they responded, or when a tenant escalation requires documented evidence that repair timelines were reasonable. At that point, there's no benchmark — just competing recollections.
+                It fails when the contractor is unavailable, when there&apos;s a dispute about how quickly they responded, or when a tenant escalation requires documented evidence that repair timelines were reasonable. At that point, there&apos;s no benchmark — just competing recollections.
               </p>
               <h2 className="text-xl font-semibold text-foreground">The Nexus Operations SLA structure</h2>
               <p>
@@ -82,7 +82,7 @@ export default function BlogPost() {
                 When evaluating any maintenance coordinator or contractor relationship, the key questions are: What is the committed assignment time? What is the committed on-site time? How is emergency coverage handled after hours? How is SLA performance tracked and reported?
               </p>
               <p>
-                If the answers are vague or entirely informal, that's useful information. It tells you that the relationship is built on availability and trust — which can work, but won't give you anything to hold the vendor to when the relationship is tested.
+                If the answers are vague or entirely informal, that&apos;s useful information. It tells you that the relationship is built on availability and trust — which can work, but won&apos;t give you anything to hold the vendor to when the relationship is tested.
               </p>
             </div>
             <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-primary/5">

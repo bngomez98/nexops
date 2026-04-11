@@ -52,7 +52,7 @@ export default function BlogPost() {
               What Property Maintenance Actually Costs in Topeka: Benchmarks for Common Repairs
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-10 border-l-2 border-primary/30 pl-5">
-              Knowing whether a contractor's quote is reasonable requires benchmarks. These ranges reflect the Topeka, Kansas market based on common maintenance jobs across trade categories.
+              Knowing whether a contractor&apos;s quote is reasonable requires benchmarks. These ranges reflect the Topeka, Kansas market based on common maintenance jobs across trade categories.
             </p>
             <div className="prose prose-sm max-w-none text-foreground/80 leading-relaxed space-y-6">
               <p>

@@ -55,6 +55,55 @@ const benefits = [
     icon: Users,
     title: 'A coordinator on your side',
     desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus coordinators intervene so you can keep moving.',
+    title: "No subscription fees or lead costs",
+    description:
+      "We never charge contractors to receive work. No subscription fees, no lead fees. You receive your full quoted rate on every job.",
+  },
+  {
+    icon: BarChart3,
+    title: "Performance-based priority",
+    description:
+      "Contractors who consistently meet response times, complete quality documentation, and maintain high ratings get priority assignment on higher-value work. Reliable performance earns more volume.",
+  },
+]
+
+const requirements = [
+  "Valid Kansas business license",
+  "Applicable trade licenses for your service categories",
+  "General liability insurance ($500K per occurrence minimum)",
+  "Workers compensation insurance (if you have employees)",
+  "Ability to respond to assignments within defined SLA windows",
+  "Willingness to provide photo documentation on every job",
+]
+
+const verificationSteps = [
+  {
+    icon: FileText,
+    step: "01",
+    title: "Apply online",
+    description:
+      "Complete the short application with your business info, trade specialties, and service area. Any home service category is welcome.",
+  },
+  {
+    icon: BadgeCheck,
+    step: "02",
+    title: "We review within 12 hours",
+    description:
+      "A member of our team reviews every application and follows up at the email you provide — guaranteed within 12 hours.",
+  },
+  {
+    icon: ShieldCheck,
+    step: "03",
+    title: "Credential verification",
+    description:
+      "We verify licenses against state databases and confirm insurance coverage directly with your provider before approval.",
+  },
+  {
+    icon: CheckCircle,
+    step: "04",
+    title: "Start receiving work",
+    description:
+      "Once approved, you're added to the active network and begin receiving assignment notifications matching your trade and availability.",
   },
 ]
 
@@ -104,6 +153,11 @@ export default function ContractorsPage() {
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
                 Get paid for the work — not the paperwork.
+              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
+                Pre-qualified work.{" "}
+                <span className="font-serif italic font-normal text-primary">
+                  Guaranteed payment within 30 days.
+                </span>
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Join the Nexus Operations contractor network and receive pre-documented jobs from
@@ -116,6 +170,11 @@ export default function ContractorsPage() {
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
                 >
                   Apply to join <ArrowRight className="h-4 w-4" />
+                  href="/contractors/apply"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+                >
+                  Apply to Join — 12-hour review
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/contact"
@@ -130,6 +189,46 @@ export default function ContractorsPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <DollarSign className="h-4 w-4 text-primary" /> Direct payouts
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Network at a Glance */}
+        <section id="network" className="py-16 lg:py-24">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mb-10">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Contractor network
+              </p>
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
+                Who&apos;s in the network.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Every contractor in the network has been manually verified —
+                license confirmed against state records, insurance confirmed
+                directly with the provider. Below is the current network by
+                trade category. Contractor identities are kept confidential
+                until a specific job assignment is confirmed.
+              </p>
+            </div>
+
+            {/* Summary stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+              {[
+                { label: "Active contractors", value: "20+" },
+                { label: "Trade categories", value: "All trades" },
+                { label: "Accepting applications", value: "Open" },
+                { label: "Application review time", value: "12 hours" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="p-5 rounded-xl bg-card border border-border text-center"
+                >
+                  <p className="text-2xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4 text-primary" /> Local dispatch only
@@ -141,6 +240,74 @@ export default function ContractorsPage() {
               <div className="rounded-3xl border border-border bg-card p-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
                   Network snapshot
+            {/* Network table */}
+            <div className="rounded-xl border border-border overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-secondary/60 border-b border-border">
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Trade
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden sm:table-cell">
+                        Credential required
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden md:table-cell">
+                        Insurance min.
+                      </th>
+                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Tiers covered
+                      </th>
+                      <th className="text-center px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Active
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border bg-card">
+                    {networkCategories.map((cat) => (
+                      <tr key={cat.trade} className="hover:bg-secondary/30 transition-colors">
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{cat.icon}</span>
+                            <span className="font-medium text-foreground text-[13px]">
+                              {cat.trade}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden sm:table-cell max-w-[220px]">
+                          {cat.credentialRequired}
+                        </td>
+                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden md:table-cell whitespace-nowrap">
+                          {cat.insuranceMin}
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex flex-wrap gap-1">
+                            {cat.tiers.map((tier) => (
+                              <span
+                                key={tier}
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-medium ${tierColors[tier]}`}
+                              >
+                                {tier}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-center">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                            <span className="text-[12.5px] font-semibold text-foreground">
+                              {cat.activeContractors}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <p className="text-[11.5px] text-muted-foreground">
+                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
                 </p>
                 <div className="mt-5 grid grid-cols-2 gap-5">
                   {[
@@ -162,6 +329,10 @@ export default function ContractorsPage() {
                   className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:gap-2 transition-all"
                 >
                   Contractor plans &amp; tiers <ArrowRight className="h-3.5 w-3.5" />
+                  href="/contractors/apply"
+                  className="text-[11.5px] font-semibold text-primary hover:underline whitespace-nowrap"
+                >
+                  Apply to join →
                 </Link>
               </div>
             </div>
@@ -216,6 +387,34 @@ export default function ContractorsPage() {
                     <Wrench className="h-3 w-3 text-primary" /> {t}
                   </span>
                 ))}
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                  Requirements
+                </p>
+                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-6">
+                  What we require to join.
+                </h2>
+                <div className="rounded-xl bg-card border border-border p-6 lg:p-8">
+                  <div className="flex flex-col gap-4">
+                    {requirements.map((req) => (
+                      <div
+                        key={req}
+                        className="flex items-start gap-3 text-sm text-foreground/70"
+                      >
+                        <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                        {req}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      We accept contractors across all home service and trade categories —
+                      plumbing, electrical, HVAC, roofing, concrete, landscaping, painting,
+                      fencing, appliance repair, and more. If you provide skilled home
+                      services, apply.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -264,6 +463,32 @@ export default function ContractorsPage() {
                 </span>
                 <p className="mt-3 text-[17px] font-bold text-foreground">{title}</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
+        {/* CTA */}
+        <section className="py-16 lg:py-24 bg-secondary/50">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4 text-balance">
+                Ready to join the network?
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-8">
+                The application takes under five minutes. Every application is reviewed within 12 hours.
+                All home service trades are welcome.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/contractors/apply"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+                >
+                  Apply Now — 12-Hour Review
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <a
+                  href={`mailto:${CONTACT_INFO.email}`}
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+                >
+                  Email with questions
+                  <ArrowRight className="h-4 w-4" />
+                </a>
               </div>
             ))}
           </div>

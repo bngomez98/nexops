@@ -7,6 +7,7 @@ import { PortalHeader } from './components/PortalHeader'
 import { SubmitRequestSheet } from './components/SubmitRequestSheet'
 import { TabBar, type Tab } from './components/TabBar'
 import { usePortal } from './lib/portal-context'
+import { Loader2 } from 'lucide-react'
 import { AdminView } from './views/AdminView'
 import { DashboardView } from './views/DashboardView'
 import { JobsView } from './views/JobsView'
@@ -14,16 +15,39 @@ import { ProfileView } from './views/ProfileView'
 import { SearchView } from './views/SearchView'
 
 export default function PortalPage() {
-  const { currentUser } = usePortal()
+  const { currentUser, loading, error } = usePortal()
   const [tab, setTab] = useState<Tab>('dashboard')
   const [submitOpen, setSubmitOpen] = useState(false)
   const [openJobId, setOpenJobId] = useState<string | null>(null)
 
   useEffect(() => {
-    if (tab === 'admin' && currentUser.role !== 'admin') {
+    if (currentUser && tab === 'admin' && currentUser.role !== 'admin') {
       setTab('dashboard')
     }
-  }, [currentUser.role, tab])
+  }, [currentUser, tab])
+
+  if (loading) {
+    return (
+      <div className="portal-content flex items-center justify-center min-h-[60vh]">
+        <div className="glass-soft px-6 py-5 text-indigo-100 flex items-center gap-3">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Loading portal…
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="portal-content flex items-center justify-center min-h-[60vh]">
+        <div className="glass-soft px-6 py-5 text-rose-200">
+          {error}
+        </div>
+      </div>
+    )
+  }
+
+  if (!currentUser) return null
 
   return (
     <div className="portal-content">

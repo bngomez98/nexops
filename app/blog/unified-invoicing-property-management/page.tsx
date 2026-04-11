@@ -37,19 +37,20 @@ export default function BlogPost() {
               The Case for Unified Invoicing: Why Dozens of Contractor Bills Are Costing Your Team More Than the Invoices Say
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-10 border-l-2 border-primary/30 pl-5">
-              When a 200-unit property management company processes 40 maintenance jobs a month, that's potentially 40 separate contractor invoices — each with different formats, payment terms, and follow-up requirements.
+              When a 200-unit property management company processes 40 maintenance jobs a month, that&apos;s potentially 40 separate contractor invoices — each with different formats, payment terms, and follow-up requirements.
             </p>
             <div className="prose prose-sm max-w-none text-foreground/80 leading-relaxed space-y-6">
               <h2 className="text-xl font-semibold text-foreground">The actual cost of fragmented invoicing</h2>
               <p>
-                The visible cost of a maintenance invoice is the dollar amount on the page. The invisible cost is the time it takes to receive it, validate it, reconcile it against the job record, process payment, and store it correctly. For a portfolio generating 30–50 jobs per month, that administrative overhead can easily represent 5–8 hours of staff time monthly — and that's assuming everything goes smoothly.
+                The visible cost of a maintenance invoice is the dollar amount on the page. The invisible cost is the time it takes to receive it, validate it, reconcile it against the job record, process payment, and store it correctly. For a portfolio generating 30–50 jobs per month, that administrative overhead can easily represent 5–8 hours of staff time monthly — and that&apos;s assuming everything goes smoothly.
               </p>
               <p>
-                When invoices don't go smoothly — when a contractor invoices a different amount than quoted, sends the invoice to the wrong email, or uses a format that doesn't match the property management software — the time multiplies. Each exception requires follow-up, documentation, and resolution.
+                When invoices don&apos;t go smoothly — when a contractor invoices a different amount than quoted, sends the invoice to the wrong email, or uses a format that doesn&apos;t match the property management software — the time multiplies. Each exception requires follow-up, documentation, and resolution.
               </p>
               <h2 className="text-xl font-semibold text-foreground">What unified invoicing actually means</h2>
               <p>
                 Unified invoicing means one invoice per billing cycle, covering all jobs across all properties. Each line item shows: the property address, the job date, the trade, the urgency tier, the contractor, and the billed amount. The invoice is itemized enough to attribute costs to specific properties and audit any line item, but consolidated enough to process as a single payment.
+                Unified invoicing means one invoice per billing cycle, covering all jobs across all properties. Each line item shows: the property address, the job date, the trade, the contractor&apos;s base cost, the coordination markup, and the total. The invoice is itemized enough to attribute costs to specific properties and audit any line item, but consolidated enough to process as a single payment.
               </p>
               <p>
                 For property management companies that allocate maintenance costs to individual properties or pass repair costs through to owners, line-item detail is essential. Unified invoicing does not sacrifice detail — it consolidates the payment without obscuring the breakdown.

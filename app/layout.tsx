@@ -136,7 +136,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  generator: 'GPT-5.3-Codex',
 }
 
 export const viewport: Viewport = {

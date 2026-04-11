@@ -1,10 +1,9 @@
 'use client'
 
-import { Briefcase, FileText, Search, Tag, Users } from 'lucide-react'
+import { Briefcase, FileText, Search, Tag } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { CATEGORY_LABEL, type Category } from '../lib/mock-data'
+import { formatCategoryLabel } from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
-import { Avatar } from '../components/Avatar'
 import { StatusPill } from '../components/StatusPill'
 
 interface SearchViewProps {
@@ -12,27 +11,25 @@ interface SearchViewProps {
 }
 
 const DOCS = [
-  { id: 'doc-1', title: 'How to submit a maintenance request', tag: 'Guide' },
-  { id: 'doc-2', title: 'Stripe payments and invoicing FAQ', tag: 'Billing' },
-  { id: 'doc-3', title: 'Contractor onboarding checklist', tag: 'Onboarding' },
-  { id: 'doc-4', title: 'Service Level Agreement (SLA) overview', tag: 'Policy' },
-  { id: 'doc-5', title: 'Photo upload best practices', tag: 'Guide' },
+  { id: 'doc-1', title: 'Homeowner FAQ', tag: 'FAQ', href: '/faq' },
+  { id: 'doc-2', title: 'Services overview', tag: 'Services', href: '/services' },
+  { id: 'doc-3', title: 'Pricing & billing', tag: 'Billing', href: '/pricing' },
+  { id: 'doc-4', title: 'Contact support', tag: 'Support', href: '/contact' },
+  { id: 'doc-5', title: 'How it works', tag: 'Guide', href: '/services#how-it-works' },
 ]
 
-const CATEGORIES_LIST = Object.entries(CATEGORY_LABEL) as [Category, string][]
-
 export function SearchView({ onOpenJob }: SearchViewProps) {
-  const { jobs, users } = usePortal()
+  const { jobs } = usePortal()
   const [q, setQ] = useState('')
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase()
+    const categoryList = Array.from(new Set(jobs.map((job) => job.category)))
     if (!query) {
       return {
         jobs: jobs.slice(0, 4),
-        users: users.slice(0, 4),
         docs: DOCS.slice(0, 4),
-        categories: CATEGORIES_LIST,
+        categories: categoryList,
       }
     }
     return {
@@ -43,13 +40,10 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
           j.location.toLowerCase().includes(query) ||
           j.shortId.includes(query),
       ),
-      users: users.filter(
-        (u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query),
-      ),
       docs: DOCS.filter((d) => d.title.toLowerCase().includes(query)),
-      categories: CATEGORIES_LIST.filter(([, label]) => label.toLowerCase().includes(query)),
+      categories: categoryList.filter((label) => label.toLowerCase().includes(query)),
     }
-  }, [q, jobs, users])
+  }, [q, jobs])
 
   return (
     <div className="space-y-5">
@@ -98,22 +92,6 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
         </div>
       </ResultGroup>
 
-      <ResultGroup title="People" icon={Users} count={results.users.length} empty="No people match.">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-          {results.users.map((u) => (
-            <div key={u.id} className="glass-soft p-3 flex items-center gap-3">
-              <Avatar user={u} size={38} />
-              <div className="min-w-0">
-                <div className="text-sm font-semibold text-white truncate">{u.name}</div>
-                <div className="text-[10.5px] uppercase tracking-wider text-indigo-200/55">
-                  {u.role}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ResultGroup>
-
       <ResultGroup
         title="Categories"
         icon={Tag}
@@ -121,12 +99,12 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
         empty="No categories match."
       >
         <div className="flex flex-wrap gap-1.5">
-          {results.categories.map(([id, label]) => (
+          {results.categories.map((label) => (
             <span
-              key={id}
+              key={label}
               className="text-[11px] rounded-full px-3 py-1.5 bg-white/5 border border-white/10 text-indigo-100"
             >
-              {label}
+              {formatCategoryLabel(label)}
             </span>
           ))}
         </div>
@@ -140,7 +118,11 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
       >
         <div className="grid sm:grid-cols-2 gap-2.5">
           {results.docs.map((d) => (
-            <div key={d.id} className="glass-soft p-3 flex items-center gap-3">
+            <a
+              key={d.id}
+              href={d.href}
+              className="glass-soft p-3 flex items-center gap-3 hover:bg-white/10 transition"
+            >
               <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500/40 to-sky-500/30 border border-white/10 flex items-center justify-center">
                 <FileText size={15} className="text-indigo-100" />
               </div>
@@ -148,7 +130,7 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
                 <div className="text-sm font-medium text-white truncate">{d.title}</div>
                 <div className="text-[10px] uppercase tracking-wider text-indigo-200/55">{d.tag}</div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </ResultGroup>

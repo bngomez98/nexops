@@ -102,7 +102,8 @@ function SignUpInner() {
         : role === "property-manager" ? "/onboarding/property-manager"
         : "/onboarding/homeowner"
       window.location.href = dest
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)
@@ -160,7 +161,7 @@ function SignUpInner() {
             {isContractor ? (
               <>
                 <p>Receive fully documented project requests in your trade. Your membership covers access — no per-job fees or commissions.</p>
-                <p>Every project you claim comes with photos, scope, and the owner's budget ceiling already in hand.</p>
+                <p>Every project you claim comes with photos, scope, and the owner&apos;s budget ceiling already in hand.</p>
               </>
             ) : (
               <>

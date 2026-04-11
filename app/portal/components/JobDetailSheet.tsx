@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Calendar,
@@ -8,19 +8,19 @@ import {
   CreditCard,
   MapPin,
   MessageCircle,
-  PenLine,
   Send,
-  Star,
 } from 'lucide-react'
 import {
-  CATEGORY_LABEL,
   PRIORITY_LABEL,
   STATUS_FLOW,
   STATUS_LABEL,
+  avatarGradient,
+  buildInitials,
+  formatCategoryLabel,
   formatMoney,
   formatRelative,
-  type Job,
-} from '../lib/mock-data'
+  type PortalJob,
+} from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
 import { Avatar } from './Avatar'
 import { Sheet } from './Sheet'
@@ -32,11 +32,54 @@ interface JobDetailSheetProps {
 }
 
 export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
-  const { jobs, users, currentUser, advanceStatus, postMessage, assignContractor } = usePortal()
-  const job = useMemo<Job | null>(() => jobs.find((j) => j.id === jobId) ?? null, [jobs, jobId])
+  const { jobs, currentUser, advanceStatus, postMessage, refreshJob } = usePortal()
+  const job = useMemo<PortalJob | null>(() => jobs.find((j) => j.id === jobId) ?? null, [jobs, jobId])
 
   const [draft, setDraft] = useState('')
-  const [signed, setSigned] = useState(false)
+  const [messages, setMessages] = useState<
+    { id: string; authorId: string; authorName: string; body: string; timestamp: string }[]
+  >([])
+  const [messagesLoading, setMessagesLoading] = useState(false)
+  const [isPaying, setIsPaying] = useState(false)
+  const [actionError, setActionError] = useState('')
+
+  useEffect(() => {
+    if (!jobId) return
+    void refreshJob(jobId)
+  }, [jobId, refreshJob])
+
+  useEffect(() => {
+    if (!jobId) return
+    let active = true
+    const load = async () => {
+      setMessagesLoading(true)
+      try {
+        const res = await fetch(`/api/messages/${jobId}`)
+        if (!res.ok) return
+        const data = await res.json()
+        if (!active) return
+        const mapped = (data.messages ?? []).map((m: Record<string, unknown>) => {
+          const authorName =
+            (m.sender_name as string) ||
+            (m.sender_id === job?.ownerId ? job?.ownerName : m.sender_id === job?.contractorId ? job?.contractorName : 'Nexus Team')
+          return {
+            id: m.id as string,
+            authorId: m.sender_id as string,
+            authorName: (authorName as string) || 'Nexus Team',
+            body: m.content as string,
+            timestamp: m.created_at as string,
+          }
+        })
+        setMessages(mapped)
+      } finally {
+        if (active) setMessagesLoading(false)
+      }
+    }
+    void load()
+    return () => {
+      active = false
+    }
+  }, [jobId, job?.ownerId, job?.ownerName, job?.contractorId, job?.contractorName])
 
   if (!job) {
     return (
@@ -46,19 +89,62 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
     )
   }
 
-  const homeowner = users.find((u) => u.id === job.homeownerId)
-  const contractor = users.find((u) => u.id === job.contractorId)
-  const before = job.photos.filter((p) => p.kind === 'before')
-  const after = job.photos.filter((p) => p.kind === 'after')
-  const otherPhotos = job.photos.filter((p) => p.kind === 'attachment')
-  const canAdvance = job.status !== 'complete'
-  const canAssign = currentUser.role === 'admin' && !job.contractorId
-  const availableContractors = users.filter((u) => u.role === 'contractor')
+  const canAdvance = job.status !== 'completed'
+  const isOwner = currentUser?.role === 'homeowner' || currentUser?.role === 'manager' || currentUser?.role === 'property-manager'
+  const homeownerAvatar = job.ownerName
+    ? {
+        initials: buildInitials(job.ownerName),
+        avatarColor: avatarGradient(job.ownerName),
+        avatarUrl: null,
+      }
+    : null
+  const contractorAvatar = job.contractorName
+    ? {
+        initials: buildInitials(job.contractorName),
+        avatarColor: avatarGradient(job.contractorName),
+        avatarUrl: null,
+      }
+    : null
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!draft.trim()) return
-    postMessage(job.id, draft)
-    setDraft('')
+    setActionError('')
+    try {
+      const message = await postMessage(job.id, draft)
+      if (message) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: message.id,
+            authorId: message.sender_id,
+            authorName: currentUser?.name ?? 'You',
+            body: message.content,
+            timestamp: message.created_at,
+          },
+        ])
+      }
+      setDraft('')
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Unable to send message')
+    }
+  }
+
+  const handlePay = async () => {
+    if (!job.invoiceAmount || job.invoicePaid) return
+    setIsPaying(true)
+    try {
+      const res = await fetch('/api/stripe/invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestId: job.id }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } finally {
+      setIsPaying(false)
+    }
   }
 
   return (
@@ -69,7 +155,7 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
           <div className="flex items-center gap-2 mb-2">
             <span className={`priority-dot priority-${job.priority}`} aria-hidden />
             <span className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70">
-              {CATEGORY_LABEL[job.category]} · {PRIORITY_LABEL[job.priority]} priority
+              {formatCategoryLabel(job.category)} · {PRIORITY_LABEL[job.priority]} priority
             </span>
             <span className="ml-auto">
               <StatusPill status={job.status} />
@@ -123,8 +209,17 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
               )
             })}
           </div>
-          {canAdvance && (currentUser.role === 'admin' || currentUser.role === 'contractor') && (
-            <button type="button" className="btn-ghost mt-4 w-full" onClick={() => advanceStatus(job.id)}>
+          {canAdvance && (currentUser?.role === 'admin' || currentUser?.role === 'contractor') && (
+            <button
+              type="button"
+              className="btn-ghost mt-4 w-full"
+              onClick={() => {
+                setActionError('')
+                void advanceStatus(job.id).catch((err) => {
+                  setActionError(err instanceof Error ? err.message : 'Unable to update status')
+                })
+              }}
+            >
               Advance to {STATUS_LABEL[STATUS_FLOW[STATUS_FLOW.indexOf(job.status) + 1]]}
             </button>
           )}
@@ -132,42 +227,21 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
 
         {/* People */}
         <div className="grid grid-cols-2 gap-3">
-          {homeowner && (
+          {job.ownerName && homeownerAvatar && (
             <div className="glass-soft p-4 flex items-center gap-3">
-              <Avatar user={homeowner} size={42} />
+              <Avatar user={homeownerAvatar} size={42} />
               <div className="min-w-0">
                 <div className="text-[10px] uppercase tracking-wider text-indigo-200/50">Homeowner</div>
-                <div className="text-sm font-semibold text-white truncate">{homeowner.name}</div>
-                <div className="text-[11px] text-indigo-200/60 truncate">{homeowner.phone}</div>
+                <div className="text-sm font-semibold text-white truncate">{job.ownerName}</div>
               </div>
             </div>
           )}
-          {contractor ? (
+          {job.contractorName && contractorAvatar ? (
             <div className="glass-soft p-4 flex items-center gap-3">
-              <Avatar user={contractor} size={42} />
+              <Avatar user={contractorAvatar} size={42} />
               <div className="min-w-0">
                 <div className="text-[10px] uppercase tracking-wider text-indigo-200/50">Contractor</div>
-                <div className="text-sm font-semibold text-white truncate">{contractor.name}</div>
-                <div className="text-[11px] text-indigo-200/60 inline-flex items-center gap-1">
-                  <Star size={11} className="fill-amber-300 text-amber-300" />
-                  {contractor.rating?.toFixed(1)} · {contractor.jobsCompleted} jobs
-                </div>
-              </div>
-            </div>
-          ) : canAssign ? (
-            <div className="glass-soft p-4">
-              <div className="text-[10px] uppercase tracking-wider text-indigo-200/50 mb-2">Assign contractor</div>
-              <div className="flex flex-wrap gap-1.5">
-                {availableContractors.map((c) => (
-                  <button
-                    type="button"
-                    key={c.id}
-                    onClick={() => assignContractor(job.id, c.id)}
-                    className="text-[11px] rounded-full px-2.5 py-1 bg-white/5 border border-white/10 text-indigo-100 hover:bg-indigo-500/30"
-                  >
-                    {c.name.split(' ')[0]}
-                  </button>
-                ))}
+                <div className="text-sm font-semibold text-white truncate">{job.contractorName}</div>
               </div>
             </div>
           ) : (
@@ -178,19 +252,22 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
         </div>
 
         {/* Photos */}
-        {(before.length > 0 || after.length > 0 || otherPhotos.length > 0) && (
+        {job.photoUrls.length > 0 && (
           <div>
             <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60 mb-3">
-              {before.length > 0 && after.length > 0 ? 'Before / After' : 'Photos'}
+              Attachments
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {before.length > 0 && (
-                <PhotoStack label="Before" photos={before} />
-              )}
-              {after.length > 0 && <PhotoStack label="After" photos={after} />}
-              {after.length === 0 && before.length === 0 && otherPhotos.length > 0 && (
-                <PhotoStack label="Attachments" photos={otherPhotos} span />
-              )}
+              {job.photoUrls.map((url) => (
+                <div
+                  key={url}
+                  className="aspect-[4/3] rounded-xl border border-white/10 overflow-hidden relative"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt="" className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -204,11 +281,14 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             </div>
           </div>
           <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
-            {job.messages.length === 0 && (
+            {messagesLoading && (
+              <div className="text-xs text-indigo-200/50 italic">Loading messages…</div>
+            )}
+            {!messagesLoading && messages.length === 0 && (
               <div className="text-xs text-indigo-200/50 italic">No messages yet.</div>
             )}
-            {job.messages.map((m) => {
-              const mine = m.authorId === currentUser.id
+            {messages.map((m) => {
+              const mine = m.authorId === currentUser?.id
               return (
                 <div
                   key={m.id}
@@ -242,17 +322,20 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSend()
+                if (e.key === 'Enter') void handleSend()
               }}
             />
-            <button type="button" className="btn-primary !px-4" onClick={handleSend}>
+            <button type="button" className="btn-primary !px-4" onClick={() => void handleSend()}>
               <Send size={15} />
             </button>
           </div>
+          {actionError && (
+            <div className="mt-2 text-xs text-rose-300">{actionError}</div>
+          )}
         </div>
 
         {/* Invoice */}
-        {job.invoice ? (
+        {job.invoiceAmount && (
           <div className="glass-soft p-4">
             <div className="flex items-center gap-2 mb-2">
               <CreditCard size={14} className="text-indigo-200" />
@@ -263,102 +346,43 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-2xl font-semibold text-white">
-                  {formatMoney(job.invoice.amountCents)}
+                  {formatMoney(job.invoiceAmount)}
                 </div>
                 <div className="text-[11px] text-indigo-200/60 capitalize">
-                  Status: {job.invoice.status}
+                  Status: {job.invoicePaid ? 'paid' : 'pending'}
                 </div>
               </div>
-              {job.invoice.status !== 'paid' && currentUser.role === 'homeowner' && (
-                <button type="button" className="btn-primary">Pay with Stripe</button>
-              )}
-              {job.invoice.status === 'paid' && (
-                <span className="status-pill status-complete">
+              {job.invoicePaid ? (
+                <span className="status-pill status-completed">
                   <CheckCircle2 size={12} /> Paid
                 </span>
+              ) : (
+                isOwner && (
+                  <button type="button" className="btn-primary" onClick={handlePay} disabled={isPaying}>
+                    {isPaying ? 'Starting checkout…' : 'Pay with Stripe'}
+                  </button>
+                )
               )}
             </div>
           </div>
-        ) : (
-          job.status === 'complete' && currentUser.role === 'contractor' && (
-            <div className="glass-soft p-4 text-xs text-indigo-100/70 flex items-center justify-between">
-              No invoice yet.
-              <button type="button" className="btn-ghost">Submit invoice</button>
-            </div>
-          )
         )}
 
-        {/* Signature & rating (when complete) */}
-        {job.status === 'complete' && (
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => setSigned((s) => !s)}
-              className="glass-soft p-4 text-left hover:bg-white/5 transition"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <PenLine size={14} className="text-indigo-200" />
-                <span className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
-                  Signature
-                </span>
+        {job.finalCost && (
+          <div className="glass-soft p-4 flex items-center justify-between">
+            <div>
+              <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
+                Final cost
               </div>
-              <div className="text-sm text-white">
-                {signed ? 'Signed ✓' : 'Tap to sign off'}
-              </div>
-            </button>
-            <div className="glass-soft p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Star size={14} className="text-amber-300 fill-amber-300" />
-                <span className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
-                  Rating
-                </span>
-              </div>
-              <div className="text-sm text-white">
-                {job.review ? `${job.review.rating}.0 / 5.0` : 'Awaiting review'}
-              </div>
-              {job.review && (
-                <div className="text-[11px] text-indigo-200/70 mt-1 line-clamp-2">
-                  “{job.review.body}”
-                </div>
-              )}
+              <div className="text-lg font-semibold text-white">{formatMoney(job.finalCost)}</div>
             </div>
+            {job.status === 'completed' && (
+              <span className="status-pill status-completed">
+                <CheckCircle2 size={12} /> Completed
+              </span>
+            )}
           </div>
         )}
       </div>
     </Sheet>
-  )
-}
-
-function PhotoStack({
-  label,
-  photos,
-  span,
-}: {
-  label: string
-  photos: { id: string; caption: string; hue: number }[]
-  span?: boolean
-}) {
-  return (
-    <div className={span ? 'col-span-2' : ''}>
-      <div className="text-[10px] uppercase tracking-wider text-indigo-200/50 mb-1.5">{label}</div>
-      <div className={`grid ${span ? 'grid-cols-3' : 'grid-cols-1'} gap-2`}>
-        {photos.map((p) => (
-          <div
-            key={p.id}
-            className="aspect-[4/3] rounded-xl border border-white/10 overflow-hidden relative"
-            style={{
-              background: `linear-gradient(135deg, hsl(${p.hue} 70% 35% / 0.55), hsl(${
-                p.hue + 30
-              } 80% 25% / 0.6))`,
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-1.5 left-2 text-[10px] text-white/90 font-medium">
-              {p.caption}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
   )
 }

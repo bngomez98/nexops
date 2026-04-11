@@ -37,6 +37,8 @@ export const projectRequestSchema = z.object({
   description: z.string().min(20, 'Description must be at least 20 characters').max(2000, 'Description must be less than 2000 characters'),
   location: z.string().min(3, 'Please enter a valid location'),
   budget: z.string().min(1, 'Please enter a budget').optional().or(z.literal('')),
+  urgency: z.enum(['urgent', 'high', 'normal', 'low']).optional(),
+  photoUrls: z.array(z.string().min(1)).max(8, 'Maximum 8 photos allowed').optional(),
 
   pipelineMode: z.enum(['standard', 'automated', 'community']).default('automated'),
   communityVisible: z.boolean().default(true),
@@ -97,6 +99,20 @@ export const contactFormSchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters').max(5000),
 })
 
+export const contractorApplicationSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().min(1, 'Last name is required').max(100),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().min(7, 'Phone number is required').max(30),
+  companyName: z.string().min(2, 'Company name is required').max(150),
+  serviceCategories: z.string().min(2, 'Please describe your trade(s)').max(300),
+  yearsInBusiness: z.string().min(1, 'Years in business is required').max(20),
+  licenseNumber: z.string().max(100).optional().or(z.literal('')),
+  insuranceCarrier: z.string().max(150).optional().or(z.literal('')),
+  serviceArea: z.string().min(2, 'Service area is required').max(200),
+  coverageNotes: z.string().max(1000).optional().or(z.literal('')),
+})
+
 export const invoiceCreateSchema = z.object({
   job_id: z.string().uuid('Invalid job ID'),
   line_items: z.array(z.object({
@@ -120,6 +136,7 @@ export type ProjectRequestData = z.infer<typeof projectRequestSchema>
 export type ContractorProfileData = z.infer<typeof contractorProfileSchema>
 export type ContractorSettingsData = z.infer<typeof contractorSettingsSchema>
 export type ContactFormData = z.infer<typeof contactFormSchema>
+export type ContractorApplicationData = z.infer<typeof contractorApplicationSchema>
 export type InvoiceCreateData = z.infer<typeof invoiceCreateSchema>
 export type MessageData = z.infer<typeof messageSchema>
 export type MessageWithJobData = z.infer<typeof messageWithJobSchema>

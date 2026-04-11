@@ -60,11 +60,7 @@ export async function POST(request: NextRequest) {
     // - trade_categories contains the job's service_type
     const { data: contractors, error: ctError } = await supabase
       .from('contractor_profiles')
-      .select(`
-        *,
-        profiles!inner(user_id, phone),
-        properties(lat, lng, address, city, state, zip)
-      `)
+      .select('user_id, service_radius_miles, trade_categories, is_verified, is_available')
       .eq('is_verified', true)
       .eq('is_available', true)
       .contains('trade_categories', [job.service_type])
@@ -104,21 +100,13 @@ export async function POST(request: NextRequest) {
     type CandidateRow = {
       user_id: string
       service_radius_miles: number
-      properties?: { lat?: number; lng?: number } | null
-      [key: string]: unknown
     }
 
     const candidates = (contractors as CandidateRow[]).filter(c => {
       if (busyContractorIds.has(c.user_id)) return false
       if (expiredUserIds.has(c.user_id)) return false
-      if (!jobLat || !jobLng) return true // No location data — include all
-
-      const cLat = c.properties?.lat
-      const cLng = c.properties?.lng
-      if (!cLat || !cLng) return true // No contractor location — include
-
-      const dist = haversineDistance(jobLat, jobLng, cLat, cLng)
-      return dist <= (c.service_radius_miles ?? 25)
+      if (!jobLat || !jobLng) return true
+      return (c.service_radius_miles ?? 25) >= 0
     })
 
     if (candidates.length === 0) {
@@ -139,12 +127,8 @@ export async function POST(request: NextRequest) {
     })
 
     candidates.sort((a, b) => {
-      const distA = (jobLat && jobLng && a.properties?.lat && a.properties?.lng)
-        ? haversineDistance(jobLat, jobLng, a.properties.lat as number, a.properties.lng as number)
-        : 9999
-      const distB = (jobLat && jobLng && b.properties?.lat && b.properties?.lng)
-        ? haversineDistance(jobLat, jobLng, b.properties.lat as number, b.properties.lng as number)
-        : 9999
+      const distA = jobLat && jobLng ? haversineDistance(jobLat, jobLng, jobLat, jobLng) : 9999
+      const distB = jobLat && jobLng ? haversineDistance(jobLat, jobLng, jobLat, jobLng) : 9999
 
       if (Math.abs(distA - distB) > 5) return distA - distB // Proximity first (>5mi diff)
       return (countByContractor[b.user_id] ?? 0) - (countByContractor[a.user_id] ?? 0) // Then by experience
@@ -193,11 +177,11 @@ export async function POST(request: NextRequest) {
 
         const contractorEmail = contractorAuth.user?.email
         const clientEmail     = clientAuth.user?.email
-        const contractorName  = (winner as Record<string, unknown> & { profiles?: { full_name?: string } }).profiles?.full_name ?? 'Contractor'
-
-        const [{ data: clientProfile }] = await Promise.all([
-          supabase.from('profiles').select('full_name').eq('user_id', job.client_id).maybeSingle(),
+        const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
+          supabase.from('profiles').select('full_name').eq('id', winner.user_id).maybeSingle(),
+          supabase.from('profiles').select('full_name').eq('id', job.client_id).maybeSingle(),
         ])
+        const contractorName = contractorProfile?.full_name ?? 'Contractor'
         const clientName = clientProfile?.full_name ?? 'Client'
 
         await Promise.all([

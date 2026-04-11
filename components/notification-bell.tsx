@@ -30,7 +30,8 @@ export function NotificationBell() {
         const data = await res.json()
         setNotifications(data.notifications ?? [])
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       // Swallow network errors — keep existing state.
     } finally {
       setLoading(false)
@@ -148,9 +149,9 @@ export function NotificationBell() {
                 <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                   <Inbox className="w-5 h-5 text-muted-foreground" />
                 </div>
-                <p className="text-[13px] font-semibold text-foreground mb-1">You're all caught up</p>
+                <p className="text-[13px] font-semibold text-foreground mb-1">You&apos;re all caught up</p>
                 <p className="text-[11.5px] text-muted-foreground max-w-[220px] leading-relaxed">
-                  We'll let you know when there's an update on your requests or account.
+                  We&apos;ll let you know when there&apos;s an update on your requests or account.
                 </p>
               </div>
             ) : (

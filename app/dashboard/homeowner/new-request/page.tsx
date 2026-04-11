@@ -105,7 +105,8 @@ export default function NewProjectRequest() {
         const data = await res.json()
         if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -150,7 +151,8 @@ export default function NewProjectRequest() {
               : 'Automated request analysis is temporarily unavailable. You can still submit your request.'
           )
         }
-      } catch {
+      } catch (err) {
+        console.error(err)
         setAnalysisError('Automated request analysis is temporarily unavailable. You can still submit your request.')
       } finally {
         setAnalyzingText(false)
@@ -576,7 +578,7 @@ export default function NewProjectRequest() {
                   />
                   {fieldErrors.preferredDate && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.preferredDate}</p>}
                   <p className="text-[11px] text-muted-foreground mt-1.5">
-                    Choose when you'd like the first visit, estimate, or service window to start.
+                    Choose when you&apos;d like the first visit, estimate, or service window to start.
                   </p>
                   {!formData.preferredDate && (
                     <p className="text-[11px] text-muted-foreground mt-1">
