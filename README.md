@@ -58,6 +58,12 @@ SUPABASE_PROJECT_REF=... SUPABASE_ACCESS_TOKEN=... node scripts/migrate.mjs
 
 By default the migration runner applies `scripts/setup.sql`.
 
+To apply only the project trigger migration:
+
+```bash
+SUPABASE_PROJECT_REF=... SUPABASE_ACCESS_TOKEN=... SUPABASE_MIGRATION_FILE=013_project_triggers.sql node scripts/migrate.mjs
+```
+
 ## Project Structure
 
 \`\`\`
