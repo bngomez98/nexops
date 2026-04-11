@@ -18,22 +18,6 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
-import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { CONTACT_INFO } from "@/lib/contact-info"
-import Link from "next/link"
-import Image from "next/image"
-import {
-  ArrowRight,
-  MapPin,
-  Phone,
-  Mail,
-  CheckCircle,
-  MonitorSmartphone,
-  Database,
-  Layers3,
-} from "lucide-react"
 
 export const metadata: Metadata = {
   title: 'About — Property Maintenance Coordination Built in Topeka',
@@ -85,25 +69,6 @@ const services = [
   { icon: Users, title: 'Contractor matching', desc: 'We match each job to a trade specialist based on fit, availability, and recent performance.' },
   { icon: Compass, title: 'Active coordination', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
-const engineeringCapabilities = [
-  {
-    title: "Front-end Development",
-    description:
-      "Responsive, production-ready interfaces built for speed, clarity, and real-world user workflows.",
-    icon: MonitorSmartphone,
-  },
-  {
-    title: "Back-end Development",
-    description:
-      "Reliable APIs, business logic, and data integrations that support secure and scalable operations.",
-    icon: Database,
-  },
-  {
-    title: "Complete Builds",
-    description:
-      "End-to-end delivery from planning and architecture to deployment, QA, and ongoing support.",
-    icon: Layers3,
-  },
 ]
 
 export default function AboutPage() {
@@ -127,22 +92,6 @@ export default function AboutPage() {
                 accountable coordinator that handles the work end-to-end — intake, dispatch,
                 documentation, and billing — so owners can focus on running their properties, not
                 chasing tradespeople.
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Maintenance coordination
-                <br className="hidden sm:block" />
-                <span className="font-serif italic font-normal text-primary">
-                  for Topeka property owners.
-                </span>
-              </h1>
-              <p className="text-sm uppercase tracking-[0.14em] font-medium text-muted-foreground mb-6">
-                A coordination company, not a contractor.
-              </p>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Nexus Operations does not perform the work itself. We
-                coordinate the professionals who do. Our role is to ensure that when a
-                property manager submits a maintenance request, a verified
-                contractor is assigned, arrives on time, completes documented
-                work, and gets paid -- all through one reliable point of contact.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -188,7 +137,7 @@ export default function AboutPage() {
               <div className="rounded-3xl border border-border bg-card p-8 sm:p-10">
                 <p className="text-[14.5px] leading-relaxed text-foreground">
                   Property maintenance fails most often in the hand-offs — between the owner and the
-                  contractor, between one trade and another, between the job being "done" and the
+                  contractor, between one trade and another, between the job being &quot;done&quot; and the
                   invoice being paid. Every hand-off is a chance for details to get lost.
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
@@ -198,7 +147,7 @@ export default function AboutPage() {
                   dropped, and nothing happens without a record.
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
-                  Founded in Topeka, Kansas in 2026, we're locally owned and operated. Our
+                  Founded in Topeka, Kansas in 2026, we&apos;re locally owned and operated. Our
                   coordinators live in the community we serve.
                 </p>
               </div>
@@ -221,50 +170,6 @@ export default function AboutPage() {
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
-        {/* Founder */}
-        <section id="process" className="py-16 lg:py-24">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-              Leadership
-            </p>
-            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-10">
-              Founded and operated by Brianna Gomez.
-            </h2>
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div className="relative">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary">
-                  <Image
-                    src="/business-growth-success-strategy.jpg"
-                    alt="Nexus Operations founder"
-                    width={600}
-                    height={450}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-foreground/90 backdrop-blur-sm p-4 text-background">
-                  <p className="font-semibold text-sm">Brianna Gomez</p>
-                  <p className="text-xs opacity-60 mt-0.5">Chief Executive Member · Nexus Operations, LLC</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <p className="text-muted-foreground leading-relaxed text-[15px]">
-                  Brianna founded Nexus Operations in January 2026 to address a specific operational gap she identified in the Topeka property management market: property managers were spending disproportionate time coordinating vendor relationships instead of managing their core responsibilities.
-                </p>
-                <p className="text-muted-foreground leading-relaxed text-[15px]">
-                  Nexus Operations was built to absorb that coordination burden entirely, starting with commercial property maintenance and expanding into broader B2B operational support.
-                </p>
-                <div className="mt-2 grid grid-cols-2 gap-4">
-                  {[
-                    { label: 'Company formed', value: 'January 2026' },
-                    { label: 'Headquarters', value: 'Topeka, KS' },
-                    { label: 'Service area', value: 'Shawnee County' },
-                    { label: 'Business type', value: 'LLC · Kansas' },
-                  ].map(({ label, value }) => (
-                    <div key={label} className="p-4 rounded-xl bg-secondary/60 border border-border">
-                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{label}</p>
-                      <p className="text-sm font-semibold text-foreground">{value}</p>
-                    </div>
-                  ))}
                 </div>
                 <p className="mt-5 text-[15px] font-bold text-foreground">{title}</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
@@ -300,130 +205,7 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <p className="text-[14px] font-semibold text-foreground">{title}</p>
-                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">
-                      {desc}
-                    </p>
-        {/* Capabilities */}
-        <section className="py-16 lg:py-24 border-t border-border">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Delivery capabilities
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                Front-end, back-end, and complete build execution.
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                We support operational teams with product execution across the full stack and
-                deliverables that are ready for real production use.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              {engineeringCapabilities.map(({ title, description, icon: Icon }) => (
-                <div key={title} className="rounded-2xl border border-border bg-card p-6">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Process Walkthrough */}
-        <section className="py-16 lg:py-24">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                How it works
-              </p>
-              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                From request to resolved: a real example.
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                A property manager overseeing 120 units submits an emergency request at 11:14 PM on a Saturday.
-                Here is exactly what happens next.
-              </p>
-            </div>
-
-            <div className="relative">
-              {/* Timeline connector line */}
-              <div className="absolute left-[19px] top-8 bottom-8 w-px bg-border hidden sm:block" aria-hidden="true" />
-
-              <div className="flex flex-col gap-0">
-                {[
-                  {
-                    time: "11:14 PM Saturday",
-                    label: "Request submitted",
-                    color: "bg-foreground",
-                    detail: "Property manager logs into the portal and submits: burst pipe in Unit 14B, water actively running, tenant present. Uploads 4 photos. Selects Emergency tier.",
-                    outcome: null,
-                  },
-                  {
-                    time: "11:14 PM",
-                    label: "Automated triage",
-                    color: "bg-primary",
-                    detail: "System classifies as Emergency — Plumbing. SLA clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
-                    outcome: null,
-                  },
-                  {
-                    time: "11:27 PM",
-                    label: "Contractor assigned",
-                    color: "bg-primary",
-                    detail: "On-call plumber from the verified network accepts the assignment. Property manager receives confirmation with contractor name, license number, and ETA. Tenant is notified.",
-                    outcome: "13 minutes to assignment. SLA: 60 minutes.",
-                  },
-                  {
-                    time: "12:51 AM Sunday",
-                    label: "On-site arrival",
-                    color: "bg-primary",
-                    detail: "Contractor arrives at Unit 14B, locates the failed supply line under the kitchen sink, shuts off water to the unit. Submits arrival photo through the portal.",
-                    outcome: "97 minutes from submission. SLA: 4 hours.",
-                  },
-                  {
-                    time: "2:18 AM",
-                    label: "Work completed",
-                    color: "bg-primary",
-                    detail: "Supply line replaced, water restored to unit. Contractor submits 6 completion photos and a written summary noting secondary water intrusion in the cabinet below.",
-                    outcome: null,
-                  },
-                  {
-                    time: "Monday AM",
-                    label: "Invoice issued",
-                    color: "bg-secondary border-2 border-border",
-                    detail: "Nexus Operations generates a unified invoice: $280 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
-                    outcome: "One invoice. Full documentation. Zero coordination calls.",
-                  },
-                  {
-                    time: "Within 30 days",
-                    label: "Contractor paid",
-                    color: "bg-green-500",
-                    detail: "Once the property manager pays the invoice, Nexus Operations pays the plumber directly at the full quoted rate of $280. No collection lag, no disputed invoices.",
-                    outcome: null,
-                  },
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-5 sm:gap-8 pb-8 last:pb-0">
-                    <div className="relative flex flex-col items-center">
-                      <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center z-10 ${step.color}`} />
-                    </div>
-                    <div className="flex-1 pt-1.5 pb-2">
-                      <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 mb-2">
-                        <span className="text-xs font-mono text-muted-foreground">{step.time}</span>
-                        <h3 className="text-sm font-semibold text-foreground">{step.label}</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed mb-2">
-                        {step.detail}
-                      </p>
-                      {step.outcome && (
-                        <div className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-primary bg-primary/8 rounded-full px-3 py-1">
-                          <CheckCircle className="h-3 w-3" />
-                          {step.outcome}
-                        </div>
-                      )}
-                    </div>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">{desc}</p>
                   </div>
                 </div>
               ))}
@@ -496,8 +278,8 @@ export default function AboutPage() {
               </h3>
               <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
                 Our coordinators and contractor network serve every neighborhood in Topeka and
-                surrounding Shawnee County communities. If you're unsure whether we cover your
-                address, call us directly and we'll confirm on the spot.
+                surrounding Shawnee County communities. If you&apos;re unsure whether we cover your
+                address, call us directly and we&apos;ll confirm on the spot.
               </p>
               <p className="mt-4 flex items-center gap-2 text-[13.5px] font-semibold text-foreground">
                 <MapPin className="h-4 w-4 text-primary" /> {CONTACT_INFO.addressLine1},{' '}

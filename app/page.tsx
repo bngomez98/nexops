@@ -6,8 +6,6 @@ import {
   BadgeCheck,
   CheckCircle2,
   ClipboardList,
-  ChevronRight,
-  Clock,
   Clock3,
   CreditCard,
   FileText,
@@ -74,42 +72,6 @@ const howItWorks = [
     desc: 'Every job finishes with photo documentation, a written summary, and a unified invoice.',
     icon: CreditCard,
   },
-const copy = {
-  homeowner: {
-    badge: 'Homeowners & Property Managers',
-    title: 'Property maintenance, handled end to end.',
-    subtitle:
-      'Submit one request with photos and budget. Nexus assigns qualified contractors, tracks progress, and keeps every update in one timeline.',
-    image: '/business-handshake-professional-meeting.jpg',
-    ctaPrimary: { href: '/auth/sign-up', label: 'Submit request' },
-    ctaSecondary: { href: '/dashboard/homeowner', label: 'Homeowner dashboard' },
-    bullets: [
-      { icon: CalendarCheck2, text: 'Contractors are matched based on availability and trade fit.' },
-      { icon: ShieldCheck, text: 'Every contractor in our network is verified and insured.' },
-      { icon: CreditCard, text: 'Every completed job includes clean invoices and full records.' },
-    ],
-  },
-  contractor: {
-    badge: 'Contractor Network',
-    title: 'Claim better-fit jobs with full context upfront.',
-    subtitle:
-      'See scope, budget, photos, and location before you accept. Use one workspace for dispatch, updates, and payout visibility.',
-    image: '/photo-contractor.jpg',
-    ctaPrimary: { href: '/auth/sign-up?role=contractor', label: 'Join network' },
-    ctaSecondary: { href: '/dashboard/contractor', label: 'Contractor dashboard' },
-    bullets: [
-      { icon: Eye, text: 'Review the scope and photos before accepting any job.' },
-      { icon: Clock3, text: 'Jobs are routed quickly so you spend less time waiting.' },
-      { icon: CreditCard, text: 'Payments are tracked and processed through one workflow.' },
-    ],
-  },
-} as const
-
-const statsData = [
-  { value: '20+', label: 'Verified contractors' },
-  { value: '< 4h', label: 'Urgent assignment' },
-  { value: '100%', label: 'Documented jobs' },
-  { value: '30d', label: 'Payment guarantee' },
 ]
 
 const differentiators = [
@@ -182,15 +144,6 @@ const testimonials = [
 
 export default function HomePage() {
   const homeownerPlans = getPlansByRole('homeowner').slice(0, 3)
-const urgencyTiers = [
-  { name: 'Routine', sla: 'Assigned < 24h · On-site in 3–5 days', desc: 'Nexus handles standard maintenance work with flexible scheduling.', featured: false },
-  { name: 'Urgent', sla: 'Assigned < 4h · Next business day on-site', desc: 'Nexus manages time-sensitive repairs that require rapid contractor response.', featured: true },
-  { name: 'Emergency', sla: 'Assigned < 1h · On-site within 4 hours', desc: 'Nexus provides 24/7 emergency response for critical property issues.', featured: false },
-]
-
-export default function HomePage() {
-  const [audience, setAudience] = useState<Audience>('homeowner')
-  const hero = useMemo(() => copy[audience], [audience])
 
   return (
     <div className="min-h-screen bg-background">
@@ -264,7 +217,7 @@ export default function HomePage() {
                       ))}
                     </div>
                     <p className="mt-2 text-[13px] font-semibold text-foreground">
-                      "We finally have one inbox for every maintenance request."
+                      &quot;We finally have one inbox for every maintenance request.&quot;
                     </p>
                     <p className="mt-1 text-[11.5px] text-muted-foreground">
                       Property manager · 12-unit portfolio
@@ -371,30 +324,6 @@ export default function HomePage() {
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {howItWorks.map(({ step, title, desc, icon: Icon }) => (
-        </div>
-      </section>
-      {/* ── Pricing ── */}
-      <section id="pricing" style={{ padding: '112px 28px', background: '#0d0d0d', color: '#fff' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ maxWidth: 600, marginBottom: 64 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6ee7a0', marginBottom: 16 }}>
-              Pricing
-            </p>
-            <h2 style={{ fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.1, color: '#fff', marginBottom: 16 }}>
-              Simple subscription plans.
-            </h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-              Start free or go Pro for unlimited requests. Annual plans start at{' '}
-              <strong style={{ color: 'rgba(255,255,255,0.8)' }}>$59/mo</strong> — save 25% vs monthly.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 48 }}>
-            {[
-              { label: 'Free', note: 'Up to 3 requests/yr', role: 'Homeowners & Contractors', accent: false },
-              { label: '$59/mo', note: `Billed annually ($${59 * 12}/yr)`, role: 'Pro — best value', accent: true },
-              { label: '$79/mo', note: 'Billed monthly', role: 'Pro — full flexibility', accent: false },
-            ].map(({ label, note, role, accent }) => (
               <div
                 key={step}
                 className="relative rounded-2xl border border-border bg-card p-6"
@@ -407,42 +336,6 @@ export default function HomePage() {
                 </div>
                 <h3 className="mt-4 text-[17px] font-bold text-foreground">{title}</h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
-                <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent ? '#6ee7a0' : 'rgba(255,255,255,0.35)', marginBottom: 8 }}>{role}</p>
-                <p style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.03em', color: accent ? '#6ee7a0' : '#fff', marginBottom: 4 }}>{label}</p>
-                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)' }}>{note}</p>
-              </div>
-            ))}
-          </div>
-
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>
-            Response time guarantees by urgency tier.
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 36 }}>
-            {urgencyTiers.map(({ name, sla, desc, featured }) => (
-              <div
-                key={name}
-                style={{
-                  background: featured ? '#fff' : 'rgba(255,255,255,0.04)',
-                  border: featured ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                  color: featured ? '#111' : '#fff',
-                  borderRadius: 20,
-                  padding: '28px',
-                  position: 'relative',
-                }}
-              >
-                {featured && (
-                  <span style={{
-                    position: 'absolute', top: 18, right: 18,
-                    fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-                    padding: '4px 10px', borderRadius: 9999,
-                    background: '#3d7a4f', color: '#fff',
-                  }}>
-                    Most common
-                  </span>
-                )}
-                <p style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: featured ? '#666' : 'rgba(255,255,255,0.4)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{name}</p>
-                <p style={{ fontSize: 12, marginBottom: 16, color: featured ? '#888' : 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{sla}</p>
-                <p style={{ fontSize: 13, lineHeight: 1.65, color: featured ? '#444' : 'rgba(255,255,255,0.6)' }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -495,30 +388,6 @@ export default function HomePage() {
                 ))}
               </div>
 
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
-            <Link href="/pricing" style={{ color: '#6ee7a0', textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-              View full pricing details <ChevronRight size={14} />
-            </Link>
-          </p>
-        </div>
-      </section>
-      {/* ── Why Nexus ── */}
-      <section style={{ padding: '112px 28px', background: '#f5f3ef' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'center' }}>
-            <div>
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#3d7a4f', marginBottom: 16 }}>
-                Why Nexus
-              </p>
-              <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.12, color: '#111', marginBottom: 20 }}>
-                Nexus Provides Maintenance Coordination, Not a Contractor Marketplace.
-              </h2>
-              <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 28 }}>
-                Nexus Operations stays involved from intake to invoice — reviewing contractor performance, enforcing response-time guarantees, and providing monthly reporting on every request handled.
-              </p>
-              <p style={{ fontSize: 15.5, color: '#555', lineHeight: 1.75, marginBottom: 36 }}>
-                Founded in Topeka, Kansas in 2026, Nexus Operations was built to serve property managers and homeowners who need a coordination partner that manages the full maintenance workflow.
-              </p>
               <Link
                 href="/about"
                 className="mt-8 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-primary hover:gap-2 transition-all"
@@ -619,7 +488,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <blockquote className="mt-4 flex-1 text-[14px] leading-relaxed text-foreground">
-                  “{quote}”
+                  &quot;{quote}&quot;
                 </blockquote>
                 <figcaption className="mt-5 border-t border-border pt-4">
                   <p className="text-[13px] font-semibold text-foreground">{name}</p>

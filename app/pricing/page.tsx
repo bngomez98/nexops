@@ -22,16 +22,6 @@ export const metadata: Metadata = {
   title: 'Pricing — Simple, Transparent Subscription Plans',
   description:
     'Nexus Operations offers transparent subscription plans for homeowners, property managers, and contractors. Start free. Upgrade when you need unlimited requests. No long-term contracts.',
-import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import Link from "next/link"
-import { ArrowRight, Check } from "lucide-react"
-
-export const metadata: Metadata = {
-  title: "Pricing — Subscription Plans",
-  description:
-    "Nexus Operations pricing: Starter plan included, Pro plans from $59/month billed annually. Serving Topeka and Shawnee County, KS.",
 }
 
 const included = [
@@ -101,7 +91,6 @@ function PlanCard({
   plan: Plan
   featured?: boolean
 }) {
-export default function PricingPage() {
   return (
     <div
       className={`relative flex flex-col rounded-2xl border p-7 ${
@@ -246,134 +235,6 @@ export default function PricingPage() {
                 <div>
                   <p className="text-[14.5px] font-semibold text-foreground">{title}</p>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
-        {/* Service Tiers — SLA Reference */}
-        <section className="py-16 lg:py-24 bg-secondary/40">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                Response Times
-              </p>
-              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4">
-                Guaranteed response by urgency.
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Every request is triaged by urgency. SLA response times are contractual — if a contractor declines, backup assignment is automatic.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-5">
-              {[
-                {
-                  name: "Routine",
-                  sla: "Assigned within 24 hrs · On-site within 3–5 days",
-                  description: "Standard maintenance requests. Scheduled repairs, cosmetic fixes, planned replacements.",
-                  features: [
-                    "Contractor assigned within 24 hours",
-                    "On-site within 3–5 business days",
-                    "Photo documentation on every job",
-                    "Monthly unified invoicing",
-                    "Quality assurance review",
-                    "Full request tracking in portal",
-                  ],
-                  highlighted: false,
-                },
-                {
-                  name: "Urgent",
-                  sla: "Assigned within 4 hrs · On-site next business day",
-                  description: "Issues requiring prompt attention. Non-emergency plumbing, electrical, HVAC in moderate weather.",
-                  features: [
-                    "Everything in Routine",
-                    "Contractor assigned within 4 hours",
-                    "On-site next business day",
-                    "Escalation if primary contractor declines",
-                    "Priority assignment from network",
-                    "Direct status updates",
-                  ],
-                  highlighted: true,
-                },
-                {
-                  name: "Emergency",
-                  sla: "Assigned within 1 hr · On-site within 4 hrs",
-                  description: "Critical failures requiring immediate response. Burst pipes, gas leaks, HVAC failure in extreme weather.",
-                  features: [
-                    "Everything in Urgent",
-                    "Contractor assigned within 1 hour",
-                    "On-site within 4 hours",
-                    "Automatic backup contractor",
-                    "24/7 coordination availability",
-                    "Real-time updates until resolution",
-                  ],
-                  highlighted: false,
-                },
-              ].map((tier) => (
-                <div
-                  key={tier.name}
-                  className={`p-7 rounded-2xl border flex flex-col ${
-                    tier.highlighted
-                      ? "bg-primary/5 border-primary/20 shadow-lg shadow-primary/10"
-                      : "bg-card border-border"
-                  }`}
-                >
-                  {tier.highlighted && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full self-start mb-4">
-                      Most Common
-                    </span>
-                  )}
-                  <h3 className="text-base font-bold text-foreground mb-2">{tier.name}</h3>
-                  <p className="text-[11.5px] text-muted-foreground mb-2 font-medium">{tier.sla}</p>
-                  <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-6 mt-2">
-                    {tier.description}
-                  </p>
-                  <ul className="flex flex-col gap-3 flex-grow">
-                    {tier.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-[12.5px]">
-                        <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                        <span className="text-foreground/70">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            {/* Invoice example */}
-            <div className="mt-12 grid lg:grid-cols-2 gap-10">
-              <div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">How your invoice works.</h3>
-                <p className="text-[13.5px] text-muted-foreground leading-relaxed mb-6">
-                  Every invoice shows a full line-item breakdown of work performed. You always see exactly what you&apos;re paying for.
-                </p>
-                <div className="rounded-2xl bg-card border border-border p-6">
-                  <p className="text-[12px] font-semibold text-muted-foreground mb-4 uppercase tracking-wider">Example: Routine plumbing repair</p>
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between py-2 border-b border-border">
-                      <span className="text-[13px] text-muted-foreground">Service: Plumbing repair</span>
-                      <span className="text-[13px] font-semibold text-foreground">$400.00</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2">
-                      <span className="text-[13px] font-bold text-foreground">Total invoiced</span>
-                      <span className="text-[13px] font-bold text-primary">$400.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">What your subscription covers.</h3>
-                <div className="flex flex-col gap-4">
-                  {[
-                    { title: "Request intake & classification", desc: "We triage every request, assign the right trade, and match to the best-available contractor." },
-                    { title: "SLA enforcement & escalation", desc: "Automated monitoring ensures contractors respond and arrive within committed windows." },
-                    { title: "Quality assurance & documentation", desc: "Every job includes photo documentation and completion verification before invoicing." },
-                    { title: "Unified invoicing & reporting", desc: "Monthly consolidated invoices replace dozens of separate contractor bills." },
-                  ].map((item) => (
-                    <div key={item.title} className="flex gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mt-2" />
-                      <div>
-                        <p className="text-[13px] font-semibold text-foreground mb-0.5">{item.title}</p>
-                        <p className="text-[12.5px] text-muted-foreground leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             ))}
@@ -393,7 +254,7 @@ export default function PricingPage() {
               <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
                 Multi-property portfolios, multi-family buildings, and commercial real estate get
                 custom pricing, dedicated coordinators, and portfolio-level reporting. Tell us about
-                your operation and we'll put a quote together.
+                your operation and we&apos;ll put a quote together.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
@@ -420,84 +281,6 @@ export default function PricingPage() {
             title="Answers before you sign up."
             align="center"
           />
-            <div className="grid lg:grid-cols-2 gap-10 mb-12">
-              {/* What's included */}
-              <div className="rounded-2xl border border-border bg-card p-7">
-                <h3 className="text-lg font-semibold text-foreground mb-6">What commercial clients receive</h3>
-                <div className="flex flex-col gap-5">
-                  {[
-                    {
-                      title: "Monthly unified invoicing",
-                      desc: "Every job across all properties consolidated into a single monthly invoice. Line-item detail for each request: property address, trade, and total. No individual contractor bills to reconcile.",
-                    },
-                    {
-                      title: "SLA enforcement across all tiers",
-                      desc: "Routine (24-hr assignment, 3–5 day on-site), Urgent (4-hr assignment, next business day), Emergency (1-hr assignment, 4-hr on-site). SLA performance is tracked per property and reported monthly.",
-                    },
-                    {
-                      title: "Monthly performance reporting",
-                      desc: "A standard monthly report covering: total requests by property, resolution times vs. SLA, contractor performance ratings, spend by trade category, and any open items.",
-                    },
-                    {
-                      title: "Dedicated coordination contact",
-                      desc: "Commercial accounts get a named point of contact at Nexus Operations for escalations, reporting questions, and new property onboarding.",
-                    },
-                    {
-                      title: "Multi-property portal access",
-                      desc: "Submit and track requests across all properties in a single dashboard. Per-property request history, invoice records, and document storage.",
-                    },
-                  ].map((item) => (
-                    <div key={item.title} className="flex gap-3">
-                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-[13.5px] font-semibold text-foreground mb-0.5">{item.title}</p>
-                        <p className="text-[12.5px] text-muted-foreground leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Pricing structure */}
-              <div className="flex flex-col gap-5">
-                <div className="rounded-2xl border border-border bg-card p-7">
-                  <h3 className="text-base font-semibold text-foreground mb-4">Commercial pricing structure</h3>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
-                      <div>
-                        <p className="text-[13px] font-semibold text-foreground">Platform access</p>
-                        <p className="text-[12px] text-muted-foreground">Multi-property portal, reporting, document storage</p>
-                      </div>
-                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">Contact for quote</span>
-                    </div>
-                    <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
-                      <div>
-                        <p className="text-[13px] font-semibold text-foreground">Routine jobs</p>
-                        <p className="text-[12px] text-muted-foreground">Assigned within 24 hrs · On-site within 3–5 days</p>
-                      </div>
-                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
-                    </div>
-                    <div className="flex items-start justify-between gap-4 py-3 border-b border-border">
-                      <div>
-                        <p className="text-[13px] font-semibold text-foreground">Urgent jobs</p>
-                        <p className="text-[12px] text-muted-foreground">4-hr assignment, next business day on-site</p>
-                      </div>
-                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
-                    </div>
-                    <div className="flex items-start justify-between gap-4 py-3">
-                      <div>
-                        <p className="text-[13px] font-semibold text-foreground">Emergency jobs</p>
-                        <p className="text-[12px] text-muted-foreground">1-hr assignment, 4-hr on-site, 24/7</p>
-                      </div>
-                      <span className="text-[13px] font-bold text-foreground whitespace-nowrap">By arrangement</span>
-                    </div>
-                  </div>
-                  <div className="mt-5 pt-5 border-t border-border">
-                    <p className="text-[12px] text-muted-foreground leading-relaxed">
-                      Volume pricing available for large portfolios. Discuss your portfolio with our team.
-                    </p>
-                  </div>
-                </div>
 
           <div className="mx-auto mt-12 grid max-w-4xl gap-3">
             {faqs.map(({ q, a }) => (

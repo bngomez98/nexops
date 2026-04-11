@@ -93,18 +93,6 @@ export default function ContactPage() {
             </p>
           </div>
         </section>
-        <section className="pt-32 pb-24 lg:pt-40 lg:pb-32">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mb-16">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">Contact</p>
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Get in touch
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Whether you are a homeowner looking to submit a project request or a contractor
-                interested in joining our network, we&apos;d love to hear from you.
-              </p>
-            </div>
 
         {/* ── Contact grid ───────────────────────────────── */}
         <Section>
