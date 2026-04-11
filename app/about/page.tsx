@@ -4,12 +4,16 @@ import Image from 'next/image'
 import {
   ArrowRight,
   BadgeCheck,
+  CheckCircle,
   ClipboardList,
   Compass,
+  Database,
   FileText,
   HeartHandshake,
   Landmark,
+  Layers3,
   MapPin,
+  MonitorSmartphone,
   ShieldCheck,
   Target,
   Users,
@@ -18,22 +22,6 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
-import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { CONTACT_INFO } from "@/lib/contact-info"
-import Link from "next/link"
-import Image from "next/image"
-import {
-  ArrowRight,
-  MapPin,
-  Phone,
-  Mail,
-  CheckCircle,
-  MonitorSmartphone,
-  Database,
-  Layers3,
-} from "lucide-react"
 
 export const metadata: Metadata = {
   title: 'About — Property Maintenance Coordination Built in Topeka',
@@ -85,6 +73,8 @@ const services = [
   { icon: Users, title: 'Contractor matching', desc: 'We match each job to a trade specialist based on fit, availability, and recent performance.' },
   { icon: Compass, title: 'Active coordination', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
+]
+
 const engineeringCapabilities = [
   {
     title: "Front-end Development",
@@ -127,22 +117,6 @@ export default function AboutPage() {
                 accountable coordinator that handles the work end-to-end — intake, dispatch,
                 documentation, and billing — so owners can focus on running their properties, not
                 chasing tradespeople.
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Maintenance coordination
-                <br className="hidden sm:block" />
-                <span className="font-serif italic font-normal text-primary">
-                  for Topeka property owners.
-                </span>
-              </h1>
-              <p className="text-sm uppercase tracking-[0.14em] font-medium text-muted-foreground mb-6">
-                A coordination company, not a contractor.
-              </p>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Nexus Operations does not perform the work itself. We
-                coordinate the professionals who do. Our role is to ensure that when a
-                property manager submits a maintenance request, a verified
-                contractor is assigned, arrives on time, completes documented
-                work, and gets paid -- all through one reliable point of contact.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -221,52 +195,8 @@ export default function AboutPage() {
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
-        {/* Founder */}
-        <section id="process" className="py-16 lg:py-24">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-              Leadership
-            </p>
-            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-10">
-              Founded and operated by Brianna Gomez.
-            </h2>
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div className="relative">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary">
-                  <Image
-                    src="/business-growth-success-strategy.jpg"
-                    alt="Nexus Operations founder"
-                    width={600}
-                    height={450}
-                    className="w-full h-full object-cover"
-                  />
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-foreground/90 backdrop-blur-sm p-4 text-background">
-                  <p className="font-semibold text-sm">Brianna Gomez</p>
-                  <p className="text-xs opacity-60 mt-0.5">Chief Executive Member · Nexus Operations, LLC</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <p className="text-muted-foreground leading-relaxed text-[15px]">
-                  Brianna founded Nexus Operations in January 2026 to address a specific operational gap she identified in the Topeka property management market: property managers were spending disproportionate time coordinating vendor relationships instead of managing their core responsibilities.
-                </p>
-                <p className="text-muted-foreground leading-relaxed text-[15px]">
-                  Nexus Operations was built to absorb that coordination burden entirely, starting with commercial property maintenance and expanding into broader B2B operational support.
-                </p>
-                <div className="mt-2 grid grid-cols-2 gap-4">
-                  {[
-                    { label: 'Company formed', value: 'January 2026' },
-                    { label: 'Headquarters', value: 'Topeka, KS' },
-                    { label: 'Service area', value: 'Shawnee County' },
-                    { label: 'Business type', value: 'LLC · Kansas' },
-                  ].map(({ label, value }) => (
-                    <div key={label} className="p-4 rounded-xl bg-secondary/60 border border-border">
-                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{label}</p>
-                      <p className="text-sm font-semibold text-foreground">{value}</p>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-5 text-[15px] font-bold text-foreground">{title}</p>
+                <p className="mt-4 text-[15px] font-bold text-foreground">{title}</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
               </div>
             ))}
@@ -303,6 +233,13 @@ export default function AboutPage() {
                     <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">
                       {desc}
                     </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
+
         {/* Capabilities */}
         <section className="py-16 lg:py-24 border-t border-border">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -425,11 +362,11 @@ export default function AboutPage() {
                       )}
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </Section>
+        </section>
 
         {/* ── Commitments ───────────────────────────────────── */}
         <Section tone="dark">

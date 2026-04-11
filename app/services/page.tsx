@@ -181,54 +181,6 @@ export default function ServicesPage() {
                     </li>
                   ))}
                 </ul>
-              <div>
-                <Image
-                  src="/business-growth-success-strategy.jpg"
-                  alt="Business growth and success strategy"
-                  width={560}
-                  height={280}
-                  className="w-full object-cover rounded-xl mb-6"
-                  style={{ maxHeight: '220px' }}
-                />
-                <h3 className="text-sm font-semibold text-foreground mb-4">
-                  Pricing model
-                </h3>
-                <div className="rounded-xl bg-card border border-border p-6 lg:p-8 mb-6">
-                  <p className="text-muted-foreground leading-relaxed mb-6">
-                    Simple subscription plans for homeowners and contractors. No
-                    retainers or hidden fees — one invoice per billing cycle.
-                  </p>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between py-3 border-b border-border">
-                      <span className="text-sm text-foreground">
-                        Routine Maintenance
-                      </span>
-                      <span className="text-sm font-medium text-foreground">
-                        Assigned &lt; 24h
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between py-3 border-b border-border">
-                      <span className="text-sm text-foreground">
-                        Urgent Repairs
-                      </span>
-                      <span className="text-sm font-medium text-foreground">
-                        Assigned &lt; 4h
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between py-3">
-                      <span className="text-sm text-foreground">
-                        Emergency Response
-                      </span>
-                      <span className="text-sm font-medium text-foreground">
-                        Assigned &lt; 1h
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  All urgency tiers include guaranteed response times, photo
-                  documentation, and unified monthly invoicing.
-                </p>
               </div>
             ))}
           </div>
@@ -241,55 +193,6 @@ export default function ServicesPage() {
             title="Response commitments by urgency."
             description="Every request is tagged at submission. We commit to assignment and on-site timelines based on the tier."
           />
-        {/* Residential */}
-        <section id="residential" className="py-16 lg:py-24">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-secondary">
-                    <Home className="h-5 w-5 text-foreground/70" />
-                  </div>
-                  <span className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-                    Residential
-                  </span>
-                </div>
-                <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                  Individual property owners and small portfolios.
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-6">
-                  Managing 50-200 units without a dedicated property
-                  management firm? You face many of the same coordination challenges as
-                  larger operations, often with fewer resources. We provide the coordination infrastructure without the
-                  overhead.
-                </p>
-
-                <div className="flex flex-col gap-3 mb-8">
-                  {[
-                    "Same verified contractor network as commercial clients",
-                    "Same response time guarantees by urgency category",
-                    "No minimum commitment or long-term contracts",
-                    "Direct communication on every maintenance request",
-                    "Transparent pricing -- one invoice per billing cycle",
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-start gap-3 text-sm text-foreground/70"
-                    >
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
-                >
-                  Get started as a property owner
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {urgencyTiers.map(({ label, time, onSite, detail }) => (
