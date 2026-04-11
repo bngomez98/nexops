@@ -325,6 +325,10 @@ export default function HomePage() {
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {howItWorks.map(({ step, title, desc, icon: Icon }) => (
               <div key={step} className="relative rounded-2xl border border-border bg-card p-6">
+              <div
+                key={step}
+                className="relative rounded-2xl border border-border bg-card p-6"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
                     Step {step}

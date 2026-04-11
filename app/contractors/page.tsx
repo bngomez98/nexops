@@ -270,6 +270,12 @@ export default function ContractorsPage() {
                   </div>
                 </div>
               </div>
+              <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <p className="text-[11.5px] text-muted-foreground">
+                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
+                </p>
+              </div>
+            </div>
 
               <div className="lg:col-span-5">
                 <div className="rounded-3xl border border-border bg-card p-8">

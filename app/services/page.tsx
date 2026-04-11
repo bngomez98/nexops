@@ -244,6 +244,7 @@ export default function ServicesPage() {
               <SectionHeading
                 eyebrow="What every job includes"
                 title="Coordination is not a separate product — it&apos;s the whole point."
+                title="Coordination is not a separate product — it's the whole point."
                 description="You don&apos;t pay per task or per photo or per note. Every Nexus request gets the full treatment."
               />
             </div>

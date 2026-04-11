@@ -35,6 +35,7 @@ function getSubscriptionPeriod(sub: Stripe.Subscription): {
     end: endUnix ? new Date(endUnix * 1000).toISOString() : null,
   }
 }
+
 export async function POST(req: NextRequest) {
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')
