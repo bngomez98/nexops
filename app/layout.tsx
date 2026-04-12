@@ -9,10 +9,17 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { CookieConsentBanner } from '@/components/cookie-consent'
 import { ZendeskWidget } from '@/components/zendesk-widget'
 import { CONTACT_INFO } from '@/lib/contact-info'
+import { getSiteUrl } from '@/lib/env'
 import './globals.css'
 
 const GTM_ID = 'GTM-PL3NBCWD'
 const GA_ID = 'G-LDGVHFCMKT'
+
+// Cloudflare Google Tag Gateway proxy path.
+// Override with NEXT_PUBLIC_GTM_PROXY_HOST if the proxy runs on a different origin.
+const GTM_PROXY_HOST =
+  process.env.NEXT_PUBLIC_GTM_PROXY_HOST?.replace(/\/$/, '') || getSiteUrl()
+const GTM_PROXY_PATH = `${GTM_PROXY_HOST}/cdn-cgi/gtm`
 
 const CONSENT_DEFAULT_SCRIPT = [
   `window.dataLayer=window.dataLayer||[];`,
@@ -27,7 +34,7 @@ const CONSENT_DEFAULT_SCRIPT = [
   `gtag('set','ads_data_redaction',true);`,
 ].join('\n')
 
-const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
+const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='${GTM_PROXY_PATH}/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
 
 const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
 
@@ -166,7 +173,7 @@ export default function RootLayout({
         <Script id="gtm-init" strategy="afterInteractive">
           {GTM_INIT_SCRIPT}
         </Script>
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script src={`${GTM_PROXY_PATH}/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
@@ -191,7 +198,7 @@ export default function RootLayout({
       <body>
         <noscript>
           <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            src={`${GTM_PROXY_PATH}/ns.html?id=${GTM_ID}`}
             height="0"
             width="0"
             style={{ display: 'none', visibility: 'hidden' }}
