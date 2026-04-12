@@ -85,13 +85,13 @@ const engineeringCapabilities = [
   {
     title: "Back-end Development",
     description:
-      "Reliable APIs, business logic, and data integrations that support secure and scalable operations.",
+      "Reliable APIs, business logic, and data integrations that support secure operations.",
     icon: Database,
   },
   {
     title: "Complete Builds",
     description:
-      "End-to-end delivery from planning and architecture to deployment, QA, and ongoing support.",
+      "Full delivery from planning and architecture through deployment, QA, and ongoing support.",
     icon: Layers3,
   },
 ]
@@ -173,7 +173,7 @@ export default function AboutPage() {
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
                   Founded in Topeka, Kansas in 2026, we&apos;re locally owned and operated. Our
-                  our team lives in the community we serve.
+                  team lives in the community we serve.
                 </p>
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We coordinate property maintenance end to end."
+                description="We do not sell software. We do not run a contractor marketplace. We coordinate property maintenance — intake, dispatch, documentation, and billing."
               />
               <Link
                 href="/services"
@@ -251,8 +251,8 @@ export default function AboutPage() {
                 Front-end, back-end, and complete build execution.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                We support operational teams with product execution across the full stack and
-                deliverables that are ready for real production use.
+                We work alongside operational teams to deliver production-ready product across
+                front-end, back-end, and infrastructure layers.
               </p>
             </div>
 

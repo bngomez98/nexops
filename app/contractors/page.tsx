@@ -53,8 +53,6 @@ const benefits = [
   },
   {
     icon: Users,
-    title: 'A coordinator on your side',
-    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus coordinators intervene so you can keep moving.',
     title: 'Direct support from Nexus Operations',
     desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus Operations will resolve the issue so the job can proceed.',
   },
