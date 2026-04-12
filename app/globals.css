@@ -40,6 +40,43 @@
   --sidebar-ring: #3d7a4f;
 }
 
+.dark {
+  color-scheme: dark;
+  --background: #0c1411;
+  --foreground: #e6eee8;
+  --card: #0f1916;
+  --card-foreground: #e6eee8;
+  --popover: #0f1916;
+  --popover-foreground: #e6eee8;
+  --primary: #4ade80;
+  --primary-foreground: #04150b;
+  --secondary: #111b17;
+  --secondary-foreground: #d5e1d9;
+  --muted: #101814;
+  --muted-foreground: #9bb0a3;
+  --accent: #1b2b23;
+  --accent-foreground: #e3f3e8;
+  --destructive: #ef4444;
+  --destructive-foreground: #0f0a0a;
+  --border: #1c2a23;
+  --input: #1c2a23;
+  --ring: #65c791;
+  --chart-1: #65c791;
+  --chart-2: #3b82f6;
+  --chart-3: #c084fc;
+  --chart-4: #f97316;
+  --chart-5: #fca5a5;
+  --sidebar: #0b1210;
+  --sidebar-foreground: #e6eee8;
+  --sidebar-primary: #4ade80;
+  --sidebar-primary-foreground: #04150b;
+  --sidebar-accent: #0f1916;
+  --sidebar-accent-foreground: #d5e1d9;
+  --sidebar-border: #1c2a23;
+  --sidebar-muted: #7a8f83;
+  --sidebar-ring: #65c791;
+}
+
 @theme inline {
   --font-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
   --font-serif: "Instrument Serif", "Georgia", serif;

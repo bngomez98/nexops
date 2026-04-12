@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/app/lib/auth-context'
+import { ThemeProvider } from '@/components/theme-provider'
 import { CookieConsentBanner } from '@/components/cookie-consent'
 import { ZendeskWidget } from '@/components/zendesk-widget'
 import { CONTACT_INFO } from '@/lib/contact-info'
@@ -12,8 +13,6 @@ import './globals.css'
 
 const GTM_ID = 'GTM-PL3NBCWD'
 const GA_ID = 'G-LDGVHFCMKT'
-
-const THEME_INIT_SCRIPT = `(function(){var t=localStorage.getItem('nexus-theme');document.documentElement.classList.add(t==='dark'?'dark':'light');})()`
 
 const CONSENT_DEFAULT_SCRIPT = [
   `window.dataLayer=window.dataLayer||[];`,
@@ -139,7 +138,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#3d7a4f',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#3d7a4f' },
+    { media: '(prefers-color-scheme: dark)', color: '#0b1712' },
+  ],
   width: 'device-width',
   initialScale: 1,
 }
@@ -152,7 +154,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -196,12 +197,14 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <AuthProvider>{children}</AuthProvider>
-        <CookieConsentBanner />
-        <Toaster position="bottom-right" richColors closeButton />
-        <Analytics />
-        <SpeedInsights />
-        <ZendeskWidget />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="nexus-theme" disableTransitionOnChange>
+          <AuthProvider>{children}</AuthProvider>
+          <CookieConsentBanner />
+          <Toaster position="bottom-right" richColors closeButton />
+          <Analytics />
+          <SpeedInsights />
+          <ZendeskWidget />
+        </ThemeProvider>
       </body>
     </html>
   )
