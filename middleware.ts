@@ -26,9 +26,24 @@ export async function middleware(request: NextRequest) {
     'Permissions-Policy',
     'geolocation=(), microphone=(), camera=(), payment=()'
   )
+  // 'unsafe-eval' is retained because bundled Supabase and some Radix
+  // primitives rely on Function constructors at runtime. Remove once
+  // those upstream dependencies drop that requirement.
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.com cdn.jsdelivr.net unpkg.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' fonts.gstatic.com; connect-src 'self' *.supabase.co *.vercel.com; frame-ancestors 'none';"
+    [
+      "default-src 'self'",
+      // same-origin assets + Vercel CDN + Zendesk widget + Google badge
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.com cdn.jsdelivr.net unpkg.com static.zdassets.com ekr.zdassets.com apis.google.com",
+      "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com fonts.googleapis.com",
+      "img-src 'self' data: https:",
+      "font-src 'self' fonts.gstatic.com",
+      // same-origin + Supabase (auth + real-time) + Vercel + Zendesk API
+      "connect-src 'self' *.supabase.co *.vercel.com *.zendesk.com *.zopim.com wss://*.zendesk.com",
+      // Zendesk widget iframe
+      "frame-src *.zendesk.com",
+      "frame-ancestors 'none'",
+    ].join('; ')
   )
 
   return response
