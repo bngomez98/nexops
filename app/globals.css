@@ -144,49 +144,6 @@
   }
 }
 
-@layer utilities {
-  .font-heading {
-    font-family: var(--font-sans);
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
-  .font-mono-label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .text-gradient {
-    background: linear-gradient(135deg, #3d7a4f, #4ade80);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .animate-fade-up {
-    animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  .animate-fade-in {
-    animation: fade-in 0.4s ease both;
-  }
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: #e2e8f0 transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
-  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
-    border-radius: 9999px;
-  }
-}
 
 :focus-visible {
   outline: 2px solid var(--ring);
@@ -551,17 +508,6 @@
 /* ── Smooth scroll ── */
 html {
   scroll-behavior: smooth;
-}
-
-/* ── Improved focus ring ── */
-:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-}
-
-/* ── text-balance utility ── */
-.text-balance {
-  text-wrap: balance;
 }
 
 .skip-link {
