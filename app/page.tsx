@@ -340,7 +340,7 @@ export default function HomePage() {
             ))}
           </div>
         </Section>
-        {/* ── Why Nexus ──────────────────────────────────────── */}
+        {/* ── Why Nexus ──────────────────────────────────���───── */}
         <Section tone="muted" id="why-nexus">
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6">
