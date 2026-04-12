@@ -324,7 +324,6 @@ export default function HomePage() {
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {howItWorks.map(({ step, title, desc, icon: Icon }) => (
-              <div key={step} className="relative rounded-2xl border border-border bg-card p-6">
               <div
                 key={step}
                 className="relative rounded-2xl border border-border bg-card p-6"
@@ -341,7 +340,7 @@ export default function HomePage() {
             ))}
           </div>
         </Section>
-        {/* ── Why Nexus ──────────────────────────────────────── */}
+        {/* ── Why Nexus ──────────────────────────────────���───── */}
         <Section tone="muted" id="why-nexus">
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6">
