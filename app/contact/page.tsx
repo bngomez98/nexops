@@ -52,21 +52,21 @@ const quickPaths = [
   {
     icon: Sparkles,
     title: 'Submit a maintenance request',
-    desc: 'Already know what you need done? Skip the form and submit a documented request through your dashboard.',
+    desc: 'If you know what needs to be done, submit a documented request directly through your dashboard instead of using this form.',
     cta: 'Submit a request',
     href: '/auth/sign-up',
   },
   {
     icon: Building2,
     title: 'Commercial & portfolio proposals',
-    desc: 'Managing 10+ doors? Our commercial team will put together a custom proposal within two business days.',
+    desc: 'If you manage ten or more units, our commercial team will prepare a custom proposal for you within two business days.',
     cta: 'Request a proposal',
     href: '/commercial',
   },
   {
     icon: Hammer,
     title: 'Contractors joining the network',
-    desc: 'Licensed and insured in Shawnee County? Apply directly — no cold outreach, no lead fees.',
+    desc: 'If you are licensed and insured in Shawnee County, you can apply directly — no cold outreach and no lead fees.',
     cta: 'Apply to join',
     href: '/auth/sign-up?role=contractor',
   },
@@ -104,7 +104,7 @@ export default function ContactPage() {
                   Reach us directly
                 </p>
                 <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
-                  We offer four direct ways to reach our team.
+                  Contact us by email, phone, or in person.
                 </h2>
 
                 <ul className="mt-6 flex flex-col gap-4">
@@ -145,11 +145,12 @@ export default function ContactPage() {
                   <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
                   <div>
                     <h3 className="text-[14px] font-bold text-foreground">
-                      If this is an emergency, use our emergency line.
+                      For urgent situations, contact our 24/7 emergency line.
                     </h3>
                     <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
-                      Burst pipe, gas leak, or HVAC failure in extreme weather? Emergency requests
-                      are handled 24/7 — contractor assignment within 1 hour, on-site within 4 hours.
+                      Burst pipes, gas leaks, and HVAC failures in extreme weather are handled
+                      around the clock — we assign a contractor within one hour and have someone
+                      on-site within four hours.
                     </p>
                     <a
                       href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}`}
@@ -171,7 +172,7 @@ export default function ContactPage() {
                   {CONTACT_INFO.serviceArea}.
                 </p>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                  Not sure if we cover your address? Call us and we&apos;ll confirm on the spot.
+                  If you are unsure whether we cover your address, give us a call and we will confirm right away.
                 </p>
               </div>
             </aside>
@@ -186,9 +187,9 @@ export default function ContactPage() {
         {/* ── Quick paths ────────────────────────────────── */}
         <Section tone="muted">
           <SectionHeading
-            eyebrow="Skip the form"
-            title="There are other ways to get started."
-            description="If you already know what you are looking for, take the direct path."
+            eyebrow="Direct paths"
+            title="You can also get started without this form."
+            description="Use one of the options below to reach us or begin your request right away."
             align="center"
           />
 
