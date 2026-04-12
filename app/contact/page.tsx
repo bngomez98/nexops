@@ -84,7 +84,7 @@ export default function ContactPage() {
               <MessageSquare className="h-3 w-3" /> Contact
             </p>
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Talk to a real person in Topeka.
+              Reach our team in Topeka, Kansas.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Whether you&apos;re a homeowner with a project, a property manager evaluating a commercial
@@ -104,7 +104,7 @@ export default function ContactPage() {
                   Reach us directly
                 </p>
                 <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
-                  Four ways to get a human on the other end.
+                  We offer four direct ways to reach our team.
                 </h2>
 
                 <ul className="mt-6 flex flex-col gap-4">
@@ -145,7 +145,7 @@ export default function ContactPage() {
                   <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
                   <div>
                     <h3 className="text-[14px] font-bold text-foreground">
-                      Emergency? Use the emergency line.
+                      If this is an emergency, use our emergency line.
                     </h3>
                     <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
                       Burst pipe, gas leak, or HVAC failure in extreme weather? Emergency requests
@@ -187,8 +187,8 @@ export default function ContactPage() {
         <Section tone="muted">
           <SectionHeading
             eyebrow="Skip the form"
-            title="Other ways to get started."
-            description="If you already know what you&apos;re looking for, take the shortcut."
+            title="There are other ways to get started."
+            description="If you already know what you are looking for, take the direct path."
             align="center"
           />
 
