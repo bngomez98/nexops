@@ -565,7 +565,7 @@ export default function HomePage() {
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
               Create an account in under two minutes and submit your first request today. A Nexus
-              Nexus Operations reviews every submission before dispatching a contractor.
+              Operations coordinator reviews every submission before dispatching a contractor.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link

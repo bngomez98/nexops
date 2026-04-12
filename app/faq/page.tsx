@@ -72,8 +72,6 @@ const sections = [
       {
         q: 'How fast do I get paid?',
         a: 'Nexus pays contractors directly after each completed job on the schedule configured in your payout settings. We never hold funds or take a percentage of your quoted rate — you get exactly what you quoted.',
-        q: "Is there a cost to join the Nexus contractor network?",
-        a: "Joining the contractor network is free. Nexus Operations does not charge contractors subscription fees or lead fees. Contractors receive their full quoted rate on every job. Nexus Operations collects payment from the client and pays contractors directly within 30 days of job completion.",
       },
       {
         q: 'Do I have to accept every job that routes to me?',
@@ -193,7 +191,7 @@ export default function FAQPage() {
               Still have questions?
             </p>
             <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Still have questions?
+              Reach out directly.
             </h3>
             <p className="mx-auto mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
               Reach out directly and a member of the Nexus team will get back to you within one
