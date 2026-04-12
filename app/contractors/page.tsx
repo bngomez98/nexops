@@ -268,6 +268,7 @@ export default function ContractorsPage() {
                   </div>
                 </div>
               </div>
+
               <div className="lg:col-span-5">
                 <div className="rounded-3xl border border-border bg-card p-8">
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
