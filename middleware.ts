@@ -41,7 +41,7 @@ export async function middleware(request: NextRequest) {
       // same-origin + Supabase (auth + real-time) + Vercel + Zendesk API
       "connect-src 'self' *.supabase.co *.vercel.com *.zendesk.com *.zopim.com wss://*.zendesk.com",
       // Zendesk widget iframe
-      "frame-src *.zendesk.com",
+      "frame-src *.zendesk.com https://www.google.com",
       "frame-ancestors 'none'",
     ].join('; ')
   )
