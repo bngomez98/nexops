@@ -81,7 +81,7 @@ export async function GET() {
     if (ids.length > 0) {
       const byId = await supabase
         .from('profiles')
-        .select('id, user_id, full_name, email, phone, role, avatar_url, average_rating, reviews_count')
+        .select('id, user_id, full_name, email, phone, bio, role, avatar_url, average_rating, reviews_count, service_categories')
         .in('id', ids)
 
       profiles = (byId.data as Array<Record<string, unknown>> | null) ?? []
@@ -90,7 +90,7 @@ export async function GET() {
       if (unresolved.length > 0) {
         const byUserId = await supabase
           .from('profiles')
-          .select('id, user_id, full_name, email, phone, role, avatar_url, average_rating, reviews_count')
+          .select('id, user_id, full_name, email, phone, bio, role, avatar_url, average_rating, reviews_count, service_categories')
           .in('user_id', unresolved)
 
         profiles = [...profiles, ...((byUserId.data as Array<Record<string, unknown>> | null) ?? [])]
@@ -134,6 +134,7 @@ export async function GET() {
           .join('') || 'U',
         rating: typeof profile?.average_rating === 'number' ? profile.average_rating : undefined,
         jobsCompleted: typeof profile?.reviews_count === 'number' ? profile.reviews_count : undefined,
+        serviceCategories: Array.isArray(profile?.service_categories) ? profile.service_categories : [],
       }
     })
 
