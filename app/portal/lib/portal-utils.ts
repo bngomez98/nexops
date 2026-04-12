@@ -9,10 +9,14 @@ export interface PortalUser {
   name: string
   email: string
   phone?: string | null
+  bio?: string | null
   role: PortalRole
   avatarUrl?: string | null
   initials: string
   avatarColor: string
+  rating?: number | null
+  jobsCompleted?: number | null
+  serviceCategories?: string[]
 }
 
 export interface PortalJob {

@@ -28,7 +28,7 @@ import { getPlansByRole, formatPrice } from '@/lib/plans'
 export const metadata: Metadata = {
   title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
   description:
-    'Nexus Operations coordinates verified, insured contractors for homeowners, landlords, and property managers in Topeka and Shawnee County. One request, full documentation, unified billing.',
+    'Nexus Operations is a managed maintenance coordination service for homeowners, landlords, and property managers in Topeka and Shawnee County. Submit one request; Nexus triages scope, dispatches verified contractors, and delivers unified billing with photo documentation.',
 }
 
 const stats = [
@@ -121,6 +121,29 @@ const audienceCards = [
   },
 ]
 
+const businessExplainers = [
+  {
+    icon: ClipboardList,
+    title: 'We own intake and scope',
+    desc: 'Requests include photos, budget, and access notes. A Nexus coordinator confirms details before dispatch so the job starts with a clear scope.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'We dispatch verified contractors',
+    desc: 'Licensed, insured contractors are matched by trade and availability. No open job board to manage and no unvetted names to chase.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'We manage updates and schedules',
+    desc: 'Nexus coordinates arrival windows, change orders, and status updates, keeping the property owner and occupant in the loop.',
+  },
+  {
+    icon: FileText,
+    title: 'We document and invoice once',
+    desc: 'Arrival and completion photos, written summaries, and a single consolidated monthly invoice so accounting stays clean.',
+  },
+]
+
 const testimonials = [
   {
     quote:
@@ -157,17 +180,18 @@ export default function HomePage() {
               <div className="lg:col-span-7">
                 <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                   <Sparkles className="h-3 w-3" />
-                  Property maintenance, coordinated.
+                  Managed maintenance coordination for Shawnee County.
                 </p>
 
                 <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                  One request. A verified contractor. Every step documented.
+                  Property maintenance, handled by one accountable team.
                 </h1>
 
                 <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                  Nexus Operations coordinates licensed, insured contractors for homeowners, landlords,
-                  and property managers across {CONTACT_INFO.cityState}. Submit a request in minutes —
-                  we handle dispatch, scheduling, photos, and unified billing.
+                  Nexus Operations is a managed service — not a contractor directory — for homeowners,
+                  landlords, and property managers across {CONTACT_INFO.cityState}. Submit a request
+                  once; we triage scope, dispatch a licensed and insured contractor, manage updates,
+                  and deliver photo-documented work with unified billing.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -175,25 +199,25 @@ export default function HomePage() {
                     href="/auth/sign-up"
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
                   >
-                    Submit your first request <ArrowRight className="h-4 w-4" />
+                    Submit a maintenance request <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href="/services"
                     className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
                   >
-                    See how it works
+                    See the coordination workflow
                   </Link>
                 </div>
 
                 <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px] text-muted-foreground">
                   <div className="flex items-center gap-1.5">
-                    <BadgeCheck className="h-4 w-4 text-primary" /> Licensed &amp; insured network
+                    <BadgeCheck className="h-4 w-4 text-primary" /> Managed service, not a lead marketplace
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Clock3 className="h-4 w-4 text-primary" /> Urgent dispatch under 4 hours
+                    <Clock3 className="h-4 w-4 text-primary" /> Dispatch and scheduling owned by Nexus
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <FileText className="h-4 w-4 text-primary" /> Photo records on every job
+                    <FileText className="h-4 w-4 text-primary" /> Photo records and one monthly invoice
                   </div>
                 </div>
               </div>
@@ -228,6 +252,37 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ── What we do ───────────────────────────────────── */}
+        <Section tone="muted" id="what-we-do">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-5">
+              <SectionHeading
+                eyebrow="What we do"
+                title="A single team to coordinate every maintenance job."
+                description="Nexus Operations owns the whole workflow for property maintenance in Shawnee County — intake, dispatch, updates, documentation, and billing — so owners and managers have one accountable partner instead of juggling contractors."
+              />
+            </div>
+            <div className="lg:col-span-7 grid gap-4 sm:grid-cols-2">
+              {businessExplainers.map(({ icon: Icon, title, desc }) => (
+                <div
+                  key={title}
+                  className="flex gap-3 rounded-2xl border border-border bg-background p-5"
+                >
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold text-foreground">{title}</p>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
 
         {/* ── Stats strip ─────────────────────────────────────── */}
         <section className="border-b border-border bg-[#0a0a0a]">
@@ -340,7 +395,7 @@ export default function HomePage() {
             ))}
           </div>
         </Section>
-        {/* ── Why Nexus ──────────────────────────────────────── */}
+        {/* ── Why Nexus ──────────────────────────────────���───── */}
         <Section tone="muted" id="why-nexus">
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6">
@@ -561,24 +616,25 @@ export default function HomePage() {
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-[44px]">
-              Ready to hand off your maintenance coordination?
+              Ready for one team to run your maintenance playbook?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
-              Create an account in under two minutes and submit your first request today. A Nexus
-              Nexus Operations reviews every submission before dispatching a contractor.
+              Nexus Operations handles intake, dispatch, scheduling, updates, and documentation for
+              every job — and sends one consolidated invoice at month-end. Talk with a coordinator or
+              create your account to submit a request today.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-[14px] font-semibold text-white hover:bg-white/10 transition"
+              >
+                Talk with a coordinator <ArrowRight className="h-4 w-4" />
+              </Link>
               <Link
                 href="/auth/sign-up"
                 className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-primary shadow-lg hover:opacity-95 transition"
               >
                 Create an account <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-[14px] font-semibold text-white hover:bg-white/10 transition"
-              >
-                Talk to the team
               </Link>
             </div>
             <p className="mt-8 text-[12.5px] text-primary-foreground/70">

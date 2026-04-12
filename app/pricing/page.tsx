@@ -200,7 +200,7 @@ export default function PricingPage() {
         <Section tone="muted" id="contractor-plans">
           <SectionHeading
             eyebrow="For licensed contractors"
-            title="Grow your business through the Nexus network."
+            title="Pre-documented jobs. Direct payouts. No lead fees."
             description="Join for free. Upgrade for higher project limits, priority routing, and earnings analytics. No marketplace fees — ever."
           />
 
@@ -253,7 +253,6 @@ export default function PricingPage() {
               </h3>
               <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
                 Multi-property portfolios, multi-family buildings, and commercial real estate get
-                custom pricing, dedicated coordinators, and portfolio-level reporting. Tell us about
                 custom pricing, a named Nexus representative, and portfolio-level reporting. Tell us about
                 your operation and we&apos;ll put a quote together.
               </p>
