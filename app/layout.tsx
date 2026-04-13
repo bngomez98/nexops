@@ -82,21 +82,21 @@ const LOCAL_BUSINESS_SCHEMA = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
   title: {
-    default: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
+    default: 'Nexus Operations — Managed Property Maintenance in Topeka, KS',
     template: '%s — Nexus Operations',
   },
   description:
-    'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. We assign verified, licensed contractors, enforce response-time guarantees, and document every job from request to completion.',
+    'Nexus Operations manages property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. We assign verified, licensed contractors, enforce response-time guarantees, and document every job from request to completion.',
   keywords: [
     'property maintenance Topeka',
-    'maintenance coordination Kansas',
+    'managed maintenance Kansas',
     'verified contractors Shawnee County',
     'property management Topeka KS',
     'licensed contractor network',
-    'home repair coordination',
+    'home repair service',
     'commercial property maintenance',
     'residential maintenance Topeka',
-    'contractor assignment service',
+    'contractor dispatch service',
     'Nexus Operations',
   ],
   authors: [{ name: COMPANY_NAME }],
@@ -125,17 +125,17 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://nexusoperations.org',
-    title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
+    title: 'Nexus Operations — Managed Property Maintenance in Topeka, KS',
     description:
-      'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
+      'Nexus Operations manages property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
     siteName: 'Nexus Operations',
-    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service coordination' }],
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations managed property maintenance' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nexus Operations — Property Maintenance Coordination',
+    title: 'Nexus Operations — Managed Property Maintenance',
     description:
-      'Licensed contractor coordination for homeowners and property managers in Topeka, KS. Verified network, guaranteed response times, full project documentation.',
+      'Managed maintenance operations for homeowners and property managers in Topeka, KS. Verified network, guaranteed response times, full project documentation.',
     images: [DEFAULT_OG_IMAGE],
   },
   robots: {

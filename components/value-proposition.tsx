@@ -19,20 +19,17 @@ const values = [
   },
   {
     icon: Receipt,
-    title: "Unified monthly invoicing",
+    title: "Transparent, unified billing",
     description:
       "One consolidated invoice per billing cycle covering every job across every property, with line-item detail by trade, urgency, and contractor. No separate paperwork to track down.",
-    title: "Transparent Pricing",
-    description:
-      "No retainers, no hidden fees. Simple subscription plans for homeowners and contractors. One invoice per billing cycle covering all coordinated work.",
     accent: "text-primary",
     bg: "bg-primary/8 border-primary/15",
   },
   {
     icon: Users,
-    title: "One Point of Contact",
+    title: "One point of contact",
     description:
-      "Instead of managing 15 separate vendor relationships, submit one request. Nexus Operations handles trade matching, scheduling, quality assurance, and payment coordination, with a single monthly invoice.",
+      "Instead of managing multiple vendor relationships, submit one request. Nexus Operations handles trade matching, scheduling, quality assurance, and consolidated billing.",
     accent: "text-violet-600",
     bg: "bg-violet-50 border-violet-100",
   },

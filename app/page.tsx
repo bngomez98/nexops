@@ -26,9 +26,9 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 import { getPlansByRole, formatPrice } from '@/lib/plans'
 
 export const metadata: Metadata = {
-  title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
+  title: 'Nexus Operations — Managed Property Maintenance in Topeka, KS',
   description:
-    'Nexus Operations is a managed maintenance coordination service for homeowners, landlords, and property managers in Topeka and Shawnee County. Submit one request; Nexus triages scope, dispatches verified contractors, and delivers unified billing with photo documentation.',
+    'Nexus Operations is a managed property maintenance service for homeowners, landlords, and property managers in Topeka and Shawnee County. Submit one request; Nexus triages scope, dispatches verified contractors, and delivers unified billing with full photo documentation.',
 }
 
 const stats = [
@@ -180,7 +180,7 @@ export default function HomePage() {
               <div className="lg:col-span-7">
                 <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                   <Sparkles className="h-3 w-3" />
-                  Managed maintenance coordination for Shawnee County.
+                  Managed property maintenance for Shawnee County.
                 </p>
 
                 <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
@@ -205,7 +205,7 @@ export default function HomePage() {
                     href="/services"
                     className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
                   >
-                    See the coordination workflow
+                    How it works
                   </Link>
                 </div>
 
@@ -259,8 +259,8 @@ export default function HomePage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What we do"
-                title="A single team to coordinate every maintenance job."
-                description="Nexus Operations owns the whole workflow for property maintenance in Shawnee County — intake, dispatch, updates, documentation, and billing — so owners and managers have one accountable partner instead of juggling contractors."
+                title="One accountable team. The whole workflow."
+                description="Nexus Operations owns property maintenance end-to-end in Shawnee County — intake, dispatch, updates, documentation, and billing — so owners and managers have a single partner instead of managing contractors."
               />
             </div>
             <div className="lg:col-span-7 grid gap-4 sm:grid-cols-2">
@@ -305,7 +305,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Who we serve"
             title="Built for everyone who owns, manages, or services property."
-            description="Nexus Operations is a single point of contact for homeowners, property managers, and licensed contractors, coordinating their work within one shared workflow."
+            description="Nexus Operations is a single point of contact for homeowners, property managers, and licensed contractors — connecting them through one managed workflow."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -616,19 +616,19 @@ export default function HomePage() {
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-[44px]">
-              Ready for one team to run your maintenance playbook?
+              One team. Every property. Every trade.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15.5px] leading-relaxed text-primary-foreground/80">
               Nexus Operations handles intake, dispatch, scheduling, updates, and documentation for
-              every job — and sends one consolidated invoice at month-end. Talk with a coordinator or
-              create your account to submit a request today.
+              every job — and sends one consolidated invoice at month-end. Reach out or create your
+              account to submit a request today.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-[14px] font-semibold text-white hover:bg-white/10 transition"
               >
-                Talk with a coordinator <ArrowRight className="h-4 w-4" />
+                Talk to our team <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/auth/sign-up"

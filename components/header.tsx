@@ -43,7 +43,7 @@ export function Header() {
       {/* Utility bar */}
       <div className="hidden border-b border-border/60 bg-muted/30 md:block">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-[12px] text-muted-foreground">
-          <p>Property maintenance coordination · {CONTACT_INFO.cityState}</p>
+          <p>Property maintenance operations · {CONTACT_INFO.cityState}</p>
           <div className="flex items-center gap-5">
             <a
               href={CONTACT_INFO.phoneHref}
