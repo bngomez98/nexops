@@ -68,7 +68,7 @@ const faqs = [
   },
   {
     q: 'Do you charge per job?',
-    a: 'No. Your subscription covers dispatch, oversight, and documentation. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
+    a: 'No. Your subscription covers coordination and dispatch. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
   },
   {
     q: 'Can I switch plans?',
@@ -222,7 +222,7 @@ export default function PricingPage() {
         <Section>
           <SectionHeading
             eyebrow="Included in every plan"
-            title="Every plan includes the same core platform features from day one."
+            title="Every plan includes the same coordination features from day one."
             align="center"
           />
 
