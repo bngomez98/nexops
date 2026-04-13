@@ -3,12 +3,13 @@
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
-  Briefcase,
+  BarChart3,
   CheckCircle2,
   Clock,
+  DollarSign,
   Plus,
-  Sparkles,
   Users,
+  Zap,
 } from 'lucide-react'
 import {
   STATUS_LABEL,
@@ -45,12 +46,13 @@ export function DashboardView({
   return (
     <div className="space-y-6">
       {loading && (
-        <div className="glass p-4 text-xs text-indigo-200/70">Loading live operations data…</div>
+        <div className="glass p-4 text-xs text-indigo-200/70">Syncing live operations data…</div>
       )}
       {error && (
-        <div className="glass p-4 text-xs text-rose-300">Failed to load portal data: {error}</div>
+        <div className="glass p-4 text-xs text-rose-300">Failed to load data: {error}</div>
       )}
-      {/* Hero stats card */}
+
+      {/* Command center hero */}
       <motion.section
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -70,30 +72,30 @@ export function DashboardView({
           </div>
 
           <div>
-            <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70 mb-2">
-              Live operations
+            <div className="text-[10px] font-mono uppercase tracking-wider text-indigo-200/70 mb-2">
+              Operations center
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-[1.05]">
-              Every property,
+              Your portfolio,
               <br />
-              <span className="text-glow">handled in one place.</span>
+              <span className="text-glow">fully under control.</span>
             </h1>
             <p className="text-sm text-indigo-100/70 mt-3 max-w-md leading-relaxed">
-              Submit a request, watch it move from pending to complete, and pay invoices
-              without ever leaving the app.
+              Submit a work order, track assignment and progress in real time, and close out with
+              full documentation — all from one place.
             </p>
 
             <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-2">
-              <StatBlock label="Open" value={stats.open} Icon={Briefcase} accent="from-indigo-400 to-sky-400" />
-              <StatBlock label="Completed" value={stats.completed} Icon={CheckCircle2} accent="from-emerald-400 to-teal-400" />
-              <StatBlock label="Awaiting pay" value={stats.pendingPayment} Icon={Clock} accent="from-amber-400 to-orange-400" />
-              <StatBlock label="Active pros" value={stats.activeContractors} Icon={Users} accent="from-violet-400 to-fuchsia-400" />
+              <StatBlock label="Active"      value={stats.open}               Icon={Clock}      accent="from-indigo-400 to-sky-400" />
+              <StatBlock label="Closed"      value={stats.completed}          Icon={CheckCircle2} accent="from-emerald-400 to-teal-400" />
+              <StatBlock label="Awaiting"    value={stats.pendingPayment}     Icon={DollarSign} accent="from-amber-400 to-orange-400" />
+              <StatBlock label="Assigned"    value={stats.activeContractors}  Icon={Users}      accent="from-violet-400 to-fuchsia-400" />
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <button type="button" className="btn-primary" onClick={onSubmitRequest}>
                 <Plus size={16} />
-                Submit a request
+                New work order
               </button>
               <button type="button" className="btn-ghost" onClick={onSeeAllJobs}>
                 View all jobs <ArrowRight size={14} />
@@ -103,26 +105,26 @@ export function DashboardView({
         </div>
       </motion.section>
 
-      {/* Recent jobs + activity */}
+      {/* Pipeline + activity */}
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-5">
         <section>
           <SectionHeader
-            title="Recent jobs"
-            subtitle="The latest activity across your properties"
+            title="Work orders"
+            subtitle="Most recent across all properties"
             action={
               <button
                 type="button"
                 onClick={onSeeAllJobs}
                 className="text-xs font-medium text-indigo-300 hover:text-white transition inline-flex items-center gap-1"
               >
-                See all <ArrowRight size={12} />
+                Full pipeline <ArrowRight size={12} />
               </button>
             }
           />
           <div className="grid sm:grid-cols-2 gap-3">
             {recent.length === 0 && (
               <div className="glass p-6 text-sm text-indigo-200/60 col-span-2 text-center">
-                No jobs yet — submit one to get started.
+                No work orders yet — submit one to get started.
               </div>
             )}
             {recent.map((j, idx) => (
@@ -133,8 +135,8 @@ export function DashboardView({
 
         <section>
           <SectionHeader
-            title="Activity"
-            subtitle="Real-time updates"
+            title="Activity feed"
+            subtitle="Status changes and updates"
             action={
               <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-emerald-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -145,7 +147,7 @@ export function DashboardView({
           <div className="glass p-2">
             {activity.length === 0 && (
               <div className="px-3 py-8 text-xs text-indigo-200/50 text-center">
-                Nothing new yet.
+                No recent activity.
               </div>
             )}
             {activity.map((a, idx) => (
@@ -159,7 +161,7 @@ export function DashboardView({
                 className="w-full text-left flex items-start gap-3 p-3 rounded-2xl hover:bg-white/5 transition"
               >
                 <div className="mt-0.5">
-                  <Sparkles size={16} className="text-indigo-300" />
+                  <Zap size={14} className="text-indigo-300" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-white leading-snug">{a.text}</div>
@@ -167,6 +169,19 @@ export function DashboardView({
                 </div>
               </motion.button>
             ))}
+          </div>
+
+          {/* Throughput mini-metric */}
+          <div className="mt-3 glass-soft p-4 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-400 to-fuchsia-500 flex items-center justify-center flex-shrink-0">
+              <BarChart3 size={14} className="text-white" />
+            </div>
+            <div>
+              <div className="text-[11px] font-semibold text-white">
+                {stats.completionRate}% close rate
+              </div>
+              <div className="text-[10px] text-indigo-200/50">lifetime work orders</div>
+            </div>
           </div>
         </section>
       </div>
@@ -229,7 +244,7 @@ function buildActivity(jobs: PortalJob[]): ActivityItem[] {
     items.push({
       id: `created-${j.id}`,
       jobId: j.id,
-      text: `New request “${j.title}” — ${STATUS_LABEL[j.status]}`,
+      text: `"${j.title}" — ${STATUS_LABEL[j.status] ?? j.status}`,
       when: formatRelative(j.createdAt),
     })
   }
@@ -237,10 +252,10 @@ function buildActivity(jobs: PortalJob[]): ActivityItem[] {
 }
 
 function buildStats(jobs: PortalJob[]) {
-  const openJobs = jobs.filter((j) => j.status !== 'completed' && j.status !== 'cancelled')
-  const completed = jobs.filter((j) => j.status === 'completed')
+  const openJobs   = jobs.filter((j) => j.status !== 'completed' && j.status !== 'cancelled')
+  const completed  = jobs.filter((j) => j.status === 'completed')
   const pendingPayment = jobs.filter((j) => j.invoiceAmount && !j.invoicePaid).length
-  const total = jobs.length || 1
+  const total      = jobs.length || 1
   const completionRate = Math.round((completed.length / total) * 100)
   const activeContractors = new Set(
     openJobs.filter((j) => j.contractorId).map((j) => j.contractorId),
