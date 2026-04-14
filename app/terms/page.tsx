@@ -30,7 +30,7 @@ export default function TermsPage() {
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">1. Acceptance of Terms</h2>
             <p>
               These Terms of Service (&quot;Terms&quot;) govern access to and use of Nexus Operations, LLC
-              (&quot;Nexus Operations&quot;, &quot;we&quot;, &quot;us&quot;) coordination services, software, and
+              (&quot;Nexus Operations&quot;, &quot;we&quot;, &quot;us&quot;) maintenance services, software, and
               websites (collectively, the &quot;Services&quot;). By submitting a request, creating an account, or
               authorizing work, you agree to these Terms, our <Link href="/privacy" className="text-primary underline">Privacy Policy</Link>, and any order forms, statements of work, or
               subscription selections you approve (each, an &quot;Order&quot;).
