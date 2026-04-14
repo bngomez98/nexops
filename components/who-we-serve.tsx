@@ -7,7 +7,7 @@ const audiences = [
     label: "Commercial",
     title: "Property Management",
     description:
-      "Managed maintenance operations across multiple properties with guaranteed response times and unified invoicing.",
+      "Coordinate maintenance across multiple properties with guaranteed response times and unified invoicing.",
     features: [
       "Response times by urgency",
       "Backup contractor assignment",
@@ -21,7 +21,7 @@ const audiences = [
     label: "Residential",
     title: "Property Owners",
     description:
-      "Access verified contractors and full-service maintenance management without subscriptions or retainers.",
+      "Access verified contractors and professional coordination without subscriptions or retainers.",
     features: [
       "Verified contractor network",
       "Pay per job only",
@@ -35,11 +35,11 @@ const audiences = [
     label: "B2B Services",
     title: "Business Operations",
     description:
-      "Outsourced operational support including lead generation, vendor management, and project oversight.",
+      "Outsourced operational support including lead generation, vendor management, and project coordination.",
     features: [
       "Lead generation",
       "Vendor management",
-      "Project oversight",
+      "Project coordination",
       "Growth consulting",
     ],
     href: "/services#b2b",
@@ -60,7 +60,7 @@ export function WhoWeServe() {
             and B2B operations.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Managed maintenance and operational support for property managers, owners, and businesses.
+            Maintenance coordination and operational support for property managers, owners, and businesses.
           </p>
         </div>
 

@@ -14,7 +14,7 @@ export function ContactCTA() {
             <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4 text-balance">
               Ready to hand off
               <br className="hidden sm:block" />
-              property maintenance?
+              contractor coordination?
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-10">
               Whether you manage a commercial portfolio or own residential
