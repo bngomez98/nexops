@@ -6,6 +6,8 @@ app:
   name: Nexus Operations
   url: https://nexusoperations.org
   region: Topeka, KS
+  region_centroid: { lat: 39.0473, lng: -95.6752 }
+  default_service_radius_miles: 30
   node_version: ">=20 <25"
   package_manager: pnpm@9.15.0
 
@@ -15,9 +17,33 @@ framework:
   router: app
   language: TypeScript
 
+business_model:
+  description: >
+    B2B2C property-services marketplace. Homeowners submit project requests;
+    verified contractors claim them exclusively. Homeowners pay nothing to
+    submit; contractors pay a monthly membership that grants unlimited claims
+    within their tier's active-job cap. Nexus takes an urgency-based fee on
+    each invoice (25% / 30% / 35%).
+  primary_entities:
+    - service_requests    # homeowner → contractor (primary pipeline)
+    - jobs                # legacy structured-offer pipeline (matches + invoices)
+    - invoices            # contractor → client, with Nexus fee
+    - lead_credits        # membership-tier budget ledger (migration 017)
+  urgency_sla:
+    emergency: { respond_minutes: 30,   complete_hours: 24  }
+    urgent:    { respond_minutes: 240,  complete_hours: 72  }
+    routine:   { respond_minutes: 1440, complete_hours: 336 }
+  fee_rates_by_urgency:
+    routine:   0.25
+    urgent:    0.30
+    emergency: 0.35
+
 services:
   supabase:
-    description: Primary runtime database and auth
+    description: Primary runtime database and auth (Postgres + pgvector + RLS)
+    migrations:
+      - scripts/setup.sql                       # base schema
+      - scripts/017_nexus_business_model.sql    # geo / SLA / lead credits / audit
     env_vars:
       - NEXT_PUBLIC_SUPABASE_URL
       - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
@@ -78,8 +104,14 @@ services:
 cron:
   jobs:
     - path: /api/cron/document-expiry
-      schedule: "0 9 * * *"   # daily at 09:00 UTC
-      description: Expire stale contractor documents
+      schedule: "0 9 * * *"        # daily 09:00 UTC
+      description: Warn contractors about compliance documents expiring in 30 days
+    - path: /api/cron/invoice-maintenance
+      schedule: "15 9 * * *"       # daily 09:15 UTC
+      description: Flip past-due invoices to status 'overdue' (3-day grace)
+    - path: /api/cron/sla-sweep
+      schedule: "*/5 * * * *"      # every 5 minutes
+      description: Flag unclaimed requests past their sla_respond_by deadline
   env_vars:
     - CRON_SECRET
 
