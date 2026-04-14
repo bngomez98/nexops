@@ -22,7 +22,7 @@ import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Services — Trade Categories Coordinated by Nexus Operations',
+  title: 'Services — Trade Categories by Nexus Operations',
   description:
     'Nexus Operations coordinates plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
 }
