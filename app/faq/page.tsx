@@ -92,7 +92,7 @@ const sections = [
       },
       {
         q: 'How does pricing work?',
-        a: 'Homeowners and commercial clients subscribe to a plan that includes coordination, documentation, and unified invoicing. Contractor work is billed at the contractor\'s quoted rate and rolled into a monthly unified invoice. See the pricing page for current plans and features.',
+        a: 'Homeowners and commercial clients subscribe to a plan that includes dispatch, documentation, and unified invoicing. Contractor work is billed at the contractor\'s quoted rate and rolled into a monthly unified invoice. See the pricing page for current plans and features.',
       },
       {
         q: 'What happens to photos and project data I submit?',
