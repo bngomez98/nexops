@@ -1,0 +1,97 @@
+# Nexus Operations – Application Configuration
+# This file documents the runtime configuration for all services used by the app.
+# Copy env.example to .env.local and fill in the values referenced here.
+
+app:
+  name: Nexus Operations
+  url: https://nexusoperations.org
+  region: Topeka, KS
+  node_version: ">=20 <25"
+  package_manager: pnpm@9.15.0
+
+framework:
+  name: Next.js
+  version: "15"
+  router: app
+  language: TypeScript
+
+services:
+  supabase:
+    description: Primary runtime database and auth
+    env_vars:
+      - NEXT_PUBLIC_SUPABASE_URL
+      - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY          # legacy fallback
+      - SUPABASE_SERVICE_ROLE_KEY              # server-only
+      - SUPABASE_PROJECT_REF
+      - SUPABASE_ACCESS_TOKEN
+
+  stripe:
+    description: Subscription billing and payments
+    plans:
+      homeowner_pro_annual:
+        price_usd_per_month: 59
+        billing: annually
+        env_var: STRIPE_PRICE_ID_HOMEOWNER_PRO_ANNUAL
+      homeowner_pro_monthly:
+        price_usd_per_month: 79
+        billing: monthly
+        env_var: STRIPE_PRICE_ID_HOMEOWNER_PRO_MONTHLY
+      contractor_pro_annual:
+        price_usd_per_month: 59
+        billing: annually
+        env_var: STRIPE_PRICE_ID_CONTRACTOR_PRO_ANNUAL
+      contractor_pro_monthly:
+        price_usd_per_month: 79
+        billing: monthly
+        env_var: STRIPE_PRICE_ID_CONTRACTOR_PRO_MONTHLY
+      contractor_elite:
+        price_usd_per_month: 199
+        billing: monthly
+        env_var: STRIPE_PRICE_ID_CONTRACTOR_ELITE
+    env_vars:
+      - STRIPE_SECRET_KEY
+      - STRIPE_WEBHOOK_SECRET
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
+  resend:
+    description: Transactional email delivery
+    from_address: "Nexus Operations <noreply@nexusoperations.org>"
+    env_vars:
+      - RESEND_API_KEY
+      - RESEND_FROM_EMAIL
+
+  openai:
+    description: AI chat, insights, and request categorization
+    used_by:
+      - /api/ai/chat
+      - /api/ai/insights
+      - /api/automation/categorize-request
+    env_vars:
+      - OPENAI_API_KEY
+
+  vercel_blob:
+    description: File and image storage
+    env_vars:
+      - BLOB_READ_WRITE_TOKEN
+
+cron:
+  jobs:
+    - path: /api/cron/document-expiry
+      schedule: "0 9 * * *"   # daily at 09:00 UTC
+      description: Expire stale contractor documents
+  env_vars:
+    - CRON_SECRET
+
+feature_flags:
+  automation:
+    description: AI-powered request automation features
+    env_var: NEXT_PUBLIC_AUTOMATION_ENABLED
+    default: false
+
+ci:
+  provider: GitHub Actions
+  workflows:
+    - ci.yml        # lint, typecheck, test, build on every push/PR
+    - cd.yml        # deploy to Vercel on merge to main
+    - stale.yml     # close stale issues/PRs
