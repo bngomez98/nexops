@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, ArrowRight, Phone } from 'lucide-react'
+import { Menu, X, ArrowRight, Phone, ChevronDown } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 import { Logo } from '@/components/logo'
@@ -24,42 +24,53 @@ export function Header() {
   const closeMobile = useCallback(() => setMobileOpen(false), [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16)
+    const onScroll = () => setScrolled(window.scrollY > 8)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
+
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/')
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-[background,border] duration-300 ${
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75'
-          : 'border-transparent bg-background'
+          ? 'border-b border-border/80 bg-background/95 backdrop-blur-md shadow-sm'
+          : 'border-b border-transparent bg-background'
       }`}
     >
       {/* Utility bar */}
-      <div className="hidden border-b border-border/60 bg-muted/30 md:block">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-[12px] text-muted-foreground">
-          <p>Property maintenance coordination · {CONTACT_INFO.cityState}</p>
-          <div className="flex items-center gap-5">
+      <div className="hidden border-b border-border/50 bg-muted/40 lg:block">
+        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-xs text-muted-foreground">
+          <p className="font-medium">
+            Property maintenance coordination for {CONTACT_INFO.cityState}
+          </p>
+          <div className="flex items-center gap-6">
             <a
               href={CONTACT_INFO.phoneHref}
-              className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
+              className="inline-flex items-center gap-1.5 font-medium hover:text-foreground transition-colors"
             >
               <Phone className="h-3 w-3" /> {CONTACT_INFO.phoneDisplay}
             </a>
-            <span className="h-3 w-px bg-border" />
-            <span>Mon–Fri · 8 AM – 5 PM CT</span>
+            <span className="h-3 w-px bg-border" aria-hidden="true" />
+            <span>Mon – Fri, 8 AM – 5 PM CT</span>
           </div>
         </div>
       </div>
 
       {/* Main nav */}
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" aria-label="Nexus Operations — Home" className="flex items-center">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-6">
+        <Link 
+          href="/" 
+          aria-label="Nexus Operations — Home" 
+          className="flex items-center"
+        >
           <Logo />
         </Link>
 
@@ -71,36 +82,40 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-colors ${
+              className={`relative px-3.5 py-2 text-sm font-medium transition-colors ${
                 isActive(item.href)
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  ? 'text-primary'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {item.label}
+              {isActive(item.href) && (
+                <span className="absolute inset-x-3.5 -bottom-[1.125rem] h-0.5 rounded-full bg-primary" />
+              )}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-4 lg:flex">
           <ThemeToggle />
           <Link
             href="/auth/login"
-            className="text-[13.5px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             Sign in
           </Link>
           <Link
             href="/auth/sign-up"
-            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm btn-primary-glow hover:opacity-95 transition-all"
           >
-            Get started <ArrowRight className="h-3.5 w-3.5" />
+            Get started
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-muted transition-colors lg:hidden"
           onClick={() => setMobileOpen((s) => !s)}
           aria-label="Toggle navigation menu"
           aria-expanded={mobileOpen}
@@ -111,50 +126,53 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-border bg-background lg:hidden">
-          <nav className="mx-auto max-w-7xl px-6 py-4" aria-label="Mobile navigation">
+        <div className="border-t border-border bg-background lg:hidden animate-fade-in">
+          <nav className="mx-auto max-w-7xl px-6 py-5" aria-label="Mobile navigation">
             <ul className="flex flex-col gap-1">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={closeMobile}
-                    className={`block rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors ${
+                    className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
                       isActive(item.href)
                         ? 'bg-primary/10 text-primary'
                         : 'text-foreground hover:bg-muted'
                     }`}
                   >
                     {item.label}
+                    <ChevronDown className="h-4 w-4 -rotate-90 text-muted-foreground" />
                   </Link>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-4 flex gap-3 border-t border-border pt-4">
-              <ThemeToggle className="w-full justify-center border-border/70" />
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border pt-5">
               <Link
                 href="/auth/login"
                 onClick={closeMobile}
-                className="flex flex-1 items-center justify-center rounded-full border border-border px-4 py-2.5 text-[13px] font-semibold text-foreground"
+                className="flex items-center justify-center rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground hover:bg-muted transition-colors"
               >
                 Sign in
               </Link>
               <Link
                 href="/auth/sign-up"
                 onClick={closeMobile}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2.5 text-[13px] font-semibold text-primary-foreground"
+                className="flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
               >
-                Get started <ArrowRight className="h-3.5 w-3.5" />
+                Get started <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
-            <a
-              href={CONTACT_INFO.phoneHref}
-              className="mt-4 inline-flex items-center gap-2 text-[13px] font-medium text-primary"
-            >
-              <Phone className="h-3.5 w-3.5" /> {CONTACT_INFO.phoneDisplay}
-            </a>
+            <div className="mt-5 flex items-center justify-between border-t border-border pt-5">
+              <a
+                href={CONTACT_INFO.phoneHref}
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary"
+              >
+                <Phone className="h-4 w-4" /> {CONTACT_INFO.phoneDisplay}
+              </a>
+              <ThemeToggle />
+            </div>
           </nav>
         </div>
       )}
