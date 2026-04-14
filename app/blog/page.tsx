@@ -7,13 +7,13 @@ import { ArrowRight, Clock } from "lucide-react"
 export const metadata: Metadata = {
   title: "Blog | Property Management & Maintenance Insights | Nexus Operations",
   description:
-    "Practical guides for Topeka property managers: contractor vetting, maintenance coordination, emergency response, and reducing repair costs. Written by the Nexus Operations team.",
+    "Practical guides for Topeka property managers: contractor vetting, maintenance management, emergency response, and reducing repair costs. Written by the Nexus Operations team.",
   keywords: [
     "property management Topeka KS",
     "property maintenance Topeka",
     "contractor vetting Kansas",
     "property manager tips Topeka",
-    "maintenance coordination",
+    "managed maintenance",
     "rental property repairs Topeka",
     "emergency maintenance property management",
     "property management company Topeka Kansas",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Blog | Nexus Operations",
-    description: "Practical guides for Topeka property managers on maintenance coordination, contractor vetting, and emergency response.",
+    description: "Practical guides for Topeka property managers on maintenance management, contractor vetting, and emergency response.",
     url: "https://nexusoperations.org/blog",
     type: "website",
   },
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
 const posts = [
   {
     slug: "property-manager-maintenance-coordination-topeka",
-    title: "Why Property Managers in Topeka Spend 10+ Hours a Week on Maintenance Coordination (and How to Stop)",
+    title: "Why Property Managers in Topeka Spend 10+ Hours a Week on Maintenance Management (and How to Stop)",
     excerpt:
-      "The average property manager overseeing 150–200 units in Topeka spends between 10 and 15 hours a week on maintenance coordination: fielding calls, sourcing contractors, chasing confirmations, and reconciling invoices. Here is where that time actually goes — and what a structured coordination model looks like instead.",
+      "The average property manager overseeing 150–200 units in Topeka spends between 10 and 15 hours a week on maintenance management: fielding calls, sourcing contractors, chasing confirmations, and reconciling invoices. Here is where that time actually goes — and what a structured operations model looks like instead.",
     category: "Operations",
     readTime: "6 min read",
     date: "March 2026",
@@ -52,9 +52,9 @@ const posts = [
   },
   {
     slug: "emergency-maintenance-response-property-management",
-    title: "Emergency Maintenance at 11 PM: What a Well-Coordinated Response Actually Looks Like",
+    title: "Emergency Maintenance at 11 PM: What a Well-Managed Response Actually Looks Like",
     excerpt:
-      "A burst pipe on a Saturday night is a test of your coordination system. Most property managers have a mental rolodex of contractors they hope will pick up. This post walks through what a documented emergency response process looks like — from the moment the tenant calls to the invoice landing in your inbox.",
+      "A burst pipe on a Saturday night is a test of your operations system. Most property managers have a mental rolodex of contractors they hope will pick up. This post walks through what a documented emergency response process looks like — from the moment the tenant calls to the invoice landing in your inbox.",
     category: "Emergency Response",
     readTime: "5 min read",
     date: "February 2026",
@@ -108,7 +108,7 @@ export default function BlogPage() {
                 Nexus Operations Blog
               </p>
               <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground mb-6 text-balance">
-                Property management, maintenance, and coordination.
+                Property management and maintenance operations.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Practical guides for property managers and owners in Topeka, Kansas.
