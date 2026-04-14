@@ -24,9 +24,9 @@ import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'About — Property Maintenance Coordination Built in Topeka',
+  title: 'About — Managed Property Maintenance Built in Topeka',
   description:
-    'Nexus Operations is a locally owned property maintenance coordination company founded in Topeka, Kansas. Learn about our team, our process, and our commitment to verified, documented service.',
+    'Nexus Operations is a locally owned managed property maintenance company founded in Topeka, Kansas. Learn about our team, our process, and our commitment to verified, documented service.',
 }
 
 const values = [
@@ -65,13 +65,13 @@ const milestones = [
   { year: '2026', title: 'Nexus Operations founded', desc: 'Launched in Topeka, KS to give homeowners and property managers a single, accountable service for property maintenance.' },
   { year: '2026', title: 'Verified contractor network', desc: 'Built a starting roster of 20+ license-verified trades across plumbing, electrical, HVAC, and general repair.' },
   { year: '2026', title: 'Unified billing launched', desc: 'Rolled out monthly consolidated invoices so owners stop juggling contractor-by-contractor billing.' },
-  { year: '2026', title: 'Commercial portfolio tier', desc: 'Introduced dedicated coordination tiers for property managers with 10+ units under management.' },
+  { year: '2026', title: 'Commercial portfolio tier', desc: 'Introduced dedicated service tiers for property managers with 10+ units under management.' },
 ]
 
 const services = [
   { icon: ClipboardList, title: 'Intake & scope review', desc: 'We read every request, clarify scope, and confirm access details before dispatch.' },
   { icon: Users, title: 'Contractor matching', desc: 'We match each job to a trade specialist based on fit, availability, and recent performance.' },
-  { icon: Compass, title: 'Active coordination', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
+  { icon: Compass, title: 'Active oversight', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
 ]
 
@@ -114,7 +114,7 @@ export default function AboutPage() {
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Most property owners in Topeka juggle a patchwork of contractors, handwritten
                 invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable coordinator that handles the work end-to-end — intake, dispatch,
+                accountable partner that handles the work end-to-end — intake, dispatch,
                 documentation, and billing — so owners can focus on running their properties, not
                 chasing tradespeople.
               </p>
@@ -332,7 +332,7 @@ export default function AboutPage() {
                     label: "Invoice issued",
                     color: "bg-secondary border-2 border-border",
                     detail: "Nexus Operations generates a unified invoice: $280 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
-                    outcome: "One invoice. Full documentation. Zero coordination calls.",
+                    outcome: "One invoice. Full documentation. Zero back-and-forth.",
                   },
                   {
                     time: "Within 30 days",
