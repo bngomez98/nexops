@@ -53,8 +53,6 @@ const benefits = [
   },
   {
     icon: Users,
-    title: 'A coordinator on your side',
-    desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus coordinators intervene so you can keep moving.',
     title: 'Direct support from Nexus Operations',
     desc: 'If a homeowner is unreachable, a scope changes, or schedules conflict, Nexus Operations will resolve the issue so the job can proceed.',
   },
@@ -197,104 +195,107 @@ export default function ContractorsPage() {
                 </div>
               ))}
             </div>
-            {/* Network table */}
-            <div className="mt-10 rounded-xl border border-border overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-secondary/60 border-b border-border">
-                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Trade
-                      </th>
-                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden sm:table-cell">
-                        Credential required
-                      </th>
-                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden md:table-cell">
-                        Insurance min.
-                      </th>
-                      <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Tiers covered
-                      </th>
-                      <th className="text-center px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Active
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border bg-card">
-                    {networkCategories.map((cat) => (
-                      <tr key={cat.trade} className="hover:bg-secondary/30 transition-colors">
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-2.5">
-                            <span className="text-base">{cat.icon}</span>
-                            <span className="font-medium text-foreground text-[13px]">
-                              {cat.trade}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden sm:table-cell max-w-[220px]">
-                          {cat.credentialRequired}
-                        </td>
-                        <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden md:table-cell whitespace-nowrap">
-                          {cat.insuranceMin}
-                        </td>
-                        <td className="px-5 py-4">
-                          <div className="flex flex-wrap gap-1">
-                            {cat.tiers.map((tier) => (
-                              <span
-                                key={tier}
-                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-medium ${tierColors[tier]}`}
-                              >
-                                {tier}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 text-center">
-                          <div className="flex items-center justify-center gap-1.5">
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                            <span className="text-[12.5px] font-semibold text-foreground">
-                              {cat.activeContractors}
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <p className="text-[11.5px] text-muted-foreground">
-                  Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
-                </p>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5">
-              <div className="rounded-3xl border border-border bg-card p-8">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
-                  Network snapshot
-                </p>
-                <div className="mt-5 grid grid-cols-2 gap-5">
-                  {[
-                    { value: '20+', label: 'Active contractors' },
-                    { value: '$0', label: 'Lead fees' },
-                    { value: '100%', label: 'Documented jobs' },
-                    { value: '< 4h', label: 'Urgent response' },
-                  ].map(({ value, label }) => (
-                    <div key={label} className="rounded-xl border border-border bg-background p-4">
-                      <p className="text-2xl font-extrabold text-foreground">{value}</p>
-                      <p className="mt-1 text-[11.5px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-                        {label}
-                      </p>
-                    </div>
-                  ))}
+            <div className="mt-12 grid gap-8 lg:grid-cols-12 lg:items-start">
+              <div className="lg:col-span-7">
+                <div className="rounded-xl border border-border overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-secondary/60 border-b border-border">
+                          <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            Trade
+                          </th>
+                          <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden sm:table-cell">
+                            Credential required
+                          </th>
+                          <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden md:table-cell">
+                            Insurance min.
+                          </th>
+                          <th className="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            Tiers covered
+                          </th>
+                          <th className="text-center px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            Active
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border bg-card">
+                        {networkCategories.map((cat) => (
+                          <tr key={cat.trade} className="hover:bg-secondary/30 transition-colors">
+                            <td className="px-5 py-4">
+                              <div className="flex items-center gap-2.5">
+                                <span className="text-base">{cat.icon}</span>
+                                <span className="font-medium text-foreground text-[13px]">
+                                  {cat.trade}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden sm:table-cell max-w-[220px]">
+                              {cat.credentialRequired}
+                            </td>
+                            <td className="px-5 py-4 text-[12.5px] text-muted-foreground hidden md:table-cell whitespace-nowrap">
+                              {cat.insuranceMin}
+                            </td>
+                            <td className="px-5 py-4">
+                              <div className="flex flex-wrap gap-1">
+                                {cat.tiers.map((tier) => (
+                                  <span
+                                    key={tier}
+                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-medium ${tierColors[tier]}`}
+                                  >
+                                    {tier}
+                                  </span>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="px-5 py-4 text-center">
+                              <div className="flex items-center justify-center gap-1.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                                <span className="text-[12.5px] font-semibold text-foreground">
+                                  {cat.activeContractors}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <p className="text-[11.5px] text-muted-foreground">
+                      Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
+                    </p>
+                  </div>
                 </div>
-                <Link
-                  href="/pricing#contractor-plans"
-                  className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:gap-2 transition-all"
-                >
-                  Contractor plans &amp; tiers <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="rounded-3xl border border-border bg-card p-8">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                    Network snapshot
+                  </p>
+                  <div className="mt-5 grid grid-cols-2 gap-5">
+                    {[
+                      { value: '20+', label: 'Active contractors' },
+                      { value: '$0', label: 'Lead fees' },
+                      { value: '100%', label: 'Documented jobs' },
+                      { value: '< 4h', label: 'Urgent response' },
+                    ].map(({ value, label }) => (
+                      <div key={label} className="rounded-xl border border-border bg-background p-4">
+                        <p className="text-2xl font-extrabold text-foreground">{value}</p>
+                        <p className="mt-1 text-[11.5px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+                          {label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <Link
+                    href="/pricing#contractor-plans"
+                    className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:gap-2 transition-all"
+                  >
+                    Contractor plans &amp; tiers <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

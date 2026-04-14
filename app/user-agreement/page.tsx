@@ -25,7 +25,7 @@ export default function UserAgreementPage() {
           </Button>
 
           <h1 className="font-serif text-5xl font-light mb-2">User Agreement</h1>
-          <p className="text-muted-foreground mb-12">Last updated: March 2025</p>
+          <p className="text-muted-foreground mb-12">Last updated: April 2026</p>
 
           <div className="prose prose-lg max-w-none space-y-10">
 
@@ -55,7 +55,16 @@ export default function UserAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">3. Homeowner & Property Manager Responsibilities</h2>
+              <h2 className="text-2xl font-semibold mb-3">3. Platform Roles</h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Nexus Operations coordinates work between homeowners/property managers (clients) and contractors. We do not
+                provide licensed trade services ourselves; we vet and dispatch independent contractors to perform the work.
+                Each user type agrees to the obligations below.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">4. Homeowner &amp; Property Manager Responsibilities</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
                 As a homeowner or property manager using the Platform, you agree to:
               </p>
@@ -65,11 +74,12 @@ export default function UserAgreementPage() {
                 <li>Pay invoices in a timely manner as outlined in our payment terms.</li>
                 <li>Provide a safe working environment for all contractors dispatched to your property.</li>
                 <li>Not solicit contractors identified through the Platform for work outside the Platform for a period of 12 months following introduction.</li>
+                <li>Notify Nexus promptly of quality concerns so we can coordinate remediation with the contractor.</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">4. Contractor Responsibilities</h2>
+              <h2 className="text-2xl font-semibold mb-3">5. Contractor Responsibilities</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
                 As a contractor using the Platform, you agree to:
               </p>
@@ -80,11 +90,22 @@ export default function UserAgreementPage() {
                 <li>Provide photographic documentation of work before and after completion.</li>
                 <li>Comply with all applicable local, state, and federal laws and regulations.</li>
                 <li>Not misrepresent your qualifications, experience, or credentials.</li>
+                <li>Use the Platform to communicate status updates and closeout documentation for every job.</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">5. Subscription Plans & Billing</h2>
+              <h2 className="text-2xl font-semibold mb-3">6. Service Requests &amp; Scheduling</h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Clients submit requests with property details, scope, and urgency tier. Nexus assigns contractors based on
+                trade, availability, and service level agreements. Access instructions must be accurate; missed appointments
+                or site inaccessibility may require rescheduling and may be billable. Emergency requests may be routed to
+                the first available qualified contractor.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">7. Subscription Plans &amp; Billing</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
                 Paid subscriptions are billed on a recurring basis. By subscribing to a paid plan, you authorize
                 Nexus Operations to charge your payment method on a recurring basis until cancellation.
@@ -99,7 +120,17 @@ export default function UserAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">6. Prohibited Conduct</h2>
+              <h2 className="text-2xl font-semibold mb-3">8. Invoices, Disputes &amp; Adjustments</h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Standard invoices are due upon receipt unless stated otherwise in a statement of work. Disputes must be
+                submitted in writing within 10 days of invoice delivery with documentation. Undisputed amounts remain payable.
+                If on-site findings materially change scope, a revised quote will be provided for approval before continuation
+                unless you authorize a pre-set emergency ceiling.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">9. Prohibited Conduct</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">You agree not to:</p>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Use the Platform for any unlawful purpose or in violation of any applicable law.</li>
@@ -108,11 +139,21 @@ export default function UserAgreementPage() {
                 <li>Attempt to circumvent payment through the Platform.</li>
                 <li>Reverse engineer, scrape, or copy any portion of the Platform.</li>
                 <li>Share account credentials with unauthorized individuals.</li>
+                <li>Upload malicious code, interfere with security features, or attempt unauthorized access.</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">7. Intellectual Property</h2>
+              <h2 className="text-2xl font-semibold mb-3">10. Documentation, Photos &amp; Data</h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Photos, notes, and job records uploaded to the Platform are used to coordinate work, validate completion,
+                and maintain audit history. You grant Nexus Operations a non-exclusive right to store and use this
+                documentation to operate and improve the Services, subject to our <Link href="/privacy" className="text-primary underline">Privacy Policy</Link>.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">11. Intellectual Property</h2>
               <p className="text-muted-foreground leading-relaxed">
                 All content on the Platform, including text, graphics, logos, and software, is owned by or licensed
                 to Nexus Operations and is protected by applicable intellectual property laws. You may not reproduce,
@@ -121,7 +162,15 @@ export default function UserAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">8. Dispute Resolution</h2>
+              <h2 className="text-2xl font-semibold mb-3">12. Ratings and Quality</h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Nexus monitors quality through completion photos, SLA performance, and client feedback. We may prioritize
+                or de-prioritize contractors based on performance and may remove content that is abusive or irrelevant.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">13. Dispute Resolution</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
                 In the event of a dispute between users or between a user and Nexus Operations, we encourage resolution
                 through our support channels first. Unresolved disputes will be subject to binding arbitration in
@@ -133,7 +182,7 @@ export default function UserAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">9. Limitation of Liability</h2>
+              <h2 className="text-2xl font-semibold mb-3">14. Limitation of Liability</h2>
               <p className="text-muted-foreground leading-relaxed">
                 To the maximum extent permitted by law, Nexus Operations shall not be liable for any indirect,
                 incidental, special, consequential, or punitive damages arising from your use of the Platform. Our
@@ -142,7 +191,7 @@ export default function UserAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">10. Modifications</h2>
+              <h2 className="text-2xl font-semibold mb-3">15. Modifications</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We reserve the right to update this User Agreement at any time. Material changes will be communicated
                 via email or prominent notice on the Platform at least 14 days before taking effect. Continued use
@@ -151,7 +200,16 @@ export default function UserAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-3">11. Contact Us</h2>
+              <h2 className="text-2xl font-semibold mb-3">16. Termination</h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                We may suspend or terminate access for violations of this Agreement, non-payment, or misuse of the
+                Platform. You may close your account at any time. Sections intended to survive termination (including
+                payment obligations, documentation rights, disclaimers, and dispute terms) will remain in effect.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-3">17. Contact Us</h2>
               <p className="text-muted-foreground leading-relaxed">
                 If you have questions about this User Agreement, please contact us:
               </p>

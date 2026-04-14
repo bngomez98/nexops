@@ -61,6 +61,12 @@ export interface NewRequestInput {
   accessRequirements?: string
 }
 
+export interface PortalPreferences {
+  notifyMessages: boolean
+  notifyStatus: boolean
+  notifyPayments: boolean
+}
+
 /* ── Context value shape ──────────────────────────────────────────────────── */
 
 interface PortalContextValue {
@@ -68,6 +74,7 @@ interface PortalContextValue {
   jobs: PortalJob[]
   notifications: PortalNotification[]
   conversations: PortalConversation[]
+  preferences: PortalPreferences
   loading: boolean
   error: string | null
   refresh: () => Promise<void>
@@ -81,6 +88,9 @@ interface PortalContextValue {
   advanceStatus: (jobId: string) => Promise<void>
   assignContractor: (jobId: string, contractorId: string) => Promise<void>
   postMessage: (jobId: string, body: string) => Promise<PortalMessage | null>
+  updateProfile: (fields: { name?: string; phone?: string; bio?: string; serviceCategories?: string[] }) => Promise<void>
+  updateAvatar: (file: File) => Promise<string>
+  updatePreferences: (prefs: Partial<PortalPreferences>) => Promise<void>
 }
 
 const PortalContext = createContext<PortalContextValue | undefined>(undefined)
@@ -137,10 +147,16 @@ function mapUser(u: any): PortalUser {
     name,
     email: u.email ?? '',
     phone: u.phone ?? null,
+    bio: u.bio ?? null,
     role: u.role ?? 'homeowner',
     avatarUrl: u.avatarUrl ?? u.avatar_url ?? null,
     initials: buildInitials(name),
     avatarColor: avatarGradient(name),
+    rating: u.rating ?? null,
+    jobsCompleted: u.jobsCompleted ?? u.jobs_completed ?? null,
+    serviceCategories: Array.isArray(u.serviceCategories ?? u.service_categories)
+      ? (u.serviceCategories ?? u.service_categories)
+      : [],
   }
 }
 
@@ -160,11 +176,18 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 
 /* ── Provider ─────────────────────────────────────────────────────────────── */
 
+const DEFAULT_PREFS: PortalPreferences = {
+  notifyMessages: true,
+  notifyStatus: true,
+  notifyPayments: false,
+}
+
 export function PortalProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<PortalUser | null>(null)
   const [jobs, setJobs] = useState<PortalJob[]>([])
   const [notifications, setNotifications] = useState<PortalNotification[]>([])
   const [conversations, setConversations] = useState<PortalConversation[]>([])
+  const [preferences, setPreferences] = useState<PortalPreferences>(DEFAULT_PREFS)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const mountedRef = useRef(true)
@@ -173,10 +196,30 @@ export function PortalProvider({ children }: { children: ReactNode }) {
 
   const loadUser = useCallback(async () => {
     try {
-      const data = await apiFetch<Record<string, unknown>>('/api/auth/me')
-      if (mountedRef.current) setCurrentUser(mapUser(data))
+      // Prefer bootstrap which returns richer user data (serviceCategories, rating, preferences)
+      const data = await apiFetch<Record<string, unknown>>('/api/portal/bootstrap')
+      if (mountedRef.current) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const cu = (data as any).currentUser
+        if (cu) setCurrentUser(mapUser(cu))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const prefs = (data as any).preferences
+        if (prefs && typeof prefs === 'object') {
+          setPreferences({
+            notifyMessages: Boolean(prefs.notifyMessages ?? true),
+            notifyStatus: Boolean(prefs.notifyStatus ?? true),
+            notifyPayments: Boolean(prefs.notifyPayments ?? false),
+          })
+        }
+      }
     } catch {
-      if (mountedRef.current) setCurrentUser(null)
+      // Fallback to auth/me
+      try {
+        const data = await apiFetch<Record<string, unknown>>('/api/auth/me')
+        if (mountedRef.current) setCurrentUser(mapUser(data))
+      } catch {
+        if (mountedRef.current) setCurrentUser(null)
+      }
     }
   }, [])
 
@@ -281,7 +324,6 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const refreshJob = useCallback(async (jobId: string) => {
     try {
       const data = await apiFetch<Record<string, unknown>>(`/api/projects/${jobId}`)
-      // API may return { project: {...} } or the object directly
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const raw: any = (data as any).project ?? data
       const updated = mapProject(raw)
@@ -289,7 +331,6 @@ export function PortalProvider({ children }: { children: ReactNode }) {
         setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)))
       }
     } catch {
-      // Fall back to full refresh
       await refreshJobs()
     }
   }, [refreshJobs])
@@ -346,7 +387,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     [refreshJob],
   )
 
-  /* ── Assign contractor (reuses claim endpoint) ────────────────────────── */
+  /* ── Assign contractor ────────────────────────────────────────────────── */
 
   const assignContractor = useCallback(
     async (jobId: string, contractorId: string) => {
@@ -375,7 +416,6 @@ export function PortalProvider({ children }: { children: ReactNode }) {
           body: JSON.stringify({ projectId: jobId, status: nextStatus }),
         })
       } catch {
-        // Fallback to direct project update
         await apiFetch(`/api/projects/${jobId}`, {
           method: 'PATCH',
           body: JSON.stringify({ status: nextStatus }),
@@ -413,6 +453,74 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     [currentUser],
   )
 
+  /* ── Update profile ───────────────────────────────────────────────────── */
+
+  const updateProfile = useCallback(
+    async (fields: { name?: string; phone?: string; bio?: string; serviceCategories?: string[] }) => {
+      await apiFetch<Record<string, unknown>>('/api/portal/profile', {
+        method: 'PUT',
+        body: JSON.stringify(fields),
+      })
+      if (mountedRef.current) {
+        setCurrentUser((prev) => {
+          if (!prev) return prev
+          const newName = fields.name ?? prev.name
+          return {
+            ...prev,
+            name: newName,
+            initials: buildInitials(newName),
+            avatarColor: avatarGradient(newName),
+            phone: fields.phone !== undefined ? fields.phone : prev.phone,
+            bio: fields.bio !== undefined ? fields.bio : prev.bio,
+            serviceCategories: fields.serviceCategories !== undefined ? fields.serviceCategories : prev.serviceCategories,
+          }
+        })
+      }
+    },
+    [],
+  )
+
+  /* ── Update avatar ────────────────────────────────────────────────────── */
+
+  const updateAvatar = useCallback(async (file: File): Promise<string> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('bucket', 'profile-photos')
+
+    const res = await fetch('/api/upload', { method: 'POST', body: formData })
+    if (!res.ok) {
+      const text = await res.text().catch(() => res.statusText)
+      throw new Error(text || 'Upload failed')
+    }
+    const uploadData = (await res.json()) as { url: string }
+
+    await apiFetch<Record<string, unknown>>('/api/portal/profile', {
+      method: 'PUT',
+      body: JSON.stringify({ avatarUrl: uploadData.url }),
+    })
+
+    if (mountedRef.current) {
+      setCurrentUser((prev) => (prev ? { ...prev, avatarUrl: uploadData.url } : prev))
+    }
+    return uploadData.url
+  }, [])
+
+  /* ── Update preferences ───────────────────────────────────────────────── */
+
+  const updatePreferences = useCallback(async (prefs: Partial<PortalPreferences>) => {
+    if (mountedRef.current) {
+      setPreferences((prev) => ({ ...prev, ...prefs }))
+    }
+    try {
+      await apiFetch<Record<string, unknown>>('/api/portal/preferences', {
+        method: 'PUT',
+        body: JSON.stringify(prefs),
+      })
+    } catch {
+      /* optimistic update stays */
+    }
+  }, [])
+
   /* ── Memoised context value ───────────────────────────────────────────── */
 
   const value = useMemo<PortalContextValue>(
@@ -421,6 +529,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
       jobs,
       notifications,
       conversations,
+      preferences,
       loading,
       error,
       refresh,
@@ -434,12 +543,16 @@ export function PortalProvider({ children }: { children: ReactNode }) {
       advanceStatus,
       assignContractor,
       postMessage,
+      updateProfile,
+      updateAvatar,
+      updatePreferences,
     }),
     [
       currentUser,
       jobs,
       notifications,
       conversations,
+      preferences,
       loading,
       error,
       refresh,
@@ -453,6 +566,9 @@ export function PortalProvider({ children }: { children: ReactNode }) {
       advanceStatus,
       assignContractor,
       postMessage,
+      updateProfile,
+      updateAvatar,
+      updatePreferences,
     ],
   )
 
@@ -466,3 +582,4 @@ export function usePortal(): PortalContextValue {
   if (!ctx) throw new Error('usePortal must be used inside <PortalProvider>')
   return ctx
 }
+

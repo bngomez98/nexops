@@ -5,7 +5,7 @@ type Tone = 'default' | 'muted' | 'dark' | 'primary'
 const toneClasses: Record<Tone, string> = {
   default: 'bg-background text-foreground',
   muted: 'bg-card text-foreground',
-  dark: 'bg-[#0a0a0a] text-white',
+  dark: 'bg-[#0d1a11] text-white',
   primary: 'bg-primary text-primary-foreground',
 }
 

@@ -12,12 +12,12 @@ function NexusIcon({ size = 30, className = '' }: { size?: number; className?: s
       aria-hidden="true"
       className={className}
     >
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round" />
-      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="5.5" strokeLinecap="round" />
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
-      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#3d7a4f" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
-      <line x1="60" y1="47" x2="60" y2="73" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round" />
-      <line x1="47" y1="60" x2="73" y2="60" stroke="#3d7a4f" strokeWidth="5" strokeLinecap="round" />
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#2d6a42" strokeWidth="5.5" strokeLinecap="round" />
+      <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#2d6a42" strokeWidth="5.5" strokeLinecap="round" />
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#2d6a42" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+      <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#2d6a42" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+      <line x1="60" y1="47" x2="60" y2="73" stroke="#2d6a42" strokeWidth="5" strokeLinecap="round" />
+      <line x1="47" y1="60" x2="73" y2="60" stroke="#2d6a42" strokeWidth="5" strokeLinecap="round" />
     </svg>
   )
 }
