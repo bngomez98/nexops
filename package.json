@@ -10,10 +10,11 @@
     "lint": "eslint .",
     "start": "next start",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=20",
+    "node": ">=20 <25",
     "pnpm": ">=9"
   },
   "dependencies": {
@@ -22,9 +23,6 @@
     "@edge-runtime/vm": "latest",
     "@hookform/resolvers": "^3.10.0",
     "@opentelemetry/api": "latest",
-    "@pinia/colada": "latest",
-    "@prisma/adapter-better-sqlite3": "^7.4.1",
-    "@prisma/client": "^7.4.1",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
@@ -55,10 +53,8 @@
     "@vitest/browser-preview": "latest",
     "@vitest/browser-webdriverio": "latest",
     "@vitest/ui": "latest",
-    "@vue/compiler-sfc": "latest",
     "ai": "6.0.134",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.6.2",
     "canvas": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,11 +64,9 @@
     "framer-motion": "^12.38.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.475.0",
-    "next": "^15.2.4",
+    "next": "^15.5.15",
     "next-themes": "^0.4.6",
-    "pinia": "latest",
     "playwright": "latest",
-    "prisma": "latest",
     "react": "^19.0.0",
     "react-day-picker": "^9.5.1",
     "react-dom": "^19.0.0",
@@ -89,8 +83,6 @@
     "vaul": "^1.1.2",
     "vite": "latest",
     "vitest": "latest",
-    "vue-router": "latest",
-    "webdriverio": "latest",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -113,7 +105,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
-      "better-sqlite3",
       "canvas",
       "esbuild",
       "sharp"

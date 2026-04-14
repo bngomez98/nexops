@@ -13,7 +13,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
@@ -24,29 +27,26 @@ export async function POST(request: NextRequest) {
     if (!projectId || !newStatus) {
       return NextResponse.json(
         { error: 'projectId and newStatus are required' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
-    // Get the project
-    const { data: project, error: projError } = await supabase
+    const { data: project, error: projectError } = await supabase
       .from('service_requests')
-      .select('*')
+      .select('id, owner_id, assigned_contractor_id, status, additional_notes, category')
       .eq('id', projectId)
       .single()
 
-    if (projError || !project) {
+    if (projectError || !project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    // Verify user is owner or assigned contractor
     const isOwner = project.owner_id === user.id
     const isContractor = project.assigned_contractor_id === user.id
     if (!isOwner && !isContractor) {
       return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
     }
 
-    // Validate state transition
     const currentStatus = project.status
     if (!isValidTransition(currentStatus, newStatus)) {
       const validNextStates = STATUS_TRANSITIONS[currentStatus] ?? []
@@ -55,23 +55,21 @@ export async function POST(request: NextRequest) {
           error: `Invalid transition: ${currentStatus} → ${newStatus}`,
           validTransitions: validNextStates,
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
-    // Update the project status
     const { error: updateError } = await supabase
       .from('service_requests')
       .update({
         status: newStatus,
         updated_at: new Date().toISOString(),
-        status_reason: reason || null,
+        status_reason: typeof reason === 'string' && reason.trim() ? reason.trim() : null,
       })
       .eq('id', projectId)
 
     if (updateError) throw updateError
 
-    // Create notification for stakeholders
     const notificationRecipients = [project.owner_id]
     if (project.assigned_contractor_id) {
       notificationRecipients.push(project.assigned_contractor_id)
@@ -88,22 +86,32 @@ export async function POST(request: NextRequest) {
       cancelled: 'Cancelled',
     }
 
-    const { error: notifError } = await supabase
+    const projectLabel =
+      (typeof project.additional_notes === 'string' && project.additional_notes.split('\n')[0]) ||
+      project.category ||
+      'Project'
+
+    const { error: notificationError } = await supabase
       .from('notifications')
       .insert(
-        notificationRecipients.map(recipientId => ({
+        notificationRecipients.map((recipientId) => ({
           user_id: recipientId,
           type: 'status_update',
           title: `Project status updated: ${statusLabels[newStatus]}`,
-          message: `Your project has been updated to ${statusLabels[newStatus]}.`,
-          project_id: projectId,
+          body: `${projectLabel} has been updated to ${statusLabels[newStatus]}.`,
+          link: `/dashboard/requests/${projectId}`,
+          metadata: {
+            projectId,
+            newStatus,
+            reason: typeof reason === 'string' ? reason : null,
+          },
           read: false,
           created_at: new Date().toISOString(),
-        }))
+        })),
       )
 
-    if (notifError) {
-      console.error('[POST /api/automation/update-project-status] notification insert error:', notifError)
+    if (notificationError) {
+      console.error('[POST /api/automation/update-status] notification insert error:', notificationError)
     }
 
     return NextResponse.json({
@@ -113,8 +121,8 @@ export async function POST(request: NextRequest) {
       newStatus,
       timestamp: new Date().toISOString(),
     })
-  } catch (err) {
-    console.error('[POST /api/automation/update-status]', err)
+  } catch (error) {
+    console.error('[POST /api/automation/update-status]', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

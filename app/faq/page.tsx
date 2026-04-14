@@ -1,220 +1,226 @@
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowLeft, ChevronRight } from "lucide-react"
-import { CONTACT_INFO } from "@/lib/contact-info"
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowRight, HelpCircle, Mail, Phone } from 'lucide-react'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
+import { Section } from '@/components/section'
+import { CONTACT_INFO } from '@/lib/contact-info'
 
-export const metadata = {
-  title: "FAQ | Nexus Operations",
+export const metadata: Metadata = {
+  title: 'FAQ — Nexus Operations',
   description:
-    "Frequently asked questions about Nexus Operations — how to submit service requests, contractor verification, exclusive assignment, fees, and platform policies in Topeka, KS.",
-  keywords: [
-    "Nexus Operations FAQ",
-    "how to hire contractor Topeka",
-    "contractor verification Topeka KS",
-    "property service questions",
-    "home repair FAQ Topeka",
-    "contractor claims process",
-    "property manager FAQ",
-    "homeowner service request help",
-  ],
-  alternates: {
-    canonical: "https://nexusoperations.org/faq",
-  },
+    'Frequently asked questions about Nexus Operations — how to submit service requests, contractor verification, response commitments, pricing, and platform policies in Topeka, KS.',
+  alternates: { canonical: 'https://nexusoperations.org/faq' },
   openGraph: {
-    title: "FAQ | Nexus Operations",
+    title: 'FAQ — Nexus Operations',
     description:
-      "Everything you need to know about submitting requests, contractor verification, exclusive assignment, and platform policies.",
-    url: "https://nexusoperations.org/faq",
-    type: "article",
-  },
-  twitter: {
-    title: "FAQ | Nexus Operations",
-    description:
-      "Everything you need to know about submitting requests, contractor verification, exclusive assignment, and platform policies.",
+      'Everything you need to know about submitting requests, contractor verification, response commitments, and platform policies.',
+    url: 'https://nexusoperations.org/faq',
+    type: 'article',
   },
 }
 
 const sections = [
   {
-    category: "Property Owners",
+    category: 'For homeowners & property owners',
     questions: [
       {
-        q: "How do I submit a service request?",
-        a: "Log in to your account, select the trade category, upload project photos, describe the scope of work, set a maximum budget, and provide your availability for a contractor consultation. Requests that meet all documentation requirements are routed to the contractor network.",
+        q: 'How do I submit a service request?',
+        a: 'Sign in to your dashboard, pick the trade category, upload a few photos, describe the issue, and choose an availability window. A Nexus team member reads the request, confirms scope, and dispatches a license-verified contractor within the SLA window for the urgency tier you selected.',
       },
       {
-        q: "What information is required to submit a request?",
-        a: "Every request requires: 2–10 project photos, a written scope of work describing what needs to be done, a maximum budget cap, the property address, and at least one preferred consultation window. Requests that do not meet these requirements cannot be submitted.",
+        q: 'What information do I need to include with a request?',
+        a: 'A short written description of the issue, 2–10 photos showing the scope, the property address, and at least one preferred visit window. Optional: a preferred budget ceiling, access notes (lockbox codes, pet warnings), and any contractor preferences.',
       },
       {
-        q: "Will multiple contractors contact me about my request?",
-        a: "No. Only one contractor is assigned per request. Once a contractor claims your request, it is immediately removed from all other contractors' feeds. You will not receive calls, emails, or visits from competing contractors.",
+        q: 'Will multiple contractors contact me about my request?',
+        a: 'No. Nexus is not a marketplace. One Nexus team member reviews your request and assigns it to one contractor. You will not receive cold calls, emails, or competing quotes from other tradespeople.',
       },
       {
-        q: "How quickly will a contractor claim my request?",
-        a: "Claim times vary by trade and availability in your area. When a contractor claims your request, both parties receive a confirmed consultation appointment within 24 hours. If no contractor is available, you will be notified directly — there is no indefinite waiting period.",
+        q: 'How fast will someone be on-site?',
+        a: 'It depends on the urgency tier you selected. Routine: assigned within 24 hours, on-site in 3–5 business days. Urgent: assigned within 4 hours, on-site next business day. Emergency: assigned within 1 hour, on-site within 4 hours (24/7).',
       },
       {
-        q: "Am I obligated to hire the contractor after the consultation?",
-        a: "No. After the consultation, the contractor provides a written, itemized estimate. You can accept the estimate, negotiate, or decline with no obligation or cancellation fees.",
+        q: 'Am I obligated to accept the quote?',
+        a: 'No. After the on-site visit, the contractor provides a written estimate. You can accept, negotiate scope, or decline with no cancellation fee. If you decline, the request closes out cleanly in your dashboard.',
       },
       {
-        q: "Can I cancel a submitted request?",
-        a: "Yes. You may cancel an open request at any time before a contractor claims it. Once a contractor has claimed and a consultation is scheduled, cancellations must be made at least 24 hours in advance. Repeated same-day cancellations may affect your account standing.",
+        q: 'Can I cancel a request I already submitted?',
+        a: 'Yes. You can cancel any open request before a contractor is on-site. Once a contractor has been dispatched and is en route, same-day cancellations may incur a trip fee from the contractor — we will always tell you in advance if that applies.',
       },
       {
-        q: "I manage multiple properties. Can one account cover all of them?",
-        a: `Yes. Property manager accounts support multiple property addresses under a single login, with per-property request history and tracking. Register as a Property Manager during sign-up or contact ${CONTACT_INFO.email} to upgrade an existing account.`,
+        q: 'I manage several properties. Can one account cover all of them?',
+        a: `Yes. Property manager accounts support unlimited property addresses under a single login with per-property request history. For portfolios of 10+ units, consider our dedicated commercial engagement — contact ${CONTACT_INFO.email} to get started.`,
       },
     ],
   },
   {
-    category: "Contractors",
+    category: 'For contractors',
     questions: [
       {
-        q: "What is required to join as a contractor?",
-        a: "Contractor applications require: a valid Kansas contractor license (or equivalent trade license) and proof of current general liability insurance. All applications are reviewed manually by Nexus Operations staff. Applications missing required documentation will not be approved.",
+        q: 'What does it cost to join the contractor network?',
+        a: 'Nothing. Starter contractor accounts are free, forever. Pro and Elite tiers are optional upgrades that raise project capacity limits and enable priority routing, but they are not required to receive work.',
       },
       {
-        q: "How does the claim process work?",
-        a: "When a new request matching your service categories and area is submitted, you receive a notification. The first qualified contractor to tap 'Claim' secures the request exclusively. The listing is removed from all other contractors' feeds at the moment of claim. You then receive the property owner's full contact information and a confirmed consultation appointment.",
+        q: 'What is required to join?',
+        a: 'A valid Kansas business license, applicable trade licenses for your service categories, current general liability insurance (minimum $500K per occurrence), workers compensation (if you have employees), and two references or prior client endorsements.',
       },
       {
-        q: "What information do I receive before claiming a request?",
-        a: "Before claiming, you can see: the service category, a brief project description, the property address, the budget ceiling, the number of photos attached, and the property owner's availability windows. Full photo access and direct contact information are provided after you claim.",
+        q: 'How are contractors verified?',
+        a: 'Every applicant goes through a three-part verification. We cross-check license numbers against Kansas state records, confirm insurance certificates directly with the issuing carrier (not just the document), and contact references. Verification typically takes 3–5 business days, and credentials are re-verified annually.',
       },
       {
-        q: "Is there a cost to join the Nexus contractor network?",
-        a: "Joining the contractor network is free. Nexus Operations does not charge contractors subscription fees or lead fees. Contractors receive their full quoted rate on every job. Nexus Operations collects payment from the client and pays contractors directly within 30 days of job completion.",
+        q: 'How fast do I get paid?',
+        a: 'Nexus pays contractors directly after each completed job on the schedule configured in your payout settings. We never hold funds or take a percentage of your quoted rate — you get exactly what you quoted.',
       },
       {
-        q: "What happens if I claim a request but cannot make the consultation?",
-        a: `Contact ${CONTACT_INFO.email} as soon as possible. The request may be released back to the open pool at Nexus Operations' discretion. Repeated failures to honor claimed consultations will result in account suspension.`,
+        q: 'Do I have to accept every job that routes to me?',
+        a: 'No. You can decline any assignment for any reason. Consistently meeting SLA on accepted jobs is how contractors earn priority placement on higher-value work over time.',
       },
       {
-        q: "Can I set which request types and geographic area I receive?",
-        a: "Yes. Your contractor profile allows you to select active service categories (e.g., HVAC, Electrical, Roofing) and set a service radius in miles from your registered address. You will only receive notifications for requests that match both filters.",
+        q: 'Can I set my own rates and service area?',
+        a: 'Yes. You quote every job at your own rate, and your profile includes a service radius in miles from your registered address plus active trade categories. You will only receive work that matches both filters.',
       },
     ],
   },
   {
-    category: "Platform Policies",
+    category: 'Platform & policies',
     questions: [
       {
-        q: "Is Nexus Operations available outside Topeka, KS?",
-        a: "Currently, Nexus Operations serves Topeka, Kansas and the immediate surrounding Shawnee County area. Expansion to additional markets will be announced on this site and via contractor newsletter.",
+        q: 'Is Nexus Operations available outside Topeka?',
+        a: 'Not yet. We currently serve Topeka and the surrounding Shawnee County area exclusively. Expansion to additional Kansas markets will be announced here first.',
       },
       {
-        q: "How are contractors verified — and what exactly does that review involve?",
-        a: "Every contractor undergoes a three-part verification before receiving any assignments. First, the license number is cross-checked against Kansas KLCA records and the relevant trade board database (e.g., Kansas State Board of Technical Professions for electrical, Kansas Department of Health and Environment for HVAC). Second, the insurance certificate is confirmed directly with the issuing insurance company — not just reviewed as a document — to verify the policy is active and meets our minimums ($500K general liability per occurrence). Third, if references are provided, we contact them. Verification typically takes 3–5 business days. Credentials are re-verified annually and whenever a policy approaches expiration; lapsed coverage results in automatic suspension from the network. Commercial clients may request the license number and current insurance certificate for any assigned contractor before a job begins.",
+        q: 'How does pricing work?',
+        a: 'Homeowners and commercial clients subscribe to a plan that includes dispatch, documentation, and unified invoicing. Contractor work is billed at the contractor\'s quoted rate and rolled into a monthly unified invoice. See the pricing page for current plans and features.',
       },
       {
-        q: "What happens to my submitted photos and project data?",
-        a: "Project photos and details are used solely for matching you with a contractor and facilitating the consultation. Your data is never sold, shared with advertising networks, or distributed to multiple contractors. See the Privacy Policy for full data handling details.",
+        q: 'What happens to photos and project data I submit?',
+        a: 'Project photos and details are used solely for matching you with a contractor and documenting the job in your account. Your data is never sold, shared with advertising networks, or distributed to third parties. See the privacy policy for full data handling details.',
       },
       {
-        q: "What are business hours, and how do I reach someone for an after-hours emergency?",
-        a: `General support: ${CONTACT_INFO.phoneDisplay}, Monday through Friday 8 am–5 pm CT. Email: ${CONTACT_INFO.email}. For after-hours emergencies (burst pipes, gas leaks, HVAC failure in extreme weather), use the emergency line: emergency@nexusoperations.org. An on-call coordinator responds within 15 minutes around the clock — including nights, weekends, and holidays. Emergency jobs are assigned to a contractor within 1 hour and a contractor is on-site within 4 hours.`,
+        q: 'How do I reach someone after hours for an emergency?',
+        a: `General support runs ${CONTACT_INFO.businessHours} at ${CONTACT_INFO.phoneDisplay} or ${CONTACT_INFO.email}. For after-hours emergencies — burst pipes, gas leaks, HVAC failure in extreme weather — email emergency@nexusoperations.org. An on-call Nexus team member responds within 15 minutes around the clock, including nights, weekends, and holidays.`,
+      },
+      {
+        q: 'What if I have a complaint about a contractor or a job?',
+        a: `Email ${CONTACT_INFO.email} with the request ID and a description of the issue. Nexus Operations will investigate, contact the contractor, and resolve the issue. If a job falls short of our standards, we will make it right.`,
       },
     ],
   },
 ]
 
 const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
   mainEntity: sections.flatMap((section) =>
     section.questions.map(({ q, a }) => ({
-      "@type": "Question",
+      '@type': 'Question',
       name: q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: a,
-      },
-    }))
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
   ),
 }
 
 export default function FAQPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 h-14">
-          <Link href="/">
-            <Image
-              src="/nexus-logo.png"
-              alt="Nexus Operations"
-              width={140}
-              height={47}
-              style={{ height: "32px", width: "auto" }}
-              priority
-            />
-          </Link>
-          <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
-            <Link href="/terms"   className="hover:text-foreground transition">Terms</Link>
-            <Link href="/privacy" className="hover:text-foreground transition">Privacy</Link>
-            <Link href="/faq"     className="text-foreground font-medium">FAQ</Link>
+      <Header />
+      <main>
+        {/* ── Hero ───────────────────────────────────────── */}
+        <section className="border-b border-border">
+          <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+              <HelpCircle className="h-3 w-3" /> FAQ
+            </p>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+              Everything you wanted to ask.
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+              How to submit requests, how contractors get verified, pricing, response commitments,
+              and the platform policies that govern every job.
+            </p>
           </div>
-        </div>
-      </header>
+        </section>
 
-      <div className="mx-auto max-w-3xl px-6 py-14">
-        <Link href="/" className="mb-8 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition">
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to {CONTACT_INFO.website}
-        </Link>
+        {/* ── FAQ sections ───────────────────────────────── */}
+        <Section>
+          <div className="mx-auto max-w-4xl space-y-14">
+            {sections.map((section) => (
+              <div key={section.category}>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  {section.category}
+                </p>
+                <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  {section.category === 'For homeowners & property owners'
+                    ? 'Submitting, tracking, and closing out requests.'
+                    : section.category === 'For contractors'
+                      ? 'Joining the network, quoting work, and getting paid.'
+                      : 'Verification, data handling, and the rules of the road.'}
+                </h2>
 
-        <h1 className="text-2xl font-bold mt-4">Frequently Asked Questions</h1>
-        <p className="mt-1.5 text-[13px] text-muted-foreground">
-          Questions about the platform process, fees, verification, and policies.
-        </p>
-
-        <div className="mt-10 space-y-10">
-          {sections.map((section) => (
-            <div key={section.category}>
-              <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-4">{section.category}</h2>
-              <div className="space-y-3">
-                {section.questions.map(({ q, a }) => (
-                  <details key={q} className="group rounded-lg border border-border bg-card overflow-hidden">
-                    <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-medium list-none select-none hover:bg-muted/50 transition">
-                      {q}
-                      <ChevronRight className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground transition-transform group-open:rotate-90" />
-                    </summary>
-                    <div className="border-t border-border px-5 py-4 text-[13px] text-muted-foreground leading-relaxed">
-                      {a}
-                    </div>
-                  </details>
-                ))}
+                <div className="mt-6 flex flex-col gap-3">
+                  {section.questions.map(({ q, a }) => (
+                    <details
+                      key={q}
+                      className="group rounded-2xl border border-border bg-card p-5 open:border-primary/40"
+                    >
+                      <summary className="flex cursor-pointer items-center justify-between gap-4 text-[14.5px] font-semibold text-foreground">
+                        {q}
+                        <ArrowRight className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-transform group-open:rotate-90" />
+                      </summary>
+                      <p className="mt-3 text-[13.5px] leading-relaxed text-muted-foreground">
+                        {a}
+                      </p>
+                    </details>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-14 rounded-lg border border-border bg-card p-6">
-          <h3 className="text-sm font-semibold mb-2">Still have a question?</h3>
-          <p className="text-[13px] text-muted-foreground mb-4">
-            Contact us directly or visit the Zendesk help center for additional documentation.
-          </p>
-          <div className="flex flex-wrap gap-3 text-[13px]">
-            <a href={CONTACT_INFO.phoneHref} className="text-primary hover:underline">{CONTACT_INFO.phoneDisplay}</a>
-            <a href="tel:+17857271106" className="text-primary hover:underline">785-727-1106</a>
-            <span className="text-border">·</span>
-            <a href={`mailto:${CONTACT_INFO.email}`} className="text-primary hover:underline">{CONTACT_INFO.email}</a>
-            <span className="text-border">·</span>
-            <a href="https://nexusoperations.zendesk.com/hc/en-us" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Help Center</a>
+            ))}
           </div>
-        </div>
+        </Section>
 
-        <div className="mt-10 border-t border-border pt-8 flex flex-wrap gap-6 text-[12px] text-muted-foreground">
-          <Link href="/terms"   className="hover:text-foreground transition">Terms of Service</Link>
-          <Link href="/privacy" className="hover:text-foreground transition">Privacy Policy</Link>
-          <Link href="/site-map" className="hover:text-foreground transition">Sitemap</Link>
-        </div>
-      </div>
-    </main>
+        {/* ── Still have questions ───────────────────────── */}
+        <Section tone="muted">
+          <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-background p-8 text-center sm:p-12">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+              Still have questions?
+            </p>
+            <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Reach out directly.
+            </h3>
+            <p className="mx-auto mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
+              Reach out directly and a member of the Nexus team will get back to you within one
+              business day — sooner for anything urgent.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition"
+              >
+                Contact us <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href={`mailto:${CONTACT_INFO.email}`}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
+              >
+                <Mail className="h-4 w-4" /> {CONTACT_INFO.email}
+              </a>
+              <a
+                href={CONTACT_INFO.phoneHref}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
+              >
+                <Phone className="h-4 w-4" /> {CONTACT_INFO.phoneDisplay}
+              </a>
+            </div>
+          </div>
+        </Section>
+      </main>
+      <Footer />
+    </div>
   )
 }

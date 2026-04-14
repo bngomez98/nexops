@@ -8,9 +8,23 @@ import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
 import { getPlansByRole, type Plan } from '@/lib/plans'
 import {
   Check, Crown, Loader2, ExternalLink, ArrowLeft,
-  CreditCard, Shield, AlertCircle, Zap, Star,
+  CreditCard, Shield, AlertCircle, Zap, Star, FileText, Download,
 } from 'lucide-react'
 import { toast } from 'sonner'
+
+interface SubscriptionInvoice {
+  id: string
+  number: string | null
+  status: string | null
+  amountDue: number
+  amountPaid: number
+  currency: string
+  created: number
+  periodStart: number
+  periodEnd: number
+  hostedInvoiceUrl: string | null
+  invoicePdf: string | null
+}
 
 interface UserData {
   id: string
@@ -27,6 +41,8 @@ export default function HomeownerBillingPage() {
   const [checkoutLoading, _setCheckoutLoading] = useState<string | null>(null)
   const [checkoutPlanId, setCheckoutPlanId] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
+  const [invoices, setInvoices] = useState<SubscriptionInvoice[]>([])
+  const [invoicesLoading, setInvoicesLoading] = useState(false)
 
   const plans = getPlansByRole('homeowner')
 
@@ -38,7 +54,21 @@ export default function HomeownerBillingPage() {
         const { user: u } = await res.json()
         if (u.role !== 'homeowner') { router.push('/dashboard/contractor/settings'); return }
         setUser(u)
-      } catch {
+        // Fetch subscription invoices
+        setInvoicesLoading(true)
+        try {
+          const invRes = await fetch('/api/stripe/subscription-invoices')
+          if (invRes.ok) {
+            const { invoices: data } = await invRes.json()
+            setInvoices(data ?? [])
+          }
+        } catch (invErr) {
+          console.error(invErr)
+        } finally {
+          setInvoicesLoading(false)
+        }
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -63,7 +93,8 @@ export default function HomeownerBillingPage() {
       const data = await res.json()
       if (!res.ok) { toast.error(data.error || 'Failed to open billing portal'); return }
       window.location.href = data.url
-    } catch {
+    } catch (err) {
+      console.error(err)
       toast.error('Something went wrong. Please try again.')
     } finally {
       setPortalLoading(false)
@@ -233,6 +264,86 @@ export default function HomeownerBillingPage() {
                 </div>
               )
             })}
+          </div>
+        </div>
+
+        {/* Invoice history */}
+        <div>
+          <h2 className="font-bold text-foreground text-[17px] mb-1">Invoice History</h2>
+          <p className="text-[13px] text-muted-foreground mb-5">
+            Download or view past subscription invoices.
+          </p>
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            {invoicesLoading ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+              </div>
+            ) : invoices.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
+                <FileText className="w-6 h-6" />
+                <p className="text-[13px] font-medium">No invoices yet</p>
+                <p className="text-[12px]">Your subscription invoices will appear here once your plan is active.</p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {invoices.map((inv) => {
+                  const amount = inv.amountDue > 0 ? inv.amountDue : inv.amountPaid
+                  const date = new Date(inv.created * 1000).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric',
+                  })
+                  const statusColor =
+                    inv.status === 'paid'
+                      ? 'text-emerald-600 bg-emerald-50 border-emerald-200'
+                      : inv.status === 'open'
+                        ? 'text-amber-600 bg-amber-50 border-amber-200'
+                        : 'text-muted-foreground bg-secondary border-border'
+
+                  return (
+                    <li key={inv.id} className="flex items-center justify-between gap-4 px-5 py-3.5 flex-wrap">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <FileText className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+                        <div className="min-w-0">
+                          <p className="text-[13px] font-medium text-foreground truncate">
+                            {inv.number ?? inv.id.slice(0, 12).toUpperCase()}
+                          </p>
+                          <p className="text-[11.5px] text-muted-foreground">{date}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <p className="text-[13px] font-semibold text-foreground">
+                          ${(amount / 100).toFixed(2)}
+                        </p>
+                        <span className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full border capitalize ${statusColor}`}>
+                          {inv.status}
+                        </span>
+                        {inv.hostedInvoiceUrl && (
+                          <a
+                            href={inv.hostedInvoiceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[12px] text-primary hover:underline"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            View
+                          </a>
+                        )}
+                        {inv.invoicePdf && (
+                          <a
+                            href={inv.invoicePdf}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            PDF
+                          </a>
+                        )}
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
           </div>
         </div>
 

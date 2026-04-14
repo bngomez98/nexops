@@ -43,6 +43,27 @@ pnpm build
 pnpm start
 \`\`\`
 
+
+## Database Configuration
+
+- Primary runtime database: **Supabase** (`NEXT_PUBLIC_SUPABASE_URL` + publishable/anon key)
+- Optional auxiliary Postgres variables for Neon are still supported, but app APIs and migrations target Supabase tables.
+- Source-of-truth schema for automated setup: `scripts/setup.sql`
+
+Apply schema with:
+
+```bash
+SUPABASE_PROJECT_REF=... SUPABASE_ACCESS_TOKEN=... node scripts/migrate.mjs
+```
+
+By default the migration runner applies `scripts/setup.sql`.
+
+To apply only the project trigger migration:
+
+```bash
+SUPABASE_PROJECT_REF=... SUPABASE_ACCESS_TOKEN=... SUPABASE_MIGRATION_FILE=013_project_triggers.sql node scripts/migrate.mjs
+```
+
 ## Project Structure
 
 \`\`\`

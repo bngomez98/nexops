@@ -1,11 +1,8 @@
 import { FlatCompat } from "@eslint/eslintrc"
 import js from "@eslint/js"
-import globals from "globals"
 import path from "path"
 import { fileURLToPath } from "url"
 import tseslint from "typescript-eslint"
-import nextPlugin from '@next/eslint-plugin-next'
-import tseslint from 'typescript-eslint'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -30,7 +27,6 @@ export default tseslint.config(
   ...compat.extends("next/core-web-vitals"),
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  nextPlugin.flatConfig.coreWebVitals,
   {
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],

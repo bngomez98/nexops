@@ -74,7 +74,8 @@ export default function RequestDetailPage({ params }: { params: Promise<{ id: st
         }
         const { project: p } = await projRes.json()
         setProject(p)
-      } catch {
+      } catch (err) {
+        console.error(err)
         setError('Failed to load project details.')
       } finally {
         setLoading(false)

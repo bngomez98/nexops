@@ -2,12 +2,39 @@ import type Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { getAdminClient } from '@/lib/supabase/admin'
+
 import {
   sendInvoicePaidContractorEmail,
   sendInvoicePaidClientEmail,
 } from '@/lib/email'
 
-type StripeSubWithPeriod = { current_period_start: number; current_period_end: number }
+/**
+ * Safely reads `current_period_start` / `current_period_end` from a Stripe
+ * subscription. In newer API versions these fields live on the first
+ * subscription item rather than the subscription itself, so we check both.
+ * Returns ISO strings (or null if unavailable).
+ */
+function getSubscriptionPeriod(sub: Stripe.Subscription): {
+  start: string | null
+  end: string | null
+} {
+  const s = sub as unknown as {
+    current_period_start?: number
+    current_period_end?: number
+  }
+  const item = sub.items?.data?.[0] as unknown as {
+    current_period_start?: number
+    current_period_end?: number
+  } | undefined
+
+  const startUnix = s.current_period_start ?? item?.current_period_start ?? null
+  const endUnix = s.current_period_end ?? item?.current_period_end ?? null
+
+  return {
+    start: startUnix ? new Date(startUnix * 1000).toISOString() : null,
+    end: endUnix ? new Date(endUnix * 1000).toISOString() : null,
+  }
+}
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -22,7 +49,8 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET)
-  } catch {
+  } catch (err) {
+    console.error(err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
@@ -82,6 +110,7 @@ export async function POST(req: NextRequest) {
         if (userId && planId && session.mode === 'subscription') {
           const subId = session.subscription as string
           const sub = await stripe.subscriptions.retrieve(subId)
+          const { start, end } = getSubscriptionPeriod(sub)
 
           await supabase.from('billing_subscriptions').upsert({
             user_id: userId,
@@ -89,8 +118,8 @@ export async function POST(req: NextRequest) {
             stripe_customer_id: session.customer as string,
             plan_id: planId,
             status: sub.status,
-            current_period_start: new Date((sub as unknown as StripeSubWithPeriod).current_period_start * 1000).toISOString(),
-            current_period_end: new Date((sub as unknown as StripeSubWithPeriod).current_period_end * 1000).toISOString(),
+            current_period_start: start,
+            current_period_end: end,
           }, { onConflict: 'stripe_subscription_id' })
 
           await supabase.from('profiles').update({
@@ -108,12 +137,13 @@ export async function POST(req: NextRequest) {
         const sub = event.data.object as Stripe.Subscription
         const status = sub.status
         const planId = sub.metadata?.planId
+        const { start, end } = getSubscriptionPeriod(sub)
 
         await supabase.from('billing_subscriptions')
           .update({
             status,
-            current_period_start: new Date((sub as unknown as StripeSubWithPeriod).current_period_start * 1000).toISOString(),
-            current_period_end: new Date((sub as unknown as StripeSubWithPeriod).current_period_end * 1000).toISOString(),
+            current_period_start: start,
+            current_period_end: end,
             cancel_at_period_end: sub.cancel_at_period_end,
           })
           .eq('stripe_subscription_id', sub.id)
@@ -167,7 +197,7 @@ export async function POST(req: NextRequest) {
             .from('jobs')
             .select('service_type')
             .eq('id', nexusInvoice.job_id)
-            .single()
+            .maybeSingle()
 
           // Send receipt emails (fire-and-forget)
           ;(async () => {
@@ -178,8 +208,8 @@ export async function POST(req: NextRequest) {
                 admin.auth.admin.getUserById(nexusInvoice.client_id),
               ])
               const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
-                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.contractor_id).maybeSingle(),
-                supabase.from('profiles').select('full_name').eq('user_id', nexusInvoice.client_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
+                supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
               ])
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([

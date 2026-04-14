@@ -105,7 +105,8 @@ export default function NewProjectRequest() {
         const data = await res.json()
         if (data.user.role !== 'homeowner') { router.push('/dashboard/contractor'); return }
         setUser(data.user)
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -150,7 +151,8 @@ export default function NewProjectRequest() {
               : 'Automated request analysis is temporarily unavailable. You can still submit your request.'
           )
         }
-      } catch {
+      } catch (err) {
+        console.error(err)
         setAnalysisError('Automated request analysis is temporarily unavailable. You can still submit your request.')
       } finally {
         setAnalyzingText(false)

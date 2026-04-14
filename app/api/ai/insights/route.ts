@@ -26,6 +26,10 @@ interface ContractorProfile {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ error: 'AI features are not configured' }, { status: 503 })
+    }
+
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
@@ -35,7 +39,8 @@ export async function POST(req: NextRequest) {
     let body: { role: string; requests?: InsightRequest[] | ProjectScore[]; profile?: ContractorProfile }
     try {
       body = await req.json()
-    } catch {
+    } catch (err) {
+      console.error(err)
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
     }
 

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { messageWithJobSchema } from '@/lib/validators'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/messages — list all conversations for the current user
 export async function GET() {
   try {
@@ -112,11 +114,11 @@ export async function POST(request: NextRequest) {
     // Verify the sender is a party to this job
     const { data: job } = await supabase
       .from('service_requests')
-      .select('owner_id, contractor_id')
+      .select('owner_id, assigned_contractor_id')
       .eq('id', job_id)
       .single()
 
-    if (!job || (job.owner_id !== user.id && job.contractor_id !== user.id)) {
+    if (!job || (job.owner_id !== user.id && job.assigned_contractor_id !== user.id)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

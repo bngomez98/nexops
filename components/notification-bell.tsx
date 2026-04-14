@@ -30,7 +30,8 @@ export function NotificationBell() {
         const data = await res.json()
         setNotifications(data.notifications ?? [])
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       // Swallow network errors — keep existing state.
     } finally {
       setLoading(false)

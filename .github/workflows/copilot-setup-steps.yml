@@ -1,0 +1,10 @@
+            - name: Setup Flowpipe
+  # You may pin to the exact commit or the version.
+  # uses: turbot/flowpipe-action-setup@cb25645f42ae071a051b83fcac8a6efe76462af8
+  uses: turbot/flowpipe-action-setup@v1.0.0
+  with:
+    # Flowpipe CLI version to install. Defaults to "latest". Examples: latest, 0.1.0, 0.2.2.
+    flowpipe-version: # optional, default is latest
+    # Flowpipe credentials to create. Accepts HCL format.
+    flowpipe-config: # optional
+          

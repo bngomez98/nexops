@@ -44,7 +44,8 @@ export default function MessagesPage() {
       if (!res.ok) return
       const data = await res.json() as { conversations: Conversation[] }
       setConversations(data.conversations ?? [])
-    } catch {
+    } catch (err) {
+      console.error(err)
       // network error — keep existing state
     }
   }, [])
@@ -57,7 +58,8 @@ export default function MessagesPage() {
         const { user: me } = await res.json() as { user: User }
         setUser(me)
         await loadConversations()
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
