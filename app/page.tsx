@@ -174,7 +174,7 @@ export default function HomePage() {
       <main>
         {/* ── Hero ────────────────────────────────────────────── */}
         <section className="relative overflow-hidden border-b border-border">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(61,122,79,0.08),transparent_55%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(45,106,66,0.13),transparent_55%)]" />
           <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-20 sm:pt-20 lg:pt-24 lg:pb-24">
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16 lg:items-center">
               <div className="lg:col-span-7">
@@ -285,14 +285,14 @@ export default function HomePage() {
         </Section>
 
         {/* ── Stats strip ─────────────────────────────────────── */}
-        <section className="border-b border-border bg-[#0a0a0a]">
+        <section className="border-b border-border bg-[#0d1a11]">
           <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-white/10 sm:grid-cols-4">
             {stats.map(({ value, label }) => (
               <div key={label} className="px-6 py-8 text-center">
                 <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                   {value}
                 </p>
-                <p className="mt-1 text-[11.5px] font-medium uppercase tracking-[0.08em] text-white/50">
+                <p className="mt-1 text-[11.5px] font-medium uppercase tracking-[0.08em] text-white/55">
                   {label}
                 </p>
               </div>
@@ -613,8 +613,10 @@ export default function HomePage() {
         </Section>
 
         {/* ── Final CTA ──────────────────────────────────────── */}
-        <section className="bg-primary">
-          <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
+        <section className="relative overflow-hidden bg-primary">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_140%_100%_at_50%_-30%,rgba(255,255,255,0.16),transparent_65%)]" />
+          <div className="pointer-events-none absolute inset-0 dot-grid-dark opacity-40" />
+          <div className="relative mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-[44px]">
               Ready for one team to run your maintenance playbook?
             </h2>

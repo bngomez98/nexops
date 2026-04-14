@@ -36,7 +36,7 @@ export default function GlobalError({
               fontWeight: 600,
               textTransform: 'uppercase',
               letterSpacing: '0.16em',
-              color: '#3d7a4f',
+              color: '#2d6a42',
             }}
           >
             500
@@ -64,7 +64,7 @@ export default function GlobalError({
             support at{' '}
             <a
               href="mailto:admin@nexusoperations.org"
-              style={{ color: '#3d7a4f', textDecoration: 'underline' }}
+              style={{ color: '#2d6a42', textDecoration: 'underline' }}
             >
               admin@nexusoperations.org
             </a>
@@ -78,7 +78,7 @@ export default function GlobalError({
                 alignItems: 'center',
                 gap: '0.5rem',
                 borderRadius: '9999px',
-                backgroundColor: '#3d7a4f',
+                backgroundColor: '#2d6a42',
                 padding: '0.625rem 1.25rem',
                 fontSize: '0.875rem',
                 fontWeight: 600,
