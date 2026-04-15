@@ -2,6 +2,14 @@ function normalizeUrl(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url
 }
 
+export function parseBooleanEnv(value?: string): boolean {
+  if (!value) return false
+  const normalized = value.trim().toLowerCase()
+  if (['1', 'true', 'yes', 'on'].includes(normalized)) return true
+  if (['0', 'false', 'no', 'off'].includes(normalized)) return false
+  return false
+}
+
 function withHttps(url: string): string {
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url
@@ -77,4 +85,10 @@ export function getDatabaseUrlUnpooled(): string | undefined {
 
 export function getBlobToken(): string | undefined {
   return process.env.BLOB_READ_WRITE_TOKEN
+}
+
+export function isAutomationEnabled(): boolean {
+  return parseBooleanEnv(
+    process.env.AUTOMATION_ENABLED ?? process.env.NEXT_PUBLIC_AUTOMATION_ENABLED,
+  )
 }

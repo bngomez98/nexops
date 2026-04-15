@@ -49,7 +49,8 @@ export async function fetchClientSecret(planId: string): Promise<string> {
     customer: customerId,
     mode: 'subscription',
     ui_mode: 'embedded',
-    redirect_on_completion: 'never',
+    redirect_on_completion: 'always',
+    return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
     line_items: [lineItem],
     metadata: { userId: user.id, planId },
     subscription_data: {

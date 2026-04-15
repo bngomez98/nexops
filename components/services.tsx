@@ -28,21 +28,21 @@ const categories = [
     name: "HVAC",
     description: "Installation, repair, and maintenance for heating and cooling systems.",
     budget: "$3,000 - $20,000",
-    available: false,
+    available: true,
   },
   {
     icon: Fence,
     name: "Fencing",
     description: "Wood, vinyl, chain link, and iron fencing installation and repair.",
     budget: "$1,500 - $8,000",
-    available: false,
+    available: true,
   },
   {
     icon: Zap,
     name: "Electrical",
     description: "Panel upgrades, wiring, outlet installation, lighting, and code compliance.",
     budget: "$500 - $10,000",
-    available: false,
+    available: true,
   },
 ]
 
@@ -53,11 +53,11 @@ export function Services() {
         <div className="max-w-2xl mb-16">
           <p className="text-primary text-sm font-medium tracking-wide mb-3">Service categories</p>
           <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-4">
-            Launching with 3 categories, expanding fast
+            Six service categories, with more planned.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Each request requires photos, specifications, and a budget cap so contractors know exactly
-            what they are bidding on before they claim the lead.
+            Each request requires photos, specifications, and a budget cap so contractors
+            know the scope before they claim the lead.
           </p>
         </div>
 

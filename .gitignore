@@ -2,40 +2,57 @@
 
 # dependencies
 /node_modules
-.npm
-.pnpm-store
-.pnp
+/.pnp
 .pnp.js
+.pnp.cjs
+.pnp.loader.mjs
+
+# package manager caches / stores
+.npm
+.pnpm-store/
+.yarn/cache
+.yarn/install-state.gz
+
+# lockfiles from other package managers (this project uses pnpm)
 package-lock.json
 yarn.lock
+npm-shrinkwrap.json
+# NOTE: pnpm-lock.yaml MUST be committed — do not add it here.
 
 # testing
 coverage
+*.lcov
 
 # next.js
 /.next/
 /out/
+.swc/
 
 # production
 /build
 dist
 
-# debug
+# debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 .pnpm-debug.log*
+lerna-debug.log*
+logs
+*.log
 
-# env files
-.env*
+# env files (keep env.example / .env.example committed)
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!env.example
 
 # vercel
 .vercel
+
+# turbo
+.turbo
 
 # typescript
 *.tsbuildinfo
@@ -54,3 +71,6 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Local node compile cache (safety — don't commit)
+node-compile-cache/

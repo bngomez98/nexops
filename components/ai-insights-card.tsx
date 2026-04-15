@@ -69,7 +69,8 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
       const json = await res.json()
       setData(json)
       setFetched(true)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setError(true)
     } finally {
       setLoading(false)
@@ -130,7 +131,7 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
 
           {error && !loading && (
             <div className="flex flex-col items-center gap-2 py-6 text-center">
-              <p className="text-[13px] text-muted-foreground">Couldn't load insights right now.</p>
+              <p className="text-[13px] text-muted-foreground">Couldn&apos;t load insights right now.</p>
               <button onClick={fetchInsights} className="text-[12px] text-primary hover:underline flex items-center gap-1">
                 <RefreshCw className="w-3 h-3" /> Try again
               </button>

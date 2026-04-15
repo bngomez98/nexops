@@ -24,7 +24,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
     requestId = body.requestId
-  } catch {
+  } catch (err) {
+    console.error(err)
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
   }
   if (!requestId) {

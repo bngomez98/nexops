@@ -12,8 +12,8 @@ function getResend(): Resend {
   if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
   return _resend
 }
-const FROM   = process.env.RESEND_FROM_EMAIL ?? 'Nexus Operations <noreply@nexusops.com>'
-const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusops.com'
+const FROM   = process.env.RESEND_FROM_EMAIL ?? 'Nexus Operations <noreply@nexusoperations.org>'
+const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nexusoperations.org'
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
@@ -41,7 +41,7 @@ ${body}
 </td></tr>
 <tr><td style="padding:20px 32px;border-top:1px solid #f0f0f0;background:#fafafa;">
 <p style="margin:0;font-size:12px;color:#9ca3af;">
-Nexus Operations · Topeka, KS · <a href="${SITE}" style="color:#6366f1;">nexusops.com</a>
+Nexus Operations · Topeka, KS · <a href="${SITE}" style="color:#6366f1;">nexusoperations.org</a>
 </p>
 </td></tr>
 </table>
@@ -294,7 +294,7 @@ export async function sendContactFormEmail(opts: {
   type: string
   message: string
 }) {
-  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusops.com'
+  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.org'
   await send({
     to: adminEmail,
     subject: `New contact form: ${fmt(opts.type)} inquiry from ${opts.name}`,
@@ -320,6 +320,105 @@ export async function sendContactFormEmail(opts: {
       </table>
       ${p(opts.message)}
       ${small(`Reply directly to <a href="mailto:${opts.email}" style="color:#6366f1;">${opts.email}</a>`)}
+    `),
+  })
+}
+
+/** 10. Contractor application — sent to admin + auto-reply to applicant */
+export async function sendContractorApplicationEmail(opts: {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  companyName: string
+  serviceCategories: string
+  yearsInBusiness: string
+  licenseNumber?: string
+  insuranceCarrier?: string
+  serviceArea: string
+  coverageNotes?: string
+}) {
+  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.org'
+  const fullName = `${opts.firstName} ${opts.lastName}`
+
+  // Admin notification
+  await send({
+    to: adminEmail,
+    subject: `New contractor application: ${fullName} — ${opts.companyName}`,
+    html: wrap(`
+      ${h1('New Contractor Application')}
+      ${p('<strong>Action required:</strong> Review and respond within 12 hours.')}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:36%;">Name</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;font-weight:600;">${fullName}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Company</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.companyName}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Email</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;"><a href="mailto:${opts.email}" style="color:#6366f1;">${opts.email}</a></td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Phone</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.phone}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Trade(s)</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.serviceCategories}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Years in Business</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.yearsInBusiness}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">License #</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.licenseNumber || '—'}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Insurance Carrier</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.insuranceCarrier || '—'}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Service Area</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.serviceArea}</td>
+        </tr>
+        ${opts.coverageNotes ? `<tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Notes</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.coverageNotes}</td>
+        </tr>` : ''}
+      </table>
+      ${small('Submitted via nexusoperations.org/contractors/apply')}
+    `),
+  })
+
+  // Auto-reply to applicant
+  await send({
+    to: opts.email,
+    subject: 'Application received — Nexus Operations contractor network',
+    html: wrap(`
+      ${h1(`Application received, ${opts.firstName}.`)}
+      ${p('We\'ve received your application to join the Nexus Operations contractor network. Our team reviews every application within <strong>12 hours</strong> and will follow up at this email address.')}
+      ${p('Here\'s a summary of what you submitted:')}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;width:40%;">Company</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.companyName}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;">Trade(s)</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.serviceCategories}</td>
+        </tr>
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;">Service area</td>
+          <td style="padding:10px 16px;font-size:13px;color:#111827;">${opts.serviceArea}</td>
+        </tr>
+      </table>
+      ${p('While you wait, you can review how the network works and what to expect once you\'re approved.')}
+      ${btn('Learn More', `${SITE}/contractors`)}
+      ${small('Questions? Reply to this email or call us at (785) 727-1106.')}
     `),
   })
 }

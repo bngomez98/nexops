@@ -55,7 +55,8 @@ export default function HomeownerPipelinePage() {
         }
 
         setProjects(Array.isArray(data.projects) ? data.projects : [])
-      } catch {
+      } catch (err) {
+        console.error(err)
         setError('Unable to load your pipeline right now. Please try again.')
       } finally {
         setLoading(false)

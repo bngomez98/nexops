@@ -10,12 +10,11 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    // Fetch profile from public.profiles
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
     // Normalise DB value 'property_manager' (underscore) to the hyphenated form
@@ -56,7 +55,7 @@ export async function GET() {
         city: '',
         state: '',
         zipCode: '',
-        avatarUrl: profile?.avatar_url ?? null,
+        avatarUrl: profile?.photo_url ?? profile?.avatar_url ?? null,
         stripeCustomerId: profile?.stripe_customer_id ?? null,
         stripeSubscriptionId: profile?.stripe_subscription_id ?? null,
         subscriptionTier: profile?.subscription_tier ?? (role === 'contractor' ? 'contractor_free' : 'homeowner_basic'),

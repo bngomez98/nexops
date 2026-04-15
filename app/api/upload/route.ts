@@ -2,7 +2,12 @@ import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf']
+const ALLOWED_JOB_PHOTO_TYPES = [
+  'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif',
+  'video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo',
+]
 const MAX_SIZE_BYTES = 10 * 1024 * 1024 // 10MB
+const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024 // 50MB
 
 const ALLOWED_BUCKETS = ['profile-photos', 'compliance-docs', 'contracts', 'job-photos']
 
@@ -36,13 +41,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file type
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json({ error: 'Invalid file type. Only PDF, JPG, and PNG are allowed.' }, { status: 400 })
+    const allowedTypes = bucket === 'job-photos' ? ALLOWED_JOB_PHOTO_TYPES : ALLOWED_TYPES
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: `Invalid file type for ${bucket}.` }, { status: 400 })
     }
 
     // Validate file size
-    if (file.size > MAX_SIZE_BYTES) {
-      return NextResponse.json({ error: 'File size exceeds 10MB limit.' }, { status: 400 })
+    const isVideo = file.type.startsWith('video/')
+    const maxSize = isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_SIZE_BYTES
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: `File size exceeds ${isVideo ? '50MB' : '10MB'} limit.` }, { status: 400 })
     }
 
     // Build storage path
@@ -91,6 +99,7 @@ export async function POST(request: NextRequest) {
         file_url: uploadData.path,
         expires_at: expiresAt || null,
         verified: false,
+        status: 'pending',
       })
     }
 

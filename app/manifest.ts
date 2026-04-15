@@ -9,12 +9,12 @@ export default function manifest(): MetadataRoute.Manifest {
     display: 'standalone',
     orientation: 'portrait',
     background_color: '#ffffff',
-    theme_color: '#3d7a4f',
+    theme_color: '#2d6a42',
     lang: 'en-US',
     categories: ['business', 'productivity', 'utilities'],
     icons: [
-      { src: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' },
-      { src: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { src: '/nexus-favicon.png', sizes: '180x180', type: 'image/png' },
+      { src: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
       { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
     ],
     shortcuts: [

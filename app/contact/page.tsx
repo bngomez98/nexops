@@ -1,183 +1,219 @@
-import type { Metadata } from "next"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Mail, Phone, Clock, Shield } from "lucide-react"
-import { CONTACT_INFO } from "@/lib/contact-info"
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import {
+  ArrowRight,
+  Building2,
+  Clock,
+  Hammer,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Phone,
+  Shield,
+  Sparkles,
+} from 'lucide-react'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
+import { Section, SectionHeading } from '@/components/section'
+import { ContactForm } from '@/components/contact-form'
+import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: "Contact — Submit a Request or Apply as a Contractor in Topeka, KS",
-  description:
-    `Contact Nexus Operations to submit a maintenance request or apply as a licensed contractor. Serving homeowners, landlords, and property managers in Topeka and Shawnee County. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
+  title: 'Contact — Submit a Request or Reach the Nexus Team',
+  description: `Contact Nexus Operations to submit a maintenance request, request a commercial proposal, or apply as a licensed contractor. Serving ${CONTACT_INFO.serviceArea}. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
 }
+
+const directItems = [
+  {
+    icon: Mail,
+    label: 'Email',
+    value: CONTACT_INFO.email,
+    href: `mailto:${CONTACT_INFO.email}`,
+  },
+  {
+    icon: Phone,
+    label: 'Phone',
+    value: CONTACT_INFO.phoneDisplay,
+    href: CONTACT_INFO.phoneHref,
+  },
+  {
+    icon: Clock,
+    label: 'Business hours',
+    value: CONTACT_INFO.businessHours,
+  },
+  {
+    icon: MapPin,
+    label: 'Office',
+    value: `${CONTACT_INFO.addressLine1}, ${CONTACT_INFO.cityStateZip}`,
+  },
+]
+
+const quickPaths = [
+  {
+    icon: Sparkles,
+    title: 'Submit a maintenance request',
+    desc: 'If you know what needs to be done, submit a documented request directly through your dashboard instead of using this form.',
+    cta: 'Submit a request',
+    href: '/auth/sign-up',
+  },
+  {
+    icon: Building2,
+    title: 'Commercial & portfolio proposals',
+    desc: 'If you manage ten or more units, our commercial team will prepare a custom proposal for you within two business days.',
+    cta: 'Request a proposal',
+    href: '/commercial',
+  },
+  {
+    icon: Hammer,
+    title: 'Contractors joining the network',
+    desc: 'If you are licensed and insured in Shawnee County, you can apply directly — no cold outreach and no lead fees.',
+    cta: 'Apply to join',
+    href: '/auth/sign-up?role=contractor',
+  },
+]
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <section className="pt-32 pb-24 lg:pt-40 lg:pb-32">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-2xl mb-16">
-              <p className="text-primary text-sm font-medium tracking-wide mb-4">Contact</p>
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
-                Get in touch
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Whether you are a homeowner looking to submit a project request or a contractor
-                interested in joining our network, we'd love to hear from you.
-              </p>
-            </div>
-
-            <div className="grid lg:grid-cols-5 gap-12 items-start">
-              {/* Contact info sidebar */}
-              <div className="lg:col-span-2 flex flex-col gap-8">
-                <div>
-                  <h2 className="text-lg font-semibold mb-4">Direct contact</h2>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-                        <Mail className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Email</p>
-                        <a href={`mailto:${CONTACT_INFO.email}`} className="text-sm font-medium hover:text-primary transition-colors">
-                          {CONTACT_INFO.email}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-                        <Phone className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Phone</p>
-                        <a href={CONTACT_INFO.phoneHref} className="text-sm font-medium hover:text-primary transition-colors">
-                          {CONTACT_INFO.phoneDisplay}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-                        <Clock className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Business hours</p>
-                        <p className="text-sm font-medium">{CONTACT_INFO.businessHours}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Emergency callout */}
-                <div className="p-6 rounded-xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-950/20">
-                  <div className="flex items-start gap-3">
-                    <Shield className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-sm font-semibold text-foreground mb-1">
-                        Emergency? Use the emergency line.
-                      </h3>
-                      <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-3">
-                        Burst pipe, gas leak, or HVAC failure in extreme weather? Do not wait for a callback.
-                        Emergency requests are handled 24/7 — including nights, weekends, and holidays.
-                        Contractor assignment within 1 hour, on-site within 4 hours.
-                      </p>
-                      <a
-                        href="mailto:emergency@nexusoperations.org"
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 dark:text-red-400 hover:underline"
-                      >
-                        <Mail className="h-4 w-4" />
-                        emergency@nexusoperations.org
-                      </a>
-                      <p className="text-[11px] text-muted-foreground mt-1.5">
-                        On-call coordinator responds within 15 minutes around the clock.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-xl bg-card border border-border/40">
-                  <h3 className="text-sm font-semibold mb-2">Service area</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    We currently serve {CONTACT_INFO.serviceArea}.
-                  </p>
-                </div>
-
-                <div className="p-6 rounded-xl bg-card border border-border/40">
-                  <h3 className="text-sm font-semibold mb-2">Response time</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    General inquiries: we respond within 24 business hours.
-                    Emergency requests are handled 24/7 via the emergency line above.
-                  </p>
-                </div>
-              </div>
-
-              {/* Form */}
-              <div className="lg:col-span-3 p-8 rounded-xl bg-card border border-border/40">
-                <h2 className="text-lg font-semibold mb-6">Send a message</h2>
-                <form className="flex flex-col gap-5">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="firstName" className="text-sm font-medium">First name <span className="text-primary">*</span></label>
-                      <Input id="firstName" placeholder="John" required />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="lastName" className="text-sm font-medium">Last name <span className="text-primary">*</span></label>
-                      <Input id="lastName" placeholder="Smith" required />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="text-sm font-medium">Email <span className="text-primary">*</span></label>
-                    <Input id="email" type="email" placeholder="john@example.com" required />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="phone" className="text-sm font-medium">Phone</label>
-                    <Input id="phone" type="tel" placeholder="(555) 000-0000" />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="type" className="text-sm font-medium">I am a... <span className="text-primary">*</span></label>
-                    <select
-                      id="type"
-                      className="flex h-10 w-full rounded-lg border border-input bg-input px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      required
-                    >
-                      <option value="">Select one</option>
-                      <option value="homeowner">Homeowner with a project</option>
-                      <option value="commercial">Commercial property owner/manager</option>
-                      <option value="contractor">Contractor interested in joining</option>
-                      <option value="partner">Potential partner (real estate, insurance, etc.)</option>
-                      <option value="other">Other inquiry</option>
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="message" className="text-sm font-medium">Message <span className="text-primary">*</span></label>
-                    <Textarea
-                      id="message"
-                      placeholder="Tell us about your project or the services you provide."
-                      rows={5}
-                      required
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity mt-2"
-                  >
-                    Send Message
-                  </button>
-                  <p className="text-xs text-muted-foreground">
-                    By submitting this form, you agree to receive communications from Nexus Operations. We respect your privacy.
-                  </p>
-                </form>
-              </div>
-            </div>
+        {/* ── Hero ───────────────────────────────────────── */}
+        <section className="border-b border-border">
+          <div className="mx-auto max-w-5xl px-6 py-20 text-center sm:py-24">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+              <MessageSquare className="h-3 w-3" /> Contact
+            </p>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+              Reach our team in Topeka, Kansas.
+            </h1>
+            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+              Whether you&apos;re a homeowner with a project, a property manager evaluating a commercial
+              engagement, or a contractor interested in joining the network — we respond to every
+              inquiry within one business day.
+            </p>
           </div>
         </section>
+
+        {/* ── Contact grid ───────────────────────────────── */}
+        <Section>
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+            {/* Direct contact sidebar */}
+            <aside className="flex flex-col gap-6 lg:col-span-5">
+              <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  Reach us directly
+                </p>
+                <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
+                  Contact us by email, phone, or in person.
+                </h2>
+
+                <ul className="mt-6 flex flex-col gap-4">
+                  {directItems.map(({ icon: Icon, label, value, href }) => {
+                    const inner = (
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                            {label}
+                          </p>
+                          <p className="mt-0.5 truncate text-[14px] font-semibold text-foreground">
+                            {value}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                    return (
+                      <li key={label}>
+                        {href ? (
+                          <a href={href} className="block transition hover:opacity-80">
+                            {inner}
+                          </a>
+                        ) : (
+                          inner
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+
+              {/* Emergency callout */}
+              <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-6">
+                <div className="flex items-start gap-3">
+                  <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
+                  <div>
+                    <h3 className="text-[14px] font-bold text-foreground">
+                      For urgent situations, contact our 24/7 emergency line.
+                    </h3>
+                    <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
+                      Burst pipes, gas leaks, and HVAC failures in extreme weather are handled
+                      around the clock — we assign a contractor within one hour and have someone
+                      on-site within four hours.
+                    </p>
+                    <a
+                      href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}`}
+                      className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-destructive hover:underline"
+                    >
+                      <Mail className="h-4 w-4" />
+                      emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service area */}
+              <div className="rounded-2xl border border-border bg-card p-6">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  Service area
+                </p>
+                <p className="mt-2 text-[14px] font-semibold text-foreground">
+                  {CONTACT_INFO.serviceArea}.
+                </p>
+                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                  If you are unsure whether we cover your address, give us a call and we will confirm right away.
+                </p>
+              </div>
+            </aside>
+
+            {/* Form */}
+            <div className="lg:col-span-7">
+              <ContactForm />
+            </div>
+          </div>
+        </Section>
+
+        {/* ── Quick paths ────────────────────────────────── */}
+        <Section tone="muted">
+          <SectionHeading
+            eyebrow="Direct paths"
+            title="You can also get started without this form."
+            description="Use one of the options below to reach us or begin your request right away."
+            align="center"
+          />
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {quickPaths.map(({ icon: Icon, title, desc, cta, href }) => (
+              <Link
+                key={title}
+                href={href}
+                className="group flex h-full flex-col rounded-2xl border border-border bg-background p-6 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <p className="mt-5 text-[16px] font-bold text-foreground">{title}</p>
+                <p className="mt-2 flex-1 text-[13px] leading-relaxed text-muted-foreground">
+                  {desc}
+                </p>
+                <span className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary group-hover:gap-2 transition-all">
+                  {cta} <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Section>
       </main>
       <Footer />
     </div>

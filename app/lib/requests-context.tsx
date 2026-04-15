@@ -1,11 +1,47 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { mockClientRequests, mockContractorJobs, type MaintenanceRequest, type ContractorJob } from './mock-data'
+import { useAuth } from '@/app/lib/auth-context'
 
-const STORAGE_VERSION = 'v2'
-const OLD_STORAGE_KEYS = ['nexus-requests-cache', 'nexus-dashboard-cache']
-const REQUESTS_STORAGE_KEY = `nexus-requests-${STORAGE_VERSION}`
+export interface MaintenanceRequest {
+  id: string
+  propertyId: string
+  propertyName: string
+  type: string
+  status: 'pending' | 'assigned' | 'in-progress' | 'completed' | 'invoiced'
+  budget: number
+  createdAt: string
+  updatedAt: string
+  dueDate: string
+  description: string
+  images?: string[]
+  assignedContractor?: {
+    id: string
+    name: string
+    phone: string
+  }
+  estimatedCost?: number
+  invoiceAmount?: number
+}
+
+export interface ContractorJob {
+  id: string
+  requestId: string
+  propertyName: string
+  type: string
+  status: 'available' | 'claimed' | 'completed' | 'invoiced'
+  budget: number
+  description: string
+  claimedAt?: string
+  completedAt?: string
+  payout?: number
+}
+
+const STORAGE_VERSION = 'v3'
+const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7
+const OLD_STORAGE_KEYS = ['nexus-requests-cache', 'nexus-dashboard-cache', 'nexus-requests-v2']
+const REQUEST_STATUSES = new Set<MaintenanceRequest['status']>(['pending', 'assigned', 'in-progress', 'completed', 'invoiced'])
+const JOB_STATUSES = new Set<ContractorJob['status']>(['available', 'claimed', 'completed', 'invoiced'])
 
 interface RequestsContextType {
   clientRequests: MaintenanceRequest[]
@@ -20,35 +56,127 @@ interface RequestsContextType {
 const RequestsContext = createContext<RequestsContextType | undefined>(undefined)
 
 interface PersistedRequests {
+  version: string
+  cachedAt: number
+  userId: string
   clientRequests: MaintenanceRequest[]
   contractorJobs: ContractorJob[]
 }
 
+function getRequestsStorageKey(userId: string) {
+  return `nexus-requests-${STORAGE_VERSION}-${userId}`
+}
+
+function sanitizeClientRequests(items: unknown): MaintenanceRequest[] {
+  if (!Array.isArray(items)) return []
+  const seen = new Set<string>()
+  const clean: MaintenanceRequest[] = []
+
+  for (const item of items) {
+    if (!item || typeof item !== 'object') continue
+    const request = item as MaintenanceRequest
+    if (
+      typeof request.id !== 'string' ||
+      !request.id ||
+      seen.has(request.id) ||
+      typeof request.propertyId !== 'string' ||
+      typeof request.propertyName !== 'string' ||
+      typeof request.type !== 'string' ||
+      typeof request.description !== 'string' ||
+      !REQUEST_STATUSES.has(request.status)
+    ) {
+      continue
+    }
+
+    clean.push(request)
+    seen.add(request.id)
+  }
+
+  return clean
+}
+
+function sanitizeContractorJobs(items: unknown): ContractorJob[] {
+  if (!Array.isArray(items)) return []
+  const seen = new Set<string>()
+  const clean: ContractorJob[] = []
+
+  for (const item of items) {
+    if (!item || typeof item !== 'object') continue
+    const job = item as ContractorJob
+    if (
+      typeof job.id !== 'string' ||
+      !job.id ||
+      seen.has(job.id) ||
+      typeof job.requestId !== 'string' ||
+      typeof job.propertyName !== 'string' ||
+      typeof job.type !== 'string' ||
+      typeof job.description !== 'string' ||
+      !JOB_STATUSES.has(job.status)
+    ) {
+      continue
+    }
+
+    clean.push(job)
+    seen.add(job.id)
+  }
+
+  return clean
+}
+
 export function RequestsProvider({ children }: { children: ReactNode }) {
-  const [clientRequests, setClientRequests] = useState<MaintenanceRequest[]>(mockClientRequests)
-  const [contractorJobs, setContractorJobs] = useState<ContractorJob[]>(mockContractorJobs)
+  const { user } = useAuth()
+  const [clientRequests, setClientRequests] = useState<MaintenanceRequest[]>([])
+  const [contractorJobs, setContractorJobs] = useState<ContractorJob[]>([])
+  const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
+    setIsHydrated(false)
+    setClientRequests([])
+    setContractorJobs([])
     OLD_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key))
 
-    const raw = localStorage.getItem(REQUESTS_STORAGE_KEY)
-    if (!raw) return
+    if (!user?.id) {
+      setIsHydrated(true)
+      return
+    }
+
+    const storageKey = getRequestsStorageKey(user.id)
+    const raw = localStorage.getItem(storageKey)
+    if (!raw) {
+      setIsHydrated(true)
+      return
+    }
 
     try {
       const parsed = JSON.parse(raw) as PersistedRequests
-      if (Array.isArray(parsed.clientRequests) && Array.isArray(parsed.contractorJobs)) {
-        setClientRequests(parsed.clientRequests)
-        setContractorJobs(parsed.contractorJobs)
+      const isCurrentVersion = parsed.version === STORAGE_VERSION
+      const isCurrentUser = parsed.userId === user.id
+      const isFresh = typeof parsed.cachedAt === 'number' && Date.now() - parsed.cachedAt <= CACHE_TTL_MS
+
+      if (isCurrentVersion && isCurrentUser && isFresh) {
+        setClientRequests(sanitizeClientRequests(parsed.clientRequests))
+        setContractorJobs(sanitizeContractorJobs(parsed.contractorJobs))
+      } else {
+        localStorage.removeItem(storageKey)
       }
-    } catch {
-      localStorage.removeItem(REQUESTS_STORAGE_KEY)
+    } catch (err) {
+      console.error(err)
+      localStorage.removeItem(storageKey)
     }
-  }, [])
+    setIsHydrated(true)
+  }, [user?.id])
 
   useEffect(() => {
-    const payload: PersistedRequests = { clientRequests, contractorJobs }
-    localStorage.setItem(REQUESTS_STORAGE_KEY, JSON.stringify(payload))
-  }, [clientRequests, contractorJobs])
+    if (!isHydrated || !user?.id) return
+    const payload: PersistedRequests = {
+      version: STORAGE_VERSION,
+      cachedAt: Date.now(),
+      userId: user.id,
+      clientRequests: sanitizeClientRequests(clientRequests),
+      contractorJobs: sanitizeContractorJobs(contractorJobs),
+    }
+    localStorage.setItem(getRequestsStorageKey(user.id), JSON.stringify(payload))
+  }, [clientRequests, contractorJobs, isHydrated, user?.id])
 
   const addRequest = (request: Omit<MaintenanceRequest, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString().split('T')[0]
@@ -62,7 +190,6 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     setClientRequests((prev) => [newRequest, ...prev])
   }
 
-  const claimJob = (jobId: string, _contractorId: string) => {
   const claimJob = (jobId: string, contractorId: string) => {
     void contractorId
     setContractorJobs((prev) =>
@@ -87,10 +214,12 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
   }
 
   const clearCachedData = () => {
-    localStorage.removeItem(REQUESTS_STORAGE_KEY)
+    if (user?.id) {
+      localStorage.removeItem(getRequestsStorageKey(user.id))
+    }
     OLD_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key))
-    setClientRequests(mockClientRequests)
-    setContractorJobs(mockContractorJobs)
+    setClientRequests([])
+    setContractorJobs([])
   }
 
   return (

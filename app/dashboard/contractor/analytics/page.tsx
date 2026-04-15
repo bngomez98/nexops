@@ -31,7 +31,8 @@ export default function AnalyticsDashboard() {
         if (data.user.role !== 'contractor') { router.push('/dashboard/homeowner'); return }
         setUser(data.user)
         setProfile(data.contractorProfile)
-      } catch {
+      } catch (err) {
+        console.error(err)
         router.push('/auth/login')
       } finally {
         setLoading(false)
@@ -63,8 +64,8 @@ export default function AnalyticsDashboard() {
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="contractor" onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+      <main className="md:ml-[240px] p-6 space-y-6 animate-fade-up">
+        <div>
           <h1 className="text-2xl font-bold text-foreground">Performance Analytics</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {profile?.companyName || user.name} — your live account metrics

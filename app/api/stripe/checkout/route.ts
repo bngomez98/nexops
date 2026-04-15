@@ -25,11 +25,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Free plans do not require checkout' }, { status: 400 })
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('stripe_customer_id, full_name, role')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
+
+    if (profileError) {
+      console.error('[POST /api/stripe/checkout] profile lookup failed', profileError)
+      return NextResponse.json({ error: 'Unable to load profile' }, { status: 500 })
+    }
 
     const customerId = await ensureStripeCustomer({
       supabase,

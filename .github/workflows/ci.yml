@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint, Typecheck, Test, Build (non-blocking)
+    name: Lint, Typecheck, Test, Build
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -23,62 +23,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: pnpm
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm lint
-        continue-on-error: true
 
       - name: Type check
-        run: npx tsc --noEmit
-        continue-on-error: true
+        run: pnpm typecheck
 
       - name: Unit tests
         run: pnpm test
-        continue-on-error: true
 
       - name: Build
         run: pnpm build
-        continue-on-error: true
-          cache: "pnpm"
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
-        run: corepack pnpm install --frozen-lockfile
-
-      - name: Build
-        run: corepack pnpm build
         env:
+          # Stub secrets so the build succeeds in CI without real credentials
           RESEND_API_KEY: re_dummy
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
-          RESEND_API_KEY: re_S3g6c5cq_9szCd5g7CsKUtbunkY1jvpmi
           NEXT_PUBLIC_SITE_URL: https://nexusoperations.org
-          # Allow build to complete without real secrets
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: placeholder_publishable_key
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder
-
-      - name: Lint
-        run: pnpm lint
-        run: corepack pnpm lint
-        continue-on-error: true
-        env: =production
-          NEXT_PUBLIC_SITE_URL: https://nexusoperations.org

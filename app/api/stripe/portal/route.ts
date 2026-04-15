@@ -12,11 +12,16 @@ export async function POST() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('stripe_customer_id, stripe_subscription_id, role, full_name, subscription_status')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
+
+    if (profileError) {
+      console.error('[POST /api/stripe/portal] profile lookup failed', profileError)
+      return NextResponse.json({ error: 'Unable to load profile' }, { status: 500 })
+    }
 
     if (!profile) {
       return NextResponse.json({ error: 'Billing profile not found' }, { status: 404 })
@@ -40,7 +45,7 @@ export async function POST() {
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: returnUrl,
-      flow_data: profile.subscription_status === 'past_due' || profile.stripe_subscription_id
+      flow_data: profile.subscription_status === 'past_due'
         ? {
             type: 'payment_method_update',
           }
