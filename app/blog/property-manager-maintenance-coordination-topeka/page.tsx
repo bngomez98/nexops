@@ -129,7 +129,7 @@ export default function BlogPost() {
 
               <h2 className="text-xl font-semibold text-foreground">What this looks like for a Topeka portfolio</h2>
               <p>
-                Nexus Operations was built specifically for the Topeka property management market. We coordinate
+                Nexus Operations was built specifically for the Topeka property management market. We manage
                 maintenance across verified contractors in Shawnee County, handle dispatch from intake to invoice,
                 and provide monthly performance reporting. Property managers submit requests through a portal
                 and receive consolidated invoices. The operational work — contractor sourcing, scheduling,
