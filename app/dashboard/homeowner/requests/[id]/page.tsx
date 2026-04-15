@@ -179,9 +179,9 @@ export default function HomeownerRequestDetailPage() {
             <div className="bg-card border border-border rounded-xl p-5">
               <p className="text-[13px] font-semibold mb-3">Invoice</p>
               <div className="space-y-2 text-[13px]">
-                <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-semibold">${invoice.subtotal.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Nexus fee</span><span className="font-semibold">${invoice.nexus_fee.toLocaleString()}</span></div>
-                <div className="flex justify-between border-t border-border pt-2"><span className="font-bold">Total</span><span className="font-bold">${invoice.total.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-semibold">${(invoice.subtotal as number).toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Nexus fee</span><span className="font-semibold">${(invoice.nexus_fee as number).toLocaleString()}</span></div>
+                <div className="flex justify-between border-t border-border pt-2"><span className="font-bold">Total</span><span className="font-bold">${(invoice.total as number).toLocaleString()}</span></div>
                 <div className="pt-2">
                   <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                     invoice.status === 'paid' ? 'bg-emerald-100 text-emerald-700' :
@@ -189,7 +189,7 @@ export default function HomeownerRequestDetailPage() {
                     'bg-slate-100 text-slate-700'
                   }`}>
                     {invoice.status === 'paid' ? <CheckCircle2 className="w-3 h-3" /> : null}
-                    {fmt(invoice.status)}
+                    {fmt(invoice.status as string)}
                   </span>
                 </div>
                 {invoice.status === 'sent' && (
