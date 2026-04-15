@@ -45,7 +45,7 @@ export default function TermsPage() {
 
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">3. Scope of Services</h2>
             <p>
-              Nexus Operations coordinates maintenance, repairs, and related services through vetted third-party contractors.
+              Nexus Operations manages maintenance, repairs, and related services through vetted third-party contractors.
               We do not provide licensed trade services ourselves. Each Order will specify scope, pricing, service level,
               and any materials. If the scope changes after on-site evaluation, we will provide an updated quote for approval
               before proceeding unless you authorize emergency work up to a specified ceiling.
@@ -77,7 +77,7 @@ export default function TermsPage() {
             <p>
               Contractors performing work are independent businesses. We vet licensing, insurance, and experience, monitor SLA performance,
               and document each job, but we do not guarantee contractor workmanship. Contractor warranties, if any, are passed through to you.
-              To request a correction, notify us within 7 days of completion with photos or documentation so we can coordinate remediation.
+              To request a correction, notify us within 7 days of completion with photos or documentation so we can manage remediation.
             </p>
 
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">8. Safety and Compliance</h2>
