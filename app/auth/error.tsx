@@ -20,7 +20,7 @@ export default function AuthError({
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Error</p>
         <h1 className="mt-3 text-2xl font-bold tracking-tight">Something went wrong</h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          We couldn't complete that action. Please try again or return to the login page.
+          We couldn&apos;t complete that action. Please try again or return to the login page.
         </p>
         <div className="mt-6 flex flex-col gap-2">
           <button

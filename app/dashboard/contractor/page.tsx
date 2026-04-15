@@ -10,8 +10,8 @@ import { AIInsightsCard } from '@/components/ai-insights-card'
 import { formatDateOnly } from '@/lib/date-format'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
-  BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
-  RefreshCw, Clock, DollarSign, CheckCircle2, Zap, CalendarDays, Crown, ArrowRight,
+  BarChart3, AlertTriangle, Sparkles,
+  RefreshCw, Clock, DollarSign, Zap, CalendarDays, Crown, ArrowRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
 

@@ -31,13 +31,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const currentProfile = await loadCurrentProfile(supabase, user.id)
+    const currentProfile = (await loadCurrentProfile(supabase, user.id)) as Record<string, unknown> | null
     const currentRole = normalizeRole(currentProfile?.role ?? user.user_metadata?.role)
 
     let requestQuery = supabase
       .from('service_requests')
       .select(
-        'id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, status, urgency, photo_urls, invoice_amount, invoice_paid, created_at, consultation_date',
+        'id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, status, urgency, photo_urls, invoice_amount, invoice_paid, created_at, updated_at, consultation_date',
       )
       .order('created_at', { ascending: false })
       .limit(150)
