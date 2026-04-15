@@ -126,9 +126,9 @@ export default function ContractorMyProjects() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'Active',    value: active.length,    icon: Wrench,      iconClass: 'text-primary',       },
-            { label: 'Completed', value: done.length,      icon: CheckCircle2, iconClass: 'text-muted-foreground',  },
-            { label: 'Total',     value: projects.length,  icon: Briefcase,   iconClass: 'text-muted-foreground',    },
+            { label: 'Active',    value: active.length,    icon: Wrench,      iconClass: 'text-primary',       color: '' },
+            { label: 'Completed', value: done.length,      icon: CheckCircle2, iconClass: 'text-muted-foreground',  color: '' },
+            { label: 'Total',     value: projects.length,  icon: Briefcase,   iconClass: 'text-muted-foreground',    color: '' },
           ].map(s => {
             const Icon = s.icon
             return (

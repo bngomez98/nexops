@@ -19,9 +19,6 @@ const values = [
   },
   {
     icon: Receipt,
-    title: "Unified monthly invoicing",
-    description:
-      "One consolidated invoice per billing cycle covering every job across every property, with line-item detail by trade, urgency, and contractor. No separate paperwork to track down.",
     title: "Transparent Pricing",
     description:
       "No retainers, no hidden fees. Simple subscription plans for homeowners and contractors. One invoice per billing cycle covering all work.",

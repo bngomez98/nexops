@@ -15,6 +15,7 @@ const STATUS_FILTERS: ('all' | PortalJobStatus)[] = ['all', 'open', 'claimed', '
 
 export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
   const { jobs, currentUser, loading, error } = usePortal()
+  if (!currentUser) return null
   const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]>('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [query, setQuery] = useState('')
