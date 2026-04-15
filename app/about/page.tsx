@@ -214,7 +214,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We coordinate property maintenance — intake, dispatch, documentation, and billing."
+                description="We do not sell software. We do not run a contractor marketplace. We manage property maintenance — intake, dispatch, documentation, and billing."
               />
               <Link
                 href="/services"

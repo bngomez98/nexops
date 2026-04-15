@@ -122,7 +122,7 @@ const marketplaceComparison = [
 const audienceCards = [
   {
     title: 'Homeowners',
-    desc: 'Submit a request with photos and a budget. We coordinate a verified contractor and manage everything through completion.',
+    desc: 'Submit a request with photos and a budget. We assign a verified contractor and manage everything through completion.',
     cta: 'Create homeowner account',
     href: '/auth/sign-up',
     icon: Home,
@@ -306,7 +306,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Who we serve"
             title="Built for everyone who owns, manages, or services property."
-            description="Nexus Operations is a single point of contact connecting homeowners, property managers, and licensed contractors within one coordinated workflow."
+            description="Nexus Operations is a single point of contact connecting homeowners, property managers, and licensed contractors within one connected workflow."
             align="center"
           />
 
@@ -627,7 +627,7 @@ export default function HomePage() {
               {[
                 {
                   q: 'Who is Nexus Operations for?',
-                  a: 'Homeowners, landlords, and property managers anywhere in Topeka / Shawnee County who need a single, reliable partner to coordinate property maintenance.',
+                  a: 'Homeowners, landlords, and property managers anywhere in Topeka / Shawnee County who need a single, reliable partner to manage property maintenance.',
                 },
                 {
                   q: 'How are contractors vetted?',

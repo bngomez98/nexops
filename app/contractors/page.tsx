@@ -426,7 +426,7 @@ export default function ContractorsPage() {
               },
               {
                 q: 'Can I set my own rates?',
-                a: 'Yes. You quote every job at your own rate. Nexus coordinates with the client; your number is the number that gets invoiced.',
+                a: 'Yes. You quote every job at your own rate. Nexus works with the client; your number is the number that gets invoiced.',
               },
               {
                 q: 'Do I need employees to join?',
