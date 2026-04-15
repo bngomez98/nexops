@@ -32,7 +32,7 @@ export function DashboardView({
 }: DashboardViewProps) {
   const { currentUser, jobs, loading, error } = usePortal()
   if (!currentUser) return null
-  const visible = jobs.filter((j) => {
+  const visible = jobs.filter((j: PortalJob) => {
     if (currentUser.role === 'admin' || currentUser.role === 'property-manager' || currentUser.role === 'manager') return true
     if (currentUser.role === 'contractor') return j.contractorId === currentUser.id || j.status === 'open'
     return j.ownerId === currentUser.id

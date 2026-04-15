@@ -15,7 +15,6 @@ const STATUS_FILTERS: ('all' | PortalJobStatus)[] = ['all', 'open', 'claimed', '
 
 export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
   const { jobs, currentUser, loading, error } = usePortal()
-  if (!currentUser) return null
   const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]>('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [query, setQuery] = useState('')
@@ -26,6 +25,7 @@ export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
   }, [jobs])
 
   const visible = useMemo(() => {
+    if (!currentUser) return []
     return jobs.filter((j) => {
       if (currentUser.role === 'contractor' && j.status !== 'open' && j.contractorId !== currentUser.id) {
         return false
@@ -44,6 +44,8 @@ export function JobsView({ onSubmitRequest, onOpenJob }: JobsViewProps) {
       return true
     })
   }, [jobs, currentUser, statusFilter, categoryFilter, query])
+
+  if (!currentUser) return null
 
   return (
     <div className="space-y-5">
