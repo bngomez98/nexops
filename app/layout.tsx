@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     template: '%s — Nexus Operations',
   },
   description:
-    'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. We assign verified, licensed contractors, enforce response-time guarantees, and document every job from request to completion.',
+    'Nexus Operations manages property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. We assign verified, licensed contractors, enforce response-time guarantees, and document every job from request to completion.',
   keywords: [
     'property maintenance Topeka',
     'maintenance coordination Kansas',
@@ -127,7 +127,7 @@ export const metadata: Metadata = {
     url: 'https://nexusoperations.org',
     title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
     description:
-      'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
+      'Nexus Operations manages property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
     siteName: 'Nexus Operations',
     images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service coordination' }],
   },
