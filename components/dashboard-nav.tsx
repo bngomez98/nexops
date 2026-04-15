@@ -22,48 +22,48 @@ interface NavItem {
 
 const NAV_ITEMS: Record<string, NavItem[]> = {
   homeowner: [
-    { label: 'Dashboard',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
-    { label: 'Requests',    href: '/dashboard/homeowner/requests',   icon: ClipboardList },
-    { label: 'Pipeline',    href: '/dashboard/homeowner/pipeline',   icon: Workflow, exact: true },
+    { label: 'Operations Hub',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
+    { label: 'Service Requests', href: '/dashboard/homeowner/requests',   icon: ClipboardList },
+    { label: 'Dispatch Pipeline',href: '/dashboard/homeowner/pipeline',   icon: Workflow, exact: true },
     { label: 'Messages',    href: '/dashboard/messages',             icon: MessageSquare },
-    { label: 'New Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
+    { label: 'Create Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
     { label: 'Properties',  href: '/dashboard/homeowner/properties', icon: Home },
-    { label: 'Documents',   href: '/dashboard/homeowner/documents',  icon: FolderOpen },
+    { label: 'Compliance Docs',   href: '/dashboard/homeowner/documents',  icon: FolderOpen },
     { label: 'Invoices',    href: '/dashboard/homeowner/invoices',   icon: Receipt },
     { label: 'Payments',    href: '/dashboard/homeowner/payments',   icon: Wallet },
     { label: 'Profile',     href: '/dashboard/homeowner/profile',    icon: User },
     { label: 'Settings',    href: '/dashboard/homeowner/settings',   icon: Settings, exact: true },
   ],
   contractor: [
-    { label: 'Dashboard',        href: '/dashboard/contractor',                   icon: LayoutDashboard, exact: true },
+    { label: 'Operations Hub',   href: '/dashboard/contractor',                   icon: LayoutDashboard, exact: true },
     { label: 'Available Work',   href: '/dashboard/contractor/available-work',    icon: Zap, exact: true },
-    { label: 'Jobs',             href: '/dashboard/contractor/jobs',              icon: Briefcase },
+    { label: 'Job Queue',        href: '/dashboard/contractor/jobs',              icon: Briefcase },
     { label: 'Messages',         href: '/dashboard/messages',                     icon: MessageSquare },
     { label: 'My Assignments',   href: '/dashboard/contractor/my-projects',       icon: ClipboardList, exact: true },
     { label: 'Invoices',         href: '/dashboard/contractor/invoices',          icon: Receipt },
     { label: 'Payments',         href: '/dashboard/contractor/payments',          icon: Wallet },
-    { label: 'Documents',        href: '/dashboard/contractor/documents',         icon: FolderOpen },
-    { label: 'Analytics',        href: '/dashboard/contractor/analytics',         icon: TrendingUp, exact: true },
+    { label: 'Compliance Docs',  href: '/dashboard/contractor/documents',         icon: FolderOpen },
+    { label: 'Performance',      href: '/dashboard/contractor/analytics',         icon: TrendingUp, exact: true },
     { label: 'Profile',          href: '/dashboard/contractor/profile',           icon: User },
     { label: 'Settings',         href: '/dashboard/contractor/settings',          icon: Settings, exact: true },
   ],
   'property-manager': [
-    { label: 'Dashboard',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
+    { label: 'Operations Hub',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
     { label: 'Properties',  href: '/dashboard/property-manager/properties',       icon: Building2 },
-    { label: 'Requests',    href: '/dashboard/property-manager/requests',         icon: ClipboardList },
+    { label: 'Service Requests', href: '/dashboard/property-manager/requests',         icon: ClipboardList },
     { label: 'Invoices',    href: '/dashboard/property-manager/invoices',         icon: Receipt },
     { label: 'Payments',    href: '/dashboard/property-manager/payments',         icon: Wallet },
-    { label: 'Documents',   href: '/dashboard/property-manager/documents',        icon: FolderOpen },
+    { label: 'Compliance Docs',   href: '/dashboard/property-manager/documents',        icon: FolderOpen },
     { label: 'Settings',    href: '/dashboard/property-manager/settings',        icon: Settings, exact: true },
   ],
   admin: [
-    { label: 'Overview',     href: '/dashboard/admin',             icon: LayoutDashboard, exact: true },
+    { label: 'Operations Hub',     href: '/dashboard/admin',             icon: LayoutDashboard, exact: true },
     { label: 'Contractors',  href: '/dashboard/admin/contractors', icon: ShieldAlert },
     { label: 'Jobs',         href: '/dashboard/admin/jobs',        icon: Briefcase },
-    { label: 'Matches',      href: '/dashboard/admin/matches',     icon: BarChart3 },
+    { label: 'Matching',      href: '/dashboard/admin/matches',     icon: BarChart3 },
     { label: 'Users',        href: '/dashboard/admin/users',       icon: Users },
     { label: 'Invoices',     href: '/dashboard/admin/invoices',    icon: Receipt },
-    { label: 'Documents',    href: '/dashboard/admin/documents',   icon: FolderOpen },
+    { label: 'Compliance Docs',    href: '/dashboard/admin/documents',   icon: FolderOpen },
   ],
 }
 
@@ -91,8 +91,8 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
   const quickActions = useMemo(() => {
     if (role === 'homeowner') {
       return [
-        { label: 'Submit Request', href: '/dashboard/homeowner/new-request', icon: PlusCircle },
-        { label: 'Billing', href: '/dashboard/homeowner/billing', icon: CreditCard },
+        { label: 'Create Request', href: '/dashboard/homeowner/new-request', icon: PlusCircle },
+        { label: 'Billing & Plans', href: '/dashboard/homeowner/billing', icon: CreditCard },
       ]
     }
     if (role === 'contractor') {
@@ -103,11 +103,18 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
     }
     if (role === 'property-manager') {
       return [
-        { label: 'New Request', href: '/dashboard/property-manager/requests/new', icon: PlusCircle },
-        { label: 'Properties', href: '/dashboard/property-manager/properties', icon: Building2 },
+        { label: 'Create Request', href: '/dashboard/property-manager/requests/new', icon: PlusCircle },
+        { label: 'Portfolio', href: '/dashboard/property-manager/properties', icon: Building2 },
       ]
     }
     return []
+  }, [role])
+
+  const operationsFocus = useMemo(() => {
+    if (role === 'homeowner') return 'Dispatch quality and cost control'
+    if (role === 'contractor') return 'Lead response time and assignment throughput'
+    if (role === 'property-manager') return 'Portfolio uptime and monthly spend discipline'
+    return 'Platform integrity and operational governance'
   }, [role])
 
   function active(item: NavItem) {
@@ -185,7 +192,7 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
           <div className="space-y-6">
             {/* Main nav */}
             <div>
-              <p className="px-3 mb-2 font-mono-label text-sidebar-muted">Navigation</p>
+              <p className="px-3 mb-2 font-mono-label text-sidebar-muted">Workspace</p>
               <div className="space-y-1">
                 {navItems.map(item => {
                   const isActiveItem = active(item)
@@ -232,6 +239,16 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
                 </div>
               </div>
             )}
+
+            <div className="rounded-xl border border-sidebar-border bg-sidebar-accent/30 px-3.5 py-3.5">
+              <p className="text-[10px] uppercase tracking-[0.14em] text-sidebar-muted font-semibold">Operations Focus</p>
+              <p className="mt-2 text-xs leading-relaxed text-sidebar-foreground/85">{operationsFocus}</p>
+              <div className="mt-3 flex items-center gap-1.5 text-[10px] text-sidebar-muted">
+                <kbd className="rounded border border-sidebar-border bg-sidebar px-1.5 py-0.5">⌘</kbd>
+                <kbd className="rounded border border-sidebar-border bg-sidebar px-1.5 py-0.5">K</kbd>
+                <span>Search workspace</span>
+              </div>
+            </div>
           </div>
         </nav>
 
@@ -244,7 +261,7 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent/30 px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <HelpCircle className="w-4 h-4" />
-            Help Center
+            Operations Help Center
           </a>
           <button
             onClick={onLogout}
@@ -267,7 +284,7 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
         </button>
 
         <div className="flex-1 min-w-0">
-          <p className="font-mono-label text-muted-foreground">{ROLE_LABELS[role]} Portal</p>
+          <p className="font-mono-label text-muted-foreground">Nexus Operations · {ROLE_LABELS[role]} Workspace</p>
           <h1 className="text-lg font-semibold text-foreground truncate">{currentLabel}</h1>
         </div>
 
