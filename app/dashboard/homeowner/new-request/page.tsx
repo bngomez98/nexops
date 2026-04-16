@@ -159,7 +159,7 @@ export default function NewProjectRequest() {
       }
     }, 800)
     return () => clearTimeout(timer)
-  }, [formData.title, formData.description, formData.category])
+  }, [automationEnabled, formData.title, formData.description, formData.category])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target
@@ -257,7 +257,6 @@ export default function NewProjectRequest() {
         err.issues.forEach((e) => {
           errors[e.path[0] as string] = e.message
         })
-        err.issues.forEach((e) => { errors[e.path[0] as string] = e.message })
         setFieldErrors(errors)
         setError('Please fix the errors below')
       } else {
