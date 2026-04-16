@@ -232,11 +232,16 @@ export default function ContractorDashboard() {
               <p className="text-primary-foreground/80 text-sm mt-2 flex flex-wrap items-center gap-3">
                 <span className="capitalize">{profile?.membershipTier || 'Starter'} Plan</span>
                 <span className="opacity-40">·</span>
-                 <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active assignments</span>
+                <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active assignments</span>
                 <span className="opacity-40">·</span>
                 <span className="flex items-center gap-1">
                   <Zap className="w-3.5 h-3.5" />
-                   {projects.length} live request opportunities
+                  {projects.length} live opportunities
+                </span>
+                <span className="opacity-40">·</span>
+                <span className="flex items-center gap-1">
+                  <DollarSign className="w-3.5 h-3.5" />
+                  ${projects.reduce((s, p) => s + (p.budget || 0), 0).toLocaleString()} pipeline
                 </span>
               </p>
             </div>
@@ -305,46 +310,6 @@ export default function ContractorDashboard() {
             )
           })}
         </div>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              label: 'Current Plan',
-              value: (profile?.membershipTier || 'Starter').toUpperCase(),
-              detail: 'Plan level determines assignment capacity and routing priority.',
-            },
-            {
-              label: 'Time to Claim',
-              value: 'Real-time',
-              detail: 'New qualified projects surface immediately as they are posted.',
-            },
-            {
-              label: 'Estimated Pipeline',
-              value: `$${filteredProjects.reduce((sum, project) => sum + (project.budget || 0), 0).toLocaleString()}`,
-              detail: 'Total posted budget across projects currently matching your filters.',
-            },
-          ].map((card) => (
-            <div key={card.label} className="rounded-xl border border-border bg-card p-5 card-elevated">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{card.label}</p>
-              <p className="mt-2 text-2xl font-display font-bold text-foreground">{card.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{card.detail}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          {[
-            { title: 'Service Requests', value: `${filteredProjects.length} matching`, detail: 'Track newly posted requests that match your filters.' },
-            { title: 'Messages', value: 'Live', detail: 'Coordinate updates with homeowners in real time.' },
-            { title: 'Profile', value: 'Ready', detail: 'Keep your photo and contractor profile current for trust.' },
-          ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
-              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.detail}</p>
-            </div>
-          ))}
-        </section>
 
         {/* Capacity Warning */}
         {atCapacity && (
