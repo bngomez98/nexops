@@ -24,7 +24,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 export async function POST(request: Request, { params }: RouteContext) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,

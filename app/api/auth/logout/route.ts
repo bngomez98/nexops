@@ -1,9 +1,9 @@
 
 import { createClient } from '@/lib/supabase/server'
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     await supabase.auth.signOut()
     return Response.json({ success: true })
   } catch (err) {

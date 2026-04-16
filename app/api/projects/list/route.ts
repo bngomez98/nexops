@@ -45,7 +45,7 @@ function deriveTitle(row: { title?: string | null; additional_notes?: string | n
 }
 
 async function getContractorNameMap(
-  supabase: ReturnType<typeof createClient>,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   rows: ServiceRequestRow[],
 ) {
   const contractorIds = Array.from(
@@ -71,7 +71,7 @@ async function getContractorNameMap(
 
 export async function GET(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {

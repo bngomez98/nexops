@@ -1,17 +1,18 @@
-/**
- * Framework-agnostic navigation hooks.
- *
- * These replace next/navigation (useRouter, usePathname, useParams,
- * useSearchParams) with thin wrappers around the standard browser APIs so
- * the component tree has no hard dependency on Next.js.
- *
- * In a Next.js App Router context these wrappers call the underlying Next.js
- * APIs at runtime; outside of that context (tests, alternative runtimes) they
- * fall back to the native Web APIs.
- */
-
 'use client'
 
+export {
+  useRouter,
+  usePathname,
+  useParams,
+  useSearchParams,
+  useSelectedLayoutSegment,
+  useSelectedLayoutSegments,
+  redirect,
+  notFound,
+  permanentRedirect,
+} from 'next/navigation'
+
+export type { ReadonlyURLSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 
 // ---------------------------------------------------------------------------
