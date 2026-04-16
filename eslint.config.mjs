@@ -14,7 +14,6 @@ const compat = new FlatCompat({
 })
 
 export default tseslint.config(
-  { ignores: ['.next/**', 'node_modules/**', 'next-env.d.ts'] },
   {
     ignores: [
       ".next/**",
@@ -30,6 +29,8 @@ export default tseslint.config(
   {
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/purity': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
     },
   }

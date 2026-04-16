@@ -91,19 +91,19 @@ export default function PropertyManagerDashboard() {
             <div>
               <div className="inline-flex items-center gap-2 text-primary-foreground/80 text-xs font-semibold uppercase tracking-wider bg-white/10 border border-white/15 px-3 py-1.5 rounded-full mb-4">
                 <Sparkles className="w-3.5 h-3.5" />
-                Property Manager Portal
+                Portfolio Operations Center
               </div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
-                Welcome, {user.name.split(' ')[0]}
+                Portfolio command center, {user.name.split(' ')[0]}
               </h1>
               <p className="text-primary-foreground/75 text-sm mt-2">
-                {stats.totalProperties} properties · {stats.activeJobs} active jobs
+                {stats.totalProperties} managed properties · {stats.activeJobs} active work orders
               </p>
             </div>
             <Link href="/dashboard/property-manager/requests/new">
               <button className="inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/95 transition-colors shadow-lg">
                 <Plus className="w-4 h-4" /> 
-                New Request
+                Dispatch Request
               </button>
             </Link>
           </div>
@@ -112,9 +112,9 @@ export default function PropertyManagerDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { label: 'Properties', value: stats.totalProperties, icon: Building2, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
-            { label: 'Active Jobs', value: stats.activeJobs, icon: ClipboardList, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
-            { label: 'Spend (Month)', value: `$${stats.spendThisMonth.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+             { label: 'Managed Properties', value: stats.totalProperties, icon: Building2, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
+             { label: 'Active Work Orders', value: stats.activeJobs, icon: ClipboardList, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
+             { label: 'Month-to-Date Spend', value: `$${stats.spendThisMonth.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -139,24 +139,24 @@ export default function PropertyManagerDashboard() {
               icon: Building2, 
               iconBg: 'bg-blue-500/10', 
               iconColor: 'text-blue-600 dark:text-blue-400', 
-              title: 'Manage Properties', 
-              sub: 'View and add managed properties' 
+               title: 'Property Portfolio', 
+               sub: 'Manage assets, addresses, and ownership records' 
             },
             { 
               href: '/dashboard/property-manager/requests', 
               icon: ClipboardList, 
               iconBg: 'bg-amber-500/10', 
               iconColor: 'text-amber-600 dark:text-amber-400', 
-              title: 'Service Requests', 
-              sub: 'Track requests across portfolio' 
+               title: 'Service Dispatch', 
+               sub: 'Track work orders across every property' 
             },
             { 
               href: '/dashboard/property-manager/invoices', 
               icon: TrendingUp, 
               iconBg: 'bg-primary/10', 
               iconColor: 'text-primary', 
-              title: 'Invoices & Spend', 
-              sub: 'Portfolio-level financial overview' 
+               title: 'Invoices & Cost Control', 
+               sub: 'Review approvals, invoices, and monthly spend' 
             },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
             <Link 
@@ -175,6 +175,32 @@ export default function PropertyManagerDashboard() {
             </Link>
           ))}
         </div>
+
+        <section className="grid gap-4 lg:grid-cols-3">
+          {[
+            {
+              title: 'Response SLA',
+              value: stats.activeJobs > 0 ? 'On Track' : 'No Active Jobs',
+              sub: 'Monitor dispatch cycle times and contractor response speed.',
+            },
+            {
+              title: 'Budget Health',
+              value: stats.spendThisMonth > 0 ? `$${stats.spendThisMonth.toLocaleString()}` : '$0',
+              sub: 'Month-to-date paid invoice volume across managed assets.',
+            },
+            {
+              title: 'Portfolio Utilization',
+              value: `${stats.totalProperties} Assets`,
+              sub: 'Confirm every property has documented service coverage.',
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
+              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{item.sub}</p>
+            </div>
+          ))}
+        </section>
       </main>
     </div>
   )
