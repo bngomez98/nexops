@@ -95,8 +95,10 @@ export default function AboutPage() {
       <Header />
       <main>
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-12 lg:items-center lg:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 home-service-bg" />
+          <div className="pointer-events-none absolute inset-0 dot-grid opacity-40" />
+          <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-24 lg:grid-cols-12 lg:items-center lg:py-28">
             <div className="lg:col-span-7">
               <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                 <MapPin className="h-3 w-3" /> {CONTACT_INFO.cityState}
@@ -128,8 +130,8 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-xl card-elevated">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+              <div className="rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-accent p-6 shadow-xl card-elevated">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary contractor-accent pb-4">
                   What accountability looks like
                 </p>
                 <div className="mt-5 space-y-3">
@@ -141,7 +143,7 @@ export default function AboutPage() {
                   ].map((line) => (
                     <div
                       key={line}
-                      className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground"
+                      className="rounded-xl border border-primary/10 bg-gradient-to-r from-background to-accent/30 px-4 py-3 text-sm text-foreground shadow-sm"
                     >
                       {line}
                     </div>
