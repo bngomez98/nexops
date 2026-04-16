@@ -1,14 +1,14 @@
-import { NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { data: profile, error: profileError } = await supabase
@@ -19,7 +19,7 @@ export async function GET() {
 
     if (profileError) {
       console.error('[GET /api/stripe/subscription-invoices] profile lookup failed', profileError)
-      return NextResponse.json({ error: 'Unable to load profile' }, { status: 500 })
+      return Response.json({ error: 'Unable to load profile' }, { status: 500 })
     }
 
     const customerId = await ensureStripeCustomer({
@@ -50,9 +50,9 @@ export async function GET() {
       invoicePdf: inv.invoice_pdf ?? null,
     }))
 
-    return NextResponse.json({ invoices })
+    return Response.json({ invoices })
   } catch (err) {
     console.error('[GET /api/stripe/subscription-invoices]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

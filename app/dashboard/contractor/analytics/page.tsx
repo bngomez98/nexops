@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { BarChart3, Award, TrendingUp, Target, Briefcase, Star } from 'lucide-react'
 

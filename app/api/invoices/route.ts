@@ -14,7 +14,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
+
 import { sendInvoiceSentClientEmail } from '@/lib/email'
 import { invoiceCreateSchema } from '@/lib/validators'
 import {
@@ -23,19 +23,19 @@ import {
   INVOICE_STATUS_TRANSITIONS,
 } from '@/lib/business-logic'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json()
     const parsed = invoiceCreateSchema.safeParse(body)
     if (!parsed.success) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       )
@@ -52,11 +52,11 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (jobError || !job) {
-      return NextResponse.json({ error: 'Job not found' }, { status: 404 })
+      return Response.json({ error: 'Job not found' }, { status: 404 })
     }
 
     if (job.contractor_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     // Calculate amounts server-side using urgency tier.
@@ -88,25 +88,25 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('Invoice insert error:', insertError)
-      return NextResponse.json({ error: 'Failed to create invoice' }, { status: 500 })
+      return Response.json({ error: 'Failed to create invoice' }, { status: 500 })
     }
 
-    return NextResponse.json({ invoice })
+    return Response.json({ invoice })
   } catch (err) {
     console.error('Invoice error:', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const statusParam = request.nextUrl.searchParams.get('status')
+    const statusParam = new URL(request.url).searchParams.get('status')
     const role = user.user_metadata?.role as string | undefined
 
     let query = supabase
@@ -125,27 +125,27 @@ export async function GET(request: NextRequest) {
 
     const { data: invoices, error } = await query.order('created_at', { ascending: false })
     if (error) {
-      return NextResponse.json({ error: 'Failed to fetch invoices' }, { status: 500 })
+      return Response.json({ error: 'Failed to fetch invoices' }, { status: 500 })
     }
 
-    return NextResponse.json({ invoices: invoices ?? [] })
+    return Response.json({ invoices: invoices ?? [] })
   } catch (err) {
     console.error('Invoice GET error:', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { id, status } = await request.json()
     if (!id || !status) {
-      return NextResponse.json({ error: 'id and status required' }, { status: 400 })
+      return Response.json({ error: 'id and status required' }, { status: 400 })
     }
 
     const { data: invoice } = await supabase
@@ -155,7 +155,7 @@ export async function PATCH(request: NextRequest) {
       .single()
 
     if (!invoice) {
-      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
+      return Response.json({ error: 'Invoice not found' }, { status: 404 })
     }
 
     // Role gate:
@@ -166,12 +166,12 @@ export async function PATCH(request: NextRequest) {
     const isAdmin = role === 'admin'
 
     if (!isOwner && !isAdmin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     // Contractors can't retroactively mark paid — that's webhook/admin territory.
     if (status === 'paid' && !isAdmin) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Only admin or Stripe webhook can mark an invoice paid' },
         { status: 403 }
       )
@@ -179,7 +179,7 @@ export async function PATCH(request: NextRequest) {
 
     // Validate the transition against the state machine.
     if (!isValidInvoiceTransition(invoice.status, status)) {
-      return NextResponse.json({
+      return Response.json({
         error: `Cannot transition from '${invoice.status}' to '${status}'`,
         allowed_transitions: INVOICE_STATUS_TRANSITIONS[invoice.status] ?? [],
       }, { status: 400 })
@@ -191,7 +191,7 @@ export async function PATCH(request: NextRequest) {
       .eq('id', id)
 
     if (updErr) {
-      return NextResponse.json({ error: 'Failed to update invoice' }, { status: 500 })
+      return Response.json({ error: 'Failed to update invoice' }, { status: 500 })
     }
 
     // Side effects per new status:
@@ -236,9 +236,9 @@ export async function PATCH(request: NextRequest) {
         .then(() => {}, () => {})
     }
 
-    return NextResponse.json({ success: true, status })
+    return Response.json({ success: true, status })
   } catch (err) {
     console.error('[PATCH /api/invoices]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

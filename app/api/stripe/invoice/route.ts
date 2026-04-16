@@ -1,5 +1,5 @@
 import type Stripe from 'stripe'
-import { NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { getSiteUrl } from '@/lib/env'
@@ -9,11 +9,11 @@ const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
   const stripe = getStripeClient()
-  const supabase = await createClient()
+  const supabase = createClient(request)
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    return Response.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
   const body = await req.json()
@@ -29,18 +29,18 @@ export async function POST(req: Request) {
       .single()
 
     if (!invoice) {
-      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
+      return Response.json({ error: 'Invoice not found' }, { status: 404 })
     }
     if (invoice.client_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
     if (invoice.status === 'paid') {
-      return NextResponse.json({ error: 'Invoice is already paid' }, { status: 400 })
+      return Response.json({ error: 'Invoice is already paid' }, { status: 400 })
     }
 
     // If we already have a Stripe payment URL, return it
     if (invoice.stripe_payment_url) {
-      return NextResponse.json({ url: invoice.stripe_payment_url })
+      return Response.json({ url: invoice.stripe_payment_url })
     }
 
     // Get contractor's Stripe Connect account
@@ -123,13 +123,13 @@ export async function POST(req: Request) {
       stripe_payment_url: session.url,
     }).eq('id', invoiceId)
 
-    return NextResponse.json({ url: session.url })
+    return Response.json({ url: session.url })
   }
 
   // ── Flow B: service_requests table (legacy workflow) ──────────────────────
   const { requestId } = body
   if (!requestId) {
-    return NextResponse.json({ error: 'requestId or invoiceId required' }, { status: 400 })
+    return Response.json({ error: 'requestId or invoiceId required' }, { status: 400 })
   }
 
   const { data: request } = await supabase
@@ -139,16 +139,16 @@ export async function POST(req: Request) {
     .single()
 
   if (!request) {
-    return NextResponse.json({ error: 'Request not found' }, { status: 404 })
+    return Response.json({ error: 'Request not found' }, { status: 404 })
   }
   if (request.owner_id !== user.id) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
   if (!request.final_cost || request.final_cost <= 0) {
-    return NextResponse.json({ error: 'No final cost set on this request' }, { status: 400 })
+    return Response.json({ error: 'No final cost set on this request' }, { status: 400 })
   }
   if (!request.assigned_contractor_id) {
-    return NextResponse.json({ error: 'No contractor assigned to this request' }, { status: 400 })
+    return Response.json({ error: 'No contractor assigned to this request' }, { status: 400 })
   }
 
   const { data: existingPayment } = await supabase
@@ -160,7 +160,7 @@ export async function POST(req: Request) {
     .maybeSingle()
 
   if (existingPayment) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'An invoice payment has already been initiated for this request' },
       { status: 409 }
     )
@@ -173,7 +173,7 @@ export async function POST(req: Request) {
     .single()
 
   if (!contractor?.stripe_connect_account_id || contractor.stripe_connect_status !== 'active') {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Contractor has not completed Stripe onboarding' },
       { status: 400 }
     )
@@ -268,5 +268,5 @@ export async function POST(req: Request) {
     status: 'pending',
   })
 
-  return NextResponse.json({ url: session.url })
+  return Response.json({ url: session.url })
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ImageUpload } from '@/components/image-upload'
 import { formatDateOnly, todayDateInputValue } from '@/lib/date-format'

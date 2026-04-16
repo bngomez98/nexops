@@ -1,31 +1,31 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { isValidTransition, STATUS_TRANSITIONS } from '@/lib/business-logic'
 import { isAutomationEnabled } from '@/lib/env'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   if (!isAutomationEnabled()) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Automation features are disabled', code: 'FEATURE_DISABLED' },
       { status: 403 },
     )
   }
 
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { projectId, newStatus, reason } = await request.json()
 
     if (!projectId || !newStatus) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'projectId and newStatus are required' },
         { status: 400 },
       )
@@ -38,19 +38,19 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (projectError || !project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+      return Response.json({ error: 'Project not found' }, { status: 404 })
     }
 
     const isOwner = project.owner_id === user.id
     const isContractor = project.assigned_contractor_id === user.id
     if (!isOwner && !isContractor) {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+      return Response.json({ error: 'Not authorized' }, { status: 403 })
     }
 
     const currentStatus = project.status
     if (!isValidTransition(currentStatus, newStatus)) {
       const validNextStates = STATUS_TRANSITIONS[currentStatus] ?? []
-      return NextResponse.json(
+      return Response.json(
         {
           error: `Invalid transition: ${currentStatus} → ${newStatus}`,
           validTransitions: validNextStates,
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       console.error('[POST /api/automation/update-status] notification insert error:', notificationError)
     }
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       projectId,
       previousStatus: currentStatus,
@@ -123,6 +123,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('[POST /api/automation/update-status]', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

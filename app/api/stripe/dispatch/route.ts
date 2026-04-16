@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+
 import { createClient } from "@/lib/supabase/server"
 import { getStripeClient } from "@/lib/stripe/server"
 import { getSiteUrl } from "@/lib/env"
@@ -13,11 +13,11 @@ const PLATFORM_FEE_CENTS = Math.round(DISPATCH_AMOUNT_CENTS * 0.15)
 export async function POST(req: Request) {
   try {
   const stripe = getStripeClient()
-  const supabase = await createClient()
+  const supabase = createClient(req)
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    return Response.json({ error: "Not authenticated" }, { status: 401 })
   }
 
   let requestId: string
@@ -26,10 +26,10 @@ export async function POST(req: Request) {
     requestId = body.requestId
   } catch (err) {
     console.error(err)
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+    return Response.json({ error: "Invalid request body" }, { status: 400 })
   }
   if (!requestId) {
-    return NextResponse.json({ error: "requestId required" }, { status: 400 })
+    return Response.json({ error: "requestId required" }, { status: 400 })
   }
 
   // Fetch the service request to confirm this user is the owner and get the contractor
@@ -40,13 +40,13 @@ export async function POST(req: Request) {
     .single()
 
   if (!request) {
-    return NextResponse.json({ error: "Request not found" }, { status: 404 })
+    return Response.json({ error: "Request not found" }, { status: 404 })
   }
   if (request.owner_id !== user.id) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    return Response.json({ error: "Forbidden" }, { status: 403 })
   }
   if (!request.assigned_contractor_id) {
-    return NextResponse.json({ error: "No contractor assigned to this request" }, { status: 400 })
+    return Response.json({ error: "No contractor assigned to this request" }, { status: 400 })
   }
 
   // Check for an existing pending/paid dispatch payment to avoid double-charging
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     .maybeSingle()
 
   if (existingPayment) {
-    return NextResponse.json(
+    return Response.json(
       { error: "A dispatch fee has already been initiated for this request" },
       { status: 409 }
     )
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
     .single()
 
   if (!contractor?.stripe_connect_account_id || contractor.stripe_connect_status !== "active") {
-    return NextResponse.json(
+    return Response.json(
       { error: "Contractor has not completed Stripe onboarding" },
       { status: 400 }
     )
@@ -152,9 +152,9 @@ export async function POST(req: Request) {
     status: "pending",
   })
 
-  return NextResponse.json({ url: session.url })
+  return Response.json({ url: session.url })
   } catch (err) {
     console.error('[POST /api/stripe/dispatch]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

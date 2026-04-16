@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import type { NextRequest } from 'next/server'
 
 const envMock = vi.hoisted(() => ({
   hasSupabaseServerConfig: vi.fn(),
@@ -31,7 +30,7 @@ describe('middleware robustness', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     const { middleware } = await import('@/middleware')
-    const request = { nextUrl: { pathname: '/' } } as unknown as NextRequest
+    const request = { nextUrl: { pathname: '/' } } as unknown as Request
     const response = await middleware(request)
 
     expect(response.status).toBe(200)
@@ -55,7 +54,7 @@ describe('middleware robustness', () => {
     updateSessionMock.mockResolvedValue(sessionResponse)
 
     const { middleware } = await import('@/middleware')
-    const request = { nextUrl: { pathname: '/' } } as unknown as NextRequest
+    const request = { nextUrl: { pathname: '/' } } as unknown as Request
     const response = await middleware(request)
 
     expect(updateSessionMock).toHaveBeenCalled()
@@ -67,7 +66,7 @@ describe('middleware robustness', () => {
     envMock.hasSupabaseServerConfig.mockReturnValue(false)
 
     const { middleware } = await import('@/middleware')
-    const request = { nextUrl: { pathname: '/' } } as unknown as NextRequest
+    const request = { nextUrl: { pathname: '/' } } as unknown as Request
     const response = await middleware(request)
 
     expect(updateSessionMock).not.toHaveBeenCalled()

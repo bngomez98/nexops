@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"

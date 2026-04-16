@@ -2,14 +2,14 @@
 import { useAuth } from '@/app/lib/auth-context'
 import { useRequests } from '@/app/lib/requests-context'
 import { DashboardLayout } from '@/components/dashboard-layout'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { useEffect } from 'react'
 import { isHomeownerDashboardRole } from '@/lib/dashboard-role'
 import {
   FileText, CheckCircle2, Clock, AlertCircle,
   Briefcase, Plus, ArrowRight, TrendingUp,
 } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/components/link'
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {

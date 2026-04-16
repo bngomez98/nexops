@@ -1,4 +1,3 @@
-import 'server-only'
 import Stripe from 'stripe'
 
 let _client: Stripe | undefined

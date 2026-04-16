@@ -2,7 +2,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { CONTACT_INFO } from "@/lib/contact-info"
-import Link from "next/link"
+import Link from "@/components/link"
 import { ArrowLeft } from "lucide-react"
 
 export const metadata = {
