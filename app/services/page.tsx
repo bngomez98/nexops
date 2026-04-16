@@ -125,8 +125,10 @@ export default function ServicesPage() {
       <Header />
       <main>
         {/* ── Hero ────────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto max-w-5xl px-6 py-20 text-center sm:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 home-service-bg" />
+          <div className="pointer-events-none absolute inset-0 property-grid-pattern opacity-40" />
+          <div className="relative mx-auto max-w-5xl px-6 py-24 text-center sm:py-28">
             <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
               <Sparkles className="h-3 w-3" /> Services
             </p>

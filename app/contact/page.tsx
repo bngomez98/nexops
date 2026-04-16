@@ -78,8 +78,10 @@ export default function ContactPage() {
       <Header />
       <main>
         {/* ── Hero ───────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto max-w-5xl px-6 py-20 text-center sm:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 hero-gradient" />
+          <div className="pointer-events-none absolute inset-0 property-grid-pattern opacity-40" />
+          <div className="relative mx-auto max-w-5xl px-6 py-24 text-center sm:py-28">
             <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
               <MessageSquare className="h-3 w-3" /> Contact
             </p>
@@ -99,8 +101,8 @@ export default function ContactPage() {
           <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
             {/* Direct contact sidebar */}
             <aside className="flex flex-col gap-6 lg:col-span-5">
-              <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+              <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-accent p-6 sm:p-8 shadow-lg">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary contractor-accent pb-3">
                   Reach us directly
                 </p>
                 <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">

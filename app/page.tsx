@@ -183,9 +183,10 @@ export default function HomePage() {
         {/* ── Hero ────────────────────────────────────────────── */}
         <section className="relative overflow-hidden border-b border-border">
           <div className="pointer-events-none absolute inset-0 hero-gradient" />
-          <div className="pointer-events-none absolute inset-0 dot-grid opacity-50" />
-          
-          <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:py-24">
+          <div className="pointer-events-none absolute inset-0 hero-home-pattern opacity-60" />
+          <div className="pointer-events-none absolute inset-0 property-grid-pattern opacity-30" />
+
+          <div className="relative mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:py-28">
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16 lg:items-center">
               <div className="lg:col-span-7">
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary">
@@ -239,12 +240,12 @@ export default function HomePage() {
 
               <div className="lg:col-span-5">
                 <div className="relative">
-                  <div className="rounded-2xl border border-border bg-card p-6 shadow-2xl card-elevated">
-                    <div className="mb-4 flex items-center justify-between border-b border-border pb-4">
+                  <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6 shadow-2xl card-elevated backdrop-blur-sm">
+                    <div className="contractor-accent mb-5 flex items-center justify-between border-b border-border pb-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
                         Live operations view
                       </p>
-                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">
+                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-600 border border-emerald-500/20">
                         Coordinated by Nexus
                       </span>
                     </div>
@@ -256,7 +257,7 @@ export default function HomePage() {
                       ].map((item) => (
                         <div
                           key={item.label}
-                          className="flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5"
+                          className="flex items-center justify-between rounded-lg border border-primary/10 bg-gradient-to-r from-background to-primary/5 px-4 py-3 shadow-sm hover:shadow-md transition-all"
                         >
                           <p className="text-sm font-medium text-foreground">{item.label}</p>
                           <p className="text-xs font-semibold text-primary">{item.status}</p>
