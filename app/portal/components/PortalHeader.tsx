@@ -144,7 +144,7 @@ export function PortalHeader() {
                   <div className="text-[11px] text-indigo-200/70">{notif.body}</div>
                 )}
                 <div className="text-[10px] text-indigo-200/40 mt-1">
-                  {formatRelative(notif.created_at)}
+                  {formatRelative(notif.createdAt)}
                 </div>
               </button>
             ))}

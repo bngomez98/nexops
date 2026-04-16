@@ -58,7 +58,7 @@ export default function AllRequestsPage() {
           .filter(r => r.final_cost)
           .reduce((s, r) => s + (r.final_cost ?? 0), 0)
         setStats({ total: requests.length, active, completed, revenue })
-        setRecent(requests.slice(0, 10) as RecentRequest[])
+        setRecent(requests.slice(0, 10) as unknown as RecentRequest[])
       }
       setLoading(false)
     }

@@ -116,10 +116,10 @@ export function JobDetailSheet({ jobId, onClose }: JobDetailSheetProps) {
           ...prev,
           {
             id: message.id,
-            authorId: message.sender_id,
+            authorId: message.senderId,
             authorName: currentUser?.name ?? 'You',
-            body: message.content,
-            timestamp: message.created_at,
+            body: message.body,
+            timestamp: message.createdAt,
           },
         ])
       }

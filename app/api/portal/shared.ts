@@ -72,14 +72,14 @@ export function avatarGradient(seed: string) {
   return options[hash % options.length]
 }
 
-export async function loadCurrentProfile(supabase: SupabaseClient<AnyObj>, userId: string) {
+export async function loadCurrentProfile(supabase: SupabaseClient<AnyObj>, userId: string): Promise<AnyObj | null> {
   const byId = await supabase
     .from('profiles')
     .select('*')
     .eq('id', userId)
     .maybeSingle()
 
-  if (byId.data) return byId.data
+  if (byId.data) return byId.data as AnyObj
 
   const byUserId = await supabase
     .from('profiles')
@@ -87,5 +87,5 @@ export async function loadCurrentProfile(supabase: SupabaseClient<AnyObj>, userI
     .eq('user_id', userId)
     .maybeSingle()
 
-  return byUserId.data
+  return (byUserId.data as AnyObj | null) ?? null
 }

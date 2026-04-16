@@ -28,7 +28,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const profile = await loadCurrentProfile(supabase, user.id)
+    const profile: any = await loadCurrentProfile(supabase, user.id)
     const role = normalizeRole(profile?.role ?? user.user_metadata?.role)
 
     const isOwner = project.owner_id === user.id

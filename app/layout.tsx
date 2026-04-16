@@ -1,25 +1,15 @@
 import type React from 'react'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/app/lib/auth-context'
 import { ThemeProvider } from '@/components/theme-provider'
 import { CookieConsentBanner } from '@/components/cookie-consent'
 import { ZendeskWidget } from '@/components/zendesk-widget'
 import { CONTACT_INFO } from '@/lib/contact-info'
-import { getSiteUrl } from '@/lib/env'
 import './globals.css'
 
-const GTM_ID = 'GTM-PL3NBCWD'
 const GA_ID = 'G-LDGVHFCMKT'
-
-// Cloudflare Google Tag Gateway proxy path.
-// Override with NEXT_PUBLIC_GTM_PROXY_HOST if the proxy runs on a different origin.
-const GTM_PROXY_HOST =
-  process.env.NEXT_PUBLIC_GTM_PROXY_HOST?.replace(/\/$/, '') || getSiteUrl()
-const GTM_PROXY_PATH = `${GTM_PROXY_HOST}/cdn-cgi/gtm`
 
 const CONSENT_DEFAULT_SCRIPT = [
   `window.dataLayer=window.dataLayer||[];`,
@@ -33,8 +23,6 @@ const CONSENT_DEFAULT_SCRIPT = [
   `});`,
   `gtag('set','ads_data_redaction',true);`,
 ].join('\n')
-
-const GTM_INIT_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='${GTM_PROXY_PATH}/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
 
 const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
 
@@ -86,7 +74,7 @@ export const metadata: Metadata = {
     template: '%s — Nexus Operations',
   },
   description:
-    'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. We assign verified, licensed contractors, enforce response-time guarantees, and document every job from request to completion.',
+    'Nexus Operations manages maintenance for homeowners and property managers in Topeka and Shawnee County. Each request is assigned to one verified, licensed contractor (not sold as shared leads), consultation is confirmed within 24 hours, and every job is documented from intake to invoice.',
   keywords: [
     'property maintenance Topeka',
     'maintenance coordination Kansas',
@@ -127,7 +115,7 @@ export const metadata: Metadata = {
     url: 'https://nexusoperations.org',
     title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
     description:
-      'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
+      'Nexus Operations assigns each request to one verified, licensed contractor in Topeka and Shawnee County, confirms consultation within 24 hours, and documents every job through invoice.',
     siteName: 'Nexus Operations',
     images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service coordination' }],
   },
@@ -135,7 +123,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nexus Operations — Property Maintenance Coordination',
     description:
-      'Licensed contractor coordination for homeowners and property managers in Topeka, KS. Verified network, guaranteed response times, full project documentation.',
+      'Topeka property maintenance with one-request/one-contractor assignment, 24-hour consultation confirmation, and complete job documentation.',
     images: [DEFAULT_OG_IMAGE],
   },
   robots: {
@@ -146,8 +134,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#3d7a4f' },
-    { media: '(prefers-color-scheme: dark)', color: '#0b1712' },
+    { media: '(prefers-color-scheme: light)', color: '#2d6a42' },
+    { media: '(prefers-color-scheme: dark)', color: '#0d1a11' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -159,21 +147,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth bg-background" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Instrument+Serif&display=swap"
           rel="stylesheet"
         />
         <Script id="consent-default" strategy="beforeInteractive">
           {CONSENT_DEFAULT_SCRIPT}
         </Script>
-        <Script id="gtm-init" strategy="afterInteractive">
-          {GTM_INIT_SCRIPT}
-        </Script>
-        <Script src={`${GTM_PROXY_PATH}/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">
           {GA_INIT_SCRIPT}
         </Script>
@@ -196,20 +181,10 @@ export default function RootLayout({
         )}
       </head>
       <body>
-        <noscript>
-          <iframe
-            src={`${GTM_PROXY_PATH}/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="nexus-theme" disableTransitionOnChange>
           <AuthProvider>{children}</AuthProvider>
           <CookieConsentBanner />
           <Toaster position="bottom-right" richColors closeButton />
-          <Analytics />
-          <SpeedInsights />
           <ZendeskWidget />
         </ThemeProvider>
       </body>

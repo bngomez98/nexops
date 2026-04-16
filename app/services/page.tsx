@@ -22,9 +22,9 @@ import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Services — Trade Categories Coordinated by Nexus Operations',
+  title: 'Services — Trade Categories by Nexus Operations',
   description:
-    'Nexus Operations coordinates plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
+    'Nexus Operations manages plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
 }
 
 const tradeCategories = [
@@ -61,7 +61,7 @@ const tradeCategories = [
   {
     icon: ClipboardList,
     title: 'Turnover & make-ready',
-    desc: 'Full punch-list coordination between tenants — cleaning, paint, minor repair, and documentation so you can list the unit faster.',
+    desc: 'Full punch-list management between tenants — cleaning, paint, minor repair, and documentation so you can list the unit faster.',
     examples: ['Move-out walk-through', 'Deep clean', 'Paint & patch', 'Punch-list repair', 'Photo documentation for listing'],
   },
   {
@@ -79,7 +79,7 @@ const tradeCategories = [
   {
     icon: Layers,
     title: 'Appliances',
-    desc: 'Diagnosis and repair of built-in and freestanding appliances, with replacement coordination when repair is not cost-effective.',
+    desc: 'Diagnosis and repair of built-in and freestanding appliances, with replacement sourcing when repair is not cost-effective.',
     examples: ['Refrigerator service', 'Washer/dryer repair', 'Dishwasher install', 'Range & oven repair'],
   },
   {
@@ -134,7 +134,7 @@ export default function ServicesPage() {
               Every trade you need. One service.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations coordinates every trade a typical property requires — routine,
+              Nexus Operations manages every trade a typical property requires — routine,
               urgent, or emergency. Here&apos;s everything we handle, plus how we route each request
               through our licensed, insured network.
             </p>
@@ -159,7 +159,7 @@ export default function ServicesPage() {
         <Section>
           <SectionHeading
             eyebrow="Trade categories"
-            title="What we coordinate."
+            title="What we manage."
             description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn&apos;t fit a category, submit a request anyway — our team will route it."
           />
 
@@ -243,7 +243,7 @@ export default function ServicesPage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What every job includes"
-                title="Coordination is not a separate product — it's the whole point."
+                title="Oversight is built into every job — not sold as an add-on."
                 description="You don&apos;t pay per task or per photo or per note. Every Nexus request gets the full treatment."
               />
             </div>

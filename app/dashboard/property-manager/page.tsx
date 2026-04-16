@@ -7,14 +7,14 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, Building2, ClipboardList, DollarSign,
-  Plus, ArrowRight,
+  Plus, ArrowRight, Sparkles, TrendingUp,
 } from 'lucide-react'
 
 export default function PropertyManagerDashboard() {
   const router = useRouter()
-  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [loading, setLoading] = useState(true)
-  const [stats, setStats]   = useState({
+  const [stats, setStats] = useState({
     totalProperties: 0,
     activeJobs: 0,
     spendThisMonth: 0,
@@ -68,32 +68,42 @@ export default function PropertyManagerDashboard() {
     router.push('/auth/login')
   }
 
-  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    )
+  }
   if (!user) return null
 
   return (
     <div className="min-h-screen bg-background">
       <DashboardNav userName={user.name} role="property-manager" onLogout={handleLogout} />
-      <main className="md:ml-[240px] p-5 md:p-7 space-y-6">
-        {/* Welcome banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-primary p-6 md:p-8 text-primary-foreground">
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <pattern id="g2" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M0 40L40 0M-10 10L10-10M30 50L50 30" stroke="white" strokeWidth="1" fill="none"/>
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#g2)"/>
-            </svg>
-          </div>
+      
+      <main className="lg:ml-[260px] p-5 sm:p-6 lg:p-8 space-y-6 pt-20 lg:pt-8">
+        {/* Welcome Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-primary p-6 sm:p-8 text-primary-foreground">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_70%_-20%,rgba(255,255,255,0.15),transparent_50%)]" />
+          <div className="pointer-events-none absolute inset-0 dot-grid opacity-20" />
+          
           <div className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-5">
             <div>
-              <p className="text-primary-foreground/60 text-[11px] font-bold uppercase tracking-widest mb-1.5">Property Manager Portal</p>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Welcome, {user.name.split(' ')[0]}</h1>
-              <p className="text-primary-foreground/70 text-sm mt-1.5">{stats.totalProperties} properties · {stats.activeJobs} active jobs</p>
+              <div className="inline-flex items-center gap-2 text-primary-foreground/80 text-xs font-semibold uppercase tracking-wider bg-white/10 border border-white/15 px-3 py-1.5 rounded-full mb-4">
+                <Sparkles className="w-3.5 h-3.5" />
+                Portfolio Operations Center
+              </div>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
+                Portfolio command center, {user.name.split(' ')[0]}
+              </h1>
+              <p className="text-primary-foreground/75 text-sm mt-2">
+                {stats.totalProperties} managed properties · {stats.activeJobs} active work orders
+              </p>
             </div>
             <Link href="/dashboard/property-manager/requests/new">
-              <button className="inline-flex items-center gap-2 bg-white text-primary font-bold text-[13px] px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors shadow-sm flex-shrink-0">
-                <Plus className="w-4 h-4" /> New Request
+              <button className="inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/95 transition-colors shadow-lg">
+                <Plus className="w-4 h-4" /> 
+                Dispatch Request
               </button>
             </Link>
           </div>
@@ -102,42 +112,95 @@ export default function PropertyManagerDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { label: 'Properties',    value: stats.totalProperties, icon: Building2,    color: 'text-muted-foreground', bg: 'bg-muted' },
-            { label: 'Active Jobs',   value: stats.activeJobs,      icon: ClipboardList, color: 'text-muted-foreground', bg: 'bg-muted' },
-            { label: 'Spend (Month)', value: `$${stats.spendThisMonth.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+             { label: 'Managed Properties', value: stats.totalProperties, icon: Building2, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
+             { label: 'Active Work Orders', value: stats.activeJobs, icon: ClipboardList, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
+             { label: 'Month-to-Date Spend', value: `$${stats.spendThisMonth.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
             return (
-              <div key={s.label} className="bg-card border border-border rounded-xl p-5">
+              <div key={s.label} className="bg-card border border-border rounded-xl p-5 card-elevated">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
-                  <div className={`w-8 h-8 rounded-lg ${s.bg} flex items-center justify-center`}><Icon className={`w-4 h-4 ${s.color}`} /></div>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
+                  <div className={`w-9 h-9 rounded-lg ${s.bg} flex items-center justify-center`}>
+                    <Icon className={`w-4 h-4 ${s.color}`} />
+                  </div>
                 </div>
-                <p className="text-2xl font-bold text-foreground">{s.value}</p>
+                <p className="font-display text-2xl sm:text-3xl font-bold text-foreground tabular-nums">{s.value}</p>
               </div>
             )
           })}
         </div>
 
-        {/* Quick actions */}
+        {/* Quick Actions */}
         <div className="grid sm:grid-cols-3 gap-4">
           {[
-            { href: '/dashboard/property-manager/properties', icon: Building2, iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'Manage Properties', sub: 'View and add managed properties' },
-            { href: '/dashboard/property-manager/requests', icon: ClipboardList, iconBg: 'bg-muted', iconColor: 'text-muted-foreground', title: 'Service Requests', sub: 'Track requests across portfolio' },
-            { href: '/dashboard/property-manager/invoices', icon: DollarSign, iconBg: 'bg-muted', iconColor: 'text-foreground', title: 'Invoices & Spend', sub: 'Portfolio-level financial overview' },
+            { 
+              href: '/dashboard/property-manager/properties', 
+              icon: Building2, 
+              iconBg: 'bg-blue-500/10', 
+              iconColor: 'text-blue-600 dark:text-blue-400', 
+               title: 'Property Portfolio', 
+               sub: 'Manage assets, addresses, and ownership records' 
+            },
+            { 
+              href: '/dashboard/property-manager/requests', 
+              icon: ClipboardList, 
+              iconBg: 'bg-amber-500/10', 
+              iconColor: 'text-amber-600 dark:text-amber-400', 
+               title: 'Service Dispatch', 
+               sub: 'Track work orders across every property' 
+            },
+            { 
+              href: '/dashboard/property-manager/invoices', 
+              icon: TrendingUp, 
+              iconBg: 'bg-primary/10', 
+              iconColor: 'text-primary', 
+               title: 'Invoices & Cost Control', 
+               sub: 'Review approvals, invoices, and monthly spend' 
+            },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
-            <Link key={href} href={href}
-              className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+            <Link 
+              key={href} 
+              href={href}
+              className="group flex items-center gap-4 p-5 bg-card border border-border rounded-xl card-elevated card-elevated-hover"
             >
-              <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0`}><Icon className={`w-5 h-5 ${iconColor}`} /></div>
+              <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0`}>
+                <Icon className={`w-5 h-5 ${iconColor}`} />
+              </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-foreground text-[13px]">{title}</p>
-                <p className="text-[11.5px] text-muted-foreground mt-0.5">{sub}</p>
+                <p className="font-semibold text-foreground text-sm">{title}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
             </Link>
           ))}
         </div>
+
+        <section className="grid gap-4 lg:grid-cols-3">
+          {[
+            {
+              title: 'Response SLA',
+              value: stats.activeJobs > 0 ? 'On Track' : 'No Active Jobs',
+              sub: 'Monitor dispatch cycle times and contractor response speed.',
+            },
+            {
+              title: 'Budget Health',
+              value: stats.spendThisMonth > 0 ? `$${stats.spendThisMonth.toLocaleString()}` : '$0',
+              sub: 'Month-to-date paid invoice volume across managed assets.',
+            },
+            {
+              title: 'Portfolio Utilization',
+              value: `${stats.totalProperties} Assets`,
+              sub: 'Confirm every property has documented service coverage.',
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
+              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{item.sub}</p>
+            </div>
+          ))}
+        </section>
       </main>
     </div>
   )

@@ -4,8 +4,8 @@ type Tone = 'default' | 'muted' | 'dark' | 'primary'
 
 const toneClasses: Record<Tone, string> = {
   default: 'bg-background text-foreground',
-  muted: 'bg-card text-foreground',
-  dark: 'bg-[#0a0a0a] text-white',
+  muted: 'bg-muted/50 text-foreground',
+  dark: 'section-dark',
   primary: 'bg-primary text-primary-foreground',
 }
 
@@ -24,7 +24,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={`relative py-20 sm:py-24 ${toneClasses[tone]} ${className}`}
+      className={`relative py-16 sm:py-20 lg:py-24 ${toneClasses[tone]} ${className}`}
     >
       <div className="mx-auto max-w-7xl px-6">{children}</div>
     </section>
@@ -49,7 +49,7 @@ export function SectionHeading({
     <div className={`max-w-3xl ${align === 'center' ? 'mx-auto text-center' : ''}`}>
       {eyebrow && (
         <p
-          className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
+          className={`font-mono-label mb-3 ${
             onDark ? 'text-emerald-400' : 'text-primary'
           }`}
         >
@@ -57,7 +57,7 @@ export function SectionHeading({
         </p>
       )}
       <h2
-        className={`mt-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-[44px] lg:leading-[1.1] ${
+        className={`font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-[42px] lg:leading-[1.15] text-balance ${
           onDark ? 'text-white' : 'text-foreground'
         }`}
       >
@@ -65,8 +65,8 @@ export function SectionHeading({
       </h2>
       {description && (
         <p
-          className={`mt-4 text-[15px] leading-relaxed sm:text-base ${
-            onDark ? 'text-white/65' : 'text-muted-foreground'
+          className={`mt-4 text-base leading-relaxed sm:text-lg ${
+            onDark ? 'text-white/70' : 'text-muted-foreground'
           }`}
         >
           {description}

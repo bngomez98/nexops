@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         mode: 'subscription',
-        ui_mode: 'embedded',
+        ui_mode: 'embedded_page',
         redirect_on_completion: 'always',
         return_url: `${siteUrl}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
         line_items: [lineItem],

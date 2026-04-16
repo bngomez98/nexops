@@ -90,11 +90,11 @@ export async function POST(request: NextRequest) {
     const projectCategory = String(project.category).toLowerCase()
 
     const matches: ContractorMatch[] = contractors
-      .map((contractor) => {
+      .reduce<ContractorMatch[]>((acc, contractor) => {
         const contractorId = typeof contractor.id === 'string' ? contractor.id : null
 
         if (!contractorId) {
-          return null
+          return acc
         }
 
         let score = 100
@@ -122,18 +122,19 @@ export async function POST(request: NextRequest) {
           score += 5
         }
 
-        return {
+        acc.push({
           contractor_id: contractorId,
-          email: typeof contractor.email === 'string' ? contractor.email : '',
+          email: typeof contractor.email === 'string' ? contractor.email : null,
           full_name:
             (typeof contractor.full_name === 'string' && contractor.full_name) ||
             'Contractor',
           match_score: Math.max(0, Math.min(100, score)),
           active_projects: activeProjects,
           average_rating: rating,
-        }
-      })
-      .filter((match): match is ContractorMatch => Boolean(match))
+        })
+
+        return acc
+      }, [])
       .sort((a, b) => b.match_score - a.match_score)
       .slice(0, 5)
 
