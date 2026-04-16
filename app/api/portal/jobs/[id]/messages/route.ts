@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { loadCurrentProfile, normalizeRole } from '../../../shared'
 
 type RouteContext = { params: Promise<{ id: string }> }
 
-export async function POST(request: NextRequest, { params }: RouteContext) {
+export async function POST(request: Request, { params }: RouteContext) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { id } = await params
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       .single()
 
     if (projectError || !project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+      return Response.json({ error: 'Project not found' }, { status: 404 })
     }
 
     const profile: any = await loadCurrentProfile(supabase, user.id)
@@ -34,14 +34,14 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     const isOwner = project.owner_id === user.id
     const isAssignedContractor = project.assigned_contractor_id === user.id
     if (!isOwner && !isAssignedContractor && role !== 'admin') {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+      return Response.json({ error: 'Not authorized' }, { status: 403 })
     }
 
     const { content } = await request.json()
     const body = typeof content === 'string' ? content.trim() : ''
 
     if (!body) {
-      return NextResponse.json({ error: 'content is required' }, { status: 400 })
+      return Response.json({ error: 'content is required' }, { status: 400 })
     }
 
     const { data: inserted, error: insertError } = await supabase
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       user.email?.split('@')[0] ||
       'User'
 
-    return NextResponse.json({
+    return Response.json({
       message: {
         id: String(inserted.id),
         authorId: String(inserted.sender_id),
@@ -73,6 +73,6 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     })
   } catch (error) {
     console.error('[POST /api/portal/jobs/[id]/messages]', error)
-    return NextResponse.json({ error: 'Unable to send message' }, { status: 500 })
+    return Response.json({ error: 'Unable to send message' }, { status: 500 })
   }
 }

@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
+
 import { getDatabaseUrl, getDatabaseUrlUnpooled } from '@/lib/env'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(request: Request) {
   const health: Record<string, unknown> = {
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -14,7 +14,7 @@ export async function GET() {
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     try {
       const { createClient } = await import('@/lib/supabase/server')
-      const supabase = await createClient()
+      const supabase = createClient(request)
       const { error } = await supabase.from('profiles').select('id').limit(1)
       health.database = error ? 'error' : 'connected'
 
@@ -40,5 +40,5 @@ export async function GET() {
     unpooled: getDatabaseUrlUnpooled() ? 'configured' : 'not_configured',
   }
 
-  return NextResponse.json(health)
+  return Response.json(health)
 }

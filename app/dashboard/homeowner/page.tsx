@@ -1,8 +1,8 @@
 'use client'
 
 import { Suspense, useEffect, useState, useCallback, useRef } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter, useSearchParams } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { AIAssistant } from '@/components/ai-assistant'
 import { AIInsightsCard } from '@/components/ai-insights-card'

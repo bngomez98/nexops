@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { contactFormSchema } from '@/lib/validators'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json()
     const parsed = contactFormSchema.safeParse(body)
 
     if (!parsed.success) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       )
@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
       console.log('[contact] Form submission:', { firstName, lastName, email, type })
     }
 
-    return NextResponse.json({ success: true })
+    return Response.json({ success: true })
   } catch (err) {
     console.error('[POST /api/contact]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

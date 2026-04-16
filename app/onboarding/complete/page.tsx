@@ -1,8 +1,8 @@
 "use client"
 
 import { Suspense } from "react"
-import { useSearchParams } from "next/navigation"
-import Link from "next/link"
+import { useSearchParams } from "@/lib/router"
+import Link from "@/components/link"
 import Image from "next/image"
 import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react"
 

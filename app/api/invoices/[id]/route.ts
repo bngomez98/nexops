@@ -7,18 +7,18 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
+
 
 type Params = { params: Promise<{ id: string }> }
 
-export async function GET(_request: NextRequest, { params }: Params) {
+export async function GET(request: Request, { params }: Params) {
   try {
     const { id } = await params
-    const supabase = await createClient()
+    const supabase = createClient(request)
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { data: invoice, error } = await supabase
@@ -33,7 +33,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
       .single()
 
     if (error || !invoice) {
-      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
+      return Response.json({ error: 'Invoice not found' }, { status: 404 })
     }
 
     const role = user.user_metadata?.role as string | undefined
@@ -42,12 +42,12 @@ export async function GET(_request: NextRequest, { params }: Params) {
       invoice.contractor_id === user.id ||
       invoice.client_id === user.id
     if (!canRead) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    return NextResponse.json({ invoice })
+    return Response.json({ invoice })
   } catch (err) {
     console.error('[GET /api/invoices/[id]]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

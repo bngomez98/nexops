@@ -1,5 +1,3 @@
-import Image from 'next/image'
-
 /** Inline SVG icon that matches the Nexus Operations orbital mark */
 function NexusIcon({ size = 30, className = '' }: { size?: number; className?: string }) {
   return (
@@ -38,13 +36,13 @@ export function Logo({
 }) {
   if (variant === 'image') {
     return (
-      <Image
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
         src="/nexus-logo.png"
         alt="Nexus Operations"
         width={120}
         height={40}
         className={`h-7 w-auto ${className}`}
-        priority
       />
     )
   }

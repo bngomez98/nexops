@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@supabase/supabase-js'
 
 /* ── Lazy Supabase admin client ─────────────────────────────────────────── */
@@ -42,7 +42,7 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     /* ── Rate limiting ──────────────────────────────────────────────────── */
     const ip =
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       'unknown'
 
     if (!checkRateLimit(ip)) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Too many submissions. Please try again in an hour.' },
         { status: 429 },
       )
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (!description) errors.push('description')
 
     if (errors.length > 0) {
-      return NextResponse.json(
+      return Response.json(
         { error: `Missing or invalid required fields: ${errors.join(', ')}` },
         { status: 400 },
       )
@@ -117,16 +117,16 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('[public-request] insert error:', insertError)
-      return NextResponse.json({ error: 'Failed to submit request. Please try again.' }, { status: 500 })
+      return Response.json({ error: 'Failed to submit request. Please try again.' }, { status: 500 })
     }
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       token: submissionToken,
       id: inserted?.id ?? null,
     })
   } catch (error) {
     console.error('[POST /api/portal/public-request]', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

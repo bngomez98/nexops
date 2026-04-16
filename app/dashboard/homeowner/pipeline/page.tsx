@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { Loader2, AlertCircle, CalendarDays } from 'lucide-react'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { formatDateOnly } from '@/lib/date-format'

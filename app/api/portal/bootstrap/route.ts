@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import {
   avatarGradient,
@@ -19,16 +19,16 @@ const DEFAULT_DOCS = [
   { id: 'doc-5', title: 'Photo upload best practices', tag: 'Guide' },
 ]
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const currentProfile = (await loadCurrentProfile(supabase, user.id)) as Record<string, unknown> | null
@@ -222,7 +222,7 @@ export async function GET() {
         .join('') || 'U',
     }
 
-    return NextResponse.json({
+    return Response.json({
       currentUser,
       users: portalUsers,
       jobs,
@@ -235,6 +235,6 @@ export async function GET() {
     })
   } catch (error) {
     console.error('[GET /api/portal/bootstrap]', error)
-    return NextResponse.json({ error: 'Unable to load portal data' }, { status: 500 })
+    return Response.json({ error: 'Unable to load portal data' }, { status: 500 })
   }
 }
