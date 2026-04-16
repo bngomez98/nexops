@@ -32,6 +32,7 @@ export async function GET() {
     }
 
     const currentProfile = (await loadCurrentProfile(supabase, user.id)) as Record<string, unknown> | null
+    const currentProfile: any = await loadCurrentProfile(supabase, user.id)
     const currentRole = normalizeRole(currentProfile?.role ?? user.user_metadata?.role)
 
     let requestQuery = supabase
@@ -130,7 +131,7 @@ export async function GET() {
           .split(' ')
           .filter(Boolean)
           .slice(0, 2)
-          .map((part) => part[0]?.toUpperCase() ?? '')
+          .map((part: any) => part[0]?.toUpperCase() ?? '')
           .join('') || 'U',
         rating: typeof profile?.average_rating === 'number' ? profile.average_rating : undefined,
         jobsCompleted: typeof profile?.reviews_count === 'number' ? profile.reviews_count : undefined,
@@ -217,7 +218,7 @@ export async function GET() {
         .split(' ')
         .filter(Boolean)
         .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
+        .map((part: any) => part[0]?.toUpperCase() ?? '')
         .join('') || 'U',
     }
 

@@ -57,7 +57,7 @@ export default function UserAgreementPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-3">3. Platform Roles</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                Nexus Operations coordinates work between homeowners/property managers (clients) and contractors. We do not
+                Nexus Operations manages work between homeowners/property managers (clients) and contractors. We do not
                 provide licensed trade services ourselves; we vet and dispatch independent contractors to perform the work.
                 Each user type agrees to the obligations below.
               </p>
@@ -74,7 +74,7 @@ export default function UserAgreementPage() {
                 <li>Pay invoices in a timely manner as outlined in our payment terms.</li>
                 <li>Provide a safe working environment for all contractors dispatched to your property.</li>
                 <li>Not solicit contractors identified through the Platform for work outside the Platform for a period of 12 months following introduction.</li>
-                <li>Notify Nexus promptly of quality concerns so we can coordinate remediation with the contractor.</li>
+                <li>Notify Nexus promptly of quality concerns so we can manage remediation with the contractor.</li>
               </ul>
             </section>
 
@@ -146,7 +146,7 @@ export default function UserAgreementPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-3">10. Documentation, Photos &amp; Data</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                Photos, notes, and job records uploaded to the Platform are used to coordinate work, validate completion,
+                Photos, notes, and job records uploaded to the Platform are used to manage work, validate completion,
                 and maintain audit history. You grant Nexus Operations a non-exclusive right to store and use this
                 documentation to operate and improve the Services, subject to our <Link href="/privacy" className="text-primary underline">Privacy Policy</Link>.
               </p>

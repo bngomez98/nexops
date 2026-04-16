@@ -67,7 +67,7 @@ export function Footer() {
           <div className="col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Nexus Operations coordinates verified, insured contractors for homeowners, landlords, 
+              Nexus Operations manages verified, insured contractors for homeowners, landlords, 
               and property managers across {CONTACT_INFO.cityState}. One request, one point of contact, one invoice.
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary">

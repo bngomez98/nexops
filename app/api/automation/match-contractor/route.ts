@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
 
         acc.push({
           contractor_id: contractorId,
-          email: typeof contractor.email === 'string' ? contractor.email : '',
+          email: typeof contractor.email === 'string' ? contractor.email : null,
           full_name:
             (typeof contractor.full_name === 'string' && contractor.full_name) ||
             'Contractor',

@@ -125,18 +125,18 @@ export default function PMInvoicesPage() {
         ) : (
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {invoices.map((inv: Record<string, unknown>) => {
-              const st = STATUS_MAP[inv.status] ?? STATUS_MAP.draft
+              const st = STATUS_MAP[inv.status as string] ?? STATUS_MAP.draft
               return (
-                <div key={inv.id} className="flex items-center gap-4 px-5 py-4">
+                <div key={inv.id as string} className="flex items-center gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt(inv.jobs.service_type) : 'Invoice'}</p>
+                      <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as any).service_type) : 'Invoice'}</p>
                       <span className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>{st.label}</span>
                     </div>
-                    {inv.jobs?.properties && <p className="text-[12px] text-muted-foreground">{inv.jobs.properties.address}</p>}
-                    <p className="text-[12px] text-muted-foreground">{new Date(inv.created_at).toLocaleDateString()}</p>
+                    {(inv.jobs as any)?.properties && <p className="text-[12px] text-muted-foreground">{(inv.jobs as any).properties.address}</p>}
+                    <p className="text-[12px] text-muted-foreground">{new Date(inv.created_at as string).toLocaleDateString()}</p>
                   </div>
-                  <p className="text-[14px] font-bold flex-shrink-0">${inv.total.toLocaleString()}</p>
+                  <p className="text-[14px] font-bold flex-shrink-0">${(inv.total as number).toLocaleString()}</p>
                 </div>
               )
             })}

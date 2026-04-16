@@ -88,6 +88,7 @@ export async function POST(req: Request) {
             unit_amount: amountCents,
             product_data: {
               name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()) : 'Service'}`,
+              name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, (c: any) => c.toUpperCase()) : 'Service'}`,
               description: `Invoice #${invoiceId.slice(0, 8).toUpperCase()} · ${new Date().toLocaleDateString()}`,
             },
           },

@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     template: '%s — Nexus Operations',
   },
   description:
-    'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. We assign verified, licensed contractors, enforce response-time guarantees, and document every job from request to completion.',
+    'Nexus Operations manages maintenance for homeowners and property managers in Topeka and Shawnee County. Each request is assigned to one verified, licensed contractor (not sold as shared leads), consultation is confirmed within 24 hours, and every job is documented from intake to invoice.',
   keywords: [
     'property maintenance Topeka',
     'maintenance coordination Kansas',
@@ -115,7 +115,7 @@ export const metadata: Metadata = {
     url: 'https://nexusoperations.org',
     title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
     description:
-      'Nexus Operations coordinates property maintenance for homeowners, landlords, and property managers in Topeka and Shawnee County, Kansas. Verified contractors, documented jobs, guaranteed response times.',
+      'Nexus Operations assigns each request to one verified, licensed contractor in Topeka and Shawnee County, confirms consultation within 24 hours, and documents every job through invoice.',
     siteName: 'Nexus Operations',
     images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service coordination' }],
   },
@@ -123,7 +123,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nexus Operations — Property Maintenance Coordination',
     description:
-      'Licensed contractor coordination for homeowners and property managers in Topeka, KS. Verified network, guaranteed response times, full project documentation.',
+      'Topeka property maintenance with one-request/one-contractor assignment, 24-hour consultation confirmation, and complete job documentation.',
     images: [DEFAULT_OG_IMAGE],
   },
   robots: {

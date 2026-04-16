@@ -529,7 +529,7 @@ function HomeownerSettingsInner() {
                       <KeyRound className="w-4 h-4 text-muted-foreground" />
                       <div>
                         <p className="text-[13px] font-semibold text-foreground">{f.friendly_name || 'Authenticator App'}</p>
-                        <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at).toLocaleDateString()}</p>
+                        <p className="text-[11px] text-muted-foreground">Added {new Date((f as any).created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <button

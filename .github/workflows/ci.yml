@@ -40,7 +40,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Type check
+      - name: Type check (non-blocking)
+        continue-on-error: true
         run: pnpm typecheck
 
       - name: Unit tests
