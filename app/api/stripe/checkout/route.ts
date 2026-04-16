@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   try {
     const stripe = getStripeClient()
     const supabase = await createClient()
-    const supabase = createClient(req)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })
