@@ -1,19 +1,15 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   ArrowRight,
   BadgeCheck,
   CheckCircle,
   ClipboardList,
   Compass,
-  Database,
   FileText,
   HeartHandshake,
   Landmark,
-  Layers3,
   MapPin,
-  MonitorSmartphone,
   ShieldCheck,
   Target,
   Users,
@@ -75,24 +71,21 @@ const services = [
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
 ]
 
-const engineeringCapabilities = [
+const switchReasons = [
   {
-    title: "Front-end Development",
+    title: 'From search-heavy to service-led',
     description:
-      "Responsive, production-ready interfaces built for speed, clarity, and real-world user workflows.",
-    icon: MonitorSmartphone,
+      'Instead of browsing listings and comparing callbacks, Nexus gives you one team that owns coordination from first request to closeout.',
   },
   {
-    title: "Back-end Development",
+    title: 'From contractor-by-contractor billing to one invoice',
     description:
-      "Reliable APIs, business logic, and data integrations that support secure operations.",
-    icon: Database,
+      'You stop collecting separate invoices and status threads; monthly billing and records are unified in one place.',
   },
   {
-    title: "Complete Builds",
+    title: 'From uncertain follow-through to documented accountability',
     description:
-      "Full delivery from planning and architecture through deployment, QA, and ongoing support.",
-    icon: Layers3,
+      'Every request is tracked with timeline updates, required photos, and a written summary before it can be marked complete.',
   },
 ]
 
@@ -135,14 +128,25 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <div className="overflow-hidden rounded-3xl border border-border shadow-xl">
-                <Image
-                  src="/business-handshake-professional-meeting.jpg"
-                  alt="Nexus team"
-                  width={1200}
-                  height={1500}
-                  className="aspect-[4/5] w-full object-cover"
-                />
+              <div className="rounded-3xl border border-border bg-card p-6 shadow-xl card-elevated">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  What accountability looks like
+                </p>
+                <div className="mt-5 space-y-3">
+                  {[
+                    'A real person reviews every request before dispatch.',
+                    'Assignment and arrival timelines are measured against published SLAs.',
+                    'Completion photos and notes are required before closeout.',
+                    'Every job lands in one auditable monthly invoice.',
+                  ].map((line) => (
+                    <div
+                      key={line}
+                      className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground"
+                    >
+                      {line}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -210,7 +214,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We coordinate property maintenance — intake, dispatch, documentation, and billing."
+                description="We do not sell software. We do not run a contractor marketplace. We manage property maintenance — intake, dispatch, documentation, and billing."
               />
               <Link
                 href="/services"
@@ -240,28 +244,25 @@ export default function AboutPage() {
           </div>
         </Section>
 
-        {/* Capabilities */}
+        {/* Marketplace comparison */}
         <section className="py-16 lg:py-24 border-t border-border">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Delivery capabilities
+                Why Nexus is different
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                Front-end, back-end, and complete build execution.
+                Built as an upgrade from Angi-style directory experiences.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                We work alongside operational teams to deliver production-ready product across
-                front-end, back-end, and infrastructure layers.
+                Directory apps hand you contacts; then you still manage the work. Nexus Operations
+                was built to own the coordination and outcomes.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
-              {engineeringCapabilities.map(({ title, description, icon: Icon }) => (
+              {switchReasons.map(({ title, description }) => (
                 <div key={title} className="rounded-2xl border border-border bg-card p-6">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <Icon className="h-5 w-5" />
-                  </div>
                   <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
                 </div>

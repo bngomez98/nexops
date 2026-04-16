@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   ArrowRight,
   BadgeCheck,
@@ -30,7 +29,7 @@ import { getPlansByRole, formatPrice } from '@/lib/plans'
 export const metadata: Metadata = {
   title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
   description:
-    'Nexus Operations is a managed maintenance coordination service for homeowners, landlords, and property managers in Topeka and Shawnee County. Submit one request; Nexus triages scope, dispatches verified contractors, and delivers unified billing with photo documentation.',
+    'Nexus Operations is a managed maintenance service in Topeka, Kansas. Each request is assigned to one verified, licensed contractor (never sold to multiple bidders), consultation is confirmed within 24 hours, and every step is documented through final invoice.',
 }
 
 const stats = [
@@ -59,7 +58,7 @@ const howItWorks = [
   {
     step: '02',
     title: 'We assign a verified contractor',
-    desc: 'Nexus reviews your request and dispatches a licensed, insured professional.',
+    desc: 'Your job is assigned to one licensed, insured contractor. We do not blast your request to a lead marketplace.',
     icon: Users,
   },
   {
@@ -85,7 +84,7 @@ const differentiators = [
   {
     icon: Clock,
     title: 'Response-time guarantees',
-    desc: 'Emergencies triaged within an hour. Routine work scheduled in 3-5 business days.',
+    desc: 'Emergency requests are triaged within 1 hour, and consultation is confirmed within 24 hours for every request.',
   },
   {
     icon: FileText,
@@ -99,10 +98,34 @@ const differentiators = [
   },
 ]
 
+const marketplaceComparison = [
+  {
+      title: 'Directory marketplaces',
+      points: [
+        'The same request is sold to multiple contractors at once',
+        'You message multiple contractors and chase responses',
+        'Scheduling and scope alignment is left to you',
+        'Billing arrives from different vendors in different formats',
+        'Documentation quality varies job-by-job',
+    ],
+  },
+  {
+      title: 'Nexus Operations',
+      points: [
+        'One request is assigned to one verified contractor',
+        'No lead resale or bidding wars between contractors',
+        '24-hour consultation confirmation on every request',
+        'Dispatch and schedule follow-up are owned by our team',
+        'Unified monthly invoice with line-item visibility',
+        'Photo-backed records are required on every request',
+    ],
+  },
+]
+
 const audienceCards = [
   {
     title: 'Homeowners',
-    desc: 'Submit a request with photos and a budget. We coordinate a verified contractor and manage everything through completion.',
+    desc: 'Submit a request with photos and a budget. We assign a verified contractor and manage everything through completion.',
     cta: 'Create homeowner account',
     href: '/auth/sign-up',
     icon: Home,
@@ -176,9 +199,10 @@ export default function HomePage() {
                 </h1>
 
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                  Nexus Operations is a managed service — not a contractor directory. Submit a request 
-                  once; we triage scope, dispatch licensed contractors, manage updates, and deliver 
-                  photo-documented work with unified billing.
+                  Nexus Operations is a managed service in Topeka, Kansas — not a lead marketplace.
+                  Submit one request and we assign it to one verified contractor, confirm consultation
+                  within 24 hours, manage scheduling and updates, and close the job with photo
+                  documentation and one invoice.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -200,11 +224,11 @@ export default function HomePage() {
                 <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <BadgeCheck className="h-4 w-4 text-primary" />
-                    <span>Managed service, not a marketplace</span>
+                    <span>No lead resale to multiple contractors</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-primary" />
-                    <span>Dispatch owned by Nexus</span>
+                    <span>Consultation confirmed within 24 hours</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-primary" />
@@ -215,16 +239,30 @@ export default function HomePage() {
 
               <div className="lg:col-span-5">
                 <div className="relative">
-                  <div className="relative overflow-hidden rounded-2xl border border-border shadow-2xl">
-                    <Image
-                      src="/business-handshake-professional-meeting.jpg"
-                      alt="Nexus Operations coordinator meeting with a property manager"
-                      width={800}
-                      height={600}
-                      priority
-                      className="aspect-[4/3] w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  <div className="rounded-2xl border border-border bg-card p-6 shadow-2xl card-elevated">
+                    <div className="mb-4 flex items-center justify-between border-b border-border pb-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                        Live operations view
+                      </p>
+                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">
+                        Coordinated by Nexus
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      {[
+                        { label: 'Emergency plumbing', status: 'Assigned in 13 min' },
+                        { label: 'HVAC no-cool call', status: 'Technician en route' },
+                        { label: 'Make-ready punch list', status: 'Documented + invoiced' },
+                      ].map((item) => (
+                        <div
+                          key={item.label}
+                          className="flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5"
+                        >
+                          <p className="text-sm font-medium text-foreground">{item.label}</p>
+                          <p className="text-xs font-semibold text-primary">{item.status}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   
                   <div className="absolute -bottom-6 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-xs">
@@ -272,7 +310,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Who we serve"
             title="Built for everyone who owns, manages, or services property."
-            description="Nexus Operations is a single point of contact connecting homeowners, property managers, and licensed contractors within one coordinated workflow."
+            description="Nexus Operations is a single point of contact connecting homeowners, property managers, and licensed contractors within one connected workflow."
             align="center"
           />
 
@@ -377,14 +415,23 @@ export default function HomePage() {
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6">
               <div className="relative">
-                <div className="overflow-hidden rounded-2xl border border-border shadow-xl">
-                  <Image
-                    src="/business-analytics-data-visualization.jpg"
-                    alt="Maintenance analytics dashboard"
-                    width={800}
-                    height={600}
-                    className="aspect-[4/3] w-full object-cover"
-                  />
+                <div className="rounded-2xl border border-border bg-card p-6 shadow-xl card-elevated">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                    Coordinator-led workflow
+                  </p>
+                  <div className="mt-5 space-y-4">
+                    {[
+                      'Human triage on every request before dispatch',
+                      'Contractor matched by trade, urgency, and availability',
+                      'Job updates captured in one shared timeline',
+                      'Completion photos and notes required before closeout',
+                    ].map((line) => (
+                      <div key={line} className="flex items-start gap-3">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
+                        <p className="text-sm text-foreground">{line}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="absolute -right-4 -top-4 hidden rounded-xl border border-border bg-card p-4 shadow-lg sm:block">
                   <p className="font-mono-label text-muted-foreground">Founded</p>
@@ -398,7 +445,7 @@ export default function HomePage() {
               <SectionHeading
                 eyebrow="Why Nexus"
                 title="A managed service, not a contractor marketplace."
-                description="Marketplaces give you a list of names and step away. Nexus stays involved from submission to invoice — reviewing scope, coordinating schedules, verifying work, and publishing documentation."
+                description="Typical platforms sell one request to many contractors. Nexus assigns each request to one verified contractor, coordinates the work directly, and stays accountable through documentation and billing."
               />
 
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -423,6 +470,32 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+          </div>
+        </Section>
+
+        {/* ── Marketplace Comparison ─────────────────────────── */}
+        <Section id="comparison">
+          <SectionHeading
+            eyebrow="Why owners switch"
+            title="A better model than Angi-style contractor directories."
+            description="Instead of selling your request as shared leads, Nexus assigns one verified contractor and runs the job from intake to final invoice."
+            align="center"
+          />
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {marketplaceComparison.map(({ title, points }) => (
+              <div key={title} className="rounded-xl border border-border bg-card p-6 card-elevated">
+                <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
+                <ul className="mt-5 space-y-3">
+                  {points.map((point) => (
+                    <li key={point} className="flex items-start gap-3 text-sm text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </Section>
 
@@ -558,7 +631,7 @@ export default function HomePage() {
               {[
                 {
                   q: 'Who is Nexus Operations for?',
-                  a: 'Homeowners, landlords, and property managers anywhere in Topeka / Shawnee County who need a single, reliable partner to coordinate property maintenance.',
+                  a: 'Homeowners, landlords, and property managers anywhere in Topeka / Shawnee County who need a single, reliable partner to manage property maintenance.',
                 },
                 {
                   q: 'How are contractors vetted?',

@@ -24,7 +24,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'Services — Trade Categories by Nexus Operations',
   description:
-    'Nexus Operations coordinates plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
+    'Nexus Operations manages plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
 }
 
 const tradeCategories = [
@@ -159,7 +159,7 @@ export default function ServicesPage() {
         <Section>
           <SectionHeading
             eyebrow="Trade categories"
-            title="What we coordinate."
+            title="What we manage."
             description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn&apos;t fit a category, submit a request anyway — our team will route it."
           />
 

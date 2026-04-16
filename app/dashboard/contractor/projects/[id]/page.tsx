@@ -132,6 +132,8 @@ export default function ProjectDetailsPage() {
     )
   }
 
+  if (!user) return null
+
   const statusLabel: Record<string, string> = {
     open: 'Open',
     claimed: 'Claimed',
