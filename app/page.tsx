@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   ArrowRight,
   BadgeCheck,
@@ -96,6 +95,27 @@ const differentiators = [
     icon: CreditCard,
     title: 'Unified billing',
     desc: 'One monthly invoice consolidates all work across all your properties.',
+  },
+]
+
+const marketplaceComparison = [
+  {
+    title: 'Directory marketplaces',
+    points: [
+      'You message multiple contractors and chase responses',
+      'Scheduling and scope alignment is left to you',
+      'Billing arrives from different vendors in different formats',
+      'Documentation quality varies job-by-job',
+    ],
+  },
+  {
+    title: 'Nexus Operations',
+    points: [
+      'One request routes through a Nexus coordinator',
+      'Dispatch and schedule follow-up are owned by our team',
+      'Unified monthly invoice with line-item visibility',
+      'Photo-backed records are required on every request',
+    ],
   },
 ]
 
@@ -215,16 +235,30 @@ export default function HomePage() {
 
               <div className="lg:col-span-5">
                 <div className="relative">
-                  <div className="relative overflow-hidden rounded-2xl border border-border shadow-2xl">
-                    <Image
-                      src="/business-handshake-professional-meeting.jpg"
-                      alt="Nexus Operations coordinator meeting with a property manager"
-                      width={800}
-                      height={600}
-                      priority
-                      className="aspect-[4/3] w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  <div className="rounded-2xl border border-border bg-card p-6 shadow-2xl card-elevated">
+                    <div className="mb-4 flex items-center justify-between border-b border-border pb-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                        Live operations view
+                      </p>
+                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">
+                        Coordinated by Nexus
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      {[
+                        { label: 'Emergency plumbing', status: 'Assigned in 13 min' },
+                        { label: 'HVAC no-cool call', status: 'Technician en route' },
+                        { label: 'Make-ready punch list', status: 'Documented + invoiced' },
+                      ].map((item) => (
+                        <div
+                          key={item.label}
+                          className="flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5"
+                        >
+                          <p className="text-sm font-medium text-foreground">{item.label}</p>
+                          <p className="text-xs font-semibold text-primary">{item.status}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   
                   <div className="absolute -bottom-6 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-xs">
@@ -377,14 +411,23 @@ export default function HomePage() {
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6">
               <div className="relative">
-                <div className="overflow-hidden rounded-2xl border border-border shadow-xl">
-                  <Image
-                    src="/business-analytics-data-visualization.jpg"
-                    alt="Maintenance analytics dashboard"
-                    width={800}
-                    height={600}
-                    className="aspect-[4/3] w-full object-cover"
-                  />
+                <div className="rounded-2xl border border-border bg-card p-6 shadow-xl card-elevated">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                    Coordinator-led workflow
+                  </p>
+                  <div className="mt-5 space-y-4">
+                    {[
+                      'Human triage on every request before dispatch',
+                      'Contractor matched by trade, urgency, and availability',
+                      'Job updates captured in one shared timeline',
+                      'Completion photos and notes required before closeout',
+                    ].map((line) => (
+                      <div key={line} className="flex items-start gap-3">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
+                        <p className="text-sm text-foreground">{line}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="absolute -right-4 -top-4 hidden rounded-xl border border-border bg-card p-4 shadow-lg sm:block">
                   <p className="font-mono-label text-muted-foreground">Founded</p>
@@ -423,6 +466,32 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+          </div>
+        </Section>
+
+        {/* ── Marketplace Comparison ─────────────────────────── */}
+        <Section id="comparison">
+          <SectionHeading
+            eyebrow="Why owners switch"
+            title="A better model than Angi-style contractor directories."
+            description="Nexus is built for people who want outcomes, not a list of phone numbers. We stay accountable from intake through invoice."
+            align="center"
+          />
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {marketplaceComparison.map(({ title, points }) => (
+              <div key={title} className="rounded-xl border border-border bg-card p-6 card-elevated">
+                <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
+                <ul className="mt-5 space-y-3">
+                  {points.map((point) => (
+                    <li key={point} className="flex items-start gap-3 text-sm text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </Section>
 
