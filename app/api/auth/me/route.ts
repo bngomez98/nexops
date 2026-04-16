@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { data: profile } = await supabase
@@ -44,7 +44,7 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({
+    return Response.json({
       user: {
         id: user.id,
         email: user.email ?? '',
@@ -65,6 +65,6 @@ export async function GET() {
     })
   } catch (err) {
     console.error('[GET /api/auth/me]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { CheckCircle2, Clock, AlertCircle, FileText, TrendingUp, Loader2 } from 'lucide-react'

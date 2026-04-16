@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound, Camera, Upload } from 'lucide-react'

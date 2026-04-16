@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import Link from '@/components/link'
+import { usePathname, useRouter } from '@/lib/router'
 import {
   LayoutDashboard, FileText, Briefcase, TrendingUp, Users,
   Settings, LogOut, Menu, X, Bell, ChevronRight,

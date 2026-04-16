@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from '@/components/link'
+import { usePathname } from '@/lib/router'
 import { Menu, X, ArrowRight, Phone, ChevronDown } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 import { CONTACT_INFO } from '@/lib/contact-info'

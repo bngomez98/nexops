@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/link'
 import { Logo } from '@/components/logo'
 import { Phone, Mail, MapPin, ArrowRight, BadgeCheck, Clock } from 'lucide-react'
 import { CONTACT_INFO } from '@/lib/contact-info'

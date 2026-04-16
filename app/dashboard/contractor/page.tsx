@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ProjectFilters } from '@/components/project-filters'
 import { AIAssistant } from '@/components/ai-assistant'
@@ -224,7 +224,7 @@ export default function ContractorDashboard() {
           <div className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-5">
             <div>
               <p className="text-primary-foreground/70 text-xs font-semibold uppercase tracking-wider mb-2">
-                 Nexus Contractor Operations
+                 Contractor Command Dashboard
               </p>
               <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
                 {profile?.companyName || user.name}
@@ -236,7 +236,7 @@ export default function ContractorDashboard() {
                 <span className="opacity-40">·</span>
                 <span className="flex items-center gap-1">
                   <Zap className="w-3.5 h-3.5" />
-                   {projects.length} available projects
+                   {projects.length} live request opportunities
                 </span>
               </p>
             </div>
@@ -249,6 +249,13 @@ export default function ContractorDashboard() {
               >
                 <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
               </button>
+              <Link
+                href="/dashboard/messages"
+                className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
+              >
+                <Clock className="w-4 h-4" />
+                Messages
+              </Link>
               <Link
                 href="/dashboard/contractor/analytics"
                 className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
@@ -321,6 +328,20 @@ export default function ContractorDashboard() {
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{card.label}</p>
               <p className="mt-2 text-2xl font-display font-bold text-foreground">{card.value}</p>
               <p className="mt-2 text-sm text-muted-foreground">{card.detail}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          {[
+            { title: 'Service Requests', value: `${filteredProjects.length} matching`, detail: 'Track newly posted requests that match your filters.' },
+            { title: 'Messages', value: 'Live', detail: 'Coordinate updates with homeowners in real time.' },
+            { title: 'Profile', value: 'Ready', detail: 'Keep your photo and contractor profile current for trust.' },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
+              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{item.detail}</p>
             </div>
           ))}
         </section>

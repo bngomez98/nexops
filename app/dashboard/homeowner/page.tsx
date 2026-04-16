@@ -1,8 +1,8 @@
 'use client'
 
 import { Suspense, useEffect, useState, useCallback, useRef } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter, useSearchParams } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { AIAssistant } from '@/components/ai-assistant'
 import { AIInsightsCard } from '@/components/ai-insights-card'
@@ -222,7 +222,7 @@ function HomeownerDashboardInner() {
             <div className="min-w-0">
               <div className="inline-flex items-center gap-2 text-primary-foreground/80 text-xs font-semibold uppercase tracking-wider bg-white/10 border border-white/15 px-3 py-1.5 rounded-full mb-4">
                 <Sparkles className="w-3.5 h-3.5" />
-                Nexus Homeowner Operations
+                Homeowner Command Dashboard
               </div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
                 {requests.length === 0
@@ -231,8 +231,8 @@ function HomeownerDashboardInner() {
               </h1>
               <p className="text-primary-foreground/75 text-sm mt-2 leading-relaxed max-w-lg">
                 {requests.length === 0
-                  ? 'Submit your first request to launch professional dispatch and cost tracking.'
-                  : `${open.length + active.length} active request${open.length + active.length !== 1 ? 's' : ''} · ${completed.length} completed · $${totalSpend.toLocaleString()} in tracked project value`}
+                  ? 'Submit your first request to begin property service tracking, messaging, and cost visibility.'
+                  : `${open.length + active.length} active request${open.length + active.length !== 1 ? 's' : ''} · ${completed.length} completed · $${totalSpend.toLocaleString()} tracked`}
               </p>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
@@ -498,23 +498,31 @@ function HomeownerDashboardInner() {
               iconBg: 'bg-primary/10',
               iconColor: 'text-primary',
               title: 'Create Service Request',
-              sub: 'Dispatch work to the Nexus Operations contractor network',
+              sub: 'Launch a new request and start live service tracking',
             },
             {
-              href: '/dashboard/homeowner/billing',
-              icon: CreditCard,
-              iconBg: 'bg-emerald-500/10',
-              iconColor: 'text-emerald-600 dark:text-emerald-400',
-              title: 'Billing & Plans',
-              sub: isPro ? `${planLabel} Plan · Active` : 'Starter Plan · Upgrade available',
+              href: '/dashboard/homeowner/properties',
+              icon: MapPin,
+              iconBg: 'bg-violet-500/10',
+              iconColor: 'text-violet-600 dark:text-violet-400',
+              title: 'Property Tracker',
+              sub: 'View every property and related open service activity',
             },
             {
-              href: '/dashboard/homeowner/settings',
+              href: '/dashboard/messages',
               icon: Activity,
               iconBg: 'bg-blue-500/10',
               iconColor: 'text-blue-600 dark:text-blue-400',
-              title: 'Account & Security',
-              sub: 'Profile, communication preferences, and security controls',
+              title: 'Messages',
+              sub: 'Open conversations with your assigned service professionals',
+            },
+            {
+              href: '/dashboard/homeowner/profile',
+              icon: CreditCard,
+              iconBg: 'bg-emerald-500/10',
+              iconColor: 'text-emerald-600 dark:text-emerald-400',
+              title: 'Profile & Photo',
+              sub: isPro ? `${planLabel} Plan · Active profile` : 'Update your profile photo and account details',
             },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
             <Link

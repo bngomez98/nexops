@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { Bell, X, CheckCheck, Inbox } from 'lucide-react'
 
 interface Notification {

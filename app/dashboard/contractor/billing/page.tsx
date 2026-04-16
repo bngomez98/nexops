@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { EmbeddedCheckoutModal } from '@/components/embedded-checkout'
 import { getPlansByRole, type Plan } from '@/lib/plans'

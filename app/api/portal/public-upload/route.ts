@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@supabase/supabase-js'
 
 /* ── Lazy Supabase admin client (service role, no user auth needed) ─────── */
@@ -40,7 +40,7 @@ function randomId(length = 8): string {
   return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     /* ── Rate limiting ──────────────────────────────────────────────────── */
     const ip =
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       'unknown'
 
     if (!checkRateLimit(ip)) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Too many uploads. Please try again later.' },
         { status: 429 },
       )
@@ -59,14 +59,14 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File | null
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+      return Response.json({ error: 'No file provided' }, { status: 400 })
     }
 
     const isImage = ALLOWED_IMAGE_TYPES.includes(file.type)
     const isVideo = ALLOWED_VIDEO_TYPES.includes(file.type)
 
     if (!isImage && !isVideo) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Invalid file type. Only images and videos are allowed.' },
         { status: 400 },
       )
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     const maxSize = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES
     if (file.size > maxSize) {
-      return NextResponse.json(
+      return Response.json(
         { error: `File too large. Max size is ${isVideo ? '50MB' : '10MB'}.` },
         { status: 400 },
       )
@@ -95,16 +95,16 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('[public-upload] storage error:', uploadError)
-      return NextResponse.json({ error: 'Failed to upload file.' }, { status: 500 })
+      return Response.json({ error: 'Failed to upload file.' }, { status: 500 })
     }
 
     const { data: urlData } = getSupabaseAdmin().storage
       .from('job-photos')
       .getPublicUrl(uploadData.path)
 
-    return NextResponse.json({ url: urlData.publicUrl, path: uploadData.path })
+    return Response.json({ url: urlData.publicUrl, path: uploadData.path })
   } catch (error) {
     console.error('[POST /api/portal/public-upload]', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

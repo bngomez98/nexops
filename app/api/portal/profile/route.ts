@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { loadCurrentProfile } from '../shared'
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const body = (await request.json()) as {
@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest) {
     if (body.serviceCategories !== undefined) update.service_categories = body.serviceCategories
 
     if (Object.keys(update).length === 0) {
-      return NextResponse.json({ error: 'No fields to update' }, { status: 400 })
+      return Response.json({ error: 'No fields to update' }, { status: 400 })
     }
 
     // Try update by id first, then by user_id
@@ -48,38 +48,38 @@ export async function PUT(request: NextRequest) {
       if (byUserId.error) throw byUserId.error
 
       const profile = byUserId.data ?? {}
-      return NextResponse.json({ success: true, profile: normalizeProfile(profile as Record<string, unknown>) })
+      return Response.json({ success: true, profile: normalizeProfile(profile as Record<string, unknown>) })
     }
 
     const profile = byId.data ?? {}
-    return NextResponse.json({ success: true, profile: normalizeProfile(profile as Record<string, unknown>) })
+    return Response.json({ success: true, profile: normalizeProfile(profile as Record<string, unknown>) })
   } catch (error) {
     console.error('[PUT /api/portal/profile]', error)
-    return NextResponse.json({ error: 'Unable to update profile' }, { status: 500 })
+    return Response.json({ error: 'Unable to update profile' }, { status: 500 })
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const profile = await loadCurrentProfile(supabase, user.id)
     if (!profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+      return Response.json({ error: 'Profile not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ profile: normalizeProfile(profile as Record<string, unknown>) })
+    return Response.json({ profile: normalizeProfile(profile as Record<string, unknown>) })
   } catch (error) {
     console.error('[GET /api/portal/profile]', error)
-    return NextResponse.json({ error: 'Unable to load profile' }, { status: 500 })
+    return Response.json({ error: 'Unable to load profile' }, { status: 500 })
   }
 }
 

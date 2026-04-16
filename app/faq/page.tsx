@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { ArrowRight, HelpCircle, Mail, Phone } from 'lucide-react'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'

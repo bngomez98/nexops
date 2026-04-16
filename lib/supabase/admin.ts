@@ -3,7 +3,6 @@
  * NEVER expose this on the client side.
  * Only import from server-side code (API routes, server actions).
  */
-import 'server-only'
 import { createClient } from '@supabase/supabase-js'
 
 let _admin: ReturnType<typeof createClient> | null = null

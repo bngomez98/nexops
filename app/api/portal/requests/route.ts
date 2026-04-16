@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { dbStatusToPortal, normalizeCategory, normalizePriority, parseTitle, shortIdFromRequestId } from '../shared'
 
@@ -10,16 +10,16 @@ function toUrgency(priority: unknown) {
   return 'routine'
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const location = typeof body.location === 'string' ? body.location.trim() : ''
 
     if (!title || !description || !location) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'title, description, and location are required' },
         { status: 400 },
       )
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     const requestId = String(created.id)
 
-    return NextResponse.json(
+    return Response.json(
       {
         job: {
           id: requestId,
@@ -81,6 +81,6 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('[POST /api/portal/requests]', error)
-    return NextResponse.json({ error: 'Unable to create request' }, { status: 500 })
+    return Response.json({ error: 'Unable to create request' }, { status: 500 })
   }
 }

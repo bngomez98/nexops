@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from '@/components/link'
+import { usePathname } from '@/lib/router'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'
@@ -22,22 +22,22 @@ interface NavItem {
 
 const NAV_ITEMS: Record<string, NavItem[]> = {
   homeowner: [
-    { label: 'Operations Hub',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
-    { label: 'Service Requests', href: '/dashboard/homeowner/requests',   icon: ClipboardList },
+    { label: 'Dashboard Home',   href: '/dashboard/homeowner',            icon: LayoutDashboard, exact: true },
+    { label: 'Request Tracker', href: '/dashboard/homeowner/requests',   icon: ClipboardList },
     { label: 'Dispatch Pipeline',href: '/dashboard/homeowner/pipeline',   icon: Workflow, exact: true },
     { label: 'Messages',    href: '/dashboard/messages',             icon: MessageSquare },
-    { label: 'Create Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
+    { label: 'New Request', href: '/dashboard/homeowner/new-request',icon: PlusCircle, exact: true },
     { label: 'Properties',  href: '/dashboard/homeowner/properties', icon: Home },
     { label: 'Compliance Docs',   href: '/dashboard/homeowner/documents',  icon: FolderOpen },
     { label: 'Invoices',    href: '/dashboard/homeowner/invoices',   icon: Receipt },
     { label: 'Payments',    href: '/dashboard/homeowner/payments',   icon: Wallet },
     { label: 'Profile',     href: '/dashboard/homeowner/profile',    icon: User },
-    { label: 'Settings',    href: '/dashboard/homeowner/settings',   icon: Settings, exact: true },
+    { label: 'Account Settings',    href: '/dashboard/homeowner/settings',   icon: Settings, exact: true },
   ],
   contractor: [
-    { label: 'Operations Hub',   href: '/dashboard/contractor',                   icon: LayoutDashboard, exact: true },
+    { label: 'Dashboard Home',   href: '/dashboard/contractor',                   icon: LayoutDashboard, exact: true },
     { label: 'Available Work',   href: '/dashboard/contractor/available-work',    icon: Zap, exact: true },
-    { label: 'Job Queue',        href: '/dashboard/contractor/jobs',              icon: Briefcase },
+    { label: 'Service Queue',        href: '/dashboard/contractor/jobs',              icon: Briefcase },
     { label: 'Messages',         href: '/dashboard/messages',                     icon: MessageSquare },
     { label: 'My Assignments',   href: '/dashboard/contractor/my-projects',       icon: ClipboardList, exact: true },
     { label: 'Invoices',         href: '/dashboard/contractor/invoices',          icon: Receipt },
@@ -45,16 +45,17 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { label: 'Compliance Docs',  href: '/dashboard/contractor/documents',         icon: FolderOpen },
     { label: 'Performance',      href: '/dashboard/contractor/analytics',         icon: TrendingUp, exact: true },
     { label: 'Profile',          href: '/dashboard/contractor/profile',           icon: User },
-    { label: 'Settings',         href: '/dashboard/contractor/settings',          icon: Settings, exact: true },
+    { label: 'Account Settings',         href: '/dashboard/contractor/settings',          icon: Settings, exact: true },
   ],
   'property-manager': [
-    { label: 'Operations Hub',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
+    { label: 'Dashboard Home',   href: '/dashboard/property-manager',                  icon: LayoutDashboard, exact: true },
     { label: 'Properties',  href: '/dashboard/property-manager/properties',       icon: Building2 },
-    { label: 'Service Requests', href: '/dashboard/property-manager/requests',         icon: ClipboardList },
+    { label: 'Request Tracker', href: '/dashboard/property-manager/requests',         icon: ClipboardList },
+    { label: 'Messages',    href: '/dashboard/messages',             icon: MessageSquare },
     { label: 'Invoices',    href: '/dashboard/property-manager/invoices',         icon: Receipt },
     { label: 'Payments',    href: '/dashboard/property-manager/payments',         icon: Wallet },
     { label: 'Compliance Docs',   href: '/dashboard/property-manager/documents',        icon: FolderOpen },
-    { label: 'Settings',    href: '/dashboard/property-manager/settings',        icon: Settings, exact: true },
+    { label: 'Profile & Settings',    href: '/dashboard/property-manager/settings',        icon: Settings, exact: true },
   ],
   admin: [
     { label: 'Operations Hub',     href: '/dashboard/admin',             icon: LayoutDashboard, exact: true },
@@ -111,10 +112,17 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
   }, [role])
 
   const operationsFocus = useMemo(() => {
-    if (role === 'homeowner') return 'Dispatch quality and cost control'
-    if (role === 'contractor') return 'Lead response time and assignment throughput'
-    if (role === 'property-manager') return 'Portfolio uptime and monthly spend discipline'
-    return 'Platform integrity and operational governance'
+    if (role === 'homeowner') return 'Track requests, messages, properties, and costs in one workspace.'
+    if (role === 'contractor') return 'Manage your queue, active jobs, payouts, and customer communication.'
+    if (role === 'property-manager') return 'Monitor portfolio health, requests, and spend across properties.'
+    return 'Oversee platform performance, users, and governance.'
+  }, [role])
+
+  const profileHref = useMemo(() => {
+    if (role === 'homeowner') return '/dashboard/homeowner/profile'
+    if (role === 'contractor') return '/dashboard/contractor/profile'
+    if (role === 'property-manager') return '/dashboard/property-manager/settings'
+    return '/dashboard/admin/users'
   }, [role])
 
   function active(item: NavItem) {
@@ -298,7 +306,7 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
           
           <div className="h-6 w-px bg-border hidden sm:block" />
           
-          <div className="flex items-center gap-2.5">
+          <Link href={profileHref} className="flex items-center gap-2.5 rounded-lg px-2 py-1 hover:bg-muted transition-colors">
             {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -311,8 +319,11 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
                 {initials}
               </div>
             )}
-            <span className="hidden sm:block text-sm font-medium text-foreground">{userName}</span>
-          </div>
+            <div className="hidden sm:block">
+              <span className="text-sm font-medium text-foreground">{userName}</span>
+              <p className="text-[11px] text-muted-foreground leading-tight">View profile</p>
+            </div>
+          </Link>
           
           <Button 
             variant="ghost" 

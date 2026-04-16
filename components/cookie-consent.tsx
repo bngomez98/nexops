@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/components/link'
 import { X } from 'lucide-react'
 
 const CONSENT_KEY = 'nexus-cookie-consent'
