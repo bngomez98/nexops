@@ -3,7 +3,22 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ChevronDown, X } from 'lucide-react'
+import { ChevronDown, X, SlidersHorizontal } from 'lucide-react'
+
+interface FilterState {
+  search: string
+  category: string
+  budgetRange: string
+  status: string
+  location: string
+  sortBy: 'recent' | 'budget-high' | 'budget-low'
+}
+
+const PRESETS: { label: string; filters: Partial<FilterState> }[] = [
+  { label: 'Most Recent', filters: { sortBy: 'recent', category: '', budgetRange: '' } },
+  { label: 'Highest Budget', filters: { sortBy: 'budget-high', category: '', budgetRange: '' } },
+  { label: 'High Value', filters: { sortBy: 'budget-high', budgetRange: '10000-25000' } },
+]
 
 const SERVICE_CATEGORIES = [
   { value: 'tree-removal', label: 'Tree Removal' },
@@ -30,15 +45,6 @@ const STATUS_OPTIONS = [
   { value: 'completed', label: 'Completed' },
 ]
 
-interface FilterState {
-  search: string
-  category: string
-  budgetRange: string
-  status: string
-  location: string
-  sortBy: 'recent' | 'budget-high' | 'budget-low'
-}
-
 interface ProjectFiltersProps {
   onFiltersChange: (filters: FilterState) => void
   showStatus?: boolean
@@ -55,6 +61,7 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
   })
 
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['search']))
+  const [showAdvanced, setShowAdvanced] = useState(false)
 
   function toggleSection(section: string) {
     setExpandedSections(prev => {
@@ -70,6 +77,12 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
 
   function updateFilter<K extends keyof FilterState>(key: K, value: FilterState[K]) {
     const newFilters = { ...filters, [key]: value }
+    setFilters(newFilters)
+    onFiltersChange(newFilters)
+  }
+
+  function applyPreset(preset: Partial<FilterState>) {
+    const newFilters = { ...filters, ...preset }
     setFilters(newFilters)
     onFiltersChange(newFilters)
   }
@@ -93,6 +106,35 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
 
   return (
     <div className="space-y-4 bg-muted/30 rounded-lg p-6 border border-border">
+      {/* Quick presets */}
+      <div>
+        <p className="font-semibold text-foreground text-sm mb-2">Quick Filters</p>
+        <div className="flex flex-col gap-1.5">
+          {PRESETS.map(preset => {
+            const isActive = preset.label === 'Most Recent'
+              ? filters.sortBy === 'recent' && !filters.category && !filters.budgetRange
+              : preset.label === 'Highest Budget'
+              ? filters.sortBy === 'budget-high' && !filters.budgetRange
+              : filters.sortBy === 'budget-high' && filters.budgetRange === '10000-25000'
+            return (
+              <button
+                key={preset.label}
+                onClick={() => applyPreset(preset.filters)}
+                className={`text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-background border border-border hover:border-primary/40 hover:text-primary'
+                }`}
+              >
+                {preset.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="border-t border-border" />
+
       {/* Search */}
       <div>
         <button
@@ -205,91 +247,105 @@ export function ProjectFilters({ onFiltersChange, showStatus = false }: ProjectF
         )}
       </div>
 
-      {/* Status (if applicable) */}
-      {showStatus && (
-        <div>
-          <button
-            onClick={() => toggleSection('status')}
-            className="flex items-center justify-between w-full py-2 hover:bg-muted/50 px-2 rounded"
-          >
-            <span className="font-semibold text-foreground">Status</span>
-            <ChevronDown className={`w-5 h-5 transition-transform ${expandedSections.has('status') ? 'rotate-180' : ''}`} />
-          </button>
-          {expandedSections.has('status') && (
-            <div className="mt-3 space-y-2">
-              {STATUS_OPTIONS.map(opt => (
-                <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="status"
-                    value={opt.value}
-                    checked={filters.status === opt.value}
-                    onChange={(e) => updateFilter('status', e.target.value)}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm text-foreground">{opt.label}</span>
-                </label>
-              ))}
-              {filters.status && (
-                <button
-                  onClick={() => updateFilter('status', '')}
-                  className="text-xs text-primary hover:underline"
-                >
-                  Clear selection
-                </button>
+      {/* Advanced toggle */}
+      <button
+        onClick={() => setShowAdvanced(v => !v)}
+        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <SlidersHorizontal className="w-4 h-4" />
+        Advanced options
+        <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+      </button>
+
+      {showAdvanced && (
+        <>
+          {/* Status (if applicable) */}
+          {showStatus && (
+            <div>
+              <button
+                onClick={() => toggleSection('status')}
+                className="flex items-center justify-between w-full py-2 hover:bg-muted/50 px-2 rounded"
+              >
+                <span className="font-semibold text-foreground">Status</span>
+                <ChevronDown className={`w-5 h-5 transition-transform ${expandedSections.has('status') ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedSections.has('status') && (
+                <div className="mt-3 space-y-2">
+                  {STATUS_OPTIONS.map(opt => (
+                    <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="status"
+                        value={opt.value}
+                        checked={filters.status === opt.value}
+                        onChange={(e) => updateFilter('status', e.target.value)}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-foreground">{opt.label}</span>
+                    </label>
+                  ))}
+                  {filters.status && (
+                    <button
+                      onClick={() => updateFilter('status', '')}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Clear selection
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           )}
-        </div>
-      )}
 
-      {/* Sort */}
-      <div>
-        <button
-          onClick={() => toggleSection('sort')}
-          className="flex items-center justify-between w-full py-2 hover:bg-muted/50 px-2 rounded"
-        >
-          <span className="font-semibold text-foreground">Sort By</span>
-          <ChevronDown className={`w-5 h-5 transition-transform ${expandedSections.has('sort') ? 'rotate-180' : ''}`} />
-        </button>
-        {expandedSections.has('sort') && (
-          <div className="mt-3 space-y-2">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="sort"
-                value="recent"
-                checked={filters.sortBy === 'recent'}
-                onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
-                className="w-4 h-4"
-              />
-              <span className="text-sm text-foreground">Most Recent</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="sort"
-                value="budget-high"
-                checked={filters.sortBy === 'budget-high'}
-                onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
-                className="w-4 h-4"
-              />
-              <span className="text-sm text-foreground">Highest Budget</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="sort"
-                value="budget-low"
-                checked={filters.sortBy === 'budget-low'}
-                onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
-                className="w-4 h-4"
-              />
-              <span className="text-sm text-foreground">Lowest Budget</span>
-            </label>
+          {/* Sort */}
+          <div>
+            <button
+              onClick={() => toggleSection('sort')}
+              className="flex items-center justify-between w-full py-2 hover:bg-muted/50 px-2 rounded"
+            >
+              <span className="font-semibold text-foreground">Sort By</span>
+              <ChevronDown className={`w-5 h-5 transition-transform ${expandedSections.has('sort') ? 'rotate-180' : ''}`} />
+            </button>
+            {expandedSections.has('sort') && (
+              <div className="mt-3 space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="sort"
+                    value="recent"
+                    checked={filters.sortBy === 'recent'}
+                    onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm text-foreground">Most Recent</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="sort"
+                    value="budget-high"
+                    checked={filters.sortBy === 'budget-high'}
+                    onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm text-foreground">Highest Budget</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="sort"
+                    value="budget-low"
+                    checked={filters.sortBy === 'budget-low'}
+                    onChange={(e) => updateFilter('sortBy', e.target.value as 'recent' | 'budget-high' | 'budget-low')}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm text-foreground">Lowest Budget</span>
+                </label>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
       {/* Clear All Button */}
       {hasActiveFilters && (
