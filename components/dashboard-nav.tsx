@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from '@/components/link'
+import { usePathname } from '@/lib/router'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'

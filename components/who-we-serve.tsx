@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/link"
 import { ArrowRight, Building2, Home, Briefcase } from "lucide-react"
 
 const audiences = [

@@ -1,8 +1,8 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter, useSearchParams } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import {
   Save, Loader2, ArrowLeft, User, Bell, AlertTriangle,

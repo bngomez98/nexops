@@ -1,5 +1,4 @@
 import { describe, expect, it, vi, afterEach } from 'vitest'
-import { NextRequest } from 'next/server'
 import { isAutomationEnabled } from '@/lib/env'
 import { createClient } from '@/lib/supabase/server'
 import { generateText } from 'ai'
@@ -31,7 +30,7 @@ describe('automation routes feature flags', () => {
   it('categorize-request returns 403 when automation is disabled', async () => {
     isAutomationEnabledMock.mockReturnValue(false)
     const { POST } = await import('@/app/api/automation/categorize-request/route')
-    const request = new NextRequest('http://localhost/api/automation/categorize-request', {
+    const request = new Request('http://localhost/api/automation/categorize-request', {
       method: 'POST',
       body: JSON.stringify({ title: 'Fix sink', description: 'Need plumbing support' }),
       headers: { 'content-type': 'application/json' },
@@ -48,7 +47,7 @@ describe('automation routes feature flags', () => {
   it('match-contractor returns 403 when automation is disabled before supabase calls', async () => {
     isAutomationEnabledMock.mockReturnValue(false)
     const { POST } = await import('@/app/api/automation/match-contractor/route')
-    const request = new NextRequest('http://localhost/api/automation/match-contractor', {
+    const request = new Request('http://localhost/api/automation/match-contractor', {
       method: 'POST',
       body: JSON.stringify({ projectId: 'abc' }),
       headers: { 'content-type': 'application/json' },
@@ -65,7 +64,7 @@ describe('automation routes feature flags', () => {
   it('update-status returns 403 when automation is disabled before supabase calls', async () => {
     isAutomationEnabledMock.mockReturnValue(false)
     const { POST } = await import('@/app/api/automation/update-status/route')
-    const request = new NextRequest('http://localhost/api/automation/update-status', {
+    const request = new Request('http://localhost/api/automation/update-status', {
       method: 'POST',
       body: JSON.stringify({ projectId: 'abc', newStatus: 'assigned' }),
       headers: { 'content-type': 'application/json' },

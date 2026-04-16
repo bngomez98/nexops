@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { isAutomationEnabled } from '@/lib/env'
 
@@ -26,29 +26,29 @@ function toCategoryList(value: unknown): string[] {
   return []
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   if (!isAutomationEnabled()) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Automation features are disabled', code: 'FEATURE_DISABLED' },
       { status: 403 },
     )
   }
 
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { projectId } = await request.json()
 
     if (!projectId) {
-      return NextResponse.json({ error: 'projectId is required' }, { status: 400 })
+      return Response.json({ error: 'projectId is required' }, { status: 400 })
     }
 
     const { data: project, error: projectError } = await supabase
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (projectError || !project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+      return Response.json({ error: 'Project not found' }, { status: 404 })
     }
 
     const { data: contractors, error: contractorsError } = await supabase
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       .neq('is_active', false)
 
     if (contractorsError || !contractors) {
-      return NextResponse.json({ matches: [] })
+      return Response.json({ matches: [] })
     }
 
     const contractorIds = contractors
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
         .eq('id', projectId)
 
       if (!updateError) {
-        return NextResponse.json({
+        return Response.json({
           matches,
           autoAssigned: true,
           message: `Project automatically assigned to ${topMatch.full_name} (${topMatch.match_score.toFixed(0)}% match)`,
@@ -158,9 +158,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ matches, autoAssigned: false })
+    return Response.json({ matches, autoAssigned: false })
   } catch (error) {
     console.error('[POST /api/automation/match-contractor]', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

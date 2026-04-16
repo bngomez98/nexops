@@ -17,7 +17,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
+
 import {
   sendJobMatchedContractorEmail,
   sendContractorAssignedClientEmail,
@@ -34,13 +34,13 @@ type Candidate = {
   score: number
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json().catch(() => ({}))
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const requestId = body.request_id as string | undefined
 
     if (!jobId && !requestId) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'job_id or request_id is required' },
         { status: 400 }
       )
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     return await matchForJob(supabase, jobId!)
   } catch (err) {
     console.error('[match] error:', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 // ─────────────────────────────────────────────────────────────────────
 
 async function matchForServiceRequest(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: ReturnType<typeof createClient>,
   requestId: string,
 ) {
   const { data: req, error: reqErr } = await supabase
@@ -82,10 +82,10 @@ async function matchForServiceRequest(
     .single()
 
   if (reqErr || !req) {
-    return NextResponse.json({ error: 'Request not found' }, { status: 404 })
+    return Response.json({ error: 'Request not found' }, { status: 404 })
   }
   if (req.assigned_contractor_id) {
-    return NextResponse.json({ error: 'Request already assigned' }, { status: 400 })
+    return Response.json({ error: 'Request already assigned' }, { status: 400 })
   }
 
   // Try the DB RPC first (migration 017 present).
@@ -101,7 +101,7 @@ async function matchForServiceRequest(
   }
 
   if (candidates.length === 0) {
-    return NextResponse.json({
+    return Response.json({
       matched: false,
       reason: 'No eligible contractors within service radius',
     })
@@ -119,7 +119,7 @@ async function matchForServiceRequest(
     .is('assigned_contractor_id', null)   // concurrency guard
 
   if (assignErr) {
-    return NextResponse.json({ error: 'Failed to assign contractor' }, { status: 500 })
+    return Response.json({ error: 'Failed to assign contractor' }, { status: 500 })
   }
 
   // Consume a lead credit (best-effort — not fatal if table missing).
@@ -131,7 +131,7 @@ async function matchForServiceRequest(
     note: 'Auto-dispatch via /api/match',
   }).then(() => {}, () => {})
 
-  return NextResponse.json({
+  return Response.json({
     matched: true,
     request_id: requestId,
     contractor_id: winner.contractor_id,
@@ -146,7 +146,7 @@ async function matchForServiceRequest(
 }
 
 async function fallbackScoreContractors(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: ReturnType<typeof createClient>,
   req: {
     id: string
     category: string | null
@@ -251,7 +251,7 @@ async function fallbackScoreContractors(
 // ─────────────────────────────────────────────────────────────────────
 
 async function matchForJob(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: ReturnType<typeof createClient>,
   jobId: string,
 ) {
   const { data: job, error: jobError } = await supabase
@@ -261,11 +261,11 @@ async function matchForJob(
     .single()
 
   if (jobError || !job) {
-    return NextResponse.json({ error: 'Job not found' }, { status: 404 })
+    return Response.json({ error: 'Job not found' }, { status: 404 })
   }
 
   if (job.status !== 'open' && job.status !== 'unmatched') {
-    return NextResponse.json({ error: 'Job is not eligible for matching' }, { status: 400 })
+    return Response.json({ error: 'Job is not eligible for matching' }, { status: 400 })
   }
 
   const { data: contractors, error: ctError } = await supabase
@@ -277,12 +277,12 @@ async function matchForJob(
 
   if (ctError) {
     console.error('Contractor query error:', ctError)
-    return NextResponse.json({ error: 'Failed to query contractors' }, { status: 500 })
+    return Response.json({ error: 'Failed to query contractors' }, { status: 500 })
   }
 
   if (!contractors || contractors.length === 0) {
     await supabase.from('jobs').update({ status: 'unmatched' }).eq('id', jobId)
-    return NextResponse.json({ matched: false, reason: 'No eligible contractors found' })
+    return Response.json({ matched: false, reason: 'No eligible contractors found' })
   }
 
   const { data: busy } = await supabase
@@ -327,7 +327,7 @@ async function matchForJob(
 
   if (candidates.length === 0) {
     await supabase.from('jobs').update({ status: 'unmatched' }).eq('id', jobId)
-    return NextResponse.json({ matched: false, reason: 'No contractors within service radius or all busy' })
+    return Response.json({ matched: false, reason: 'No contractors within service radius or all busy' })
   }
 
   candidates.sort((a, b) => {
@@ -345,7 +345,7 @@ async function matchForJob(
     .eq('id', jobId)
 
   if (assignError) {
-    return NextResponse.json({ error: 'Failed to assign contractor' }, { status: 500 })
+    return Response.json({ error: 'Failed to assign contractor' }, { status: 500 })
   }
 
   await supabase.from('matches').insert({
@@ -408,7 +408,7 @@ async function matchForJob(
     }
   })()
 
-  return NextResponse.json({
+  return Response.json({
     matched: true,
     job_id: jobId,
     contractor_id: winner.contractor_id,

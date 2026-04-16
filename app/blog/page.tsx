@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import Link from "next/link"
+import Link from "@/components/link"
 import { ArrowRight, Clock } from "lucide-react"
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
+
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf']
 const ALLOWED_JOB_PHOTO_TYPES = [
@@ -11,14 +11,14 @@ const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024 // 50MB
 
 const ALLOWED_BUCKETS = ['profile-photos', 'compliance-docs', 'contracts', 'job-photos']
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
 
     // Verify auth
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const formData = await request.formData()
@@ -27,30 +27,30 @@ export async function POST(request: NextRequest) {
     const userId   = formData.get('user_id') as string | null
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+      return Response.json({ error: 'No file provided' }, { status: 400 })
     }
 
     if (!bucket || !ALLOWED_BUCKETS.includes(bucket)) {
-      return NextResponse.json({ error: 'Invalid bucket target' }, { status: 400 })
+      return Response.json({ error: 'Invalid bucket target' }, { status: 400 })
     }
 
     // Verify the requesting user matches the user_id (unless admin)
     const role = user.user_metadata?.role
     if (userId && userId !== user.id && role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     // Validate file type
     const allowedTypes = bucket === 'job-photos' ? ALLOWED_JOB_PHOTO_TYPES : ALLOWED_TYPES
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: `Invalid file type for ${bucket}.` }, { status: 400 })
+      return Response.json({ error: `Invalid file type for ${bucket}.` }, { status: 400 })
     }
 
     // Validate file size
     const isVideo = file.type.startsWith('video/')
     const maxSize = isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_SIZE_BYTES
     if (file.size > maxSize) {
-      return NextResponse.json({ error: `File size exceeds ${isVideo ? '50MB' : '10MB'} limit.` }, { status: 400 })
+      return Response.json({ error: `File size exceeds ${isVideo ? '50MB' : '10MB'} limit.` }, { status: 400 })
     }
 
     // Build storage path
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Storage upload error:', uploadError)
-      return NextResponse.json({ error: 'Failed to upload file.' }, { status: 500 })
+      return Response.json({ error: 'Failed to upload file.' }, { status: 500 })
     }
 
     // Get public URL (for profile-photos) or signed URL (for private buckets)
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         .from(bucket)
         .createSignedUrl(uploadData.path, 60 * 60 * 24 * 7) // 7 days
       if (signedError || !signedData) {
-        return NextResponse.json({ error: 'Failed to generate file URL.' }, { status: 500 })
+        return Response.json({ error: 'Failed to generate file URL.' }, { status: 500 })
       }
       url = signedData.signedUrl
     }
@@ -103,13 +103,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    return NextResponse.json({
+    return Response.json({
       url,
       path: uploadData.path,
       bucket,
     })
   } catch (err) {
     console.error('Upload error:', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server'
-
 type ApiErrorOptions = {
   code?: string
   details?: unknown
@@ -11,19 +9,16 @@ export function createRequestId() {
 }
 
 /** Returns a JSON error response with a consistent `{ error }` shape. */
-export function apiError(message: string, status: number, options?: ApiErrorOptions): NextResponse {
-  return NextResponse.json(
-    {
-      error: message,
-      ...(options?.code ? { code: options.code } : {}),
-      ...(options?.details !== undefined ? { details: options.details } : {}),
-      ...(options?.requestId ? { requestId: options.requestId } : {}),
-    },
-    {
-      status,
-      headers: options?.requestId ? { 'x-request-id': options.requestId } : undefined,
-    }
-  )
+export function apiError(message: string, status: number, options?: ApiErrorOptions): Response {
+  const body = JSON.stringify({
+    error: message,
+    ...(options?.code ? { code: options.code } : {}),
+    ...(options?.details !== undefined ? { details: options.details } : {}),
+    ...(options?.requestId ? { requestId: options.requestId } : {}),
+  })
+  const headers: Record<string, string> = { 'content-type': 'application/json' }
+  if (options?.requestId) headers['x-request-id'] = options.requestId
+  return new Response(body, { status, headers })
 }
 
 /** 400 Bad Request */

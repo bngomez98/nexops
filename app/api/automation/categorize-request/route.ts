@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
 import { createRequestId, internalError } from '@/lib/api-error'
 import { normalizeCategorySlug } from '@/lib/category'
 import { isAutomationEnabled } from '@/lib/env'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   if (!isAutomationEnabled()) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Automation features are disabled', code: 'FEATURE_DISABLED' },
       { status: 403 },
     )
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const { description, title } = await request.json()
 
     if (!description && !title) {
-      return NextResponse.json({ error: 'title or description is required' }, { status: 400 })
+      return Response.json({ error: 'title or description is required' }, { status: 400 })
     }
 
     const result = await generateText({
@@ -63,7 +63,7 @@ Also provide:
       ? normalizeCategorySlug(result.output.suggestedCategory)
       : null
 
-    return NextResponse.json({
+    return Response.json({
       ...result.output,
       suggestedCategory: normalizedSuggestedCategory || null,
     })

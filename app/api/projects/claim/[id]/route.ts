@@ -1,16 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 
 export async function POST(
-  _request: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { data: profile } = await supabase
@@ -21,7 +21,7 @@ export async function POST(
 
     const role = profile?.role ?? user.user_metadata?.role
     if (role !== 'contractor') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+      return Response.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     const { id: projectId } = await params
@@ -41,7 +41,7 @@ export async function POST(
       const hasInsurance = validDocs?.some(d => d.type === 'insurance') ?? false
 
       if (!hasLicense || !hasInsurance) {
-        return NextResponse.json({
+        return Response.json({
           error: 'Valid license and insurance documents required to claim projects.',
           missingDocs: true,
         }, { status: 403 })
@@ -58,10 +58,10 @@ export async function POST(
       .single()
 
     if (!sr) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+      return Response.json({ error: 'Project not found' }, { status: 404 })
     }
     if (!['pending_review', 'in_queue'].includes(sr.status) || sr.assigned_contractor_id) {
-      return NextResponse.json({ error: 'Project is no longer available' }, { status: 400 })
+      return Response.json({ error: 'Project is no longer available' }, { status: 400 })
     }
 
     // Claim it
@@ -74,9 +74,9 @@ export async function POST(
 
     if (updateError) throw updateError
 
-    return NextResponse.json({ project: { id: updated.id, status: updated.status } })
+    return Response.json({ project: { id: updated.id, status: updated.status } })
   } catch (err) {
     console.error('[POST /api/projects/claim]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
