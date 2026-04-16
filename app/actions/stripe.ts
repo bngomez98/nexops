@@ -4,9 +4,14 @@ import { createClient } from '@/lib/supabase/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 import { getPlanById } from '@/lib/plans'
+import { headers } from 'next/headers'
 
 export async function fetchClientSecret(planId: string): Promise<string> {
-  const supabase = await createClient()
+  const supabase = createClient(
+    new Request('http://localhost', {
+      headers: await headers(),
+    })
+  )
   const {
     data: { user },
     error: authError,

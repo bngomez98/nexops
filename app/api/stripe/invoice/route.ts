@@ -9,7 +9,7 @@ const PLATFORM_FEE_RATE = 0.15
 
 export async function POST(req: Request) {
   const stripe = getStripeClient()
-  const supabase = createClient(request)
+  const supabase = createClient(req)
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -87,7 +87,6 @@ export async function POST(req: Request) {
             currency: 'usd',
             unit_amount: amountCents,
             product_data: {
-              name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()) : 'Service'}`,
               name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, (c: any) => c.toUpperCase()) : 'Service'}`,
               description: `Invoice #${invoiceId.slice(0, 8).toUpperCase()} · ${new Date().toLocaleDateString()}`,
             },
@@ -132,22 +131,22 @@ export async function POST(req: Request) {
     return Response.json({ error: 'requestId or invoiceId required' }, { status: 400 })
   }
 
-  const { data: request } = await supabase
+  const { data: serviceRequest } = await supabase
     .from('service_requests')
     .select('id, owner_id, assigned_contractor_id, final_cost, category, status')
     .eq('id', requestId)
     .single()
 
-  if (!request) {
+  if (!serviceRequest) {
     return Response.json({ error: 'Request not found' }, { status: 404 })
   }
-  if (request.owner_id !== user.id) {
+  if (serviceRequest.owner_id !== user.id) {
     return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
-  if (!request.final_cost || request.final_cost <= 0) {
+  if (!serviceRequest.final_cost || serviceRequest.final_cost <= 0) {
     return Response.json({ error: 'No final cost set on this request' }, { status: 400 })
   }
-  if (!request.assigned_contractor_id) {
+  if (!serviceRequest.assigned_contractor_id) {
     return Response.json({ error: 'No contractor assigned to this request' }, { status: 400 })
   }
 
@@ -169,7 +168,7 @@ export async function POST(req: Request) {
   const { data: contractor } = await supabase
     .from('profiles')
     .select('stripe_connect_account_id, stripe_connect_status, full_name')
-    .eq('id', request.assigned_contractor_id)
+    .eq('id', serviceRequest.assigned_contractor_id)
     .single()
 
   if (!contractor?.stripe_connect_account_id || contractor.stripe_connect_status !== 'active') {
@@ -179,7 +178,7 @@ export async function POST(req: Request) {
     )
   }
 
-  const amountCents = Math.round(request.final_cost * 100)
+  const amountCents = Math.round(serviceRequest.final_cost * 100)
   const feeCents = Math.round(amountCents * PLATFORM_FEE_RATE)
 
   const { data: ownerProfile } = await supabase
@@ -211,12 +210,12 @@ export async function POST(req: Request) {
     {
       price_data: {
         currency: 'usd',
-        unit_amount: amountCents,
-        product_data: {
-          name: `Final Invoice — ${request.category} Service`,
-          description: `Full project cost for service request #${requestId.slice(0, 8)}`,
+          unit_amount: amountCents,
+          product_data: {
+            name: `Final Invoice — ${serviceRequest.category} Service`,
+            description: `Full project cost for service request #${requestId.slice(0, 8)}`,
+          },
         },
-      },
       quantity: 1,
     },
   ]
@@ -242,13 +241,13 @@ export async function POST(req: Request) {
     payment_intent_data: {
       transfer_data: { destination: contractor.stripe_connect_account_id },
       application_fee_amount: feeCents,
-      metadata: {
-        request_id: requestId,
-        payment_type: 'invoice',
-        contractor_id: request.assigned_contractor_id,
-        payer_id: user.id,
+        metadata: {
+          request_id: requestId,
+          payment_type: 'invoice',
+          contractor_id: serviceRequest.assigned_contractor_id,
+          payer_id: user.id,
+        },
       },
-    },
     success_url: `${siteUrl}/dashboard/requests/${requestId}?payment=success`,
     cancel_url: `${siteUrl}/dashboard/requests/${requestId}?payment=cancelled`,
     metadata: {
@@ -260,7 +259,7 @@ export async function POST(req: Request) {
   await supabase.from('payments').insert({
     request_id: requestId,
     payer_id: user.id,
-    contractor_id: request.assigned_contractor_id,
+    contractor_id: serviceRequest.assigned_contractor_id,
     type: 'invoice',
     amount_cents: amountCents,
     application_fee_cents: feeCents,
