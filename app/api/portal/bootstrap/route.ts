@@ -31,6 +31,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
+    const currentProfile = (await loadCurrentProfile(supabase, user.id)) as Record<string, unknown> | null
     const currentProfile: any = await loadCurrentProfile(supabase, user.id)
     const currentRole = normalizeRole(currentProfile?.role ?? user.user_metadata?.role)
 

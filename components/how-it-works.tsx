@@ -21,6 +21,7 @@ const steps = [
     number: "04",
     title: "You receive one invoice",
     description:
+      "Monthly invoice with every request, property, work performed, and costs rolled into one statement — full transparency with line-item detail by trade, urgency, and contractor.",
       "Monthly invoice with every request, property, work performed, and costs. Full transparency with line-item detail.",
   },
 ]
