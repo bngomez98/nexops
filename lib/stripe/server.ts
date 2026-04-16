@@ -10,7 +10,7 @@ export function getStripeClient(): Stripe {
       throw new Error('Missing STRIPE_SECRET_KEY')
     }
     _client = new Stripe(secretKey, {
-      apiVersion: '2025-03-31.basil',
+      apiVersion: '2025-02-24.acacia',
     })
   }
   return _client

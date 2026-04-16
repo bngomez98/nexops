@@ -14,7 +14,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const profile = await loadCurrentProfile(supabase, user.id)
+    const profile: any = await loadCurrentProfile(supabase, user.id)
 
     return NextResponse.json({
       preferences: {
