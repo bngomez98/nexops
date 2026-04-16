@@ -29,7 +29,7 @@ import { getPlansByRole, formatPrice } from '@/lib/plans'
 export const metadata: Metadata = {
   title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
   description:
-    'Nexus Operations is a managed maintenance coordination service for homeowners, landlords, and property managers in Topeka and Shawnee County. Submit one request; Nexus triages scope, dispatches verified contractors, and delivers unified billing with photo documentation.',
+    'Nexus Operations is a managed maintenance service in Topeka, Kansas. Each request is assigned to one verified, licensed contractor (never sold to multiple bidders), consultation is confirmed within 24 hours, and every step is documented through final invoice.',
 }
 
 const stats = [
@@ -58,7 +58,7 @@ const howItWorks = [
   {
     step: '02',
     title: 'We assign a verified contractor',
-    desc: 'Nexus reviews your request and dispatches a licensed, insured professional.',
+    desc: 'Your job is assigned to one licensed, insured contractor. We do not blast your request to a lead marketplace.',
     icon: Users,
   },
   {
@@ -84,7 +84,7 @@ const differentiators = [
   {
     icon: Clock,
     title: 'Response-time guarantees',
-    desc: 'Emergencies triaged within an hour. Routine work scheduled in 3-5 business days.',
+    desc: 'Emergency requests are triaged within 1 hour, and consultation is confirmed within 24 hours for every request.',
   },
   {
     icon: FileText,
@@ -100,21 +100,24 @@ const differentiators = [
 
 const marketplaceComparison = [
   {
-    title: 'Directory marketplaces',
-    points: [
-      'You message multiple contractors and chase responses',
-      'Scheduling and scope alignment is left to you',
-      'Billing arrives from different vendors in different formats',
-      'Documentation quality varies job-by-job',
+      title: 'Directory marketplaces',
+      points: [
+        'The same request is sold to multiple contractors at once',
+        'You message multiple contractors and chase responses',
+        'Scheduling and scope alignment is left to you',
+        'Billing arrives from different vendors in different formats',
+        'Documentation quality varies job-by-job',
     ],
   },
   {
-    title: 'Nexus Operations',
-    points: [
-      'One request routes through a Nexus coordinator',
-      'Dispatch and schedule follow-up are owned by our team',
-      'Unified monthly invoice with line-item visibility',
-      'Photo-backed records are required on every request',
+      title: 'Nexus Operations',
+      points: [
+        'One request is assigned to one verified contractor',
+        'No lead resale or bidding wars between contractors',
+        '24-hour consultation confirmation on every request',
+        'Dispatch and schedule follow-up are owned by our team',
+        'Unified monthly invoice with line-item visibility',
+        'Photo-backed records are required on every request',
     ],
   },
 ]
@@ -196,9 +199,10 @@ export default function HomePage() {
                 </h1>
 
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                  Nexus Operations is a managed service — not a contractor directory. Submit a request 
-                  once; we triage scope, dispatch licensed contractors, manage updates, and deliver 
-                  photo-documented work with unified billing.
+                  Nexus Operations is a managed service in Topeka, Kansas — not a lead marketplace.
+                  Submit one request and we assign it to one verified contractor, confirm consultation
+                  within 24 hours, manage scheduling and updates, and close the job with photo
+                  documentation and one invoice.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -220,11 +224,11 @@ export default function HomePage() {
                 <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <BadgeCheck className="h-4 w-4 text-primary" />
-                    <span>Managed service, not a marketplace</span>
+                    <span>No lead resale to multiple contractors</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-primary" />
-                    <span>Dispatch owned by Nexus</span>
+                    <span>Consultation confirmed within 24 hours</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-primary" />
@@ -441,7 +445,7 @@ export default function HomePage() {
               <SectionHeading
                 eyebrow="Why Nexus"
                 title="A managed service, not a contractor marketplace."
-                description="Marketplaces give you a list of names and step away. Nexus stays involved from submission to invoice — reviewing scope, coordinating schedules, verifying work, and publishing documentation."
+                description="Typical platforms sell one request to many contractors. Nexus assigns each request to one verified contractor, coordinates the work directly, and stays accountable through documentation and billing."
               />
 
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -474,7 +478,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Why owners switch"
             title="A better model than Angi-style contractor directories."
-            description="Nexus is built for people who want outcomes, not a list of phone numbers. We stay accountable from intake through invoice."
+            description="Instead of selling your request as shared leads, Nexus assigns one verified contractor and runs the job from intake to final invoice."
             align="center"
           />
 
