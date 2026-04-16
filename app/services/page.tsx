@@ -24,7 +24,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'Services — Trade Categories by Nexus Operations',
   description:
-    'Nexus Operations coordinates plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
+    'Nexus Operations manages plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
 }
 
 const tradeCategories = [
@@ -125,8 +125,10 @@ export default function ServicesPage() {
       <Header />
       <main>
         {/* ── Hero ────────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto max-w-5xl px-6 py-20 text-center sm:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 home-service-bg" />
+          <div className="pointer-events-none absolute inset-0 property-grid-pattern opacity-40" />
+          <div className="relative mx-auto max-w-5xl px-6 py-24 text-center sm:py-28">
             <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
               <Sparkles className="h-3 w-3" /> Services
             </p>
@@ -159,7 +161,7 @@ export default function ServicesPage() {
         <Section>
           <SectionHeading
             eyebrow="Trade categories"
-            title="What we coordinate."
+            title="What we manage."
             description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn&apos;t fit a category, submit a request anyway — our team will route it."
           />
 

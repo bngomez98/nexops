@@ -70,12 +70,12 @@ export async function POST(req: NextRequest) {
         const invoiceId = session.metadata?.invoice_id
         if (invoiceId && paymentType === 'invoice') {
           await supabase.from('invoices')
-            .update({ status: 'paid' })
+            .update({ status: 'paid' } as never)
             .eq('id', invoiceId)
           // Mark the associated job as completed
           const jobId = session.metadata?.job_id
           if (jobId) {
-            await supabase.from('jobs').update({ status: 'completed' }).eq('id', jobId)
+            await supabase.from('jobs').update({ status: 'completed' } as never).eq('id', jobId)
           }
         }
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
               status: 'paid',
               stripe_payment_intent_id: session.payment_intent as string,
               updated_at: new Date().toISOString(),
-            })
+            } as never)
             .eq('stripe_session_id', session.id)
             .select('id, request_id')
             .maybeSingle()
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
                 status: 'completed',
                 completion_date: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-              })
+              } as never)
               .eq('id', requestId)
           }
         }
@@ -120,13 +120,13 @@ export async function POST(req: NextRequest) {
             status: sub.status,
             current_period_start: start,
             current_period_end: end,
-          }, { onConflict: 'stripe_subscription_id' })
+          } as never, { onConflict: 'stripe_subscription_id' })
 
           await supabase.from('profiles').update({
             subscription_tier: planId,
             subscription_status: sub.status,
             stripe_subscription_id: subId,
-          }).eq('id', userId)
+          } as never).eq('id', userId)
         }
         break
       }
@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
             current_period_start: start,
             current_period_end: end,
             cancel_at_period_end: sub.cancel_at_period_end,
-          })
+          } as never)
           .eq('stripe_subscription_id', sub.id)
 
         const isActive = status === 'active' || status === 'trialing'
@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
           .update({
             subscription_status: status,
             subscription_tier: isActive ? (planId ?? 'free') : 'free',
-          })
+          } as never)
           .eq('stripe_customer_id', sub.customer as string)
         break
       }
@@ -166,12 +166,12 @@ export async function POST(req: NextRequest) {
         const requestId = stripeInvoice.metadata?.requestId
         if (requestId) {
           await supabase.from('service_requests')
-            .update({ invoice_paid: true })
+            .update({ invoice_paid: true } as never)
             .eq('id', requestId)
         }
 
         // Jobs flow: look up internal invoice by stripe_invoice_id
-        const { data: nexusInvoice } = await supabase
+        const { data: nexusInvoice }: { data: any } = await supabase
           .from('invoices')
           .select('id, job_id, contractor_id, client_id, subtotal, nexus_fee, total')
           .eq('stripe_invoice_id', stripeInvoice.id)
@@ -179,11 +179,11 @@ export async function POST(req: NextRequest) {
 
         if (nexusInvoice) {
           await supabase.from('invoices')
-            .update({ status: 'paid' })
+            .update({ status: 'paid' } as never)
             .eq('id', nexusInvoice.id)
 
           await supabase.from('jobs')
-            .update({ status: 'completed' })
+            .update({ status: 'completed' } as never)
             .eq('id', nexusInvoice.job_id)
 
           await supabase.from('job_status_history').insert({
@@ -191,9 +191,9 @@ export async function POST(req: NextRequest) {
             status:     'completed',
             changed_at: new Date().toISOString(),
             changed_by: 'system',
-          })
+          } as never)
 
-          const { data: job } = await supabase
+          const { data: job }: { data: any } = await supabase
             .from('jobs')
             .select('service_type')
             .eq('id', nexusInvoice.job_id)
@@ -210,7 +210,7 @@ export async function POST(req: NextRequest) {
               const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
-              ])
+              ]) as any
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([
                 contractorAuth.user?.email
@@ -247,7 +247,7 @@ export async function POST(req: NextRequest) {
         const invoice = event.data.object as Stripe.Invoice
         const customerId = invoice.customer as string
         await supabase.from('profiles')
-          .update({ subscription_status: 'past_due', updated_at: new Date().toISOString() })
+          .update({ subscription_status: 'past_due', updated_at: new Date().toISOString() } as never)
           .eq('stripe_customer_id', customerId)
         break
       }
@@ -258,7 +258,7 @@ export async function POST(req: NextRequest) {
         const paymentIntentId = charge.payment_intent as string | null
         if (!paymentIntentId) break
         await supabase.from('payments')
-          .update({ status: 'refunded', updated_at: new Date().toISOString() })
+          .update({ status: 'refunded', updated_at: new Date().toISOString() } as never)
           .eq('stripe_payment_intent_id', paymentIntentId)
         break
       }
@@ -273,7 +273,7 @@ export async function POST(req: NextRequest) {
           status = 'restricted'
         }
         await supabase.from('profiles')
-          .update({ stripe_connect_status: status, updated_at: new Date().toISOString() })
+          .update({ stripe_connect_status: status, updated_at: new Date().toISOString() } as never)
           .eq('stripe_connect_account_id', account.id)
         break
       }

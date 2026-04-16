@@ -71,10 +71,10 @@ export default function DashboardPage() {
             </h1>
             <p className="mt-1 text-[13.5px] text-muted-foreground">
               {isHomeownerDashboardRole(user?.role)
-                ? "Here's an overview of your maintenance activity."
+                ? "Track service dispatch, completion status, and project costs in one view."
                 : user?.role === 'contractor'
-                ? "Here's your job board and earnings summary."
-                : "Admin overview — manage the platform below."}
+                ? "Review available work, active assignments, and payout visibility."
+                : "Monitor operations performance, user activity, and financial controls."}
             </p>
           </div>
           {isHomeownerDashboardRole(user?.role) && (
@@ -82,7 +82,7 @@ export default function DashboardPage() {
               href="/dashboard/requests/new"
               className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
             >
-              <Plus className="h-3.5 w-3.5" /> New Request
+              <Plus className="h-3.5 w-3.5" /> Dispatch Request
             </Link>
           )}
         </div>
@@ -94,7 +94,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 {
-                  label: 'Active',
+                   label: 'Active Dispatch',
                   value: clientRequests.filter(r => r.status !== 'completed' && r.status !== 'invoiced').length,
                   icon: Clock,
                   color: 'text-sky-600',
@@ -108,7 +108,7 @@ export default function DashboardPage() {
                   bg: 'bg-emerald-50 border-emerald-100',
                 },
                 {
-                  label: 'Total Spend',
+                   label: 'Tracked Cost',
                   value: '$' + clientRequests.filter(r => r.invoiceAmount).reduce((s, r) => s + (r.invoiceAmount || 0), 0).toLocaleString(),
                   icon: FileText,
                   color: 'text-primary',
@@ -137,7 +137,7 @@ export default function DashboardPage() {
             {/* Recent Requests */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[15px] font-semibold text-foreground">Recent requests</h2>
+                 <h2 className="text-[15px] font-semibold text-foreground">Recent service requests</h2>
                 <Link href="/dashboard/requests" className="text-[12.5px] text-primary hover:underline underline-offset-4 inline-flex items-center gap-1">
                   View all <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -146,13 +146,13 @@ export default function DashboardPage() {
               {clientRequests.length === 0 ? (
                 <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
-                  <p className="text-[14px] font-medium text-foreground mb-1">No requests yet</p>
-                  <p className="text-[13px] text-muted-foreground mb-5">Submit your first maintenance request to get started.</p>
+                   <p className="text-[14px] font-medium text-foreground mb-1">No requests yet</p>
+                   <p className="text-[13px] text-muted-foreground mb-5">Create your first request to begin dispatch and contractor matching.</p>
                   <Link
                     href="/dashboard/requests/new"
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition"
                   >
-                    <Plus className="h-3.5 w-3.5" /> Submit a request
+                     <Plus className="h-3.5 w-3.5" /> Dispatch a request
                   </Link>
                 </div>
               ) : (
@@ -193,14 +193,14 @@ export default function DashboardPage() {
                   bg: 'bg-emerald-50 border-emerald-100',
                 },
                 {
-                  label: 'Active',
+                   label: 'Active Assignments',
                   value: contractorJobs.filter(j => j.status === 'claimed').length,
                   icon: Clock,
                   color: 'text-sky-600',
                   bg: 'bg-sky-50 border-sky-100',
                 },
                 {
-                  label: 'Pending Payout',
+                   label: 'Pending Payout Value',
                   value: '$' + contractorJobs.filter(j => j.status !== 'invoiced').reduce((s, j) => s + (j.payout || 0), 0).toLocaleString(),
                   icon: FileText,
                   color: 'text-primary',
@@ -232,7 +232,7 @@ export default function DashboardPage() {
             {/* Available Jobs */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[15px] font-semibold text-foreground">Available jobs</h2>
+                 <h2 className="text-[15px] font-semibold text-foreground">Available jobs</h2>
                 <Link href="/dashboard/jobs" className="text-[12.5px] text-primary hover:underline underline-offset-4 inline-flex items-center gap-1">
                   View all <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -242,7 +242,7 @@ export default function DashboardPage() {
                 <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                   <p className="text-[14px] font-medium text-foreground mb-1">No available jobs right now</p>
-                  <p className="text-[13px] text-muted-foreground">New jobs matching your trade will appear here when submitted.</p>
+                   <p className="text-[13px] text-muted-foreground">New opportunities aligned to your trade profile will appear here automatically.</p>
                 </div>
               ) : (
                 <div className="divide-y divide-border/50 border-y border-border/60">
@@ -262,7 +262,7 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-[15px] font-bold text-foreground">${job.budget.toLocaleString()}</span>
                         <button className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-[12px] font-semibold text-primary-foreground hover:opacity-90 transition">
-                          Claim job <ArrowRight className="h-3 w-3" />
+                           Claim assignment <ArrowRight className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
@@ -278,7 +278,7 @@ export default function DashboardPage() {
           <div className="border-y border-border/60 py-10 text-center">
             <AlertCircle className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
             <p className="text-[14px] font-medium text-foreground mb-1">Admin Dashboard</p>
-            <p className="text-[13px] text-muted-foreground">Configure reports, manage team access, and review platform activity.</p>
+             <p className="text-[13px] text-muted-foreground">Configure reporting, manage permissions, and monitor operating performance.</p>
           </div>
         )}
       </div>

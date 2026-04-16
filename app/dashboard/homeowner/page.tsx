@@ -127,7 +127,7 @@ function HomeownerDashboardInner() {
         const prevIds = new Set(prev.map((p: ServiceRequest) => p.id))
         const hasNew = newList.some((p: ServiceRequest) => !prevIds.has(p.id))
         if (hasNew && prev.length > 0) {
-          toast.success('Request status updated!')
+          toast.success('Operations update received.')
         }
         return newList
       })
@@ -145,7 +145,7 @@ function HomeownerDashboardInner() {
         setUser(u)
         await loadRequests()
         if (params.get('submitted') === '1') {
-          toast.success('Request submitted! A contractor will be assigned shortly.')
+          toast.success('Request submitted. Nexus Operations will route this to a verified contractor.')
         }
       } catch (err) {
         console.error(err)
@@ -173,7 +173,7 @@ function HomeownerDashboardInner() {
     setRefreshing(true)
     await loadRequests()
     setRefreshing(false)
-    toast.success('Refreshed')
+    toast.success('Dashboard refreshed.')
   }
 
   if (loading) {
@@ -194,10 +194,10 @@ function HomeownerDashboardInner() {
   const totalSpend = completed.reduce((s, r) => s + (r.budget ?? 0), 0)
 
   const stats = [
-    { label: 'Submitted',   value: open.length,       icon: Clock,        color: 'text-amber-600 dark:text-amber-400',   bg: 'bg-amber-500/10' },
-    { label: 'In Progress', value: active.length,     icon: Wrench,       color: 'text-blue-600 dark:text-blue-400',     bg: 'bg-blue-500/10' },
+    { label: 'Submitted for Triage', value: open.length,       icon: Clock,        color: 'text-amber-600 dark:text-amber-400',   bg: 'bg-amber-500/10' },
+    { label: 'Active Dispatch',      value: active.length,     icon: Wrench,       color: 'text-blue-600 dark:text-blue-400',     bg: 'bg-blue-500/10' },
     { label: 'Completed',   value: completed.length,  icon: CheckCircle2, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10' },
-    { label: 'Total Spend', value: `$${totalSpend.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
+    { label: 'Tracked Cost', value: `$${totalSpend.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
   ]
 
   const tier = user.subscriptionTier ?? 'homeowner_basic'
@@ -222,7 +222,7 @@ function HomeownerDashboardInner() {
             <div className="min-w-0">
               <div className="inline-flex items-center gap-2 text-primary-foreground/80 text-xs font-semibold uppercase tracking-wider bg-white/10 border border-white/15 px-3 py-1.5 rounded-full mb-4">
                 <Sparkles className="w-3.5 h-3.5" />
-                Homeowner Portal
+                Nexus Homeowner Operations
               </div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
                 {requests.length === 0
@@ -231,8 +231,8 @@ function HomeownerDashboardInner() {
               </h1>
               <p className="text-primary-foreground/75 text-sm mt-2 leading-relaxed max-w-lg">
                 {requests.length === 0
-                  ? 'Submit your first service request and get matched with a verified contractor.'
-                  : `${open.length + active.length} active request${open.length + active.length !== 1 ? 's' : ''} · ${completed.length} completed · $${totalSpend.toLocaleString()} tracked`}
+                  ? 'Submit your first request to launch professional dispatch and cost tracking.'
+                  : `${open.length + active.length} active request${open.length + active.length !== 1 ? 's' : ''} · ${completed.length} completed · $${totalSpend.toLocaleString()} in tracked project value`}
               </p>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
@@ -250,7 +250,7 @@ function HomeownerDashboardInner() {
                 className="inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/95 transition-colors shadow-lg"
               >
                 <Plus className="w-4 h-4" />
-                New Request
+                Dispatch Request
               </Link>
             </div>
           </div>
@@ -282,10 +282,10 @@ function HomeownerDashboardInner() {
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5">
                   {isPro
-                    ? 'Unlimited requests, priority matching, and insurance-ready reports.'
+                    ? 'Unlimited dispatch requests, priority routing, and insurance-ready reporting.'
                     : requestsRemaining != null && requestsRemaining > 0
-                    ? `${requestsRemaining} of 3 free requests remaining. Upgrade for unlimited.`
-                    : 'Free tier limit reached. Upgrade to continue.'}
+                    ? `${requestsRemaining} of 3 Starter requests remaining. Upgrade for unlimited volume.`
+                    : 'Starter request limit reached. Upgrade to continue dispatching work.'}
                 </p>
               </div>
             </div>
@@ -296,14 +296,14 @@ function HomeownerDashboardInner() {
                   className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 rounded-lg hover:opacity-95 transition-opacity shadow-sm"
                 >
                   <Zap className="w-4 h-4" />
-                  Upgrade to Pro
+                  Upgrade Plan
                 </Link>
               )}
               <Link
                 href="/dashboard/homeowner/billing"
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary border border-primary/30 bg-background hover:bg-primary/5 transition-colors px-4 py-2.5 rounded-lg"
               >
-                {isPro ? 'Manage' : 'Compare plans'}
+                {isPro ? 'Manage plan' : 'Compare plans'}
               </Link>
             </div>
           </div>
@@ -311,9 +311,9 @@ function HomeownerDashboardInner() {
           {!isPro && (
             <div className="mt-5 pt-5 border-t border-border grid grid-cols-3 gap-4 text-center">
               {[
-                { icon: Zap, label: 'Unlimited requests' },
-                { icon: TrendingUp, label: 'Priority matching' },
-                { icon: CheckCircle2, label: 'Insurance reports' },
+                { icon: Zap, label: 'Unlimited request volume' },
+                { icon: TrendingUp, label: 'Priority contractor routing' },
+                { icon: CheckCircle2, label: 'Insurance-ready documentation' },
               ].map(b => {
                 const Icon = b.icon
                 return (
@@ -347,6 +347,34 @@ function HomeownerDashboardInner() {
           })}
         </div>
 
+        <section className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: 'Service Level',
+              value: isPro ? 'Priority Routing' : 'Standard Routing',
+              description: isPro
+                ? 'Pro requests receive top-priority contractor matching and escalation handling.'
+                : 'Starter requests are routed in standard queue order.',
+            },
+            {
+              title: 'Open Exposure',
+              value: `${open.length + active.length} Active`,
+              description: 'Monitor open and in-progress work impacting your property operations.',
+            },
+            {
+              title: 'Financial Visibility',
+              value: `$${totalSpend.toLocaleString()}`,
+              description: 'Track completed project value and maintain invoice-ready records.',
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
+              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
+            </div>
+          ))}
+        </section>
+
         {/* Requests List */}
         <div className="bg-card border border-border rounded-xl overflow-hidden card-elevated">
           <div className="flex items-center justify-between px-5 py-4 border-b border-border gap-3 flex-wrap">
@@ -368,7 +396,7 @@ function HomeownerDashboardInner() {
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               <Plus className="w-4 h-4" />
-              New request
+              Dispatch request
             </Link>
           </div>
 
@@ -382,7 +410,7 @@ function HomeownerDashboardInner() {
               </p>
               <p className="text-sm text-muted-foreground mb-6 max-w-sm">
                 {tab === 'all'
-                  ? 'Post your first service request and get matched with a verified contractor.'
+                  ? 'Submit your first request to begin dispatch, tracking, and financial visibility.'
                   : `You have no ${tab} requests at this time.`}
               </p>
               {tab === 'all' && (
@@ -391,7 +419,7 @@ function HomeownerDashboardInner() {
                   className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-5 py-2.5 rounded-lg hover:opacity-95 transition-opacity"
                 >
                   <Plus className="w-4 h-4" />
-                  Post First Request
+                  Dispatch First Request
                 </Link>
               )}
             </div>
@@ -458,7 +486,7 @@ function HomeownerDashboardInner() {
         {/* AI Insights */}
         <AIInsightsCard
           role="homeowner"
-          requests={requests}
+          requests={requests as any}
         />
 
         {/* Quick Actions */}
@@ -469,24 +497,24 @@ function HomeownerDashboardInner() {
               icon: Plus,
               iconBg: 'bg-primary/10',
               iconColor: 'text-primary',
-              title: 'New Service Request',
-              sub: 'Get matched with a verified contractor',
+              title: 'Create Service Request',
+              sub: 'Dispatch work to the Nexus Operations contractor network',
             },
             {
               href: '/dashboard/homeowner/billing',
               icon: CreditCard,
               iconBg: 'bg-emerald-500/10',
               iconColor: 'text-emerald-600 dark:text-emerald-400',
-              title: 'Billing & Subscription',
-              sub: isPro ? `${planLabel} Plan · Active` : 'Starter Plan · Upgrade to Pro',
+              title: 'Billing & Plans',
+              sub: isPro ? `${planLabel} Plan · Active` : 'Starter Plan · Upgrade available',
             },
             {
               href: '/dashboard/homeowner/settings',
               icon: Activity,
               iconBg: 'bg-blue-500/10',
               iconColor: 'text-blue-600 dark:text-blue-400',
-              title: 'Account Settings',
-              sub: 'Profile, notifications & security',
+              title: 'Account & Security',
+              sub: 'Profile, communication preferences, and security controls',
             },
           ].map(({ href, icon: Icon, iconBg, iconColor, title, sub }) => (
             <Link

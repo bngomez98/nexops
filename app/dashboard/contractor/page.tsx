@@ -10,8 +10,8 @@ import { AIInsightsCard } from '@/components/ai-insights-card'
 import { formatDateOnly } from '@/lib/date-format'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
-  BarChart3, ArrowUpRight, AlertTriangle, Sparkles,
-  RefreshCw, Clock, DollarSign, CheckCircle2, Zap, CalendarDays, Crown, ArrowRight,
+  BarChart3, AlertTriangle, Sparkles,
+  RefreshCw, Clock, DollarSign, Zap, CalendarDays, Crown, ArrowRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -99,7 +99,7 @@ export default function ContractorDashboard() {
         const prevIds = new Set(prev.map((p: ProjectRequest) => p.id))
         const hasNew = newList.some((p: ProjectRequest) => !prevIds.has(p.id))
         if (hasNew && prev.length > 0) {
-          toast.success('New project available!')
+          toast.success('New project posted to your queue.')
         }
         return newList
       })
@@ -170,7 +170,7 @@ export default function ContractorDashboard() {
     setRefreshing(true)
     await fetchProjects()
     setRefreshing(false)
-    toast.success('Refreshed')
+    toast.success('Dashboard refreshed.')
   }
 
   async function handleClaim(projectId: string) {
@@ -185,7 +185,7 @@ export default function ContractorDashboard() {
       if (res.ok) {
         setProjects(prev => prev.filter(p => p.id !== projectId))
         setProfile(prev => prev ? { ...prev, currentActiveProjects: prev.currentActiveProjects + 1 } : prev)
-        toast.success('Project claimed successfully!')
+        toast.success('Project claimed successfully.')
       } else {
         const data = await res.json()
         toast.error(data.error || 'Failed to claim project')
@@ -224,7 +224,7 @@ export default function ContractorDashboard() {
           <div className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-5">
             <div>
               <p className="text-primary-foreground/70 text-xs font-semibold uppercase tracking-wider mb-2">
-                Contractor Dashboard
+                 Nexus Contractor Operations
               </p>
               <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
                 {profile?.companyName || user.name}
@@ -232,11 +232,11 @@ export default function ContractorDashboard() {
               <p className="text-primary-foreground/80 text-sm mt-2 flex flex-wrap items-center gap-3">
                 <span className="capitalize">{profile?.membershipTier || 'Starter'} Plan</span>
                 <span className="opacity-40">·</span>
-                <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active</span>
+                 <span>{profile?.currentActiveProjects ?? 0} / {profile?.maxActiveProjects ?? 3} active assignments</span>
                 <span className="opacity-40">·</span>
                 <span className="flex items-center gap-1">
                   <Zap className="w-3.5 h-3.5" />
-                  {projects.length} available
+                   {projects.length} available projects
                 </span>
               </p>
             </div>
@@ -263,7 +263,7 @@ export default function ContractorDashboard() {
           {profile && (
             <div className="relative mt-6">
               <div className="flex items-center justify-between text-xs text-primary-foreground/70 mb-2">
-                <span>Project capacity</span>
+                 <span>Operational capacity</span>
                 <span>{profile.currentActiveProjects} / {profile.maxActiveProjects} ({capacityPct}%)</span>
               </div>
               <div className="h-2 bg-white/20 rounded-full overflow-hidden">
@@ -279,9 +279,9 @@ export default function ContractorDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'Active', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} max`, icon: Briefcase, color: 'text-primary', bg: 'bg-primary/10' },
-            { label: 'Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} reviews`, icon: Star, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-            { label: 'Available', value: projects.length, sub: 'open projects', icon: Layers, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+             { label: 'Active Assignments', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} plan capacity`, icon: Briefcase, color: 'text-primary', bg: 'bg-primary/10' },
+             { label: 'Service Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} verified reviews`, icon: Star, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+             { label: 'Open Opportunities', value: projects.length, sub: 'available projects', icon: Layers, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -299,15 +299,41 @@ export default function ContractorDashboard() {
           })}
         </div>
 
+        <section className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              label: 'Current Plan',
+              value: (profile?.membershipTier || 'Starter').toUpperCase(),
+              detail: 'Plan level determines assignment capacity and routing priority.',
+            },
+            {
+              label: 'Time to Claim',
+              value: 'Real-time',
+              detail: 'New qualified projects surface immediately as they are posted.',
+            },
+            {
+              label: 'Estimated Pipeline',
+              value: `$${filteredProjects.reduce((sum, project) => sum + (project.budget || 0), 0).toLocaleString()}`,
+              detail: 'Total posted budget across projects currently matching your filters.',
+            },
+          ].map((card) => (
+            <div key={card.label} className="rounded-xl border border-border bg-card p-5 card-elevated">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{card.label}</p>
+              <p className="mt-2 text-2xl font-display font-bold text-foreground">{card.value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{card.detail}</p>
+            </div>
+          ))}
+        </section>
+
         {/* Capacity Warning */}
         {atCapacity && (
           <div className="rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 px-5 py-4 flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-amber-800 dark:text-amber-300">Project capacity reached</p>
+               <p className="font-semibold text-amber-800 dark:text-amber-300">Project capacity reached</p>
               <p className="text-sm text-amber-700 dark:text-amber-400 mt-0.5">
-                You&apos;ve reached your limit of {profile?.maxActiveProjects} active projects.{' '}
-                <Link href="/dashboard/contractor/settings" className="underline font-medium">Upgrade your plan</Link> to take on more work.
+                 Your current plan supports up to {profile?.maxActiveProjects} active assignments.{' '}
+                 <Link href="/dashboard/contractor/settings" className="underline font-medium">Upgrade your plan</Link> to accept additional work.
               </p>
             </div>
           </div>
@@ -317,15 +343,15 @@ export default function ContractorDashboard() {
         {projects.length > 0 && (
           <AIInsightsCard
             role="contractor"
-            requests={projects.slice(0, 5)}
-            profile={profile}
+            requests={projects.slice(0, 5) as any}
+            profile={profile as any}
           />
         )}
 
         {/* Auto-refresh notice */}
         <p className="text-xs text-muted-foreground flex items-center gap-1.5">
           <RefreshCw className="w-3 h-3" />
-          Auto-refreshes every 30 seconds · Last updated {lastRefresh.toLocaleTimeString()}
+           Auto-refresh every 30 seconds · Last updated {lastRefresh.toLocaleTimeString()}
         </p>
 
         {/* Projects Grid */}
@@ -339,7 +365,7 @@ export default function ContractorDashboard() {
               <div className="flex items-center justify-between px-6 py-4 border-b border-border">
                 <div className="flex items-center gap-2.5">
                   <Layers className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Available Projects</h2>
+                   <h2 className="font-semibold text-foreground">Available Projects</h2>
                 </div>
                 <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
                   {filteredProjects.length} result{filteredProjects.length !== 1 ? 's' : ''}
@@ -351,9 +377,9 @@ export default function ContractorDashboard() {
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
                     <Briefcase className="w-6 h-6 text-primary" />
                   </div>
-                  <p className="font-semibold text-foreground mb-2">No projects available</p>
+                   <p className="font-semibold text-foreground mb-2">No projects available</p>
                   <p className="text-sm text-muted-foreground max-w-sm">
-                    New community requests appear here automatically. Check back soon!
+                     New qualified requests appear here automatically. Check back shortly.
                   </p>
                   <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
                     <RefreshCw className="w-3 h-3" /> Auto-checking every 30 seconds
@@ -361,7 +387,7 @@ export default function ContractorDashboard() {
                 </div>
               ) : filteredProjects.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
-                  <p className="font-medium text-foreground mb-1">No matches</p>
+                   <p className="font-medium text-foreground mb-1">No matches</p>
                   <p className="text-sm text-muted-foreground">Try adjusting your filters.</p>
                 </div>
               ) : (
@@ -463,9 +489,9 @@ export default function ContractorDashboard() {
                 <Crown className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">Raise your project limit</h3>
+                 <h3 className="font-semibold text-foreground">Increase assignment capacity</h3>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  Paid plans allow more active projects and priority routing.
+                   Higher tiers unlock more active assignments, faster routing, and premium support.
                 </p>
               </div>
             </div>
@@ -473,7 +499,7 @@ export default function ContractorDashboard() {
               href="/dashboard/contractor/billing"
               className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-primary border border-primary/30 bg-background hover:bg-primary/5 transition-colors px-4 py-2.5 rounded-lg"
             >
-              View all plans
+               Review plans
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -483,7 +509,7 @@ export default function ContractorDashboard() {
                 name: 'Contractor Pro',
                 price: '$59',
                 cadence: '/mo billed annually',
-                desc: 'Up to 10 active projects, priority notifications, verified badge',
+                 desc: 'Up to 10 active assignments, priority dispatch notifications, verified badge',
                 highlight: true,
                 badge: 'Best Value',
               },
@@ -491,7 +517,7 @@ export default function ContractorDashboard() {
                 name: 'Contractor Elite',
                 price: '$199',
                 cadence: '/mo',
-                desc: 'Unlimited projects, first dispatch priority, dedicated account manager',
+                 desc: 'Unlimited assignments, first-priority dispatch access, dedicated account manager',
                 highlight: false,
               },
             ].map(plan => (
