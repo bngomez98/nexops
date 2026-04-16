@@ -4,9 +4,9 @@ import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })

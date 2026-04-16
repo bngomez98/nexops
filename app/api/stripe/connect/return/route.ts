@@ -7,10 +7,10 @@ const siteUrl = getSiteUrl()
 
 // Contractor lands here after completing (or abandoning) Stripe Express onboarding.
 // We retrieve the account to check its current verification state and update the profile.
-export async function GET(request: Request) {
+export async function GET() {
   try {
   const stripe = getStripeClient()
-  const supabase = createClient(request)
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {

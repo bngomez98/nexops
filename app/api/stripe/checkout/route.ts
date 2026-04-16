@@ -8,7 +8,7 @@ import { getStripeClient } from '@/lib/stripe/server'
 export async function POST(req: Request) {
   try {
     const stripe = getStripeClient()
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })

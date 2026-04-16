@@ -13,7 +13,7 @@ const PLATFORM_FEE_CENTS = Math.round(DISPATCH_AMOUNT_CENTS * 0.15)
 export async function POST(req: Request) {
   try {
   const stripe = getStripeClient()
-  const supabase = createClient(req)
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {

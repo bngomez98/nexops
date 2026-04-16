@@ -26,7 +26,7 @@ function toConsultationDate(value: string) {
 export async function POST(request: Request) {
   try {
     const automationEnabled = isAutomationEnabled()
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {

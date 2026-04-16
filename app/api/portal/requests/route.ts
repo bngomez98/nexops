@@ -12,7 +12,7 @@ function toUrgency(priority: unknown) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,

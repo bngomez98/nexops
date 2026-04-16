@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })

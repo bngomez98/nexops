@@ -36,7 +36,7 @@ type Candidate = {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
 // ─────────────────────────────────────────────────────────────────────
 
 async function matchForServiceRequest(
-  supabase: ReturnType<typeof createClient>,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   requestId: string,
 ) {
   const { data: req, error: reqErr } = await supabase
@@ -146,7 +146,7 @@ async function matchForServiceRequest(
 }
 
 async function fallbackScoreContractors(
-  supabase: ReturnType<typeof createClient>,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   req: {
     id: string
     category: string | null
@@ -251,7 +251,7 @@ async function fallbackScoreContractors(
 // ─────────────────────────────────────────────────────────────────────
 
 async function matchForJob(
-  supabase: ReturnType<typeof createClient>,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   jobId: string,
 ) {
   const { data: job, error: jobError } = await supabase

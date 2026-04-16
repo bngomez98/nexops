@@ -254,7 +254,9 @@ export default function NewProjectRequest() {
     } catch (err) {
       if (err instanceof ZodError) {
         const errors: Record<string, string> = {}
-        err.errors.forEach(e => { errors[e.path[0] as string] = e.message })
+        err.issues.forEach((e) => {
+          errors[e.path[0] as string] = e.message
+        })
         setFieldErrors(errors)
         setError('Please fix the errors below')
       } else {
