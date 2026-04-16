@@ -113,8 +113,10 @@ export default function ContractorsPage() {
       <Header />
       <main>
         {/* ── Hero ────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-12 lg:items-center lg:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 hero-home-pattern opacity-60" />
+          <div className="pointer-events-none absolute inset-0 dot-grid opacity-30" />
+          <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-24 lg:grid-cols-12 lg:items-center lg:py-28">
             <div className="lg:col-span-7">
               <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                 <Sparkles className="h-3 w-3" /> For licensed contractors
