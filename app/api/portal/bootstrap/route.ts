@@ -31,13 +31,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const currentProfile = await loadCurrentProfile(supabase, user.id)
+    const currentProfile: any = await loadCurrentProfile(supabase, user.id)
     const currentRole = normalizeRole(currentProfile?.role ?? user.user_metadata?.role)
 
     let requestQuery = supabase
       .from('service_requests')
       .select(
-        'id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, status, urgency, photo_urls, invoice_amount, invoice_paid, created_at, consultation_date',
+        'id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, status, urgency, photo_urls, invoice_amount, invoice_paid, created_at, updated_at, consultation_date',
       )
       .order('created_at', { ascending: false })
       .limit(150)
@@ -130,7 +130,7 @@ export async function GET() {
           .split(' ')
           .filter(Boolean)
           .slice(0, 2)
-          .map((part) => part[0]?.toUpperCase() ?? '')
+          .map((part: any) => part[0]?.toUpperCase() ?? '')
           .join('') || 'U',
         rating: typeof profile?.average_rating === 'number' ? profile.average_rating : undefined,
         jobsCompleted: typeof profile?.reviews_count === 'number' ? profile.reviews_count : undefined,
@@ -217,7 +217,7 @@ export async function GET() {
         .split(' ')
         .filter(Boolean)
         .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
+        .map((part: any) => part[0]?.toUpperCase() ?? '')
         .join('') || 'U',
     }
 

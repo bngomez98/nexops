@@ -97,7 +97,7 @@ export default function RequestDetailPage({ params }: { params: Promise<{ id: st
     )
   }
 
-  const role = user?.role ?? 'homeowner'
+  const role = (user?.role ?? 'homeowner') as 'homeowner' | 'contractor' | 'property-manager' | 'admin'
   const isContractor = role === 'contractor'
 
   if (error) {
@@ -121,7 +121,7 @@ export default function RequestDetailPage({ params }: { params: Promise<{ id: st
     )
   }
 
-  if (!project) return null
+  if (!project || !user) return null
 
   const st = STATUS[project.status] ?? { label: project.status, pill: 'status-pending', step: 0, desc: '' }
   const catIcon = CATEGORY_ICONS[project.category] ?? '🔨'
