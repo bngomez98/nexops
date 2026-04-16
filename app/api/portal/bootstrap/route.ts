@@ -32,7 +32,6 @@ export async function GET(request: Request) {
     }
 
     const currentProfile = (await loadCurrentProfile(supabase, user.id)) as Record<string, unknown> | null
-    const currentProfile: any = await loadCurrentProfile(supabase, user.id)
     const currentRole = normalizeRole(currentProfile?.role ?? user.user_metadata?.role)
 
     let requestQuery = supabase
