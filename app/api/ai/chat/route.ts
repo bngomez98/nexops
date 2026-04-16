@@ -8,7 +8,7 @@ export async function POST(req: Request) {
       return Response.json({ error: 'AI features are not configured' }, { status: 503 })
     }
 
-    const supabase = createClient(request)
+    const supabase = createClient(req)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
