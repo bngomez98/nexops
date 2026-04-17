@@ -150,6 +150,7 @@ interface DashboardNavProps {
 export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardNavProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navGroups = useMemo(() => NAV_GROUPS[role] ?? [], [role])
   const { branding } = useBranding()
   const navGroups = NAV_GROUPS[role] ?? []
   const allNavItems = useMemo(() => navGroups.flatMap(g => g.items), [navGroups])

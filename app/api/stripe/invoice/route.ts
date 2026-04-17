@@ -206,7 +206,7 @@ export async function POST(req: Request) {
     .eq('status', 'paid')
     .maybeSingle()
 
-  const lineItems = [
+  const lineItems: NonNullable<Stripe.Checkout.SessionCreateParams['line_items']> = [
     {
       price_data: {
         currency: 'usd',
