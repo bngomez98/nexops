@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 import { getPlanById } from '@/lib/plans'
+import { getSiteUrl } from '@/lib/env'
 
 export async function fetchClientSecret(planId: string): Promise<string> {
   const supabase = await createClient()
@@ -50,7 +51,7 @@ export async function fetchClientSecret(planId: string): Promise<string> {
     mode: 'subscription',
     ui_mode: 'embedded_page',
     redirect_on_completion: 'always',
-    return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `${getSiteUrl()}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
     line_items: [lineItem],
     metadata: { userId: user.id, planId },
     subscription_data: {

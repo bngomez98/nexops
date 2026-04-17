@@ -9,22 +9,27 @@ import { ZendeskWidget } from '@/components/zendesk-widget'
 import { CONTACT_INFO } from '@/lib/contact-info'
 import './globals.css'
 
-const GA_ID = 'G-LDGVHFCMKT'
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim()
+const HAS_GA = Boolean(GA_ID)
 
-const CONSENT_DEFAULT_SCRIPT = [
-  `window.dataLayer=window.dataLayer||[];`,
-  `function gtag(){dataLayer.push(arguments);}`,
-  `gtag('consent','default',{`,
-  `  analytics_storage:'denied',`,
-  `  ad_storage:'denied',`,
-  `  ad_user_data:'denied',`,
-  `  ad_personalization:'denied',`,
-  `  wait_for_update:500`,
-  `});`,
-  `gtag('set','ads_data_redaction',true);`,
-].join('\n')
+const CONSENT_DEFAULT_SCRIPT = HAS_GA
+  ? [
+      `window.dataLayer=window.dataLayer||[];`,
+      `function gtag(){dataLayer.push(arguments);}`,
+      `gtag('consent','default',{`,
+      `  analytics_storage:'denied',`,
+      `  ad_storage:'denied',`,
+      `  ad_user_data:'denied',`,
+      `  ad_personalization:'denied',`,
+      `  wait_for_update:500`,
+      `});`,
+      `gtag('set','ads_data_redaction',true);`,
+    ].join('\n')
+  : null
 
-const GA_INIT_SCRIPT = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
+const GA_INIT_SCRIPT = HAS_GA
+  ? `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`
+  : null
 
 const GOOGLE_MERCHANT_ID = /^\d+$/.test(process.env.NEXT_PUBLIC_GOOGLE_MERCHANT_ID ?? '')
   ? process.env.NEXT_PUBLIC_GOOGLE_MERCHANT_ID
@@ -155,13 +160,21 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Instrument+Serif&display=swap"
           rel="stylesheet"
         />
-        <Script id="consent-default" strategy="beforeInteractive">
-          {CONSENT_DEFAULT_SCRIPT}
-        </Script>
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        <Script id="ga-init" strategy="afterInteractive">
-          {GA_INIT_SCRIPT}
-        </Script>
+        {HAS_GA && CONSENT_DEFAULT_SCRIPT && (
+          <Script id="consent-default" strategy="beforeInteractive">
+            {CONSENT_DEFAULT_SCRIPT}
+          </Script>
+        )}
+        {HAS_GA && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            {GA_INIT_SCRIPT && (
+              <Script id="ga-init" strategy="afterInteractive">
+                {GA_INIT_SCRIPT}
+              </Script>
+            )}
+          </>
+        )}
         <Script
           id="local-business-schema"
           type="application/ld+json"
