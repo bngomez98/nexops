@@ -10,7 +10,6 @@ const PLATFORM_FEE_RATE = 0.15
 export async function POST(req: Request) {
   const stripe = getStripeClient()
   const supabase = await createClient()
-  const supabase = createClient(req)
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -216,12 +215,9 @@ export async function POST(req: Request) {
         product_data: {
           name: `Final Invoice — ${serviceRequest.category} Service`,
           description: `Full project cost for service request #${requestId.slice(0, 8)}`,
-          unit_amount: amountCents,
-          product_data: {
-            name: `Final Invoice — ${serviceRequest.category} Service`,
-            description: `Full project cost for service request #${requestId.slice(0, 8)}`,
-          },
         },
+        recurring: undefined,
+      },
       quantity: 1,
     },
   ]
@@ -252,13 +248,8 @@ export async function POST(req: Request) {
         payment_type: 'invoice',
         contractor_id: serviceRequest.assigned_contractor_id,
         payer_id: user.id,
-        metadata: {
-          request_id: requestId,
-          payment_type: 'invoice',
-          contractor_id: serviceRequest.assigned_contractor_id,
-          payer_id: user.id,
-        },
       },
+    },
     success_url: `${siteUrl}/dashboard/requests/${requestId}?payment=success`,
     cancel_url: `${siteUrl}/dashboard/requests/${requestId}?payment=cancelled`,
     metadata: {

@@ -8,7 +8,6 @@ export async function GET(
 ) {
   try {
     const supabase = await createClient()
-    const supabase = createClient(req)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })
