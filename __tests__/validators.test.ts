@@ -112,6 +112,7 @@ describe('projectRequestSchema', () => {
       location: 'Topeka, KS',
       budget: '500',
       preferredDate: '2099-05-01',
+      photoUrls: ['https://example.com/photo-1.jpg', 'https://example.com/photo-2.jpg'],
     }
     expect(projectRequestSchema.safeParse(data).success).toBe(true)
   })
@@ -124,6 +125,7 @@ describe('projectRequestSchema', () => {
       location: 'Topeka, KS',
       budget: '',
       preferredDate: '2099-05-01',
+      photoUrls: ['https://example.com/photo-1.jpg', 'https://example.com/photo-2.jpg'],
     }
     expect(projectRequestSchema.safeParse(data).success).toBe(true)
   })
@@ -170,6 +172,7 @@ describe('projectRequestSchema', () => {
       description: 'The specialty system needs inspection, documentation, and repair support.',
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
+      photoUrls: ['https://example.com/photo-1.jpg', 'https://example.com/photo-2.jpg'],
     })
     expect(result.success).toBe(true)
   })
@@ -182,6 +185,7 @@ describe('projectRequestSchema', () => {
       description: 'Need recurring pool support and documentation for chemical logs and filtration checks.',
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
+      photoUrls: ['https://example.com/photo-1.jpg', 'https://example.com/photo-2.jpg'],
     })
     expect(result.success).toBe(true)
   })
@@ -193,6 +197,7 @@ describe('projectRequestSchema', () => {
       description: 'Need cleanup, surface prep, and matching paint with documented before/after photos.',
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',
+      photoUrls: ['https://example.com/photo-1.jpg', 'https://example.com/photo-2.jpg'],
     })
     expect(result.success).toBe(true)
   })
@@ -234,6 +239,7 @@ describe('projectRequestSchema', () => {
       pipelineMode: 'community',
       communityVisible: true,
       accessRequirements: 'Gate code 4421, use east entrance.',
+      photoUrls: ['https://example.com/photo-1.jpg', 'https://example.com/photo-2.jpg'],
     })
     expect(result.success).toBe(true)
   })
