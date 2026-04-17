@@ -1,0 +1,250 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXUS OPERATIONS DESIGN SYSTEM — COMPONENT STYLES
+   Semantic component classes used across the app.
+   Pure CSS — no Tailwind directives.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Scroll-smooth ── */
+html { scroll-behavior: smooth; }
+
+/* ── Accessibility skip link ── */
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: 0.5rem;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* ── Custom scrollbar ── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(26, 93, 46, 0.3) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(26, 93, 46, 0.3);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(26, 93, 46, 0.5); }
+
+/* ── Sidebar layout ── */
+.sidebar-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar);
+  border-right: 1px solid var(--sidebar-border);
+  z-index: 40;
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sidebar.open { transform: translateX(0); }
+
+@media (min-width: 1024px) {
+  .sidebar { transform: translateX(0); }
+  .sidebar-content { margin-left: 240px; }
+}
+
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+/* ── Card elevated ── */
+.card-elevated {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.03),
+    0 2px 4px rgba(0,0,0,0.03),
+    0 4px 8px rgba(0,0,0,0.02);
+}
+
+.card-elevated-hover {
+  transition: all 200ms cubic-bezier(0.4,0,0.2,1);
+}
+.card-elevated-hover:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 4px 8px rgba(0,0,0,0.04),
+    0 8px 16px rgba(26,93,46,0.06);
+  transform: translateY(-1px);
+}
+
+/* ── Glass surfaces ── */
+.glass-surface {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+.dark .glass-surface {
+  background: rgba(15,21,18,0.75);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Button glow ── */
+.btn-primary-glow {
+  box-shadow:
+    0 1px 2px rgba(26,93,46,0.15),
+    0 4px 12px rgba(26,93,46,0.2);
+}
+.btn-primary-glow:hover {
+  box-shadow:
+    0 2px 4px rgba(26,93,46,0.2),
+    0 8px 20px rgba(26,93,46,0.25);
+}
+
+/* ── Background patterns ── */
+.hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(26,93,46,0.12), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(34,197,94,0.08), transparent 50%);
+}
+.dark .hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34,197,94,0.15), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(34,197,94,0.1), transparent 50%);
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(26,93,46,0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.dark .dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+}
+
+.gradient-mesh {
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(26,93,46,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 80% 60%, rgba(34,197,94,0.05) 0%, transparent 50%);
+}
+
+.hero-home-pattern {
+  background-image:
+    linear-gradient(135deg, rgba(26,93,46,0.03) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(26,93,46,0.02) 20px, rgba(26,93,46,0.02) 40px);
+}
+.dark .hero-home-pattern {
+  background-image:
+    linear-gradient(135deg, rgba(34,197,94,0.05) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(34,197,94,0.03) 20px, rgba(34,197,94,0.03) 40px);
+}
+
+.contractor-accent { position: relative; }
+.contractor-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1a5d2e 0%, #22c55e 50%, #1a5d2e 100%);
+  border-radius: 2px;
+}
+
+.home-service-bg {
+  background:
+    linear-gradient(135deg, rgba(26,93,46,0.02) 0%, transparent 40%),
+    linear-gradient(225deg, rgba(34,197,94,0.03) 0%, transparent 40%);
+}
+
+.property-grid-pattern {
+  background-image:
+    linear-gradient(rgba(26,93,46,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,93,46,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dark .property-grid-pattern {
+  background-image:
+    linear-gradient(rgba(34,197,94,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,197,94,0.05) 1px, transparent 1px);
+}
+
+/* ── Typography extras ── */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #1a5d2e 0%, #22c55e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Status badge colors ── */
+.badge-pending {
+  background-color: var(--color-amber-100);
+  color: var(--color-amber-800);
+}
+.dark .badge-pending {
+  background-color: color-mix(in srgb, var(--color-amber-900) 30%, transparent);
+  color: var(--color-amber-500);
+}
+
+.badge-active {
+  background-color: var(--color-blue-100);
+  color: var(--color-blue-800);
+}
+.dark .badge-active {
+  background-color: color-mix(in srgb, var(--color-blue-900) 30%, transparent);
+  color: #60a5fa;
+}
+
+.badge-completed {
+  background-color: var(--color-emerald-100);
+  color: var(--color-emerald-700);
+}
+.dark .badge-completed {
+  background-color: color-mix(in srgb, var(--color-emerald-900) 30%, transparent);
+  color: var(--color-emerald-400);
+}
+
+.badge-cancelled {
+  background-color: var(--color-red-100);
+  color: var(--color-red-700);
+}
+.dark .badge-cancelled {
+  background-color: color-mix(in srgb, var(--color-red-900) 30%, transparent);
+  color: var(--color-red-500);
+}
+
+/* ── Dark section variant ── */
+.section-dark {
+  background: #0f1512;
+  color: #ffffff;
+}
+.section-dark .text-muted-foreground { color: rgba(255,255,255,0.6); }
+.section-dark .border-border         { border-color: rgba(255,255,255,0.1); }
+.section-dark .bg-card               { background: rgba(255,255,255,0.05); }
+
+/* ── Stats arc ── */
+.stats-arc {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+@media (min-width: 768px) {
+  .stats-arc { width: 260px; height: 260px; }
+}
