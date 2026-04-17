@@ -12,6 +12,7 @@ import {
   ClipboardList, Receipt, Wallet, Home, FolderOpen,
   Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare, Workflow, Zap, Search,
 } from 'lucide-react'
+import { useBranding } from '@/components/branding-provider'
 
 interface NavItem {
   label: string
@@ -149,6 +150,7 @@ interface DashboardNavProps {
 export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardNavProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { branding } = useBranding()
   const navGroups = NAV_GROUPS[role] ?? []
   const allNavItems = useMemo(() => navGroups.flatMap(g => g.items), [navGroups])
 
@@ -193,18 +195,25 @@ export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardN
         {/* Logo */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-sidebar-border flex-shrink-0">
           <Link href="/" className="flex items-center gap-2.5">
-            <svg width="28" height="28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="currentColor" strokeWidth="5.5" strokeLinecap="round" className="text-primary"/>
-              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="currentColor" strokeWidth="5.5" strokeLinecap="round" className="text-primary"/>
-              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-primary/80"/>
-              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-primary/80"/>
-              <line x1="60" y1="47" x2="60" y2="73" stroke="currentColor" strokeWidth="5" strokeLinecap="round" className="text-primary"/>
-              <line x1="47" y1="60" x2="73" y2="60" stroke="currentColor" strokeWidth="5" strokeLinecap="round" className="text-primary"/>
-            </svg>
-            <div className="leading-none">
-              <div className="text-sm font-bold text-sidebar-foreground tracking-tight">NEXUS</div>
-              <div className="text-[8px] font-semibold text-primary tracking-[0.12em] uppercase">OPERATIONS</div>
-            </div>
+            {branding.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={branding.logoUrl} alt={branding.brandName ?? 'Logo'} className="h-8 w-auto max-w-[140px] object-contain" />
+            ) : (
+              <>
+                <svg width="28" height="28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="currentColor" strokeWidth="5.5" strokeLinecap="round" className="text-primary"/>
+                  <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="currentColor" strokeWidth="5.5" strokeLinecap="round" className="text-primary"/>
+                  <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-primary/80"/>
+                  <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-primary/80"/>
+                  <line x1="60" y1="47" x2="60" y2="73" stroke="currentColor" strokeWidth="5" strokeLinecap="round" className="text-primary"/>
+                  <line x1="47" y1="60" x2="73" y2="60" stroke="currentColor" strokeWidth="5" strokeLinecap="round" className="text-primary"/>
+                </svg>
+                <div className="leading-none">
+                  <div className="text-sm font-bold text-sidebar-foreground tracking-tight">{branding.brandName ?? 'NEXUS'}</div>
+                  {!branding.brandName && <div className="text-[8px] font-semibold text-primary tracking-[0.12em] uppercase">OPERATIONS</div>}
+                </div>
+              </>
+            )}
           </Link>
           <button 
             onClick={() => setMobileOpen(false)}
