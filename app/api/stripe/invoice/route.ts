@@ -215,6 +215,7 @@ export async function POST(req: Request) {
           name: `Final Invoice — ${serviceRequest.category} Service`,
           description: `Full project cost for service request #${requestId.slice(0, 8)}`,
         },
+        recurring: undefined,
       },
       quantity: 1,
     },
