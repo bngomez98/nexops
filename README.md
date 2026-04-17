@@ -10,7 +10,7 @@ Nexus Operations is a Next.js web application serving Topeka, KS and the surroun
 |---|---|
 | Framework | Next.js 15 (App Router) |
 | Language | TypeScript 5 |
-| Styling | Tailwind CSS 4, shadcn/ui |
+| Styling | Pure CSS (design tokens, modular stylesheets, no Tailwind runtime) |
 | Forms | React Hook Form + Zod |
 | Charts | Recharts |
 | Package manager | pnpm |
