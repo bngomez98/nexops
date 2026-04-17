@@ -197,6 +197,33 @@ describe('projectRequestSchema', () => {
     expect(result.success).toBe(true)
   })
 
+  it('requires at least 2 photos', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'graffiti-removal',
+      title: 'Remove graffiti from retaining wall',
+      description: 'Need cleanup, surface prep, and matching paint with documented before/after photos.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+      photoUrls: ['https://example.com/photo-1.jpg'],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts between 2 and 9 photos', () => {
+    const result = projectRequestSchema.safeParse({
+      category: 'graffiti-removal',
+      title: 'Remove graffiti from retaining wall',
+      description: 'Need cleanup, surface prep, and matching paint with documented before/after photos.',
+      location: 'Topeka, KS',
+      preferredDate: '2099-05-01',
+      photoUrls: [
+        'https://example.com/photo-1.jpg',
+        'https://example.com/photo-2.jpg',
+      ],
+    })
+    expect(result.success).toBe(true)
+  })
+
   it('accepts automated community pipeline preferences', () => {
     const result = projectRequestSchema.safeParse({
       category: 'open-request',
