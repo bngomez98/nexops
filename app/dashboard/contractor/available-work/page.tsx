@@ -5,8 +5,9 @@ import { useRouter } from '@/lib/router'
 import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import {
+  Brush,
   MapPin, DollarSign, Calendar, Loader2,
-  ChevronRight, Zap, Search, SlidersHorizontal, X,
+  ChevronRight, Fence, Hammer, Home, Layers, Leaf, Search, SlidersHorizontal, Sparkles, TreeDeciduous, TreePine, Wind, Wrench, X, Zap,
 } from 'lucide-react'
 
 interface ServiceRequest {
@@ -43,15 +44,26 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString()
 }
 
-const CATEGORY_ICONS: Record<string, string> = {
-  plumbing: '🔧', electrical: '⚡', hvac: '❄️', roofing: '🏠',
-  'tree-removal': '🌳', 'tree-services': '🌲', 'concrete-work': '🧱',
-  fencing: '🪵', painting: '🖌️', landscaping: '🌿', flooring: '🏗️',
-  carpentry: '🪚', excavation: '🚜', 'general-repair': '🔨',
+const CATEGORY_ICONS: Record<string, typeof Wrench> = {
+  plumbing: Wrench,
+  electrical: Zap,
+  hvac: Wind,
+  roofing: Home,
+  'tree-removal': TreePine,
+  'tree-services': TreeDeciduous,
+  'concrete-work': Hammer,
+  fencing: Fence,
+  painting: Brush,
+  landscaping: Leaf,
+  flooring: Layers,
+  cleaning: Sparkles,
+  carpentry: Hammer,
+  excavation: Hammer,
+  'general-repair': Hammer,
 }
 
-function getCategoryIcon(cat: string): string {
-  return CATEGORY_ICONS[cat.toLowerCase().replace(/\s+/g, '-')] ?? '🔨'
+function getCategoryIcon(cat: string): typeof Wrench {
+  return CATEGORY_ICONS[cat.toLowerCase().replace(/\s+/g, '-')] ?? Hammer
 }
 
 export default function AvailableWorkPage() {
@@ -232,7 +244,7 @@ export default function AvailableWorkPage() {
             <div className="divide-y divide-border">
               {filtered.map(req => {
                 const urgent = isUrgent(req)
-                const icon = getCategoryIcon(req.category)
+                const Icon = getCategoryIcon(req.category)
                 return (
                   <Link
                     key={req.id}
@@ -241,8 +253,8 @@ export default function AvailableWorkPage() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
-                          {icon}
+                        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Icon className="w-5 h-5 text-muted-foreground" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
