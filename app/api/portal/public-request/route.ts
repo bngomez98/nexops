@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     const email = typeof body.email === 'string' ? body.email.trim() : ''
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
     const address = typeof body.address === 'string' ? body.address.trim() : ''
-    const category = typeof body.category === 'string' ? body.category.trim() : 'other'
+    const category = typeof body.category === 'string' ? body.category.trim() : ''
     const description = typeof body.description === 'string' ? body.description.trim() : ''
     const preferredDate = typeof body.preferredDate === 'string' ? body.preferredDate : null
     const budget = typeof body.budget === 'string' ? body.budget : null
@@ -76,7 +76,9 @@ export async function POST(request: Request) {
     if (!name) errors.push('name')
     if (!email || !isValidEmail(email)) errors.push('valid email')
     if (!address) errors.push('address')
+    if (!category) errors.push('service category')
     if (!description) errors.push('description')
+    if (mediaUrls.length < 2 || mediaUrls.length > 9) errors.push('2-9 photos')
 
     if (errors.length > 0) {
       return Response.json(
