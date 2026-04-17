@@ -10,7 +10,7 @@ Nexus Operations is a Next.js web application serving Topeka, KS and the surroun
 |---|---|
 | Framework | Next.js 15 (App Router) |
 | Language | TypeScript 5 |
-| Styling | Tailwind CSS 4, shadcn/ui |
+| Styling | Pure CSS (design tokens, modular stylesheets, no Tailwind runtime) |
 | Forms | React Hook Form + Zod |
 | Charts | Recharts |
 | Package manager | pnpm |
@@ -196,7 +196,7 @@ GitHub Actions now runs a full CI pipeline on every push and pull request:
 - Vitest test suite (`pnpm test`)
 - Production build verification (`pnpm build`)
 
-**Note:** These checks are currently non-blocking (using `continue-on-error: true`) to allow for remediation of existing codebase issues. They will be enforced in a future update.
+Each CI run now executes all four checks and then fails at the end if any check failed, so every run surfaces the full set of issues instead of stopping after the first failure.
 
 A dedicated CD workflow deploys to Vercel production after CI succeeds on `main` (or via manual dispatch), when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are configured in repository settings.
 

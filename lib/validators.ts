@@ -41,7 +41,9 @@ export const projectRequestSchema = z.object({
   location: z.string().min(3, 'Please enter a valid location'),
   budget: z.string().min(1, 'Please enter a budget').optional().or(z.literal('')),
   urgency: z.enum(['urgent', 'high', 'normal', 'low']).optional(),
-  photoUrls: z.array(z.string().min(1)).max(8, 'Maximum 8 photos allowed').optional(),
+  photoUrls: z.array(z.string().min(1))
+    .min(2, 'Please upload at least 2 photos')
+    .max(9, 'Maximum 9 photos allowed'),
 
   pipelineMode: z.enum(['standard', 'automated', 'community']).default('automated'),
   communityVisible: z.boolean().default(true),
