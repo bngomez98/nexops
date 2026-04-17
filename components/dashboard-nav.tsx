@@ -10,7 +10,7 @@ import {
   Settings, TrendingUp, ChevronRight, Briefcase,
   PlusCircle, ShieldCheck, User, Building2,
   ClipboardList, Receipt, Wallet, Home, FolderOpen,
-  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare, Workflow, Zap,
+  Users, ShieldAlert, BarChart3, HelpCircle, MessageSquare, Workflow, Zap, Search,
 } from 'lucide-react'
 
 interface NavItem {
@@ -35,6 +35,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
         { label: 'Requests',     href: '/dashboard/homeowner/requests',    icon: ClipboardList },
         { label: 'Pipeline',     href: '/dashboard/homeowner/pipeline',    icon: Workflow,        exact: true },
         { label: 'Messages',     href: '/dashboard/messages',              icon: MessageSquare },
+        { label: 'Search',       href: '/search',                          icon: Search,          exact: true },
       ],
     },
     {
@@ -62,6 +63,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
         { label: 'Available Work',  href: '/dashboard/contractor/available-work', icon: Zap,             exact: true },
         { label: 'Service Queue',   href: '/dashboard/contractor/jobs',           icon: Briefcase },
         { label: 'Messages',        href: '/dashboard/messages',                  icon: MessageSquare },
+        { label: 'Search',          href: '/search',                              icon: Search,          exact: true },
       ],
     },
     {
@@ -90,6 +92,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
         { label: 'Properties',   href: '/dashboard/property-manager/properties',   icon: Building2 },
         { label: 'Requests',     href: '/dashboard/property-manager/requests',     icon: ClipboardList },
         { label: 'Messages',     href: '/dashboard/messages',                      icon: MessageSquare },
+        { label: 'Search',       href: '/search',                                  icon: Search,          exact: true },
       ],
     },
     {
@@ -115,6 +118,7 @@ const NAV_GROUPS: Record<string, NavGroup[]> = {
         { label: 'Contractors',  href: '/dashboard/admin/contractors', icon: ShieldAlert },
         { label: 'Jobs',         href: '/dashboard/admin/jobs',        icon: Briefcase },
         { label: 'Matching',     href: '/dashboard/admin/matches',     icon: BarChart3 },
+        { label: 'Search',       href: '/search',                      icon: Search,          exact: true },
       ],
     },
     {
