@@ -130,6 +130,50 @@ Session tokens are validated server-side on every protected request. Unauthentic
 
 All tiers include unlimited project claims, full project documentation before claiming, and a performance dashboard. No annual contracts. Cancel anytime.
 
+## Personalized Branding
+
+Property managers, contractors, and homeowners can customize how their account looks in the dashboard sidebar and portals.
+
+### What can be customized
+
+| Field | Description | Constraints |
+|---|---|---|
+| `brandName` | Replaces "NEXUS" in the sidebar logo area | Max 100 characters |
+| `primaryColor` | Brand color for buttons, highlights, and links | 6-digit hex (e.g. `#1a5d2e`) |
+| `accentColor` | Subtle background tint for accent surfaces | 6-digit hex |
+| `logoUrl` | Custom logo image (replaces the orbital mark) | JPEG, PNG, WebP, or SVG · max 2 MB |
+
+### Where branding applies
+
+Branding is scoped to **authenticated dashboard sessions only**. Public pages (marketing site, landing pages) always use the Nexus Operations design system. Within the dashboard:
+
+- Sidebar logo area (brand mark + name)
+- Primary color CSS custom property (`--primary`) — cascades to buttons, form focus rings, active nav indicators
+- Accent color CSS custom property (`--accent`) — cascades to tinted surfaces and icon badges
+
+### Workflow
+
+1. Navigate to **Dashboard → Settings → Personalized Branding**
+2. Upload a logo (optional), enter a brand name, and choose colors using the color pickers
+3. A live preview panel shows how the sidebar will look before saving
+4. An accessibility badge displays the WCAG contrast ratio of the primary color against white; aim for ≥ 4.5:1 for AA compliance
+5. Click **Save Branding** — changes take effect immediately in the current session
+6. Click **Reset to defaults** at any time to restore the Nexus design system
+
+### Technical details
+
+- Branding config is stored as a JSONB column (`branding`) in the `profiles` table
+- The `BrandingProvider` component (`components/branding-provider.tsx`) fetches the config on mount and injects CSS custom-property overrides via inline `style` on a wrapper `<div>`; this ensures the Nexus defaults in `globals.css` remain active as a fallback
+- Logo files are uploaded to the `profile-photos` Supabase storage bucket and served as public URLs
+- Apply the migration for existing installations: `scripts/019_branding.sql`
+
+### API
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/settings/branding` | Return the current user's branding config |
+| PUT | `/api/settings/branding` | Update the current user's branding config |
+
 ## Security
 
 `middleware.ts` applies the following HTTP security headers on every response:

@@ -10,6 +10,7 @@ import {
   invoiceCreateSchema,
   messageSchema,
   messageWithJobSchema,
+  brandingSchema,
 } from '@/lib/validators'
 
 // ─── signupSchema ────────────────────────────────────────────────────────────
@@ -483,5 +484,68 @@ describe('messageWithJobSchema', () => {
     }
     const result = messageWithJobSchema.safeParse(data)
     expect(result.success).toBe(false)
+  })
+})
+
+// ─── brandingSchema ──────────────────────────────────────────────────────────
+
+describe('brandingSchema', () => {
+  it('accepts empty object (all fields optional)', () => {
+    expect(brandingSchema.safeParse({}).success).toBe(true)
+  })
+
+  it('accepts full valid branding config', () => {
+    const data = {
+      brandName: 'Acme Property Group',
+      primaryColor: '#1a5d2e',
+      accentColor: '#e8f5ec',
+      logoUrl: 'https://example.com/logo.png',
+    }
+    expect(brandingSchema.safeParse(data).success).toBe(true)
+  })
+
+  it('accepts empty string values (to clear individual fields)', () => {
+    const data = {
+      brandName: '',
+      primaryColor: '',
+      accentColor: '',
+      logoUrl: '',
+    }
+    expect(brandingSchema.safeParse(data).success).toBe(true)
+  })
+
+  it('rejects invalid hex color for primaryColor', () => {
+    const result = brandingSchema.safeParse({ primaryColor: 'red' })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects 3-digit hex shorthand for primaryColor', () => {
+    const result = brandingSchema.safeParse({ primaryColor: '#abc' })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects invalid hex color for accentColor', () => {
+    const result = brandingSchema.safeParse({ accentColor: '#GGGGGG' })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects malformed URL for logoUrl', () => {
+    const result = brandingSchema.safeParse({ logoUrl: 'not-a-url' })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects brandName exceeding 100 characters', () => {
+    const result = brandingSchema.safeParse({ brandName: 'A'.repeat(101) })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts brandName at exactly 100 characters', () => {
+    const result = brandingSchema.safeParse({ brandName: 'A'.repeat(100) })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts uppercase hex colors', () => {
+    const result = brandingSchema.safeParse({ primaryColor: '#1A5D2E' })
+    expect(result.success).toBe(true)
   })
 })

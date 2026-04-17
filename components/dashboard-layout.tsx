@@ -8,6 +8,7 @@ import {
   Settings, LogOut, Menu, X, Bell, ChevronRight,
   Search, ChevronDown, Shield, User as UserIcon
 } from 'lucide-react'
+import { useBranding } from '@/components/branding-provider'
 
 interface NavItem {
   label: string
@@ -75,6 +76,7 @@ export function DashboardLayout({
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const [navSearchTerm, setNavSearchTerm] = useState('')
+  const { branding } = useBranding()
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -143,18 +145,25 @@ export function DashboardLayout({
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border shrink-0">
           <Link href="/" className="flex items-center gap-3 overflow-hidden min-w-0">
-            <svg width="28" height="28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
-              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#2d6a42" strokeWidth="5.5" strokeLinecap="round"/>
-              <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#2d6a42" strokeWidth="5.5" strokeLinecap="round"/>
-              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#2d6a42" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-              <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#2d6a42" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
-              <line x1="60" y1="47" x2="60" y2="73" stroke="#2d6a42" strokeWidth="5" strokeLinecap="round"/>
-              <line x1="47" y1="60" x2="73" y2="60" stroke="#2d6a42" strokeWidth="5" strokeLinecap="round"/>
-            </svg>
-            <div className="overflow-hidden" style={{ opacity: isDesktopCollapsed ? 0 : 1, transition: 'opacity 0.2s ease', whiteSpace: 'nowrap' }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>NEXUS</div>
-              <div style={{ fontSize: 7.5, fontWeight: 700, color: '#2d6a42', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>
-            </div>
+            {branding.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={branding.logoUrl} alt={branding.brandName ?? 'Logo'} className="h-7 w-auto max-w-[140px] object-contain shrink-0" />
+            ) : (
+              <>
+                <svg width="28" height="28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
+                  <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke="#2d6a42" strokeWidth="5.5" strokeLinecap="round"/>
+                  <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke="#2d6a42" strokeWidth="5.5" strokeLinecap="round"/>
+                  <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(-42 60 60)" stroke="#2d6a42" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+                  <ellipse cx="60" cy="60" rx="28" ry="12" transform="rotate(42 60 60)" stroke="#2d6a42" strokeWidth="4" strokeLinecap="round" opacity="0.85"/>
+                  <line x1="60" y1="47" x2="60" y2="73" stroke="#2d6a42" strokeWidth="5" strokeLinecap="round"/>
+                  <line x1="47" y1="60" x2="73" y2="60" stroke="#2d6a42" strokeWidth="5" strokeLinecap="round"/>
+                </svg>
+                <div className="overflow-hidden" style={{ opacity: isDesktopCollapsed ? 0 : 1, transition: 'opacity 0.2s ease', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>{branding.brandName ?? 'NEXUS'}</div>
+                  {!branding.brandName && <div style={{ fontSize: 7.5, fontWeight: 700, color: '#2d6a42', letterSpacing: '0.16em', textTransform: 'uppercase', marginTop: 1 }}>OPERATIONS</div>}
+                </div>
+              </>
+            )}
           </Link>
           <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden p-1.5 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors">
             <X className="w-4 h-4" />
