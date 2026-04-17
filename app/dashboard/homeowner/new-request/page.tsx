@@ -93,7 +93,7 @@ export default function NewProjectRequest() {
   const [analysisError, setAnalysisError] = useState('')
   const [analyzingText, setAnalyzingText] = useState(false)
   const [formData, setFormData] = useState({
-    category: 'open-request', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
+    category: '', customCategory: '', title: '', description: '', location: '', budget: '', preferredDate: '',
     pipelineMode: automationEnabled ? 'automated' : 'standard', communityVisible: automationEnabled, accessRequirements: '',
   })
 
@@ -170,18 +170,15 @@ export default function NewProjectRequest() {
   function validateStep(s: number): boolean {
     setError('')
     setFieldErrors({})
-    if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
-      setFieldErrors({ customCategory: 'Please describe the service category.' })
-      setError('Please describe the service category.')
+    const resolvedCategory = (formData.customCategory.trim() || formData.category).trim()
+    if (s === 0 && !resolvedCategory) {
+      setFieldErrors({ customCategory: 'Please enter a service category.' })
+      setError('Please enter a service category.')
       return false
     }
-    if (s === 0 && !formData.category) {
-      setError('Please select a service category.')
-      return false
-    }
-    if (s === 0 && formData.category === 'other' && !formData.customCategory.trim()) {
-      setFieldErrors({ customCategory: 'Please describe the service category.' })
-      setError('Please describe the service category.')
+    if (s === 0 && resolvedCategory.length < 2) {
+      setFieldErrors({ customCategory: 'Service category must be at least 2 characters.' })
+      setError('Please enter a service category.')
       return false
     }
 
@@ -189,6 +186,7 @@ export default function NewProjectRequest() {
       const errs: Record<string, string> = {}
       if (!formData.title.trim()) errs.title = 'Project title is required.'
       if (!formData.description.trim()) errs.description = 'Description is required.'
+      if (uploadedImages.length < 2 || uploadedImages.length > 9) errs.photoUrls = 'Please upload between 2 and 9 photos.'
       if (Object.keys(errs).length) { setFieldErrors(errs); setError('Please fix the errors below.'); return false }
     }
     return true
@@ -203,6 +201,9 @@ export default function NewProjectRequest() {
     const stepErrors: Record<string, string> = {}
     if (!formData.location.trim()) stepErrors.location = 'Location is required.'
     if (!formData.preferredDate) stepErrors.preferredDate = 'Preferred service date is required.'
+    if (uploadedImages.length < 2 || uploadedImages.length > 9) {
+      stepErrors.photoUrls = 'Please upload between 2 and 9 photos.'
+    }
     if (Object.keys(stepErrors).length > 0) {
       setFieldErrors(stepErrors)
       setError('Please complete the required scheduling details.')
@@ -211,11 +212,28 @@ export default function NewProjectRequest() {
     setError('')
     setFieldErrors({})
     try {
-      const validated = projectRequestSchema.parse(formData)
       setSubmitting(true)
+      const resolvedCategory = formData.customCategory.trim() || formData.category || 'open-request'
+      const uploadedPhotoUrls: string[] = []
+      for (const image of uploadedImages) {
+        const uploadBody = new FormData()
+        uploadBody.append('file', image)
+        uploadBody.append('bucket', 'job-photos')
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: uploadBody })
+        const uploadData = await uploadRes.json()
+        if (!uploadRes.ok || !uploadData?.url) {
+          throw new Error(uploadData?.error || 'Failed to upload one or more photos')
+        }
+        uploadedPhotoUrls.push(String(uploadData.url))
+      }
+      const validated = projectRequestSchema.parse({
+        ...formData,
+        category: resolvedCategory,
+        customCategory: '',
+        photoUrls: uploadedPhotoUrls,
+      })
       const payload = new FormData()
       payload.append('category', validated.category)
-      if (validated.customCategory) payload.append('customCategory', validated.customCategory)
       payload.append('title', validated.title)
       payload.append('description', validated.description)
       payload.append('location', validated.location)
@@ -224,7 +242,7 @@ export default function NewProjectRequest() {
       payload.append('communityVisible', String(validated.communityVisible))
       if (validated.accessRequirements) payload.append('accessRequirements', validated.accessRequirements)
       if (validated.budget) payload.append('budget', String(parseFloat(validated.budget)))
-      uploadedImages.forEach(img => payload.append('images', img))
+      validated.photoUrls.forEach((url) => payload.append('photoUrls', url))
 
       const res  = await fetch('/api/projects/create', { method: 'POST', body: payload })
       const data = await res.json()
@@ -322,7 +340,7 @@ export default function NewProjectRequest() {
                     Select Service Category
                   </h2>
                   <p className="text-[11px] text-muted-foreground mb-5">
-                    Choose a quick category below, or enter your own category to support specialty and community requests.
+                     Enter the service category in your own words, or tap a quick category below.
                   </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {SERVICE_CATEGORIES.map(cat => (
@@ -351,20 +369,20 @@ export default function NewProjectRequest() {
                 </div>
                 <div className="mt-4">
                   <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">
-                    Custom Category <span className="text-muted-foreground font-normal">(optional)</span>
+                     Service Category <span className="text-destructive">*</span>
                   </label>
                   <input
                     name="customCategory"
                     value={formData.customCategory}
                     onChange={handleChange}
-                    placeholder="e.g., pool maintenance, accessibility modification, signage"
+                     placeholder="e.g., pool maintenance, accessibility modification, signage, storefront cleanup"
                     className={`w-full px-3 py-2.5 rounded-xl border text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition ${
                       fieldErrors.customCategory ? 'border-destructive' : 'border-input'
                     }`}
                   />
                   {fieldErrors.customCategory && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.customCategory}</p>}
                   <p className="text-[11px] text-muted-foreground mt-1.5">
-                    Custom requests still enter the shared service pipeline so specialists can review, document, and claim them.
+                     We support any service category. Requests are routed through the shared contractor pipeline.
                   </p>
                 </div>
               </div>
@@ -372,7 +390,7 @@ export default function NewProjectRequest() {
               <button
                 type="button"
                 onClick={nextStep}
-                disabled={!formData.category || formData.category.length < 2}
+                 disabled={!(formData.customCategory.trim() || formData.category)}
                 className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-[13.5px] py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40"
               >
                 Continue to Project Details
@@ -388,7 +406,7 @@ export default function NewProjectRequest() {
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl">{selectedCat?.icon}</span>
                   <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
-                    {selectedCat?.label} — Project Details
+                     {(formData.customCategory.trim() || selectedCat?.label || 'Open Request')} — Project Details
                   </h2>
                 </div>
 
@@ -508,13 +526,13 @@ export default function NewProjectRequest() {
 
               <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
                 <h2 className="text-[13px] font-semibold text-foreground uppercase tracking-wide">
-                  Project Photos{' '}
-                  <span className="text-muted-foreground font-normal normal-case">(optional but recommended)</span>
-                </h2>
-                <ImageUpload onImagesChange={setUploadedImages} maxFiles={5} maxSizeInMB={10} />
-                <p className="text-[11px] text-muted-foreground">
-                  Up to 5 photos help contractors understand scope before arriving.
-                </p>
+                   Project Photos <span className="text-destructive">*</span>
+                 </h2>
+                 <ImageUpload onImagesChange={setUploadedImages} maxFiles={9} maxSizeInMB={10} />
+                 <p className="text-[11px] text-muted-foreground">
+                   Upload 2–9 photos so contractors can review scope quickly before claiming.
+                 </p>
+                {fieldErrors.photoUrls && <p className="text-[11.5px] text-destructive mt-1">{fieldErrors.photoUrls}</p>}
               </div>
 
               <div className="flex gap-3">

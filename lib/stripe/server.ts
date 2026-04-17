@@ -8,8 +8,9 @@ export function getStripeClient(): Stripe {
     if (!secretKey) {
       throw new Error('Missing STRIPE_SECRET_KEY')
     }
+    const apiVersion = (process.env.STRIPE_API_VERSION as Stripe.LatestApiVersion | undefined) ?? '2024-12-18'
     _client = new Stripe(secretKey, {
-      apiVersion: '2026-03-25.dahlia',
+      apiVersion,
     })
   }
   return _client

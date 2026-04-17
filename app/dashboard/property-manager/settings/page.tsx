@@ -1,13 +1,53 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound } from 'lucide-react'
+import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound, Palette, Upload, RotateCcw } from 'lucide-react'
+import { useBranding } from '@/components/branding-provider'
+
+// ── Accessibility contrast helper ──────────────────────────────────────────
+
+function hexToRgb(hex: string): [number, number, number] | null {
+  const m = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  if (!m) return null
+  return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)]
+}
+
+function relativeLuminance([r, g, b]: [number, number, number]): number {
+  return [r, g, b].reduce((acc, c, i) => {
+    const s = c / 255
+    const lin = s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
+    return acc + lin * [0.2126, 0.7152, 0.0722][i]
+  }, 0)
+}
+
+function contrastRatio(hex1: string, hex2: string): number {
+  const c1 = hexToRgb(hex1)
+  const c2 = hexToRgb(hex2)
+  if (!c1 || !c2) return 0
+  const l1 = relativeLuminance(c1)
+  const l2 = relativeLuminance(c2)
+  const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1]
+  return (hi + 0.05) / (lo + 0.05)
+}
+
+function ColorContrastBadge({ color, against = '#ffffff' }: { color: string; against?: string }) {
+  if (!color || !/^#[0-9a-fA-F]{6}$/.test(color)) return null
+  const ratio = contrastRatio(color, against)
+  const passes = ratio >= 4.5
+  return (
+    <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${passes ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+      {passes ? <CheckCircle2 className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+      {ratio.toFixed(1)}:1 {passes ? 'WCAG AA' : 'low contrast'}
+    </span>
+  )
+}
 
 function PropertyManagerSettingsInner() {
   const router = useRouter()
+  const { setBranding } = useBranding()
   const [user, setUser]   = useState<{ id: string; name: string; role: string; email?: string } | null>(null)
   const [loading, setLoading]   = useState(true)
   const [saving, setSaving]     = useState(false)
@@ -19,6 +59,14 @@ function PropertyManagerSettingsInner() {
   const [notifications, setNotifications] = useState({
     requestNotifications: true, messageNotifications: true, projectUpdates: true, newsletter: false,
   })
+
+  // Branding state
+  const [brandingForm, setBrandingForm] = useState({ brandName: '', primaryColor: '', accentColor: '', logoUrl: '' })
+  const [brandingSaving, setBrandingSaving] = useState(false)
+  const [brandingError, setBrandingError]   = useState('')
+  const [brandingSuccess, setBrandingSuccess] = useState('')
+  const [logoUploading, setLogoUploading]   = useState(false)
+  const logoInputRef = useRef<HTMLInputElement>(null)
 
   // 2FA state
   const [mfaFactors, setMfaFactors]   = useState<Record<string, unknown>[]>([])
@@ -37,6 +85,20 @@ function PropertyManagerSettingsInner() {
         if (data.user.role !== 'property-manager') { router.push('/auth/login'); return }
         setUser(data.user)
         setFormData({ email: data.user.email, phone: data.user.phone ?? '' })
+
+        // Load branding settings
+        const brandingRes = await fetch('/api/settings/branding')
+        if (brandingRes.ok) {
+          const brandingData = await brandingRes.json()
+          if (brandingData?.branding) {
+            setBrandingForm({
+              brandName: brandingData.branding.brandName ?? '',
+              primaryColor: brandingData.branding.primaryColor ?? '',
+              accentColor: brandingData.branding.accentColor ?? '',
+              logoUrl: brandingData.branding.logoUrl ?? '',
+            })
+          }
+        }
 
         // Load MFA factors
         const supabase = createClient()
@@ -103,6 +165,88 @@ function PropertyManagerSettingsInner() {
     } finally {
       setDeleting(false)
     }
+  }
+
+  // ── Branding handlers ────────────────────────────────────────────────────
+
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'].includes(file.type)) {
+      setBrandingError('Logo must be a JPEG, PNG, WebP, or SVG image.')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setBrandingError('Logo file must be 2 MB or smaller.')
+      return
+    }
+    setLogoUploading(true)
+    setBrandingError('')
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('bucket', 'profile-photos')
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        const data = await res.json()
+        setBrandingError(data.error ?? 'Upload failed.')
+        return
+      }
+      const { url } = await res.json()
+      setBrandingForm(prev => ({ ...prev, logoUrl: url }))
+    } catch (err) {
+      console.error(err)
+      setBrandingError('Upload failed. Please try again.')
+    } finally {
+      setLogoUploading(false)
+      if (logoInputRef.current) logoInputRef.current.value = ''
+    }
+  }
+
+  async function handleBrandingSave(e: React.FormEvent) {
+    e.preventDefault()
+    setBrandingError('')
+    setBrandingSuccess('')
+    setBrandingSaving(true)
+    try {
+      const res = await fetch('/api/settings/branding', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(brandingForm),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        if (data.details) {
+          const msgs = Object.values(data.details).flat().join(', ')
+          setBrandingError(msgs || 'Validation failed.')
+        } else {
+          setBrandingError(data.error ?? 'Failed to save. Please try again.')
+        }
+        return
+      }
+      const data = await res.json()
+      setBrandingSuccess('Branding saved!')
+      setTimeout(() => setBrandingSuccess(''), 4000)
+      // Push updated branding into context so sidebar updates immediately
+      setBranding({
+        brandName: data.branding?.brandName ?? '',
+        primaryColor: data.branding?.primaryColor ?? '',
+        accentColor: data.branding?.accentColor ?? '',
+        logoUrl: data.branding?.logoUrl ?? '',
+      })
+    } catch (err) {
+      console.error(err)
+      setBrandingError('Failed to save. Please try again.')
+    } finally {
+      setBrandingSaving(false)
+    }
+  }
+
+  function handleBrandingReset() {
+    setBrandingForm({ brandName: '', primaryColor: '', accentColor: '', logoUrl: '' })
+    setBrandingError('')
+    setBrandingSuccess('')
+    setBranding({})
   }
 
   async function handleEnroll2FA() {
@@ -306,13 +450,209 @@ function PropertyManagerSettingsInner() {
             ))}
           </div>
 
+          {/* Branding */}
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
+            <div className="flex items-center gap-2 px-6 py-4 border-b border-border bg-primary/5">
+              <Palette className="w-4 h-4 text-primary" />
+              <h2 className="font-semibold text-foreground text-[14px]">Personalized Branding</h2>
+              <span className="ml-auto text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full">Beta</span>
+            </div>
+
+            <form onSubmit={handleBrandingSave} className="p-6 space-y-5">
+              <p className="text-[12.5px] text-muted-foreground">
+                Customize how your property management brand appears in your dashboard sidebar and portals. Changes apply to your account only.
+              </p>
+
+              {brandingError && (
+                <div className="flex items-start gap-2.5 p-3 rounded-xl border border-destructive/30 bg-destructive/8 text-destructive text-[12.5px]">
+                  <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                  {brandingError}
+                </div>
+              )}
+              {brandingSuccess && (
+                <div className="flex items-start gap-2.5 p-3 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-700 text-[12.5px]">
+                  <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                  {brandingSuccess}
+                </div>
+              )}
+
+              {/* Logo upload */}
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-2">
+                  Logo <span className="font-normal text-muted-foreground">(JPEG, PNG, WebP, SVG · max 2 MB)</span>
+                </label>
+                <div className="flex items-center gap-4">
+                  {brandingForm.logoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={brandingForm.logoUrl}
+                      alt="Custom logo preview"
+                      className="h-12 w-auto max-w-[160px] rounded-lg border border-border object-contain bg-muted/30 p-1"
+                    />
+                  ) : (
+                    <div className="h-12 w-20 rounded-lg border-2 border-dashed border-border bg-muted/30 flex items-center justify-center text-muted-foreground">
+                      <Palette className="w-5 h-5 opacity-40" />
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => logoInputRef.current?.click()}
+                      disabled={logoUploading}
+                      className="inline-flex items-center gap-2 text-[12.5px] font-semibold text-foreground border border-border px-3 py-2 rounded-lg hover:bg-secondary transition-colors disabled:opacity-60"
+                    >
+                      {logoUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                      {logoUploading ? 'Uploading…' : 'Upload logo'}
+                    </button>
+                    {brandingForm.logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setBrandingForm(prev => ({ ...prev, logoUrl: '' }))}
+                        className="text-[11.5px] text-destructive hover:underline text-left"
+                      >
+                        Remove logo
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    className="hidden"
+                    onChange={handleLogoUpload}
+                  />
+                </div>
+              </div>
+
+              {/* Brand name */}
+              <div>
+                <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Brand Name</label>
+                <input
+                  type="text"
+                  maxLength={100}
+                  value={brandingForm.brandName}
+                  onChange={e => setBrandingForm(prev => ({ ...prev, brandName: e.target.value }))}
+                  placeholder="e.g. Acme Property Group"
+                  className="w-full px-3 py-2.5 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                />
+                <p className="text-[11.5px] text-muted-foreground mt-1">Replaces &quot;NEXUS&quot; in the sidebar logo area.</p>
+              </div>
+
+              {/* Colors */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Primary Color</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={brandingForm.primaryColor || '#1a5d2e'}
+                      onChange={e => setBrandingForm(prev => ({ ...prev, primaryColor: e.target.value }))}
+                      className="h-9 w-10 rounded-md border border-input cursor-pointer p-0.5 bg-background"
+                    />
+                    <input
+                      type="text"
+                      maxLength={7}
+                      value={brandingForm.primaryColor}
+                      onChange={e => setBrandingForm(prev => ({ ...prev, primaryColor: e.target.value }))}
+                      placeholder="#1a5d2e"
+                      pattern="^#[0-9a-fA-F]{6}$"
+                      className="flex-1 px-3 py-2 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition font-mono"
+                    />
+                  </div>
+                  <div className="mt-1.5">
+                    <ColorContrastBadge color={brandingForm.primaryColor} against="#ffffff" />
+                  </div>
+                  <p className="text-[11.5px] text-muted-foreground mt-1">Used for buttons, highlights, and links.</p>
+                </div>
+
+                <div>
+                  <label className="block text-[12.5px] font-semibold text-foreground mb-1.5">Accent Color</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={brandingForm.accentColor || '#e8f5ec'}
+                      onChange={e => setBrandingForm(prev => ({ ...prev, accentColor: e.target.value }))}
+                      className="h-9 w-10 rounded-md border border-input cursor-pointer p-0.5 bg-background"
+                    />
+                    <input
+                      type="text"
+                      maxLength={7}
+                      value={brandingForm.accentColor}
+                      onChange={e => setBrandingForm(prev => ({ ...prev, accentColor: e.target.value }))}
+                      placeholder="#e8f5ec"
+                      pattern="^#[0-9a-fA-F]{6}$"
+                      className="flex-1 px-3 py-2 rounded-lg border border-input text-[13px] bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition font-mono"
+                    />
+                  </div>
+                  <p className="text-[11.5px] text-muted-foreground mt-1">Subtle background tint for accent surfaces.</p>
+                </div>
+              </div>
+
+              {/* Live preview */}
+              {(brandingForm.primaryColor || brandingForm.brandName || brandingForm.logoUrl) && (
+                <div className="rounded-xl border border-border overflow-hidden">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground px-4 py-2 border-b border-border bg-muted/30">
+                    Live Preview
+                  </p>
+                  <div className="flex items-center gap-3 px-4 py-3" style={{ backgroundColor: '#0f1512' }}>
+                    {brandingForm.logoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={brandingForm.logoUrl} alt="Preview" className="h-7 w-auto max-w-[120px] object-contain" />
+                    ) : (
+                      <svg width="24" height="24" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-42 60 60)" stroke={brandingForm.primaryColor || '#22c55e'} strokeWidth="5.5" strokeLinecap="round"/>
+                        <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(42 60 60)" stroke={brandingForm.primaryColor || '#22c55e'} strokeWidth="5.5" strokeLinecap="round"/>
+                        <line x1="60" y1="47" x2="60" y2="73" stroke={brandingForm.primaryColor || '#22c55e'} strokeWidth="5" strokeLinecap="round"/>
+                        <line x1="47" y1="60" x2="73" y2="60" stroke={brandingForm.primaryColor || '#22c55e'} strokeWidth="5" strokeLinecap="round"/>
+                      </svg>
+                    )}
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>
+                        {brandingForm.brandName || 'NEXUS'}
+                      </div>
+                      {!brandingForm.brandName && (
+                        <div style={{ fontSize: 7.5, fontWeight: 700, color: brandingForm.primaryColor || '#22c55e', letterSpacing: '0.16em', textTransform: 'uppercase' }}>
+                          OPERATIONS
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      className="ml-6 px-3 py-1.5 rounded-md text-[12px] font-semibold text-white"
+                      style={{ backgroundColor: brandingForm.primaryColor || '#1a5d2e' }}
+                    >
+                      Sample button
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="submit"
+                  disabled={brandingSaving}
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-[13px] px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60"
+                >
+                  {brandingSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                  {brandingSaving ? 'Saving…' : 'Save Branding'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBrandingReset}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border text-[13px] font-semibold text-foreground hover:bg-secondary transition-colors"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset to defaults
+                </button>
+              </div>
+            </form>
+          </div>
+
           {/* Two-Factor Authentication */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <div className="flex items-center gap-2 mb-1">
               <Lock className="w-4 h-4 text-primary" />
               <h2 className="font-semibold text-foreground text-[14px]">Two-Factor Authentication (2FA)</h2>
             </div>
-
             {mfaError && (
               <div className="flex items-start gap-2 p-3 rounded-lg border border-destructive/30 bg-destructive/8 text-destructive text-[12.5px]">
                 <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />

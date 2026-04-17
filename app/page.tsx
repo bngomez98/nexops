@@ -11,6 +11,7 @@ import {
   Hammer,
   LineChart,
   MessageSquare,
+  Search,
   ShieldCheck,
   Star,
   Users,
@@ -33,10 +34,10 @@ export const metadata: Metadata = {
 }
 
 const stats = [
-  { value: '20+', label: 'Verified Contractors' },
-  { value: '< 4h', label: 'Emergency Response' },
-  { value: '100%', label: 'Photo Documented' },
-  { value: '15+', label: 'Trade Categories' },
+  { value: '< 2hr', label: 'Emergency Response' },
+  { value: '150+', label: 'Vetted Contractors' },
+  { value: '500+', label: 'Jobs Completed' },
+  { value: '4.9★', label: 'Average Rating' },
 ]
 
 const serviceCategories = [
@@ -566,6 +567,35 @@ export default function HomePage() {
               Compare all plans
               <ArrowRight className="h-4 w-4" />
             </Link>
+          </div>
+        </Section>
+
+        {/* ── Search Bar ─────────────────────────────────────── */}
+        <Section id="find">
+          <div className="max-w-3xl mx-auto text-center">
+            <SectionHeading
+              eyebrow="Find what you need"
+              title="Search requests, properties, and contractors."
+              description="Already on the platform? Log in and search for open service requests, available properties, or licensed contractors in your area."
+              align="center"
+            />
+            <div className="mt-8 flex gap-3 max-w-xl mx-auto">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Link
+                  href="/auth/login"
+                  className="flex items-center gap-2 pl-11 pr-4 h-12 w-full rounded-xl border border-border bg-background text-sm text-muted-foreground hover:border-primary/40 hover:bg-muted/30 transition"
+                >
+                  Search the platform…
+                </Link>
+              </div>
+              <Link
+                href="/auth/sign-up"
+                className="h-12 px-6 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition flex items-center gap-2 whitespace-nowrap"
+              >
+                Get started free <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </Section>
 

@@ -41,7 +41,9 @@ export const projectRequestSchema = z.object({
   location: z.string().min(3, 'Please enter a valid location'),
   budget: z.string().min(1, 'Please enter a budget').optional().or(z.literal('')),
   urgency: z.enum(['urgent', 'high', 'normal', 'low']).optional(),
-  photoUrls: z.array(z.string().min(1)).max(8, 'Maximum 8 photos allowed').optional(),
+  photoUrls: z.array(z.string().min(1))
+    .min(2, 'Please upload at least 2 photos')
+    .max(9, 'Maximum 9 photos allowed'),
 
   pipelineMode: z.enum(['standard', 'automated', 'community']).default('automated'),
   communityVisible: z.boolean().default(true),
@@ -144,3 +146,18 @@ export type InvoiceCreateData = z.infer<typeof invoiceCreateSchema>
 export type MessageData = z.infer<typeof messageSchema>
 export type MessageWithJobData = z.infer<typeof messageWithJobSchema>
 export type HomeownerSettingsData = z.infer<typeof homeownerSettingsSchema>
+
+// ── Branding ─────────────────────────────────────────────────────────────────
+
+const hexColorSchema = z
+  .string()
+  .regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid 6-digit hex color (e.g. #1a5d2e)')
+
+export const brandingSchema = z.object({
+  brandName: z.string().trim().max(100, 'Brand name must be 100 characters or less').optional().or(z.literal('')),
+  primaryColor: hexColorSchema.optional().or(z.literal('')),
+  accentColor: hexColorSchema.optional().or(z.literal('')),
+  logoUrl: z.string().url('Must be a valid URL').max(2048).optional().or(z.literal('')),
+})
+
+export type BrandingData = z.infer<typeof brandingSchema>
