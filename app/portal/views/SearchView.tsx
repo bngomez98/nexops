@@ -22,6 +22,23 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
   const { jobs } = usePortal()
   const [q, setQ] = useState('')
 
+  const searchPlaceholder = useMemo(() => {
+    const dynamicHints = Array.from(
+      new Set(
+        jobs
+          .flatMap((job) => [job.title, formatCategoryLabel(job.category), `#${job.shortId}`])
+          .map((hint) => hint.trim())
+          .filter(Boolean),
+      ),
+    ).slice(0, 3)
+
+    if (!dynamicHints.length) {
+      return 'Search jobs, categories, docs, or job number…'
+    }
+
+    return `Try “${dynamicHints.join('”, “')}”…`
+  }, [jobs])
+
   const results = useMemo(() => {
     const query = q.trim().toLowerCase()
     const categoryList = Array.from(new Set(jobs.map((job) => job.category)))
@@ -59,7 +76,7 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
         <input
           autoFocus
           className="glass-input !pl-12 !py-4 !text-base !rounded-2xl"
-          placeholder="Try “leak”, “Diego”, “HVAC”, or a job number…"
+          placeholder={searchPlaceholder}
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
