@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from '@/components/link'
 import {
   ArrowRight,
@@ -24,6 +25,7 @@ import {
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Section, SectionHeading } from '@/components/section'
+import { ConstructionWorkerIllustration } from '@/components/construction-worker-illustration'
 import { CONTACT_INFO } from '@/lib/contact-info'
 import { getPlansByRole, formatPrice } from '@/lib/plans'
 
@@ -241,33 +243,52 @@ export default function HomePage() {
 
               <div className="lg:col-span-5">
                 <div className="relative">
-                  <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6 shadow-2xl card-elevated backdrop-blur-sm">
-                    <div className="contractor-accent mb-5 flex items-center justify-between border-b border-border pb-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                        Live operations view
-                      </p>
-                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-600 border border-emerald-500/20">
-                        Coordinated by Nexus
-                      </span>
-                    </div>
-                    <div className="space-y-3">
-                      {[
-                        { label: 'Emergency plumbing', status: 'Assigned in 13 min' },
-                        { label: 'HVAC no-cool call', status: 'Technician en route' },
-                        { label: 'Make-ready punch list', status: 'Documented + invoiced' },
-                      ].map((item) => (
-                        <div
-                          key={item.label}
-                          className="flex items-center justify-between rounded-lg border border-primary/10 bg-gradient-to-r from-background to-primary/5 px-4 py-3 shadow-sm hover:shadow-md transition-all"
-                        >
-                          <p className="text-sm font-medium text-foreground">{item.label}</p>
-                          <p className="text-xs font-semibold text-primary">{item.status}</p>
+                  {/* Contractor hero photo */}
+                  <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                    <Image
+                      src="/photo-contractor.jpg"
+                      alt="Licensed contractor on a Nexus Operations job site"
+                      width={800}
+                      height={1000}
+                      className="h-[420px] w-full object-cover object-top sm:h-[480px]"
+                      priority
+                    />
+                    {/* Gradient overlay for readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                    {/* Overlay live operations card */}
+                    <div className="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6">
+                      <div className="rounded-xl border border-white/10 bg-black/50 p-4 backdrop-blur-md">
+                        <div className="mb-3 flex items-center justify-between">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-400">
+                            Live operations
+                          </p>
+                          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-white/70">
+                            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse-soft" />
+                            Coordinated by Nexus
+                          </span>
                         </div>
-                      ))}
+                        <div className="space-y-2">
+                          {[
+                            { label: 'Emergency plumbing', status: 'Assigned in 13 min' },
+                            { label: 'HVAC no-cool call', status: 'Technician en route' },
+                            { label: 'Make-ready punch list', status: 'Documented + invoiced' },
+                          ].map((item) => (
+                            <div
+                              key={item.label}
+                              className="flex items-center justify-between rounded-lg bg-white/10 px-3 py-2"
+                            >
+                              <p className="text-xs font-medium text-white">{item.label}</p>
+                              <p className="text-[10px] font-semibold text-emerald-400">{item.status}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="absolute -bottom-6 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-xs">
+
+                  {/* Floating testimonial card */}
+                  <div className="absolute -bottom-6 -left-4 z-10 max-w-xs sm:-left-6">
                     <div className="rounded-xl border border-border bg-card p-4 shadow-xl card-elevated">
                       <div className="flex items-center gap-1 text-amber-500">
                         {[0, 1, 2, 3, 4].map((i) => (
@@ -304,6 +325,34 @@ export default function HomePage() {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Photo Trust Banner ──────────────────────────────── */}
+        <section className="relative overflow-hidden">
+          <Image
+            src="/business-growth-success-strategy.jpg"
+            alt="Business growth and property strategy"
+            width={1024}
+            height={1024}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/80 to-primary/70" />
+          <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-20">
+            <div className="grid gap-8 sm:grid-cols-3">
+              <div className="text-center sm:text-left">
+                <p className="font-display text-3xl font-bold text-white sm:text-4xl">150+</p>
+                <p className="mt-1 text-sm font-medium text-white/80">Vetted contractors in the network</p>
+              </div>
+              <div className="text-center sm:text-left">
+                <p className="font-display text-3xl font-bold text-white sm:text-4xl">24hr</p>
+                <p className="mt-1 text-sm font-medium text-white/80">Consultation confirmed on every request</p>
+              </div>
+              <div className="text-center sm:text-left">
+                <p className="font-display text-3xl font-bold text-white sm:text-4xl">4.9★</p>
+                <p className="mt-1 text-sm font-medium text-white/80">Average rating across all completed jobs</p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -355,6 +404,11 @@ export default function HomePage() {
                 View all service categories
                 <ArrowRight className="h-4 w-4" />
               </Link>
+
+              {/* Construction worker illustration */}
+              <div className="mt-8 hidden lg:block">
+                <ConstructionWorkerIllustration size={220} className="rounded-xl opacity-90" />
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
@@ -417,25 +471,42 @@ export default function HomePage() {
           <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-6">
               <div className="relative">
-                <div className="rounded-2xl border border-border bg-card p-6 shadow-xl card-elevated">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                    Coordinator-led workflow
-                  </p>
-                  <div className="mt-5 space-y-4">
-                    {[
-                      'Human triage on every request before dispatch',
-                      'Contractor matched by trade, urgency, and availability',
-                      'Job updates captured in one shared timeline',
-                      'Completion photos and notes required before closeout',
-                    ].map((line) => (
-                      <div key={line} className="flex items-start gap-3">
-                        <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-                        <p className="text-sm text-foreground">{line}</p>
-                      </div>
-                    ))}
+                {/* Office workspace photo with overlay card */}
+                <div className="overflow-hidden rounded-2xl shadow-xl">
+                  <Image
+                    src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                    alt="Nexus Operations coordination workspace"
+                    width={1024}
+                    height={1024}
+                    className="h-[400px] w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-2xl" />
+                </div>
+
+                {/* Overlay workflow card */}
+                <div className="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6">
+                  <div className="rounded-xl border border-white/10 bg-black/50 p-5 backdrop-blur-md">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-400 mb-3">
+                      Coordinator-led workflow
+                    </p>
+                    <div className="space-y-2.5">
+                      {[
+                        'Human triage on every request before dispatch',
+                        'Contractor matched by trade, urgency, and availability',
+                        'Job updates captured in one shared timeline',
+                        'Completion photos and notes required before closeout',
+                      ].map((line) => (
+                        <div key={line} className="flex items-start gap-2.5">
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
+                          <p className="text-xs text-white/90">{line}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="absolute -right-4 -top-4 hidden rounded-xl border border-border bg-card p-4 shadow-lg sm:block">
+
+                {/* Founded badge */}
+                <div className="absolute -right-3 -top-3 hidden rounded-xl border border-border bg-card p-4 shadow-lg sm:block">
                   <p className="font-mono-label text-muted-foreground">Founded</p>
                   <p className="mt-1 font-display text-2xl font-bold text-foreground">2026</p>
                   <p className="text-sm text-muted-foreground">Topeka, Kansas</p>
@@ -693,9 +764,16 @@ export default function HomePage() {
         </Section>
 
         {/* ── Final CTA ──────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-primary">
+        <section className="relative overflow-hidden">
+          <Image
+            src="/business-analytics-data-visualization.jpg"
+            alt="Data-driven property maintenance operations"
+            width={1024}
+            height={1024}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-primary/85" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-30%,rgba(255,255,255,0.15),transparent_60%)]" />
-          <div className="pointer-events-none absolute inset-0 dot-grid opacity-30" />
           
           <div className="relative mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
             <h2 className="font-display text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl lg:text-5xl text-balance">
