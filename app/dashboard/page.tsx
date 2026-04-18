@@ -3,11 +3,11 @@ import { useAuth } from '@/app/lib/auth-context'
 import { useRequests } from '@/app/lib/requests-context'
 import { DashboardLayout } from '@/components/dashboard-layout'
 import { useRouter } from '@/lib/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { isHomeownerDashboardRole } from '@/lib/dashboard-role'
 import {
   FileText, CheckCircle2, Clock, AlertCircle,
-  Briefcase, Plus, ArrowRight, TrendingUp,
+  Briefcase, Plus, ArrowRight, TrendingUp, Search, MessageSquare, Home,
 } from 'lucide-react'
 import Link from '@/components/link'
 
@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const { user, isLoggedIn, logout } = useAuth()
   const { clientRequests, contractorJobs } = useRequests()
   const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (!isLoggedIn) router.push('/auth/login')
@@ -54,6 +55,13 @@ export default function DashboardPage() {
     router.push('/auth/login')
   }
 
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
+
   return (
     <DashboardLayout
       userName={user?.name ?? 'System User'}
@@ -62,6 +70,18 @@ export default function DashboardPage() {
       onLogout={handleLogout}
     >
       <div id="main-content" className="space-y-8 max-w-5xl">
+
+        {/* Search bar */}
+        <form onSubmit={handleSearch} className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search requests, properties, contractors…"
+            className="w-full pl-11 pr-4 h-11 rounded-xl border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+          />
+        </form>
 
         {/* Page header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -86,6 +106,40 @@ export default function DashboardPage() {
             </Link>
           )}
         </div>
+
+        {/* Quick actions */}
+        {(() => {
+          const quickActions = isHomeownerDashboardRole(user?.role) ? [
+            { label: 'New Request',      href: '/dashboard/requests/new',              icon: Plus,           color: 'text-primary bg-primary/10' },
+            { label: 'Find Contractor',  href: '/search?tab=contractors',              icon: Search,         color: 'text-sky-600 bg-sky-50' },
+            { label: 'Messages',         href: '/dashboard/messages',                  icon: MessageSquare,  color: 'text-violet-600 bg-violet-50' },
+            { label: 'My Properties',    href: '/dashboard/homeowner/properties',      icon: Home,           color: 'text-emerald-600 bg-emerald-50' },
+          ] : user?.role === 'contractor' ? [
+            { label: 'Available Work',   href: '/dashboard/contractor/available-work', icon: Briefcase,      color: 'text-primary bg-primary/10' },
+            { label: 'Find Properties',  href: '/search?tab=properties',               icon: Search,         color: 'text-sky-600 bg-sky-50' },
+            { label: 'Messages',         href: '/dashboard/messages',                  icon: MessageSquare,  color: 'text-violet-600 bg-violet-50' },
+            { label: 'Earnings',         href: '/dashboard/contractor/analytics',      icon: TrendingUp,     color: 'text-emerald-600 bg-emerald-50' },
+          ] : [
+            { label: 'Search Platform',  href: '/search',                              icon: Search,         color: 'text-primary bg-primary/10' },
+            { label: 'Messages',         href: '/dashboard/messages',                  icon: MessageSquare,  color: 'text-violet-600 bg-violet-50' },
+          ]
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {quickActions.map(({ label, href, icon: Icon, color }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-card hover:bg-muted/40 hover:border-primary/30 transition-all"
+                >
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${color}`}>
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <span className="text-[12px] font-semibold text-foreground text-center leading-tight">{label}</span>
+                </Link>
+              ))}
+            </div>
+          )
+        })()}
 
         {/* ── CLIENT VIEW ── */}
         {isHomeownerDashboardRole(user?.role) && (
