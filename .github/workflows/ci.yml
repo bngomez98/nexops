@@ -44,7 +44,6 @@ jobs:
 
       - name: Type check
         id: typecheck
-        continue-on-error: true
         run: pnpm typecheck
 
       - name: Unit tests
