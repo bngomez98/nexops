@@ -55,8 +55,7 @@ export interface AppRouter {
 
 export function useRouter(): AppRouter {
   // Attempt to use Next.js router when available (avoids full-page reloads).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // We are inside Next.js — delegate dynamically to avoid a hard import that
     // would prevent tree-shaking when the file is bundled outside Next.js.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -86,8 +85,7 @@ export function useRouter(): AppRouter {
 // ---------------------------------------------------------------------------
 
 export function usePathname(): string {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { usePathname: useNextPathname } = require('next/navigation') as typeof import('next/navigation')
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -102,8 +100,7 @@ export function usePathname(): string {
 // ---------------------------------------------------------------------------
 
 export function useSearchParams(): URLSearchParams {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { useSearchParams: useNextSearchParams } = require('next/navigation') as typeof import('next/navigation')
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -129,8 +126,7 @@ export function useSearchParams(): URLSearchParams {
  * returned (requires the caller to know the pattern).
  */
 export function useParams<T extends Record<string, string | string[]> = Record<string, string>>(): T {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { useParams: useNextParams } = require('next/navigation') as typeof import('next/navigation')
     // eslint-disable-next-line react-hooks/rules-of-hooks

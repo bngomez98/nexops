@@ -9,6 +9,24 @@ import {
   sendInvoicePaidClientEmail,
 } from '@/lib/email'
 
+type NexusInvoice = {
+  id: string
+  job_id: string
+  contractor_id: string
+  client_id: string
+  subtotal: number
+  nexus_fee: number
+  total: number
+}
+
+type JobRow = {
+  service_type: string
+}
+
+type ProfileRow = {
+  full_name: string | null
+}
+
 /**
  * Safely reads `current_period_start` / `current_period_end` from a Stripe
  * subscription. In newer API versions these fields live on the first
@@ -200,11 +218,12 @@ export async function POST(req: Request) {
         }
 
         // Jobs flow: look up internal invoice by stripe_invoice_id
-        const { data: nexusInvoice }: { data: any } = await supabase
+        const { data: nexusInvoiceRaw } = await supabase
           .from('invoices')
           .select('id, job_id, contractor_id, client_id, subtotal, nexus_fee, total')
           .eq('stripe_invoice_id', stripeInvoice.id)
           .maybeSingle()
+        const nexusInvoice = nexusInvoiceRaw as NexusInvoice | null
 
         if (nexusInvoice) {
           await supabase.from('invoices')
@@ -222,11 +241,12 @@ export async function POST(req: Request) {
             changed_by: 'system',
           } as never)
 
-          const { data: job }: { data: any } = await supabase
+          const { data: jobRaw } = await supabase
             .from('jobs')
             .select('service_type')
             .eq('id', nexusInvoice.job_id)
             .maybeSingle()
+          const job = jobRaw as JobRow | null
 
           // Send receipt emails (fire-and-forget)
           ;(async () => {
@@ -236,10 +256,12 @@ export async function POST(req: Request) {
                 admin.auth.admin.getUserById(nexusInvoice.contractor_id),
                 admin.auth.admin.getUserById(nexusInvoice.client_id),
               ])
-              const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
+              const [contractorProfileResult, clientProfileResult] = await Promise.all([
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
-              ]) as any
+              ])
+              const contractorProfile = contractorProfileResult.data as ProfileRow | null
+              const clientProfile = clientProfileResult.data as ProfileRow | null
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([
                 contractorAuth.user?.email
