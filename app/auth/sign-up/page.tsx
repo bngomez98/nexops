@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "@/lib/router"
 import Link from "@/components/link"
 import Image from "next/image"
@@ -22,11 +22,18 @@ const SERVICE_CATEGORIES = [
   { value: 'excavation',    label: 'Excavation' },
 ]
 
+function normalizeRoleParam(value: string | null) {
+  if (!value) return "homeowner"
+  if (value === "property_manager" || value === "property-manager") return "property-manager"
+  if (value === "contractor") return "contractor"
+  return "homeowner"
+}
+
 function SignUpInner() {
   const searchParams = useSearchParams()
-  const roleParam = searchParams.get("role") ?? "homeowner"
+  const roleParam = searchParams.get("role")
 
-  const [role, setRole] = useState<string>(roleParam)
+  const [role, setRole] = useState<string>(normalizeRoleParam(roleParam))
   const [formData, setFormData] = useState({
     name: "", email: "", password: "", confirmPassword: "",
     company: "", phone: "",
@@ -35,6 +42,10 @@ function SignUpInner() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    setRole(normalizeRoleParam(roleParam))
+  }, [roleParam])
 
   const isContractor      = role === "contractor"
   const isPropertyManager = role === "property-manager"

@@ -166,9 +166,16 @@ create table if not exists public.profiles (
                                    check (contractor_hourly_rate is null or contractor_hourly_rate >= 0),
   contractor_minimum_service_fee numeric(10,2)
                                    check (contractor_minimum_service_fee is null or contractor_minimum_service_fee >= 0),
+  -- personalized branding (property managers, contractors, homeowners)
+  -- schema: { brandName?, primaryColor?, accentColor?, logoUrl? }
+  branding                       jsonb,
   created_at                     timestamptz not null default now(),
   updated_at                     timestamptz not null default now()
 );
+
+-- ── profiles: add branding column for existing installs ────────
+alter table public.profiles
+  add column if not exists branding jsonb;
 
 -- ── profiles: keep id / user_id in sync ───────────────────────
 create or replace function public.sync_profile_identity_columns()

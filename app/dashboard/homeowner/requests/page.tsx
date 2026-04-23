@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from '@/lib/router'
 import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
-import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, ClipboardList, MapPin, Clock, ChevronRight,
   Plus, DollarSign,
@@ -12,21 +11,21 @@ import {
 
 interface Request {
   id: string
-  service_type: string
-  urgency: string
-  description: string
+  title: string
+  category: string
+  location: string
   status: string
-  budget_ceiling: number | null
-  created_at: string
-  properties?: { address: string; city: string; state: string }
+  budget: number | null
+  createdAt: string
+  description: string
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  open:            { label: 'Submitted',    color: 'text-foreground/70',    bg: 'bg-muted' },
-  matched:         { label: 'Assigned',     color: 'text-primary',          bg: 'bg-primary/10' },
-  in_progress:     { label: 'In Progress',  color: 'text-primary',          bg: 'bg-primary/10' },
-  pending_invoice: { label: 'Invoiced',     color: 'text-foreground/70',    bg: 'bg-muted' },
-  completed:       { label: 'Complete',     color: 'text-foreground',       bg: 'bg-muted' },
+  open:        { label: 'Submitted',   color: 'text-foreground/70',    bg: 'bg-muted' },
+  claimed:     { label: 'Assigned',    color: 'text-primary',          bg: 'bg-primary/10' },
+  'in-progress': { label: 'In Progress',  color: 'text-primary',       bg: 'bg-primary/10' },
+  completed:   { label: 'Complete',     color: 'text-foreground',      bg: 'bg-muted' },
+  cancelled:   { label: 'Cancelled',    color: 'text-muted-foreground',bg: 'bg-muted' },
 }
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
@@ -39,32 +38,43 @@ function timeAgo(d: string) {
 
 export default function HomeownerRequestsPage() {
   const router = useRouter()
-  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [requests, setRequests] = useState<Request[]>([])
-  const [loading, setLoading]   = useState(true)
-  const [tab, setTab]       = useState<'all' | 'active' | 'completed'>('all')
+  const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState<'all' | 'active' | 'completed'>('all')
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data: { user: u } } = await supabase.auth.getUser()
-      if (!u) { router.push('/auth/login'); return }
-      setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'homeowner' })
+      try {
+        const authRes = await fetch('/api/auth/me')
+        if (!authRes.ok) {
+          router.push('/auth/login')
+          return
+        }
+        const { user: authUser } = await authRes.json()
+        if (!['homeowner', 'client', 'property-owner'].includes(authUser.role)) {
+          router.push('/dashboard')
+          return
+        }
+        setUser(authUser)
 
-      const { data } = await supabase
-        .from('jobs')
-        .select('*, properties(address, city, state)')
-        .eq('client_id', u.id)
-        .order('created_at', { ascending: false })
-      setRequests(data ?? [])
-      setLoading(false)
+        const projectsRes = await fetch('/api/projects/list?type=my-projects')
+        if (projectsRes.ok) {
+          const { projects } = await projectsRes.json()
+          setRequests((projects ?? []) as Request[])
+        }
+      } catch (err) {
+        console.error(err)
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    load()
+    void load()
   }, [router])
 
   const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/auth/login')
   }
 
@@ -72,8 +82,8 @@ export default function HomeownerRequestsPage() {
   if (!user) return null
 
   const displayed = tab === 'all' ? requests
-    : tab === 'active' ? requests.filter(r => ['open', 'matched', 'in_progress'].includes(r.status))
-    : requests.filter(r => r.status === 'completed')
+    : tab === 'active' ? requests.filter(r => ['open', 'claimed', 'in-progress'].includes(r.status))
+      : requests.filter(r => r.status === 'completed')
 
   return (
     <div className="min-h-screen bg-background">
@@ -122,13 +132,13 @@ export default function HomeownerRequestsPage() {
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                      <p className="font-semibold text-foreground text-[13.5px]">{fmt(req.service_type)}</p>
+                      <p className="font-semibold text-foreground text-[13.5px]">{req.title || fmt(req.category)}</p>
                       <span className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>{st.label}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
-                      {req.properties && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{req.properties.city}</span>}
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{timeAgo(req.created_at)}</span>
-                      {req.budget_ceiling && <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" />${req.budget_ceiling.toLocaleString()} budget</span>}
+                      {req.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{req.location}</span>}
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{timeAgo(req.createdAt)}</span>
+                      {req.budget && <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" />${req.budget.toLocaleString()} budget</span>}
                     </div>
                     {req.description && <p className="text-[12px] text-muted-foreground mt-1 line-clamp-1">{req.description}</p>}
                   </div>

@@ -68,15 +68,15 @@ export function WhoWeServe() {
           {audiences.map((a) => (
             <div
               key={a.label}
-              className="group rounded-xl border border-border bg-card p-8 lg:p-10 hover:border-primary/30 transition-colors"
+              className="group rounded-2xl border border-border/80 bg-card/80 p-8 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg lg:p-10"
             >
               <div className="flex flex-col lg:flex-row lg:items-start gap-8">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-secondary">
-                      <a.icon className="h-5 w-5 text-foreground/70" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
+                      <a.icon className="h-5 w-5 text-primary" />
                     </div>
-                    <span className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+                    <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
                       {a.label}
                     </span>
                   </div>
@@ -88,7 +88,7 @@ export function WhoWeServe() {
                   </p>
                   <Link
                     href={a.href}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-all hover:gap-2 hover:text-primary"
                   >
                     Learn more
                     <ArrowRight className="h-3.5 w-3.5" />
