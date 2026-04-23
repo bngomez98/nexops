@@ -6,7 +6,7 @@ import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import {
   MapPin, DollarSign, Calendar, Loader2,
-  ChevronRight, Zap, Search, SlidersHorizontal, X,
+  ChevronRight, Search, SlidersHorizontal, X, Zap,
 } from 'lucide-react'
 
 interface ServiceRequest {
@@ -43,16 +43,6 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString()
 }
 
-const CATEGORY_ICONS: Record<string, string> = {
-  plumbing: '🔧', electrical: '⚡', hvac: '❄️', roofing: '🏠',
-  'tree-removal': '🌳', 'tree-services': '🌲', 'concrete-work': '🧱',
-  fencing: '🪵', painting: '🖌️', landscaping: '🌿', flooring: '🏗️',
-  carpentry: '🪚', excavation: '🚜', 'general-repair': '🔨',
-}
-
-function getCategoryIcon(cat: string): string {
-  return CATEGORY_ICONS[cat.toLowerCase().replace(/\s+/g, '-')] ?? '🔨'
-}
 
 export default function AvailableWorkPage() {
   const router = useRouter()
@@ -232,7 +222,6 @@ export default function AvailableWorkPage() {
             <div className="divide-y divide-border">
               {filtered.map(req => {
                 const urgent = isUrgent(req)
-                const icon = getCategoryIcon(req.category)
                 return (
                   <Link
                     key={req.id}
@@ -241,8 +230,8 @@ export default function AvailableWorkPage() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
-                          {icon}
+                        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-center leading-tight px-1">
+                          {formatCategory(req.category).split(' ').map(w => w[0]).join('').slice(0, 3)}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
