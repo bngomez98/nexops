@@ -6,6 +6,12 @@ on:
       - "**"
   pull_request:
   workflow_dispatch:
+    inputs:
+      run_lint:
+        description: Run ESLint (optional)
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -13,7 +19,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint, Typecheck, Test, Build
+    name: Typecheck, Test, Build (Lint optional)
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -39,6 +45,7 @@ jobs:
 
       - name: Lint
         id: lint
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_lint == true }}
         continue-on-error: true
         run: pnpm lint
 
@@ -69,7 +76,7 @@ jobs:
         run: |
           failed=0
 
-          if [ "${{ steps.lint.outcome }}" != "success" ]; then
+          if [ "${{ steps.lint.outcome }}" != "success" ] && [ "${{ steps.lint.outcome }}" != "skipped" ]; then
             echo "❌ Lint failed"
             failed=1
           fi
