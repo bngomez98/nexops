@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+
 import { getSiteUrl } from '@/lib/env'
 import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
@@ -9,7 +9,7 @@ export async function POST() {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { data: profile, error: profileError } = await supabase
@@ -20,11 +20,11 @@ export async function POST() {
 
     if (profileError) {
       console.error('[POST /api/stripe/portal] profile lookup failed', profileError)
-      return NextResponse.json({ error: 'Unable to load profile' }, { status: 500 })
+      return Response.json({ error: 'Unable to load profile' }, { status: 500 })
     }
 
     if (!profile) {
-      return NextResponse.json({ error: 'Billing profile not found' }, { status: 404 })
+      return Response.json({ error: 'Billing profile not found' }, { status: 404 })
     }
 
     const customerId = await ensureStripeCustomer({
@@ -52,9 +52,9 @@ export async function POST() {
         : undefined,
     })
 
-    return NextResponse.json({ url: session.url })
+    return Response.json({ url: session.url })
   } catch (err) {
     console.error('[POST /api/stripe/portal]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

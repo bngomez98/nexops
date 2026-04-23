@@ -1,0 +1,56 @@
+# Azure Pipelines – Nexus Operations
+# Lint → Typecheck → Test → Build
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main
+      - "claude/*"
+  paths:
+    exclude:
+      - "*.md"
+      - docs/**
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+steps:
+  - task: NodeTool@0
+    displayName: "Setup Node.js $(NODE_VERSION)"
+    inputs:
+      versionSpec: $(NODE_VERSION)
+
+  - script: npm install -g pnpm@$(PNPM_VERSION)
+    displayName: "Install pnpm"
+
+  - script: pnpm install --frozen-lockfile
+    displayName: "Install dependencies"
+
+  - script: pnpm lint
+    displayName: "Lint"
+
+  - script: pnpm typecheck
+    displayName: "Type check"
+
+  - script: pnpm test
+    displayName: "Unit tests"
+
+  - script: pnpm build
+    displayName: "Build"
+    env:
+      RESEND_API_KEY: re_dummy
+      NEXT_PUBLIC_SITE_URL: https://nexusoperations.org
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: placeholder_publishable_key
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_placeholder

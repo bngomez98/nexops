@@ -258,7 +258,7 @@ describe('contractorSettingsSchema', () => {
       companyName: 'Pro Services LLC',
       licenseNumber: '',
       yearsInBusiness: '5',
-      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      bio: 'We document projects, manage access, and handle customer updates end-to-end.',
       serviceCategories: [],
     })
     expect(result.success).toBe(true)
@@ -269,7 +269,7 @@ describe('contractorSettingsSchema', () => {
       companyName: 'Pro Services LLC',
       licenseNumber: 'LIC123',
       yearsInBusiness: 'five',
-      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      bio: 'We document projects, manage access, and handle customer updates end-to-end.',
       serviceCategories: ['plumbing'],
     })
     expect(result.success).toBe(false)
@@ -280,7 +280,7 @@ describe('contractorSettingsSchema', () => {
       companyName: 'Pro Services LLC',
       licenseNumber: 'LIC123',
       yearsInBusiness: '-1',
-      bio: 'We document projects, coordinate access, and handle customer updates end-to-end.',
+      bio: 'We document projects, manage access, and handle customer updates end-to-end.',
       serviceCategories: ['plumbing'],
     })
     expect(result.success).toBe(false)

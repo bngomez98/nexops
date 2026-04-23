@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter, useSearchParams } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -111,15 +111,15 @@ function PMNewRequestInner() {
             ) : (
               <div className="space-y-2">
                 {properties.map(prop => (
-                  <button key={prop.id} type="button" onClick={() => setForm(f => ({ ...f, propertyId: prop.id }))}
-                    className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all ${form.propertyId === prop.id ? 'border-primary bg-primary/10' : 'border-border bg-background hover:border-border/80'}`}
+                  <button key={prop.id as string} type="button" onClick={() => setForm(f => ({ ...f, propertyId: prop.id as string }))}
+                    className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all ${form.propertyId === (prop.id as string) ? 'border-primary bg-primary/10' : 'border-border bg-background hover:border-border/80'}`}
                   >
                     <Building2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     <div>
-                      <p className="text-[13px] font-semibold">{prop.address}</p>
-                      <p className="text-[11px] text-muted-foreground">{[prop.city, prop.state].filter(Boolean).join(', ')}</p>
+                      <p className="text-[13px] font-semibold">{prop.address as string}</p>
+                      <p className="text-[11px] text-muted-foreground">{[prop.city as string, prop.state as string].filter(Boolean).join(', ')}</p>
                     </div>
-                    {form.propertyId === prop.id && <CheckCircle2 className="w-4 h-4 text-primary ml-auto flex-shrink-0" />}
+                    {form.propertyId === (prop.id as string) && <CheckCircle2 className="w-4 h-4 text-primary ml-auto flex-shrink-0" />}
                   </button>
                 ))}
               </div>

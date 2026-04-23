@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { getStripeClient } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const stripe = getStripeClient()
@@ -38,9 +38,9 @@ export async function GET(req: NextRequest) {
 
     const events = await stripe.events.list(params as Parameters<typeof stripe.events.list>[0])
 
-    return NextResponse.json(events)
+    return Response.json(events)
   } catch (err) {
     console.error('[GET /api/stripe/events]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

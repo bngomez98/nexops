@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+
 import { createClient } from "@/lib/supabase/server"
 import { getStripeClient } from "@/lib/stripe/server"
 import { getSiteUrl } from "@/lib/env"
@@ -12,7 +12,7 @@ export async function POST() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    return Response.json({ error: "Not authenticated" }, { status: 401 })
   }
 
   // Fetch current profile to check role and existing Connect account
@@ -23,7 +23,7 @@ export async function POST() {
     .single()
 
   if (profile?.role !== "contractor") {
-    return NextResponse.json({ error: "Only contractors can connect a Stripe account" }, { status: 403 })
+    return Response.json({ error: "Only contractors can connect a Stripe account" }, { status: 403 })
   }
 
   let accountId = profile?.stripe_connect_account_id as string | undefined
@@ -64,9 +64,9 @@ export async function POST() {
     type: "account_onboarding",
   })
 
-  return NextResponse.json({ url: accountLink.url })
+  return Response.json({ url: accountLink.url })
   } catch (err) {
     console.error('[POST /api/stripe/connect/onboard]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

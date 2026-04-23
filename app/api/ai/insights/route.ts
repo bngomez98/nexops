@@ -1,6 +1,6 @@
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 
 interface InsightRequest {
@@ -24,16 +24,16 @@ interface ContractorProfile {
   maxActiveProjects?: number
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: 'AI features are not configured' }, { status: 503 })
+      return Response.json({ error: 'AI features are not configured' }, { status: 503 })
     }
 
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     let body: { role: string; requests?: InsightRequest[] | ProjectScore[]; profile?: ContractorProfile }
@@ -41,13 +41,13 @@ export async function POST(req: NextRequest) {
       body = await req.json()
     } catch (err) {
       console.error(err)
-      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+      return Response.json({ error: 'Invalid request body' }, { status: 400 })
     }
 
     const { role, requests, profile } = body
 
     if (!role) {
-      return NextResponse.json({ error: 'role is required' }, { status: 400 })
+      return Response.json({ error: 'role is required' }, { status: 400 })
     }
 
     if (role === 'homeowner') {
@@ -144,9 +144,9 @@ Be concise and direct. These are experienced tradespeople.`,
       return Response.json(result.output)
     }
 
-    return NextResponse.json({ error: 'Invalid role' }, { status: 400 })
+    return Response.json({ error: 'Invalid role' }, { status: 400 })
   } catch (err) {
     console.error('[POST /api/ai/insights]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -76,14 +76,14 @@ export default function AdminMatchesPage() {
             </div>
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
               {unmatchedJobs.map(job => (
-                <div key={job.id} className="flex items-center gap-4 px-5 py-4">
+                <div key={job.id as string} className="flex items-center gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[13.5px]">{fmt(job.service_type)}</p>
-                    {job.properties && <p className="text-[12px] text-muted-foreground">{job.properties.city}, {job.properties.state}</p>}
-                    <p className="text-[12px] text-muted-foreground">{new Date(job.created_at).toLocaleDateString()}</p>
+                    <p className="font-semibold text-[13.5px]">{fmt(job.service_type as string)}</p>
+                    {!!job.properties && <p className="text-[12px] text-muted-foreground">{(job.properties as any).city}, {(job.properties as any).state}</p>}
+                    <p className="text-[12px] text-muted-foreground">{new Date(job.created_at as string).toLocaleDateString()}</p>
                   </div>
-                  <Button onClick={() => triggerMatch(job.id)} disabled={matching === job.id} size="sm" className="h-8 px-3 text-[12px] flex-shrink-0">
-                    {matching === job.id ? <><Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> Matching</> : <><RefreshCw className="mr-1.5 h-3.5 w-3.5" /> Try Match</>}
+                  <Button onClick={() => triggerMatch(job.id as string)} disabled={matching === (job.id as string)} size="sm" className="h-8 px-3 text-[12px] flex-shrink-0">
+                    {matching === (job.id as string) ? <><Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> Matching</> : <><RefreshCw className="mr-1.5 h-3.5 w-3.5" /> Try Match</>}
                   </Button>
                 </div>
               ))}
@@ -101,13 +101,13 @@ export default function AdminMatchesPage() {
           ) : (
             <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
               {matches.map((match: Record<string, unknown>) => (
-                <div key={match.id} className="flex items-center gap-4 px-5 py-4">
+                <div key={match.id as string} className="flex items-center gap-4 px-5 py-4">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[13.5px]">{match.jobs ? fmt(match.jobs.service_type) : 'Job'}</p>
-                    <p className="text-[12px] text-muted-foreground">{new Date(match.offered_at).toLocaleDateString()}</p>
+                    <p className="font-semibold text-[13.5px]">{match.jobs ? fmt((match.jobs as any).service_type) : 'Job'}</p>
+                    <p className="text-[12px] text-muted-foreground">{new Date(match.offered_at as string).toLocaleDateString()}</p>
                   </div>
-                  <span className="text-[11px] font-medium text-muted-foreground capitalize">{match.response ?? 'Pending'}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground capitalize">{(match.response as string) ?? 'Pending'}</span>
                 </div>
               ))}
             </div>

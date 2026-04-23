@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import Link from "next/link"
+import Link from "@/components/link"
 import { ArrowLeft, ArrowRight, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -50,7 +50,6 @@ export default function BlogPost() {
               <h2 className="text-xl font-semibold text-foreground">What unified invoicing actually means</h2>
               <p>
                 Unified invoicing means one invoice per billing cycle, covering all jobs across all properties. Each line item shows: the property address, the job date, the trade, the urgency tier, the contractor, and the billed amount. The invoice is itemized enough to attribute costs to specific properties and audit any line item, but consolidated enough to process as a single payment.
-                Unified invoicing means one invoice per billing cycle, covering all jobs across all properties. Each line item shows: the property address, the job date, the trade, the contractor&apos;s base cost, the coordination markup, and the total. The invoice is itemized enough to attribute costs to specific properties and audit any line item, but consolidated enough to process as a single payment.
               </p>
               <p>
                 For property management companies that allocate maintenance costs to individual properties or pass repair costs through to owners, line-item detail is essential. Unified invoicing does not sacrifice detail — it consolidates the payment without obscuring the breakdown.
@@ -62,9 +61,9 @@ export default function BlogPost() {
               <p>
                 This also eliminates the friction when a contractor relationship changes — if a contractor leaves the network, the invoicing structure for the property manager does not change at all.
               </p>
-              <h2 className="text-xl font-semibold text-foreground">What this requires on the coordination side</h2>
+              <h2 className="text-xl font-semibold text-foreground">What this requires on the operations side</h2>
               <p>
-                Unified invoicing is only possible when the coordinator — Nexus Operations in this case — has complete visibility into every job: what was requested, what was quoted, when work was completed, and what was invoiced by the contractor. That requires documentation on every job, which is why photo completion reports and written job summaries are required for every assignment in the network.
+                Unified invoicing is only possible when the operations team — Nexus Operations in this case — has complete visibility into every job: what was requested, what was quoted, when work was completed, and what was invoiced by the contractor. That requires documentation on every job, which is why photo completion reports and written job summaries are required for every assignment in the network.
               </p>
             </div>
             <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-primary/5">

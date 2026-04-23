@@ -4,9 +4,14 @@ import { createClient } from '@/lib/supabase/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 import { getPlanById } from '@/lib/plans'
+import { headers } from 'next/headers'
 
 export async function fetchClientSecret(planId: string): Promise<string> {
-  const supabase = await createClient()
+  const supabase = createClient(
+    new Request('http://localhost', {
+      headers: await headers(),
+    })
+  )
   const {
     data: { user },
     error: authError,
@@ -48,7 +53,7 @@ export async function fetchClientSecret(planId: string): Promise<string> {
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
-    ui_mode: 'embedded',
+    ui_mode: 'embedded_page',
     redirect_on_completion: 'always',
     return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
     line_items: [lineItem],

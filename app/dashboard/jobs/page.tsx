@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -103,7 +103,7 @@ export default function ContractorJobBoardPage() {
       const { data: mine } = await supabase
         .from('jobs')
         .select('*, properties(address, city, state)')
-        .eq('contractor_id', user.id)
+        .eq('contractor_id', user!.id)
         .order('created_at', { ascending: false })
       setMyJobs(mine ?? [])
       setTab('mine')

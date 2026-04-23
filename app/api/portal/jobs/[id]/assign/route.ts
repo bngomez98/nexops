@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { dbStatusToPortal, loadCurrentProfile, normalizeRole } from '../../../shared'
 
 type RouteContext = { params: Promise<{ id: string }> }
 
-export async function POST(request: NextRequest, { params }: RouteContext) {
+export async function POST(request: Request, { params }: RouteContext) {
   try {
     const supabase = await createClient()
     const {
@@ -13,20 +13,20 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const profile = await loadCurrentProfile(supabase, user.id)
+    const profile: any = await loadCurrentProfile(supabase, user.id)
     const role = normalizeRole(profile?.role ?? user.user_metadata?.role)
 
     if (role !== 'admin') {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+      return Response.json({ error: 'Not authorized' }, { status: 403 })
     }
 
     const { contractorId } = await request.json()
 
     if (!contractorId || typeof contractorId !== 'string') {
-      return NextResponse.json({ error: 'contractorId is required' }, { status: 400 })
+      return Response.json({ error: 'contractorId is required' }, { status: 400 })
     }
 
     const { data: contractor, error: contractorError } = await supabase
@@ -37,11 +37,11 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       .maybeSingle()
 
     if (contractorError || !contractor || normalizeRole(contractor.role) !== 'contractor') {
-      return NextResponse.json({ error: 'Contractor not found' }, { status: 404 })
+      return Response.json({ error: 'Contractor not found' }, { status: 404 })
     }
 
     if (contractor.is_active === false) {
-      return NextResponse.json({ error: 'Contractor is inactive' }, { status: 400 })
+      return Response.json({ error: 'Contractor is inactive' }, { status: 400 })
     }
 
     const { id } = await params
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
 
     if (updateError) throw updateError
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       projectId: updated.id,
       contractorId: updated.assigned_contractor_id,
@@ -69,6 +69,6 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     })
   } catch (error) {
     console.error('[POST /api/portal/jobs/[id]/assign]', error)
-    return NextResponse.json({ error: 'Unable to assign contractor' }, { status: 500 })
+    return Response.json({ error: 'Unable to assign contractor' }, { status: 500 })
   }
 }

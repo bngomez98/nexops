@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, CreditCard, CheckCircle2, ExternalLink } from 'lucide-react'
@@ -84,7 +84,7 @@ export default function PMPaymentsPage() {
                 <div key={inv.id as string} className="flex items-center gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as Record<string, unknown>).service_type as string) : 'Invoice'}</p>
-                    {(inv.jobs as Record<string, unknown>)?.properties && <p className="text-[12px] text-muted-foreground">{((inv.jobs as Record<string, unknown>).properties as Record<string, unknown>).address as string}</p>}
+                    {(inv.jobs as any)?.properties && <p className="text-[12px] text-muted-foreground">{((inv.jobs as any).properties as Record<string, unknown>).address as string}</p>}
                   </div>
                   <p className="text-[14px] font-bold flex-shrink-0">${(inv.total as number)?.toLocaleString()}</p>
                   {inv.stripe_payment_url ? (
@@ -126,7 +126,7 @@ export default function PMPaymentsPage() {
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as Record<string, unknown>).service_type as string) : 'Invoice'}</p>
-                    {(inv.jobs as Record<string, unknown>)?.properties && <p className="text-[12px] text-muted-foreground">{((inv.jobs as Record<string, unknown>).properties as Record<string, unknown>).address as string}</p>}
+                    {(inv.jobs as any)?.properties && <p className="text-[12px] text-muted-foreground">{((inv.jobs as any).properties as Record<string, unknown>).address as string}</p>}
                   </div>
                   <p className="text-[14px] font-bold text-emerald-600">${(inv.total as number)?.toLocaleString()}</p>
                 </div>

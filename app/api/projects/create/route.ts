@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { projectRequestSchema } from '@/lib/validators'
 import { buildPipelineSnapshot, serializePipelineSnapshot } from '@/lib/request-pipeline'
@@ -23,14 +23,14 @@ function toConsultationDate(value: string) {
   return value.includes('T') ? value : `${value}T00:00:00Z`
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const automationEnabled = isAutomationEnabled()
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { data: profile } = await supabase
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
     if (role !== 'homeowner') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+      return Response.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Accept both JSON and FormData
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (!parsed.success) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       )
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(
+    return Response.json(
       { project: { id: sr.id, title: validated.title || normalizedCategory, category: sr.category, status: sr.status } },
       { status: 201 }
     )

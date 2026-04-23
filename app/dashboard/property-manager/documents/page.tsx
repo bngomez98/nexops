@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -88,11 +88,11 @@ export default function PMDocumentsPage() {
         ) : (
           <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden">
             {docs.map((doc: Record<string, unknown>) => (
-              <div key={doc.id} className="flex items-start gap-3 px-5 py-4">
+              <div key={doc.id as string} className="flex items-start gap-3 px-5 py-4">
                 <FolderOpen className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13.5px] font-semibold capitalize">{doc.type.replace(/_/g, ' ')}</p>
-                  <p className="text-[12px] text-muted-foreground">{new Date(doc.created_at).toLocaleDateString()}</p>
+                  <p className="text-[13.5px] font-semibold capitalize">{(doc.type as string).replace(/_/g, ' ')}</p>
+                  <p className="text-[12px] text-muted-foreground">{new Date(doc.created_at as string).toLocaleDateString()}</p>
                 </div>
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${doc.verified ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                   {doc.verified ? 'Verified' : 'Pending'}

@@ -71,3 +71,6 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Local node compile cache (safety — don't commit)
+node-compile-cache/

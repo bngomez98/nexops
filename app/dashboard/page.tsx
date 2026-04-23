@@ -2,14 +2,14 @@
 import { useAuth } from '@/app/lib/auth-context'
 import { useRequests } from '@/app/lib/requests-context'
 import { DashboardLayout } from '@/components/dashboard-layout'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useRouter } from '@/lib/router'
+import { useEffect, useState } from 'react'
 import { isHomeownerDashboardRole } from '@/lib/dashboard-role'
 import {
   FileText, CheckCircle2, Clock, AlertCircle,
-  Briefcase, Plus, ArrowRight, TrendingUp,
+  Briefcase, Plus, ArrowRight, TrendingUp, Search, MessageSquare, Home,
 } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/components/link'
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
@@ -38,8 +38,9 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function DashboardPage() {
   const { user, isLoggedIn, logout } = useAuth()
-  const { clientRequests, contractorJobs, clearCachedData } = useRequests()
+  const { clientRequests, contractorJobs } = useRequests()
   const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (!isLoggedIn) router.push('/auth/login')
@@ -54,8 +55,11 @@ export default function DashboardPage() {
     router.push('/auth/login')
   }
 
-  const handleResetDashboard = () => {
-    clearCachedData()
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
   }
 
   return (
@@ -67,6 +71,18 @@ export default function DashboardPage() {
     >
       <div id="main-content" className="space-y-8 max-w-5xl">
 
+        {/* Search bar */}
+        <form onSubmit={handleSearch} className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search requests, properties, contractors…"
+            className="w-full pl-11 pr-4 h-11 rounded-xl border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+          />
+        </form>
+
         {/* Page header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -75,30 +91,55 @@ export default function DashboardPage() {
             </h1>
             <p className="mt-1 text-[13.5px] text-muted-foreground">
               {isHomeownerDashboardRole(user?.role)
-                ? "Here's an overview of your maintenance activity."
+                ? "Track service dispatch, completion status, and project costs in one view."
                 : user?.role === 'contractor'
-                ? "Here's your job board and earnings summary."
-                : "Admin overview — manage the platform below."}
+                ? "Review available work, active assignments, and payout visibility."
+                : "Monitor operations performance, user activity, and financial controls."}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleResetDashboard}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-[12.5px] font-semibold text-foreground hover:bg-muted/50 transition"
+          {isHomeownerDashboardRole(user?.role) && (
+            <Link
+              href="/dashboard/requests/new"
+              className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
             >
-              Reset cached dashboard
-            </button>
-
-            {user?.role === 'client' && (
-              <Link
-                href="/dashboard/requests/new"
-                className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-sm"
-              >
-                <Plus className="h-3.5 w-3.5" /> New Request
-              </Link>
-            )}
-          </div>
+              <Plus className="h-3.5 w-3.5" /> Dispatch Request
+            </Link>
+          )}
         </div>
+
+        {/* Quick actions */}
+        {(() => {
+          const quickActions = isHomeownerDashboardRole(user?.role) ? [
+            { label: 'New Request',      href: '/dashboard/requests/new',              icon: Plus,           color: 'text-primary bg-primary/10' },
+            { label: 'Find Contractor',  href: '/search?tab=contractors',              icon: Search,         color: 'text-sky-600 bg-sky-50' },
+            { label: 'Messages',         href: '/dashboard/messages',                  icon: MessageSquare,  color: 'text-violet-600 bg-violet-50' },
+            { label: 'My Properties',    href: '/dashboard/homeowner/properties',      icon: Home,           color: 'text-emerald-600 bg-emerald-50' },
+          ] : user?.role === 'contractor' ? [
+            { label: 'Available Work',   href: '/dashboard/contractor/available-work', icon: Briefcase,      color: 'text-primary bg-primary/10' },
+            { label: 'Find Properties',  href: '/search?tab=properties',               icon: Search,         color: 'text-sky-600 bg-sky-50' },
+            { label: 'Messages',         href: '/dashboard/messages',                  icon: MessageSquare,  color: 'text-violet-600 bg-violet-50' },
+            { label: 'Earnings',         href: '/dashboard/contractor/analytics',      icon: TrendingUp,     color: 'text-emerald-600 bg-emerald-50' },
+          ] : [
+            { label: 'Search Platform',  href: '/search',                              icon: Search,         color: 'text-primary bg-primary/10' },
+            { label: 'Messages',         href: '/dashboard/messages',                  icon: MessageSquare,  color: 'text-violet-600 bg-violet-50' },
+          ]
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {quickActions.map(({ label, href, icon: Icon, color }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-card hover:bg-muted/40 hover:border-primary/30 transition-all"
+                >
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${color}`}>
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <span className="text-[12px] font-semibold text-foreground text-center leading-tight">{label}</span>
+                </Link>
+              ))}
+            </div>
+          )
+        })()}
 
         {/* ── CLIENT VIEW ── */}
         {isHomeownerDashboardRole(user?.role) && (
@@ -107,7 +148,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 {
-                  label: 'Active',
+                   label: 'Active Dispatch',
                   value: clientRequests.filter(r => r.status !== 'completed' && r.status !== 'invoiced').length,
                   icon: Clock,
                   color: 'text-sky-600',
@@ -121,7 +162,7 @@ export default function DashboardPage() {
                   bg: 'bg-emerald-50 border-emerald-100',
                 },
                 {
-                  label: 'Total Spend',
+                   label: 'Tracked Cost',
                   value: '$' + clientRequests.filter(r => r.invoiceAmount).reduce((s, r) => s + (r.invoiceAmount || 0), 0).toLocaleString(),
                   icon: FileText,
                   color: 'text-primary',
@@ -150,7 +191,7 @@ export default function DashboardPage() {
             {/* Recent Requests */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[15px] font-semibold text-foreground">Recent requests</h2>
+                 <h2 className="text-[15px] font-semibold text-foreground">Recent service requests</h2>
                 <Link href="/dashboard/requests" className="text-[12.5px] text-primary hover:underline underline-offset-4 inline-flex items-center gap-1">
                   View all <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -159,13 +200,13 @@ export default function DashboardPage() {
               {clientRequests.length === 0 ? (
                 <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
-                  <p className="text-[14px] font-medium text-foreground mb-1">No requests yet</p>
-                  <p className="text-[13px] text-muted-foreground mb-5">Submit your first maintenance request to get started.</p>
+                   <p className="text-[14px] font-medium text-foreground mb-1">No requests yet</p>
+                   <p className="text-[13px] text-muted-foreground mb-5">Create your first request to begin dispatch and contractor matching.</p>
                   <Link
                     href="/dashboard/requests/new"
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-[12.5px] font-semibold text-primary-foreground hover:opacity-90 transition"
                   >
-                    <Plus className="h-3.5 w-3.5" /> Submit a request
+                     <Plus className="h-3.5 w-3.5" /> Dispatch a request
                   </Link>
                 </div>
               ) : (
@@ -206,14 +247,14 @@ export default function DashboardPage() {
                   bg: 'bg-emerald-50 border-emerald-100',
                 },
                 {
-                  label: 'Active',
+                   label: 'Active Assignments',
                   value: contractorJobs.filter(j => j.status === 'claimed').length,
                   icon: Clock,
                   color: 'text-sky-600',
                   bg: 'bg-sky-50 border-sky-100',
                 },
                 {
-                  label: 'Pending Payout',
+                   label: 'Pending Payout Value',
                   value: '$' + contractorJobs.filter(j => j.status !== 'invoiced').reduce((s, j) => s + (j.payout || 0), 0).toLocaleString(),
                   icon: FileText,
                   color: 'text-primary',
@@ -245,7 +286,7 @@ export default function DashboardPage() {
             {/* Available Jobs */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[15px] font-semibold text-foreground">Available jobs</h2>
+                 <h2 className="text-[15px] font-semibold text-foreground">Available jobs</h2>
                 <Link href="/dashboard/jobs" className="text-[12.5px] text-primary hover:underline underline-offset-4 inline-flex items-center gap-1">
                   View all <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -255,7 +296,7 @@ export default function DashboardPage() {
                 <div className="border-y border-dashed border-border py-10 text-center">
                   <Briefcase className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
                   <p className="text-[14px] font-medium text-foreground mb-1">No available jobs right now</p>
-                  <p className="text-[13px] text-muted-foreground">New jobs matching your trade will appear here when submitted.</p>
+                   <p className="text-[13px] text-muted-foreground">New opportunities aligned to your trade profile will appear here automatically.</p>
                 </div>
               ) : (
                 <div className="divide-y divide-border/50 border-y border-border/60">
@@ -275,7 +316,7 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-[15px] font-bold text-foreground">${job.budget.toLocaleString()}</span>
                         <button className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-[12px] font-semibold text-primary-foreground hover:opacity-90 transition">
-                          Claim job <ArrowRight className="h-3 w-3" />
+                           Claim assignment <ArrowRight className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
@@ -291,7 +332,7 @@ export default function DashboardPage() {
           <div className="border-y border-border/60 py-10 text-center">
             <AlertCircle className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
             <p className="text-[14px] font-medium text-foreground mb-1">Admin Dashboard</p>
-            <p className="text-[13px] text-muted-foreground">Configure reports, manage team access, and review platform activity.</p>
+             <p className="text-[13px] text-muted-foreground">Configure reporting, manage permissions, and monitor operating performance.</p>
           </div>
         )}
       </div>

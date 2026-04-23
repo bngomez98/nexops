@@ -1,17 +1,17 @@
 import { streamText, convertToModelMessages, type UIMessage } from 'ai'
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: 'AI features are not configured' }, { status: 503 })
+      return Response.json({ error: 'AI features are not configured' }, { status: 503 })
     }
 
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     let body: { messages: UIMessage[]; role: string; context?: string }
@@ -19,13 +19,13 @@ export async function POST(req: NextRequest) {
       body = await req.json()
     } catch (err) {
       console.error(err)
-      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+      return Response.json({ error: 'Invalid request body' }, { status: 400 })
     }
 
     const { messages, role, context } = body
 
     if (!messages || !role) {
-      return NextResponse.json({ error: 'messages and role are required' }, { status: 400 })
+      return Response.json({ error: 'messages and role are required' }, { status: 400 })
     }
 
     const systemPrompt =
@@ -74,6 +74,6 @@ ${context ? `Account context: ${context}` : ''}`
     return result.toUIMessageStreamResponse()
   } catch (err) {
     console.error('[POST /api/ai/chat]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

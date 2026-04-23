@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { useRouter } from "@/lib/router"
+import Link from "@/components/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -165,7 +165,7 @@ export default function HomeownerOnboardingPage() {
           <div className="space-y-6">
             <div>
               <h1 className="text-2xl font-bold tracking-tight mb-1">Contact information</h1>
-              <p className="text-[14px] text-muted-foreground">This is used for contractor coordination and job updates.</p>
+              <p className="text-[14px] text-muted-foreground">This is used for contractor assignment and job updates.</p>
             </div>
             <div className="space-y-4">
               <div className="space-y-1.5">

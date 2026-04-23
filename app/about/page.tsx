@@ -1,19 +1,15 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
+import Link from '@/components/link'
 import {
   ArrowRight,
   BadgeCheck,
   CheckCircle,
   ClipboardList,
   Compass,
-  Database,
   FileText,
   HeartHandshake,
   Landmark,
-  Layers3,
   MapPin,
-  MonitorSmartphone,
   ShieldCheck,
   Target,
   Users,
@@ -24,9 +20,9 @@ import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'About — Property Maintenance Coordination Built in Topeka',
+  title: 'About — Managed Property Maintenance Built in Topeka',
   description:
-    'Nexus Operations is a locally owned property maintenance coordination company founded in Topeka, Kansas. Learn about our team, our process, and our commitment to verified, documented service.',
+    'Nexus Operations is a locally owned managed property maintenance company founded in Topeka, Kansas. Learn about our team, our process, and our commitment to verified, documented service.',
 }
 
 const values = [
@@ -65,34 +61,31 @@ const milestones = [
   { year: '2026', title: 'Nexus Operations founded', desc: 'Launched in Topeka, KS to give homeowners and property managers a single, accountable service for property maintenance.' },
   { year: '2026', title: 'Verified contractor network', desc: 'Built a starting roster of 20+ license-verified trades across plumbing, electrical, HVAC, and general repair.' },
   { year: '2026', title: 'Unified billing launched', desc: 'Rolled out monthly consolidated invoices so owners stop juggling contractor-by-contractor billing.' },
-  { year: '2026', title: 'Commercial portfolio tier', desc: 'Introduced dedicated coordination tiers for property managers with 10+ units under management.' },
+  { year: '2026', title: 'Commercial portfolio tier', desc: 'Introduced dedicated service tiers for property managers with 10+ units under management.' },
 ]
 
 const services = [
   { icon: ClipboardList, title: 'Intake & scope review', desc: 'We read every request, clarify scope, and confirm access details before dispatch.' },
   { icon: Users, title: 'Contractor matching', desc: 'We match each job to a trade specialist based on fit, availability, and recent performance.' },
-  { icon: Compass, title: 'Active coordination', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
+  { icon: Compass, title: 'Active oversight', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
 ]
 
-const engineeringCapabilities = [
+const switchReasons = [
   {
-    title: "Front-end Development",
+    title: 'From search-heavy to service-led',
     description:
-      "Responsive, production-ready interfaces built for speed, clarity, and real-world user workflows.",
-    icon: MonitorSmartphone,
+      'Instead of browsing listings and comparing callbacks, Nexus gives you one team that owns coordination from first request to closeout.',
   },
   {
-    title: "Back-end Development",
+    title: 'From contractor-by-contractor billing to one invoice',
     description:
-      "Reliable APIs, business logic, and data integrations that support secure operations.",
-    icon: Database,
+      'You stop collecting separate invoices and status threads; monthly billing and records are unified in one place.',
   },
   {
-    title: "Complete Builds",
+    title: 'From uncertain follow-through to documented accountability',
     description:
-      "Full delivery from planning and architecture through deployment, QA, and ongoing support.",
-    icon: Layers3,
+      'Every request is tracked with timeline updates, required photos, and a written summary before it can be marked complete.',
   },
 ]
 
@@ -102,8 +95,10 @@ export default function AboutPage() {
       <Header />
       <main>
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-12 lg:items-center lg:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 home-service-bg" />
+          <div className="pointer-events-none absolute inset-0 dot-grid opacity-40" />
+          <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-24 lg:grid-cols-12 lg:items-center lg:py-28">
             <div className="lg:col-span-7">
               <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                 <MapPin className="h-3 w-3" /> {CONTACT_INFO.cityState}
@@ -114,7 +109,7 @@ export default function AboutPage() {
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Most property owners in Topeka juggle a patchwork of contractors, handwritten
                 invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable coordinator that handles the work end-to-end — intake, dispatch,
+                accountable partner that handles the work end-to-end — intake, dispatch,
                 documentation, and billing — so owners can focus on running their properties, not
                 chasing tradespeople.
               </p>
@@ -135,14 +130,25 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <div className="overflow-hidden rounded-3xl border border-border shadow-xl">
-                <Image
-                  src="/business-handshake-professional-meeting.jpg"
-                  alt="Nexus team"
-                  width={1200}
-                  height={1500}
-                  className="aspect-[4/5] w-full object-cover"
-                />
+              <div className="rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-accent p-6 shadow-xl card-elevated">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary contractor-accent pb-4">
+                  What accountability looks like
+                </p>
+                <div className="mt-5 space-y-3">
+                  {[
+                    'A real person reviews every request before dispatch.',
+                    'Assignment and arrival timelines are measured against published SLAs.',
+                    'Completion photos and notes are required before closeout.',
+                    'Every job lands in one auditable monthly invoice.',
+                  ].map((line) => (
+                    <div
+                      key={line}
+                      className="rounded-xl border border-primary/10 bg-gradient-to-r from-background to-accent/30 px-4 py-3 text-sm text-foreground shadow-sm"
+                    >
+                      {line}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -210,7 +216,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We coordinate property maintenance — intake, dispatch, documentation, and billing."
+                description="We do not sell software. We do not run a contractor marketplace. We manage property maintenance — intake, dispatch, documentation, and billing."
               />
               <Link
                 href="/services"
@@ -240,28 +246,25 @@ export default function AboutPage() {
           </div>
         </Section>
 
-        {/* Capabilities */}
+        {/* Marketplace comparison */}
         <section className="py-16 lg:py-24 border-t border-border">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Delivery capabilities
+                Why Nexus is different
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                Front-end, back-end, and complete build execution.
+                Built as an upgrade from Angi-style directory experiences.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                We work alongside operational teams to deliver production-ready product across
-                front-end, back-end, and infrastructure layers.
+                Directory apps hand you contacts; then you still manage the work. Nexus Operations
+                was built to own the coordination and outcomes.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
-              {engineeringCapabilities.map(({ title, description, icon: Icon }) => (
+              {switchReasons.map(({ title, description }) => (
                 <div key={title} className="rounded-2xl border border-border bg-card p-6">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <Icon className="h-5 w-5" />
-                  </div>
                   <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
                 </div>
@@ -332,7 +335,7 @@ export default function AboutPage() {
                     label: "Invoice issued",
                     color: "bg-secondary border-2 border-border",
                     detail: "Nexus Operations generates a unified invoice: $280 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
-                    outcome: "One invoice. Full documentation. Zero coordination calls.",
+                    outcome: "One invoice. Full documentation. Zero back-and-forth.",
                   },
                   {
                     time: "Within 30 days",

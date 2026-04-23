@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Users } from 'lucide-react'
@@ -68,20 +68,20 @@ export default function AdminUsersPage() {
         ) : (
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {displayed.map((u: Record<string, unknown>) => (
-              <div key={u.user_id} className="flex items-center gap-4 px-5 py-4">
+              <div key={u.user_id as string} className="flex items-center gap-4 px-5 py-4">
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-[12px] font-bold text-primary flex-shrink-0">
-                  {u.full_name?.[0]?.toUpperCase() ?? '?'}
+                  {(u.full_name as string)?.[0]?.toUpperCase() ?? '?'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-[13.5px]">{u.full_name ?? 'Unknown'}</p>
-                  <p className="text-[12px] text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</p>
+                  <p className="font-semibold text-[13.5px]">{(u.full_name as string) ?? 'Unknown'}</p>
+                  <p className="text-[12px] text-muted-foreground">{new Date(u.created_at as string).toLocaleDateString()}</p>
                 </div>
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                   u.role === 'admin' ? 'bg-red-100 text-red-700' :
                   u.role === 'contractor' ? 'bg-muted text-foreground/70' :
                   u.role === 'property-manager' ? 'bg-muted text-foreground/70' :
                   'bg-muted text-foreground/70'
-                }`}>{fmt(u.role ?? 'unknown')}</span>
+                }`}>{fmt((u.role as string) ?? 'unknown')}</span>
               </div>
             ))}
           </div>

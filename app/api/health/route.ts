@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+
 import { getDatabaseUrl, getDatabaseUrlUnpooled } from '@/lib/env'
 
 export const dynamic = 'force-dynamic'
@@ -40,5 +40,5 @@ export async function GET() {
     unpooled: getDatabaseUrlUnpooled() ? 'configured' : 'not_configured',
   }
 
-  return NextResponse.json(health)
+  return Response.json(health)
 }

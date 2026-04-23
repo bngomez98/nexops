@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Briefcase, MapPin, Clock } from 'lucide-react'
@@ -78,22 +78,22 @@ export default function AdminJobsPage() {
         ) : (
           <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
             {displayed.map(job => {
-              const st = STATUS_MAP[job.status] ?? { label: fmt(job.status), color: 'text-muted-foreground', bg: 'bg-muted' }
+              const st = STATUS_MAP[job.status as string] ?? { label: fmt(job.status as string), color: 'text-muted-foreground', bg: 'bg-muted' }
               return (
-                <div key={job.id} className="flex items-start gap-4 px-5 py-4">
+                <div key={job.id as string} className="flex items-start gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                      <p className="font-semibold text-[13.5px]">{fmt(job.service_type)}</p>
+                      <p className="font-semibold text-[13.5px]">{fmt(job.service_type as string)}</p>
                       <span className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>{st.label}</span>
                       {job.urgency === 'emergency' && <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700">🚨 Emergency</span>}
                     </div>
                     <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
-                      {job.properties && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.properties.city}, {job.properties.state}</span>}
-                      {job.client_profile && <span>Client: {job.client_profile.full_name}</span>}
-                      <span><Clock className="w-3 h-3 inline mr-1" />{new Date(job.created_at).toLocaleDateString()}</span>
+                      {!!job.properties && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{(job.properties as any).city}, {(job.properties as any).state}</span>}
+                      {!!job.client_profile && <span>Client: {(job.client_profile as any).full_name}</span>}
+                      <span><Clock className="w-3 h-3 inline mr-1" />{new Date(job.created_at as string).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  <span className="text-[11px] text-muted-foreground flex-shrink-0">#{job.id.slice(0, 8).toUpperCase()}</span>
+                  <span className="text-[11px] text-muted-foreground flex-shrink-0">#{(job.id as string).slice(0, 8).toUpperCase()}</span>
                 </div>
               )
             })}

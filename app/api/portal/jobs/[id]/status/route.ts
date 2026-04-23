@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { STATUS_TRANSITIONS, isValidTransition } from '@/lib/business-logic'
 import {
@@ -22,7 +22,7 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: 'Cancelled',
 }
 
-export async function POST(request: NextRequest, { params }: RouteContext) {
+export async function POST(request: Request, { params }: RouteContext) {
   try {
     const supabase = await createClient()
     const {
@@ -31,10 +31,10 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const profile = await loadCurrentProfile(supabase, user.id)
+    const profile: any = await loadCurrentProfile(supabase, user.id)
     const role = normalizeRole(profile?.role ?? user.user_metadata?.role)
     const { id } = await params
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       .single()
 
     if (projectError || !project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+      return Response.json({ error: 'Project not found' }, { status: 404 })
     }
 
     const isOwner = project.owner_id === user.id
@@ -53,14 +53,14 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     const isAdmin = role === 'admin'
 
     if (!isOwner && !isAssignedContractor && !isAdmin) {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+      return Response.json({ error: 'Not authorized' }, { status: 403 })
     }
 
     const { newStatus, reason } = await request.json()
     const targetStatus = portalStatusToDb(newStatus)
 
     if (!isValidTransition(project.status, targetStatus)) {
-      return NextResponse.json(
+      return Response.json(
         {
           error: `Invalid transition: ${project.status} → ${targetStatus}`,
           validTransitions: STATUS_TRANSITIONS[project.status] ?? [],
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       )
     }
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       projectId: id,
       previousStatus: project.status,
@@ -110,6 +110,6 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     })
   } catch (error) {
     console.error('[POST /api/portal/jobs/[id]/status]', error)
-    return NextResponse.json({ error: 'Unable to update status' }, { status: 500 })
+    return Response.json({ error: 'Unable to update status' }, { status: 500 })
   }
 }

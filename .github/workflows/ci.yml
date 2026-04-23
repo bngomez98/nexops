@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint, Typecheck, Test, Build (non-blocking)
+    name: Lint, Typecheck, Test, Build
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -39,21 +39,18 @@ jobs:
 
       - name: Lint
         run: pnpm lint
-        continue-on-error: true
 
-      - name: Type check
-        run: pnpm exec tsc --noEmit
+      - name: Type check (non-blocking)
         continue-on-error: true
+        run: pnpm typecheck
 
       - name: Unit tests
         run: pnpm test
-        continue-on-error: true
 
       - name: Build
         run: pnpm build
-        continue-on-error: true
         env:
-          # Allow build to complete without real secrets
+          # Stub secrets so the build succeeds in CI without real credentials
           RESEND_API_KEY: re_dummy
           NEXT_PUBLIC_SITE_URL: https://nexusoperations.org
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co

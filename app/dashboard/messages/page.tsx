@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter } from '@/lib/router'
+import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { MessageSquare } from 'lucide-react'
 
@@ -117,8 +117,8 @@ export default function MessagesPage() {
                 href={`/dashboard/messages/${conv.job_id}`}
                 className="flex items-start gap-4 px-5 py-4 hover:bg-muted/50 transition-colors"
               >
-                <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MessageSquare className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-bold text-primary">
+                  {conv.other_user_name?.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase() || '??'}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">

@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { getPlanById } from '@/lib/plans'
 import { createClient } from '@/lib/supabase/server'
 import { ensureStripeCustomer } from '@/lib/stripe/customer'
 import { getSiteUrl } from '@/lib/env'
 import { getStripeClient } from '@/lib/stripe/server'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const stripe = getStripeClient()
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -19,10 +19,10 @@ export async function POST(req: NextRequest) {
 
     const plan = getPlanById(planId)
     if (!plan) {
-      return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
+      return Response.json({ error: 'Invalid plan' }, { status: 400 })
     }
     if (plan.priceInCents === 0) {
-      return NextResponse.json({ error: 'Free plans do not require checkout' }, { status: 400 })
+      return Response.json({ error: 'Free plans do not require checkout' }, { status: 400 })
     }
 
     const { data: profile, error: profileError } = await supabase
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     if (profileError) {
       console.error('[POST /api/stripe/checkout] profile lookup failed', profileError)
-      return NextResponse.json({ error: 'Unable to load profile' }, { status: 500 })
+      return Response.json({ error: 'Unable to load profile' }, { status: 500 })
     }
 
     const customerId = await ensureStripeCustomer({
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         mode: 'subscription',
-        ui_mode: 'embedded',
+        ui_mode: 'embedded_page',
         redirect_on_completion: 'always',
         return_url: `${siteUrl}/dashboard/billing/confirm?session_id={CHECKOUT_SESSION_ID}`,
         line_items: [lineItem],
@@ -79,10 +79,10 @@ export async function POST(req: NextRequest) {
       })
 
       if (!session.client_secret) {
-        return NextResponse.json({ error: 'Stripe did not return a client secret' }, { status: 500 })
+        return Response.json({ error: 'Stripe did not return a client secret' }, { status: 500 })
       }
 
-      return NextResponse.json({ clientSecret: session.client_secret })
+      return Response.json({ clientSecret: session.client_secret })
     }
 
     // Standard redirect checkout
@@ -99,12 +99,12 @@ export async function POST(req: NextRequest) {
     })
 
     if (!session.url) {
-      return NextResponse.json({ error: 'Stripe did not return a checkout URL' }, { status: 500 })
+      return Response.json({ error: 'Stripe did not return a checkout URL' }, { status: 500 })
     }
 
-    return NextResponse.json({ url: session.url })
+    return Response.json({ url: session.url })
   } catch (err) {
     console.error('[POST /api/stripe/checkout]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

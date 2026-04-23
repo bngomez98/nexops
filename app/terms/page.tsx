@@ -2,7 +2,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { CONTACT_INFO } from "@/lib/contact-info"
-import Link from "next/link"
+import Link from "@/components/link"
 import { ArrowLeft } from "lucide-react"
 
 export const metadata = {
@@ -30,7 +30,7 @@ export default function TermsPage() {
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">1. Acceptance of Terms</h2>
             <p>
               These Terms of Service (&quot;Terms&quot;) govern access to and use of Nexus Operations, LLC
-              (&quot;Nexus Operations&quot;, &quot;we&quot;, &quot;us&quot;) coordination services, software, and
+              (&quot;Nexus Operations&quot;, &quot;we&quot;, &quot;us&quot;) maintenance services, software, and
               websites (collectively, the &quot;Services&quot;). By submitting a request, creating an account, or
               authorizing work, you agree to these Terms, our <Link href="/privacy" className="text-primary underline">Privacy Policy</Link>, and any order forms, statements of work, or
               subscription selections you approve (each, an &quot;Order&quot;).
@@ -45,7 +45,7 @@ export default function TermsPage() {
 
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">3. Scope of Services</h2>
             <p>
-              Nexus Operations coordinates maintenance, repairs, and related services through vetted third-party contractors.
+              Nexus Operations manages maintenance, repairs, and related services through vetted third-party contractors.
               We do not provide licensed trade services ourselves. Each Order will specify scope, pricing, service level,
               and any materials. If the scope changes after on-site evaluation, we will provide an updated quote for approval
               before proceeding unless you authorize emergency work up to a specified ceiling.
@@ -77,7 +77,7 @@ export default function TermsPage() {
             <p>
               Contractors performing work are independent businesses. We vet licensing, insurance, and experience, monitor SLA performance,
               and document each job, but we do not guarantee contractor workmanship. Contractor warranties, if any, are passed through to you.
-              To request a correction, notify us within 7 days of completion with photos or documentation so we can coordinate remediation.
+              To request a correction, notify us within 7 days of completion with photos or documentation so we can manage remediation.
             </p>
 
             <h2 className="font-serif text-3xl font-semibold mt-12 mb-4">8. Safety and Compliance</h2>

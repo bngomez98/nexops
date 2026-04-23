@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { ImageUpload } from '@/components/image-upload'
 import { formatDateOnly, todayDateInputValue } from '@/lib/date-format'
@@ -254,7 +254,10 @@ export default function NewProjectRequest() {
     } catch (err) {
       if (err instanceof ZodError) {
         const errors: Record<string, string> = {}
-        err.errors.forEach(e => { errors[e.path[0] as string] = e.message })
+        err.issues.forEach((e) => {
+          errors[e.path[0] as string] = e.message
+        })
+        err.issues.forEach((e) => { errors[e.path[0] as string] = e.message })
         setFieldErrors(errors)
         setError('Please fix the errors below')
       } else {

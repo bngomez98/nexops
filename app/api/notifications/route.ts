@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
@@ -8,7 +8,7 @@ export async function GET() {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { data, error } = await supabase
@@ -20,22 +20,22 @@ export async function GET() {
 
     if (error) {
       // Table may not exist yet; fail gracefully with empty list.
-      return NextResponse.json({ notifications: [] })
+      return Response.json({ notifications: [] })
     }
 
-    return NextResponse.json({ notifications: data ?? [] })
+    return Response.json({ notifications: data ?? [] })
   } catch (err) {
     console.error('[GET /api/notifications]', err)
-    return NextResponse.json({ notifications: [] })
+    return Response.json({ notifications: [] })
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: Request) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -47,11 +47,11 @@ export async function PATCH(request: NextRequest) {
         .update({ read: true })
         .eq('user_id', user.id)
         .eq('read', false)
-      return NextResponse.json({ success: true })
+      return Response.json({ success: true })
     }
 
     if (!id) {
-      return NextResponse.json({ error: 'Missing id' }, { status: 400 })
+      return Response.json({ error: 'Missing id' }, { status: 400 })
     }
 
     await supabase
@@ -60,25 +60,25 @@ export async function PATCH(request: NextRequest) {
       .eq('id', id)
       .eq('user_id', user.id)
 
-    return NextResponse.json({ success: true })
+    return Response.json({ success: true })
   } catch (err) {
     console.error('[PATCH /api/notifications]', err)
-    return NextResponse.json({ error: 'Failed to update' }, { status: 500 })
+    return Response.json({ error: 'Failed to update' }, { status: 500 })
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: Request) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     if (!id) {
-      return NextResponse.json({ error: 'Missing id' }, { status: 400 })
+      return Response.json({ error: 'Missing id' }, { status: 400 })
     }
 
     await supabase
@@ -87,9 +87,9 @@ export async function DELETE(request: NextRequest) {
       .eq('id', id)
       .eq('user_id', user.id)
 
-    return NextResponse.json({ success: true })
+    return Response.json({ success: true })
   } catch (err) {
     console.error('[DELETE /api/notifications]', err)
-    return NextResponse.json({ error: 'Failed to delete' }, { status: 500 })
+    return Response.json({ error: 'Failed to delete' }, { status: 500 })
   }
 }

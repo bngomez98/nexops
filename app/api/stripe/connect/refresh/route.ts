@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+
 import { createClient } from "@/lib/supabase/server"
 import { getStripeClient } from "@/lib/stripe/server"
 import { getSiteUrl } from "@/lib/env"
@@ -14,7 +14,7 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.redirect(`${siteUrl}/auth/login`)
+    return Response.redirect(`${siteUrl}/auth/login`)
   }
 
   const { data: profile } = await supabase
@@ -25,7 +25,7 @@ export async function GET() {
 
   const accountId = profile?.stripe_connect_account_id
   if (!accountId) {
-    return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
+    return Response.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
   }
 
   const accountLink = await stripe.accountLinks.create({
@@ -35,9 +35,9 @@ export async function GET() {
     type: "account_onboarding",
   })
 
-  return NextResponse.redirect(accountLink.url)
+  return Response.redirect(accountLink.url)
   } catch (err) {
     console.error('[GET /api/stripe/connect/refresh]', err)
-    return NextResponse.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
+    return Response.redirect(`${siteUrl}/dashboard/contractor/settings?connect=error`)
   }
 }

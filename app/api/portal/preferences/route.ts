@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { loadCurrentProfile } from '../shared'
 
@@ -11,12 +11,12 @@ export async function GET() {
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const profile = await loadCurrentProfile(supabase, user.id)
+    const profile: any = await loadCurrentProfile(supabase, user.id)
 
-    return NextResponse.json({
+    return Response.json({
       preferences: {
         notifyMessages: Boolean(profile?.notify_messages ?? true),
         notifyStatus: Boolean(profile?.notify_status_changes ?? true),
@@ -25,11 +25,11 @@ export async function GET() {
     })
   } catch (error) {
     console.error('[GET /api/portal/preferences]', error)
-    return NextResponse.json({ error: 'Unable to load preferences' }, { status: 500 })
+    return Response.json({ error: 'Unable to load preferences' }, { status: 500 })
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: Request) {
   try {
     const supabase = await createClient()
     const {
@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -59,7 +59,7 @@ export async function PUT(request: NextRequest) {
       if (byUserId.error) throw byUserId.error
     }
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       preferences: {
         notifyMessages,
@@ -69,6 +69,6 @@ export async function PUT(request: NextRequest) {
     })
   } catch (error) {
     console.error('[PUT /api/portal/preferences]', error)
-    return NextResponse.json({ error: 'Unable to update preferences' }, { status: 500 })
+    return Response.json({ error: 'Unable to update preferences' }, { status: 500 })
   }
 }

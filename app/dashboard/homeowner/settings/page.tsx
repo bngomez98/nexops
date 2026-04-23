@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound, Camera, Upload } from 'lucide-react'
@@ -529,7 +529,7 @@ function HomeownerSettingsInner() {
                       <KeyRound className="w-4 h-4 text-muted-foreground" />
                       <div>
                         <p className="text-[13px] font-semibold text-foreground">{f.friendly_name || 'Authenticator App'}</p>
-                        <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at).toLocaleDateString()}</p>
+                        <p className="text-[11px] text-muted-foreground">Added {new Date((f as any).created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <button

@@ -31,6 +31,7 @@ describe('middleware robustness', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     const { middleware } = await import('@/middleware')
+    const request = { nextUrl: { pathname: '/' } } as unknown as import('next/server').NextRequest
     const request = { nextUrl: { pathname: '/' } } as unknown as NextRequest
     const response = await middleware(request)
 
@@ -55,6 +56,7 @@ describe('middleware robustness', () => {
     updateSessionMock.mockResolvedValue(sessionResponse)
 
     const { middleware } = await import('@/middleware')
+    const request = { nextUrl: { pathname: '/' } } as unknown as import('next/server').NextRequest
     const request = { nextUrl: { pathname: '/' } } as unknown as NextRequest
     const response = await middleware(request)
 
@@ -67,6 +69,7 @@ describe('middleware robustness', () => {
     envMock.hasSupabaseServerConfig.mockReturnValue(false)
 
     const { middleware } = await import('@/middleware')
+    const request = { nextUrl: { pathname: '/' } } as unknown as import('next/server').NextRequest
     const request = { nextUrl: { pathname: '/' } } as unknown as NextRequest
     const response = await middleware(request)
 

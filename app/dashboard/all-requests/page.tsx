@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { CheckCircle2, Clock, AlertCircle, FileText, TrendingUp, Loader2 } from 'lucide-react'
@@ -58,7 +58,7 @@ export default function AllRequestsPage() {
           .filter(r => r.final_cost)
           .reduce((s, r) => s + (r.final_cost ?? 0), 0)
         setStats({ total: requests.length, active, completed, revenue })
-        setRecent(requests.slice(0, 10) as RecentRequest[])
+        setRecent(requests.slice(0, 10) as unknown as RecentRequest[])
       }
       setLoading(false)
     }

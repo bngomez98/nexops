@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useParams } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter, useParams } from '@/lib/router'
+import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { MapPin, Calendar, DollarSign, ArrowLeft, Loader } from 'lucide-react'
@@ -131,6 +131,8 @@ export default function ProjectDetailsPage() {
       </div>
     )
   }
+
+  if (!user) return null
 
   const statusLabel: Record<string, string> = {
     open: 'Open',

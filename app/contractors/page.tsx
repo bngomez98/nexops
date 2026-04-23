@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/components/link'
 import {
   ArrowRight,
   BadgeCheck,
@@ -113,8 +113,10 @@ export default function ContractorsPage() {
       <Header />
       <main>
         {/* ── Hero ────────────────────────────────────── */}
-        <section className="border-b border-border">
-          <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-12 lg:items-center lg:py-24">
+        <section className="border-b border-border relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 hero-home-pattern opacity-60" />
+          <div className="pointer-events-none absolute inset-0 dot-grid opacity-30" />
+          <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-24 lg:grid-cols-12 lg:items-center lg:py-28">
             <div className="lg:col-span-7">
               <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
                 <Sparkles className="h-3 w-3" /> For licensed contractors
@@ -268,6 +270,7 @@ export default function ContractorsPage() {
                   </div>
                 </div>
               </div>
+
               <div className="lg:col-span-5">
                 <div className="rounded-3xl border border-border bg-card p-8">
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
@@ -425,7 +428,7 @@ export default function ContractorsPage() {
               },
               {
                 q: 'Can I set my own rates?',
-                a: 'Yes. You quote every job at your own rate. Nexus coordinates with the client; your number is the number that gets invoiced.',
+                a: 'Yes. You quote every job at your own rate. Nexus works with the client; your number is the number that gets invoiced.',
               },
               {
                 q: 'Do I need employees to join?',

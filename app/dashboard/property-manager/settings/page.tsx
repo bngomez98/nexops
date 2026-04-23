@@ -1,14 +1,14 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, User, Bell, Shield, AlertTriangle, CheckCircle2, Lock, QrCode, KeyRound } from 'lucide-react'
 
 function PropertyManagerSettingsInner() {
   const router = useRouter()
-  const [user, setUser]   = useState<{ id: string; name: string; role: string } | null>(null)
+  const [user, setUser]   = useState<{ id: string; name: string; role: string; email?: string } | null>(null)
   const [loading, setLoading]   = useState(true)
   const [saving, setSaving]     = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -333,16 +333,16 @@ function PropertyManagerSettingsInner() {
                   <p className="text-[12.5px] font-semibold">Two-factor authentication is enabled on your account.</p>
                 </div>
                 {totpFactors.map(f => (
-                  <div key={f.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                  <div key={f.id as string} className="flex items-center justify-between p-3 rounded-lg border border-border">
                     <div className="flex items-center gap-2.5">
                       <KeyRound className="w-4 h-4 text-muted-foreground" />
                       <div>
-                        <p className="text-[13px] font-semibold text-foreground">{f.friendly_name || 'Authenticator App'}</p>
-                        <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at).toLocaleDateString()}</p>
+                        <p className="text-[13px] font-semibold text-foreground">{(f.friendly_name as string) || 'Authenticator App'}</p>
+                        <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at as string).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <button
-                      onClick={() => handleDisable2FA(f.id)}
+                      onClick={() => handleDisable2FA(f.id as string)}
                       disabled={mfaLoading}
                       className="text-[12px] text-destructive border border-destructive/30 px-3 py-1.5 rounded-lg hover:bg-destructive/10 transition-colors font-medium"
                     >

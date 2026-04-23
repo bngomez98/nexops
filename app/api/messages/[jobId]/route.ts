@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { messageSchema } from '@/lib/validators'
 
@@ -7,14 +7,14 @@ export const dynamic = 'force-dynamic'
 
 // GET /api/messages/[jobId] — all messages for a job, marks unread as read
 export async function GET(
-  _request: NextRequest,
+  request: Request,
   { params }: RouteContext
 ) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { jobId } = await params
@@ -66,23 +66,23 @@ export async function GET(
       timestamp: message.created_at,
     }))
 
-    return NextResponse.json({ messages: portalMessages, jobTitle })
+    return Response.json({ messages: portalMessages, jobTitle })
   } catch (err) {
     console.error('[GET /api/messages/[jobId]]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
 // POST /api/messages/[jobId] — send a message for a specific job
 export async function POST(
-  request: NextRequest,
+  request: Request,
   { params }: RouteContext
 ) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { jobId } = await params
@@ -90,7 +90,7 @@ export async function POST(
     const parsed = messageSchema.safeParse(body)
 
     if (!parsed.success) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       )
@@ -106,7 +106,7 @@ export async function POST(
       .single()
 
     if (!job || (job.owner_id !== user.id && job.assigned_contractor_id !== user.id)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const { data: message, error } = await supabase
@@ -128,7 +128,7 @@ export async function POST(
       .eq('id', user.id)
       .maybeSingle()
 
-    return NextResponse.json({
+    return Response.json({
       message: {
         ...message,
         authorId: message.sender_id,
@@ -139,6 +139,6 @@ export async function POST(
     }, { status: 201 })
   } catch (err) {
     console.error('[POST /api/messages/[jobId]]', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

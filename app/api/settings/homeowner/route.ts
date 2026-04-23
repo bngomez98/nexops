@@ -1,22 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { homeownerSettingsSchema } from '@/lib/validators'
 import { createRequestId, internalError } from '@/lib/api-error'
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: Request) {
   try {
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     const body = await request.json()
     const parsed = homeownerSettingsSchema.safeParse(body)
 
     if (!parsed.success) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       )
@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest) {
       if (emailError) throw emailError
     }
 
-    return NextResponse.json({ success: true })
+    return Response.json({ success: true })
   } catch (err) {
     const requestId = createRequestId()
     console.error(`[PUT /api/settings/homeowner][${requestId}]`, err)
@@ -52,13 +52,13 @@ export async function DELETE() {
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
     // Sign out first
     await supabase.auth.signOut()
 
-    return NextResponse.json({ success: true })
+    return Response.json({ success: true })
   } catch (err) {
     const requestId = createRequestId()
     console.error(`[DELETE /api/settings/homeowner][${requestId}]`, err)

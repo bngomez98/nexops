@@ -1,5 +1,5 @@
 import type Stripe from 'stripe'
-import { NextResponse } from 'next/server'
+
 import { createClient } from '@/lib/supabase/server'
 import { getStripeClient } from '@/lib/stripe/server'
 import { getSiteUrl } from '@/lib/env'
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    return Response.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
   const body = await req.json()
@@ -29,18 +29,18 @@ export async function POST(req: Request) {
       .single()
 
     if (!invoice) {
-      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
+      return Response.json({ error: 'Invoice not found' }, { status: 404 })
     }
     if (invoice.client_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
     if (invoice.status === 'paid') {
-      return NextResponse.json({ error: 'Invoice is already paid' }, { status: 400 })
+      return Response.json({ error: 'Invoice is already paid' }, { status: 400 })
     }
 
     // If we already have a Stripe payment URL, return it
     if (invoice.stripe_payment_url) {
-      return NextResponse.json({ url: invoice.stripe_payment_url })
+      return Response.json({ url: invoice.stripe_payment_url })
     }
 
     // Get contractor's Stripe Connect account
@@ -87,7 +87,8 @@ export async function POST(req: Request) {
             currency: 'usd',
             unit_amount: amountCents,
             product_data: {
-              name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Service'}`,
+              name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()) : 'Service'}`,
+              name: `Invoice — ${job?.service_type ? job.service_type.replace(/-|_/g, ' ').replace(/\b\w/g, (c: any) => c.toUpperCase()) : 'Service'}`,
               description: `Invoice #${invoiceId.slice(0, 8).toUpperCase()} · ${new Date().toLocaleDateString()}`,
             },
           },
@@ -122,32 +123,32 @@ export async function POST(req: Request) {
       stripe_payment_url: session.url,
     }).eq('id', invoiceId)
 
-    return NextResponse.json({ url: session.url })
+    return Response.json({ url: session.url })
   }
 
   // ── Flow B: service_requests table (legacy workflow) ──────────────────────
   const { requestId } = body
   if (!requestId) {
-    return NextResponse.json({ error: 'requestId or invoiceId required' }, { status: 400 })
+    return Response.json({ error: 'requestId or invoiceId required' }, { status: 400 })
   }
 
-  const { data: request } = await supabase
+  const { data: serviceRequest } = await supabase
     .from('service_requests')
     .select('id, owner_id, assigned_contractor_id, final_cost, category, status')
     .eq('id', requestId)
     .single()
 
-  if (!request) {
-    return NextResponse.json({ error: 'Request not found' }, { status: 404 })
+  if (!serviceRequest) {
+    return Response.json({ error: 'Request not found' }, { status: 404 })
   }
-  if (request.owner_id !== user.id) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (serviceRequest.owner_id !== user.id) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
-  if (!request.final_cost || request.final_cost <= 0) {
-    return NextResponse.json({ error: 'No final cost set on this request' }, { status: 400 })
+  if (!serviceRequest.final_cost || serviceRequest.final_cost <= 0) {
+    return Response.json({ error: 'No final cost set on this request' }, { status: 400 })
   }
-  if (!request.assigned_contractor_id) {
-    return NextResponse.json({ error: 'No contractor assigned to this request' }, { status: 400 })
+  if (!serviceRequest.assigned_contractor_id) {
+    return Response.json({ error: 'No contractor assigned to this request' }, { status: 400 })
   }
 
   const { data: existingPayment } = await supabase
@@ -159,7 +160,7 @@ export async function POST(req: Request) {
     .maybeSingle()
 
   if (existingPayment) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'An invoice payment has already been initiated for this request' },
       { status: 409 }
     )
@@ -168,17 +169,17 @@ export async function POST(req: Request) {
   const { data: contractor } = await supabase
     .from('profiles')
     .select('stripe_connect_account_id, stripe_connect_status, full_name')
-    .eq('id', request.assigned_contractor_id)
+    .eq('id', serviceRequest.assigned_contractor_id)
     .single()
 
   if (!contractor?.stripe_connect_account_id || contractor.stripe_connect_status !== 'active') {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Contractor has not completed Stripe onboarding' },
       { status: 400 }
     )
   }
 
-  const amountCents = Math.round(request.final_cost * 100)
+  const amountCents = Math.round(serviceRequest.final_cost * 100)
   const feeCents = Math.round(amountCents * PLATFORM_FEE_RATE)
 
   const { data: ownerProfile } = await supabase
@@ -206,15 +207,16 @@ export async function POST(req: Request) {
     .eq('status', 'paid')
     .maybeSingle()
 
-  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+  const lineItems = [
     {
       price_data: {
         currency: 'usd',
         unit_amount: amountCents,
         product_data: {
-          name: `Final Invoice — ${request.category} Service`,
+          name: `Final Invoice — ${serviceRequest.category} Service`,
           description: `Full project cost for service request #${requestId.slice(0, 8)}`,
         },
+        recurring: undefined,
       },
       quantity: 1,
     },
@@ -244,7 +246,7 @@ export async function POST(req: Request) {
       metadata: {
         request_id: requestId,
         payment_type: 'invoice',
-        contractor_id: request.assigned_contractor_id,
+        contractor_id: serviceRequest.assigned_contractor_id,
         payer_id: user.id,
       },
     },
@@ -259,7 +261,7 @@ export async function POST(req: Request) {
   await supabase.from('payments').insert({
     request_id: requestId,
     payer_id: user.id,
-    contractor_id: request.assigned_contractor_id,
+    contractor_id: serviceRequest.assigned_contractor_id,
     type: 'invoice',
     amount_cents: amountCents,
     application_fee_cents: feeCents,
@@ -267,5 +269,5 @@ export async function POST(req: Request) {
     status: 'pending',
   })
 
-  return NextResponse.json({ url: session.url })
+  return Response.json({ url: session.url })
 }

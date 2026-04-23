@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -56,7 +56,7 @@ export default function AdminDocumentsPage() {
 
   const expiringSoon = docs.filter(d => {
     if (!d.expires_at) return false
-    const days = Math.floor((new Date(d.expires_at).getTime() - Date.now()) / 86400000)
+    const days = Math.floor((new Date(d.expires_at as string).getTime() - Date.now()) / 86400000)
     return days >= 0 && days <= 30
   })
 
@@ -90,8 +90,8 @@ export default function AdminDocumentsPage() {
             </div>
             <div className="space-y-1">
               {expiringSoon.map((d: Record<string, unknown>) => (
-                <p key={d.id} className="text-[12px] text-amber-700">
-                  {d.profiles?.full_name ?? 'Unknown'} — {fmt(d.type)} — expires {new Date(d.expires_at).toLocaleDateString()}
+                <p key={d.id as string} className="text-[12px] text-amber-700">
+                  {(d.profiles as any)?.full_name ?? 'Unknown'} — {fmt(d.type as string)} — expires {new Date(d.expires_at as string).toLocaleDateString()}
                 </p>
               ))}
             </div>
@@ -105,27 +105,27 @@ export default function AdminDocumentsPage() {
               <p className="font-semibold mb-1">No documents uploaded yet</p>
             </div>
           ) : docs.map((doc: Record<string, unknown>) => (
-            <div key={doc.id} className="flex items-start gap-4 px-5 py-4">
+            <div key={doc.id as string} className="flex items-start gap-4 px-5 py-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <p className="font-semibold text-[13.5px]">{fmt(doc.type)}</p>
+                  <p className="font-semibold text-[13.5px]">{fmt(doc.type as string)}</p>
                   <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${doc.verified ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                     {doc.verified ? <CheckCircle2 className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
                     {doc.verified ? 'Verified' : 'Pending'}
                   </span>
                 </div>
                 <p className="text-[12px] text-muted-foreground">
-                  {doc.profiles?.full_name ?? 'Unknown'} · {fmt(doc.profiles?.role ?? 'unknown')}
-                  {doc.expires_at && <> · Exp. {new Date(doc.expires_at).toLocaleDateString()}</>}
+                  {(doc.profiles as any)?.full_name ?? 'Unknown'} · {fmt((doc.profiles as any)?.role ?? 'unknown')}
+                  {doc.expires_at && <> · Exp. {new Date(doc.expires_at as string).toLocaleDateString()}</>}
                 </p>
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 {!doc.verified ? (
-                  <Button onClick={() => handleVerify(doc.id, true)} disabled={processing === doc.id} size="sm" className="h-7 px-2 text-[11px] bg-emerald-600 hover:bg-emerald-700">
+                  <Button onClick={() => handleVerify(doc.id as string, true)} disabled={processing === (doc.id as string)} size="sm" className="h-7 px-2 text-[11px] bg-emerald-600 hover:bg-emerald-700">
                     {processing === doc.id ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Verify'}
                   </Button>
                 ) : (
-                  <Button onClick={() => handleVerify(doc.id, false)} disabled={processing === doc.id} size="sm" variant="outline" className="h-7 px-2 text-[11px] border-red-200 text-red-600 hover:bg-red-50">
+                  <Button onClick={() => handleVerify(doc.id as string, false)} disabled={processing === (doc.id as string)} size="sm" variant="outline" className="h-7 px-2 text-[11px] border-red-200 text-red-600 hover:bg-red-50">
                     Revoke
                   </Button>
                 )}
