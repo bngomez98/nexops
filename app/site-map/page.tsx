@@ -33,7 +33,7 @@ const sections: { label: string; links: SiteMapLink[] }[] = [
     label: "Account Portals",
     links: [
       { href: "/auth/sign-up",                       label: "Create Account",         desc: "Register as a homeowner, property manager, or contractor" },
-      { href: "/auth/sign-up?role=property_manager", label: "Property Manager",       desc: "Register as a property manager" },
+      { href: "/auth/sign-up?role=property-manager", label: "Property Manager",       desc: "Register as a property manager" },
       { href: "/auth/sign-up?role=contractor",       label: "Contractor Application", desc: "Apply to join the Nexus contractor network" },
       { href: "/auth/login",                         label: "Sign In",                desc: "Log in to your Nexus Operations account" },
     ],
@@ -44,7 +44,7 @@ const sections: { label: string; links: SiteMapLink[] }[] = [
       { href: "/dashboard",              label: "Overview",      desc: "Main dashboard — requests, stats, and recent activity" },
       { href: "/dashboard/requests/new", label: "New Request",   desc: "Submit a new maintenance or repair request" },
       { href: "/dashboard/requests",     label: "My Requests",   desc: "View and manage all submitted service requests" },
-      { href: "/dashboard/settings",     label: "Settings",      desc: "Account settings, notifications, and preferences" },
+      { href: "/dashboard/homeowner/settings", label: "Settings", desc: "Account settings, notifications, and preferences" },
     ],
   },
   {
