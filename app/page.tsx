@@ -138,7 +138,7 @@ const audienceCards = [
     title: 'Property Managers',
     desc: 'Manage your entire portfolio from one dashboard. Track spend by property and get consolidated monthly invoices.',
     cta: 'Set up portfolio account',
-    href: '/auth/sign-up?role=property_manager',
+    href: '/auth/sign-up?role=property-manager',
     icon: Building2,
     color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
   },
@@ -370,16 +370,16 @@ export default function HomePage() {
               <Link
                 key={title}
                 href={href}
-                className="group flex flex-col rounded-xl border border-border bg-card p-6 card-elevated card-elevated-hover"
+                className="group flex flex-col rounded-2xl border border-border/80 bg-card/90 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg"
               >
-                <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${color}`}>
+                <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-primary/20 ${color}`}>
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
+                <h3 className="font-display text-xl font-bold tracking-tight text-foreground">{title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {desc}
                 </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:gap-3 transition-all">
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-all group-hover:gap-3">
                   {cta}
                   <ArrowRight className="h-4 w-4" />
                 </span>

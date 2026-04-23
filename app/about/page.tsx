@@ -296,7 +296,7 @@ export default function AboutPage() {
         </section>
 
         {/* Process Walkthrough */}
-        <section className="py-16 lg:py-24">
+        <section id="process" className="scroll-mt-28 py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">

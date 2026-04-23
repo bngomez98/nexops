@@ -161,7 +161,7 @@ export default function CommercialPage() {
         </Section>
 
         {/* ── SLA table ────────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="sla" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Service level agreements"
             title="Published response commitments by urgency."
