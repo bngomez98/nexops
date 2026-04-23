@@ -324,7 +324,40 @@ export async function sendContactFormEmail(opts: {
   })
 }
 
-/** 10. Contractor application — sent to admin + auto-reply to applicant */
+/** 10. Cron: multi-document expiry warning (one email per contractor, batching all expiring docs) */
+export async function sendDocumentExpiryWarningEmail(opts: {
+  to: string
+  contractorName: string
+  expiringDocuments: { type: string; expiresAt: string }[]
+}) {
+  const docRows = opts.expiringDocuments
+    .map(d => `<tr>
+      <td style="padding:10px 16px;font-size:13px;color:#374151;">${fmt(d.type)}</td>
+      <td style="padding:10px 16px;font-size:13px;color:#b45309;font-weight:600;text-align:right;">${new Date(d.expiresAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</td>
+    </tr>`)
+    .join('')
+
+  await send({
+    to: opts.to,
+    subject: `Action required: compliance document${opts.expiringDocuments.length > 1 ? 's' : ''} expiring soon`,
+    html: wrap(`
+      ${h1('Compliance document expiry notice')}
+      ${p(`Hi ${opts.contractorName.split(' ')[0]}, the following compliance document${opts.expiringDocuments.length > 1 ? 's are' : ' is'} expiring within 30 days:`)}
+      <table style="width:100%;margin:16px 0;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;">
+        <tr style="background:#f9fafb;">
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Document</td>
+          <td style="padding:10px 16px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;text-align:right;">Expires</td>
+        </tr>
+        ${docRows}
+      </table>
+      ${p('Please upload updated documents to keep your account active and continue receiving job assignments.')}
+      ${btn('Upload Documents', `${SITE}/dashboard/contractor/documents`)}
+      ${small('Your account will be paused for new assignments if documents are not renewed before expiry.')}
+    `),
+  })
+}
+
+/** 11. Contractor application — sent to admin + auto-reply to applicant */
 export async function sendContractorApplicationEmail(opts: {
   firstName: string
   lastName: string

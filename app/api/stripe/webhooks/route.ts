@@ -2,6 +2,7 @@ import type Stripe from 'stripe'
 
 import { getStripeClient } from '@/lib/stripe/server'
 import { getAdminClient } from '@/lib/supabase/admin'
+import { assertServerEnv } from '@/lib/server-env'
 
 import {
   sendInvoicePaidContractorEmail,
@@ -37,6 +38,8 @@ function getSubscriptionPeriod(sub: Stripe.Subscription): {
 }
 
 export async function POST(req: Request) {
+  assertServerEnv({ requireStripe: true })
+
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')
 
@@ -56,6 +59,32 @@ export async function POST(req: Request) {
 
   try {
     const supabase = getAdminClient()
+
+    // ── Idempotency guard ───────────────────────────────────────────────────────
+    // Check whether this Stripe event has already been processed.
+    // `stripe_events` has a TEXT primary key = Stripe's evt_xxx id.
+    const { error: dupeCheckErr, data: existingEvent } = await supabase
+      .from('stripe_events')
+      .select('id')
+      .eq('id', event.id)
+      .maybeSingle()
+
+    if (dupeCheckErr) {
+      // Log but do not abort — a failed read should not block webhook delivery.
+      console.warn('[webhook] stripe_events idempotency check failed:', dupeCheckErr.message)
+    } else if (existingEvent) {
+      // Already processed; return 200 so Stripe stops retrying.
+      return Response.json({ received: true, duplicate: true })
+    }
+
+    // Record the event BEFORE processing side effects so that a partial failure
+    // on the first delivery is not repeated on Stripe's retry.
+    await supabase.from('stripe_events').insert({
+      id: event.id,
+      type: event.type,
+      processed_at: new Date().toISOString(),
+      payload: event as unknown as Record<string, unknown>,
+    } as never)
 
     switch (event.type) {
       // ── Checkout completed (one-time invoice payment) ──────────────────────
