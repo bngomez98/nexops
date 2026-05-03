@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
+import Image from 'next/image'
 import { Search, Building2, ClipboardList, HardHat, ArrowRight, MapPin, BadgeCheck } from 'lucide-react'
 import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
@@ -247,9 +248,11 @@ export function SearchClient({
                   className="flex items-start gap-4 rounded-xl border border-border bg-card px-5 py-4 hover:bg-muted/30 hover:border-primary/30 transition-all group"
                 >
                   {contractor.photo_url ? (
-                    <img
+                    <Image
                       src={contractor.photo_url}
                       alt={contractor.full_name}
+                      width={48}
+                      height={48}
                       className="w-12 h-12 rounded-full object-cover flex-shrink-0"
                     />
                   ) : (

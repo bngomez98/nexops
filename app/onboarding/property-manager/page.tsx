@@ -235,6 +235,7 @@ export default function PropertyManagerOnboardingPage() {
             </div>
             <div className="flex flex-col items-center gap-5">
               {formData.photoPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={formData.photoPreview} alt="Profile preview" className="w-28 h-28 rounded-full object-cover border-4 border-primary/20" />
               ) : (
                 <div className="w-28 h-28 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center">

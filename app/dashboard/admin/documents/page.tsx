@@ -91,7 +91,7 @@ export default function AdminDocumentsPage() {
             <div className="space-y-1">
               {expiringSoon.map((d: Record<string, unknown>) => (
                 <p key={d.id as string} className="text-[12px] text-amber-700">
-                  {(d.profiles as any)?.full_name ?? 'Unknown'} — {fmt(d.type as string)} — expires {new Date(d.expires_at as string).toLocaleDateString()}
+                  {(d.profiles as Record<string, unknown>)?.full_name ?? 'Unknown'} — {fmt(d.type as string)} — expires {new Date(d.expires_at as string).toLocaleDateString()}
                 </p>
               ))}
             </div>
@@ -115,7 +115,7 @@ export default function AdminDocumentsPage() {
                   </span>
                 </div>
                 <p className="text-[12px] text-muted-foreground">
-                  {(doc.profiles as any)?.full_name ?? 'Unknown'} · {fmt((doc.profiles as any)?.role ?? 'unknown')}
+                  {(doc.profiles as Record<string, unknown>)?.full_name ?? 'Unknown'} · {fmt((doc.profiles as Record<string, unknown>)?.role ?? 'unknown')}
                   {doc.expires_at && <> · Exp. {new Date(doc.expires_at as string).toLocaleDateString()}</>}
                 </p>
               </div>

@@ -171,7 +171,7 @@ export async function POST(req: Request) {
         }
 
         // Jobs flow: look up internal invoice by stripe_invoice_id
-        const { data: nexusInvoice }: { data: any } = await supabase
+        const { data: nexusInvoice } = await supabase
           .from('invoices')
           .select('id, job_id, contractor_id, client_id, subtotal, nexus_fee, total')
           .eq('stripe_invoice_id', stripeInvoice.id)
@@ -193,7 +193,7 @@ export async function POST(req: Request) {
             changed_by: 'system',
           } as never)
 
-          const { data: job }: { data: any } = await supabase
+          const { data: job } = await supabase
             .from('jobs')
             .select('service_type')
             .eq('id', nexusInvoice.job_id)
@@ -207,10 +207,12 @@ export async function POST(req: Request) {
                 admin.auth.admin.getUserById(nexusInvoice.contractor_id),
                 admin.auth.admin.getUserById(nexusInvoice.client_id),
               ])
-              const [{ data: contractorProfile }, { data: clientProfile }] = await Promise.all([
+              const [contractorProfileResult, clientProfileResult] = await Promise.all([
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
-              ]) as any
+              ])
+              const contractorProfile = contractorProfileResult.data
+              const clientProfile = clientProfileResult.data
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([
                 contractorAuth.user?.email

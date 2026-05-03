@@ -168,6 +168,7 @@ export default function ContractorProfilePage() {
             <p className="text-[13px] font-semibold">Profile Photo</p>
             <div className="flex items-center gap-5">
               {photoPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={photoPreview} alt="Profile" className="w-20 h-20 rounded-full object-cover border-2 border-primary/20" />
               ) : (
                 <div className="w-20 h-20 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center">

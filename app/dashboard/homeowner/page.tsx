@@ -486,7 +486,7 @@ function HomeownerDashboardInner() {
         {/* AI Insights */}
         <AIInsightsCard
           role="homeowner"
-          requests={requests as any}
+          requests={requests as unknown as Record<string, unknown>[]}
         />
 
         {/* Quick Actions */}

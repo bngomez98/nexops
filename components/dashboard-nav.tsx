@@ -149,7 +149,7 @@ interface DashboardNavProps {
 export function DashboardNav({ userName, role, onLogout, avatarUrl }: DashboardNavProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const navGroups = NAV_GROUPS[role] ?? []
+  const navGroups = useMemo(() => NAV_GROUPS[role] ?? [], [role])
   const allNavItems = useMemo(() => navGroups.flatMap(g => g.items), [navGroups])
 
   const initials = userName.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()

@@ -159,7 +159,7 @@ export default function NewProjectRequest() {
       }
     }, 800)
     return () => clearTimeout(timer)
-  }, [formData.title, formData.description, formData.category])
+  }, [automationEnabled, formData.title, formData.description, formData.category])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target

@@ -107,6 +107,7 @@ export function ImageUpload({ onImagesChange, maxFiles = 5, maxSizeInMB = 10 }: 
             {uploadedImages.map((file, index) => (
               <div key={index} className="relative group">
                 <div className="aspect-square bg-muted rounded-lg overflow-hidden border border-border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={URL.createObjectURL(file)}
                     alt={`Preview ${index + 1}`}

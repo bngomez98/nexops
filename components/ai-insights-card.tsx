@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Sparkles, Loader2, RefreshCw, AlertTriangle, Info, Zap, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface Recommendation {
@@ -56,7 +56,7 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
   const [expanded, setExpanded] = useState(true)
   const [fetched, setFetched] = useState(false)
 
-  async function fetchInsights() {
+  const fetchInsights = useCallback(async () => {
     setLoading(true)
     setError(false)
     try {
@@ -75,14 +75,14 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
     } finally {
       setLoading(false)
     }
-  }
+  }, [role, requests, profile])
 
   useEffect(() => {
     // Auto-fetch once requests are available
     if (!fetched && requests.length >= 0) {
       fetchInsights()
     }
-  }, [requests.length])
+  }, [fetched, fetchInsights, requests.length])
 
   return (
     <div className="bg-card border border-border rounded-2xl overflow-hidden">
