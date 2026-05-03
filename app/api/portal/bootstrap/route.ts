@@ -54,7 +54,6 @@ export async function GET() {
     if (requestsError) throw requestsError
 
     const requestRows = serviceRequests ?? []
-    const requestIds = requestRows.map((row) => row.id as string)
 
     const userIds = new Set<string>([user.id])
     for (const row of requestRows) {
@@ -138,37 +137,20 @@ export async function GET() {
       }
     })
 
-    const messageMap = new Map<string, Array<{ id: string; authorId: string; body: string; timestamp: string }>>()
-    if (requestIds.length > 0) {
-      const { data: messages } = await supabase
-        .from('messages')
-        .select('id, request_id, sender_id, body, created_at')
-        .in('request_id', requestIds)
-        .order('created_at', { ascending: true })
-
-      for (const message of messages ?? []) {
-        const requestId = message.request_id as string | undefined
-        if (!requestId) continue
-        const list = messageMap.get(requestId) ?? []
-        list.push({
-          id: String(message.id),
-          authorId: String(message.sender_id),
-          body: String(message.body ?? ''),
-          timestamp: String(message.created_at),
-        })
-        messageMap.set(requestId, list)
-      }
-    }
-
     const jobs = requestRows.map((row) => {
       const requestId = String(row.id)
       const ownerId = String(row.owner_id)
-      const contractorId = typeof row.assigned_contractor_id === 'string' ? row.assigned_contractor_id : undefined
-      const messages = (messageMap.get(requestId) ?? []).map((message) => ({
-        ...message,
-        authorName: portalUsers.find((u) => u.id === message.authorId)?.name ?? 'User',
-      }))
+      const contractorId = typeof row.assigned_contractor_id === 'string' ? row.assigned_contractor_id : null
+      const ownerProfile = profileByAuthId.get(ownerId)
+      const ownerName = typeof ownerProfile?.full_name === 'string' ? ownerProfile.full_name : null
+      const contractorProfile = contractorId ? profileByAuthId.get(contractorId) : null
+      const contractorName = contractorProfile
+        ? ((typeof contractorProfile.company === 'string' && contractorProfile.company) ||
+           (typeof contractorProfile.full_name === 'string' && contractorProfile.full_name) ||
+           null)
+        : null
       const photoUrls = Array.isArray(row.photo_urls) ? (row.photo_urls as string[]) : []
+      const invoiceAmount = typeof row.invoice_amount === 'number' ? row.invoice_amount : null
 
       return {
         id: requestId,
@@ -178,30 +160,18 @@ export async function GET() {
         category: normalizeCategory(row.category),
         priority: normalizePriority(row.urgency),
         status: dbStatusToPortal(row.status),
+        rawStatus: String(row.status ?? ''),
         location: String(row.address ?? ''),
         createdAt: String(row.created_at),
-        scheduledFor:
-          typeof row.consultation_date === 'string' ? row.consultation_date : undefined,
-        homeownerId: ownerId,
+        preferredDate: typeof row.consultation_date === 'string' ? row.consultation_date : null,
+        ownerId,
+        ownerName,
         contractorId,
-        photos: photoUrls.map((url, index) => ({
-          id: `${requestId}-photo-${index}`,
-          kind: 'attachment' as const,
-          caption: `Attachment ${index + 1}`,
-          hue: 180 + ((index + 1) * 17) % 160,
-          url,
-        })),
-        messages,
-        invoice:
-          typeof row.invoice_amount === 'number'
-            ? {
-                id: `${requestId}-invoice`,
-                amountCents: Math.max(0, Math.round(row.invoice_amount * 100)),
-                status: row.invoice_paid ? 'paid' : 'submitted',
-                submittedAt: String(row.created_at),
-                paidAt: row.invoice_paid ? String(row.updated_at ?? row.created_at) : undefined,
-              }
-            : undefined,
+        contractorName,
+        photoUrls,
+        invoiceAmount,
+        invoicePaid: Boolean(row.invoice_paid ?? false),
+        finalCost: null,
       }
     })
 

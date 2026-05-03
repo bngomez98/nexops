@@ -29,19 +29,21 @@ export function normalizePriority(value: unknown): 'low' | 'normal' | 'high' | '
   return 'normal'
 }
 
-export function dbStatusToPortal(value: unknown): 'pending' | 'assigned' | 'in_progress' | 'complete' {
+export function dbStatusToPortal(value: unknown): 'open' | 'claimed' | 'in-progress' | 'completed' | 'cancelled' {
   const status = typeof value === 'string' ? value.toLowerCase() : ''
-  if (status === 'assigned') return 'assigned'
-  if (status === 'consultation_scheduled' || status === 'in_progress') return 'in_progress'
-  if (status === 'completed') return 'complete'
-  return 'pending'
+  if (status === 'assigned' || status === 'consultation_scheduled') return 'claimed'
+  if (status === 'in_progress') return 'in-progress'
+  if (status === 'completed') return 'completed'
+  if (status === 'declined' || status === 'cancelled') return 'cancelled'
+  return 'open'
 }
 
-export function portalStatusToDb(value: unknown): 'pending_review' | 'assigned' | 'in_progress' | 'completed' {
+export function portalStatusToDb(value: unknown): 'pending_review' | 'assigned' | 'in_progress' | 'completed' | 'cancelled' {
   const status = typeof value === 'string' ? value.toLowerCase() : ''
-  if (status === 'assigned') return 'assigned'
-  if (status === 'in_progress') return 'in_progress'
-  if (status === 'complete' || status === 'completed') return 'completed'
+  if (status === 'claimed' || status === 'assigned') return 'assigned'
+  if (status === 'in-progress' || status === 'in_progress') return 'in_progress'
+  if (status === 'completed' || status === 'complete') return 'completed'
+  if (status === 'cancelled') return 'cancelled'
   return 'pending_review'
 }
 

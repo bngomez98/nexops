@@ -173,6 +173,16 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
   return res.json() as Promise<T>
 }
 
+/* ── Portal-to-DB and DB-to-portal status maps ───────────────────────────── */
+
+const PORTAL_STATUS_TO_DB: Record<string, string> = {
+  open: 'pending_review',
+  claimed: 'assigned',
+  'in-progress': 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled',
+}
+
 /* ── Provider ─────────────────────────────────────────────────────────────── */
 
 const DEFAULT_PREFS: PortalPreferences = {
@@ -195,21 +205,26 @@ export function PortalProvider({ children }: { children: ReactNode }) {
 
   const loadUser = useCallback(async () => {
     try {
-      // Prefer bootstrap which returns richer user data (serviceCategories, rating, preferences)
+      // Bootstrap returns user data, preferences, and jobs in a single request
       const data = await apiFetch<Record<string, unknown>>('/api/portal/bootstrap')
       if (mountedRef.current) {
-          const cu = data.currentUser
-          if (cu && typeof cu === 'object') setCurrentUser(mapUser(cu as Record<string, unknown>))
-          const prefs = data.preferences
-          if (prefs && typeof prefs === 'object') {
-            const p = prefs as Record<string, unknown>
-            setPreferences({
-              notifyMessages: Boolean(p.notifyMessages ?? true),
-              notifyStatus: Boolean(p.notifyStatus ?? true),
-              notifyPayments: Boolean(p.notifyPayments ?? false),
-            })
-          }
+        const cu = data.currentUser
+        if (cu && typeof cu === 'object') setCurrentUser(mapUser(cu as Record<string, unknown>))
+        const prefs = data.preferences
+        if (prefs && typeof prefs === 'object') {
+          const p = prefs as Record<string, unknown>
+          setPreferences({
+            notifyMessages: Boolean(p.notifyMessages ?? true),
+            notifyStatus: Boolean(p.notifyStatus ?? true),
+            notifyPayments: Boolean(p.notifyPayments ?? false),
+          })
         }
+        // Use jobs from bootstrap to avoid a second round-trip
+        const rawJobs = data.jobs
+        if (Array.isArray(rawJobs) && rawJobs.length > 0) {
+          setJobs(rawJobs.map((item) => mapProject(item as Record<string, unknown>)))
+        }
+      }
     } catch {
       // Fallback to auth/me
       try {
@@ -344,7 +359,10 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const markNotificationRead = useCallback(async (id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
     try {
-      await apiFetch(`/api/notifications/${id}/read`, { method: 'POST' })
+      await apiFetch('/api/notifications', {
+        method: 'PATCH',
+        body: JSON.stringify({ id }),
+      })
     } catch {
       /* optimistic update stays */
     }
@@ -353,7 +371,10 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const markAllNotificationsRead = useCallback(async () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
     try {
-      await apiFetch('/api/notifications/read-all', { method: 'POST' })
+      await apiFetch('/api/notifications', {
+        method: 'PATCH',
+        body: JSON.stringify({ markAllRead: true }),
+      })
     } catch {
       /* optimistic update stays */
     }
@@ -414,19 +435,13 @@ export function PortalProvider({ children }: { children: ReactNode }) {
       if (!job) return
       const idx = STATUS_FLOW.indexOf(job.status)
       if (idx < 0 || idx >= STATUS_FLOW.length - 1) return
-      const nextStatus = STATUS_FLOW[idx + 1]
+      const nextPortalStatus = STATUS_FLOW[idx + 1]
+      const nextDbStatus = PORTAL_STATUS_TO_DB[nextPortalStatus] ?? nextPortalStatus
 
-      try {
-        await apiFetch('/api/automation/update-status', {
-          method: 'POST',
-          body: JSON.stringify({ projectId: jobId, status: nextStatus }),
-        })
-      } catch {
-        await apiFetch(`/api/projects/${jobId}`, {
-          method: 'PATCH',
-          body: JSON.stringify({ status: nextStatus }),
-        })
-      }
+      await apiFetch(`/api/projects/${jobId}`, {
+        method: 'POST',
+        body: JSON.stringify({ status: nextDbStatus }),
+      })
 
       await refreshJob(jobId)
     },

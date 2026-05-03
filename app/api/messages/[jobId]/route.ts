@@ -86,19 +86,18 @@ export async function POST(
     }
 
     const { jobId } = await params
-    const body = await request.json()
-    const parsed = messageSchema.safeParse(body)
+    const rawBody = await request.json()
 
-    if (!parsed.success) {
-      return Response.json(
-        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
-        { status: 400 }
-      )
+    // Accept either `content` or `body` as the message text (portal sends `body`)
+    const content: string = rawBody.content ?? rawBody.body ?? ''
+    if (!content.trim()) {
+      return Response.json({ error: 'Message content is required' }, { status: 400 })
+    }
+    if (content.length > 5000) {
+      return Response.json({ error: 'Message is too long' }, { status: 400 })
     }
 
-    const { content, recipient_id } = parsed.data
-
-    // Verify the sender is a party to this job (owner or assigned contractor)
+    // Verify the sender is a party to this job and infer recipient if not supplied
     const { data: job } = await supabase
       .from('service_requests')
       .select('owner_id, assigned_contractor_id')
@@ -109,13 +108,28 @@ export async function POST(
       return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    // Infer recipient: the other party in the job
+    const providedRecipient: string | undefined = rawBody.recipient_id
+    const inferredRecipient = user.id === job.owner_id
+      ? job.assigned_contractor_id
+      : job.owner_id
+    const recipient_id = providedRecipient ?? inferredRecipient
+
+    const parsed = messageSchema.safeParse({ content, recipient_id: recipient_id ?? '' })
+    if (!parsed.success) {
+      return Response.json(
+        { error: 'Validation failed', details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      )
+    }
+
     const { data: message, error } = await supabase
       .from('messages')
       .insert({
         job_id: jobId,
         sender_id: user.id,
-        recipient_id,
-        content,
+        recipient_id: parsed.data.recipient_id,
+        content: parsed.data.content,
       })
       .select('id, job_id, sender_id, recipient_id, content, created_at, read_at')
       .single()
