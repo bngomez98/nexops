@@ -69,6 +69,8 @@ export function ImageUpload({ onImagesChange, maxFiles = 5, maxSizeInMB = 10 }: 
       >
         <input
           ref={inputRef}
+          id="image-upload"
+          name="images"
           type="file"
           multiple
           accept="image/*"

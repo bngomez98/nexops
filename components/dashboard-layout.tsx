@@ -249,6 +249,8 @@ export function DashboardLayout({
               <Search className="w-3.5 h-3.5 shrink-0" />
               <input
                 ref={searchInputRef}
+                id="nav-search"
+                name="nav-search"
                 type="text"
                 value={navSearchTerm}
                 onChange={(e) => setNavSearchTerm(e.target.value)}

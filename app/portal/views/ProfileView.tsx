@@ -48,9 +48,12 @@ function ToggleRow({
   checked: boolean
   onChange: (value: boolean) => void
 }) {
+  const id = `toggle-${label.toLowerCase().replace(/\s+/g, '-')}`
   return (
-    <label className="flex items-start gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
+    <label htmlFor={id} className="flex items-start gap-3 p-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
       <input
+        id={id}
+        name={id}
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
@@ -201,6 +204,8 @@ export function ProfileView() {
             <Avatar user={currentUser} size={84} />
             <input
               ref={fileInputRef}
+              id="avatar-upload"
+              name="avatar"
               type="file"
               accept="image/*"
               className="hidden"
@@ -239,12 +244,16 @@ export function ProfileView() {
             {editMode ? (
               <div className="mt-2 space-y-2">
                 <input
+                  id="edit-name"
+                  name="name"
                   className="glass-input text-sm"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   placeholder="Full name"
                 />
                 <input
+                  id="edit-phone"
+                  name="phone"
                   className="glass-input text-sm"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}

@@ -78,6 +78,8 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
       <div className="relative">
         <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-indigo-300" />
         <input
+          id="universal-search"
+          name="q"
           autoFocus
           className="glass-input !pl-12 !py-4 !text-base !rounded-2xl"
           placeholder={searchPlaceholder}
