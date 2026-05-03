@@ -23,6 +23,7 @@ import type {
   PortalJob,
   PortalJobStatus,
   PortalPriority,
+  PortalRole,
   PortalConversation,
 } from './portal-utils'
 
@@ -113,49 +114,47 @@ function mapPortalStatus(raw?: string | null): PortalJobStatus {
   return 'open'
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapProject(p: any): PortalJob {
-  const status = mapPortalStatus(p.status)
+function mapProject(p: Record<string, unknown>): PortalJob {
+  const status = mapPortalStatus(p.status as string | null | undefined)
   return {
-    id: p.id ?? '',
-    shortId: toShortId(p.id ?? ''),
-    title: p.title ?? p.name ?? 'Untitled',
-    description: p.description ?? '',
-    category: p.category ?? p.type ?? 'general',
-    priority: mapUrgencyToPriority(p.urgency ?? p.priority),
+    id: (p.id as string | null | undefined) ?? '',
+    shortId: toShortId((p.id as string | null | undefined) ?? ''),
+    title: (p.title as string | null | undefined) ?? (p.name as string | null | undefined) ?? 'Untitled',
+    description: (p.description as string | null | undefined) ?? '',
+    category: (p.category as string | null | undefined) ?? (p.type as string | null | undefined) ?? 'general',
+    priority: mapUrgencyToPriority((p.urgency as string | null | undefined) ?? (p.priority as string | null | undefined)),
     status,
-    rawStatus: p.status ?? null,
-    location: p.location ?? p.address ?? '',
-    createdAt: p.createdAt ?? p.created_at ?? new Date().toISOString(),
-    preferredDate: p.preferredDate ?? p.preferred_date ?? null,
-    ownerId: p.ownerId ?? p.owner_id ?? p.userId ?? null,
-    ownerName: p.ownerName ?? p.owner_name ?? null,
-    contractorId: p.contractorId ?? p.contractor_id ?? null,
-    contractorName: p.contractorName ?? p.contractor_name ?? null,
-    photoUrls: Array.isArray(p.photoUrls ?? p.photo_urls ?? p.photos) ? (p.photoUrls ?? p.photo_urls ?? p.photos) : [],
-    invoiceAmount: p.invoiceAmount ?? p.invoice_amount ?? null,
-    invoicePaid: p.invoicePaid ?? p.invoice_paid ?? false,
-    finalCost: p.finalCost ?? p.final_cost ?? null,
+    rawStatus: (p.status as string | null | undefined) ?? null,
+    location: (p.location as string | null | undefined) ?? (p.address as string | null | undefined) ?? '',
+    createdAt: (p.createdAt as string | null | undefined) ?? (p.created_at as string | null | undefined) ?? new Date().toISOString(),
+    preferredDate: (p.preferredDate as string | null | undefined) ?? (p.preferred_date as string | null | undefined) ?? null,
+    ownerId: (p.ownerId as string | null | undefined) ?? (p.owner_id as string | null | undefined) ?? (p.userId as string | null | undefined) ?? null,
+    ownerName: (p.ownerName as string | null | undefined) ?? (p.owner_name as string | null | undefined) ?? null,
+    contractorId: (p.contractorId as string | null | undefined) ?? (p.contractor_id as string | null | undefined) ?? null,
+    contractorName: (p.contractorName as string | null | undefined) ?? (p.contractor_name as string | null | undefined) ?? null,
+    photoUrls: Array.isArray(p.photoUrls ?? p.photo_urls ?? p.photos) ? (p.photoUrls ?? p.photo_urls ?? p.photos) as string[] : [],
+    invoiceAmount: (p.invoiceAmount as number | null | undefined) ?? (p.invoice_amount as number | null | undefined) ?? null,
+    invoicePaid: Boolean(p.invoicePaid ?? p.invoice_paid ?? false),
+    finalCost: (p.finalCost as number | null | undefined) ?? (p.final_cost as number | null | undefined) ?? null,
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapUser(u: any): PortalUser {
-  const name: string = u.name ?? u.full_name ?? 'User'
+function mapUser(u: Record<string, unknown>): PortalUser {
+  const name: string = (u.name as string | null | undefined) ?? (u.full_name as string | null | undefined) ?? 'User'
   return {
-    id: u.id ?? '',
+    id: (u.id as string | null | undefined) ?? '',
     name,
-    email: u.email ?? '',
-    phone: u.phone ?? null,
-    bio: u.bio ?? null,
-    role: u.role ?? 'homeowner',
-    avatarUrl: u.avatarUrl ?? u.avatar_url ?? null,
+    email: (u.email as string | null | undefined) ?? '',
+    phone: (u.phone as string | null | undefined) ?? null,
+    bio: (u.bio as string | null | undefined) ?? null,
+    role: ((u.role as string | null | undefined) ?? 'homeowner') as PortalRole,
+    avatarUrl: (u.avatarUrl as string | null | undefined) ?? (u.avatar_url as string | null | undefined) ?? null,
     initials: buildInitials(name),
     avatarColor: avatarGradient(name),
-    rating: u.rating ?? null,
-    jobsCompleted: u.jobsCompleted ?? u.jobs_completed ?? null,
+    rating: (u.rating as number | null | undefined) ?? null,
+    jobsCompleted: (u.jobsCompleted as number | null | undefined) ?? (u.jobs_completed as number | null | undefined) ?? null,
     serviceCategories: Array.isArray(u.serviceCategories ?? u.service_categories)
-      ? (u.serviceCategories ?? u.service_categories)
+      ? (u.serviceCategories ?? u.service_categories) as string[]
       : [],
   }
 }
@@ -199,19 +198,18 @@ export function PortalProvider({ children }: { children: ReactNode }) {
       // Prefer bootstrap which returns richer user data (serviceCategories, rating, preferences)
       const data = await apiFetch<Record<string, unknown>>('/api/portal/bootstrap')
       if (mountedRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const cu = (data as any).currentUser
-        if (cu) setCurrentUser(mapUser(cu))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const prefs = (data as any).preferences
-        if (prefs && typeof prefs === 'object') {
-          setPreferences({
-            notifyMessages: Boolean(prefs.notifyMessages ?? true),
-            notifyStatus: Boolean(prefs.notifyStatus ?? true),
-            notifyPayments: Boolean(prefs.notifyPayments ?? false),
-          })
+          const cu = data.currentUser
+          if (cu && typeof cu === 'object') setCurrentUser(mapUser(cu as Record<string, unknown>))
+          const prefs = data.preferences
+          if (prefs && typeof prefs === 'object') {
+            const p = prefs as Record<string, unknown>
+            setPreferences({
+              notifyMessages: Boolean(p.notifyMessages ?? true),
+              notifyStatus: Boolean(p.notifyStatus ?? true),
+              notifyPayments: Boolean(p.notifyPayments ?? false),
+            })
+          }
         }
-      }
     } catch {
       // Fallback to auth/me
       try {
@@ -232,7 +230,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
         : Array.isArray((data as Record<string, unknown>).projects)
           ? (data as Record<string, unknown>).projects as unknown[]
           : []
-      if (mountedRef.current) setJobs(list.map(mapProject))
+      if (mountedRef.current) setJobs(list.map((item) => mapProject(item as Record<string, unknown>)))
     } catch {
       /* keep existing jobs on error */
     }
@@ -248,15 +246,17 @@ export function PortalProvider({ children }: { children: ReactNode }) {
           : []
       if (mountedRef.current) {
         setNotifications(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          list.map((n: any) => ({
-            id: n.id ?? '',
-            title: n.title ?? '',
-            body: n.body ?? n.message ?? '',
-            read: n.read ?? false,
-            createdAt: n.createdAt ?? n.created_at ?? new Date().toISOString(),
-            jobId: n.jobId ?? n.job_id ?? null,
-          })),
+          list.map((item) => {
+            const n = item as Record<string, unknown>
+            return {
+              id: (n.id as string | undefined) ?? '',
+              title: (n.title as string | undefined) ?? '',
+              body: (n.body as string | undefined) ?? (n.message as string | undefined) ?? '',
+              read: Boolean(n.read ?? false),
+              createdAt: (n.createdAt as string | undefined) ?? (n.created_at as string | undefined) ?? new Date().toISOString(),
+              jobId: (n.jobId as string | undefined) ?? (n.job_id as string | undefined) ?? null,
+            }
+          }),
         )
       }
     } catch {
@@ -274,15 +274,17 @@ export function PortalProvider({ children }: { children: ReactNode }) {
           : []
       if (mountedRef.current) {
         setConversations(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          list.map((c: any) => ({
-            jobId: c.jobId ?? c.job_id ?? '',
-            jobTitle: c.jobTitle ?? c.job_title ?? '',
-            otherUserName: c.otherUserName ?? c.other_user_name ?? '',
-            lastMessage: c.lastMessage ?? c.last_message ?? '',
-            lastMessageAt: c.lastMessageAt ?? c.last_message_at ?? '',
-            unreadCount: c.unreadCount ?? c.unread_count ?? 0,
-          })),
+          list.map((item) => {
+            const c = item as Record<string, unknown>
+            return {
+              jobId: (c.jobId as string | undefined) ?? (c.job_id as string | undefined) ?? '',
+              jobTitle: (c.jobTitle as string | undefined) ?? (c.job_title as string | undefined) ?? '',
+              otherUserName: (c.otherUserName as string | undefined) ?? (c.other_user_name as string | undefined) ?? '',
+              lastMessage: (c.lastMessage as string | undefined) ?? (c.last_message as string | undefined) ?? '',
+              lastMessageAt: (c.lastMessageAt as string | undefined) ?? (c.last_message_at as string | undefined) ?? '',
+              unreadCount: (c.unreadCount as number | undefined) ?? (c.unread_count as number | undefined) ?? 0,
+            }
+          }),
         )
       }
     } catch {
@@ -324,8 +326,10 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const refreshJob = useCallback(async (jobId: string) => {
     try {
       const data = await apiFetch<Record<string, unknown>>(`/api/projects/${jobId}`)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const raw: any = (data as any).project ?? data
+      const projectData = data.project ?? data
+      const raw = (typeof projectData === 'object' && projectData !== null)
+        ? projectData as Record<string, unknown>
+        : data
       const updated = mapProject(raw)
       if (mountedRef.current) {
         setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)))
@@ -364,8 +368,10 @@ export function PortalProvider({ children }: { children: ReactNode }) {
           method: 'POST',
           body: JSON.stringify(input),
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const raw: any = (data as any).project ?? data
+        const projectData = data.project ?? data
+        const raw = (typeof projectData === 'object' && projectData !== null)
+          ? projectData as Record<string, unknown>
+          : data
         const job = mapProject(raw)
         if (mountedRef.current) setJobs((prev) => [job, ...prev])
         return job
@@ -436,15 +442,17 @@ export function PortalProvider({ children }: { children: ReactNode }) {
           method: 'POST',
           body: JSON.stringify({ body }),
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const m: any = (data as any).message ?? data
+        const messageData = data.message ?? data
+        const m = (typeof messageData === 'object' && messageData !== null)
+          ? messageData as Record<string, unknown>
+          : data
         return {
-          id: m.id ?? '',
-          jobId: m.jobId ?? m.job_id ?? jobId,
-          senderId: m.senderId ?? m.sender_id ?? currentUser?.id ?? '',
-          senderName: m.senderName ?? m.sender_name ?? currentUser?.name ?? '',
-          body: m.body ?? body,
-          createdAt: m.createdAt ?? m.created_at ?? new Date().toISOString(),
+          id: (m.id as string | undefined) ?? '',
+          jobId: (m.jobId as string | undefined) ?? (m.job_id as string | undefined) ?? jobId,
+          senderId: (m.senderId as string | undefined) ?? (m.sender_id as string | undefined) ?? currentUser?.id ?? '',
+          senderName: (m.senderName as string | undefined) ?? (m.sender_name as string | undefined) ?? currentUser?.name ?? '',
+          body: (m.body as string | undefined) ?? body,
+          createdAt: (m.createdAt as string | undefined) ?? (m.created_at as string | undefined) ?? new Date().toISOString(),
         }
       } catch {
         return null

@@ -189,14 +189,14 @@ Branding is scoped to **authenticated dashboard sessions only**. Public pages (m
 
 ## CI/CD
 
-GitHub Actions now runs a full CI pipeline on every push and pull request:
+GitHub Actions now runs a CI pipeline on every push and pull request:
 
-- ESLint (`pnpm lint`)
 - TypeScript type checks (`npx tsc --noEmit`)
 - Vitest test suite (`pnpm test`)
 - Production build verification (`pnpm build`)
+- ESLint (`pnpm lint`) is optional and runs only when manually requested in `workflow_dispatch`
 
-Each CI run now executes all four checks and then fails at the end if any check failed, so every run surfaces the full set of issues instead of stopping after the first failure.
+Each CI run executes these checks and then fails at the end if any required check failed, so runs surface the full set of issues instead of stopping after the first failure.
 
 A dedicated CD workflow deploys to Vercel production after CI succeeds on `main` (or via manual dispatch), when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are configured in repository settings.
 

@@ -193,10 +193,12 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
     <Sheet open={open} onClose={handleClose} title="New maintenance request">
       <div className="space-y-5">
         <div>
-          <label className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
+          <label htmlFor="request-title" className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
             Title
           </label>
           <input
+            id="request-title"
+            name="title"
             className="glass-input mt-1.5"
             placeholder="e.g. Leaking kitchen faucet"
             value={title}
@@ -258,10 +260,12 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
         </div>
 
         <div>
-          <label className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
+          <label htmlFor="request-description" className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
             Description
           </label>
           <textarea
+            id="request-description"
+            name="description"
             className="glass-input mt-1.5"
             placeholder="Describe what's going on, when it started, and any access details…"
             value={description}
@@ -270,12 +274,14 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
         </div>
 
         <div>
-          <label className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
+          <label htmlFor="request-location" className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
             Location
           </label>
           <div className="relative mt-1.5">
             <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-indigo-300/70" />
             <input
+              id="request-location"
+              name="location"
               className="glass-input pl-10"
               placeholder="Property address or unit"
               value={location}
@@ -286,11 +292,13 @@ export function SubmitRequestSheet({ open, onClose, onSubmitted }: SubmitRequest
 
         {/* ── Photos ───────────────────────────────────────────────────── */}
         <div>
-          <label className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
+          <label htmlFor="request-photos" className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/60">
             Photos / Videos
           </label>
           <input
             ref={fileInputRef}
+            id="request-photos"
+            name="photos"
             type="file"
             accept="image/*,video/*"
             multiple

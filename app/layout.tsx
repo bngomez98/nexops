@@ -1,6 +1,7 @@
 import type React from 'react'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono, Instrument_Serif } from 'next/font/google'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/app/lib/auth-context'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -8,6 +9,35 @@ import { CookieConsentBanner } from '@/components/cookie-consent'
 import { ZendeskWidget } from '@/components/zendesk-widget'
 import { CONTACT_INFO } from '@/lib/contact-info'
 import './globals.css'
+
+// Fonts are fetched from Google at build time and self-hosted — no runtime request.
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-serif',
+  display: 'swap',
+})
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim()
 const HAS_GA = Boolean(GA_ID)
@@ -152,14 +182,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth bg-background" suppressHydrationWarning>
+    <html lang="en" className={`scroll-smooth bg-background ${inter.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Instrument+Serif&display=swap"
-          rel="stylesheet"
-        />
         {HAS_GA && CONSENT_DEFAULT_SCRIPT && (
           <Script id="consent-default" strategy="beforeInteractive">
             {CONSENT_DEFAULT_SCRIPT}
