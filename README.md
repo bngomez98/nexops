@@ -10,10 +10,16 @@ Nexus Operations is a Next.js web application serving Topeka, KS and the surroun
 |---|---|
 | Framework | Next.js 15 (App Router) |
 | Language | TypeScript 5 |
+| Database | Supabase (Postgres + Auth + Realtime) |
 | Styling | Tailwind CSS 4, shadcn/ui |
 | Forms | React Hook Form + Zod |
+| Payments | Stripe (subscriptions + Connect) |
+| Email | Resend |
+| Storage | Vercel Blob |
 | Charts | Recharts |
 | Package manager | pnpm |
+
+For a detailed description of the system architecture, data model, RLS policies, matching engine, fee lifecycle, and environment variables see [`docs/architecture.md`](docs/architecture.md).
 
 ## Prerequisites
 
@@ -92,43 +98,7 @@ nexops/
 
 ## Authentication
 
-Role-based routing is enforced via `middleware.ts`. Two user roles exist:
-
-- `homeowner` — access to `/dashboard/homeowner/*`
-- `contractor` — access to `/dashboard/contractor/*`
-
-Session tokens are validated server-side on every protected request. Unauthenticated users are redirected to `/auth/login`.
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/login` | Authenticate a user and issue a session |
-| POST | `/api/auth/signup` | Register a new homeowner or contractor |
-| POST | `/api/auth/logout` | Terminate the current session |
-| GET | `/api/auth/me` | Return the authenticated user's profile |
-| GET | `/api/leads` | Return available project requests (contractor-only) |
-| GET/POST | `/api/requests` | Manage homeowner project submissions |
-
-## Service Categories
-
-| Category | Status | Typical Budget Range |
-|---|---|---|
-| Tree Removal | Available | $500 – $8,000 |
-| Concrete Work | Available | $1,200 – $15,000 |
-| Roofing | Available | $300 – $25,000 |
-| HVAC | Available | $3,000 – $20,000 |
-| Fencing | Available | $1,500 – $8,000 |
-| Electrical | Available | $500 – $10,000 |
-| Plumbing | Available | TBD |
-| Excavation | Available | TBD |
-
-## Membership Tiers
-
-| Tier | Price | Key Differentiator |
-
-
-All tiers include unlimited project claims, full project documentation before claiming, and a performance dashboard. No annual contracts. Cancel anytime.
+Four roles exist: `homeowner`, `contractor`, `property-manager`, and `admin`. Middleware redirects unauthenticated users from `/dashboard/*` to `/auth/login`. Role is stored in `profiles.role` (Supabase Postgres) and `user_metadata.role` (Supabase Auth). RLS policies enforce data access per role.
 
 ## Security
 
@@ -156,11 +126,9 @@ Each CI run now executes all four checks and then fails at the end if any check 
 
 A dedicated CD workflow deploys to Vercel production after CI succeeds on `main` (or via manual dispatch), when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are configured in repository settings.
 
+
 ## Deployment
 
-The application is configured for deployment on Vercel. No additional configuration is required beyond connecting the repository. The `next.config.mjs` file does not require environment-specific overrides for basic deployment.
+The application deploys to Vercel. Connect the repository in the Vercel dashboard; production deploys run automatically after CI passes on `main`.
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Required environment variables are listed in [`env.example`](env.example) and documented in detail in [`docs/architecture.md`](docs/architecture.md#environment-variable-inventory).
