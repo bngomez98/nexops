@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -108,11 +109,13 @@ export function ImageUpload({ onImagesChange, maxFiles = 5, maxSizeInMB = 10 }: 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {uploadedImages.map((file, index) => (
               <div key={index} className="relative group">
-                <div className="aspect-square bg-muted rounded-lg overflow-hidden border border-border">
-                  <img
+                <div className="relative aspect-square bg-muted rounded-lg overflow-hidden border border-border">
+                  <Image
+                    unoptimized
+                    fill
                     src={URL.createObjectURL(file)}
                     alt={`Preview ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="object-cover"
                   />
                 </div>
                 <Button

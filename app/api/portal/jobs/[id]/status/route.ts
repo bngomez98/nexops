@@ -34,7 +34,7 @@ export async function POST(request: Request, { params }: RouteContext) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const profile: any = await loadCurrentProfile(supabase, user.id)
+    const profile: Record<string, unknown> | null = await loadCurrentProfile(supabase, user.id)
     const role = normalizeRole(profile?.role ?? user.user_metadata?.role)
     const { id } = await params
 

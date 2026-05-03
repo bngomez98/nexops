@@ -130,7 +130,7 @@ export async function GET() {
           .split(' ')
           .filter(Boolean)
           .slice(0, 2)
-          .map((part: any) => part[0]?.toUpperCase() ?? '')
+          .map((part: string) => part[0]?.toUpperCase() ?? '')
           .join('') || 'U',
         rating: typeof profile?.average_rating === 'number' ? profile.average_rating : undefined,
         jobsCompleted: typeof profile?.reviews_count === 'number' ? profile.reviews_count : undefined,
@@ -217,7 +217,7 @@ export async function GET() {
         .split(' ')
         .filter(Boolean)
         .slice(0, 2)
-        .map((part: any) => part[0]?.toUpperCase() ?? '')
+        .map((part: string) => part[0]?.toUpperCase() ?? '')
         .join('') || 'U',
     }
 
