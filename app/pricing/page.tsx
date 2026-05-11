@@ -75,8 +75,12 @@ const faqs = [
     a: 'Yes — upgrade, downgrade, or change billing cadence at any time from your billing portal. Changes prorate automatically.',
   },
   {
-    q: 'Do contractors pay to join?',
-    a: 'Contractors can join for free with a starter profile. Pro and Elite tiers add higher project limits, priority routing, and earnings analytics.',
+    q: 'How does contractor pricing work?',
+    a: 'Contractors join for free and pay a simple 10–15% commission on completed jobs — you only pay when you earn. An optional Pro add-on ($49/mo) unlocks higher project limits, a Verified Pro badge, and same-day payouts.',
+  },
+  {
+    q: 'How is property manager pricing calculated?',
+    a: 'Property manager plans are priced per unit per month, so your cost scales with your portfolio. The Growth plan is $4/unit/month with a $50/month minimum. Portfolios of 21+ units receive custom per-unit pricing — contact us for a quote.',
   },
   {
     q: 'What if I only need one project this year?',
@@ -91,6 +95,8 @@ function PlanCard({
   plan: Plan
   featured?: boolean
 }) {
+  const isContactSales = plan.priceInCents === -1
+
   return (
     <div
       className={`relative flex flex-col rounded-2xl border p-7 ${
@@ -109,13 +115,18 @@ function PlanCard({
       <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{plan.description}</p>
 
       <div className="mt-6 flex items-baseline gap-2">
-        <span className="text-4xl font-extrabold tracking-tight text-foreground">
+        <span className={`font-extrabold tracking-tight text-foreground ${isContactSales ? 'text-2xl' : 'text-4xl'}`}>
           {formatPrice(plan.priceInCents, plan.interval)}
         </span>
-        {plan.priceInCents > 0 && <span className="text-[13px] text-muted-foreground">USD</span>}
+        {plan.priceInCents > 0 && !plan.perUnit && <span className="text-[13px] text-muted-foreground">USD</span>}
       </div>
       {plan.billingLabel && (
         <p className="mt-1 text-[12px] text-muted-foreground">{plan.billingLabel}</p>
+      )}
+      {plan.perUnit && plan.minimumCents && (
+        <p className="mt-0.5 text-[11px] text-muted-foreground">
+          Minimum ${(plan.minimumCents / 100).toFixed(0)}/mo
+        </p>
       )}
 
       <ul className="mt-6 flex flex-1 flex-col gap-2.5 text-[13px] text-muted-foreground">
@@ -128,14 +139,14 @@ function PlanCard({
       </ul>
 
       <Link
-        href="/auth/sign-up"
+        href={isContactSales ? '/contact' : '/auth/sign-up'}
         className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-[13px] font-semibold transition ${
           featured
             ? 'bg-primary text-primary-foreground hover:opacity-90'
             : 'border border-border bg-background text-foreground hover:border-primary/40 hover:text-primary'
         }`}
       >
-        {plan.priceInCents === 0 ? 'Start free' : `Choose ${plan.name}`}
+        {isContactSales ? 'Contact sales' : plan.priceInCents === 0 ? 'Start free' : `Choose ${plan.name}`}
         <ArrowRight className="h-3.5 w-3.5" />
       </Link>
     </div>
@@ -144,6 +155,7 @@ function PlanCard({
 
 export default function PricingPage() {
   const homeownerPlans = getPlansByRole('homeowner')
+  const pmPlans = getPlansByRole('property_manager')
   const contractorPlans = getPlansByRole('contractor')
 
   return (
@@ -186,7 +198,7 @@ export default function PricingPage() {
         {/* ── Homeowner plans ───────────────────────────────── */}
         <Section id="homeowner-plans">
           <SectionHeading
-            eyebrow="For homeowners & landlords"
+            eyebrow="For homeowners & small landlords"
             title="Plans for anyone who owns a property."
             description="Whether you own a single home or rent out a few units, start with the plan that fits your volume. Upgrade or cancel anytime."
           />
@@ -198,12 +210,34 @@ export default function PricingPage() {
           </div>
         </Section>
 
+        {/* ── Property Manager plans ────────────────────────── */}
+        <Section tone="muted" id="property-manager-plans">
+          <SectionHeading
+            eyebrow="For property managers & landlords"
+            title="Per-unit pricing that scales with your portfolio."
+            description="Pay for what you manage. Our per-unit model means your cost grows only as your portfolio grows — and every unit gets the same quality of service."
+          />
+
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {pmPlans.map((plan) => (
+              <PlanCard key={plan.id} plan={plan} featured={!!plan.highlighted} />
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-[13px] text-muted-foreground">
+            Need a custom quote for your portfolio?{' '}
+            <Link href="/contact" className="font-semibold text-primary hover:underline">
+              Talk to our team →
+            </Link>
+          </p>
+        </Section>
+
         {/* ── Contractor plans ──────────────────────────────── */}
-        <Section tone="muted" id="contractor-plans">
+        <Section id="contractor-plans">
           <SectionHeading
             eyebrow="For licensed contractors"
-            title="Pre-documented jobs. Direct payouts. No lead fees."
-            description="Join for free. Upgrade for higher project limits, priority routing, and earnings analytics. No marketplace fees — ever."
+            title="Free to join. Earn on every completed job."
+            description="No subscription required to access work. Join free, pay a simple commission on completed jobs, and upgrade for enhanced visibility and higher project limits."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
