@@ -11,7 +11,7 @@ import { formatDateOnly } from '@/lib/date-format'
 import {
   Briefcase, Star, Layers, MapPin, Loader2,
   BarChart3, AlertTriangle, Sparkles,
-  RefreshCw, Clock, DollarSign, Zap, CalendarDays, Crown, ArrowRight,
+  RefreshCw, Clock, DollarSign, Zap, CalendarDays,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -464,82 +464,6 @@ export default function ContractorDashboard() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* Upgrade Section */}
-        <div className="relative overflow-hidden rounded-xl border border-border bg-card p-6 card-elevated">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30">
-                <Crown className="w-6 h-6" />
-              </div>
-              <div>
-                 <h3 className="font-semibold text-foreground">Increase assignment capacity</h3>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                   Higher tiers unlock more active assignments, faster routing, and premium support.
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/dashboard/contractor/billing"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-primary border border-primary/30 bg-background hover:bg-primary/5 transition-colors px-4 py-2.5 rounded-lg"
-            >
-               Review plans
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {[
-              {
-                name: 'Contractor Pro',
-                price: '$59',
-                cadence: '/mo billed annually',
-                 desc: 'Up to 10 active assignments, priority dispatch notifications, verified badge',
-                highlight: true,
-                badge: 'Best Value',
-              },
-              {
-                name: 'Contractor Elite',
-                price: '$199',
-                cadence: '/mo',
-                 desc: 'Unlimited assignments, first-priority dispatch access, dedicated account manager',
-                highlight: false,
-              },
-            ].map(plan => (
-              <div
-                key={plan.name}
-                className={`relative rounded-xl border p-5 ${
-                  plan.highlight
-                    ? 'border-primary/40 bg-primary/5'
-                    : 'border-border bg-background'
-                }`}
-              >
-                {plan.badge && (
-                  <span className="absolute -top-2.5 left-4 text-xs font-bold uppercase tracking-wider bg-primary text-primary-foreground px-2.5 py-1 rounded-full">
-                    {plan.badge}
-                  </span>
-                )}
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-semibold text-foreground">{plan.name}</span>
-                </div>
-                <p className="font-display text-3xl font-bold text-foreground tabular-nums">
-                  {plan.price}
-                  <span className="text-sm font-normal text-muted-foreground">{plan.cadence}</span>
-                </p>
-                <p className="text-sm text-muted-foreground mt-2 mb-4">{plan.desc}</p>
-                <Link href="/dashboard/contractor/billing">
-                  <button className={`w-full py-2.5 text-sm font-semibold rounded-lg transition-all inline-flex items-center justify-center gap-1.5 ${
-                    plan.highlight
-                      ? 'bg-primary text-primary-foreground hover:opacity-95'
-                      : 'border border-border bg-background hover:border-primary/40 hover:text-primary'
-                  }`}>
-                    <Zap className="w-4 h-4" />
-                    Upgrade
-                  </button>
-                </Link>
-              </div>
-            ))}
           </div>
         </div>
       </main>

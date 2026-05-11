@@ -176,31 +176,6 @@ export default function PropertyManagerDashboard() {
           ))}
         </div>
 
-        <section className="grid gap-4 lg:grid-cols-3">
-          {[
-            {
-              title: 'Response SLA',
-              value: stats.activeJobs > 0 ? 'On Track' : 'No Active Jobs',
-              sub: 'Monitor dispatch cycle times and contractor response speed.',
-            },
-            {
-              title: 'Budget Health',
-              value: stats.spendThisMonth > 0 ? `$${stats.spendThisMonth.toLocaleString()}` : '$0',
-              sub: 'Month-to-date paid invoice volume across managed assets.',
-            },
-            {
-              title: 'Portfolio Utilization',
-              value: `${stats.totalProperties} Assets`,
-              sub: 'Confirm every property has documented service coverage.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
-              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.sub}</p>
-            </div>
-          ))}
-        </section>
       </main>
     </div>
   )

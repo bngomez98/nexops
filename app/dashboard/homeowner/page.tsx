@@ -10,7 +10,7 @@ import {
   Plus, Clock, CheckCircle2, Wrench, FileText,
   ArrowRight, Loader2,
   ChevronRight, Calendar, DollarSign, MapPin,
-  RefreshCw, CreditCard, Activity, Crown, Sparkles, Zap, TrendingUp,
+  RefreshCw, Activity, Crown, Sparkles, Zap, TrendingUp, User,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -347,34 +347,6 @@ function HomeownerDashboardInner() {
           })}
         </div>
 
-        <section className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              title: 'Service Level',
-              value: isPro ? 'Priority Routing' : 'Standard Routing',
-              description: isPro
-                ? 'Pro requests receive top-priority contractor matching and escalation handling.'
-                : 'Starter requests are routed in standard queue order.',
-            },
-            {
-              title: 'Open Exposure',
-              value: `${open.length + active.length} Active`,
-              description: 'Monitor open and in-progress work impacting your property operations.',
-            },
-            {
-              title: 'Financial Visibility',
-              value: `$${totalSpend.toLocaleString()}`,
-              description: 'Track completed project value and maintain invoice-ready records.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
-              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
-            </div>
-          ))}
-        </section>
-
         {/* Requests List */}
         <div className="bg-card border border-border rounded-xl overflow-hidden card-elevated">
           <div className="flex items-center justify-between px-5 py-4 border-b border-border gap-3 flex-wrap">
@@ -518,7 +490,7 @@ function HomeownerDashboardInner() {
             },
             {
               href: '/dashboard/homeowner/profile',
-              icon: CreditCard,
+              icon: User,
               iconBg: 'bg-emerald-500/10',
               iconColor: 'text-emerald-600 dark:text-emerald-400',
               title: 'Profile & Photo',
