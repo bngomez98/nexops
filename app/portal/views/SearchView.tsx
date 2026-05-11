@@ -22,8 +22,29 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
   const { jobs } = usePortal()
   const [q, setQ] = useState('')
 
+  const searchPlaceholder = useMemo(() => {
+    const dynamicHints = new Set<string>()
+
+    for (const job of jobs) {
+      const candidates = [job.title, formatCategoryLabel(job.category), job.shortId]
+      for (const candidate of candidates) {
+        const hint = candidate.trim()
+        if (hint) dynamicHints.add(hint)
+        if (dynamicHints.size >= 3) break
+      }
+      if (dynamicHints.size >= 3) break
+    }
+
+    if (dynamicHints.size === 0) {
+      return 'Search jobs, categories, docs, or job number…'
+    }
+
+    return `Try “${Array.from(dynamicHints).join('”, “')}”…`
+  }, [jobs])
+
   const results = useMemo(() => {
     const query = q.trim().toLowerCase()
+    const shortIdQuery = query.startsWith('#') ? query.slice(1) : query
     const categoryList = Array.from(new Set(jobs.map((job) => job.category)))
     if (!query) {
       return {
@@ -38,7 +59,7 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
           j.title.toLowerCase().includes(query) ||
           j.description.toLowerCase().includes(query) ||
           j.location.toLowerCase().includes(query) ||
-          j.shortId.includes(query),
+          j.shortId.toLowerCase().includes(shortIdQuery),
       ),
       docs: DOCS.filter((d) => d.title.toLowerCase().includes(query)),
       categories: categoryList.filter((label) => label.toLowerCase().includes(query)),
@@ -57,9 +78,11 @@ export function SearchView({ onOpenJob }: SearchViewProps) {
       <div className="relative">
         <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-indigo-300" />
         <input
+          id="universal-search"
+          name="q"
           autoFocus
           className="glass-input !pl-12 !py-4 !text-base !rounded-2xl"
-          placeholder="Try “leak”, “Diego”, “HVAC”, or a job number…"
+          placeholder={searchPlaceholder}
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />

@@ -56,7 +56,7 @@ export function AIInsightsCard({ role, requests, profile }: AIInsightsCardProps)
   const [expanded, setExpanded] = useState(true)
   const [fetched, setFetched] = useState(false)
 
-  const fetchInsights = useCallback(async () => {
+  const fetchInsights = useCallback(async function () {
     setLoading(true)
     setError(false)
     try {

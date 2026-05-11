@@ -49,12 +49,34 @@ const values = [
 ]
 
 const commitments = [
-  'Verify every contractor license and insurance certificate before onboarding.',
-  'Review every service request before dispatch — no auto-routing to a stranger.',
-  'Photo-document arrival and completion on every job.',
-  'Pay contractors directly at the quoted rate, without payment delays.',
-  'Provide monthly reporting for portfolio customers at no extra charge.',
-  'Honor published response-time commitments or explain why we missed them.',
+  {
+    icon: Users,
+    badgeClassName: 'bg-emerald-500/12 text-emerald-400 border-emerald-500/25',
+    title: 'Homeowners control their projects',
+    desc:
+      'Homeowners define the project scope, maximum budget, and available consultation windows before any contractor is notified. The terms are established before the match is made.',
+  },
+  {
+    icon: ShieldCheck,
+    badgeClassName: 'bg-amber-500/12 text-amber-400 border-amber-500/25',
+    title: 'Contractors own their projects',
+    desc:
+      "Claim a project and it's yours alone. No bidding wars, no competing for the same job.",
+  },
+  {
+    icon: ClipboardList,
+    badgeClassName: 'bg-violet-500/12 text-violet-400 border-violet-500/25',
+    title: 'Both sides come prepared',
+    desc:
+      'Every project includes photos, scope, and budget before matching. Consultations are productive from minute one.',
+  },
+  {
+    icon: BadgeCheck,
+    badgeClassName: 'bg-teal-500/12 text-teal-400 border-teal-500/25',
+    title: 'Quality matters',
+    desc:
+      'Every contractor in the network is license-verified, insurance-confirmed, and background-checked before gaining access to project requests. Performance ratings reflect actual project outcomes — not self-reported reviews.',
+  },
 ]
 
 const milestones = [
@@ -274,7 +296,7 @@ export default function AboutPage() {
         </section>
 
         {/* Process Walkthrough */}
-        <section className="py-16 lg:py-24">
+        <section id="process" className="scroll-mt-28 py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground mb-3">
@@ -373,29 +395,28 @@ export default function AboutPage() {
 
         {/* ── Commitments ───────────────────────────────────── */}
         <Section tone="dark">
-          <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
-            <div className="lg:col-span-5">
-              <SectionHeading
-                eyebrow="Our commitments"
-                title="The non-negotiables — every job, every time."
-                onDark
-              />
-              <p className="mt-4 text-[14px] leading-relaxed text-white/65">
-                Here is what you can expect from Nexus Operations on every single request. If we
-                fall short of any of these, we want to hear about it.
-              </p>
-            </div>
-            <ul className="grid gap-3 sm:grid-cols-2 lg:col-span-7">
-              {commitments.map((c) => (
-                <li
-                  key={c}
-                  className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-4"
+          <SectionHeading
+            eyebrow="Our core commitments"
+            title="A more structured experience for both sides of every project."
+            description="We designed Nexus Operations to feel personal for homeowners and practical for contractors — with clear expectations before anyone is matched."
+            align="center"
+            onDark
+          />
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            {commitments.map(({ icon: Icon, title, desc, badgeClassName }) => (
+              <div
+                key={title}
+                className="rounded-[28px] border border-white/8 bg-black/20 px-6 py-7 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-sm sm:px-7"
+              >
+                <div
+                  className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl border ${badgeClassName}`}
                 >
-                  <BadgeCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
-                  <span className="text-[13.5px] leading-relaxed text-white/80">{c}</span>
-                </li>
-              ))}
-            </ul>
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className="mt-6 text-xl font-bold tracking-tight text-white">{title}</h3>
+                <p className="mt-4 max-w-2xl text-[15px] leading-8 text-white/60">{desc}</p>
+              </div>
+            ))}
           </div>
         </Section>
 

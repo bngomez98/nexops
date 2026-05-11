@@ -5,7 +5,7 @@ import { useRouter } from '@/lib/router'
 import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Users, Briefcase, ShieldAlert, DollarSign, Activity, ArrowRight, FileText, Settings } from 'lucide-react'
+import { Loader2, Users, Briefcase, ShieldAlert, DollarSign, Activity, ArrowRight, FileText } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -72,11 +72,11 @@ export default function AdminDashboard() {
             <p className="text-sm text-muted-foreground mt-1">Platform health and key metrics</p>
           </div>
           <Link
-            href="/dashboard/admin/settings"
+            href="/dashboard/admin/users"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Settings className="w-4 h-4" />
-            Settings
+            <Users className="w-4 h-4" />
+            Manage users
           </Link>
         </div>
 

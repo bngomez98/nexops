@@ -39,8 +39,14 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single()
 
-    const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
-    if (role !== 'homeowner') {
+    const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
+    const role = rawRole === 'property_manager'
+      ? 'property-manager'
+      : rawRole === 'property_owner'
+        ? 'property-owner'
+        : rawRole
+    const ownerRoles = new Set(['homeowner', 'client', 'property-manager', 'property-owner', 'manager'])
+    if (!ownerRoles.has(role)) {
       return Response.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
@@ -98,7 +104,7 @@ export async function POST(request: Request) {
     const validated = parsed.data
     const normalizedCategory = normalizeCategory(validated.category || 'open-request', validated.customCategory)
     const normalizedUrgency = validated.urgency || 'normal'
-    const normalizedPhotoUrls = validated.photoUrls?.filter(Boolean) ?? []
+    const normalizedPhotoUrls = validated.photoUrls.filter(Boolean)
     const pipeline = buildPipelineSnapshot({
       mode: automationEnabled ? validated.pipelineMode : 'standard',
       communityVisible: automationEnabled ? validated.communityVisible : false,

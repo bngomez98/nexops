@@ -2,11 +2,30 @@ import type Stripe from 'stripe'
 
 import { getStripeClient } from '@/lib/stripe/server'
 import { getAdminClient } from '@/lib/supabase/admin'
+import { assertServerEnv } from '@/lib/server-env'
 
 import {
   sendInvoicePaidContractorEmail,
   sendInvoicePaidClientEmail,
 } from '@/lib/email'
+
+type NexusInvoice = {
+  id: string
+  job_id: string
+  contractor_id: string
+  client_id: string
+  subtotal: number
+  nexus_fee: number
+  total: number
+}
+
+type JobRow = {
+  service_type: string
+}
+
+type ProfileRow = {
+  full_name: string | null
+}
 
 /**
  * Safely reads `current_period_start` / `current_period_end` from a Stripe
@@ -37,6 +56,8 @@ function getSubscriptionPeriod(sub: Stripe.Subscription): {
 }
 
 export async function POST(req: Request) {
+  assertServerEnv({ requireStripe: true })
+
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')
 
@@ -56,6 +77,32 @@ export async function POST(req: Request) {
 
   try {
     const supabase = getAdminClient()
+
+    // ── Idempotency guard ───────────────────────────────────────────────────────
+    // Check whether this Stripe event has already been processed.
+    // `stripe_events` has a TEXT primary key = Stripe's evt_xxx id.
+    const { error: dupeCheckErr, data: existingEvent } = await supabase
+      .from('stripe_events')
+      .select('id')
+      .eq('id', event.id)
+      .maybeSingle()
+
+    if (dupeCheckErr) {
+      // Log but do not abort — a failed read should not block webhook delivery.
+      console.warn('[webhook] stripe_events idempotency check failed:', dupeCheckErr.message)
+    } else if (existingEvent) {
+      // Already processed; return 200 so Stripe stops retrying.
+      return Response.json({ received: true, duplicate: true })
+    }
+
+    // Record the event BEFORE processing side effects so that a partial failure
+    // on the first delivery is not repeated on Stripe's retry.
+    await supabase.from('stripe_events').insert({
+      id: event.id,
+      type: event.type,
+      processed_at: new Date().toISOString(),
+      payload: event as unknown as Record<string, unknown>,
+    } as never)
 
     switch (event.type) {
       // ── Checkout completed (one-time invoice payment) ──────────────────────
@@ -171,11 +218,12 @@ export async function POST(req: Request) {
         }
 
         // Jobs flow: look up internal invoice by stripe_invoice_id
-        const { data: nexusInvoice } = await supabase
+        const { data: nexusInvoiceRaw } = await supabase
           .from('invoices')
           .select('id, job_id, contractor_id, client_id, subtotal, nexus_fee, total')
           .eq('stripe_invoice_id', stripeInvoice.id)
           .maybeSingle()
+        const nexusInvoice = nexusInvoiceRaw as NexusInvoice | null
 
         if (nexusInvoice) {
           await supabase.from('invoices')
@@ -193,11 +241,12 @@ export async function POST(req: Request) {
             changed_by: 'system',
           } as never)
 
-          const { data: job } = await supabase
+          const { data: jobRaw } = await supabase
             .from('jobs')
             .select('service_type')
             .eq('id', nexusInvoice.job_id)
             .maybeSingle()
+          const job = jobRaw as JobRow | null
 
           // Send receipt emails (fire-and-forget)
           ;(async () => {
@@ -211,8 +260,8 @@ export async function POST(req: Request) {
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.contractor_id).maybeSingle(),
                 supabase.from('profiles').select('full_name').eq('id', nexusInvoice.client_id).maybeSingle(),
               ])
-              const contractorProfile = contractorProfileResult.data
-              const clientProfile = clientProfileResult.data
+              const contractorProfile = contractorProfileResult.data as ProfileRow | null
+              const clientProfile = clientProfileResult.data as ProfileRow | null
               const serviceType = job?.service_type ?? 'service'
               await Promise.all([
                 contractorAuth.user?.email

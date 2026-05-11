@@ -14,7 +14,7 @@ const platformLinks = [
 
 const accountLinks = [
   { href: '/auth/sign-up', label: 'Homeowner Sign-up' },
-  { href: '/auth/sign-up?role=property_manager', label: 'Property Manager Sign-up' },
+  { href: '/auth/sign-up?role=property-manager', label: 'Property Manager Sign-up' },
   { href: '/auth/sign-up?role=contractor', label: 'Contractor Application' },
   { href: '/auth/login', label: 'Sign In' },
 ]

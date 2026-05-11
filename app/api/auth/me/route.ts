@@ -19,7 +19,11 @@ export async function GET() {
     const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
     // Normalise DB value 'property_manager' (underscore) to the hyphenated form
     // used throughout the front-end.
-    const role = rawRole === 'property_manager' ? 'property-manager' : rawRole
+    const role = rawRole === 'property_manager'
+      ? 'property-manager'
+      : rawRole === 'property_owner'
+        ? 'property-owner'
+        : rawRole
 
     let contractorProfile = null
     if (role === 'contractor') {

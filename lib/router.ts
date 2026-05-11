@@ -15,6 +15,8 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 // Internal helpers
 // ---------------------------------------------------------------------------
 
+const LOCATION_CHANGE_EVENT = 'app:locationchange'
+
 function getPathname() {
   return typeof window !== 'undefined' ? window.location.pathname : '/'
 }
@@ -23,9 +25,19 @@ function getSearch() {
   return typeof window !== 'undefined' ? window.location.search : ''
 }
 
+function notifyLocationChange() {
+  window.dispatchEvent(new Event(LOCATION_CHANGE_EVENT))
+}
+
 function subscribeToLocation(callback: () => void) {
   window.addEventListener('popstate', callback)
-  return () => window.removeEventListener('popstate', callback)
+  window.addEventListener('hashchange', callback)
+  window.addEventListener(LOCATION_CHANGE_EVENT, callback)
+  return () => {
+    window.removeEventListener('popstate', callback)
+    window.removeEventListener('hashchange', callback)
+    window.removeEventListener(LOCATION_CHANGE_EVENT, callback)
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -43,8 +55,7 @@ export interface AppRouter {
 
 export function useRouter(): AppRouter {
   // Attempt to use Next.js router when available (avoids full-page reloads).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // We are inside Next.js — delegate dynamically to avoid a hard import that
     // would prevent tree-shaking when the file is bundled outside Next.js.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -55,8 +66,14 @@ export function useRouter(): AppRouter {
 
   // Fallback: plain browser History API
   return {
-    push: (url: string) => window.history.pushState(null, '', url),
-    replace: (url: string) => window.history.replaceState(null, '', url),
+    push: (url: string) => {
+      window.history.pushState(null, '', url)
+      notifyLocationChange()
+    },
+    replace: (url: string) => {
+      window.history.replaceState(null, '', url)
+      notifyLocationChange()
+    },
     back: () => window.history.back(),
     forward: () => window.history.forward(),
     refresh: () => window.location.reload(),
@@ -68,8 +85,7 @@ export function useRouter(): AppRouter {
 // ---------------------------------------------------------------------------
 
 export function usePathname(): string {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { usePathname: useNextPathname } = require('next/navigation') as typeof import('next/navigation')
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -84,8 +100,7 @@ export function usePathname(): string {
 // ---------------------------------------------------------------------------
 
 export function useSearchParams(): URLSearchParams {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { useSearchParams: useNextSearchParams } = require('next/navigation') as typeof import('next/navigation')
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -111,8 +126,7 @@ export function useSearchParams(): URLSearchParams {
  * returned (requires the caller to know the pattern).
  */
 export function useParams<T extends Record<string, string | string[]> = Record<string, string>>(): T {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof (globalThis as any).__NEXT_DATA__ !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof window.__NEXT_DATA__ !== 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { useParams: useNextParams } = require('next/navigation') as typeof import('next/navigation')
     // eslint-disable-next-line react-hooks/rules-of-hooks

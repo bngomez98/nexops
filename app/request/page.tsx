@@ -19,16 +19,6 @@ interface PhotoPreview {
   error: string
 }
 
-const CATEGORIES = [
-  { value: 'plumbing', label: 'Plumbing' },
-  { value: 'electrical', label: 'Electrical' },
-  { value: 'hvac', label: 'HVAC' },
-  { value: 'landscaping', label: 'Landscaping' },
-  { value: 'cleaning', label: 'Cleaning' },
-  { value: 'handyman', label: 'Handyman' },
-  { value: 'other', label: 'Other' },
-]
-
 const BUDGETS = [
   { value: 'under_500', label: 'Under $500' },
   { value: '500_1500', label: '$500–$1,500' },
@@ -148,7 +138,7 @@ export default function PublicRequestPage() {
     const files = Array.from(e.target.files ?? [])
     if (!files.length) return
 
-    const remaining = 10 - photos.length
+    const remaining = 9 - photos.length
     const toAdd = files.slice(0, remaining)
     const startIndex = photos.length
 
@@ -189,8 +179,12 @@ export default function PublicRequestPage() {
     e.preventDefault()
     setFormError('')
 
-    if (!name.trim() || !email.trim() || !address.trim() || !description.trim()) {
-      setFormError('Please fill in all required fields (name, email, service address, description).')
+    if (!name.trim() || !email.trim() || !address.trim() || !category.trim() || !description.trim()) {
+      setFormError('Please fill in all required fields (name, email, address, service category, description).')
+      return
+    }
+    if (photos.length < 2 || photos.length > 9) {
+      setFormError('Please upload between 2 and 9 photos.')
       return
     }
     if (photos.some((p) => p.uploading)) {
@@ -209,7 +203,7 @@ export default function PublicRequestPage() {
           email: email.trim(),
           phone: phone.trim() || undefined,
           address: address.trim(),
-          category: category || 'other',
+          category: category.trim(),
           description: description.trim(),
           preferredDate: preferredDate || undefined,
           budget: budget || undefined,
@@ -337,13 +331,12 @@ export default function PublicRequestPage() {
                 autoComplete="street-address"
               />
             </Field>
-            <Field label="Service category">
-              <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-                <option value="" disabled style={{ background: '#060a1f' }}>Select a category…</option>
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value} style={{ background: '#060a1f' }}>{c.label}</option>
-                ))}
-              </Select>
+            <Field label="Service category" required hint="Use any category or trade name">
+              <Input
+                placeholder="e.g., plumbing, storefront cleanup, accessibility upgrades, specialty repairs"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
             </Field>
             <Field label="Description" required>
               <Textarea
@@ -380,7 +373,7 @@ export default function PublicRequestPage() {
           {/* Photos */}
           <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 space-y-4">
             <h2 className="text-sm font-semibold text-white/80">Photos &amp; videos</h2>
-            <p className="text-xs text-indigo-200/50">Upload up to 10 files to help us understand the issue.</p>
+            <p className="text-xs text-indigo-200/50">Upload 2–9 photos to help contractors review and claim your request faster.</p>
 
             <input
               ref={fileInputRef}
@@ -430,11 +423,11 @@ export default function PublicRequestPage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={photos.length >= 10}
+               disabled={photos.length >= 9}
               className="flex items-center gap-2 rounded-2xl border border-white/15 bg-white/8 hover:bg-white/12 disabled:opacity-40 px-4 py-2.5 text-sm text-indigo-100 transition"
             >
               <Camera size={15} />
-              {photos.length === 0 ? 'Add photos or videos' : `Add more (${photos.length}/10)`}
+               {photos.length === 0 ? 'Add photos' : `Add more (${photos.length}/9)`}
             </button>
           </div>
 
@@ -459,8 +452,8 @@ export default function PublicRequestPage() {
           </button>
 
           <p className="text-center text-xs text-indigo-200/40">
-            No account required. We&apos;ll contact you at the email provided.
-          </p>
+             No account required. Requests with 2–9 photos are routed to the contractor dashboard for review.
+           </p>
         </form>
       </div>
     </div>

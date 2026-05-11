@@ -44,6 +44,10 @@ function deriveTitle(row: { title?: string | null; additional_notes?: string | n
   return row.category ?? 'Service request'
 }
 
+function isOwnerRole(role: string) {
+  return ['homeowner', 'client', 'property-manager', 'property-owner', 'manager'].includes(role)
+}
+
 async function getContractorNameMap(
   supabase: Awaited<ReturnType<typeof createClient>>,
   rows: ServiceRequestRow[],
@@ -85,12 +89,16 @@ export async function GET(request: Request) {
       .single()
 
     const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
-    const role = rawRole === 'property_manager' ? 'property-manager' : rawRole
+    const role = rawRole === 'property_manager'
+      ? 'property-manager'
+      : rawRole === 'property_owner'
+        ? 'property-owner'
+        : rawRole
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type') ?? 'my-projects'
     const pipeline = searchParams.get('pipeline') === 'true'
 
-    if (role === 'homeowner' && pipeline) {
+    if (isOwnerRole(role) && pipeline) {
       const { data: rows, error } = await supabase
         .from('service_requests')
         .select('id, owner_id, assigned_contractor_id, category, title, additional_notes, status, created_at, consultation_date, urgency')
@@ -118,7 +126,7 @@ export async function GET(request: Request) {
       return Response.json({ projects: pipelineProjects })
     }
 
-    if (role === 'homeowner' && type === 'my-projects') {
+    if (isOwnerRole(role) && type === 'my-projects') {
       const { data: rows, error } = await supabase
         .from('service_requests')
         .select('id, owner_id, assigned_contractor_id, category, title, description, additional_notes, address, budget_max, status, created_at, consultation_date, urgency, photo_urls, invoice_amount, invoice_paid')

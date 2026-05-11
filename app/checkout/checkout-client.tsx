@@ -9,9 +9,8 @@ import {
 import { loadStripe } from '@stripe/stripe-js'
 import { fetchClientSecret } from '../actions/stripe'
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-)
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+const stripePromise = publishableKey ? loadStripe(publishableKey) : null
 
 function CheckoutForm() {
   const searchParams = useSearchParams()
@@ -21,6 +20,16 @@ function CheckoutForm() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-sm text-muted-foreground">No plan selected. Please choose a plan first.</p>
+      </div>
+    )
+  }
+
+  if (!stripePromise) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-sm text-destructive/80">
+          Stripe is not configured. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY to enable checkout.
+        </p>
       </div>
     )
   }

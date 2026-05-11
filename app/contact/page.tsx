@@ -155,11 +155,11 @@ export default function ContactPage() {
                       on-site within four hours.
                     </p>
                     <a
-                      href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}`}
+                      href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}`}
                       className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-destructive hover:underline"
                     >
                       <Mail className="h-4 w-4" />
-                      emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}
+                      emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}
                     </a>
                   </div>
                 </div>

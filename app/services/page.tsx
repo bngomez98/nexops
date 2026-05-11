@@ -154,11 +154,27 @@ export default function ServicesPage() {
                 View pricing
               </Link>
             </div>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              {[
+                { href: '#commercial', label: 'Commercial' },
+                { href: '#residential', label: 'Residential' },
+                { href: '#b2b', label: 'B2B operations' },
+                { href: '#how-it-works', label: 'How it works' },
+              ].map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="inline-flex items-center rounded-full border border-border bg-background/90 px-3 py-1.5 text-[12px] font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* ── Trade categories ────────────────────────────── */}
-        <Section>
+        <Section id="residential" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Trade categories"
             title="What we manage."
@@ -189,7 +205,7 @@ export default function ServicesPage() {
         </Section>
 
         {/* ── Urgency tiers ───────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="commercial" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Urgency tiers"
             title="Response commitments by urgency."
@@ -216,7 +232,7 @@ export default function ServicesPage() {
         </Section>
 
         {/* ── Process ─────────────────────────────────────── */}
-        <Section>
+        <Section id="how-it-works" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Process"
             title="Every request follows the same documented workflow."
@@ -240,7 +256,7 @@ export default function ServicesPage() {
         </Section>
 
         {/* ── What's included ─────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="b2b" className="scroll-mt-28">
           <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-5">
               <SectionHeading

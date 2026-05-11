@@ -148,6 +148,7 @@ export async function POST(request: Request) {
           updated_at: new Date().toISOString(),
         })
         .eq('id', projectId)
+        .is('assigned_contractor_id', null)  // concurrency guard: only assign if still unclaimed
 
       if (!updateError) {
         return Response.json({

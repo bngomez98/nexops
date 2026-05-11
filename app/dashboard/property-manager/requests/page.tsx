@@ -4,54 +4,65 @@ import { useEffect, useState } from 'react'
 import { useRouter } from '@/lib/router'
 import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
-import { createClient } from '@/lib/supabase/client'
 import { Loader2, ClipboardList, MapPin, Clock, Plus } from 'lucide-react'
 
 interface Request {
   id: string
-  service_type: string
-  urgency: string
+  title: string
+  category: string
   status: string
-  created_at: string
-  properties?: { address: string; city: string; state: string }
+  createdAt: string
+  location: string
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
   open:        { label: 'Submitted',   color: 'text-foreground/70', bg: 'bg-muted' },
-  matched:     { label: 'Assigned',    color: 'text-primary', bg: 'bg-primary/10' },
-  in_progress: { label: 'In Progress', color: 'text-primary',     bg: 'bg-primary/10' },
+  claimed:     { label: 'Assigned',    color: 'text-primary', bg: 'bg-primary/10' },
+  'in-progress': { label: 'In Progress', color: 'text-primary', bg: 'bg-primary/10' },
   completed:   { label: 'Complete',    color: 'text-foreground', bg: 'bg-muted' },
+  cancelled:   { label: 'Cancelled',   color: 'text-muted-foreground', bg: 'bg-muted' },
 }
 
 function fmt(s: string) { return s.replace(/-|_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }
 
 export default function PMRequestsPage() {
   const router = useRouter()
-  const [user, setUser]     = useState<{ id: string; name: string; role: string } | null>(null)
+  const [user, setUser] = useState<{ id: string; name: string; role: string } | null>(null)
   const [requests, setRequests] = useState<Request[]>([])
-  const [loading, setLoading]   = useState(true)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data: { user: u } } = await supabase.auth.getUser()
-      if (!u) { router.push('/auth/login'); return }
-      setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'property-manager' })
+      try {
+        const authRes = await fetch('/api/auth/me')
+        if (!authRes.ok) {
+          router.push('/auth/login')
+          return
+        }
+        const { user: authUser } = await authRes.json()
+        if (!['property-manager', 'manager'].includes(authUser.role)) {
+          router.push('/dashboard')
+          return
+        }
+        setUser(authUser)
 
-      const { data } = await supabase
-        .from('jobs')
-        .select('*, properties(address, city, state)')
-        .eq('client_id', u.id)
-        .order('created_at', { ascending: false })
-      setRequests(data ?? [])
-      setLoading(false)
+        const projectsRes = await fetch('/api/projects/list?type=my-projects')
+        if (projectsRes.ok) {
+          const { projects } = await projectsRes.json()
+          setRequests((projects ?? []) as Request[])
+        }
+      } catch (err) {
+        console.error(err)
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    load()
+    void load()
   }, [router])
 
   const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/auth/login')
   }
 
@@ -93,12 +104,12 @@ export default function PMRequestsPage() {
                 <div key={req.id} className="flex items-start gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <p className="font-semibold text-[13.5px]">{fmt(req.service_type)}</p>
+                      <p className="font-semibold text-[13.5px]">{req.title || fmt(req.category)}</p>
                       <span className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>{st.label}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
-                      {req.properties && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{req.properties.city}</span>}
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{new Date(req.created_at).toLocaleDateString()}</span>
+                      {req.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{req.location}</span>}
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{new Date(req.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>

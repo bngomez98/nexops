@@ -161,7 +161,7 @@ export default function CommercialPage() {
         </Section>
 
         {/* ── SLA table ────────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="sla" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Service level agreements"
             title="Published response commitments by urgency."
@@ -244,10 +244,10 @@ export default function CommercialPage() {
                   The 1-hour assignment and 4-hour on-site SLAs apply around the clock. For
                   after-hours emergencies, submit through the portal or email{' '}
                   <a
-                    href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}`}
+                    href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}`}
                     className="font-semibold text-destructive hover:underline"
                   >
-                    emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}
+                    emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}
                   </a>
                   .
                 </p>

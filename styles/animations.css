@@ -1,0 +1,115 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXUS OPERATIONS DESIGN SYSTEM — ANIMATIONS
+   Pure CSS keyframes and animation utility classes.
+   No Tailwind — no tw-animate-css dependency.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0);    animation-timing-function: cubic-bezier(0.8,0,1,1); }
+  50%       { transform: translateY(-25%); animation-timing-function: cubic-bezier(0,0,0.2,1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes glass-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dot-bounce {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.35); }
+}
+
+/* ── Animation utility classes ── */
+
+.animate-fade-up    { animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-fade-in    { animation: fade-in 0.4s ease both; }
+.animate-slide-up   { animation: slide-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-scale-in   { animation: scale-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+.animate-spin       { animation: spin 1s linear infinite; }
+.animate-bounce     { animation: bounce 1s infinite; }
+.animate-pulse      { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Portal glass rise */
+.rise { animation: glass-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Dot bounce (notification) */
+.dot-pulse {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: #f87171;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px #0a0f23;
+  animation: dot-bounce 1.6s ease-in-out infinite;
+}
+
+/* ── Scroll reveal ── */
+
+.reveal {
+  opacity: 0;
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible { opacity: 1; }
+
+.reveal-up              { transform: translateY(30px); }
+.reveal-up.visible      { transform: translateY(0); }
+
+.reveal-left            { transform: translateX(-30px); }
+.reveal-left.visible    { transform: translateX(0); }
+
+.reveal-right           { transform: translateX(30px); }
+.reveal-right.visible   { transform: translateX(0); }
+
+.reveal-scale           { transform: scale(0.95); }
+.reveal-scale.visible   { transform: scale(1); }
+
+/* Stagger children */
+.stagger-children > .reveal:nth-child(1) { transition-delay: 0s; }
+.stagger-children > .reveal:nth-child(2) { transition-delay: 0.06s; }
+.stagger-children > .reveal:nth-child(3) { transition-delay: 0.12s; }
+.stagger-children > .reveal:nth-child(4) { transition-delay: 0.18s; }
+.stagger-children > .reveal:nth-child(5) { transition-delay: 0.24s; }
+.stagger-children > .reveal:nth-child(6) { transition-delay: 0.30s; }

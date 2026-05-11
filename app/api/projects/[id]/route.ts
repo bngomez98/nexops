@@ -17,6 +17,16 @@ function mapStatus(dbStatus: string): string {
   return map[dbStatus] ?? dbStatus
 }
 
+function normalizeRole(role: string | null | undefined) {
+  if (role === 'property_manager') return 'property-manager'
+  if (role === 'property_owner') return 'property-owner'
+  return role ?? 'homeowner'
+}
+
+function isOwnerRole(role: string) {
+  return ['homeowner', 'client', 'property-manager', 'property-owner', 'manager'].includes(role)
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -35,7 +45,7 @@ export async function GET(
       .eq('id', user.id)
       .single()
 
-    const role = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
+    const role = normalizeRole(profile?.role ?? user.user_metadata?.role ?? 'homeowner')
     const { id } = await params
 
     const { data: sr, error } = await supabase
@@ -49,7 +59,7 @@ export async function GET(
     }
 
     // Access control: homeowners only see their own, contractors only see assigned
-    if (role === 'homeowner' && sr.owner_id !== user.id) {
+    if (isOwnerRole(role) && sr.owner_id !== user.id) {
       return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
     if (role === 'contractor' && sr.assigned_contractor_id && sr.assigned_contractor_id !== user.id) {
@@ -133,7 +143,7 @@ export async function POST(
       .eq('id', user.id)
       .single()
 
-    const role = profile?.role ?? user.user_metadata?.role
+    const role = normalizeRole(profile?.role ?? user.user_metadata?.role)
     const { id } = await params
     const body = await request.json()
 
@@ -148,7 +158,7 @@ export async function POST(
     }
 
     // Only owner, assigned contractor, or admin can update
-    if (role !== 'admin' && role === 'homeowner' && sr.owner_id !== user.id) {
+    if (role !== 'admin' && isOwnerRole(role) && sr.owner_id !== user.id) {
       return Response.json({ error: 'Forbidden' }, { status: 403 })
     }
     if (role !== 'admin' && role === 'contractor' && sr.assigned_contractor_id !== user.id) {

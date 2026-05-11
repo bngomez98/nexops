@@ -1,2 +1,16 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/document-expiry",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/invoice-maintenance",
+      "schedule": "15 9 * * *"
+    },
+    {
+      "path": "/api/cron/sla-sweep",
+      "schedule": "*/5 * * * *"
+    }
+  ]
 }

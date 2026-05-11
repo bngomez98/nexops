@@ -329,7 +329,7 @@ export default function ContractorDashboard() {
         {projects.length > 0 && (
           <AIInsightsCard
             role="contractor"
-            requests={projects.slice(0, 5) as Record<string, unknown>[]}
+            requests={projects.slice(0, 5) as unknown as Record<string, unknown>[]}
             profile={profile as unknown as Record<string, unknown>}
           />
         )}
