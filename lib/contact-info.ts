@@ -1,6 +1,6 @@
 export const CONTACT_INFO = {
   companyName: "Nexus Operations, LLC",
-  email: "admin@nexusoperations.org",
+  email: "admin@nexusoperations.net",
   phoneDisplay: "(785) 727-1106",
   phoneHref: "tel:+17857271106",
   addressLine1: "2611 SW 17th St #5002",
