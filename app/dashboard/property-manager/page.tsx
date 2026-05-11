@@ -7,8 +7,17 @@ import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
 import {
   Loader2, Building2, ClipboardList, DollarSign,
-  Plus, ArrowRight, Sparkles, TrendingUp,
+  Plus, ArrowRight, Sparkles, TrendingUp, AlertTriangle,
+  Clock, FileText, ShieldAlert,
 } from 'lucide-react'
+
+interface Alert {
+  id: string
+  type: 'sla_breach' | 'invoice_pending' | 'overdue'
+  title: string
+  description: string
+  href: string
+}
 
 export default function PropertyManagerDashboard() {
   const router = useRouter()
@@ -17,8 +26,11 @@ export default function PropertyManagerDashboard() {
   const [stats, setStats] = useState({
     totalProperties: 0,
     activeJobs: 0,
+    slaBreached: 0,
+    pendingInvoices: 0,
     spendThisMonth: 0,
   })
+  const [alerts, setAlerts] = useState<Alert[]>([])
 
   useEffect(() => {
     async function load() {
@@ -43,6 +55,52 @@ export default function PropertyManagerDashboard() {
 
       const active = jobs?.filter(j => ['matched', 'in_progress'].includes(j.status)).length ?? 0
 
+      // Fetch SLA-breached service requests
+      const { data: slaRequests } = await supabase
+        .from('service_requests')
+        .select('id, title, address')
+        .eq('client_id', u.id)
+        .eq('sla_breached', true)
+        .in('status', ['open', 'assigned', 'in_progress'])
+        .limit(5)
+
+      const slaBreachedCount = slaRequests?.length ?? 0
+
+      // Fetch pending invoice approvals
+      const { data: pendingInvoiceList } = await supabase
+        .from('invoices')
+        .select('id, invoice_number, total, service_request_id')
+        .eq('client_id', u.id)
+        .eq('status', 'pending')
+        .limit(5)
+
+      const pendingInvoiceCount = pendingInvoiceList?.length ?? 0
+
+      // Build action-oriented alerts
+      const builtAlerts: Alert[] = []
+
+      slaRequests?.forEach(req => {
+        builtAlerts.push({
+          id: `sla-${req.id}`,
+          type: 'sla_breach',
+          title: 'SLA breached',
+          description: `${req.title ?? 'Work order'} at ${req.address ?? 'unknown address'} has exceeded its response time commitment.`,
+          href: '/dashboard/property-manager/requests',
+        })
+      })
+
+      pendingInvoiceList?.forEach(inv => {
+        builtAlerts.push({
+          id: `inv-${inv.id}`,
+          type: 'invoice_pending',
+          title: `Invoice ${inv.invoice_number ?? '#—'} requires approval`,
+          description: `$${(inv.total ?? 0).toLocaleString()} — review and approve to release payment to contractor.`,
+          href: '/dashboard/property-manager/invoices',
+        })
+      })
+
+      setAlerts(builtAlerts)
+
       const startOfMonth = new Date()
       startOfMonth.setDate(1)
       startOfMonth.setHours(0, 0, 0, 0)
@@ -56,7 +114,13 @@ export default function PropertyManagerDashboard() {
 
       const spend = invoices?.reduce((s, i) => s + i.total, 0) ?? 0
 
-      setStats({ totalProperties: propCount ?? 0, activeJobs: active, spendThisMonth: spend })
+      setStats({
+        totalProperties: propCount ?? 0,
+        activeJobs: active,
+        slaBreached: slaBreachedCount,
+        pendingInvoices: pendingInvoiceCount,
+        spendThisMonth: spend,
+      })
       setLoading(false)
     }
     load()
@@ -98,6 +162,12 @@ export default function PropertyManagerDashboard() {
               </h1>
               <p className="text-primary-foreground/75 text-sm mt-2">
                 {stats.totalProperties} managed properties · {stats.activeJobs} active work orders
+                {stats.slaBreached > 0 && (
+                  <span className="ml-2 inline-flex items-center gap-1 bg-red-500/20 border border-red-400/30 text-red-200 text-xs font-semibold px-2 py-0.5 rounded-full">
+                    <AlertTriangle className="w-3 h-3" />
+                    {stats.slaBreached} SLA breach{stats.slaBreached !== 1 ? 'es' : ''}
+                  </span>
+                )}
               </p>
             </div>
             <Link href="/dashboard/property-manager/requests/new">
@@ -109,11 +179,49 @@ export default function PropertyManagerDashboard() {
           </div>
         </div>
 
+        {/* Action-Oriented Alerts */}
+        {alerts.length > 0 && (
+          <div className="space-y-2.5">
+            {alerts.map(alert => {
+              const isSla = alert.type === 'sla_breach'
+              return (
+                <Link key={alert.id} href={alert.href}>
+                  <div className={`flex items-start gap-3 rounded-xl border px-5 py-4 transition-colors hover:bg-muted/50 ${
+                    isSla
+                      ? 'bg-red-50 border-red-200 dark:bg-red-900/15 dark:border-red-800'
+                      : 'bg-amber-50 border-amber-200 dark:bg-amber-900/15 dark:border-amber-800'
+                  }`}>
+                    <div className={`mt-0.5 flex-shrink-0 ${isSla ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                      {isSla ? <ShieldAlert className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-semibold ${isSla ? 'text-red-800 dark:text-red-300' : 'text-amber-800 dark:text-amber-300'}`}>
+                        {alert.title}
+                      </p>
+                      <p className={`text-xs mt-0.5 ${isSla ? 'text-red-700 dark:text-red-400' : 'text-amber-700 dark:text-amber-400'}`}>
+                        {alert.description}
+                      </p>
+                    </div>
+                    <ArrowRight className={`w-4 h-4 flex-shrink-0 mt-0.5 ${isSla ? 'text-red-500 dark:text-red-400' : 'text-amber-500 dark:text-amber-400'}`} />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
              { label: 'Managed Properties', value: stats.totalProperties, icon: Building2, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
              { label: 'Active Work Orders', value: stats.activeJobs, icon: ClipboardList, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
+             {
+               label: 'SLA Breaches',
+               value: stats.slaBreached,
+               icon: AlertTriangle,
+               color: stats.slaBreached > 0 ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground',
+               bg: stats.slaBreached > 0 ? 'bg-red-500/10' : 'bg-muted',
+             },
              { label: 'Month-to-Date Spend', value: `$${stats.spendThisMonth.toLocaleString()}`, icon: DollarSign, color: 'text-primary', bg: 'bg-primary/10' },
           ].map(s => {
             const Icon = s.icon
@@ -176,30 +284,62 @@ export default function PropertyManagerDashboard() {
           ))}
         </div>
 
+        {/* Portfolio Health Metrics */}
         <section className="grid gap-4 lg:grid-cols-3">
-          {[
-            {
-              title: 'Response SLA',
-              value: stats.activeJobs > 0 ? 'On Track' : 'No Active Jobs',
-              sub: 'Monitor dispatch cycle times and contractor response speed.',
-            },
-            {
-              title: 'Budget Health',
-              value: stats.spendThisMonth > 0 ? `$${stats.spendThisMonth.toLocaleString()}` : '$0',
-              sub: 'Month-to-date paid invoice volume across managed assets.',
-            },
-            {
-              title: 'Portfolio Utilization',
-              value: `${stats.totalProperties} Assets`,
-              sub: 'Confirm every property has documented service coverage.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
-              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.sub}</p>
+          <div className="rounded-xl border border-border bg-card p-5 card-elevated">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Response SLA</p>
             </div>
-          ))}
+            <p className={`mt-1 text-2xl font-display font-bold ${stats.slaBreached > 0 ? 'text-red-600 dark:text-red-400' : 'text-foreground'}`}>
+              {stats.slaBreached > 0
+                ? `${stats.slaBreached} Breach${stats.slaBreached !== 1 ? 'es' : ''}`
+                : stats.activeJobs > 0 ? 'On Track' : 'No Active Jobs'}
+            </p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              {stats.slaBreached > 0
+                ? 'Requests have exceeded their contracted response time.'
+                : 'All active requests are within their response-time windows.'}
+            </p>
+            {stats.slaBreached > 0 && (
+              <Link
+                href="/dashboard/property-manager/requests"
+                className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-red-600 dark:text-red-400 hover:underline"
+              >
+                View breached requests <ArrowRight className="w-3 h-3" />
+              </Link>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-5 card-elevated">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="w-4 h-4 text-muted-foreground" />
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Budget Health</p>
+            </div>
+            <p className="mt-1 text-2xl font-display font-bold text-foreground">
+              {stats.spendThisMonth > 0 ? `$${stats.spendThisMonth.toLocaleString()}` : '$0'}
+            </p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Month-to-date paid invoice volume across managed assets.
+            </p>
+            {stats.pendingInvoices > 0 && (
+              <Link
+                href="/dashboard/property-manager/invoices"
+                className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline"
+              >
+                {stats.pendingInvoices} invoice{stats.pendingInvoices !== 1 ? 's' : ''} awaiting approval <ArrowRight className="w-3 h-3" />
+              </Link>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-5 card-elevated">
+            <div className="flex items-center gap-2 mb-2">
+              <Building2 className="w-4 h-4 text-muted-foreground" />
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Portfolio Utilization</p>
+            </div>
+            <p className="mt-1 text-2xl font-display font-bold text-foreground">{stats.totalProperties} Assets</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">Confirm every property has documented service coverage.</p>
+          </div>
         </section>
       </main>
     </div>

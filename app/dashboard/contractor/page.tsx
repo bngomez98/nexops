@@ -33,6 +33,7 @@ interface ContractorProfile {
   maxActiveProjects: number
   averageRating: number
   totalReviews: number
+  leadCreditBalance?: number
 }
 
 interface FilterState {
@@ -243,6 +244,15 @@ export default function ContractorDashboard() {
                   <DollarSign className="w-3.5 h-3.5" />
                   ${projects.reduce((s, p) => s + (p.budget || 0), 0).toLocaleString()} pipeline
                 </span>
+                {(profile?.leadCreditBalance ?? 0) > 0 && (
+                  <>
+                    <span className="opacity-40">·</span>
+                    <span className="inline-flex items-center gap-1 bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 font-semibold px-2 py-0.5 rounded-full text-xs">
+                      <Zap className="w-3 h-3" />
+                      {profile?.leadCreditBalance} lead credit{(profile?.leadCreditBalance ?? 0) !== 1 ? 's' : ''}
+                    </span>
+                  </>
+                )}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -289,11 +299,19 @@ export default function ContractorDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
              { label: 'Active Assignments', value: profile?.currentActiveProjects ?? 0, sub: `of ${profile?.maxActiveProjects ?? 3} plan capacity`, icon: Briefcase, color: 'text-primary', bg: 'bg-primary/10' },
              { label: 'Service Rating', value: profile?.averageRating ? profile.averageRating.toFixed(1) : '—', sub: `${profile?.totalReviews ?? 0} verified reviews`, icon: Star, color: 'text-amber-500', bg: 'bg-amber-500/10' },
              { label: 'Open Opportunities', value: projects.length, sub: 'available projects', icon: Layers, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+             {
+               label: 'Lead Credits',
+               value: profile?.leadCreditBalance ?? 0,
+               sub: 'available claim credits',
+               icon: Zap,
+               color: (profile?.leadCreditBalance ?? 0) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground',
+               bg: (profile?.leadCreditBalance ?? 0) > 0 ? 'bg-emerald-500/10' : 'bg-muted',
+             },
           ].map(s => {
             const Icon = s.icon
             return (
@@ -493,9 +511,9 @@ export default function ContractorDashboard() {
             {[
               {
                 name: 'Contractor Pro',
-                price: '$59',
+                price: '$39',
                 cadence: '/mo billed annually',
-                 desc: 'Up to 10 active assignments, priority dispatch notifications, verified badge',
+                desc: 'Up to 10 active assignments, Verified Pro badge, reduced commission rate, same-day payouts',
                 highlight: true,
                 badge: 'Best Value',
               },
@@ -503,7 +521,7 @@ export default function ContractorDashboard() {
                 name: 'Contractor Elite',
                 price: '$199',
                 cadence: '/mo',
-                 desc: 'Unlimited assignments, first-priority dispatch access, dedicated account manager',
+                desc: 'Unlimited assignments, lowest commission rate, first-priority dispatch access, dedicated account manager',
                 highlight: false,
               },
             ].map(plan => (

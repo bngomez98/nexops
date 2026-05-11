@@ -34,6 +34,10 @@ export async function GET() {
         .eq('assigned_contractor_id', user.id)
         .in('status', ['assigned', 'consultation_scheduled', 'in_progress'])
 
+      // Sum lead credit balance from the ledger
+      const { data: creditData } = await supabase
+        .rpc('get_lead_credit_balance', { p_contractor_id: user.id })
+
       contractorProfile = {
         companyName: profile?.company ?? user.user_metadata?.company_name ?? user.email?.split('@')[0],
         bio: profile?.bio ?? '',
@@ -45,6 +49,7 @@ export async function GET() {
         maxActiveProjects: 3,
         averageRating: 0,
         totalReviews: 0,
+        leadCreditBalance: typeof creditData === 'number' ? creditData : 0,
       }
     }
 
