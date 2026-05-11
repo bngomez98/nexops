@@ -152,38 +152,38 @@ export default function DashboardPage() {
                   value: clientRequests.filter(r => r.status !== 'completed' && r.status !== 'invoiced').length,
                   icon: Clock,
                   color: 'text-sky-600',
-                  bg: 'bg-sky-50 border-sky-100',
+                  bg: 'bg-sky-500/10',
                 },
                 {
                   label: 'Completed',
                   value: clientRequests.filter(r => r.status === 'completed' || r.status === 'invoiced').length,
                   icon: CheckCircle2,
                   color: 'text-emerald-600',
-                  bg: 'bg-emerald-50 border-emerald-100',
+                  bg: 'bg-emerald-500/10',
                 },
                 {
                    label: 'Tracked Cost',
                   value: '$' + clientRequests.filter(r => r.invoiceAmount).reduce((s, r) => s + (r.invoiceAmount || 0), 0).toLocaleString(),
                   icon: FileText,
                   color: 'text-primary',
-                  bg: 'bg-primary/5 border-primary/15',
+                  bg: 'bg-primary/10',
                 },
                 {
                   label: 'Total Requests',
                   value: clientRequests.length,
                   icon: TrendingUp,
                   color: 'text-violet-600',
-                  bg: 'bg-violet-50 border-violet-100',
+                  bg: 'bg-violet-500/10',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="border-b border-border/60 py-4">
-                  <div className="flex items-start justify-between mb-3">
+                <div key={label} className="bg-card border border-border rounded-xl p-4 card-elevated">
+                  <div className="flex items-center justify-between mb-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
-                    <div className={`flex items-center justify-center w-7 h-7 rounded-lg border ${bg}`}>
-                      <Icon className={`h-3.5 w-3.5 ${color}`} />
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-lg ${bg}`}>
+                      <Icon className={`h-4 w-4 ${color}`} />
                     </div>
                   </div>
-                  <p className="text-[26px] font-bold text-foreground tracking-tight">{value}</p>
+                  <p className="font-display text-2xl font-bold text-foreground tabular-nums">{value}</p>
                 </div>
               ))}
             </div>
@@ -244,21 +244,21 @@ export default function DashboardPage() {
                   value: contractorJobs.filter(j => j.status === 'available').length,
                   icon: Briefcase,
                   color: 'text-emerald-600',
-                  bg: 'bg-emerald-50 border-emerald-100',
+                  bg: 'bg-emerald-500/10',
                 },
                 {
                    label: 'Active Assignments',
                   value: contractorJobs.filter(j => j.status === 'claimed').length,
                   icon: Clock,
                   color: 'text-sky-600',
-                  bg: 'bg-sky-50 border-sky-100',
+                  bg: 'bg-sky-500/10',
                 },
                 {
                    label: 'Pending Payout Value',
                   value: '$' + contractorJobs.filter(j => j.status !== 'invoiced').reduce((s, j) => s + (j.payout || 0), 0).toLocaleString(),
                   icon: FileText,
                   color: 'text-primary',
-                  bg: 'bg-primary/5 border-primary/15',
+                  bg: 'bg-primary/10',
                 },
                 {
                   label: 'This Month',
@@ -268,17 +268,17 @@ export default function DashboardPage() {
                     .toLocaleString(),
                   icon: TrendingUp,
                   color: 'text-violet-600',
-                  bg: 'bg-violet-50 border-violet-100',
+                  bg: 'bg-violet-500/10',
                 },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className="border-b border-border/60 py-4">
-                  <div className="flex items-start justify-between mb-3">
+                <div key={label} className="bg-card border border-border rounded-xl p-4 card-elevated">
+                  <div className="flex items-center justify-between mb-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
-                    <div className={`flex items-center justify-center w-7 h-7 rounded-lg border ${bg}`}>
-                      <Icon className={`h-3.5 w-3.5 ${color}`} />
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-lg ${bg}`}>
+                      <Icon className={`h-4 w-4 ${color}`} />
                     </div>
                   </div>
-                  <p className="text-[26px] font-bold text-foreground tracking-tight">{value}</p>
+                  <p className="font-display text-2xl font-bold text-foreground tabular-nums">{value}</p>
                 </div>
               ))}
             </div>

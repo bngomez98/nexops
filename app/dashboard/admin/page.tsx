@@ -5,7 +5,7 @@ import { useRouter } from '@/lib/router'
 import Link from '@/components/link'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Users, Briefcase, ShieldAlert, DollarSign, Activity, ArrowRight, FileText } from 'lucide-react'
+import { Loader2, Users, Briefcase, ShieldAlert, DollarSign, Activity, ArrowRight, FileText, Shield, Sparkles } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -65,19 +65,31 @@ export default function AdminDashboard() {
       <DashboardNav userName={user.name} role="admin" onLogout={handleLogout} />
       
       <main className="lg:ml-[260px] p-5 sm:p-6 lg:p-8 space-y-6 pt-20 lg:pt-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">Admin Overview</h1>
-            <p className="text-sm text-muted-foreground mt-1">Platform health and key metrics</p>
+        {/* Welcome Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-primary p-6 sm:p-8 text-primary-foreground">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_70%_-20%,rgba(255,255,255,0.15),transparent_50%)]" />
+          <div className="pointer-events-none absolute inset-0 dot-grid opacity-20" />
+          <div className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+            <div>
+              <div className="inline-flex items-center gap-2 text-primary-foreground/80 text-xs font-semibold uppercase tracking-wider bg-white/10 border border-white/15 px-3 py-1.5 rounded-full mb-4">
+                <Sparkles className="w-3.5 h-3.5" />
+                Platform Administration
+              </div>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
+                Admin Command Center
+              </h1>
+              <p className="text-primary-foreground/75 text-sm mt-2">
+                {stats.totalUsers} users · {stats.activeJobs} active jobs · {stats.pendingContractors} pending verifications · ${stats.revenue.toLocaleString()} revenue
+              </p>
+            </div>
+            <Link
+              href="/dashboard/admin/contractors"
+              className="inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/95 transition-colors shadow-lg flex-shrink-0"
+            >
+              <Shield className="w-4 h-4" />
+              Review Contractors
+            </Link>
           </div>
-          <Link
-            href="/dashboard/admin/users"
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Users className="w-4 h-4" />
-            Manage users
-          </Link>
         </div>
 
         {/* Stats Grid */}
