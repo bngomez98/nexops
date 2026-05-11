@@ -82,8 +82,8 @@ export default function HomePage() {
               <div className="relative">
                 <div className="overflow-hidden rounded-2xl">
                   <Image
-                    src="/minimalist-modern-office-workspace-aerial-view.jpg"
-                    alt="Modern workspace representing homeowner experience"
+                    src="/business-handshake-professional-meeting.jpg"
+                    alt="Homeowner and contractor reviewing project details together"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
@@ -226,8 +226,8 @@ export default function HomePage() {
               <div className="relative flex justify-center lg:justify-end">
                 <div className="overflow-hidden rounded-2xl w-full max-w-lg">
                   <Image
-                    src="/photo-contractor.jpg"
-                    alt="Contractor in hard hat using tablet at construction site"
+                    src="/business-growth-success-strategy.jpg"
+                    alt="Contractor planning business growth with service performance insights"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
