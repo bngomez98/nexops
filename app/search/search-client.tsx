@@ -19,11 +19,11 @@ interface Request {
 
 interface Property {
   id: string
-  name: string
+  nickname: string | null
   address: string
   city: string | null
   state: string | null
-  property_type: string | null
+  zip_code: string
 }
 
 interface Contractor {
@@ -221,16 +221,14 @@ export function SearchClient({
                     <Building2 className="h-4 w-4 text-primary" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate">{prop.name}</p>
+                    <p className="text-sm font-semibold text-foreground truncate">{prop.nickname || prop.address}</p>
                     <div className="flex items-center gap-1 mt-0.5">
                       <MapPin className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                       <p className="text-[13px] text-muted-foreground truncate">
                         {prop.address}{prop.city ? `, ${prop.city}` : ''}{prop.state ? `, ${prop.state}` : ''}
                       </p>
                     </div>
-                    {prop.property_type && (
-                      <p className="text-[11px] text-muted-foreground mt-1 capitalize">{prop.property_type.replace('_', ' ')}</p>
-                    )}
+                    <p className="text-[11px] text-muted-foreground mt-1">{prop.zip_code}</p>
                   </div>
                 </div>
                 <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
