@@ -15,17 +15,12 @@ export async function POST(request: Request) {
 
     const data = parsed.data
 
-    if (process.env.RESEND_API_KEY) {
-      const { sendContractorApplicationEmail } = await import('@/lib/email')
-      await sendContractorApplicationEmail(data)
-    } else {
-      console.log('[contractors/apply] Submission (email not configured):', {
-        name: `${data.firstName} ${data.lastName}`,
-        company: data.companyName,
-        email: data.email,
-        trades: data.serviceCategories,
-      })
+    if (!process.env.RESEND_API_KEY) {
+      return Response.json({ error: 'Email delivery is not configured' }, { status: 503 })
     }
+
+    const { sendContractorApplicationEmail } = await import('@/lib/email')
+    await sendContractorApplicationEmail(data)
 
     return Response.json({ success: true })
   } catch (err) {

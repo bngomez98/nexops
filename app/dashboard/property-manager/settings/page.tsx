@@ -621,7 +621,7 @@ function PropertyManagerSettingsInner() {
                       className="ml-6 px-3 py-1.5 rounded-md text-[12px] font-semibold text-white"
                       style={{ backgroundColor: brandingForm.primaryColor || '#1a5d2e' }}
                     >
-                      Sample button
+                      Request service
                     </div>
                   </div>
                 </div>
