@@ -100,7 +100,7 @@ const sections = [
       },
       {
         q: 'How do I reach someone after hours for an emergency?',
-        a: `General support runs ${CONTACT_INFO.businessHours} at ${CONTACT_INFO.phoneDisplay} or ${CONTACT_INFO.email}. For after-hours emergencies — burst pipes, gas leaks, HVAC failure in extreme weather — email emergency@nexusoperations.org. An on-call Nexus team member responds within 15 minutes around the clock, including nights, weekends, and holidays.`,
+        a: `General support runs ${CONTACT_INFO.businessHours} at ${CONTACT_INFO.phoneDisplay} or ${CONTACT_INFO.email}. For after-hours emergencies — burst pipes, gas leaks, HVAC failure in extreme weather — email emergency@nexusoperations.net. An on-call Nexus team member responds within 15 minutes around the clock, including nights, weekends, and holidays.`,
       },
       {
         q: 'What if I have a complaint about a contractor or a job?',

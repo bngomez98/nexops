@@ -294,7 +294,7 @@ export async function sendContactFormEmail(opts: {
   type: string
   message: string
 }) {
-  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.org'
+  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.net'
   await send({
     to: adminEmail,
     subject: `New contact form: ${fmt(opts.type)} inquiry from ${opts.name}`,
@@ -371,7 +371,7 @@ export async function sendContractorApplicationEmail(opts: {
   serviceArea: string
   coverageNotes?: string
 }) {
-  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.org'
+  const adminEmail = process.env.RESEND_FROM_EMAIL ?? 'admin@nexusoperations.net'
   const fullName = `${opts.firstName} ${opts.lastName}`
 
   // Admin notification
