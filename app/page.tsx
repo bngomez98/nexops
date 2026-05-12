@@ -1,7 +1,23 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from '@/components/link'
-import { ArrowRight, Camera, Calendar, MessageSquare, Eye, Zap, CreditCard, Building2, HardHat } from 'lucide-react'
+import {
+  ArrowRight,
+  Camera,
+  Calendar,
+  MessageSquare,
+  Eye,
+  Zap,
+  CreditCard,
+  Building2,
+  HardHat,
+  MapPin,
+  ClipboardList,
+  BarChart3,
+  LayoutDashboard,
+  Sparkles,
+  Wallet,
+} from 'lucide-react'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 
@@ -10,6 +26,53 @@ export const metadata: Metadata = {
   description:
     'One request. One verified contractor. No runaround. Free for homeowners. Licensed & insured contractors only.',
 }
+
+const dashboardHighlights = [
+  {
+    title: 'Property Manager Portal',
+    accentClassName: 'text-[#4da3ff]',
+    iconClassName: 'text-[#4da3ff]',
+    items: [
+      {
+        Icon: MapPin,
+        title: 'Portfolio-Centric Map View',
+        description: 'Visual status of all managed assets with color-coded pins for active maintenance requests.',
+      },
+      {
+        Icon: ClipboardList,
+        title: 'SLA Monitoring Widget',
+        description: 'Real-time tracking of dispatch cycle times and contractor response speed.',
+      },
+      {
+        Icon: BarChart3,
+        title: 'Financial Health Overview',
+        description: 'Budget vs. actuals spend analysis per property and across the entire portfolio.',
+      },
+    ],
+  },
+  {
+    title: 'Contractor Command Center',
+    accentClassName: 'text-[#31d0c6]',
+    iconClassName: 'text-[#31d0c6]',
+    items: [
+      {
+        Icon: LayoutDashboard,
+        title: 'Kanban Pipeline Management',
+        description: 'Drag-and-drop workflow from new leads to scheduled, in-progress, and paid.',
+      },
+      {
+        Icon: Sparkles,
+        title: 'AI-Powered Job Matching',
+        description: 'Intelligent fit scores based on trade, location, and historical performance.',
+      },
+      {
+        Icon: Wallet,
+        title: 'Projected Earnings Display',
+        description: 'Visibility into upcoming payouts and active lead credit balances.',
+      },
+    ],
+  },
+] as const
 
 export default function HomePage() {
   return (
@@ -234,6 +297,53 @@ export default function HomePage() {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── DASHBOARD SHOWCASE ────────────────────────────────────── */}
+        <section className="bg-[#1f2937] border-t border-white/6">
+          <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:py-24">
+            <div className="max-w-4xl">
+              <h2 className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
+                Dashboard Design:{' '}
+                <span className="text-[#f3d5b2]">Intuitive &amp; Actionable</span>
+              </h2>
+            </div>
+
+            <div className="relative mt-10">
+              <div className="h-px w-full bg-gradient-to-r from-[#4da3ff]/0 via-[#2f91ff] to-[#31d0c6]/0" />
+              <div className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border border-white/10 bg-white text-[#1f2937] shadow-lg">
+                <LayoutDashboard className="h-4 w-4" />
+              </div>
+            </div>
+
+            <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-20">
+              {dashboardHighlights.map(({ title, accentClassName, iconClassName, items }) => (
+                <div key={title}>
+                  <h3 className={`text-2xl font-bold tracking-tight ${accentClassName}`}>
+                    {title}
+                  </h3>
+
+                  <div className="mt-8 space-y-8">
+                    {items.map(({ Icon, title: itemTitle, description }) => (
+                      <div key={itemTitle} className="flex items-start gap-4">
+                        <span className={`mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center ${iconClassName}`}>
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <div className="max-w-xl">
+                          <p className="text-2xl font-bold leading-tight text-white">
+                            {itemTitle}
+                          </p>
+                          <p className="mt-2 text-lg leading-relaxed text-white/78">
+                            {description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
