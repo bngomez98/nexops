@@ -32,6 +32,31 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // Dashboard legacy route redirects
+      {
+        source: '/dashboard/requests/new',
+        destination: '/dashboard/homeowner/new-request',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/requests',
+        destination: '/dashboard/homeowner/requests',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/earnings',
+        destination: '/dashboard/contractor/payments',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/team',
+        destination: '/dashboard',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig
