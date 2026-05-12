@@ -276,11 +276,12 @@ export default function AboutPage() {
                 Why Nexus is different
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                Built as an upgrade from Angi-style directory experiences.
+                Built for managed property maintenance, not contact listings.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Directory apps hand you contacts; then you still manage the work. Nexus Operations
-                was built to own the coordination and outcomes.
+                Nexus Operations handles intake, contractor assignment, scheduling, documentation,
+                and billing. Property owners work with one accountable team instead of assembling
+                and managing vendors on their own.
               </p>
             </div>
 

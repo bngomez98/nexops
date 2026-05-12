@@ -176,8 +176,8 @@ export default function BlogPost() {
             <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-primary/5">
               <h3 className="text-base font-semibold text-foreground mb-2">Want to see the network?</h3>
               <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">
-                The Nexus Operations contractor directory shows active contractors by trade category,
-                credentials required, and current verification status.
+                The Nexus Operations contractor network overview shows active contractors by trade
+                category, required credentials, and current verification status.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
