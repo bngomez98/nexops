@@ -15,20 +15,18 @@ export async function POST(request: Request) {
 
     const { firstName, lastName, email, phone, type, message } = parsed.data
 
-    // Send via Resend if configured
-    if (process.env.RESEND_API_KEY) {
-      const { sendContactFormEmail } = await import('@/lib/email')
-      await sendContactFormEmail({
-        name: `${firstName} ${lastName}`,
-        email,
-        phone: phone ?? '',
-        type,
-        message,
-      })
-    } else {
-      // Log submission when email is not configured
-      console.log('[contact] Form submission:', { firstName, lastName, email, type })
+    if (!process.env.RESEND_API_KEY) {
+      return Response.json({ error: 'Email delivery is not configured' }, { status: 503 })
     }
+
+    const { sendContactFormEmail } = await import('@/lib/email')
+    await sendContactFormEmail({
+      name: `${firstName} ${lastName}`,
+      email,
+      phone: phone ?? '',
+      type,
+      message,
+    })
 
     return Response.json({ success: true })
   } catch (err) {
