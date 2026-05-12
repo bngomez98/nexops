@@ -48,7 +48,7 @@ const included = [
   {
     icon: Users,
     title: 'Human review on every request',
-    desc: 'Real Nexus staff review every request before dispatch.',
+    desc: 'Real Nexus staff review every request before contractor assignment.',
   },
   {
     icon: Headphones,
@@ -64,11 +64,11 @@ const faqs = [
   },
   {
     q: 'What counts as a service request?',
-    a: 'A service request is any single job or project submitted through your dashboard — a leaky faucet, a broken light fixture, a turn-over punch list, or an emergency repair. Starter accounts are limited to three per calendar year; Pro subscribers get unlimited requests.',
+    a: 'A service request is any single job or project submitted through your dashboard — a leaky faucet, a broken light fixture, a turn-over make-ready checklist, or an emergency repair. Starter accounts are limited to three per calendar year; Pro subscribers get unlimited requests.',
   },
   {
     q: 'Do you charge per job?',
-    a: 'No. Your subscription covers intake review, dispatch management, and status tracking. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
+    a: 'No. Your subscription covers intake review, contractor assignment management, and status tracking. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
   },
   {
     q: 'Can I switch plans?',
@@ -175,7 +175,7 @@ export default function PricingPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Nexus pricing covers the operations layer around every job: intake review, contractor
-              dispatch, scheduling, documentation, and unified billing. Start free, upgrade when
+              contractor assignment, scheduling, documentation, and unified billing. Start free, upgrade when
               you need more volume, and keep contractor labor billed transparently at the quoted
               job rate.
             </p>
@@ -216,7 +216,7 @@ export default function PricingPage() {
           <SectionHeading
             eyebrow="For property managers & landlords"
             title="Per-unit pricing that scales with your portfolio."
-            description="Pay for outsourced maintenance operations at the portfolio level. Our per-unit model means your cost grows only as your portfolio grows — and every unit gets the same service workflow."
+            description="Pay for outsourced maintenance operations at the portfolio level. Our per-unit model means your cost grows only as your portfolio grows — and every unit gets the same service process."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-3">

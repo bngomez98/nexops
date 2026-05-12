@@ -61,7 +61,7 @@ const tradeCategories = [
   {
     icon: ClipboardList,
     title: 'Turnover & make-ready',
-    desc: 'Full punch-list management between tenants — cleaning, paint, minor repair, and documentation so you can list the unit faster.',
+    desc: 'Complete make-ready checklist management between tenants — cleaning, paint, minor repair, and documentation so you can list the unit faster.',
     examples: ['Move-out walk-through', 'Deep clean', 'Paint & patch', 'Punch-list repair', 'Photo documentation for listing'],
   },
   {
@@ -138,7 +138,7 @@ export default function ServicesPage() {
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Nexus Operations is a managed maintenance company. We take in the request, review the
               scope, route it to the right licensed contractor, track the work, and document the
-              closeout. These are the trades and workflows we manage every day.
+              closeout. These are the trades and service processes we manage every day.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -178,7 +178,7 @@ export default function ServicesPage() {
           <SectionHeading
             eyebrow="Trade categories"
             title="What we manage."
-            description="Every category below is handled through the same Nexus process: human intake review, licensed-contractor dispatch, progress tracking, and documented closeout. If your issue doesn&apos;t fit a category, submit it anyway — our team will route it."
+            description="Every category below is handled through the same Nexus process: human intake review, licensed-contractor assignment, progress tracking, and documented closeout. If your issue doesn&apos;t fit a category, submit it anyway — our team will route it."
           />
 
           <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -235,7 +235,7 @@ export default function ServicesPage() {
         <Section id="how-it-works" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Process"
-            title="Every request follows the same documented workflow."
+            title="Every request follows the same documented process."
             align="center"
           />
 
@@ -262,12 +262,12 @@ export default function ServicesPage() {
               <SectionHeading
                 eyebrow="What every job includes"
                 title="Oversight is built into every job — not sold as an add-on."
-                description="You are paying for managed execution, not just a referral. Every Nexus request gets the same intake review, dispatch oversight, documentation, and billing workflow."
+                description="You are paying for managed execution, not just a referral. Every Nexus request gets the same intake review, contractor assignment oversight, documentation, and billing process."
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
               {[
-                { icon: ClipboardList, title: 'Human review', desc: 'Every request read by a Nexus team member before dispatch.' },
+                { icon: ClipboardList, title: 'Human review', desc: 'Every request is read by a Nexus team member before contractor assignment.' },
                 { icon: Wrench, title: 'Verified contractor', desc: 'Matched to a trade specialist with confirmed license and insurance.' },
                 { icon: FileText, title: 'Photo documentation', desc: 'Arrival and completion photos attached to every job.' },
                 { icon: ShieldCheck, title: 'Unified invoice', desc: 'Consolidated into your monthly billing with line-item detail.' },

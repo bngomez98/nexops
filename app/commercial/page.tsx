@@ -54,7 +54,7 @@ const portfolioBenefits = [
   },
   {
     icon: Building2,
-    title: 'Multi-property workflows',
+    title: 'Multi-property service planning',
     desc: 'Assign access notes, preferred contractors, and per-building budget caps once and re-use them everywhere.',
   },
 ]
@@ -94,7 +94,7 @@ const reportingFields = [
 ]
 
 const onboarding = [
-  { step: '01', title: 'Discovery call', desc: 'Tell us about your portfolio — unit count, geography, preferred workflow, pain points.' },
+  { step: '01', title: 'Discovery call', desc: 'Tell us about your portfolio — unit count, geography, preferred process, pain points.' },
   { step: '02', title: 'Proposal', desc: 'We put together a pricing proposal and scope of work within 48 business hours.' },
   { step: '03', title: 'Onboarding', desc: 'We load your properties, contacts, preferred contractors, and access notes into the dashboard.' },
   { step: '04', title: 'Go live', desc: 'Your team submits requests through Nexus; your named Nexus representative manages day-to-day operations.' },
@@ -118,7 +118,7 @@ export default function CommercialPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               For larger portfolios, Nexus becomes your outsourced maintenance operations team — a
-              named representative, structured dispatch workflows, monthly reporting, and one
+              named representative, structured service processes, monthly reporting, and one
               billing system across every unit you manage.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -143,7 +143,7 @@ export default function CommercialPage() {
           <SectionHeading
             eyebrow="Portfolio benefits"
             title="What a commercial engagement includes."
-            description="This is not just access to contractors. It is a portfolio-level operating model for intake, dispatch, oversight, reporting, and billing."
+            description="This is not just access to contractors. It is a portfolio-level operating model for intake, contractor assignment, oversight, reporting, and billing."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -324,7 +324,7 @@ export default function CommercialPage() {
               <p className="mt-4 text-[14px] leading-relaxed text-muted-foreground">
                 If you manage 10 or more units — including small multi-family, scattered-site
                 rentals, or commercial real estate — a Nexus commercial engagement can reduce the
-                hours your team spends coordinating contractors and tracking invoices.
+                hours your team spends managing contractor communication and tracking invoices.
               </p>
             </div>
             <ul className="flex flex-col gap-3">

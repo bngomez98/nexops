@@ -26,7 +26,7 @@ export default function HomePage() {
                   <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-white lg:text-6xl xl:text-7xl">
                     Home services,{' '}
                     <br className="hidden sm:block" />
-                    coordinated.
+                    made simple.
                   </h1>
                   <h2 className="mt-2 text-5xl font-extrabold leading-tight tracking-tight text-white/40 lg:text-6xl xl:text-7xl">
                     Not complicated.
@@ -35,8 +35,8 @@ export default function HomePage() {
 
                 <p className="text-lg text-white/60 max-w-2xl">
                   Nexus Operations is a managed maintenance service for homeowners, landlords, and
-                  property managers. We review each request, dispatch one verified contractor,
-                  track the job, and keep the paperwork in one place.
+                  property managers. We review each request, assign one verified contractor,
+                  track the job, and keep all records in one place.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-3">
@@ -170,7 +170,7 @@ export default function HomePage() {
                   <p className="mt-3 text-base text-[#111111]/60 max-w-xl">
                     Nexus is not a shared lead marketplace. Contractors receive exclusive,
                     pre-qualified requests with scope, photos, budget context, and a real ops team
-                    behind every dispatch.
+                    supporting every assignment.
                   </p>
                 </div>
 
@@ -252,7 +252,7 @@ export default function HomePage() {
                 Simple pricing
               </h2>
               <p className="mt-3 mx-auto max-w-2xl text-base text-white/50">
-                Homeowners use Nexus for free. Property owners subscribe for managed dispatch and
+                Homeowners use Nexus for free. Property owners subscribe for managed service and
                 unified billing. Contractors join the network to claim documented work without
                 paying for shared leads.
               </p>

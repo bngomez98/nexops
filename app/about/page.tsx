@@ -87,7 +87,7 @@ const milestones = [
 ]
 
 const services = [
-  { icon: ClipboardList, title: 'Intake & scope review', desc: 'We read every request, clarify scope, and confirm access details before dispatch.' },
+  { icon: ClipboardList, title: 'Intake & scope review', desc: 'We read every request, clarify scope, and confirm access details before assignment.' },
   { icon: Users, title: 'Contractor matching', desc: 'We match each job to a trade specialist based on fit, availability, and recent performance.' },
   { icon: Compass, title: 'Active oversight', desc: 'We manage scheduling, updates, and change orders directly with the contractor on your behalf.' },
   { icon: Landmark, title: 'Unified invoicing', desc: 'We consolidate every job into one monthly invoice with photo records attached.' },
@@ -97,7 +97,7 @@ const switchReasons = [
   {
     title: 'From search-heavy to service-led',
     description:
-      'Instead of juggling listings and callbacks, Nexus gives you one team that owns intake, dispatch, and closeout from start to finish.',
+      'Instead of juggling listings and callbacks, Nexus gives you one team that owns intake, contractor assignment, and closeout from start to finish.',
   },
   {
     title: 'From contractor-by-contractor billing to one invoice',
@@ -131,9 +131,9 @@ export default function AboutPage() {
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Most property owners in Topeka juggle a patchwork of contractors, handwritten
                 invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable maintenance partner that handles the work end-to-end — intake,
-                dispatch, documentation, and billing — so owners can focus on running their
-                properties, not chasing tradespeople.
+                accountable maintenance partner that handles the full service from intake through
+                billing. We manage intake, contractor assignment, documentation, and billing so
+                owners can focus on running their properties, not chasing tradespeople.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -158,7 +158,7 @@ export default function AboutPage() {
                 </p>
                 <div className="mt-5 space-y-3">
                   {[
-                    'A real person reviews every request before dispatch.',
+                    'A real person reviews every request before assigning a contractor.',
                     'Assignment and arrival timelines are measured against published SLAs.',
                     'Completion photos and notes are required before closeout.',
                     'Every job lands in one auditable monthly invoice.',
