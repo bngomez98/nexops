@@ -1,8 +1,8 @@
 export interface Plan {
   id: string
   name: string
-  role: 'homeowner' | 'contractor'
-  /** Display price per month in cents (e.g. 5900 = $59/mo) */
+  role: 'homeowner' | 'contractor' | 'property_manager'
+  /** Display price per month in cents (e.g. 5900 = $59/mo). 0 = free, -1 = contact sales */
   priceInCents: number
   /**
    * The Stripe price_data recurring interval used only when no stripePriceId is
@@ -16,6 +16,10 @@ export interface Plan {
   features: string[]
   highlighted?: boolean
   badge?: string
+  /** When true, the price is per unit/month rather than a flat fee */
+  perUnit?: boolean
+  /** Minimum monthly charge in cents when perUnit is true */
+  minimumCents?: number
   /** Stripe Price ID – set via STRIPE_PRICE_ID_<PLAN_ID_UPPER> env var */
   stripePriceId?: string
 }
@@ -78,6 +82,66 @@ export const PLANS: Plan[] = [
     stripePriceId: process.env.STRIPE_PRICE_ID_HOMEOWNER_PRO_ANNUAL,
   },
 
+  // ── Property Manager Plans ───────────────────────────────────────────────
+  {
+    id: 'pm_starter',
+    name: 'PM Starter',
+    role: 'property_manager',
+    priceInCents: 0,
+    interval: 'month',
+    description: 'Get started coordinating maintenance for up to 2 properties at no cost.',
+    features: [
+      'Up to 2 properties',
+      'Up to 3 service requests / year',
+      'Verified contractor assignment',
+      'Real-time work order tracking',
+      'Unified billing across properties',
+      'Email support',
+    ],
+  },
+  {
+    id: 'pm_growth',
+    name: 'PM Growth',
+    role: 'property_manager',
+    priceInCents: 400,
+    interval: 'month',
+    billingLabel: '$4 / unit · mo (min $50/mo)',
+    description: 'For small landlords growing a rental portfolio.',
+    perUnit: true,
+    minimumCents: 5000,
+    features: [
+      '3 – 20 units',
+      'Unlimited service requests',
+      'Portfolio analytics & spend reports',
+      'Maintenance scheduling & reminders',
+      'Invoice & document storage',
+      'SLA monitoring dashboard',
+      'Priority phone & email support',
+    ],
+    highlighted: true,
+    badge: 'Most Popular',
+    stripePriceId: process.env.STRIPE_PRICE_ID_PM_GROWTH,
+  },
+  {
+    id: 'pm_scale',
+    name: 'PM Scale',
+    role: 'property_manager',
+    priceInCents: -1,
+    interval: 'month',
+    billingLabel: 'custom pricing',
+    description: 'Enterprise-grade maintenance operations for 21+ unit portfolios.',
+    features: [
+      '21+ units — custom per-unit rate',
+      'Everything in PM Growth',
+      'Dedicated account manager',
+      'Priority contractor dispatch',
+      'Custom SLA agreements',
+      'API access for integrations',
+      'Portfolio-level reporting & exports',
+    ],
+    stripePriceId: process.env.STRIPE_PRICE_ID_PM_SCALE,
+  },
+
   // ── Contractor Plans ─────────────────────────────────────────────────────
   {
     id: 'contractor_free',
@@ -85,11 +149,12 @@ export const PLANS: Plan[] = [
     role: 'contractor',
     priceInCents: 0,
     interval: 'month',
-    description: 'Launch your contractor profile and start building your pipeline.',
+    description: 'Free to join. Earn on every completed job with a simple commission.',
     features: [
       'Up to 3 active projects',
       'Access to open project board',
       'Basic project tracking',
+      '10–15% commission on completed jobs',
       'Direct project payouts',
       'Email support',
     ],
@@ -98,16 +163,17 @@ export const PLANS: Plan[] = [
     id: 'contractor_pro_monthly',
     name: 'Contractor Pro',
     role: 'contractor',
-    priceInCents: 7900,
+    priceInCents: 4900,
     interval: 'month',
     billingLabel: 'billed monthly',
-    description: 'Grow your business with more capacity and visibility.',
+    description: 'Enhanced visibility and faster payouts for growing contractors.',
     features: [
       'Up to 10 active projects',
-      'Priority project notifications',
+      '"Verified Pro" badge on profile',
+      'Priority project notifications & routing',
+      'Reduced commission rate on completed jobs',
       'Earnings analytics & reports',
-      'Verified badge on profile',
-      'Direct project payouts',
+      'Same-day payouts',
       'Priority support & onboarding',
     ],
     stripePriceId: process.env.STRIPE_PRICE_ID_CONTRACTOR_PRO_MONTHLY,
@@ -116,17 +182,16 @@ export const PLANS: Plan[] = [
     id: 'contractor_pro_annual',
     name: 'Contractor Pro',
     role: 'contractor',
-    priceInCents: 5900,
+    priceInCents: 3900,
     interval: 'month',
-    billingLabel: 'billed annually ($708/yr)',
-    description: 'Full access at our best rate — save 25% with an annual commitment.',
+    billingLabel: 'billed annually ($468/yr)',
+    description: 'Full Pro access at our best rate — save 20% with an annual commitment.',
     features: [
       'Everything in Pro Monthly',
-      'Annual billing at $59/mo',
-      'Save $240 per year vs monthly',
-      'Up to 10 active projects',
-      'Verified badge on profile',
-      'Direct project payouts',
+      'Annual billing at $39/mo',
+      'Save $120 per year vs monthly',
+      '"Verified Pro" badge on profile',
+      'Priority routing & same-day payouts',
     ],
     highlighted: true,
     badge: 'Best Value',
@@ -139,9 +204,10 @@ export const PLANS: Plan[] = [
     priceInCents: 19900,
     interval: 'month',
     billingLabel: 'billed monthly',
-    description: 'Unlimited capacity for high-volume contractors.',
+    description: 'Unlimited capacity and lowest commission rate for high-volume contractors.',
     features: [
       'Unlimited active projects',
+      'Lowest commission rate on completed jobs',
       'First-look on all new requests',
       'Advanced earnings dashboard',
       'Dedicated account manager',
@@ -157,11 +223,12 @@ export function getPlanById(id: string): Plan | undefined {
   return PLANS.find(p => p.id === id)
 }
 
-export function getPlansByRole(role: 'homeowner' | 'contractor'): Plan[] {
+export function getPlansByRole(role: 'homeowner' | 'contractor' | 'property_manager'): Plan[] {
   return PLANS.filter(p => p.role === role)
 }
 
 export function formatPrice(priceInCents: number, interval: string): string {
-  if (priceInCents === 0) return 'Starter'
+  if (priceInCents === 0) return 'Free'
+  if (priceInCents === -1) return 'Contact us'
   return `$${(priceInCents / 100).toFixed(0)}/${interval === 'month' ? 'mo' : 'yr'}`
 }

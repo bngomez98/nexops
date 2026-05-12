@@ -97,7 +97,7 @@ const switchReasons = [
   {
     title: 'From search-heavy to service-led',
     description:
-      'Instead of browsing listings and comparing callbacks, Nexus gives you one team that owns coordination from first request to closeout.',
+      'Instead of juggling listings and callbacks, Nexus gives you one team that owns intake, dispatch, and closeout from start to finish.',
   },
   {
     title: 'From contractor-by-contractor billing to one invoice',
@@ -276,11 +276,11 @@ export default function AboutPage() {
                 Why Nexus is different
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                Built as an upgrade from Angi-style directory experiences.
+                Built for owners who need execution, not just contacts.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Directory apps hand you contacts; then you still manage the work. Nexus Operations
-                was built to own the coordination and outcomes.
+                Nexus Operations assigns vetted contractors, manages timelines, and documents outcomes
+                from first request through final invoice.
               </p>
             </div>
 

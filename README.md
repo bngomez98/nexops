@@ -78,7 +78,7 @@ nexops/
 │   │   └── homeowner/      # Homeowner portal (requests, new submission, settings)
 │   ├── contractors/        # Public contractor landing page
 │   ├── pricing/            # Membership tier comparison
-│   ├── services/           # Service category directory
+│   ├── services/           # Service category catalog
 │   └── ...                 # Additional public pages (contact, terms, privacy)
 ├── components/             # Reusable React components
 │   ├── ui/                 # Base UI primitives (shadcn/ui)
