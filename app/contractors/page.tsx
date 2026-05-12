@@ -126,9 +126,10 @@ export default function ContractorsPage() {
                 Pre-documented jobs, direct payouts, no lead fees.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Join the Nexus Operations contractor network and receive pre-documented jobs from
-                vetted homeowners and property managers in Topeka and Shawnee County. No marketplace
-                fees. No lead costs. Direct payouts at your full quoted rate.
+                Join the Nexus Operations contractor network and receive managed job opportunities
+                from vetted homeowners and property managers in Topeka and Shawnee County. Nexus
+                handles intake, client communication, and documentation so you can focus on the
+                work. No marketplace fees. No lead costs. Direct payouts at your full quoted rate.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -332,7 +333,7 @@ export default function ContractorsPage() {
               <SectionHeading
                 eyebrow="Trades we are hiring"
                 title="We're actively building out our contractor roster."
-                description="Whether you work solo or run a small crew, we want to talk to you."
+                description="Whether you work solo or run a small crew, we want to talk to you if you want steady, documented work routed through a local ops team."
               />
               <Link
                 href="/auth/sign-up?role=contractor"
@@ -363,7 +364,7 @@ export default function ContractorsPage() {
               <SectionHeading
                 eyebrow="Requirements"
                 title="What we look for."
-                description="Nexus only onboards contractors who meet or exceed our verification standards. Here's the checklist."
+                description="Because Nexus stands behind every dispatch, we only onboard contractors who meet or exceed our verification standards. Here&apos;s the checklist."
               />
             </div>
             <ul className="grid gap-3 sm:grid-cols-2 lg:col-span-7">

@@ -142,9 +142,10 @@ export default function FAQPage() {
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
               Everything you wanted to ask.
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              How to submit requests, how contractors get verified, pricing, response commitments,
-              and the platform policies that govern every job.
+            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+              If you&apos;re wondering whether Nexus Operations is a contractor marketplace, a software
+              tool, or a managed service, start here. These answers explain how the business works,
+              how we dispatch jobs, how contractors are verified, and how pricing is structured.
             </p>
           </div>
         </section>

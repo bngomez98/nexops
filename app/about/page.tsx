@@ -131,9 +131,9 @@ export default function AboutPage() {
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
                 Most property owners in Topeka juggle a patchwork of contractors, handwritten
                 invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable partner that handles the work end-to-end — intake, dispatch,
-                documentation, and billing — so owners can focus on running their properties, not
-                chasing tradespeople.
+                accountable maintenance partner that handles the work end-to-end — intake,
+                dispatch, documentation, and billing — so owners can focus on running their
+                properties, not chasing tradespeople.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -183,7 +183,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="Our mission"
                 title="Be the maintenance partner you'd rehire on purpose."
-                description="We measure ourselves against the bar that most property owners secretly hope exists: a team that picks up the phone, follows through, and leaves a clean paper trail."
+                description="We run a service business, not a lead marketplace: a team that picks up the phone, follows through, and leaves a clean paper trail."
               />
             </div>
             <div className="lg:col-span-7">
@@ -238,7 +238,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We manage property maintenance — intake, dispatch, documentation, and billing."
+                description="We do not sell software. We do not run a contractor marketplace. We act as the operations layer between the property owner and the contractor on every job."
               />
               <Link
                 href="/services"
@@ -279,8 +279,9 @@ export default function AboutPage() {
                 Built for owners who need execution, not just contacts.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Nexus Operations assigns vetted contractors, manages timelines, and documents outcomes
-                from first request through final invoice.
+                Nexus Operations acts as the accountable middle layer: we assign vetted
+                contractors, manage timelines, and document outcomes from first request through
+                final invoice.
               </p>
             </div>
 

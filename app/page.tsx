@@ -33,8 +33,10 @@ export default function HomePage() {
                   </h2>
                 </div>
 
-                <p className="text-lg text-white/60 max-w-md">
-                  One request. One verified contractor. No runaround.
+                <p className="text-lg text-white/60 max-w-2xl">
+                  Nexus Operations is a managed maintenance service for homeowners, landlords, and
+                  property managers. We review each request, dispatch one verified contractor,
+                  track the job, and keep the paperwork in one place.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-3">
@@ -97,8 +99,9 @@ export default function HomePage() {
                   <h2 className="text-4xl font-extrabold tracking-tight text-[#111111] lg:text-5xl">
                     For homeowners
                   </h2>
-                  <p className="mt-3 text-base text-[#111111]/60 max-w-md">
-                    Submit once. Get matched with one verified contractor. No phone tag, no surprise visits.
+                  <p className="mt-3 text-base text-[#111111]/60 max-w-xl">
+                    Instead of calling around for quotes, you submit one request and Nexus handles
+                    the intake, contractor match, scheduling, and status updates for you.
                   </p>
                 </div>
 
@@ -164,8 +167,10 @@ export default function HomePage() {
                   <h2 className="text-4xl font-extrabold tracking-tight text-[#111111] lg:text-5xl">
                     For contractors
                   </h2>
-                  <p className="mt-3 text-base text-[#111111]/60 max-w-md">
-                    Stop paying for shared leads. Claim exclusive, pre-qualified requests and show up with everything you need.
+                  <p className="mt-3 text-base text-[#111111]/60 max-w-xl">
+                    Nexus is not a shared lead marketplace. Contractors receive exclusive,
+                    pre-qualified requests with scope, photos, budget context, and a real ops team
+                    behind every dispatch.
                   </p>
                 </div>
 
@@ -246,8 +251,10 @@ export default function HomePage() {
               <h2 className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
                 Simple pricing
               </h2>
-              <p className="mt-3 text-base text-white/50">
-                No per-lead fees. No long-term contracts.
+              <p className="mt-3 mx-auto max-w-2xl text-base text-white/50">
+                Homeowners use Nexus for free. Property owners subscribe for managed dispatch and
+                unified billing. Contractors join the network to claim documented work without
+                paying for shared leads.
               </p>
             </div>
 
