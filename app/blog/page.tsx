@@ -111,8 +111,9 @@ export default function BlogPage() {
                 Property management and maintenance operations.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Practical guides for property managers and owners in Topeka, Kansas.
-                Written by the Nexus Operations team.
+                Practical guides for property managers and owners in Topeka, Kansas. We use the
+                blog to explain the maintenance operations problems Nexus solves every day and what
+                a better service model looks like in practice.
               </p>
             </div>
           </div>
