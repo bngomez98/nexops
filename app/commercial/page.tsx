@@ -23,7 +23,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'Commercial & Portfolio Property Management',
   description:
-    'Nexus Operations commercial engagement model for property managers overseeing multi-unit portfolios in Topeka, KS. Named account representative, SLA-backed response, consolidated monthly invoicing, and portfolio-wide reporting.',
+    'Nexus Operations commercial service for property managers overseeing multi-unit portfolios in Topeka, KS. Named account representative, clear response windows, and one monthly bill.',
 }
 
 const portfolioBenefits = [
@@ -34,13 +34,13 @@ const portfolioBenefits = [
   },
   {
     icon: ClipboardList,
-    title: 'Portfolio-wide dashboard',
-    desc: 'See every active request across every property, tagged by building, trade, and urgency.',
+    title: 'Portfolio-wide view',
+    desc: 'See every active request across every property, grouped by building, trade, and urgency.',
   },
   {
     icon: BarChart3,
     title: 'Monthly reporting',
-    desc: 'Detailed maintenance reports by property, trade, urgency tier, and contractor — delivered monthly.',
+    desc: 'Detailed monthly updates by property, trade, urgency level, and contractor.',
   },
   {
     icon: FileText,
@@ -49,13 +49,13 @@ const portfolioBenefits = [
   },
   {
     icon: Shield,
-    title: 'Response-time SLAs',
-    desc: 'Published assignment and on-site SLAs by urgency tier, tracked and reported in your monthly rollup.',
+    title: 'Clear response windows',
+    desc: 'Published assignment and on-site response windows by urgency level, tracked in your monthly summary.',
   },
   {
     icon: Building2,
-    title: 'Multi-property workflows',
-    desc: 'Assign access notes, preferred contractors, and per-building budget caps once and re-use them everywhere.',
+    title: 'Multi-property process',
+    desc: 'Set access notes, preferred contractors, and per-building budget caps once and reuse them everywhere.',
   },
 ]
 
@@ -116,11 +116,11 @@ export default function CommercialPage() {
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
               Built for property managers running 10+ units.
             </h1>
-            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations offers a dedicated engagement model for multi-property portfolios —
-              with a named Nexus representative, custom workflows, monthly performance reports, and
-              consolidated billing across every unit you manage.
-            </p>
+              <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                Nexus Operations offers a dedicated engagement model for multi-property portfolios —
+                with a named Nexus representative, custom processes, monthly performance reports, and
+                consolidated billing across every unit you manage.
+              </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/contact"
@@ -163,9 +163,9 @@ export default function CommercialPage() {
         {/* ── SLA table ────────────────────────────────── */}
         <Section tone="muted" id="sla" className="scroll-mt-28">
           <SectionHeading
-            eyebrow="Service level agreements"
+            eyebrow="Response windows"
             title="Published response commitments by urgency."
-            description="Every commercial engagement is backed by published assignment and on-site SLAs, tracked in your monthly performance report."
+            description="Every commercial engagement includes published assignment and on-site response windows, tracked in your monthly report."
           />
 
           <div className="mt-12 overflow-x-auto rounded-2xl border border-border">
@@ -173,8 +173,8 @@ export default function CommercialPage() {
               <thead>
                 <tr className="bg-secondary/60 border-b border-border">
                   <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tier</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Assignment SLA</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">On-site SLA</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Assignment window</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">On-site window</th>
                   <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground hidden lg:table-cell">Typical use</th>
                 </tr>
               </thead>
@@ -204,10 +204,10 @@ export default function CommercialPage() {
               <Shield className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-foreground mb-1">Emergency tier is 24/7 — including nights, weekends, and holidays</p>
-                <p className="text-[12.5px] text-muted-foreground leading-relaxed">
-                  The 1-hour assignment and 4-hour on-site SLAs apply around the clock. A burst pipe
-                  at 11 PM on a Saturday is handled the same as one at 10 AM on a Tuesday.
-                </p>
+                  <p className="text-[12.5px] text-muted-foreground leading-relaxed">
+                    The 1-hour assignment and 4-hour on-site windows apply around the clock. A burst pipe
+                    at 11 PM on a Saturday is handled the same as one at 10 AM on a Tuesday.
+                  </p>
               </div>
             </div>
           </div>
@@ -241,8 +241,8 @@ export default function CommercialPage() {
                   Emergency tier is 24/7 — including nights, weekends, and holidays.
                 </p>
                 <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
-                  The 1-hour assignment and 4-hour on-site SLAs apply around the clock. For
-                  after-hours emergencies, submit through the portal or email{' '}
+                  The 1-hour assignment and 4-hour on-site windows apply around the clock. For
+                  after-hours emergencies, submit through your account or email{' '}
                   <a
                     href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}`}
                     className="font-semibold text-destructive hover:underline"

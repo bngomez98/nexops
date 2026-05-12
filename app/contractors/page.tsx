@@ -22,7 +22,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'For Contractors — Join the Nexus Operations Network',
   description:
-    'Licensed and insured contractors in Shawnee County: join the Nexus Operations network for pre-qualified, fully documented jobs. Direct payouts, no marketplace fees, no lead costs.',
+    'Licensed and insured contractors in Shawnee County can join the Nexus Operations network for well-scoped jobs. Direct payouts and no lead costs.',
 }
 
 const benefits = [
@@ -39,17 +39,17 @@ const benefits = [
   {
     icon: ShieldCheck,
     title: 'No lead fees, no subscriptions required',
-    desc: 'Starter accounts are free, forever. Pro and Elite tiers add higher project limits, priority routing, and analytics — but they are optional.',
+    desc: 'Starter accounts are free, forever. Pro and Elite tiers add higher project limits and priority placement — but they are optional.',
   },
   {
     icon: BarChart3,
     title: 'Performance-based priority',
-    desc: 'Consistent response times, complete documentation, and high ratings earn priority assignment on higher-value work.',
+    desc: 'Consistent response times, complete job records, and high ratings help you get priority on higher-value work.',
   },
   {
     icon: Hammer,
     title: 'Admin tools in one dashboard',
-    desc: 'Messaging, photo upload, status updates, and invoicing are all handled in a single contractor dashboard, with no separate spreadsheets to maintain.',
+    desc: 'Messaging, photo upload, status updates, and invoicing are handled in one contractor account, with no separate spreadsheets to maintain.',
   },
   {
     icon: Users,
@@ -63,7 +63,7 @@ const requirements = [
   'Applicable trade licenses for your service categories',
   'General liability insurance ($500K per occurrence minimum)',
   'Workers compensation insurance (if you have employees)',
-  'Ability to respond to assignments within published SLA windows',
+  'Ability to respond to assignments within published response windows',
   'Willingness to provide photo documentation on every job',
   'Two professional references or prior client endorsements',
 ]
@@ -72,7 +72,7 @@ const onboarding = [
   { step: '01', title: 'Apply', desc: 'Create a contractor account and submit your trade categories, insurance, and references.' },
   { step: '02', title: 'Verify', desc: 'We confirm license status, insurance certificates, and contact your references within 2–3 business days.' },
   { step: '03', title: 'Onboard', desc: 'One call with a Nexus team member to walk through the dashboard, payment setup, and scheduling preferences.' },
-  { step: '04', title: 'Activate', desc: 'Your profile goes live in the network and matching jobs begin routing to your dashboard.' },
+  { step: '04', title: 'Activate', desc: 'Your profile goes live in the network and matching jobs begin appearing in your account.' },
 ]
 
 const trades = [
@@ -126,8 +126,8 @@ export default function ContractorsPage() {
                 Pre-documented jobs, direct payouts, no lead fees.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Join the Nexus Operations contractor network and receive pre-documented jobs from
-                vetted homeowners and property managers in Topeka and Shawnee County. No marketplace
+                Join the Nexus Operations contractor network and receive clear job requests from
+                vetted homeowners and property managers in Topeka and Shawnee County. No middleman
                 fees. No lead costs. Direct payouts at your full quoted rate.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -169,13 +169,13 @@ export default function ContractorsPage() {
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
                 Who&apos;s in the network.
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Every contractor in the network has been manually verified —
-                license confirmed against state records, insurance confirmed
-                directly with the provider. Below is the current network by
-                trade category. Contractor identities are kept confidential
-                until a specific job assignment is confirmed.
-              </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Every contractor in the network has been manually verified —
+                  license confirmed against state records, insurance confirmed
+                  directly with the provider. Below is the current network by
+                  trade category. Contractor identities are kept confidential
+                  until a specific job is confirmed.
+                </p>
             </div>
 
             {/* Summary stats */}
@@ -264,9 +264,9 @@ export default function ContractorsPage() {
                     </table>
                   </div>
                   <div className="px-5 py-3.5 bg-secondary/40 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <p className="text-[11.5px] text-muted-foreground">
-                      Contractor identities are anonymized until job assignment. Verified credentials are available for review upon request before any job begins. All trade categories are open.
-                    </p>
+                        <p className="text-[11.5px] text-muted-foreground">
+                          Contractor identities stay private until a job is assigned. Verified credentials are available for review upon request before any job begins. All trade categories are open.
+                        </p>
                   </div>
                 </div>
               </div>
@@ -363,7 +363,7 @@ export default function ContractorsPage() {
               <SectionHeading
                 eyebrow="Requirements"
                 title="What we look for."
-                description="Nexus only onboards contractors who meet or exceed our verification standards. Here's the checklist."
+                description="Nexus only onboards contractors who meet our verification standards. Here&apos;s the checklist."
               />
             </div>
             <ul className="grid gap-3 sm:grid-cols-2 lg:col-span-7">
@@ -416,7 +416,7 @@ export default function ContractorsPage() {
             {[
               {
                 q: 'Does it cost anything to join?',
-                a: 'No. Starter contractor accounts are free, forever. You can optionally upgrade to Pro or Elite tiers for higher project limits and priority routing — but it is not required to receive work.',
+                a: 'No. Starter contractor accounts are free, forever. You can optionally upgrade to Pro or Elite tiers for higher project limits and priority placement — but it is not required to receive work.',
               },
               {
                 q: 'How fast do I get paid?',
@@ -424,7 +424,7 @@ export default function ContractorsPage() {
               },
               {
                 q: 'Do I have to accept every job?',
-                a: 'No. You can decline any assignment for any reason. Consistently meeting SLA on accepted jobs is how contractors earn priority placement.',
+                a: 'No. You can decline any assignment for any reason. Consistently meeting response windows on accepted jobs is how contractors earn priority placement.',
               },
               {
                 q: 'Can I set my own rates?',
@@ -436,7 +436,7 @@ export default function ContractorsPage() {
               },
               {
                 q: "Do you send work outside Topeka?",
-                a: "No — we only dispatch within Topeka and Shawnee County. You won't be asked to drive across the state for a job.",
+                a: "No — we only schedule work within Topeka and Shawnee County. You won't be asked to drive across the state for a job.",
               },
             ].map(({ q, a }) => (
               <details
@@ -459,10 +459,10 @@ export default function ContractorsPage() {
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
               Ready to join the network?
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Apply in minutes. The Nexus team will follow up to verify your license and insurance,
-              then walk you through the dashboard.
-            </p>
+              <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
+                Apply in minutes. The Nexus team will follow up to verify your license and insurance,
+                then walk you through your account.
+              </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/auth/sign-up?role=contractor"

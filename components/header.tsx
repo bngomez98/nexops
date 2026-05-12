@@ -62,7 +62,7 @@ export function Header() {
             href="/contact"
             className="inline-flex items-center rounded-full border border-white/40 px-5 py-2 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
           >
-            Request a demo
+            Contact us
           </Link>
         </div>
 
@@ -105,7 +105,7 @@ export function Header() {
                 onClick={closeMobile}
                 className="flex items-center justify-center rounded-full border border-white/40 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
               >
-                Request a demo
+                Contact us
               </Link>
             </div>
           </nav>

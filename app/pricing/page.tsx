@@ -19,9 +19,9 @@ import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Pricing — Simple, Transparent Subscription Plans',
+  title: 'Pricing — Simple, Transparent Plans',
   description:
-    'Nexus Operations offers transparent subscription plans for homeowners, property managers, and contractors. Start free. Upgrade when you need unlimited requests. No long-term contracts.',
+    'Nexus Operations offers simple plans for homeowners, property managers, and contractors. Start free and upgrade when needed.',
 }
 
 const included = [
@@ -53,7 +53,7 @@ const included = [
   {
     icon: Headphones,
     title: 'Human support',
-    desc: 'Talk to a real person during business hours — phone, email, or portal.',
+    desc: 'Talk to a real person during business hours by phone, email, or through your account.',
   },
 ]
 
@@ -176,7 +176,7 @@ export default function PricingPage() {
             <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Start free. Upgrade when you need unlimited requests. Every plan includes our verified
               contractor network, response-time guarantees, and full job documentation — no hidden
-              per-job fees, no long-term contracts.
+              job fees, and no long-term contracts.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -256,11 +256,11 @@ export default function PricingPage() {
 
         {/* ── What's included ───────────────────────────────── */}
         <Section>
-          <SectionHeading
-            eyebrow="Included in every plan"
-            title="Every plan includes the same coordination features from day one."
-            align="center"
-          />
+            <SectionHeading
+              eyebrow="Included in every plan"
+              title="Every plan includes the same support from day one."
+              align="center"
+            />
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {included.map(({ icon: Icon, title, desc }) => (
@@ -289,7 +289,7 @@ export default function PricingPage() {
               </h3>
               <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
                 Multi-property portfolios, multi-family buildings, and commercial real estate get
-                custom pricing, a named Nexus representative, and portfolio-level reporting. Tell us about
+                custom pricing, a named Nexus representative, and monthly updates across properties. Tell us about
                 your operation and we&apos;ll put a quote together.
               </p>
             </div>

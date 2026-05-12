@@ -3,7 +3,7 @@ import { Logo } from '@/components/logo'
 import { Phone, Mail, MapPin, ArrowRight, BadgeCheck, Clock } from 'lucide-react'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
-const platformLinks = [
+const serviceLinks = [
   { href: '/services', label: 'Services' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/commercial', label: 'Commercial' },
@@ -38,7 +38,7 @@ export function Footer() {
             <div>
               <p className="font-mono-label text-primary">Ready to simplify maintenance?</p>
               <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-foreground">
-                One portal for requests, dispatch, and billing.
+                One place for requests, scheduling, and billing.
               </h2>
               <p className="mt-2 max-w-lg text-sm text-muted-foreground">
                 Free to sign up. No long-term contracts. Serving {CONTACT_INFO.cityState} and Shawnee County.
@@ -104,7 +104,7 @@ export function Footer() {
             </div>
           </div>
 
-          <FooterColumn title="Platform" links={platformLinks} />
+          <FooterColumn title="Services" links={serviceLinks} />
           <FooterColumn title="Accounts" links={accountLinks} />
           <FooterColumn title="Company" links={companyLinks} />
         </div>

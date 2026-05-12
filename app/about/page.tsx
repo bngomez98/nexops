@@ -22,7 +22,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'About — Managed Property Maintenance Built in Topeka',
   description:
-    'Nexus Operations is a locally owned managed property maintenance company founded in Topeka, Kansas. Learn about our team, our process, and our commitment to verified, documented service.',
+    'Nexus Operations is a locally owned property maintenance company founded in Topeka, Kansas. Learn about our team, process, and commitment to reliable service.',
 }
 
 const values = [
@@ -34,7 +34,7 @@ const values = [
   {
     icon: Target,
     title: 'Response you can count on',
-    desc: 'We commit to assignment and on-site timelines by urgency tier. If we miss a commitment, we own it.',
+    desc: 'We commit to clear scheduling and arrival timelines by urgency level. If we miss a commitment, we own it.',
   },
   {
     icon: HeartHandshake,
@@ -44,7 +44,7 @@ const values = [
   {
     icon: FileText,
     title: 'Documentation by default',
-    desc: 'Photos, scope notes, and invoices are attached to every request so you have full records for insurance, owners, and resale.',
+    desc: 'Photos, job notes, and invoices are attached to every request so you have complete records.',
   },
 ]
 
@@ -128,13 +128,13 @@ export default function AboutPage() {
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
                 We built Nexus Operations so property owners have a single, accountable service for maintenance.
               </h1>
-              <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Most property owners in Topeka juggle a patchwork of contractors, handwritten
-                invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable partner that handles the work end-to-end — intake, dispatch,
-                documentation, and billing — so owners can focus on running their properties, not
-                chasing tradespeople.
-              </p>
+                <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                  Most property owners in Topeka juggle a patchwork of contractors, handwritten
+                  invoices, and missed callbacks. We founded Nexus Operations to be the single,
+                  accountable partner that handles the work end-to-end — request intake, scheduling,
+                  documentation, and billing — so owners can focus on running their properties, not
+                  chasing tradespeople.
+                </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/contact"
@@ -158,8 +158,8 @@ export default function AboutPage() {
                 </p>
                 <div className="mt-5 space-y-3">
                   {[
-                    'A real person reviews every request before dispatch.',
-                    'Assignment and arrival timelines are measured against published SLAs.',
+                    'A real person reviews every request before scheduling.',
+                    'Assignment and arrival timelines are measured against published response windows.',
                     'Completion photos and notes are required before closeout.',
                     'Every job lands in one auditable monthly invoice.',
                   ].map((line) => (
@@ -195,7 +195,7 @@ export default function AboutPage() {
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
                   Nexus Operations exists to own every one of those hand-offs. We review each
-                  request, assign the right contractor, track the work in real time, and close the
+                  request, assign the right contractor, track the work clearly, and close the
                   loop with photo documentation and a unified invoice. Nothing important gets
                   dropped, and nothing happens without a record.
                 </p>
@@ -238,7 +238,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We manage property maintenance — intake, dispatch, documentation, and billing."
+                description="We do not sell software. We manage property maintenance — intake, scheduling, documentation, and billing."
               />
               <Link
                 href="/services"
@@ -278,10 +278,10 @@ export default function AboutPage() {
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
                 Built as an upgrade from Angi-style directory experiences.
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Directory apps hand you contacts; then you still manage the work. Nexus Operations
-                was built to own the coordination and outcomes.
-              </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Directory sites hand you contacts; then you still manage the work. Nexus Operations
+                  was built to own the coordination and outcomes.
+                </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
@@ -326,9 +326,9 @@ export default function AboutPage() {
                   },
                   {
                     time: "11:14 PM",
-                    label: "Automated triage",
+                      label: "Quick review",
                     color: "bg-primary",
-                    detail: "System classifies as Emergency — Plumbing. SLA clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
+                      detail: "The request is marked Emergency — Plumbing. Response timing starts: contractor assigned within 1 hour, on-site within 4 hours.",
                     outcome: null,
                   },
                   {
@@ -336,14 +336,14 @@ export default function AboutPage() {
                     label: "Contractor assigned",
                     color: "bg-primary",
                     detail: "On-call plumber from the verified network accepts the assignment. Property manager receives confirmation with contractor name, license number, and ETA. Tenant is notified.",
-                    outcome: "13 minutes to assignment. SLA: 60 minutes.",
+                      outcome: "13 minutes to assignment. Goal: 60 minutes.",
                   },
                   {
                     time: "12:51 AM Sunday",
                     label: "On-site arrival",
                     color: "bg-primary",
                     detail: "Contractor arrives at Unit 14B, locates the failed supply line under the kitchen sink, shuts off water to the unit. Submits arrival photo through the portal.",
-                    outcome: "97 minutes from submission. SLA: 4 hours.",
+                      outcome: "97 minutes from submission. Goal: 4 hours.",
                   },
                   {
                     time: "2:18 AM",
@@ -397,8 +397,8 @@ export default function AboutPage() {
         <Section tone="dark">
           <SectionHeading
             eyebrow="Our core commitments"
-            title="A more structured experience for both sides of every project."
-            description="We designed Nexus Operations to feel personal for homeowners and practical for contractors — with clear expectations before anyone is matched."
+              title="A more structured experience for both sides of every project."
+              description="We designed Nexus Operations to feel personal for homeowners and practical for contractors — with clear expectations before anyone is connected."
             align="center"
             onDark
           />

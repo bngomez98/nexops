@@ -9,12 +9,12 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'FAQ — Nexus Operations',
   description:
-    'Frequently asked questions about Nexus Operations — how to submit service requests, contractor verification, response commitments, pricing, and platform policies in Topeka, KS.',
+    'Frequently asked questions about Nexus Operations — how to submit requests, contractor checks, response times, pricing, and service rules in Topeka, KS.',
   alternates: { canonical: 'https://nexusoperations.org/faq' },
   openGraph: {
     title: 'FAQ — Nexus Operations',
     description:
-      'Everything you need to know about submitting requests, contractor verification, response commitments, and platform policies.',
+      'Everything you need to know about submitting requests, contractor checks, response times, and service rules.',
     url: 'https://nexusoperations.org/faq',
     type: 'article',
   },
@@ -26,7 +26,7 @@ const sections = [
     questions: [
       {
         q: 'How do I submit a service request?',
-        a: 'Sign in to your dashboard, pick the trade category, upload a few photos, describe the issue, and choose an availability window. A Nexus team member reads the request, confirms scope, and dispatches a license-verified contractor within the SLA window for the urgency tier you selected.',
+        a: 'Sign in to your account, pick the type of work, upload a few photos, describe the issue, and choose a time window. A Nexus team member reviews the request, confirms the details, and schedules a licensed contractor within the response window for the urgency level you selected.',
       },
       {
         q: 'What information do I need to include with a request?',
@@ -42,7 +42,7 @@ const sections = [
       },
       {
         q: 'Am I obligated to accept the quote?',
-        a: 'No. After the on-site visit, the contractor provides a written estimate. You can accept, negotiate scope, or decline with no cancellation fee. If you decline, the request closes out cleanly in your dashboard.',
+        a: 'No. After the on-site visit, the contractor provides a written estimate. You can accept, adjust the work, or decline with no cancellation fee. If you decline, the request closes in your account.',
       },
       {
         q: 'Can I cancel a request I already submitted?',
@@ -59,7 +59,7 @@ const sections = [
     questions: [
       {
         q: 'What does it cost to join the contractor network?',
-        a: 'Nothing. Starter contractor accounts are free, forever. Pro and Elite tiers are optional upgrades that raise project capacity limits and enable priority routing, but they are not required to receive work.',
+        a: 'Nothing. Starter contractor accounts are free, forever. Pro and Elite tiers are optional upgrades that raise project limits and help with priority placement, but they are not required to receive work.',
       },
       {
         q: 'What is required to join?',
@@ -75,7 +75,7 @@ const sections = [
       },
       {
         q: 'Do I have to accept every job that routes to me?',
-        a: 'No. You can decline any assignment for any reason. Consistently meeting SLA on accepted jobs is how contractors earn priority placement on higher-value work over time.',
+        a: 'No. You can decline any assignment for any reason. Contractors who consistently meet response windows on accepted jobs are more likely to get priority on higher-value work over time.',
       },
       {
         q: 'Can I set my own rates and service area?',
@@ -84,7 +84,7 @@ const sections = [
     ],
   },
   {
-    category: 'Platform & policies',
+    category: 'Service & policies',
     questions: [
       {
         q: 'Is Nexus Operations available outside Topeka?',
@@ -92,7 +92,7 @@ const sections = [
       },
       {
         q: 'How does pricing work?',
-        a: 'Homeowners and commercial clients subscribe to a plan that includes dispatch, documentation, and unified invoicing. Contractor work is billed at the contractor\'s quoted rate and rolled into a monthly unified invoice. See the pricing page for current plans and features.',
+        a: 'Homeowners and commercial clients choose a plan that includes scheduling support, job records, and a single monthly bill. Contractor work is billed at the contractor\'s quoted rate and included in that monthly bill. See the pricing page for current plans and features.',
       },
       {
         q: 'What happens to photos and project data I submit?',
@@ -142,10 +142,10 @@ export default function FAQPage() {
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
               Everything you wanted to ask.
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              How to submit requests, how contractors get verified, pricing, response commitments,
-              and the platform policies that govern every job.
-            </p>
+                <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                  How to submit requests, how contractors get verified, pricing, response commitments,
+                  and the service rules that guide every job.
+                </p>
           </div>
         </section>
 
@@ -162,7 +162,7 @@ export default function FAQPage() {
                     ? 'Submitting, tracking, and closing out requests.'
                     : section.category === 'For contractors'
                       ? 'Joining the network, quoting work, and getting paid.'
-                      : 'Verification, data handling, and the rules of the road.'}
+                      : 'Verification, data handling, and service rules.'}
                 </h2>
 
                 <div className="mt-6 flex flex-col gap-3">

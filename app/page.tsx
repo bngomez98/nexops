@@ -190,7 +190,7 @@ export default function HomePage() {
                       {
                         Icon: CreditCard,
                         title: 'Get paid faster',
-                        desc: 'Unified invoicing and quick payouts',
+                        desc: 'One clear billing flow and quick payouts',
                       },
                     ].map(({ Icon, title, desc }) => (
                       <div key={title} className="flex items-start gap-4">
@@ -321,11 +321,11 @@ export default function HomePage() {
             <div className="mt-10 flex items-center justify-center gap-3 text-center">
               <Building2 className="h-5 w-5 flex-shrink-0 text-white/40" />
               <p className="text-sm text-white/40">
-                Enterprise property management?{' '}
+                Managing many properties?{' '}
                 <Link href="/contact" className="underline underline-offset-2 hover:text-white/70 transition-colors">
                   Contact us
                 </Link>{' '}
-                for custom coordination pricing.
+                for custom pricing.
               </p>
             </div>
           </div>

@@ -22,9 +22,9 @@ import { Section, SectionHeading } from '@/components/section'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Services — Trade Categories by Nexus Operations',
+  title: 'Services — Home and Property Repair Help',
   description:
-    'Nexus Operations manages plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners. Licensed, insured contractors on every job.',
+    'Nexus Operations helps with plumbing, electrical, HVAC, general repair, turnover, landscaping, and preventative maintenance for Topeka and Shawnee County property owners.',
 }
 
 const tradeCategories = [
@@ -132,14 +132,14 @@ export default function ServicesPage() {
             <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
               <Sparkles className="h-3 w-3" /> Services
             </p>
-            <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Every trade you need. One service.
-            </h1>
-            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations manages every trade a typical property requires — routine,
-              urgent, or emergency. Here&apos;s everything we handle, plus how we route each request
-              through our licensed, insured network.
-            </p>
+              <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+                Every trade you need. One service.
+              </h1>
+              <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                Nexus Operations manages every trade a typical property requires — routine,
+                urgent, or emergency. Here&apos;s everything we handle and how we move each request
+                forward with licensed, insured contractors.
+              </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/auth/sign-up"
@@ -158,7 +158,7 @@ export default function ServicesPage() {
               {[
                 { href: '#commercial', label: 'Commercial' },
                 { href: '#residential', label: 'Residential' },
-                { href: '#b2b', label: 'B2B operations' },
+                { href: '#b2b', label: 'For managers' },
                 { href: '#how-it-works', label: 'How it works' },
               ].map((item) => (
                 <a
@@ -207,9 +207,9 @@ export default function ServicesPage() {
         {/* ── Urgency tiers ───────────────────────────────── */}
         <Section tone="muted" id="commercial" className="scroll-mt-28">
           <SectionHeading
-            eyebrow="Urgency tiers"
+            eyebrow="Response windows"
             title="Response commitments by urgency."
-            description="Every request is tagged at submission. We commit to assignment and on-site timelines based on the tier."
+            description="Every request is marked by urgency. We share expected assignment and arrival times for each level."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -233,11 +233,11 @@ export default function ServicesPage() {
 
         {/* ── Process ─────────────────────────────────────── */}
         <Section id="how-it-works" className="scroll-mt-28">
-          <SectionHeading
-            eyebrow="Process"
-            title="Every request follows the same documented workflow."
-            align="center"
-          />
+            <SectionHeading
+              eyebrow="Process"
+              title="Every request follows the same clear process."
+              align="center"
+            />
 
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {process.map(({ step, title, desc }) => (
@@ -266,11 +266,11 @@ export default function ServicesPage() {
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
-              {[
-                { icon: ClipboardList, title: 'Human review', desc: 'Every request read by a Nexus team member before dispatch.' },
+                {[
+                { icon: ClipboardList, title: 'Human review', desc: 'Every request is read by a Nexus team member before scheduling.' },
                 { icon: Wrench, title: 'Verified contractor', desc: 'Matched to a trade specialist with confirmed license and insurance.' },
                 { icon: FileText, title: 'Photo documentation', desc: 'Arrival and completion photos attached to every job.' },
-                { icon: ShieldCheck, title: 'Unified invoice', desc: 'Consolidated into your monthly billing with line-item detail.' },
+                { icon: ShieldCheck, title: 'Single monthly bill', desc: 'All work appears in one monthly bill with clear line-by-line details.' },
               ].map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}

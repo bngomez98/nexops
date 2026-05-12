@@ -20,7 +20,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
   title: 'Contact — Submit a Request or Reach the Nexus Team',
-  description: `Contact Nexus Operations to submit a maintenance request, request a commercial proposal, or apply as a licensed contractor. Serving ${CONTACT_INFO.serviceArea}. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
+  description: `Contact Nexus Operations to submit a maintenance request, ask about commercial services, or apply as a licensed contractor. Serving ${CONTACT_INFO.serviceArea}. Email ${CONTACT_INFO.email} or call ${CONTACT_INFO.phoneDisplay}.`,
 }
 
 const directItems = [
@@ -52,7 +52,7 @@ const quickPaths = [
   {
     icon: Sparkles,
     title: 'Submit a maintenance request',
-    desc: 'If you know what needs to be done, submit a documented request directly through your dashboard instead of using this form.',
+    desc: 'If you know what needs to be done, you can submit a request directly from your account instead of using this form.',
     cta: 'Submit a request',
     href: '/auth/sign-up',
   },
@@ -88,11 +88,11 @@ export default function ContactPage() {
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
               Reach our team in Topeka, Kansas.
             </h1>
-            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Whether you&apos;re a homeowner with a project, a property manager evaluating a commercial
-              engagement, or a contractor interested in joining the network — we respond to every
-              inquiry within one business day.
-            </p>
+              <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                Whether you&apos;re a homeowner with a project, a property manager handling many
+                properties, or a contractor interested in joining the network — we respond to every
+                inquiry within one business day.
+              </p>
           </div>
         </section>
 
@@ -151,7 +151,7 @@ export default function ContactPage() {
                     </h3>
                     <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted-foreground">
                       Burst pipes, gas leaks, and HVAC failures in extreme weather are handled
-                      around the clock — we assign a contractor within one hour and have someone
+                      around the clock — we connect you with a contractor within one hour and have someone
                       on-site within four hours.
                     </p>
                     <a
