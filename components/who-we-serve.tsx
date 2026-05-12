@@ -21,7 +21,7 @@ const audiences = [
     label: "Residential",
     title: "Property Owners",
     description:
-      "Access verified contractors and professional coordination without subscriptions or retainers.",
+      "Access verified contractors and hands-on dispatch management without subscriptions or retainers.",
     features: [
       "Verified contractor network",
       "Pay per job only",
@@ -35,11 +35,11 @@ const audiences = [
     label: "B2B Services",
     title: "Business Operations",
     description:
-      "Outsourced operational support including lead generation, vendor management, and project coordination.",
+      "Outsourced operational support including lead generation, vendor management, and project execution oversight.",
     features: [
       "Lead generation",
       "Vendor management",
-      "Project coordination",
+      "Project execution oversight",
       "Growth consulting",
     ],
     href: "/services#b2b",
@@ -60,7 +60,7 @@ export function WhoWeServe() {
             and B2B operations.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Maintenance coordination and operational support for property managers, owners, and businesses.
+            Maintenance dispatch, tracking, and operational support for property managers, owners, and businesses.
           </p>
         </div>
 

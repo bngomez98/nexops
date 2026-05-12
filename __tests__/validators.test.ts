@@ -248,7 +248,7 @@ describe('projectRequestSchema', () => {
   it('rejects invalid pipeline mode', () => {
     const result = projectRequestSchema.safeParse({
       category: 'open-request',
-      title: 'General request for service coordination',
+      title: 'General request for service dispatch management',
       description: 'Need request tracking, handling, and documentation support for ongoing service work.',
       location: 'Topeka, KS',
       preferredDate: '2099-05-01',

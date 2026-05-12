@@ -129,7 +129,7 @@ export const PLANS: Plan[] = [
     priceInCents: -1,
     interval: 'month',
     billingLabel: 'custom pricing',
-    description: 'Enterprise-grade coordination for 21+ unit portfolios.',
+    description: 'Enterprise-grade maintenance operations for 21+ unit portfolios.',
     features: [
       '21+ units — custom per-unit rate',
       'Everything in PM Growth',
