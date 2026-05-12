@@ -49,7 +49,7 @@ export type JobStatus =
   | 'completed'
   | 'cancelled'
 
-export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'void'
+export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'void'
 
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded'
 
