@@ -325,7 +325,7 @@ export default function HomePage() {
                 <Link href="/contact" className="underline underline-offset-2 hover:text-white/70 transition-colors">
                   Contact us
                 </Link>{' '}
-                for custom coordination pricing.
+                for custom portfolio pricing.
               </p>
             </div>
           </div>
