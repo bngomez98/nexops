@@ -105,18 +105,18 @@ const LOCAL_BUSINESS_SCHEMA = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://nexusoperations.org'),
   title: {
-    default: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
+    default: 'Nexus Operations — Property Maintenance Management in Topeka, KS',
     template: '%s — Nexus Operations',
   },
   description:
     'Nexus Operations manages maintenance for homeowners and property managers in Topeka and Shawnee County. Each request is assigned to one verified, licensed contractor (not sold as shared leads), consultation is confirmed within 24 hours, and every job is documented from intake to invoice.',
   keywords: [
     'property maintenance Topeka',
-    'maintenance coordination Kansas',
+    'maintenance management Kansas',
     'verified contractors Shawnee County',
     'property management Topeka KS',
     'licensed contractor network',
-    'home repair coordination',
+    'home repair management',
     'commercial property maintenance',
     'residential maintenance Topeka',
     'contractor assignment service',
@@ -148,15 +148,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://nexusoperations.org',
-    title: 'Nexus Operations — Property Maintenance Coordination in Topeka, KS',
+    title: 'Nexus Operations — Property Maintenance Management in Topeka, KS',
     description:
       'Nexus Operations assigns each request to one verified, licensed contractor in Topeka and Shawnee County, confirms consultation within 24 hours, and documents every job through invoice.',
     siteName: 'Nexus Operations',
-    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service coordination' }],
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: 'Nexus Operations property service management' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nexus Operations — Property Maintenance Coordination',
+    title: 'Nexus Operations — Property Maintenance Management',
     description:
       'Topeka property maintenance with one-request/one-contractor assignment, 24-hour consultation confirmation, and complete job documentation.',
     images: [DEFAULT_OG_IMAGE],
