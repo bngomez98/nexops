@@ -107,15 +107,40 @@ function toShortId(id: string): string {
 function mapPortalStatus(raw?: string | null): PortalJobStatus {
   if (!raw) return 'open'
   const lower = raw.toLowerCase().replace(/[_ ]/g, '-')
-  if (lower === 'completed' || lower === 'done' || lower === 'closed') return 'completed'
+  if (lower === 'completed' || lower === 'complete' || lower === 'done' || lower === 'closed') return 'completed'
   if (lower === 'in-progress' || lower === 'in_progress' || lower === 'active') return 'in-progress'
   if (lower === 'claimed' || lower === 'assigned' || lower === 'accepted') return 'claimed'
   if (lower === 'cancelled' || lower === 'canceled') return 'cancelled'
   return 'open'
 }
 
+function mapPhotoUrls(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((photo) => {
+      if (typeof photo === 'string') return photo
+      if (photo && typeof photo === 'object' && typeof (photo as { url?: unknown }).url === 'string') {
+        return (photo as { url: string }).url
+      }
+      return null
+    })
+    .filter((photo): photo is string => Boolean(photo))
+}
+
 function mapProject(p: Record<string, unknown>): PortalJob {
   const status = mapPortalStatus(p.status as string | null | undefined)
+  const invoice = (p.invoice && typeof p.invoice === 'object')
+    ? (p.invoice as Record<string, unknown>)
+    : null
+  const invoiceAmountCents =
+    typeof invoice?.amountCents === 'number'
+      ? invoice.amountCents
+      : typeof invoice?.amount_cents === 'number'
+        ? invoice.amount_cents
+        : null
+  const invoicePaidByStatus =
+    typeof invoice?.status === 'string' ? invoice.status.toLowerCase() === 'paid' : null
+
   return {
     id: (p.id as string | null | undefined) ?? '',
     shortId: toShortId((p.id as string | null | undefined) ?? ''),
@@ -128,13 +153,25 @@ function mapProject(p: Record<string, unknown>): PortalJob {
     location: (p.location as string | null | undefined) ?? (p.address as string | null | undefined) ?? '',
     createdAt: (p.createdAt as string | null | undefined) ?? (p.created_at as string | null | undefined) ?? new Date().toISOString(),
     preferredDate: (p.preferredDate as string | null | undefined) ?? (p.preferred_date as string | null | undefined) ?? null,
-    ownerId: (p.ownerId as string | null | undefined) ?? (p.owner_id as string | null | undefined) ?? (p.userId as string | null | undefined) ?? null,
+    ownerId:
+      (p.ownerId as string | null | undefined) ??
+      (p.owner_id as string | null | undefined) ??
+      (p.homeownerId as string | null | undefined) ??
+      (p.homeowner_id as string | null | undefined) ??
+      (p.userId as string | null | undefined) ??
+      null,
     ownerName: (p.ownerName as string | null | undefined) ?? (p.owner_name as string | null | undefined) ?? null,
     contractorId: (p.contractorId as string | null | undefined) ?? (p.contractor_id as string | null | undefined) ?? null,
     contractorName: (p.contractorName as string | null | undefined) ?? (p.contractor_name as string | null | undefined) ?? null,
-    photoUrls: Array.isArray(p.photoUrls ?? p.photo_urls ?? p.photos) ? (p.photoUrls ?? p.photo_urls ?? p.photos) as string[] : [],
-    invoiceAmount: (p.invoiceAmount as number | null | undefined) ?? (p.invoice_amount as number | null | undefined) ?? null,
-    invoicePaid: Boolean(p.invoicePaid ?? p.invoice_paid ?? false),
+    photoUrls: mapPhotoUrls(p.photoUrls ?? p.photo_urls ?? p.photos),
+    invoiceAmount:
+      (p.invoiceAmount as number | null | undefined) ??
+      (p.invoice_amount as number | null | undefined) ??
+      (invoiceAmountCents != null ? invoiceAmountCents / 100 : null),
+    invoicePaid:
+      (typeof (p.invoicePaid ?? p.invoice_paid) === 'boolean'
+        ? Boolean(p.invoicePaid ?? p.invoice_paid)
+        : invoicePaidByStatus ?? false),
     finalCost: (p.finalCost as number | null | undefined) ?? (p.final_cost as number | null | undefined) ?? null,
   }
 }
@@ -157,6 +194,48 @@ function mapUser(u: Record<string, unknown>): PortalUser {
       ? (u.serviceCategories ?? u.service_categories) as string[]
       : [],
   }
+}
+
+function mapJobsFromBootstrap(data: Record<string, unknown>): PortalJob[] {
+  const users = Array.isArray(data.users)
+    ? data.users.filter((user): user is Record<string, unknown> => Boolean(user && typeof user === 'object'))
+    : []
+  const currentUser =
+    data.currentUser && typeof data.currentUser === 'object'
+      ? (data.currentUser as Record<string, unknown>)
+      : null
+
+  const namesById = new Map<string, string>()
+  for (const user of users) {
+    if (typeof user.id === 'string' && typeof user.name === 'string') {
+      namesById.set(user.id, user.name)
+    }
+  }
+  if (currentUser && typeof currentUser.id === 'string' && typeof currentUser.name === 'string') {
+    namesById.set(currentUser.id, currentUser.name)
+  }
+
+  const rawJobs = Array.isArray(data.jobs)
+    ? data.jobs.filter((job): job is Record<string, unknown> => Boolean(job && typeof job === 'object'))
+    : []
+
+  return rawJobs.map((raw) => {
+    const mapped = mapProject(raw)
+    const ownerId = mapped.ownerId
+    const contractorId = mapped.contractorId
+    return {
+      ...mapped,
+      ownerName: mapped.ownerName ?? (ownerId ? namesById.get(ownerId) ?? null : null),
+      contractorName: mapped.contractorName ?? (contractorId ? namesById.get(contractorId) ?? null : null),
+    }
+  })
+}
+
+function toPortalStatusTransition(status: PortalJobStatus): string {
+  if (status === 'claimed') return 'assigned'
+  if (status === 'in-progress') return 'in_progress'
+  if (status === 'completed') return 'completed'
+  return 'pending'
 }
 
 /* ── JSON fetch helper ────────────────────────────────────────────────────── */
@@ -223,14 +302,8 @@ export function PortalProvider({ children }: { children: ReactNode }) {
 
   const refreshJobs = useCallback(async () => {
     try {
-      const data = await apiFetch<Record<string, unknown>>('/api/projects/list')
-      // API may return { projects: [...] } or an array directly
-      const list: unknown[] = Array.isArray(data)
-        ? data
-        : Array.isArray((data as Record<string, unknown>).projects)
-          ? (data as Record<string, unknown>).projects as unknown[]
-          : []
-      if (mountedRef.current) setJobs(list.map((item) => mapProject(item as Record<string, unknown>)))
+      const data = await apiFetch<Record<string, unknown>>('/api/portal/bootstrap')
+      if (mountedRef.current) setJobs(mapJobsFromBootstrap(data))
     } catch {
       /* keep existing jobs on error */
     }
@@ -325,12 +398,13 @@ export function PortalProvider({ children }: { children: ReactNode }) {
 
   const refreshJob = useCallback(async (jobId: string) => {
     try {
-      const data = await apiFetch<Record<string, unknown>>(`/api/projects/${jobId}`)
-      const projectData = data.project ?? data
-      const raw = (typeof projectData === 'object' && projectData !== null)
-        ? projectData as Record<string, unknown>
-        : data
-      const updated = mapProject(raw)
+      const data = await apiFetch<Record<string, unknown>>('/api/portal/bootstrap')
+      const jobsFromBootstrap = mapJobsFromBootstrap(data)
+      const updated = jobsFromBootstrap.find((job) => job.id === jobId)
+      if (!updated) {
+        await refreshJobs()
+        return
+      }
       if (mountedRef.current) {
         setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)))
       }
@@ -364,11 +438,11 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const submitRequest = useCallback(
     async (input: NewRequestInput): Promise<PortalJob | null> => {
       try {
-        const data = await apiFetch<Record<string, unknown>>('/api/projects/create', {
+        const data = await apiFetch<Record<string, unknown>>('/api/portal/requests', {
           method: 'POST',
           body: JSON.stringify(input),
         })
-        const projectData = data.project ?? data
+        const projectData = data.job ?? data.project ?? data
         const raw = (typeof projectData === 'object' && projectData !== null)
           ? projectData as Record<string, unknown>
           : data
@@ -397,7 +471,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
 
   const assignContractor = useCallback(
     async (jobId: string, contractorId: string) => {
-      await apiFetch(`/api/projects/claim/${jobId}`, {
+      await apiFetch(`/api/portal/jobs/${jobId}/assign`, {
         method: 'POST',
         body: JSON.stringify({ contractorId }),
       })
@@ -416,17 +490,10 @@ export function PortalProvider({ children }: { children: ReactNode }) {
       if (idx < 0 || idx >= STATUS_FLOW.length - 1) return
       const nextStatus = STATUS_FLOW[idx + 1]
 
-      try {
-        await apiFetch('/api/automation/update-status', {
-          method: 'POST',
-          body: JSON.stringify({ projectId: jobId, status: nextStatus }),
-        })
-      } catch {
-        await apiFetch(`/api/projects/${jobId}`, {
-          method: 'PATCH',
-          body: JSON.stringify({ status: nextStatus }),
-        })
-      }
+      await apiFetch(`/api/portal/jobs/${jobId}/status`, {
+        method: 'POST',
+        body: JSON.stringify({ newStatus: toPortalStatusTransition(nextStatus) }),
+      })
 
       await refreshJob(jobId)
     },
@@ -438,9 +505,9 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const postMessage = useCallback(
     async (jobId: string, body: string): Promise<PortalMessage | null> => {
       try {
-        const data = await apiFetch<Record<string, unknown>>(`/api/messages/${jobId}`, {
+        const data = await apiFetch<Record<string, unknown>>(`/api/portal/jobs/${jobId}/messages`, {
           method: 'POST',
-          body: JSON.stringify({ body }),
+          body: JSON.stringify({ content: body }),
         })
         const messageData = data.message ?? data
         const m = (typeof messageData === 'object' && messageData !== null)
@@ -450,9 +517,18 @@ export function PortalProvider({ children }: { children: ReactNode }) {
           id: (m.id as string | undefined) ?? '',
           jobId: (m.jobId as string | undefined) ?? (m.job_id as string | undefined) ?? jobId,
           senderId: (m.senderId as string | undefined) ?? (m.sender_id as string | undefined) ?? currentUser?.id ?? '',
-          senderName: (m.senderName as string | undefined) ?? (m.sender_name as string | undefined) ?? currentUser?.name ?? '',
+          senderName:
+            (m.senderName as string | undefined) ??
+            (m.sender_name as string | undefined) ??
+            (m.authorName as string | undefined) ??
+            currentUser?.name ??
+            '',
           body: (m.body as string | undefined) ?? body,
-          createdAt: (m.createdAt as string | undefined) ?? (m.created_at as string | undefined) ?? new Date().toISOString(),
+          createdAt:
+            (m.createdAt as string | undefined) ??
+            (m.created_at as string | undefined) ??
+            (m.timestamp as string | undefined) ??
+            new Date().toISOString(),
         }
       } catch {
         return null
@@ -590,4 +666,3 @@ export function usePortal(): PortalContextValue {
   if (!ctx) throw new Error('usePortal must be used inside <PortalProvider>')
   return ctx
 }
-
