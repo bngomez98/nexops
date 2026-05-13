@@ -7,10 +7,10 @@ const siteUrl = getSiteUrl()
 
 // Stripe redirects contractors here when an account link has expired.
 // We generate a fresh link and redirect the contractor back into the flow.
-export async function GET(request: Request) {
+export async function GET() {
   try {
   const stripe = getStripeClient()
-  const supabase = createClient(request)
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {

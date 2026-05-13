@@ -1,9 +1,9 @@
 
 import { createClient } from '@/lib/supabase/server'
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
@@ -19,7 +19,11 @@ export async function GET(request: Request) {
     const rawRole = profile?.role ?? user.user_metadata?.role ?? 'homeowner'
     // Normalise DB value 'property_manager' (underscore) to the hyphenated form
     // used throughout the front-end.
-    const role = rawRole === 'property_manager' ? 'property-manager' : rawRole
+    const role = rawRole === 'property_manager'
+      ? 'property-manager'
+      : rawRole === 'property_owner'
+        ? 'property-owner'
+        : rawRole
 
     let contractorProfile = null
     if (role === 'contractor') {
@@ -29,6 +33,10 @@ export async function GET(request: Request) {
         .select('id', { count: 'exact', head: true })
         .eq('assigned_contractor_id', user.id)
         .in('status', ['assigned', 'consultation_scheduled', 'in_progress'])
+
+      // Sum lead credit balance from the ledger
+      const { data: creditData } = await supabase
+        .rpc('get_lead_credit_balance', { p_contractor_id: user.id })
 
       contractorProfile = {
         companyName: profile?.company ?? user.user_metadata?.company_name ?? user.email?.split('@')[0],
@@ -41,6 +49,7 @@ export async function GET(request: Request) {
         maxActiveProjects: 3,
         averageRating: 0,
         totalReviews: 0,
+        leadCreditBalance: typeof creditData === 'number' ? creditData : 0,
       }
     }
 

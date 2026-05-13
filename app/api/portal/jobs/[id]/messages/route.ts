@@ -6,7 +6,7 @@ type RouteContext = { params: Promise<{ id: string }> }
 
 export async function POST(request: Request, { params }: RouteContext) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,
@@ -28,7 +28,7 @@ export async function POST(request: Request, { params }: RouteContext) {
       return Response.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    const profile: any = await loadCurrentProfile(supabase, user.id)
+    const profile: Record<string, unknown> | null = await loadCurrentProfile(supabase, user.id)
     const role = normalizeRole(profile?.role ?? user.user_metadata?.role)
 
     const isOwner = project.owner_id === user.id

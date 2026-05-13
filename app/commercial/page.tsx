@@ -117,9 +117,9 @@ export default function CommercialPage() {
               Built for property managers running 10+ units.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations offers a dedicated engagement model for multi-property portfolios —
-              with a named Nexus representative, custom workflows, monthly performance reports, and
-              consolidated billing across every unit you manage.
+              For larger portfolios, Nexus becomes your outsourced maintenance operations team — a
+              named representative, structured dispatch workflows, monthly reporting, and one
+              billing system across every unit you manage.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -143,6 +143,7 @@ export default function CommercialPage() {
           <SectionHeading
             eyebrow="Portfolio benefits"
             title="What a commercial engagement includes."
+            description="This is not just access to contractors. It is a portfolio-level operating model for intake, dispatch, oversight, reporting, and billing."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -161,7 +162,7 @@ export default function CommercialPage() {
         </Section>
 
         {/* ── SLA table ────────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="sla" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Service level agreements"
             title="Published response commitments by urgency."
@@ -244,10 +245,10 @@ export default function CommercialPage() {
                   The 1-hour assignment and 4-hour on-site SLAs apply around the clock. For
                   after-hours emergencies, submit through the portal or email{' '}
                   <a
-                    href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}`}
+                    href={`mailto:emergency@${CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}`}
                     className="font-semibold text-destructive hover:underline"
                   >
-                    emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.org'}
+                    emergency@{CONTACT_INFO.email.split('@')[1] ?? 'nexusoperations.net'}
                   </a>
                   .
                 </p>

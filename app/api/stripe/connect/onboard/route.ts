@@ -5,10 +5,10 @@ import { getSiteUrl } from "@/lib/env"
 
 const siteUrl = getSiteUrl()
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
   const stripe = getStripeClient()
-  const supabase = createClient(request)
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {

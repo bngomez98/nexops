@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from '@/lib/router'
 import Link from '@/components/link'
@@ -29,6 +30,7 @@ type MfaFactor = {
   factor_type: string
   status: string
   friendly_name?: string | null
+  created_at?: string | null
 }
 
 function ContractorSettingsInner() {
@@ -507,7 +509,7 @@ function ContractorSettingsInner() {
                           <KeyRound className="w-4 h-4 text-muted-foreground" />
                           <div>
                             <p className="text-[13px] font-semibold text-foreground">{f.friendly_name || 'Authenticator App'}</p>
-                            <p className="text-[11px] text-muted-foreground">Added {new Date((f as any).created_at).toLocaleDateString()}</p>
+                            <p className="text-[11px] text-muted-foreground">Added {new Date(f.created_at ?? '').toLocaleDateString()}</p>
                           </div>
                         </div>
                         <button
@@ -526,7 +528,7 @@ function ContractorSettingsInner() {
                       Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code below.
                     </p>
                     <div className="flex flex-col items-center gap-4 p-5 rounded-xl bg-secondary/30 border border-border">
-                      <img src={enrollData.qr} alt="2FA QR Code" className="w-44 h-44 rounded-lg" />
+                      <Image unoptimized src={enrollData.qr} alt="2FA QR Code" width={176} height={176} className="w-44 h-44 rounded-lg" />
                       <div className="text-center">
                         <p className="text-[11px] text-muted-foreground mb-1">Or enter this code manually:</p>
                         <code className="text-[12px] font-mono bg-background border border-border px-3 py-1.5 rounded-lg select-all break-all">

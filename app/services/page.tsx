@@ -136,9 +136,9 @@ export default function ServicesPage() {
               Every trade you need. One service.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations manages every trade a typical property requires — routine,
-              urgent, or emergency. Here&apos;s everything we handle, plus how we route each request
-              through our licensed, insured network.
+              Nexus Operations is a managed maintenance company. We take in the request, review the
+              scope, route it to the right licensed contractor, track the work, and document the
+              closeout. These are the trades and workflows we manage every day.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -154,15 +154,31 @@ export default function ServicesPage() {
                 View pricing
               </Link>
             </div>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              {[
+                { href: '#commercial', label: 'Commercial' },
+                { href: '#residential', label: 'Residential' },
+                { href: '#b2b', label: 'B2B operations' },
+                { href: '#how-it-works', label: 'How it works' },
+              ].map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="inline-flex items-center rounded-full border border-border bg-background/90 px-3 py-1.5 text-[12px] font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* ── Trade categories ────────────────────────────── */}
-        <Section>
+        <Section id="residential" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Trade categories"
             title="What we manage."
-            description="Every category below is handled by licensed, insured contractors in our network. If your issue doesn&apos;t fit a category, submit a request anyway — our team will route it."
+            description="Every category below is handled through the same Nexus process: human intake review, licensed-contractor dispatch, progress tracking, and documented closeout. If your issue doesn&apos;t fit a category, submit it anyway — our team will route it."
           />
 
           <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -189,7 +205,7 @@ export default function ServicesPage() {
         </Section>
 
         {/* ── Urgency tiers ───────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="commercial" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Urgency tiers"
             title="Response commitments by urgency."
@@ -216,7 +232,7 @@ export default function ServicesPage() {
         </Section>
 
         {/* ── Process ─────────────────────────────────────── */}
-        <Section>
+        <Section id="how-it-works" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Process"
             title="Every request follows the same documented workflow."
@@ -240,13 +256,13 @@ export default function ServicesPage() {
         </Section>
 
         {/* ── What's included ─────────────────────────────── */}
-        <Section tone="muted">
+        <Section tone="muted" id="b2b" className="scroll-mt-28">
           <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What every job includes"
                 title="Oversight is built into every job — not sold as an add-on."
-                description="You don&apos;t pay per task or per photo or per note. Every Nexus request gets the full treatment."
+                description="You are paying for managed execution, not just a referral. Every Nexus request gets the same intake review, dispatch oversight, documentation, and billing workflow."
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">

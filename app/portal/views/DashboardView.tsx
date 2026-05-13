@@ -2,28 +2,30 @@
 
 import { motion } from 'framer-motion'
 import {
+  AlertTriangle,
   ArrowRight,
   Briefcase,
   CheckCircle2,
   Clock,
+  DollarSign,
   Plus,
-  Sparkles,
-  Users,
 } from 'lucide-react'
 import {
   STATUS_LABEL,
+  formatMoney,
   formatRelative,
   type PortalJob,
+  type PortalJobStatus,
 } from '../lib/portal-utils'
 import { usePortal } from '../lib/portal-context'
-import { JobCard } from '../components/JobCard'
-import { StatsArc } from '../components/StatsArc'
 
 interface DashboardViewProps {
   onSubmitRequest: () => void
   onOpenJob: (jobId: string) => void
   onSeeAllJobs: () => void
 }
+
+const PIPELINE_STATUSES: PortalJobStatus[] = ['open', 'claimed', 'in-progress', 'completed', 'cancelled']
 
 export function DashboardView({
   onSubmitRequest,
@@ -32,84 +34,118 @@ export function DashboardView({
 }: DashboardViewProps) {
   const { currentUser, jobs, loading, error } = usePortal()
   if (!currentUser) return null
+
   const visible = jobs.filter((j: PortalJob) => {
     if (currentUser.role === 'admin' || currentUser.role === 'property-manager' || currentUser.role === 'manager') return true
     if (currentUser.role === 'contractor') return j.contractorId === currentUser.id || j.status === 'open'
     return j.ownerId === currentUser.id
   })
+
   const stats = buildStats(visible)
-  const recent = [...visible]
+  const pipeline = buildPipeline(visible)
+  const recent = [...visible].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).slice(0, 6)
+  const urgentQueue = [...visible]
+    .filter((j) => j.status !== 'completed' && j.status !== 'cancelled' && (j.priority === 'urgent' || j.priority === 'high'))
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-    .slice(0, 4)
-  const activity = buildActivity(visible).slice(0, 5)
+    .slice(0, 5)
+
+  const activity = buildActivity(visible).slice(0, 8)
 
   return (
-    <div className="space-y-6">
-      {loading && (
-        <div className="glass p-4 text-xs text-indigo-200/70">Loading live operations data…</div>
-      )}
-      {error && (
-        <div className="glass p-4 text-xs text-rose-300">Failed to load portal data: {error}</div>
-      )}
-      {/* Hero stats card */}
+    <div className="space-y-5">
+      {loading && <div className="glass p-4 text-xs text-indigo-200/70">Refreshing Nexus Operations data…</div>}
+      {error && <div className="glass p-4 text-xs text-rose-300">Unable to load portal operations: {error}</div>}
+
       <motion.section
-        initial={{ opacity: 0, y: 18 }}
+        initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="glass-tinted p-6 md:p-8 relative overflow-hidden"
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="glass-tinted p-6"
       >
-        <div className="absolute -top-24 -right-20 h-72 w-72 rounded-full bg-indigo-500/30 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-sky-500/20 blur-3xl pointer-events-none" />
+        <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-indigo-200/65">Nexus operations</div>
+        <h1 className="mt-2 text-3xl font-semibold text-white tracking-tight">Portal command center</h1>
+        <p className="mt-2 text-sm text-indigo-100/75 max-w-3xl">
+          Track dispatch throughput, monitor urgent work, and move requests from intake to payment without leaving the portal.
+        </p>
 
-        <div className="relative grid md:grid-cols-[auto_1fr] gap-6 md:gap-10 items-center">
-          <div className="flex justify-center">
-            <StatsArc
-              completionRate={stats.completionRate}
-              open={stats.open}
-              completed={stats.completed}
-            />
-          </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricTile label="Active dispatch" value={stats.open} Icon={Briefcase} />
+          <MetricTile label="Completed" value={stats.completed} Icon={CheckCircle2} />
+          <MetricTile label="Awaiting payment" value={stats.pendingPayment} Icon={Clock} />
+          <MetricTile label="Open invoice value" value={formatMoney(stats.pendingInvoiceTotal)} Icon={DollarSign} />
+        </div>
 
-          <div>
-            <div className="text-[10.5px] font-mono uppercase tracking-wider text-indigo-200/70 mb-2">
-              Live operations
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-[1.05]">
-              Every property,
-              <br />
-              <span className="text-glow">handled in one place.</span>
-            </h1>
-            <p className="text-sm text-indigo-100/70 mt-3 max-w-md leading-relaxed">
-              Submit a request, watch it move from pending to complete, and pay invoices
-              without ever leaving the app.
-            </p>
-
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-2">
-              <StatBlock label="Open" value={stats.open} Icon={Briefcase} accent="from-indigo-400 to-sky-400" />
-              <StatBlock label="Completed" value={stats.completed} Icon={CheckCircle2} accent="from-emerald-400 to-teal-400" />
-              <StatBlock label="Awaiting pay" value={stats.pendingPayment} Icon={Clock} accent="from-amber-400 to-orange-400" />
-              <StatBlock label="Active pros" value={stats.activeContractors} Icon={Users} accent="from-violet-400 to-fuchsia-400" />
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <button type="button" className="btn-primary" onClick={onSubmitRequest}>
-                <Plus size={16} />
-                Submit a request
-              </button>
-              <button type="button" className="btn-ghost" onClick={onSeeAllJobs}>
-                View all jobs <ArrowRight size={14} />
-              </button>
-            </div>
-          </div>
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <button type="button" className="btn-primary" onClick={onSubmitRequest}>
+            <Plus size={15} />
+            Submit request
+          </button>
+          <button type="button" className="btn-ghost" onClick={onSeeAllJobs}>
+            Review full job board <ArrowRight size={13} />
+          </button>
         </div>
       </motion.section>
 
-      {/* Recent jobs + activity */}
-      <div className="grid lg:grid-cols-[1.4fr_1fr] gap-5">
-        <section>
-          <SectionHeader
-            title="Recent jobs"
-            subtitle="The latest activity across your properties"
+      <section className="glass p-5">
+        <SectionTitle
+          title="Dispatch pipeline"
+          subtitle="Live request counts by workflow stage"
+        />
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+          {pipeline.map((item) => (
+            <button
+              key={item.status}
+              type="button"
+              onClick={onSeeAllJobs}
+              className="glass-soft p-3 text-left hover:bg-white/10 transition"
+            >
+              <div className="text-[10px] uppercase tracking-[0.14em] text-indigo-200/55">{item.label}</div>
+              <div className="mt-1.5 text-2xl font-semibold text-white">{item.count}</div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="glass p-5">
+        <SectionTitle
+          title="Immediate attention queue"
+          subtitle="High and urgent jobs requiring action"
+        />
+        {urgentQueue.length === 0 ? (
+          <div className="mt-3 glass-soft p-4 text-xs text-indigo-200/70">
+            No high-priority dispatches are open right now.
+          </div>
+        ) : (
+          <div className="mt-3 space-y-2">
+            {urgentQueue.map((job) => (
+              <button
+                key={job.id}
+                type="button"
+                onClick={() => onOpenJob(job.id)}
+                className="w-full glass-soft p-3.5 text-left hover:bg-white/10 transition flex items-start gap-3"
+              >
+                <AlertTriangle size={15} className="mt-0.5 text-amber-300" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-white truncate">{job.title}</div>
+                  <div className="text-[11px] text-indigo-200/65 mt-0.5 truncate">
+                    #{job.shortId} · {job.location}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[10px] uppercase tracking-[0.12em] text-amber-200">{job.priority}</div>
+                  <div className="text-[11px] text-indigo-200/70 mt-0.5">{STATUS_LABEL[job.status]}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <section className="glass p-5">
+          <SectionTitle
+            title="Recent dispatches"
+            subtitle="Latest requests submitted in the portal"
             action={
               <button
                 type="button"
@@ -120,84 +156,86 @@ export function DashboardView({
               </button>
             }
           />
-          <div className="grid sm:grid-cols-2 gap-3">
-            {recent.length === 0 && (
-              <div className="glass p-6 text-sm text-indigo-200/60 col-span-2 text-center">
-                No jobs yet — submit one to get started.
-              </div>
-            )}
-            {recent.map((j, idx) => (
-              <JobCard key={j.id} job={j} index={idx} onOpen={onOpenJob} />
-            ))}
-          </div>
+          {recent.length === 0 ? (
+            <div className="mt-3 glass-soft p-4 text-xs text-indigo-200/70">
+              No dispatch records are available yet. Use “Submit request” to create the first operation.
+            </div>
+          ) : (
+            <div className="mt-3 space-y-2">
+              {recent.map((job) => (
+                <button
+                  key={job.id}
+                  type="button"
+                  onClick={() => onOpenJob(job.id)}
+                  className="w-full glass-soft p-3 text-left hover:bg-white/10 transition"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-white truncate">{job.title}</div>
+                      <div className="text-[11px] text-indigo-200/65 truncate">#{job.shortId} · {job.location}</div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-[10px] uppercase tracking-[0.12em] text-indigo-200/70">{STATUS_LABEL[job.status]}</div>
+                      <div className="text-[11px] text-indigo-200/55 mt-0.5">{formatRelative(job.createdAt)}</div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </section>
 
-        <section>
-          <SectionHeader
-            title="Activity"
-            subtitle="Real-time updates"
-            action={
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-emerald-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live
-              </span>
-            }
+        <section className="glass p-5">
+          <SectionTitle
+            title="Operational activity"
+            subtitle="Most recent timeline events"
           />
-          <div className="glass p-2">
-            {activity.length === 0 && (
-              <div className="px-3 py-8 text-xs text-indigo-200/50 text-center">
-                Nothing new yet.
-              </div>
-            )}
-            {activity.map((a, idx) => (
-              <motion.button
-                type="button"
-                key={a.id}
-                onClick={() => onOpenJob(a.jobId)}
-                initial={{ opacity: 0, x: 8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 + idx * 0.06 }}
-                className="w-full text-left flex items-start gap-3 p-3 rounded-2xl hover:bg-white/5 transition"
-              >
-                <div className="mt-0.5">
-                  <Sparkles size={16} className="text-indigo-300" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-white leading-snug">{a.text}</div>
-                  <div className="text-[10px] text-indigo-200/50 mt-0.5">{a.when}</div>
-                </div>
-              </motion.button>
-            ))}
-          </div>
+          {activity.length === 0 ? (
+            <div className="mt-3 glass-soft p-4 text-xs text-indigo-200/70">
+              Activity will appear here once dispatches are created.
+            </div>
+          ) : (
+            <div className="mt-3 space-y-2">
+              {activity.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => onOpenJob(item.jobId)}
+                  className="w-full glass-soft p-3 text-left hover:bg-white/10 transition"
+                >
+                  <div className="text-xs text-white leading-snug">{item.text}</div>
+                  <div className="text-[10px] text-indigo-200/55 mt-1">{item.when}</div>
+                </button>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>
   )
 }
 
-function StatBlock({
+function MetricTile({
   label,
   value,
   Icon,
-  accent,
 }: {
   label: string
-  value: number
+  value: number | string
   Icon: React.ComponentType<{ size?: number }>
-  accent: string
 }) {
   return (
-    <div className="glass-soft p-3">
-      <div className={`h-7 w-7 rounded-lg flex items-center justify-center bg-gradient-to-br ${accent} text-white shadow-md`}>
+    <div className="glass-soft p-3.5">
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-[10px] uppercase tracking-[0.14em] text-indigo-200/55">{label}</div>
         <Icon size={14} />
       </div>
-      <div className="mt-2 text-xl font-semibold text-white tracking-tight">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider text-indigo-200/60">{label}</div>
+      <div className="mt-2 text-2xl font-semibold text-white tracking-tight">{value}</div>
     </div>
   )
 }
 
-function SectionHeader({
+function SectionTitle({
   title,
   subtitle,
   action,
@@ -207,10 +245,10 @@ function SectionHeader({
   action?: React.ReactNode
 }) {
   return (
-    <div className="flex items-end justify-between mb-3 px-1">
+    <div className="flex items-end justify-between gap-3">
       <div>
         <h2 className="text-lg font-semibold text-white tracking-tight">{title}</h2>
-        {subtitle && <div className="text-xs text-indigo-200/60">{subtitle}</div>}
+        {subtitle && <div className="text-xs text-indigo-200/60 mt-0.5">{subtitle}</div>}
       </div>
       {action}
     </div>
@@ -230,27 +268,31 @@ function buildActivity(jobs: PortalJob[]): ActivityItem[] {
     items.push({
       id: `created-${j.id}`,
       jobId: j.id,
-      text: `New request “${j.title}” — ${STATUS_LABEL[j.status]}`,
+      text: `Request “${j.title}” is ${STATUS_LABEL[j.status].toLowerCase()}`,
       when: formatRelative(j.createdAt),
     })
   }
   return items.sort((a, b) => (a.when > b.when ? 1 : -1))
 }
 
+function buildPipeline(jobs: PortalJob[]) {
+  return PIPELINE_STATUSES.map((status) => ({
+    status,
+    label: STATUS_LABEL[status],
+    count: jobs.filter((job) => job.status === status).length,
+  }))
+}
+
 function buildStats(jobs: PortalJob[]) {
   const openJobs = jobs.filter((j) => j.status !== 'completed' && j.status !== 'cancelled')
   const completed = jobs.filter((j) => j.status === 'completed')
-  const pendingPayment = jobs.filter((j) => j.invoiceAmount && !j.invoicePaid).length
-  const total = jobs.length || 1
-  const completionRate = Math.round((completed.length / total) * 100)
-  const activeContractors = new Set(
-    openJobs.filter((j) => j.contractorId).map((j) => j.contractorId),
-  ).size
+  const pendingInvoices = jobs.filter((j) => (j.invoiceAmount ?? 0) > 0 && !j.invoicePaid)
+  const pendingInvoiceTotal = pendingInvoices.reduce((sum, job) => sum + (job.invoiceAmount ?? 0), 0)
+
   return {
     open: openJobs.length,
     completed: completed.length,
-    pendingPayment,
-    completionRate,
-    activeContractors,
+    pendingPayment: pendingInvoices.length,
+    pendingInvoiceTotal,
   }
 }

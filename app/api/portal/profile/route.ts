@@ -4,7 +4,7 @@ import { loadCurrentProfile } from '../shared'
 
 export async function PUT(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,
@@ -59,9 +59,9 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,

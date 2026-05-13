@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,
@@ -148,6 +148,7 @@ export async function POST(request: Request) {
           updated_at: new Date().toISOString(),
         })
         .eq('id', projectId)
+        .is('assigned_contractor_id', null)  // concurrency guard: only assign if still unclaimed
 
       if (!updateError) {
         return Response.json({

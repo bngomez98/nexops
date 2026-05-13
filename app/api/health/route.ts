@@ -3,7 +3,7 @@ import { getDatabaseUrl, getDatabaseUrlUnpooled } from '@/lib/env'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET(request: Request) {
+export async function GET() {
   const health: Record<string, unknown> = {
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     try {
       const { createClient } = await import('@/lib/supabase/server')
-      const supabase = createClient(request)
+      const supabase = await createClient()
       const { error } = await supabase.from('profiles').select('id').limit(1)
       health.database = error ? 'error' : 'connected'
 

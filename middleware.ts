@@ -33,15 +33,15 @@ export async function middleware(request: NextRequest) {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      // same-origin assets + Vercel CDN + Zendesk widget + Google badge
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.com cdn.jsdelivr.net unpkg.com static.zdassets.com ekr.zdassets.com apis.google.com",
+      // same-origin assets + Vercel CDN + Zendesk widget + Google badge + GTM + Stripe
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.com cdn.jsdelivr.net unpkg.com static.zdassets.com ekr.zdassets.com apis.google.com www.googletagmanager.com js.stripe.com",
       "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com fonts.googleapis.com",
       "img-src 'self' data: https:",
       "font-src 'self' fonts.gstatic.com",
-      // same-origin + Supabase (auth + real-time) + Vercel + Zendesk API
-      "connect-src 'self' *.supabase.co *.vercel.com *.zendesk.com *.zopim.com wss://*.zendesk.com wss://*.zopim.com",
-      // Zendesk widget iframe
-      "frame-src *.zendesk.com https://www.google.com",
+      // same-origin + Supabase (auth + real-time) + Vercel + Zendesk API + Stripe + Google Analytics
+      "connect-src 'self' *.supabase.co *.vercel.com *.zendesk.com *.zopim.com wss://*.zendesk.com wss://*.zopim.com api.stripe.com hooks.stripe.com q.stripe.com www.google-analytics.com analytics.google.com region1.google-analytics.com",
+      // Zendesk widget iframe + Stripe embedded checkout
+      "frame-src *.zendesk.com https://www.google.com js.stripe.com hooks.stripe.com",
       "frame-ancestors 'none'",
     ].join('; ')
   )

@@ -14,7 +14,7 @@ type Params = { params: Promise<{ id: string }> }
 export async function GET(request: Request, { params }: Params) {
   try {
     const { id } = await params
-    const supabase = createClient(request)
+    const supabase = await createClient()
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {

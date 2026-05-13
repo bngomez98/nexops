@@ -19,9 +19,9 @@ const DEFAULT_DOCS = [
   { id: 'doc-5', title: 'Photo upload best practices', tag: 'Guide' },
 ]
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,
@@ -130,7 +130,7 @@ export async function GET(request: Request) {
           .split(' ')
           .filter(Boolean)
           .slice(0, 2)
-          .map((part: any) => part[0]?.toUpperCase() ?? '')
+          .map((part: string) => part[0]?.toUpperCase() ?? '')
           .join('') || 'U',
         rating: typeof profile?.average_rating === 'number' ? profile.average_rating : undefined,
         jobsCompleted: typeof profile?.reviews_count === 'number' ? profile.reviews_count : undefined,
@@ -217,7 +217,7 @@ export async function GET(request: Request) {
         .split(' ')
         .filter(Boolean)
         .slice(0, 2)
-        .map((part: any) => part[0]?.toUpperCase() ?? '')
+        .map((part: string) => part[0]?.toUpperCase() ?? '')
         .join('') || 'U',
     }
 

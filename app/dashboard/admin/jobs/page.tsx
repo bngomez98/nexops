@@ -88,8 +88,8 @@ export default function AdminJobsPage() {
                       {job.urgency === 'emergency' && <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700">🚨 Emergency</span>}
                     </div>
                     <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
-                      {!!job.properties && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{(job.properties as any).city}, {(job.properties as any).state}</span>}
-                      {!!job.client_profile && <span>Client: {(job.client_profile as any).full_name}</span>}
+                      {!!job.properties && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{(job.properties as Record<string, unknown>).city as string}, {(job.properties as Record<string, unknown>).state as string}</span>}
+                      {!!job.client_profile && <span>Client: {(job.client_profile as Record<string, unknown>).full_name as string}</span>}
                       <span><Clock className="w-3 h-3 inline mr-1" />{new Date(job.created_at as string).toLocaleDateString()}</span>
                     </div>
                   </div>

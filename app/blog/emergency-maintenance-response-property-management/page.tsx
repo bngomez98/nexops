@@ -65,7 +65,7 @@ export default function BlogPost() {
               <h2 className="text-xl font-semibold text-foreground">The after-hours contact path</h2>
               <p>
                 For Nexus Operations clients, after-hours emergencies are handled through the portal or via the dedicated emergency email:{" "}
-                <a href="mailto:emergency@nexusoperations.org" className="text-primary hover:underline">emergency@nexusoperations.org</a>.
+                <a href="mailto:emergency@nexusoperations.net" className="text-primary hover:underline">emergency@nexusoperations.net</a>.
                 An on-call coordinator responds within 15 minutes. The Emergency SLA clock starts from the moment the request is received — not from the next business day.
               </p>
             </div>

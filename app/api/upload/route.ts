@@ -13,7 +13,7 @@ const ALLOWED_BUCKETS = ['profile-photos', 'compliance-docs', 'contracts', 'job-
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
 
     // Verify auth
     const { data: { user }, error: authError } = await supabase.auth.getUser()

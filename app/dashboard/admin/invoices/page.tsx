@@ -88,7 +88,7 @@ export default function AdminInvoicesPage() {
                 <div key={inv.id as string} className="flex items-center gap-4 px-5 py-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as any).service_type) : 'Invoice'}</p>
+                      <p className="font-semibold text-[13.5px]">{inv.jobs ? fmt((inv.jobs as Record<string, unknown>).service_type as string) : 'Invoice'}</p>
                       <span className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>{st.label}</span>
                     </div>
                     <p className="text-[12px] text-muted-foreground">{new Date(inv.created_at as string).toLocaleDateString()}</p>

@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  eslint: {
+    // ESLint is run separately (opt-in via CI workflow_dispatch or `pnpm lint`).
+    ignoreDuringBuilds: true,
   },
   images: {
     remotePatterns: [

@@ -25,7 +25,7 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
@@ -100,14 +100,20 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const statusParam = new URL(request.url).searchParams.get('status')
-    const role = user.user_metadata?.role as string | undefined
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+    const role = (profile?.role as string | undefined) ?? (user.user_metadata?.role as string | undefined)
 
     let query = supabase
       .from('invoices')
@@ -137,7 +143,7 @@ export async function GET(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
@@ -161,7 +167,12 @@ export async function PATCH(request: Request) {
     // Role gate:
     //   • contractor → may move draft↔sent, or void unpaid invoices they own
     //   • admin / service role → may mark paid / void
-    const role = user.user_metadata?.role as string | undefined
+    const { data: actorProfile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+    const role = (actorProfile?.role as string | undefined) ?? (user.user_metadata?.role as string | undefined)
     const isOwner = invoice.contractor_id === user.id
     const isAdmin = role === 'admin'
 

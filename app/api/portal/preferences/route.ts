@@ -2,9 +2,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { loadCurrentProfile } from '../shared'
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const profile: any = await loadCurrentProfile(supabase, user.id)
+    const profile: Record<string, unknown> | null = await loadCurrentProfile(supabase, user.id)
 
     return Response.json({
       preferences: {
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,

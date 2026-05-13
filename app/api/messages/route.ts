@@ -5,9 +5,9 @@ import { messageWithJobSchema } from '@/lib/validators'
 export const dynamic = 'force-dynamic'
 
 // GET /api/messages — list all conversations for the current user
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
 // POST /api/messages — send a new message
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(request)
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })

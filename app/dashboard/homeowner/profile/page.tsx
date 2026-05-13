@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from '@/lib/router'
 import { DashboardNav } from '@/components/dashboard-nav'
 import { createClient } from '@/lib/supabase/client'
@@ -103,7 +104,7 @@ export default function HomeownerProfilePage() {
             <p className="text-[13px] font-semibold">Profile Photo</p>
             <div className="flex items-center gap-5">
               {photoPreview ? (
-                <img src={photoPreview} alt="Profile" className="w-20 h-20 rounded-full object-cover border-2 border-primary/20" />
+                <Image unoptimized src={photoPreview} alt="Profile" width={80} height={80} className="w-20 h-20 rounded-full object-cover border-2 border-primary/20" />
               ) : (
                 <div className="w-20 h-20 rounded-full bg-muted border-2 border-dashed border-border flex items-center justify-center">
                   <User className="w-8 h-8 text-muted-foreground" />
