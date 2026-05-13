@@ -173,10 +173,11 @@ export default function PricingPage() {
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
               Simple, transparent pricing.
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Start free. Upgrade when you need unlimited requests. Every plan includes our verified
-              contractor network, response-time guarantees, and full job documentation — no hidden
-              per-job fees, no long-term contracts.
+            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+              Nexus pricing covers the operations layer around every job: intake review, contractor
+              dispatch, scheduling, documentation, and unified billing. Start free, upgrade when
+              you need more volume, and keep contractor labor billed transparently at the quoted
+              job rate.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -200,7 +201,7 @@ export default function PricingPage() {
           <SectionHeading
             eyebrow="For homeowners & small landlords"
             title="Plans for anyone who owns a property."
-            description="Whether you own a single home or rent out a few units, start with the plan that fits your volume. Upgrade or cancel anytime."
+            description="Whether you own a single home or rent out a few units, choose the level of Nexus oversight and request volume you need. Upgrade or cancel anytime."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -215,7 +216,7 @@ export default function PricingPage() {
           <SectionHeading
             eyebrow="For property managers & landlords"
             title="Per-unit pricing that scales with your portfolio."
-            description="Pay for what you manage. Our per-unit model means your cost grows only as your portfolio grows — and every unit gets the same quality of service."
+            description="Pay for outsourced maintenance operations at the portfolio level. Our per-unit model means your cost grows only as your portfolio grows — and every unit gets the same service workflow."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -237,7 +238,7 @@ export default function PricingPage() {
           <SectionHeading
             eyebrow="For licensed contractors"
             title="Free to join. Earn on every completed job."
-            description="No subscription required to access work. Join free, pay a simple commission on completed jobs, and upgrade for enhanced visibility and higher project limits."
+            description="No subscription required to access work. Join free, accept managed jobs from the Nexus network, and upgrade only if you want enhanced visibility and higher project limits."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">

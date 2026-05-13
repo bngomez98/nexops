@@ -89,9 +89,9 @@ export default function ContactPage() {
               Reach our team in Topeka, Kansas.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Whether you&apos;re a homeowner with a project, a property manager evaluating a commercial
-              engagement, or a contractor interested in joining the network — we respond to every
-              inquiry within one business day.
+              This is the front door to Nexus Operations — for service requests, commercial sales,
+              and contractor onboarding. Whether you need work done, want portfolio support, or
+              plan to join the network, our team responds within one business day.
             </p>
           </div>
         </section>
@@ -191,7 +191,7 @@ export default function ContactPage() {
           <SectionHeading
             eyebrow="Direct paths"
             title="You can also get started without this form."
-            description="Use one of the options below to reach us or begin your request right away."
+            description="Use one of the options below to contact the right part of the business or begin your request right away."
             align="center"
           />
 
