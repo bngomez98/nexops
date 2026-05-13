@@ -34,20 +34,26 @@ export default function AdminDashboard() {
       totalUsers: usersRes.count ?? 0,
       pendingContractors: contractorsRes.count ?? 0,
       activeJobs: jobsRes.count ?? 0,
-      revenue: revenueRes.data?.reduce((s: number, i: Record<string, unknown>) => s + (i.total as number), 0) ?? 0,
+      revenue: revenueRes.data?.reduce((s: number, i: Record<string, unknown>) => s + (Number(i.total) || 0), 0) ?? 0,
     })
   }
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data: { user: u } } = await supabase.auth.getUser()
-      if (!u) { router.push('/auth/login'); return }
-      const role = u.user_metadata?.role
-      if (role !== 'admin') { router.push('/dashboard'); return }
-      setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'admin' })
-      await loadStats(supabase)
-      setLoading(false)
+      try {
+        const supabase = createClient()
+        const { data: { user: u } } = await supabase.auth.getUser()
+        if (!u) { router.push('/auth/login'); return }
+        const role = u.user_metadata?.role
+        if (role !== 'admin') { router.push('/dashboard'); return }
+        setUser({ id: u.id, name: u.user_metadata?.full_name ?? u.email, role: 'admin' })
+        await loadStats(supabase)
+      } catch (err) {
+        console.error('Admin dashboard load error:', err)
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [router])
@@ -111,6 +117,7 @@ export default function AdminDashboard() {
                 disabled={refreshing}
                 className="p-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
                 title="Refresh stats"
+                aria-label="Refresh statistics"
               >
                 <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
               </button>

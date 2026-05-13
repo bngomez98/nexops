@@ -3,7 +3,7 @@ import { useAuth } from '@/app/lib/auth-context'
 import { useRequests } from '@/app/lib/requests-context'
 import { DashboardLayout } from '@/components/dashboard-layout'
 import { useRouter } from '@/lib/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { isHomeownerDashboardRole } from '@/lib/dashboard-role'
 import {
   FileText, CheckCircle2, Clock, AlertCircle,
@@ -80,15 +80,23 @@ export default function DashboardPage() {
     }
   }
 
-  /* ── Derived stats ── */
-  const activeRequests = clientRequests.filter(r => r.status !== 'completed' && r.status !== 'invoiced').length
-  const completedRequests = clientRequests.filter(r => r.status === 'completed' || r.status === 'invoiced').length
-  const trackedCost = clientRequests.filter(r => r.invoiceAmount).reduce((s, r) => s + (r.invoiceAmount || 0), 0)
+  /* ── Derived stats (memoized to avoid re-computing on every render) ── */
+  const {
+    activeRequests, completedRequests, trackedCost,
+  } = useMemo(() => ({
+    activeRequests:    clientRequests.filter(r => r.status !== 'completed' && r.status !== 'invoiced').length,
+    completedRequests: clientRequests.filter(r => r.status === 'completed' || r.status === 'invoiced').length,
+    trackedCost:       clientRequests.filter(r => r.invoiceAmount).reduce((s, r) => s + (r.invoiceAmount || 0), 0),
+  }), [clientRequests])
 
-  const availableJobs = contractorJobs.filter(j => j.status === 'available').length
-  const activeJobs = contractorJobs.filter(j => j.status === 'claimed').length
-  const pendingPayout = contractorJobs.filter(j => j.status !== 'invoiced').reduce((s, j) => s + (j.payout || 0), 0)
-  const monthlyEarnings = contractorJobs.filter(j => j.status === 'completed' || j.status === 'invoiced').reduce((s, j) => s + (j.payout || 0), 0)
+  const {
+    availableJobs, activeJobs, pendingPayout, monthlyEarnings,
+  } = useMemo(() => ({
+    availableJobs:   contractorJobs.filter(j => j.status === 'available').length,
+    activeJobs:      contractorJobs.filter(j => j.status === 'claimed').length,
+    pendingPayout:   contractorJobs.filter(j => j.status !== 'invoiced').reduce((s, j) => s + (j.payout || 0), 0),
+    monthlyEarnings: contractorJobs.filter(j => j.status === 'completed' || j.status === 'invoiced').reduce((s, j) => s + (j.payout || 0), 0),
+  }), [contractorJobs])
 
   return (
     <DashboardLayout
