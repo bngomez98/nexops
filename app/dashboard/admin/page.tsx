@@ -113,14 +113,13 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
               <button
+              <button
                 onClick={handleRefresh}
                 disabled={refreshing}
                 className="p-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
                 title="Refresh stats"
                 aria-label="Refresh statistics"
               >
-                <RefreshCw className={`w-4 h-4 text-white ${refreshing ? 'animate-spin' : ''}`} />
-              </button>
               <Link
                 href="/dashboard/admin/users"
                 className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 transition-colors text-white font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20"
