@@ -26,7 +26,7 @@ const sections = [
     questions: [
       {
         q: 'How do I submit a service request?',
-        a: 'Sign in to your dashboard, pick the trade category, upload a few photos, describe the issue, and choose an availability window. A Nexus team member reads the request, confirms scope, and dispatches a license-verified contractor within the SLA window for the urgency tier you selected.',
+        a: 'Sign in to your dashboard, pick the trade category, upload a few photos, describe the issue, and choose an availability window. A Nexus team member reads the request, confirms scope, and assigns a license-verified contractor within the SLA window for the urgency tier you selected.',
       },
       {
         q: 'What information do I need to include with a request?',
@@ -46,7 +46,7 @@ const sections = [
       },
       {
         q: 'Can I cancel a request I already submitted?',
-        a: 'Yes. You can cancel any open request before a contractor is on-site. Once a contractor has been dispatched and is en route, same-day cancellations may incur a trip fee from the contractor — we will always tell you in advance if that applies.',
+        a: 'Yes. You can cancel any open request before a contractor is on-site. Once a contractor has been assigned and is en route, same-day cancellations may incur a trip fee from the contractor — we will always tell you in advance if that applies.',
       },
       {
         q: 'I manage several properties. Can one account cover all of them?',
@@ -92,7 +92,7 @@ const sections = [
       },
       {
         q: 'How does pricing work?',
-        a: 'Homeowners and commercial clients subscribe to a plan that includes dispatch, documentation, and unified invoicing. Contractor work is billed at the contractor\'s quoted rate and rolled into a monthly unified invoice. See the pricing page for current plans and features.',
+        a: 'Homeowners and commercial clients subscribe to a plan that includes contractor assignment, documentation, and unified invoicing. Contractor work is billed at the contractor\'s quoted rate and rolled into a monthly unified invoice. See the pricing page for current plans and features.',
       },
       {
         q: 'What happens to photos and project data I submit?',
@@ -145,7 +145,7 @@ export default function FAQPage() {
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               If you&apos;re wondering whether Nexus Operations is a contractor marketplace, a software
               tool, or a managed service, start here. These answers explain how the business works,
-              how we dispatch jobs, how contractors are verified, and how pricing is structured.
+              how we assign jobs, how contractors are verified, and how pricing is structured.
             </p>
           </div>
         </section>
