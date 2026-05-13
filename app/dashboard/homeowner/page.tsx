@@ -334,14 +334,15 @@ function HomeownerDashboardInner() {
           {stats.map(s => {
             const Icon = s.icon
             return (
-              <div key={s.label} className="group bg-card border border-border rounded-xl p-5 card-elevated card-elevated-hover">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{s.label}</span>
-                  <div className={`w-9 h-9 rounded-lg ${s.bg} flex items-center justify-center`}>
+              <div key={s.label} className="group bg-card border border-border rounded-xl p-5 card-elevated card-elevated-hover relative overflow-hidden">
+                <div className={`absolute top-0 left-0 right-0 h-0.5 ${s.bg}`} />
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground leading-tight">{s.label}</span>
+                  <div className={`w-8 h-8 rounded-lg ${s.bg} flex items-center justify-center flex-shrink-0`}>
                     <Icon className={`w-4 h-4 ${s.color}`} />
                   </div>
                 </div>
-                <p className="font-display text-2xl sm:text-3xl font-bold text-foreground tabular-nums">{s.value}</p>
+                <p className="font-display text-2xl sm:text-[28px] font-bold text-foreground tabular-nums leading-none">{s.value}</p>
               </div>
             )
           })}
@@ -355,22 +356,26 @@ function HomeownerDashboardInner() {
               description: isPro
                 ? 'Pro requests receive top-priority contractor matching and escalation handling.'
                 : 'Starter requests are routed in standard queue order.',
+              accent: isPro ? 'bg-primary/15' : 'bg-muted',
             },
             {
               title: 'Open Exposure',
               value: `${open.length + active.length} Active`,
               description: 'Monitor open and in-progress work impacting your property operations.',
+              accent: 'bg-sky-500/15',
             },
             {
               title: 'Financial Visibility',
               value: `$${totalSpend.toLocaleString()}`,
               description: 'Track completed project value and maintain invoice-ready records.',
+              accent: 'bg-emerald-500/15',
             },
           ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.title}</p>
-              <p className="mt-2 text-2xl font-display font-bold text-foreground">{item.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
+            <div key={item.title} className="rounded-xl border border-border bg-card p-5 card-elevated relative overflow-hidden">
+              <div className={`absolute top-0 left-0 right-0 h-0.5 ${item.accent}`} />
+              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">{item.title}</p>
+              <p className="mt-2 text-[22px] font-display font-bold text-foreground">{item.value}</p>
+              <p className="mt-2 text-[13px] text-muted-foreground leading-relaxed">{item.description}</p>
             </div>
           ))}
         </section>
