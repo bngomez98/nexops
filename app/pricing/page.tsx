@@ -131,7 +131,7 @@ function PlanCard({
       </ul>
 
       <Link
-        href="/auth/sign-up"
+        href={plan.role === 'contractor' ? '/auth/sign-up?role=contractor' : '/auth/sign-up'}
         className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-[13px] font-semibold transition ${
           featured
             ? 'bg-primary text-primary-foreground hover:opacity-90'
@@ -190,7 +190,7 @@ export default function PricingPage() {
         {/* ── Homeowner plans ───────────────────────────────── */}
         <Section id="homeowner-plans">
           <SectionHeading
-            eyebrow="For homeowners &amp; landlords"
+            eyebrow="For homeowners & landlords"
             title="Plans for anyone who owns a property."
             description="Whether you own a single home or rent out a few units, choose the request volume that fits your needs. Upgrade or cancel at any time."
           />
