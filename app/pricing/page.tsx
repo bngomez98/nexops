@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from '@/components/link'
 import {
   ArrowRight,
+  Building2,
   CheckCircle2,
   Clock,
   CreditCard,
@@ -19,56 +20,56 @@ import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Pricing — Simple, Transparent Subscription Plans',
+  title: 'Pricing — Nexus Operations Subscription Plans',
   description:
-    'Nexus Operations offers transparent subscription plans for homeowners, property managers, and contractors. Start free. Upgrade when you need unlimited requests. No long-term contracts.',
+    'Nexus Operations subscription plans for homeowners, landlords, and licensed contractors in Topeka, KS. Start free. Upgrade for unlimited requests. No long-term contracts.',
 }
 
 const included = [
   {
     icon: Shield,
     title: 'Verified contractor network',
-    desc: 'Every contractor is license- and insurance-verified before joining.',
+    desc: 'Every contractor is license- and insurance-verified before joining the Nexus network.',
   },
   {
     icon: Clock,
-    title: 'Response-time guarantees',
-    desc: 'Urgent assignments under 4 hours, emergencies under 1 hour.',
+    title: 'Defined response windows',
+    desc: 'Emergency assignments happen within 1 hour. Urgent requests confirmed within 4 hours.',
   },
   {
     icon: FileText,
     title: 'Full job documentation',
-    desc: 'Arrival photos, completion photos, and written scope on every job.',
+    desc: 'Arrival photos, completion photos, and written scope notes on every job before closeout.',
   },
   {
     icon: CreditCard,
-    title: 'Unified billing',
-    desc: 'One clean invoice consolidates every request across every property.',
+    title: 'Unified monthly billing',
+    desc: 'One line-itemized invoice covers every request you submitted that month.',
   },
   {
     icon: Users,
     title: 'Human review on every request',
-    desc: 'Real Nexus staff review every request before contractor assignment.',
+    desc: 'A real Nexus team member reads every request before a contractor is assigned.',
   },
   {
     icon: Headphones,
-    title: 'Human support',
-    desc: 'Talk to a real person during business hours — phone, email, or portal.',
+    title: 'Live support',
+    desc: 'Reach us by phone, email, or portal during business hours — a real person picks up.',
   },
 ]
 
 const faqs = [
   {
     q: 'Is there a contract?',
-    a: 'No. Every plan is month-to-month (or cancel-anytime annual). Cancel directly from your billing portal — no phone calls and no retention offers required.',
+    a: 'No. Every plan is month-to-month or cancel-anytime annual. Cancel directly from your billing portal — no phone calls, no retention offers.',
   },
   {
     q: 'What counts as a service request?',
-    a: 'A service request is any single job or project submitted through your dashboard — a leaky faucet, a broken light fixture, a turn-over make-ready checklist, or an emergency repair. Starter accounts are limited to three per calendar year; Pro subscribers get unlimited requests.',
+    a: 'A service request is any single job submitted through your dashboard — a leaky faucet, a broken fixture, a make-ready punch list, or an emergency repair. Starter accounts cover up to three per calendar year. Pro subscribers get unlimited requests.',
   },
   {
     q: 'Do you charge per job?',
-    a: 'No. Your subscription covers intake review, contractor assignment management, and status tracking. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
+    a: 'No. Your subscription covers dispatch, scheduling, and job oversight. Contractor labor and materials are billed separately through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
   },
   {
     q: 'Can I switch plans?',
@@ -76,15 +77,11 @@ const faqs = [
   },
   {
     q: 'How does contractor pricing work?',
-    a: 'Contractors join for free and pay a simple 10–15% commission on completed jobs — you only pay when you earn. An optional Pro add-on ($49/mo) unlocks higher project limits, a Verified Pro badge, and same-day payouts.',
-  },
-  {
-    q: 'How is property manager pricing calculated?',
-    a: 'Property manager plans are priced per unit per month, so your cost scales with your portfolio. The Growth plan is $4/unit/month with a $50/month minimum. Portfolios of 21+ units receive custom per-unit pricing — contact us for a quote.',
+    a: 'Contractors join free and can accept jobs immediately. Pro ($59–$79/mo) adds higher project limits, a Verified badge, and priority notifications. Elite ($199/mo) is unlimited projects with first-look on new requests.',
   },
   {
     q: 'What if I only need one project this year?',
-    a: 'The free Starter plan covers up to three service requests per year — perfect for occasional needs. No payment method required to sign up.',
+    a: 'The free Starter plan covers up to three service requests per year — no payment method required to sign up.',
   },
 ]
 
@@ -95,8 +92,6 @@ function PlanCard({
   plan: Plan
   featured?: boolean
 }) {
-  const isContactSales = plan.priceInCents === -1
-
   return (
     <div
       className={`relative flex flex-col rounded-2xl border p-7 ${
@@ -115,18 +110,15 @@ function PlanCard({
       <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{plan.description}</p>
 
       <div className="mt-6 flex items-baseline gap-2">
-        <span className={`font-extrabold tracking-tight text-foreground ${isContactSales ? 'text-2xl' : 'text-4xl'}`}>
+        <span className="text-4xl font-extrabold tracking-tight text-foreground">
           {formatPrice(plan.priceInCents, plan.interval)}
         </span>
-        {plan.priceInCents > 0 && !plan.perUnit && <span className="text-[13px] text-muted-foreground">USD</span>}
+        {plan.priceInCents > 0 && (
+          <span className="text-[13px] text-muted-foreground">USD</span>
+        )}
       </div>
       {plan.billingLabel && (
         <p className="mt-1 text-[12px] text-muted-foreground">{plan.billingLabel}</p>
-      )}
-      {plan.perUnit && plan.minimumCents && (
-        <p className="mt-0.5 text-[11px] text-muted-foreground">
-          Minimum ${(plan.minimumCents / 100).toFixed(0)}/mo
-        </p>
       )}
 
       <ul className="mt-6 flex flex-1 flex-col gap-2.5 text-[13px] text-muted-foreground">
@@ -139,14 +131,14 @@ function PlanCard({
       </ul>
 
       <Link
-        href={isContactSales ? '/contact' : '/auth/sign-up'}
+        href={plan.role === 'contractor' ? '/auth/sign-up?role=contractor' : '/auth/sign-up'}
         className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-[13px] font-semibold transition ${
           featured
             ? 'bg-primary text-primary-foreground hover:opacity-90'
             : 'border border-border bg-background text-foreground hover:border-primary/40 hover:text-primary'
         }`}
       >
-        {isContactSales ? 'Contact sales' : plan.priceInCents === 0 ? 'Start free' : `Choose ${plan.name}`}
+        {plan.priceInCents === 0 ? 'Start free' : `Choose ${plan.name}`}
         <ArrowRight className="h-3.5 w-3.5" />
       </Link>
     </div>
@@ -155,7 +147,6 @@ function PlanCard({
 
 export default function PricingPage() {
   const homeownerPlans = getPlansByRole('homeowner')
-  const pmPlans = getPlansByRole('property_manager')
   const contractorPlans = getPlansByRole('contractor')
 
   return (
@@ -174,10 +165,10 @@ export default function PricingPage() {
               Simple, transparent pricing.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus pricing covers the operations layer around every job: intake review, contractor
-              contractor assignment, scheduling, documentation, and unified billing. Start free, upgrade when
-              you need more volume, and keep contractor labor billed transparently at the quoted
-              job rate.
+              Your subscription covers the operations layer around every job — intake review,
+              contractor assignment, scheduling, documentation, and unified billing. Start free,
+              upgrade when you need more volume. Contractor labor is billed separately at the
+              quoted rate with full line-item transparency.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -190,7 +181,7 @@ export default function PricingPage() {
                 href="/contact"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
               >
-                Talk to sales
+                Talk to our team
               </Link>
             </div>
           </div>
@@ -199,9 +190,9 @@ export default function PricingPage() {
         {/* ── Homeowner plans ───────────────────────────────── */}
         <Section id="homeowner-plans">
           <SectionHeading
-            eyebrow="For homeowners & small landlords"
+            eyebrow="For homeowners & landlords"
             title="Plans for anyone who owns a property."
-            description="Whether you own a single home or rent out a few units, choose the level of Nexus oversight and request volume you need. Upgrade or cancel anytime."
+            description="Whether you own a single home or rent out a few units, choose the request volume that fits your needs. Upgrade or cancel at any time."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -211,34 +202,12 @@ export default function PricingPage() {
           </div>
         </Section>
 
-        {/* ── Property Manager plans ────────────────────────── */}
-        <Section tone="muted" id="property-manager-plans">
-          <SectionHeading
-            eyebrow="For property managers & landlords"
-            title="Per-unit pricing that scales with your portfolio."
-            description="Pay for outsourced maintenance operations at the portfolio level. Our per-unit model means your cost grows only as your portfolio grows — and every unit gets the same service process."
-          />
-
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {pmPlans.map((plan) => (
-              <PlanCard key={plan.id} plan={plan} featured={!!plan.highlighted} />
-            ))}
-          </div>
-
-          <p className="mt-8 text-center text-[13px] text-muted-foreground">
-            Need a custom quote for your portfolio?{' '}
-            <Link href="/contact" className="font-semibold text-primary hover:underline">
-              Talk to our team →
-            </Link>
-          </p>
-        </Section>
-
         {/* ── Contractor plans ──────────────────────────────── */}
-        <Section id="contractor-plans">
+        <Section tone="muted" id="contractor-plans">
           <SectionHeading
             eyebrow="For licensed contractors"
-            title="Free to join. Earn on every completed job."
-            description="No subscription required to access work. Join free, accept managed jobs from the Nexus network, and upgrade only if you want enhanced visibility and higher project limits."
+            title="Free to join. No per-lead fees."
+            description="Join free and start claiming pre-documented jobs immediately. Upgrade for higher project limits, priority notifications, and earnings analytics."
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -259,7 +228,7 @@ export default function PricingPage() {
         <Section>
           <SectionHeading
             eyebrow="Included in every plan"
-            title="Every plan includes the same operations features from day one."
+            title="The same service process on every job, every time."
             align="center"
           />
 
@@ -278,20 +247,23 @@ export default function PricingPage() {
           </div>
         </Section>
 
-        {/* ── Commercial callout ────────────────────────────── */}
+        {/* ── Multi-property callout ────────────────────────── */}
         <Section tone="muted">
           <div className="grid gap-8 rounded-3xl border border-border bg-background p-8 sm:p-10 lg:grid-cols-3 lg:items-center">
             <div className="lg:col-span-2">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
-                Managing 10+ units?
-              </p>
+              <div className="flex items-center gap-2 mb-2">
+                <Building2 className="h-4 w-4 text-primary" />
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                  Managing 10 or more units?
+                </p>
+              </div>
               <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                Commercial &amp; portfolio pricing available.
+                Custom pricing for multi-property owners.
               </h3>
               <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
-                Multi-property portfolios, multi-family buildings, and commercial real estate get
-                custom pricing, a named Nexus representative, and portfolio-level reporting. Tell us about
-                your operation and we&apos;ll put a quote together.
+                Multi-property owners, multi-family buildings, and commercial real estate operators
+                get custom pricing, a named Nexus representative, and property-level monthly
+                reporting. Tell us about your operation and we&apos;ll put together a quote.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
@@ -336,7 +308,10 @@ export default function PricingPage() {
 
           <p className="mt-10 text-center text-[13px] text-muted-foreground">
             Still have questions? Call {CONTACT_INFO.phoneDisplay} or email{' '}
-            <a href={`mailto:${CONTACT_INFO.email}`} className="font-semibold text-primary hover:underline">
+            <a
+              href={`mailto:${CONTACT_INFO.email}`}
+              className="font-semibold text-primary hover:underline"
+            >
               {CONTACT_INFO.email}
             </a>
           </p>
@@ -346,11 +321,11 @@ export default function PricingPage() {
         <section className="bg-primary">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center sm:py-24">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
-              Ready to simplify maintenance?
+              Your first request takes under two minutes.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[15px] text-primary-foreground/80">
-              Create an account and submit your first request in under two minutes. No credit card
-              required for the free plan.
+              Create an account and submit a request — no credit card required on the free plan.
+              Nexus assigns a verified contractor and handles the rest.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -363,7 +338,7 @@ export default function PricingPage() {
                 href="/contact"
                 className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-[14px] font-semibold text-white hover:bg-white/10 transition"
               >
-                Talk to the team
+                Talk to our team
               </Link>
             </div>
           </div>
