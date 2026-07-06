@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from '@/components/link'
 import {
   AirVent,
@@ -128,47 +129,48 @@ export default function ServicesPage() {
         <section className="border-b border-border relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 home-service-bg" />
           <div className="pointer-events-none absolute inset-0 property-grid-pattern opacity-40" />
-          <div className="relative mx-auto max-w-5xl px-6 py-24 text-center sm:py-28">
-            <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-              <Sparkles className="h-3 w-3" /> Services
-            </p>
-            <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Every trade you need. One service.
-            </h1>
-            <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations is a managed maintenance company. We take in the request, review the
-              scope, route it to the right licensed contractor, track the work, and document the
-              closeout. These are the trades and service processes we manage every day.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/auth/sign-up"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
-              >
-                Submit a request <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/pricing"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
-              >
-                View pricing
-              </Link>
-            </div>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-              {[
-                { href: '#commercial', label: 'Commercial' },
-                { href: '#residential', label: 'Residential' },
-                { href: '#b2b', label: 'B2B operations' },
-                { href: '#how-it-works', label: 'How it works' },
-              ].map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="inline-flex items-center rounded-full border border-border bg-background/90 px-3 py-1.5 text-[12px] font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                >
-                  {item.label}
-                </a>
-              ))}
+          <div className="relative mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:py-28">
+            <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+              <div className="lg:col-span-7">
+                <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+                  <Sparkles className="h-3 w-3" /> Services
+                </p>
+                <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+                  Every trade you need. One service.
+                </h1>
+                <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
+                  Nexus Operations manages every trade a typical property requires — routine,
+                  urgent, or emergency. Every category below is handled by a licensed, insured
+                  contractor in our Topeka network, with our team owning assignment, scheduling,
+                  and documentation from intake to invoice.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <Link
+                    href="/auth/sign-up"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
+                  >
+                    Submit a request <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-[14px] font-semibold text-foreground hover:border-primary/40 hover:text-primary transition"
+                  >
+                    View pricing
+                  </Link>
+                </div>
+              </div>
+              <div className="lg:col-span-5">
+                <div className="overflow-hidden rounded-2xl shadow-xl">
+                  <Image
+                    src="/photo-contractor.jpg"
+                    alt="Nexus Operations licensed contractor on the job"
+                    width={600}
+                    height={480}
+                    className="w-full h-auto object-cover"
+                    priority
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -208,8 +210,8 @@ export default function ServicesPage() {
         <Section tone="muted" id="commercial" className="scroll-mt-28">
           <SectionHeading
             eyebrow="Urgency tiers"
-            title="Response commitments by urgency."
-            description="Every request is tagged at submission. We commit to assignment and on-site timelines based on the tier."
+            title="Response windows by urgency."
+            description="Every request is tagged at submission. Assignment and on-site windows are measured against the tier you select."
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">

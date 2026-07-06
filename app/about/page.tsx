@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from '@/components/link'
 import {
   ArrowRight,
@@ -22,7 +23,7 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'About — Managed Property Maintenance Built in Topeka',
   description:
-    'Nexus Operations is a locally owned managed property maintenance company founded in Topeka, Kansas. Learn about our team, our process, and our commitment to verified, documented service.',
+    'Nexus Operations is a locally owned managed property maintenance company founded in Topeka, Kansas. Learn how we vet contractors, document every job, and run maintenance from intake through final invoice.',
 }
 
 const values = [
@@ -33,8 +34,8 @@ const values = [
   },
   {
     icon: Target,
-    title: 'Response you can count on',
-    desc: 'We commit to assignment and on-site timelines by urgency tier. If we miss a commitment, we own it.',
+    title: 'Measured response windows',
+    desc: 'Every request is classified by urgency on submission. Emergency assignments happen within 1 hour. Routine requests are confirmed within 24 hours.',
   },
   {
     icon: HeartHandshake,
@@ -83,7 +84,7 @@ const milestones = [
   { year: '2026', title: 'Nexus Operations founded', desc: 'Launched in Topeka, KS to give homeowners and property managers a single, accountable service for property maintenance.' },
   { year: '2026', title: 'Verified contractor network', desc: 'Built a starting roster of 20+ license-verified trades across plumbing, electrical, HVAC, and general repair.' },
   { year: '2026', title: 'Unified billing launched', desc: 'Rolled out monthly consolidated invoices so owners stop juggling contractor-by-contractor billing.' },
-  { year: '2026', title: 'Commercial portfolio tier', desc: 'Introduced dedicated service tiers for property managers with 10+ units under management.' },
+  { year: '2026', title: 'Multi-property service tier', desc: 'Introduced dedicated service tiers for property managers with 10+ units under management.' },
 ]
 
 const services = [
@@ -152,24 +153,33 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <div className="rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-accent p-6 shadow-xl card-elevated">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary contractor-accent pb-4">
-                  What accountability looks like
-                </p>
-                <div className="mt-5 space-y-3">
-                  {[
-                    'A real person reviews every request before assigning a contractor.',
-                    'Assignment and arrival timelines are measured against published SLAs.',
-                    'Completion photos and notes are required before closeout.',
-                    'Every job lands in one auditable monthly invoice.',
-                  ].map((line) => (
-                    <div
-                      key={line}
-                      className="rounded-xl border border-primary/10 bg-gradient-to-r from-background to-accent/30 px-4 py-3 text-sm text-foreground shadow-sm"
-                    >
-                      {line}
-                    </div>
-                  ))}
+              <div className="relative overflow-hidden rounded-3xl shadow-xl">
+                <Image
+                  src="/business-analytics-data-visualization.jpg"
+                  alt="Nexus Operations job tracking and documentation"
+                  width={600}
+                  height={480}
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60 mb-3">
+                    What accountability looks like
+                  </p>
+                  <div className="space-y-2">
+                    {[
+                      'A real person reviews every request before assigning a contractor.',
+                      'Completion photos and notes are required before closeout.',
+                      'Every job lands in one auditable monthly invoice.',
+                    ].map((line) => (
+                      <div
+                        key={line}
+                        className="rounded-lg bg-white/15 backdrop-blur-sm px-3 py-2 text-xs text-white"
+                      >
+                        {line}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -327,9 +337,9 @@ export default function AboutPage() {
                   },
                   {
                     time: "11:14 PM",
-                    label: "Automated triage",
+                    label: "Request classified",
                     color: "bg-primary",
-                    detail: "System classifies as Emergency — Plumbing. SLA clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
+                    detail: "System classifies as Emergency — Plumbing. Assignment clock starts: contractor must be assigned within 1 hour, on-site within 4 hours.",
                     outcome: null,
                   },
                   {
@@ -397,9 +407,9 @@ export default function AboutPage() {
         {/* ── Commitments ───────────────────────────────────── */}
         <Section tone="dark">
           <SectionHeading
-            eyebrow="Our core commitments"
-            title="A more structured experience for both sides of every project."
-            description="We designed Nexus Operations to feel personal for homeowners and practical for contractors — with clear expectations before anyone is matched."
+            eyebrow="How we operate"
+            title="Clear expectations on both sides of every job."
+            description="Nexus Operations is built so homeowners know what they're getting and contractors know exactly what they're walking into — before any match is made."
             align="center"
             onDark
           />
