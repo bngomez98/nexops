@@ -24,7 +24,7 @@ export default async function SearchPage({
   const [requestsResult, propertiesResult, contractorsResult] = await Promise.all([
     query.length >= 2
       ? supabase
-          .from('requests')
+          .from('service_requests')
           .select('id, title, description, status, created_at, property_id')
           .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
           .order('created_at', { ascending: false })
@@ -34,9 +34,9 @@ export default async function SearchPage({
     query.length >= 2
       ? supabase
           .from('properties')
-          .select('id, name, address, city, state, property_type')
-          .or(`name.ilike.%${query}%,address.ilike.%${query}%`)
-          .order('name', { ascending: true })
+          .select('id, nickname, address, city, state, zip_code')
+          .or(`nickname.ilike.%${query}%,address.ilike.%${query}%,city.ilike.%${query}%`)
+          .order('created_at', { ascending: false })
           .limit(20)
       : Promise.resolve({ data: [], error: null }),
 
