@@ -90,7 +90,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "^15.5.15",
     "globals": "^17.5.0",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.18",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2"
   },
