@@ -6,9 +6,9 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: 'Nexus Operations — Home Services, Coordinated.',
+  title: 'Property Maintenance Coordination in Topeka, KS',
   description:
-    'One request. One verified contractor. No runaround. Free for homeowners. Licensed & insured contractors only.',
+    'Nexus Operations coordinates property repairs in Topeka and Shawnee County: request review, contractor matching, scheduling, job records, and invoicing. Labor and materials are billed separately.',
 }
 
 export default function HomePage() {
@@ -17,32 +17,29 @@ export default function HomePage() {
       <Header />
       <main>
         {/* ─── HERO ──────────────────────────────────────────────────── */}
-        <section className="bg-[#111111] min-h-[calc(100vh-64px)] flex items-center">
+        <section className="bg-sidebar min-h-[calc(100vh-64px)] flex items-center">
           <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:py-28">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               {/* Left: copy */}
               <div className="flex flex-col gap-7">
                 <div>
+                  <p className="mb-4 text-sm font-medium text-white/70">Topeka &amp; Shawnee County, Kansas</p>
                   <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-white lg:text-6xl xl:text-7xl">
-                    Home services,{' '}
-                    <br className="hidden sm:block" />
-                    made simple.
+                    Property maintenance coordination.
                   </h1>
-                  <h2 className="mt-2 text-5xl font-extrabold leading-tight tracking-tight text-white/40 lg:text-6xl xl:text-7xl">
-                    Not complicated.
-                  </h2>
                 </div>
 
                 <p className="text-lg text-white/60 max-w-2xl">
-                  Nexus Operations is a managed maintenance service for homeowners, landlords, and
-                  property managers. We review each request, assign one verified contractor,
-                  track the job, and keep all records in one place.
+                  Nexus Operations coordinates repairs and maintenance for homeowners, landlords,
+                  and property managers. We review the issue, match it with a contractor, coordinate
+                  scheduling, and track the work through completion and invoicing. Contractors
+                  provide the trade work; Nexus manages the coordination and records.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-3">
                   <Link
-                    href="/"
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-white/90 transition-colors"
+                    href="/request"
+                    className="inline-flex items-center gap-2 rounded-full bg-card px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90 transition-colors"
                   >
                     Submit a request <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -54,8 +51,9 @@ export default function HomePage() {
                   </Link>
                 </div>
 
-                <p className="text-xs text-white/35 tracking-wide">
-                  Free for homeowners. Licensed &amp; insured contractors only.
+                <p className="text-sm text-white/70">
+                  Homeowner Starter includes up to 3 requests per year with no subscription fee.
+                  Contractor labor and materials are billed separately.
                 </p>
               </div>
 
@@ -64,7 +62,7 @@ export default function HomePage() {
                 <div className="relative w-full max-w-lg overflow-hidden rounded-2xl">
                   <Image
                     src="/photo-contractor.jpg"
-                    alt="Contractor reviewing plans at a construction site"
+                    alt="Illustration of a contractor wearing a hard hat and safety vest"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
@@ -77,7 +75,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── FOR HOMEOWNERS ────────────────────────────────────────── */}
-        <section className="bg-[#f0eeeb]">
+        <section className="bg-background">
           <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:py-28">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               {/* Left: image */}
@@ -96,18 +94,20 @@ export default function HomePage() {
               {/* Right: copy + card */}
               <div className="flex flex-col gap-7">
                 <div>
-                  <h2 className="text-4xl font-extrabold tracking-tight text-[#111111] lg:text-5xl">
+                  <h2 className="text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
                     For homeowners
                   </h2>
-                  <p className="mt-3 text-base text-[#111111]/60 max-w-xl">
-                    Instead of calling around for quotes, you submit one request and Nexus handles
-                    the intake, contractor match, scheduling, and status updates for you.
+                  <p className="mt-3 text-base text-muted-foreground max-w-xl">
+                    Submit the property address, a description of the issue, and any photos.
+                    Nexus reviews the request, confirms the scope and access details, and coordinates
+                    a contractor. A submitted budget is not a final quote; confirm the scope and
+                    price before authorizing work.
                   </p>
                 </div>
 
                 {/* Feature card */}
-                <div className="rounded-2xl bg-white/60 border border-black/5 p-6 shadow-sm">
-                  <p className="mb-5 text-xs font-bold uppercase tracking-widest text-[#111111]/40">
+                <div className="rounded-2xl bg-card border border-border p-6 shadow-sm">
+                  <p className="mb-5 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     Homeowner Experience
                   </p>
 
@@ -115,13 +115,13 @@ export default function HomePage() {
                     {[
                       {
                         Icon: Camera,
-                        title: 'Upload photos & set a budget cap',
-                        desc: 'Show contractors exactly what you need',
+                        title: 'Describe the work and budget',
+                        desc: 'Add photos and a budget range for review',
                       },
                       {
                         Icon: Calendar,
-                        title: 'Pick consultation windows',
-                        desc: 'Choose times that work for your schedule',
+                        title: 'Provide access and availability',
+                        desc: 'Nexus coordinates the appointment with the contractor',
                       },
                       {
                         Icon: MessageSquare,
@@ -130,12 +130,12 @@ export default function HomePage() {
                       },
                     ].map(({ Icon, title, desc }) => (
                       <div key={title} className="flex items-start gap-4">
-                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#111111] text-white">
+                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-sidebar text-white">
                           <Icon className="h-5 w-5" />
                         </span>
                         <div>
-                          <p className="text-sm font-semibold text-[#111111]">{title}</p>
-                          <p className="text-sm text-[#111111]/55">{desc}</p>
+                          <p className="text-sm font-semibold text-foreground">{title}</p>
+                          <p className="text-sm text-muted-foreground">{desc}</p>
                         </div>
                       </div>
                     ))}
@@ -144,8 +144,8 @@ export default function HomePage() {
 
                 <div>
                   <Link
-                    href="/"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-6 py-3 text-sm font-semibold text-white hover:bg-black/80 transition-colors"
+                    href="/request"
+                    className="inline-flex items-center gap-2 rounded-full bg-sidebar px-6 py-3 text-sm font-semibold text-white hover:bg-black/80 transition-colors"
                   >
                     Submit a request <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -156,7 +156,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── FOR CONTRACTORS ───────────────────────────────────────── */}
-        <section className="bg-[#f0eeeb]">
+        <section className="bg-background">
           <div className="mx-auto w-full max-w-7xl px-6 pb-20 lg:pb-28">
             {/* subtle divider */}
             <div className="h-px bg-black/8 mb-20 lg:mb-28" />
@@ -164,19 +164,20 @@ export default function HomePage() {
               {/* Left: copy + card */}
               <div className="flex flex-col gap-7">
                 <div>
-                  <h2 className="text-4xl font-extrabold tracking-tight text-[#111111] lg:text-5xl">
+                  <h2 className="text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
                     For contractors
                   </h2>
-                  <p className="mt-3 text-base text-[#111111]/60 max-w-xl">
-                    Nexus is not a shared lead marketplace. Contractors receive exclusive,
-                    pre-qualified requests with scope, photos, budget context, and a real ops team
-                    supporting every assignment.
+                  <p className="mt-3 text-base text-muted-foreground max-w-xl">
+                    Contractors review available requests in their service categories and accept
+                    work that fits their capacity. Nexus coordinates the request and customer
+                    communication. Contractors confirm the scope and price, perform the work,
+                    and submit progress notes, photos, and invoices.
                   </p>
                 </div>
 
                 {/* Feature card */}
-                <div className="rounded-2xl bg-white/60 border border-black/5 p-6 shadow-sm">
-                  <p className="mb-5 text-xs font-bold uppercase tracking-widest text-[#111111]/40">
+                <div className="rounded-2xl bg-card border border-border p-6 shadow-sm">
+                  <p className="mb-5 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     Contractor Experience
                   </p>
 
@@ -184,27 +185,27 @@ export default function HomePage() {
                     {[
                       {
                         Icon: Eye,
-                        title: 'See everything before claiming',
-                        desc: 'Photos, budget, and scope upfront',
+                        title: 'Review request details',
+                        desc: 'See the issue, available photos, and budget context',
                       },
                       {
                         Icon: Zap,
-                        title: 'First-come, first-served',
-                        desc: 'No bidding wars, no competing quotes',
+                        title: 'Accept work in your trade',
+                        desc: 'Assignments depend on eligibility and availability',
                       },
                       {
                         Icon: CreditCard,
-                        title: 'Get paid faster',
-                        desc: 'Unified invoicing and quick payouts',
+                        title: 'Submit invoices and track payments',
+                        desc: 'Keep job records and billing in your dashboard',
                       },
                     ].map(({ Icon, title, desc }) => (
                       <div key={title} className="flex items-start gap-4">
-                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#111111] text-white">
+                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-sidebar text-white">
                           <Icon className="h-5 w-5" />
                         </span>
                         <div>
-                          <p className="text-sm font-semibold text-[#111111]">{title}</p>
-                          <p className="text-sm text-[#111111]/55">{desc}</p>
+                          <p className="text-sm font-semibold text-foreground">{title}</p>
+                          <p className="text-sm text-muted-foreground">{desc}</p>
                         </div>
                       </div>
                     ))}
@@ -214,13 +215,13 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-3">
                   <Link
                     href="/contractors"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-6 py-3 text-sm font-semibold text-white hover:bg-black/80 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-full bg-sidebar px-6 py-3 text-sm font-semibold text-white hover:bg-black/80 transition-colors"
                   >
                     Join the network <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href="/pricing"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-black/25 px-6 py-3 text-sm font-semibold text-[#111111] hover:bg-black/5 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:bg-black/5 transition-colors"
                   >
                     View pricing ↗
                   </Link>
@@ -232,7 +233,7 @@ export default function HomePage() {
                 <div className="overflow-hidden rounded-2xl w-full max-w-lg">
                   <Image
                     src="/photo-contractor.jpg"
-                    alt="Contractor in hard hat using tablet at construction site"
+                    alt="Illustration of a contractor wearing a hard hat and safety vest"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
@@ -244,17 +245,17 @@ export default function HomePage() {
         </section>
 
         {/* ─── PRICING ───────────────────────────────────────────────── */}
-        <section className="bg-[#111111]">
+        <section className="bg-sidebar">
           <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:py-28">
             {/* Heading */}
             <div className="mb-12 text-center">
               <h2 className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
-                Simple pricing
+                Coordination fees and repair costs
               </h2>
-              <p className="mt-3 mx-auto max-w-2xl text-base text-white/50">
-                Homeowners use Nexus for free. Property owners subscribe for managed service and
-                unified billing. Contractors join the network to claim documented work without
-                paying for shared leads.
+              <p className="mt-3 mx-auto max-w-2xl text-base text-white/70">
+                Plans cover maintenance coordination and account features, not the repair itself.
+                Labor and materials are charged separately. Contractor accounts have a separate
+                fee structure, including commissions on completed jobs.
               </p>
             </div>
 
@@ -263,15 +264,16 @@ export default function HomePage() {
               {/* Homeowners */}
               <div className="flex flex-col gap-6 rounded-2xl border border-white/10 bg-white/5 p-8">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-white/40">
+                  <p className="text-xs font-bold uppercase tracking-widest text-white/70">
                     For Homeowners
                   </p>
-                  <p className="mt-3 text-5xl font-extrabold text-white">Free</p>
-                  <p className="mt-2 text-sm text-white/50">Submit requests at no cost.</p>
+                  <p className="mt-3 text-5xl font-extrabold text-white">$0</p>
+                  <p className="mt-2 text-sm text-white/70">Starter subscription · up to 3 requests per year.</p>
+                  <p className="mt-2 text-sm text-white/70">Labor and materials are billed separately.</p>
                 </div>
 
                 <ul className="flex flex-col gap-3">
-                  {['Verified contractor match', 'Pre-scheduled consultation', 'Status tracking'].map(
+                  {['Verified contractor match', 'Scheduling coordination', 'Status tracking'].map(
                     (feat) => (
                       <li key={feat} className="flex items-center gap-2.5 text-sm text-white/75">
                         <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-white/15 text-white text-xs">✓</span>
@@ -283,8 +285,8 @@ export default function HomePage() {
 
                 <div className="mt-auto">
                   <Link
-                    href="/"
-                    className="inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-white/90 transition-colors"
+                    href="/request"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-card px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90 transition-colors"
                   >
                     Get started →
                   </Link>
@@ -294,18 +296,19 @@ export default function HomePage() {
               {/* Contractors */}
               <div className="flex flex-col gap-6 rounded-2xl border border-white/10 bg-white/5 p-8">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-white/40">
+                  <p className="text-xs font-bold uppercase tracking-widest text-white/70">
                     For Contractors
                   </p>
                   <div className="mt-3 flex items-baseline gap-1">
-                    <span className="text-5xl font-extrabold text-white">$199</span>
-                    <span className="text-lg text-white/50">/month</span>
+                    <span className="text-5xl font-extrabold text-white">$0</span>
+                    <span className="text-lg text-white/70">to join</span>
                   </div>
-                  <p className="mt-2 text-sm text-white/50">Claim unlimited leads in your categories.</p>
+                  <p className="mt-2 text-sm text-white/70">Starter: up to 3 active projects; 10–15% commission on completed jobs.</p>
+                  <p className="mt-2 text-sm text-white/70">Paid plans offer higher project limits. See pricing for details.</p>
                 </div>
 
                 <ul className="flex flex-col gap-3">
-                  {['Exclusive leads', 'Pre-qualified details', 'Fast payout'].map((feat) => (
+                  {['Available project board', 'Request details before acceptance', 'Invoice and payment tracking'].map((feat) => (
                     <li key={feat} className="flex items-center gap-2.5 text-sm text-white/75">
                       <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-white/15 text-white text-xs">✓</span>
                       {feat}
@@ -316,7 +319,7 @@ export default function HomePage() {
                 <div className="mt-auto">
                   <Link
                     href="/contractors"
-                    className="inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-white/90 transition-colors"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-card px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90 transition-colors"
                   >
                     Join the network →
                   </Link>
@@ -326,8 +329,8 @@ export default function HomePage() {
 
             {/* Enterprise note */}
             <div className="mt-10 flex items-center justify-center gap-3 text-center">
-              <Building2 className="h-5 w-5 flex-shrink-0 text-white/40" />
-              <p className="text-sm text-white/40">
+              <Building2 className="h-5 w-5 flex-shrink-0 text-white/70" />
+              <p className="text-sm text-white/70">
                 Enterprise property management?{' '}
                 <Link href="/contact" className="underline underline-offset-2 hover:text-white/70 transition-colors">
                   Contact us
