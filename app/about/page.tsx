@@ -126,13 +126,13 @@ export default function AboutPage() {
                 <MapPin className="h-3 w-3" /> {CONTACT_INFO.cityState}
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                A local maintenance service for homes and rental properties.
+                We coordinate property maintenance in Topeka and Shawnee County.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Nexus Operations manages property repairs, routine upkeep, and rental turnovers
-                for homeowners, landlords, and property managers in Topeka and Shawnee County.
-                Trade contractors carry out the work; Nexus manages each request from intake
-                through completion, with scheduling, job records, and invoicing in one place.
+                Nexus Operations works with homeowners, landlords, and property managers to
+                organize repairs and recurring maintenance. We review requests, coordinate
+                contractors and scheduling, track job records, and manage invoicing. Contractors
+                confirm the scope and price and carry out the trade work.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -181,8 +181,8 @@ export default function AboutPage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="Our role"
-                title="Maintenance support beyond a contractor referral."
-                description="Nexus stays involved after a contractor is assigned, managing job updates, documentation, and billing. Owners review the proposed scope and cost; contractors carry out the repairs."
+                title="Coordination between the property owner and the contractor."
+                description="Nexus manages the request and communication. Contractors provide the repair work, while owners review and authorize the proposed scope and cost."
               />
             </div>
             <div className="lg:col-span-7">
@@ -194,7 +194,7 @@ export default function AboutPage() {
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
                   During the job, Nexus coordinates scheduling and communication and keeps status
-                  updates, photos, notes, and invoices with the request. Maintenance plans do not
+                  updates, photos, notes, and invoices with the request. Coordination plans do not
                   include repair labor or materials; those are billed separately. Changes to the
                   work should be reviewed before they are authorized.
                 </p>
@@ -237,7 +237,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="What we do"
                 title="From request review to invoicing."
-                description="Nexus manages each maintenance request, from understanding the issue and assigning a contractor to tracking the work and keeping the final job records."
+                description="Nexus coordinates the steps around the repair: reviewing the issue, matching a contractor, arranging access and scheduling, and keeping job and billing records."
               />
               <Link
                 href="/services"

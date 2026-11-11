@@ -19,7 +19,7 @@ import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Pricing — Maintenance Plans and Contractor Fees',
+  title: 'Pricing — Coordination Plans and Contractor Fees',
   description:
     'Compare Nexus Operations plans for homeowners, property managers, and contractors, including request limits, subscription fees, and commissions. Repair labor and materials are separate.',
 }
@@ -68,7 +68,7 @@ const faqs = [
   },
   {
     q: 'Does my plan include the cost of repairs?',
-    a: 'No. Homeowner and property manager plans cover maintenance request management and account features. Contractor labor and materials are billed separately at the agreed job price. Review the scope and quote before authorizing work. Contractor accounts also pay the commission specified by their plan.',
+    a: 'No. Homeowner and property manager plans cover coordination and account features. Contractor labor and materials are billed separately at the agreed job price. Review the scope and quote before authorizing work. Contractor accounts also pay the commission specified by their plan.',
   },
   {
     q: 'Can I switch plans?',
@@ -171,11 +171,11 @@ export default function PricingPage() {
               <Sparkles className="h-3 w-3" /> Pricing
             </p>
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Maintenance plans for your property.
+              Maintenance coordination plans.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
               Homeowner and property manager plans cover request review, contractor matching,
-              scheduling, job records, and invoicing. Repair labor and materials are
+              scheduling, job records, and billing coordination. Repair labor and materials are
               billed separately. Contractor plans have project limits and commission fees,
               shown below.
             </p>

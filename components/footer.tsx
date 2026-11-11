@@ -36,13 +36,13 @@ export function Footer() {
         <div className="mb-14 rounded-xl border border-border bg-background p-6 sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-mono-label text-primary">For your home or rental property</p>
+              <p className="font-mono-label text-primary">Request maintenance coordination</p>
               <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-foreground">
                 Tell us what needs repair.
               </h2>
               <p className="mt-2 max-w-lg text-sm text-muted-foreground">
-                Repairs, routine upkeep, and rental turnovers through a local contractor network.
-                Nexus manages the request through completion. Serving {CONTACT_INFO.cityState}
+                Nexus reviews the issue, coordinates a contractor, and tracks scheduling, job records,
+                and invoices. Contractors perform the repair work. Serving {CONTACT_INFO.cityState}
                 {' '}and Shawnee County.
               </p>
             </div>
@@ -69,9 +69,9 @@ export function Footer() {
           <div className="col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Managed property maintenance for homeowners, landlords, and property managers
-              in {CONTACT_INFO.cityState} and Shawnee County. Repairs, routine upkeep, and
-              rental turnovers through a local contractor network.
+              Property maintenance coordination for homeowners, landlords, and property managers
+              in {CONTACT_INFO.cityState} and Shawnee County. Request review, contractor matching,
+              scheduling, job records, and invoicing.
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary">
               <BadgeCheck className="h-3.5 w-3.5" /> Licensed & Insured Network

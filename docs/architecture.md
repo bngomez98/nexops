@@ -49,6 +49,9 @@ Next.js Edge / Node.js API Routes
 | Fire-and-forget email (match) | Inside `/api/match` (async IIFE) | Resend API call | Logged; non-fatal |
 | Fire-and-forget email (invoice sent) | Inside `PATCH /api/invoices` | Resend API call | Logged; non-fatal |
 | Fire-and-forget email (invoice paid) | Inside Stripe webhook handler | Resend API call | Logged; non-fatal |
+| Cron: document-expiry | `GET /api/cron/document-expiry` (09:00 UTC daily) | Resend API calls per contractor | Non-fatal per-user; result logged |
+| Cron: invoice-maintenance | `GET /api/cron/invoice-maintenance` (09:15 UTC daily) | `invoices` status → `overdue` via DB function | Retried next day |
+| Cron: sla-sweep | `GET /api/cron/sla-sweep` (every 5 min) | `service_requests.sla_breached` flag via DB function | Retried on next tick |
 
 ---
 
@@ -62,6 +65,9 @@ All service-role usage goes through `lib/supabase/admin.ts → getAdminClient()`
 | `app/api/stripe/webhooks/route.ts` | Webhook has no user JWT; must update payments/profiles/subscriptions on Stripe's behalf | UPDATE `payments`, `invoices`, `jobs`, `billing_subscriptions`, `profiles`; INSERT `job_status_history`, `stripe_events` | Stripe HMAC signature verified before any DB write; idempotency via `stripe_events` |
 | `app/api/match/route.ts` (email IIFE) | `auth.admin.getUserById` requires service role to look up emails of other users | READ auth.users email only | Called only after successful assignment; wrapped in try/catch; no data written |
 | `app/api/invoices/route.ts` (PATCH, email IIFE) | `auth.admin.getUserById` for client/contractor email lookup | READ auth.users email only | Called only on `sent` transition; wrapped in try/catch; no data written |
+| `app/api/cron/document-expiry/route.ts` | Reads documents of many users + looks up auth emails | SELECT `documents`, `profiles`; READ auth.users email | Requires `CRON_SECRET` Bearer token; no writes via admin client |
+| `app/api/cron/invoice-maintenance/route.ts` | Calls `maintenance_mark_overdue_invoices()` DB function which requires elevated access | RPC call only | Requires `CRON_SECRET` Bearer token |
+| `app/api/cron/sla-sweep/route.ts` | Calls `maintenance_flag_sla_breaches()` DB function | RPC call only | Requires `CRON_SECRET` Bearer token |
 | `app/api/portal/public-request/route.ts` | Anon submissions lack user JWT | INSERT `service_requests` (owner_id = null, submission_token required) | Validated against `anon_can_submit_requests` RLS policy; submission_token enforced |
 | `app/api/portal/public-upload/route.ts` | Anon uploads lack user JWT | INSERT Storage objects | File type + size validated; path scoped to submission_token |
 
@@ -207,6 +213,7 @@ Fees are urgency-based and calculated server-side in `calculateInvoiceTotals()` 
 | `PATCH /api/invoices` | ✗ | draft→sent, void | ✗ | any |
 | `POST /api/portal/jobs/[id]/assign` | ✗ | ✗ | ✗ | ✓ |
 | `POST /api/portal/jobs/[id]/status` | owner | assigned | ✗ | ✓ |
+| `GET /api/cron/*` | ✗ | ✗ | ✗ | CRON_SECRET only |
 | `POST /api/stripe/webhooks` | ✗ | ✗ | ✗ | Stripe HMAC only |
 | `POST /api/ai/chat` | ✓ | ✓ | ✓ | ✓ |
 | `POST /api/ai/insights` | ✓ | ✓ | ✓ | ✓ |
@@ -242,6 +249,7 @@ Fees are urgency-based and calculated server-side in `calculateInvoiceTotals()` 
 | `SUPABASE_SERVICE_ROLE_KEY` | Admin client (RLS bypass) |
 | `STRIPE_SECRET_KEY` | Stripe API server calls |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature verification |
+| `CRON_SECRET` | Authenticate Vercel Cron invocations to `/api/cron/*` |
 
 ### 7.2 Required — public (browser + server)
 

@@ -101,6 +101,20 @@ services:
     env_vars:
       - BLOB_READ_WRITE_TOKEN
 
+cron:
+  jobs:
+    - path: /api/cron/document-expiry
+      schedule: "0 9 * * *"        # daily 09:00 UTC
+      description: Warn contractors about compliance documents expiring in 30 days
+    - path: /api/cron/invoice-maintenance
+      schedule: "15 9 * * *"       # daily 09:15 UTC
+      description: Flip past-due invoices to status 'overdue' (3-day grace)
+    - path: /api/cron/sla-sweep
+      schedule: "*/5 * * * *"      # every 5 minutes
+      description: Flag unclaimed requests past their sla_respond_by deadline
+  env_vars:
+    - CRON_SECRET
+
 feature_flags:
   automation:
     description: AI-powered request automation features
@@ -112,3 +126,4 @@ ci:
   workflows:
     - ci.yml        # lint, typecheck, test, build on every push/PR
     - cd.yml        # deploy to Vercel on merge to main
+    - stale.yml     # close stale issues/PRs

@@ -19,7 +19,7 @@ export const SLA_RESPONSE_MINUTES: Record<string, number> = {
 
 /**
  * SLA completion windows (hours from claim → completed).
- * Used by contractor performance scoring.
+ * Used by the stale-request cron + contractor performance scoring.
  */
 export const SLA_COMPLETION_HOURS: Record<string, number> = {
   emergency: 24,

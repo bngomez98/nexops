@@ -10,7 +10,7 @@
  * Status transitions are validated server-side via
  * lib/business-logic.isValidInvoiceTransition. Only the contractor
  * can send/void; only admin (or the Stripe webhook via service role)
- * can mark paid or overdue.
+ * can mark paid. Overdue is set by the maintenance cron.
  */
 
 import { createClient } from '@/lib/supabase/server'

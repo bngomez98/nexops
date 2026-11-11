@@ -133,13 +133,13 @@ export default function ServicesPage() {
               <Sparkles className="h-3 w-3" /> Services
             </p>
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Repair, upkeep, and rental turnover services.
+              Repairs and maintenance we coordinate.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              From a plumbing repair to getting a rental ready for its next tenant, Nexus
-              manages maintenance through a network of trade contractors. Browse the work we
-              handle below. Contractor availability, scope, and pricing are confirmed when
-              your request is reviewed.
+              Nexus reviews maintenance requests, coordinates a contractor for the trade,
+              arranges scheduling, and tracks job records and invoices. Contractors perform the
+              repair work. These categories describe the requests we handle; availability and
+              the final scope are confirmed during review.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -159,7 +159,7 @@ export default function ServicesPage() {
               {[
                 { href: '#residential', label: 'Trade categories' },
                 { href: '#commercial', label: 'Response times' },
-                { href: '#b2b', label: 'What’s included' },
+                { href: '#b2b', label: 'Coordination services' },
                 { href: '#how-it-works', label: 'How it works' },
               ].map((item) => (
                 <a
@@ -262,8 +262,8 @@ export default function ServicesPage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What every job includes"
-                title="Support from the first request to the final invoice."
-                description="Nexus manages intake, scheduling, job updates, and records so you can follow the work without keeping separate conversations and paperwork. Contractor labor and materials are billed separately."
+                title="What Nexus coordinates."
+                description="Nexus manages the request and communication between you and the contractor. Your plan covers coordination and account features; contractor labor and materials are billed separately."
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">

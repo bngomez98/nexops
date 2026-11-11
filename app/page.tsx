@@ -6,9 +6,9 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: 'Property Maintenance for Homes and Rentals in Topeka, KS',
+  title: 'Property Maintenance Coordination in Topeka, KS',
   description:
-    'Nexus Operations manages home repairs, routine maintenance, and rental turnovers in Topeka and Shawnee County through a local contractor network. Request service and track the work in one place.',
+    'Nexus Operations coordinates property repairs in Topeka and Shawnee County: request review, contractor matching, scheduling, job records, and invoicing. Labor and materials are billed separately.',
 }
 
 export default function HomePage() {
@@ -25,15 +25,15 @@ export default function HomePage() {
                 <div>
                   <p className="mb-4 text-sm font-medium text-white/70">Topeka &amp; Shawnee County, Kansas</p>
                   <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-white lg:text-6xl xl:text-7xl">
-                    Property maintenance for homes and rentals.
+                    Property maintenance coordination.
                   </h1>
                 </div>
 
                 <p className="text-lg text-white/60 max-w-2xl">
-                  Nexus Operations manages repairs, routine upkeep, and rental turnovers in
-                  Topeka and Shawnee County. From plumbing and HVAC to general repairs, our
-                  contractor network carries out the work. You get one place to request service,
-                  review job updates, and keep maintenance records.
+                  Nexus Operations coordinates repairs and maintenance for homeowners, landlords,
+                  and property managers. We review the issue, match it with a contractor, coordinate
+                  scheduling, and track the work through completion and invoicing. Contractors
+                  provide the trade work; Nexus manages the coordination and records.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-3">
@@ -41,7 +41,7 @@ export default function HomePage() {
                     href="/request"
                     className="inline-flex items-center gap-2 rounded-full bg-card px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90 transition-colors"
                   >
-                    Request maintenance <ArrowRight className="h-4 w-4" />
+                    Submit a request <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href="/contractors"
@@ -61,8 +61,8 @@ export default function HomePage() {
               <div className="relative flex justify-center lg:justify-end">
                 <div className="relative w-full max-w-lg overflow-hidden rounded-2xl">
                   <Image
-                    src="/images/maintenance-service.png"
-                    alt="Maintenance technician inspecting plumbing beneath a kitchen sink"
+                    src="/photo-contractor.jpg"
+                    alt="Illustration of a contractor wearing a hard hat and safety vest"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
@@ -82,8 +82,8 @@ export default function HomePage() {
               <div className="relative">
                 <div className="overflow-hidden rounded-2xl">
                   <Image
-                    src="/images/home-maintenance.png"
-                    alt="Maintenance worker repairing a door at a residential property"
+                    src="/minimalist-modern-office-workspace-aerial-view.jpg"
+                    alt="Modern workspace representing homeowner experience"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
@@ -95,13 +95,13 @@ export default function HomePage() {
               <div className="flex flex-col gap-7">
                 <div>
                   <h2 className="text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
-                    Help with repairs and routine upkeep.
+                    For homeowners
                   </h2>
                   <p className="mt-3 text-base text-muted-foreground max-w-xl">
-                    A leaking faucet, a broken door, or an HVAC problem starts with one request.
-                    Tell us what needs attention and share photos if you have them. Nexus manages
-                    the request through completion, with contractor scheduling, job updates, and
-                    records in one place. Review the scope and price before authorizing work.
+                    Submit the property address, a description of the issue, and any photos.
+                    Nexus reviews the request, confirms the scope and access details, and coordinates
+                    a contractor. A submitted budget is not a final quote; confirm the scope and
+                    price before authorizing work.
                   </p>
                 </div>
 
@@ -120,13 +120,13 @@ export default function HomePage() {
                       },
                       {
                         Icon: Calendar,
-                        title: 'Know when work is scheduled',
-                        desc: 'Share your availability and confirm access to the property',
+                        title: 'Provide access and availability',
+                        desc: 'Nexus coordinates the appointment with the contractor',
                       },
                       {
                         Icon: MessageSquare,
-                        title: 'Keep a record of the work',
-                        desc: 'Find job updates, photos, and invoices together',
+                        title: 'Track status in one place',
+                        desc: 'Stay updated throughout the process',
                       },
                     ].map(({ Icon, title, desc }) => (
                       <div key={title} className="flex items-start gap-4">
@@ -147,7 +147,7 @@ export default function HomePage() {
                     href="/request"
                     className="inline-flex items-center gap-2 rounded-full bg-sidebar px-6 py-3 text-sm font-semibold text-white hover:bg-black/80 transition-colors"
                   >
-                    Request maintenance <ArrowRight className="h-4 w-4" />
+                    Submit a request <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
@@ -165,13 +165,13 @@ export default function HomePage() {
               <div className="flex flex-col gap-7">
                 <div>
                   <h2 className="text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
-                    Local work for your trade.
+                    For contractors
                   </h2>
                   <p className="mt-3 text-base text-muted-foreground max-w-xl">
-                    Review maintenance requests from local homeowners and property managers,
-                    then accept work that fits your trade and schedule. You confirm the scope
-                    and price and carry out the work. Nexus handles request intake and customer
-                    communication, with job updates and invoicing in your dashboard.
+                    Contractors review available requests in their service categories and accept
+                    work that fits their capacity. Nexus coordinates the request and customer
+                    communication. Contractors confirm the scope and price, perform the work,
+                    and submit progress notes, photos, and invoices.
                   </p>
                 </div>
 
@@ -232,8 +232,8 @@ export default function HomePage() {
               <div className="relative flex justify-center lg:justify-end">
                 <div className="overflow-hidden rounded-2xl w-full max-w-lg">
                   <Image
-                    src="/images/contractor-maintenance.png"
-                    alt="HVAC technician inspecting an outdoor heat pump beside a home"
+                    src="/photo-contractor.jpg"
+                    alt="Illustration of a contractor wearing a hard hat and safety vest"
                     width={640}
                     height={480}
                     className="w-full h-auto object-cover"
@@ -250,12 +250,12 @@ export default function HomePage() {
             {/* Heading */}
             <div className="mb-12 text-center">
               <h2 className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
-                Plans and repair costs
+                Coordination fees and repair costs
               </h2>
               <p className="mt-3 mx-auto max-w-2xl text-base text-white/70">
-                Choose a plan for the level of maintenance support you need. Plans cover request
-                management and account features; repair labor and materials are billed separately.
-                Contractor plans have their own project limits and commission fees.
+                Plans cover maintenance coordination and account features, not the repair itself.
+                Labor and materials are charged separately. Contractor accounts have a separate
+                fee structure, including commissions on completed jobs.
               </p>
             </div>
 
@@ -273,7 +273,7 @@ export default function HomePage() {
                 </div>
 
                 <ul className="flex flex-col gap-3">
-                  {['Verified contractor match', 'Appointment scheduling', 'Status tracking'].map(
+                  {['Verified contractor match', 'Scheduling coordination', 'Status tracking'].map(
                     (feat) => (
                       <li key={feat} className="flex items-center gap-2.5 text-sm text-white/75">
                         <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-white/15 text-white text-xs">✓</span>
