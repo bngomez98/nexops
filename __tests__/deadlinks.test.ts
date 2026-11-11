@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 const REPO_ROOT = path.resolve(__dirname, '..')
 const APP_DIR = path.join(REPO_ROOT, 'app')
 const COMPONENTS_DIR = path.join(REPO_ROOT, 'components')
+const NEXT_CONFIG_PATH = path.join(REPO_ROOT, 'next.config.mjs')
 
 const CODE_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.jsx'])
 
@@ -100,10 +101,27 @@ function normalizeRoute(href: string): { route: string; hash: string | null } {
   return { route, hash: hashPart ?? null }
 }
 
+function getNextConfigRedirects(): Set<string> {
+  const redirects = new Set<string>()
+  try {
+    const configContent = fs.readFileSync(NEXT_CONFIG_PATH, 'utf8')
+    // Extract source routes from redirect configuration
+    const sourceMatches = configContent.matchAll(/source:\s*['"]([^'"]+)['"]/g)
+    for (const match of sourceMatches) {
+      redirects.add(match[1])
+    }
+  } catch (err) {
+    // If config doesn't exist or can't be parsed, return empty set
+    console.warn('Could not parse next.config.mjs for redirects:', err)
+  }
+  return redirects
+}
+
 describe('internal link integrity', () => {
   it('has no dead internal routes or hash fragment targets', () => {
     const codeFiles = getAllCodeFiles()
     const routeToFile = getPageRouteMap()
+    const redirectRoutes = getNextConfigRedirects()
     const missingRoutes: string[] = []
     const missingHashes: string[] = []
 
@@ -123,13 +141,17 @@ describe('internal link integrity', () => {
 
       if (route.includes('[') && route.includes(']')) continue
 
+      // Check if route exists as a page or as a redirect
       const targetFile = routeToFile.get(route)
-      if (!targetFile) {
+      const isRedirect = redirectRoutes.has(route)
+
+      if (!targetFile && !isRedirect) {
         missingRoutes.push(href)
         continue
       }
 
-      if (!hash) continue
+      // Only check hash targets if this is an actual page (not a redirect)
+      if (!hash || !targetFile) continue
 
       const targetSource = fs.readFileSync(targetFile, 'utf8')
       const escapedHash = hash.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
