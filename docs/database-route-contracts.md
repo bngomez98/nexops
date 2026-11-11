@@ -7,9 +7,6 @@
 | `/api/messages*` | `messages`, `service_requests`, `profiles` | `messages.job_id` maps to `service_requests.id`; participant authorization via owner/assigned contractor |
 | `/api/notifications` | `notifications` | user-scoped read/update/delete via `notifications.user_id` |
 | `/api/upload` | `documents`, `storage.objects` | document metadata persisted with `user_id`, `verified`, `status` |
-| `/api/cron/document-expiry` | `documents`, `profiles` | expiring compliance docs by `documents.user_id`; recipient name from `profiles.id`; requires `CRON_SECRET` Bearer token |
-| `/api/cron/invoice-maintenance` | `invoices` (via DB function) | calls `maintenance_mark_overdue_invoices(p_grace_days)` using service role; requires `CRON_SECRET` |
-| `/api/cron/sla-sweep` | `service_requests` (via DB function) | calls `maintenance_flag_sla_breaches()` using service role; requires `CRON_SECRET` |
 | `/api/stripe/dispatch` | `service_requests`, `profiles`, `payments` | owner pay flow, assigned contractor payout metadata |
 | `/api/stripe/invoice` | `invoices`, `jobs`, `profiles`, `payments`, `service_requests` | jobs/invoices flow and legacy service_requests invoice flow |
 | `/api/stripe/webhooks` | `stripe_events`, `billing_subscriptions`, `profiles`, `payments`, `invoices`, `jobs`, `job_status_history`, `service_requests` | idempotency check via `stripe_events`; asynchronous Stripe reconciliation and subscription state sync |

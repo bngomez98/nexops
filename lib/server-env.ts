@@ -23,7 +23,6 @@
  * CONDITIONALLY REQUIRED
  *   RESEND_API_KEY              Required when sending transactional emails
  *   OPENAI_API_KEY              Required for /api/ai/* and /api/automation/categorize-request
- *   CRON_SECRET                 Required for /api/cron/* routes
  *
  * OPTIONAL — server
  *   SUPABASE_PROJECT_REF        Used by migration scripts
@@ -55,8 +54,6 @@ interface ServerEnvConfig {
   requireResend?: boolean
   /** When true, validates OPENAI_API_KEY. Default: false */
   requireOpenAI?: boolean
-  /** When true, validates CRON_SECRET. Default: false */
-  requireCron?: boolean
 }
 
 /**
@@ -67,12 +64,9 @@ interface ServerEnvConfig {
  * // At the top of a webhook handler:
  * assertServerEnv({ requireStripe: true })
  *
- * @example
- * // At the top of a cron route:
- * assertServerEnv({ requireCron: true })
  */
 export function assertServerEnv(config: ServerEnvConfig = {}): void {
-  const { requireStripe = true, requireResend = false, requireOpenAI = false, requireCron = false } = config
+  const { requireStripe = true, requireResend = false, requireOpenAI = false } = config
   const missing: string[] = []
 
   // ── Always required ───────────────────────────────────────────────────────
@@ -98,10 +92,6 @@ export function assertServerEnv(config: ServerEnvConfig = {}): void {
 
   if (requireOpenAI && !process.env.OPENAI_API_KEY?.trim()) {
     missing.push('OPENAI_API_KEY')
-  }
-
-  if (requireCron && !process.env.CRON_SECRET?.trim()) {
-    missing.push('CRON_SECRET')
   }
 
   if (missing.length > 0) {
