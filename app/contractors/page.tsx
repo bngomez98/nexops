@@ -22,14 +22,14 @@ import { CONTACT_INFO } from '@/lib/contact-info'
 export const metadata: Metadata = {
   title: 'For Contractors — Join the Nexus Operations Network',
   description:
-    'Licensed and insured contractors in Shawnee County: join the Nexus Operations network for pre-qualified, fully documented jobs. Direct payouts, no marketplace fees, no lead costs.',
+    'Contractors in Topeka and Shawnee County can review maintenance requests, accept work, and manage job records through Nexus Operations. Starter has no subscription fee; completed jobs carry a commission.',
 }
 
 const benefits = [
   {
     icon: DollarSign,
-    title: 'Direct payouts, on schedule',
-    desc: 'Every job pays you at your full quoted rate. Nexus Operations never holds contractor money or takes a marketplace cut.',
+    title: 'Commission-based pricing',
+    desc: 'Starter has no subscription fee and charges 10–15% commission on completed jobs. Paid plans have different project limits and commission terms; review pricing before joining.',
   },
   {
     icon: ClipboardList,
@@ -122,14 +122,14 @@ export default function ContractorsPage() {
                 <Sparkles className="h-3 w-3" /> For licensed contractors
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                Get paid for the work — not the paperwork.
-                Pre-documented jobs, direct payouts, no lead fees.
+                Maintenance work for local contractors.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Join the Nexus Operations contractor network and receive managed job opportunities
-                from vetted homeowners and property managers in Topeka and Shawnee County. Nexus
-                handles intake, client communication, and documentation so you can focus on the
-                work. No marketplace fees. No lead costs. Direct payouts at your full quoted rate.
+                Nexus coordinates repair requests from homeowners and property managers in Topeka
+                and Shawnee County. Review the request details, confirm the scope and quote, and
+                accept work that fits your trade and schedule. You perform the work and submit
+                job updates, photos, and invoices. Nexus coordinates scheduling and customer
+                communication. Completed jobs are subject to your plan&apos;s commission.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -185,7 +185,7 @@ export default function ContractorsPage() {
                 { label: "Active contractors", value: "20+" },
                 { label: "Trade categories", value: "All trades" },
                 { label: "Accepting applications", value: "Open" },
-                { label: "Application review time", value: "12 hours" },
+                { label: "Typical application review", value: "2–3 business days" },
               ].map((stat) => (
                 <div
                   key={stat.label}

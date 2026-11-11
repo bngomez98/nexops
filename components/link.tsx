@@ -1,10 +1,5 @@
 /**
- * Framework-agnostic Link component.
- *
- * Replaces `next/link` with a plain `<a>` element that uses the History API
- * for client-side navigation when the destination is a same-origin relative
- * URL.  This removes the hard dependency on Next.js's `<Link>` while keeping
- * SPA-style navigation behaviour.
+ * Anchor wrapper that delegates same-origin navigation to the Next.js App Router.
  */
 
 'use client'

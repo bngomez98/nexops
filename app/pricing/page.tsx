@@ -19,9 +19,9 @@ import { getPlansByRole, formatPrice, type Plan } from '@/lib/plans'
 import { CONTACT_INFO } from '@/lib/contact-info'
 
 export const metadata: Metadata = {
-  title: 'Pricing — Simple, Transparent Subscription Plans',
+  title: 'Pricing — Coordination Plans and Contractor Fees',
   description:
-    'Nexus Operations offers transparent subscription plans for homeowners, property managers, and contractors. Start free. Upgrade when you need unlimited requests. No long-term contracts.',
+    'Compare Nexus Operations plans for homeowners, property managers, and contractors, including request limits, subscription fees, and commissions. Repair labor and materials are separate.',
 }
 
 const included = [
@@ -60,15 +60,15 @@ const included = [
 const faqs = [
   {
     q: 'Is there a contract?',
-    a: 'No. Every plan is month-to-month (or cancel-anytime annual). Cancel directly from your billing portal — no phone calls and no retention offers required.',
+    a: 'Monthly plans are billed monthly. Annual plans use an annual billing commitment at the listed rate. Review the billing terms at checkout before choosing a plan; manage your subscription through the billing portal.',
   },
   {
     q: 'What counts as a service request?',
     a: 'A service request is any single job or project submitted through your dashboard — a leaky faucet, a broken light fixture, a turn-over make-ready checklist, or an emergency repair. Starter accounts are limited to three per calendar year; Pro subscribers get unlimited requests.',
   },
   {
-    q: 'Do you charge per job?',
-    a: 'No. Your subscription covers intake review, contractor assignment management, and status tracking. Contractor labor and materials are billed through your unified monthly invoice at the contractor-quoted rate, with full line-item transparency.',
+    q: 'Does my plan include the cost of repairs?',
+    a: 'No. Homeowner and property manager plans cover coordination and account features. Contractor labor and materials are billed separately at the agreed job price. Review the scope and quote before authorizing work. Contractor accounts also pay the commission specified by their plan.',
   },
   {
     q: 'Can I switch plans?',
@@ -171,13 +171,13 @@ export default function PricingPage() {
               <Sparkles className="h-3 w-3" /> Pricing
             </p>
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Simple, transparent pricing.
+              Maintenance coordination plans.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus pricing covers the operations layer around every job: intake review, contractor
-              contractor assignment, scheduling, documentation, and unified billing. Start free, upgrade when
-              you need more volume, and keep contractor labor billed transparently at the quoted
-              job rate.
+              Homeowner and property manager plans cover request review, contractor matching,
+              scheduling, job records, and billing coordination. Repair labor and materials are
+              billed separately. Contractor plans have project limits and commission fees,
+              shown below.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link

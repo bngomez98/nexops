@@ -126,14 +126,13 @@ export default function AboutPage() {
                 <MapPin className="h-3 w-3" /> {CONTACT_INFO.cityState}
               </p>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-                We built Nexus Operations so property owners have a single, accountable service for maintenance.
+                We coordinate property maintenance in Topeka and Shawnee County.
               </h1>
               <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                Most property owners in Topeka juggle a patchwork of contractors, handwritten
-                invoices, and missed callbacks. We founded Nexus Operations to be the single,
-                accountable maintenance partner that handles the full service from intake through
-                billing. We manage intake, contractor assignment, documentation, and billing so
-                owners can focus on running their properties, not chasing tradespeople.
+                Nexus Operations works with homeowners, landlords, and property managers to
+                organize repairs and recurring maintenance. We review requests, coordinate
+                contractors and scheduling, track job records, and manage invoicing. Contractors
+                confirm the scope and price and carry out the trade work.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -181,23 +180,23 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-5">
               <SectionHeading
-                eyebrow="Our mission"
-                title="Be the maintenance partner you'd rehire on purpose."
-                description="We run a service business, not a lead marketplace: a team that picks up the phone, follows through, and leaves a clean paper trail."
+                eyebrow="Our role"
+                title="Coordination between the property owner and the contractor."
+                description="Nexus manages the request and communication. Contractors provide the repair work, while owners review and authorize the proposed scope and cost."
               />
             </div>
             <div className="lg:col-span-7">
               <div className="rounded-3xl border border-border bg-card p-8 sm:p-10">
                 <p className="text-[14.5px] leading-relaxed text-foreground">
-                  Property maintenance fails most often in the hand-offs — between the owner and the
-                  contractor, between one trade and another, between the job being &quot;done&quot; and the
-                  invoice being paid. Every hand-off is a chance for details to get lost.
+                  A request starts with the property address, a description of the issue, available
+                  photos, and budget context. Nexus reviews those details and coordinates a
+                  contractor for the work. The contractor confirms the proposed scope and quote.
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
-                  Nexus Operations exists to own every one of those hand-offs. We review each
-                  request, assign the right contractor, track the work in real time, and close the
-                  loop with photo documentation and a unified invoice. Nothing important gets
-                  dropped, and nothing happens without a record.
+                  During the job, Nexus coordinates scheduling and communication and keeps status
+                  updates, photos, notes, and invoices with the request. Coordination plans do not
+                  include repair labor or materials; those are billed separately. Changes to the
+                  work should be reviewed before they are authorized.
                 </p>
                 <p className="mt-4 text-[14.5px] leading-relaxed text-foreground">
                   Founded in Topeka, Kansas in 2026, we&apos;re locally owned and operated. Our
@@ -237,8 +236,8 @@ export default function AboutPage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What we do"
-                title="Four things, done well — on every request."
-                description="We do not sell software. We do not run a contractor marketplace. We act as the operations layer between the property owner and the contractor on every job."
+                title="From request review to invoicing."
+                description="Nexus coordinates the steps around the repair: reviewing the issue, matching a contractor, arranging access and scheduling, and keeping job and billing records."
               />
               <Link
                 href="/services"
@@ -304,11 +303,12 @@ export default function AboutPage() {
                 How it works
               </p>
               <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-foreground mb-4">
-                From request to resolved: a real example.
+                Example: coordinating a plumbing repair.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                A property manager overseeing 120 units submits an emergency request at 11:14 PM on a Saturday.
-                Here is exactly what happens next.
+                This illustrative request shows the coordination steps, not a recorded customer
+                job. The times and amount below are examples, not a quote or a promise of arrival.
+                Actual timing depends on the issue, contractor availability, and service agreement.
               </p>
             </div>
 
@@ -358,13 +358,13 @@ export default function AboutPage() {
                     label: "Invoice issued",
                     color: "bg-secondary border-2 border-border",
                     detail: "Nexus Operations generates a unified invoice: $280 total. Invoice delivered to the property manager's portal with full photo documentation attached.",
-                    outcome: "One invoice. Full documentation. Zero back-and-forth.",
+                    outcome: "Invoice and supporting job records available together.",
                   },
                   {
                     time: "Within 30 days",
                     label: "Contractor paid",
                     color: "bg-green-500",
-                    detail: "Once the property manager pays the invoice, Nexus Operations pays the plumber directly at the full quoted rate of $280. No collection lag, no disputed invoices.",
+                    detail: "Payment is recorded against the job. Contractor payout is subject to payment processing and the applicable plan commission; the customer invoice total is not the contractor's net payout.",
                     outcome: null,
                   },
                 ].map((step, i) => (

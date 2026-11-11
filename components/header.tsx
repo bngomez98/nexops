@@ -7,7 +7,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { Logo } from '@/components/logo'
 
 const nav = [
-  { label: 'Homeowners', href: '/' },
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
   { label: 'Contractors', href: '/contractors' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Contact', href: '/contact' },
@@ -27,7 +28,7 @@ export function Header() {
     href === '/' ? pathname === '/' : pathname === href || pathname?.startsWith(href + '/')
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#111111] border-b border-white/10">
+    <header className="sticky top-0 z-50 w-full bg-sidebar border-b border-white/10">
       {/* Main nav */}
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-6">
         <Link
@@ -62,7 +63,7 @@ export function Header() {
             href="/contact"
             className="inline-flex items-center rounded-full border border-white/40 px-5 py-2 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
           >
-            Request a demo
+            Discuss a maintenance request
           </Link>
         </div>
 
@@ -79,7 +80,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-[#111111] lg:hidden">
+        <div className="border-t border-white/10 bg-sidebar lg:hidden">
           <nav className="mx-auto max-w-7xl px-6 py-5" aria-label="Mobile navigation">
             <ul className="flex flex-col gap-1">
               {nav.map((item) => (
@@ -105,7 +106,7 @@ export function Header() {
                 onClick={closeMobile}
                 className="flex items-center justify-center rounded-full border border-white/40 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
               >
-                Request a demo
+                Discuss a maintenance request
               </Link>
             </div>
           </nav>

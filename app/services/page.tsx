@@ -133,16 +133,17 @@ export default function ServicesPage() {
               <Sparkles className="h-3 w-3" /> Services
             </p>
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Every trade you need. One service.
+              Repairs and maintenance we coordinate.
             </h1>
             <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-              Nexus Operations is a managed maintenance company. We take in the request, review the
-              scope, route it to the right licensed contractor, track the work, and document the
-              closeout. These are the trades and service processes we manage every day.
+              Nexus reviews maintenance requests, coordinates a contractor for the trade,
+              arranges scheduling, and tracks job records and invoices. Contractors perform the
+              repair work. These categories describe the requests we handle; availability and
+              the final scope are confirmed during review.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
-                href="/auth/sign-up"
+                href="/request"
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
               >
                 Submit a request <ArrowRight className="h-4 w-4" />
@@ -156,9 +157,9 @@ export default function ServicesPage() {
             </div>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
               {[
-                { href: '#commercial', label: 'Commercial' },
-                { href: '#residential', label: 'Residential' },
-                { href: '#b2b', label: 'B2B operations' },
+                { href: '#residential', label: 'Trade categories' },
+                { href: '#commercial', label: 'Response times' },
+                { href: '#b2b', label: 'Coordination services' },
                 { href: '#how-it-works', label: 'How it works' },
               ].map((item) => (
                 <a
@@ -261,8 +262,8 @@ export default function ServicesPage() {
             <div className="lg:col-span-5">
               <SectionHeading
                 eyebrow="What every job includes"
-                title="Oversight is built into every job — not sold as an add-on."
-                description="You are paying for managed execution, not just a referral. Every Nexus request gets the same intake review, contractor assignment oversight, documentation, and billing process."
+                title="What Nexus coordinates."
+                description="Nexus manages the request and communication between you and the contractor. Your plan covers coordination and account features; contractor labor and materials are billed separately."
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
@@ -303,7 +304,7 @@ export default function ServicesPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
-                href="/auth/sign-up"
+                href="/request"
                 className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-primary shadow-lg hover:opacity-95 transition"
               >
                 Submit a request <ArrowRight className="h-4 w-4" />
